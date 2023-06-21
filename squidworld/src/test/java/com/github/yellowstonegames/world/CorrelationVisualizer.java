@@ -32,6 +32,7 @@ import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.world.random.SplurgeRandom;
 import com.github.yellowstonegames.world.random.SpoonRandom;
 import com.github.yellowstonegames.world.random.SportyRandom;
+import com.github.yellowstonegames.world.random.SpritzRandom;
 
 import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
@@ -40,6 +41,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class CorrelationVisualizer extends ApplicationAdapter {
 
+    private String title = "";
     private ImmediateModeRenderer20 renderer;
     private static final int width = 256, height = 256;
     private static final float[][] previousGrid = new float[width][height];
@@ -56,13 +58,13 @@ public class CorrelationVisualizer extends ApplicationAdapter {
                         g[x][y].setState(x << 1, y << 1);
                         break;
                     case 3:
-                        g[x][y].setState(x << 1, y << 1, 1111111111L);
+                        g[x][y].setState(x << 1, y << 1, 1L);
                         break;
                     case 4:
-                        g[x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L);
+                        g[x][y].setState(x << 1, y << 1, 1L, 1L);
                         break;
                     case 5:
-                        g[x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L, 1111111111L);
+                        g[x][y].setState(x << 1, y << 1, 1L, 1L, 1L);
                         break;
                 }
             }
@@ -72,9 +74,6 @@ public class CorrelationVisualizer extends ApplicationAdapter {
     private static final EnhancedRandom[][][] randoms = new EnhancedRandom[][][]{
             makeGrid(new LaserRandom(1, 1)),
             makeGrid(new MizuchiRandom(1, 1)),
-            makeGrid(new SplurgeRandom(1, 1)),
-            makeGrid(new SportyRandom(1, 1)),
-            makeGrid(new SpoonRandom(1, 1)),
             makeGrid(new TricycleRandom(1, 1, 1)),
             makeGrid(new FourWheelRandom(1, 1, 1, 1)),
             makeGrid(new TrimRandom(1, 1, 1, 1)),
@@ -82,6 +81,10 @@ public class CorrelationVisualizer extends ApplicationAdapter {
             makeGrid(new ScruffRandom(1, 1, 1, 1)),
             makeGrid(new PasarRandom(1, 1, 1, 1, 1)),
             makeGrid(new AceRandom(1, 1, 1, 1, 1)),
+            makeGrid(new SplurgeRandom(1, 1)),
+            makeGrid(new SportyRandom(1, 1)),
+            makeGrid(new SpoonRandom(1, 1)),
+            makeGrid(new SpritzRandom(1, 1)),
     };
     int currentRandom = 0, randomCount = randoms.length;
     int currentMode = 0, modeCount = 3;
@@ -98,13 +101,13 @@ public class CorrelationVisualizer extends ApplicationAdapter {
                             randoms[i][x][y].setState(x << 1, y << 1);
                             break;
                         case 3:
-                            randoms[i][x][y].setState(x << 1, y << 1, 1111111111L);
+                            randoms[i][x][y].setState(x << 1, y << 1, 1L);
                             break;
                         case 4:
-                            randoms[i][x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L);
+                            randoms[i][x][y].setState(x << 1, y << 1, 1L, 1L);
                             break;
                         case 5:
-                            randoms[i][x][y].setState(x << 1, y << 1, 1111111111L, 1111111111L, 1111111111L);
+                            randoms[i][x][y].setState(x << 1, y << 1, 1L, 1L, 1L);
                             break;
                     }
                 }
@@ -128,6 +131,8 @@ public class CorrelationVisualizer extends ApplicationAdapter {
 
     @Override
     public void create() {
+        title = randoms[currentRandom][0][0].getClass().getSimpleName() + " on mode " + currentMode;
+        System.out.println(title);
         renderer = new ImmediateModeRenderer20(width * height, false, true, 0);
         view = new ScreenViewport();
         InputAdapter input = new InputAdapter() {
@@ -151,11 +156,17 @@ public class CorrelationVisualizer extends ApplicationAdapter {
                     case ENTER:
                         currentRandom = ((currentRandom + (UIUtils.shift() ? randomCount - 1 : 1)) % randomCount);
                         refreshGrid();
+                        title = randoms[currentRandom][0][0].getClass().getSimpleName()
+                                + " on mode " + currentMode;
+                        System.out.println(title);
                         if (!keepGoing) putMap();
                         break;
                     case M: // mode
                         currentMode = ((currentMode + (UIUtils.shift() ? modeCount - 1 : 1)) % modeCount);
                         refreshGrid();
+                        title = randoms[currentRandom][0][0].getClass().getSimpleName()
+                                + " on mode " + currentMode;
+                        System.out.println(title);
                         if (!keepGoing) putMap();
                         break;
                     case Q: // quit
@@ -207,7 +218,7 @@ public class CorrelationVisualizer extends ApplicationAdapter {
     @Override
     public void render() {
         ScreenUtils.clear(Color.BLACK);
-        Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
+        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS showing " + title);
         if (keepGoing) {
             putMap();
         }
