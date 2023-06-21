@@ -75,8 +75,13 @@ public class CorrelationVisualizer extends ApplicationAdapter {
             makeGrid(new SplurgeRandom(1, 1)),
             makeGrid(new SportyRandom(1, 1)),
             makeGrid(new SpoonRandom(1, 1)),
+            makeGrid(new TricycleRandom(1, 1, 1)),
+            makeGrid(new FourWheelRandom(1, 1, 1, 1)),
+            makeGrid(new TrimRandom(1, 1, 1, 1)),
             makeGrid(new WhiskerRandom(1, 1, 1, 1)),
             makeGrid(new ScruffRandom(1, 1, 1, 1)),
+            makeGrid(new PasarRandom(1, 1, 1, 1, 1)),
+            makeGrid(new AceRandom(1, 1, 1, 1, 1)),
     };
     int currentRandom = 0, randomCount = randoms.length;
     int currentMode = 0, modeCount = 3;
@@ -107,6 +112,17 @@ public class CorrelationVisualizer extends ApplicationAdapter {
         }
     }
 
+
+    public static void seedGrid() {
+        for (int i = 0, n = randoms.length; i < n; i++) {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    randoms[i][x][y].setSeed(x << 17 ^ y << 1);
+                }
+            }
+        }
+    }
+
     private Viewport view;
     private boolean keepGoing = true;
 
@@ -123,6 +139,11 @@ public class CorrelationVisualizer extends ApplicationAdapter {
                         keepGoing = !keepGoing;
                         break;
                     case S: // step
+                        putMap();
+                        break;
+                    case NUM_1:
+                    case NUMPAD_1:
+                        seedGrid();
                         putMap();
                         break;
                     case N: // next
