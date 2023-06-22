@@ -28,7 +28,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.random.*;
+import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.FourWheelRandom;
+import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.MizuchiRandom;
+import com.github.tommyettinger.random.PasarRandom;
+import com.github.tommyettinger.random.ScruffRandom;
+import com.github.tommyettinger.random.TricycleRandom;
+import com.github.tommyettinger.random.TrimRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.yellowstonegames.world.random.ScarfRandom;
 import com.github.yellowstonegames.world.random.SplurgeRandom;
 import com.github.yellowstonegames.world.random.SpoonRandom;
 import com.github.yellowstonegames.world.random.SportyRandom;
@@ -79,6 +89,7 @@ public class CorrelationVisualizer extends ApplicationAdapter {
             makeGrid(new TrimRandom(1, 1, 1, 1)),
             makeGrid(new WhiskerRandom(1, 1, 1, 1)),
             makeGrid(new ScruffRandom(1, 1, 1, 1)),
+            makeGrid(new ScarfRandom(1, 1, 1, 1)),
             makeGrid(new PasarRandom(1, 1, 1, 1, 1)),
             makeGrid(new AceRandom(1, 1, 1, 1, 1)),
             makeGrid(new SplurgeRandom(1, 1)),
@@ -145,6 +156,20 @@ public class CorrelationVisualizer extends ApplicationAdapter {
                         break;
                     case S: // step
                         putMap();
+                        break;
+                    case V: // vertical
+                        System.out.println("Viewing column 0:");
+                        System.out.println(randoms[currentRandom][0][0]);
+                        System.out.println(randoms[currentRandom][0][1]);
+                        System.out.println(randoms[currentRandom][0][2]);
+                        System.out.println(randoms[currentRandom][0][3]);
+                        break;
+                    case H: // horizontal
+                        System.out.println("Viewing row 0:");
+                        System.out.println(randoms[currentRandom][0][0]);
+                        System.out.println(randoms[currentRandom][1][0]);
+                        System.out.println(randoms[currentRandom][2][0]);
+                        System.out.println(randoms[currentRandom][3][0]);
                         break;
                     case NUM_1:
                     case NUMPAD_1:
