@@ -42,7 +42,18 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.Interpolations;
-import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.BlueNoise;
+import com.github.yellowstonegames.grid.CyclicNoise;
+import com.github.yellowstonegames.grid.FlanNoise;
+import com.github.yellowstonegames.grid.FlawedPointHash;
+import com.github.yellowstonegames.grid.HighDimensionalValueNoise;
+import com.github.yellowstonegames.grid.IPointHash;
+import com.github.yellowstonegames.grid.IntPointHash;
+import com.github.yellowstonegames.grid.LongPointHash;
+import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.PhantomNoise;
+import com.github.yellowstonegames.grid.TaffyNoise;
+import com.github.yellowstonegames.grid.ValueNoise;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -71,8 +82,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 0;
-    private static final int MODE_LIMIT = 23;
-    private int mode = 21;
+    private static final int MODE_LIMIT = 24;
+    private int mode = 23;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -1693,6 +1704,17 @@ public class FFTVisualizer extends ApplicationAdapter {
                         }
                     }
                     break;
+            }
+        } else if(mode == 23) {
+            for (int x = 0; x < width; x++) {
+                double ix = x * 200 * iWidth - 100;
+                for (int y = 0; y < height; y++) {
+                    double iy = y * 200 * iHeight - 100;
+                    bright = basicPrepare((int)Math.signum(Math.sin(1000.0 * (ix * ix + iy * iy))));
+                    real[x][y] = bright;
+                    renderer.color(bright, bright, bright, 1f);
+                    renderer.vertex(x, y, 0);
+                }
             }
         }
 
