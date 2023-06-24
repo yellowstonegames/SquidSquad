@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.FastGif;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
@@ -1749,6 +1750,26 @@ public class FFTVisualizer extends ApplicationAdapter {
                         for (int y = 0; y < height; y++) {
                             double iy = y * 200 * iHeight - 100;
                             bright = basicPrepare((int) Math.signum(Math.sin((1000.0 + threshold * 0x1p-8) * (ix * ix + iy * iy) + c * 0.25f)));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    // This points out some issues with https://blog.rahix.de/004-spaceships/ , in particular how it
+                    // uses modulus on a 0-9 value to choose an option in a small range. The 'A' key to analyze is
+                    // good to use here.
+                    int iters = (int)(c) & 63;
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            int n1 = x / 25, n2 = y / 25;
+                            for (int i = 0; i <= iters; i++) {
+                                int n = (n1 + n2) % 10;
+                                n2 = n1;
+                                n1 = n;
+                            }
+                            bright = basicPrepare((n1 % 4 + Hasher.randomize3Float(System.nanoTime() ^ x << 16 ^ y)) / 2f - 1f);
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
