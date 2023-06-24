@@ -1706,15 +1706,55 @@ public class FFTVisualizer extends ApplicationAdapter {
                     break;
             }
         } else if(mode == 23) {
-            for (int x = 0; x < width; x++) {
-                double ix = x * 200 * iWidth - 100;
-                for (int y = 0; y < height; y++) {
-                    double iy = y * 200 * iHeight - 100;
-                    bright = basicPrepare((int)Math.signum(Math.sin(1000.0 * (ix * ix + iy * iy))));
-                    real[x][y] = bright;
-                    renderer.color(bright, bright, bright, 1f);
-                    renderer.vertex(x, y, 0);
-                }
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        double ix = x * 200 * iWidth - 100;
+                        for (int y = 0; y < height; y++) {
+                            double iy = y * 200 * iHeight - 100;
+                            bright = basicPrepare((int) Math.signum(Math.sin(1000.0 * (ix * ix + iy * iy))));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    for (int x = 0; x < width; x++) {
+                        double ix = x * 200 * iWidth - 100;
+                        for (int y = 0; y < height; y++) {
+                            double iy = y * 200 * iHeight - 100;
+                            bright = basicPrepare((int) Math.signum(Math.sin((1000.0 + threshold * 0x1p-8) * (ix * ix + iy * iy))));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    for (int x = 0; x < width; x++) {
+                        double ix = x * 200 * iWidth - 100;
+                        for (int y = 0; y < height; y++) {
+                            double iy = y * 200 * iHeight - 100;
+                            bright = basicPrepare((int) Math.signum(Math.sin(1000.0 * (ix * ix + iy * iy) + c * 0.25f)));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int x = 0; x < width; x++) {
+                        double ix = x * 200 * iWidth - 100;
+                        for (int y = 0; y < height; y++) {
+                            double iy = y * 200 * iHeight - 100;
+                            bright = basicPrepare((int) Math.signum(Math.sin((1000.0 + threshold * 0x1p-8) * (ix * ix + iy * iy) + c * 0.25f)));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
             }
         }
 
