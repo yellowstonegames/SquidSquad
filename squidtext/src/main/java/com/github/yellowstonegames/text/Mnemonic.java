@@ -408,11 +408,11 @@ public class Mnemonic {
                 .append(negative ? " and the " : " of the ")
                 .append(allAdjectives.getAt((int)((number /= nounCount) % adjectiveCount))).append(' ')
                 .append(allNouns.getAt((int)((number /= adjectiveCount) % nounCount))).append(" versus ")
-                .append(allAdjectives.getAt((int)(number /= adjectiveCount))).append(' ')
+                .append(allAdjectives.getAt((int)((number /= nounCount) % adjectiveCount))).append(' ')
                 .append(allNouns.getAt((int)((number /= adjectiveCount) % nounCount)))
                 .append(odd ? " and the " : " of the ")
                 .append(allAdjectives.getAt((int)((number /= nounCount) % adjectiveCount))).append(' ')
-                .append(allNouns.getAt((int)((number / adjectiveCount) % nounCount)));
+                .append(allNouns.getAt((int)((number / adjectiveCount))));
         if(capitalize)
             sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         return sb.toString();

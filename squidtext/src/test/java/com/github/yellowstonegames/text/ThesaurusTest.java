@@ -89,9 +89,9 @@ public class ThesaurusTest {
             }
         }
         for (int i = 0; i < 10; i++) {
-            int a = (int)Hasher.randomize3(i);
+            long a = Hasher.randomize3(i);
             for (int j = 0; j < m.length; j++) {
-                String words = m[j].toWordMnemonic(a, true);
+                String words = m[j].toLongWordMnemonic(a, true);
                 System.out.println("Mnemonic(" + j + "), encoding " + Base.BASE16.unsigned(a) + ": "+ words + ", decoding to " + Base.BASE16.unsigned(m[j].fromWordMnemonic(words)));
             }
         }
