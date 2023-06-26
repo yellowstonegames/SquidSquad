@@ -1,5 +1,7 @@
 package com.github.yellowstonegames.text;
 
+import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
 
 /**
@@ -78,20 +80,20 @@ public class ThesaurusTest {
             System.out.println(s);
         }
 
-//        Mnemonic[] m = {new Mnemonic(0), new Mnemonic(1), new Mnemonic(2), new Mnemonic(3)};
-//        for (int i = 0; i < 10; i++) {
-//            for (int j = 0; j < m.length; j++) {
-//                String words = m[j].toWordMnemonic(i, true);
-//                System.out.println("Mnemonic(" + j + "), encoding " + StringTools.hex(i) + ": "+ words + ", decoding to " + StringTools.hex(m[j].fromWordMnemonic(words)));
-//            }
-//        }
-//        for (int i = 0; i < 10; i++) {
-//            int a = GWTRNG.determineInt(i);
-//            for (int j = 0; j < m.length; j++) {
-//                String words = m[j].toWordMnemonic(a, true);
-//                System.out.println("Mnemonic(" + j + "), encoding " + StringTools.hex(a) + ": "+ words + ", decoding to " + StringTools.hex(m[j].fromWordMnemonic(words)));
-//            }
-//        }
+        Mnemonic[] m = {new Mnemonic(0), new Mnemonic(1), new Mnemonic(2), new Mnemonic(3)};
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < m.length; j++) {
+                String words = m[j].toWordMnemonic(i, true);
+                System.out.println("Mnemonic(" + j + "), encoding " + Base.BASE16.unsigned(i) + ": "+ words + ", decoding to " + Base.BASE16.unsigned(m[j].fromWordMnemonic(words)));
+            }
+        }
+        for (int i = 0; i < 10; i++) {
+            int a = (int)Hasher.randomize3(i);
+            for (int j = 0; j < m.length; j++) {
+                String words = m[j].toWordMnemonic(a, true);
+                System.out.println("Mnemonic(" + j + "), encoding " + Base.BASE16.unsigned(a) + ": "+ words + ", decoding to " + Base.BASE16.unsigned(m[j].fromWordMnemonic(words)));
+            }
+        }
         text.setLength(0);
         for (int i = 0; i < 60; i++) {
             text.append("vegetable`term`, ");

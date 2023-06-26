@@ -331,7 +331,7 @@ public class Thesaurus {
      *     <li>explorer`nouns` : explorers, nomads, pathfinders, questants, seekers, wanderers</li>
      *     <li>rage`noun` : anger, frenzy, fury, rage, vengeance, wrath</li>
      *     <li>ominous`adj` : baleful, fateful, foreboding, ominous, portentous</li>
-     *     <li>many`adj` : countless, infinite, manifold, many, myriad, thousandfold, unlimited</li>
+     *     <li>infinite`adj` : countless, infinite, manifold, boundless, myriad, thousandfold, unlimited</li>
      *     <li>impossible`adj` : abominable, forbidden, impossible, incomprehensible, indescribable, ineffable, unearthly, unspeakable</li>
      *     <li>gaze`noun` : eye, gaze, observation, purveyance, stare, watch</li>
      *     <li>pain`noun` : agony, excruciation, misery, pain, torture</li>
@@ -1682,8 +1682,8 @@ public class Thesaurus {
             with("rage", "fury", "anger", "wrath", "frenzy", "vengeance"),
             "ominous`adj`",
             with("ominous", "foreboding", "fateful", "baleful", "portentous"),
-            "many`adj`",
-            with("many", "myriad", "thousandfold", "infinite", "countless", "unlimited", "manifold"),
+            "infinite`adj`",
+            with("boundless", "myriad", "thousandfold", "infinite", "countless", "unlimited", "manifold"),
             "impossible`adj`",
             with("impossible", "forbidden", "incomprehensible", "ineffable", "unearthly", "abominable", "unspeakable", "indescribable"),
             "gaze`noun`",

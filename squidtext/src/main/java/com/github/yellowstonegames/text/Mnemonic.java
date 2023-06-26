@@ -34,8 +34,8 @@ import static com.github.yellowstonegames.text.Thesaurus.*;
  * values like -8798641734435409502 into {@code String}s like nwihyayeetyoruehyazuetro. The advantage here is that
  * nwihyayeetyoruehyazuetro is very different from protoezlebauyauzlutoatra, even though the numbers they are made from
  * are harder to distinguish (-8798641734435409502 vs. -8032477240987739423, when using the default seed). It can also
- * turn phrase {@code String}s like "Mindful warriors and the pure torch" and "Dynastic earldom and the thousandfold
- * bandit" (which were generated using a seed of 1 from -587415991 and -1105099633).
+ * turn phrase {@code String}s like "Scaly vengeance of the pungent congress" and "Fragile eggplant and the mechanical
+ * tobacco" (which were generated using a seed of 1 from inputs of 0 and 2).
  * <br>
  * The constructor optionally takes a seed that can greatly change the generated mnemonics, which may be useful if
  * mnemonic strings produced for some purpose should only be decipherable by that program or that play of the game. If
