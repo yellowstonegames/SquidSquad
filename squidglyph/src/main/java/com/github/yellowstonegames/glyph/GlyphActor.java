@@ -53,7 +53,7 @@ public class GlyphActor extends Actor {
     }
 
     public GlyphActor(char c, String markup, Font f) {
-        glyph = Font.markupGlyph(c, markup, ColorLookup.DESCRIPTIVE, f.family);
+        glyph = f.markupGlyph(c, markup);
         font = f;
     }
 

@@ -3172,7 +3172,7 @@ public class Language {
     public static final Language[] registered;
     public static final String[] registeredNames;
     static {
-        // the first item in registry is null so it can be a placeholder for random languages; we want to skip it.
+        // the first item in registry is null so that it can be a placeholder for random languages; we want to skip it.
         registered = new Language[registry.size()-1];
         registeredNames = new String[registered.length];
         for (int i = 0; i < registered.length; i++) {
