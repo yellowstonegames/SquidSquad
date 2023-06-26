@@ -50,10 +50,10 @@ import java.util.Random;
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
-    public static final int POINT_COUNT = 0x100;
+    public static final int POINT_COUNT = 0x10000;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 7;
+    private int modes = 8;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -200,6 +200,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private void sphereBitCountMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        whisker.setSeed(seed);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereBitCount(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
     private static final float[] pole = {1, 0, 0};
 //    private static final float[] pole = {0, MathTools.ROOT2_INVERSE, MathTools.ROOT2_INVERSE};
 //    private static final float[] pole = {1f/MathTools.ROOT3, 1f/MathTools.ROOT3, 1f/MathTools.ROOT3};
@@ -294,6 +308,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 5: sphereRobertsMode();
             break;
             case 6: sphereRobertsVDCMode();
+            break;
+            case 7: sphereBitCountMode();
             break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -633,6 +649,26 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[1] = y;
         vector[2] = z;
     }
+    public void onSphereBitCount(final int index)
+    {
+        long a = QuasiRandomTools.goldenLong[2][0] * index;
+        long b = QuasiRandomTools.goldenLong[2][1] * index;
+        long c = QuasiRandomTools.goldenLong[2][2] * index;
+        float x = Long.bitCount(a) - 31.5f + a * 0x1p-64f;
+        float y = Long.bitCount(b) - 31.5f + b * 0x1p-64f;
+        float z = Long.bitCount(c) - 31.5f + c * 0x1p-64f;
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+
+        float[] vector = points[index];
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
+
     public void insideCircleBoxMuller(final double[] vector)
     {
         double mag = 0.0;
@@ -820,7 +856,8 @@ public class SphereVisualizer extends ApplicationAdapter {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
         config.setResizable(false);
-        config.setForegroundFPS(60);
+        config.useVsync(false);
+        config.setForegroundFPS(0);
         config.setWindowedMode(512, 530);
         new Lwjgl3Application(new SphereVisualizer(), config);
     }
