@@ -2,6 +2,7 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.StringTools;
 
 /**
@@ -103,5 +104,7 @@ public class ThesaurusTest {
         {
             System.out.println(s);
         }
+
+        System.out.println("\n" + Base.BASE16.unsigned(MathTools.modularMultiplicativeInverse(0xBEA225F9EB34556DL)));
     }
 }
