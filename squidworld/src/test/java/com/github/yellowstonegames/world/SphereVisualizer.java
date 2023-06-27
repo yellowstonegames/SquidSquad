@@ -51,7 +51,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 0x4000;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 8;
+    private int modes = 9;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -181,6 +181,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 6: sphereRobertsVDCMode();
                 break;
             case 7: sphereBitCountMode();
+                break;
+            case 8: sphereFibonacciMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -353,6 +355,20 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     }
 
+    private void sphereFibonacciMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        random.setSeed(seed);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereFibonacci(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
     public void onSphereTrig(final int index)
     {
         float theta = random.nextExclusiveFloat();
@@ -366,6 +382,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[1] = TrigTools.sinTurns(theta) * sinPhi;
         vector[2] = TrigTools.cosTurns(phi);
     }
+
     public void onSphereGaussian(final int index)
     {
         float x = (float) random.nextGaussian();
@@ -449,6 +466,24 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[0] = x;
         vector[1] = y;
         vector[2] = z;
+    }
+
+    /**
+     * <a href="https://extremelearning.com.au/how-to-evenly-distribute-points-on-a-sphere-more-effectively-than-the-canonical-fibonacci-lattice/">Uses Martin Roberts' modified Fibonacci lattice.</a>
+     * @param index a non-negative int less than {@link #POINT_COUNT}
+     */
+    public void onSphereFibonacci(final int index)
+    {
+
+        float theta = (index * 0x9E3779B97F4A7C15L >>> 41) * 0x1p-23f;
+        float phi = TrigTools.acosTurns(1 - 2 * (index + 0.36f) / (POINT_COUNT - 0.28f));
+        float sinPhi = TrigTools.sinTurns(phi);
+
+        float[] vector = points[index];
+
+        vector[0] = TrigTools.cosTurns(theta) * sinPhi;
+        vector[1] = TrigTools.sinTurns(theta) * sinPhi;
+        vector[2] = TrigTools.cosTurns(phi);
     }
 
     public static void main (String[] arg) {
