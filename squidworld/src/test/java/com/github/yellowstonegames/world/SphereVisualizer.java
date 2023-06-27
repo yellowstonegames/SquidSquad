@@ -51,7 +51,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 0x4000;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 11;
+    private int modes = 12;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -187,6 +187,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 9: sphereR2Mode();
                 break;
             case 10: sphereHalton2Mode();
+                break;
+            case 11: sphereHammersley2Mode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -401,6 +403,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private void sphereHammersley2Mode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        random.setSeed(seed);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereHammersley2(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
     public void onSphereTrig(final int index)
     {
         float theta = random.nextExclusiveFloat();
@@ -546,6 +562,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[0] = TrigTools.cosTurns(theta) * sinPhi;
         vector[1] = TrigTools.sinTurns(theta) * sinPhi;
         vector[2] = TrigTools.cosTurns(phi);
+    }
+
+    public void onSphereHammersley2(final int index)
+    {
+        double theta = (Long.reverse(index) >>> 12) * (0x1p-52 * TrigTools.PI2_D);
+        double d = (index * 2.0 / POINT_COUNT - 1.0);
+        double phi = Math.acos(d);
+        double sinPhi = Math.sin(phi);
+
+        float[] vector = points[index];
+
+        vector[0] = (float) (Math.cos(theta) * sinPhi);
+        vector[1] = (float) (Math.sin(theta) * sinPhi);
+        vector[2] = (float) (Math.cos(phi));
     }
 
     public static void main (String[] arg) {
