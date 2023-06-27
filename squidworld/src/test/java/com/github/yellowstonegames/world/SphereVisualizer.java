@@ -51,7 +51,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 0x4000;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 10;
+    private int modes = 11;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -185,6 +185,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 8: sphereFibonacciMode();
                 break;
             case 9: sphereR2Mode();
+                break;
+            case 10: sphereHalton2Mode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -385,6 +387,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private void sphereHalton2Mode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        random.setSeed(seed);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereHalton2(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
     public void onSphereTrig(final int index)
     {
         float theta = random.nextExclusiveFloat();
@@ -506,6 +522,22 @@ public class SphereVisualizer extends ApplicationAdapter {
     {
         float theta = (QuasiRandomTools.goldenLong[1][0] * index >>> 41) * 0x1p-23f;
         float d = (QuasiRandomTools.goldenLong[1][1] * index >> 40) * 0x1p-23f;
+        float phi = TrigTools.acosTurns(d);
+        float sinPhi = TrigTools.sinTurns(phi);
+
+        float[] vector = points[index];
+
+        vector[0] = TrigTools.cosTurns(theta) * sinPhi;
+        vector[1] = TrigTools.sinTurns(theta) * sinPhi;
+        vector[2] = TrigTools.cosTurns(phi);
+    }
+
+    // with 2, 3: minimum distance was 0.003802
+    // with 2, 7: minimum distance was 0.006096
+    public void onSphereHalton2(final int index)
+    {
+        float theta = QuasiRandomTools.vanDerCorput(2, index);
+        float d = (QuasiRandomTools.vanDerCorput(7, index) - 0.5f) * 2f;
         float phi = TrigTools.acosTurns(d);
         float sinPhi = TrigTools.sinTurns(phi);
 
