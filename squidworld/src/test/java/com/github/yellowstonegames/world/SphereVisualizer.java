@@ -29,8 +29,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -43,13 +43,12 @@ import com.github.yellowstonegames.grid.RotationTools;
 import com.github.yellowstonegames.world.random.RandomRandom;
 
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
-    public static final int POINT_COUNT = 0x10000;
+    public static final int POINT_COUNT = 0x4000;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
     private int modes = 8;
@@ -67,6 +66,9 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final EnhancedRandom random = new AceRandom(seed);
 //    private final EnhancedRandom random = new WhiskerRandom(seed);
 //    private final EnhancedRandom random = new ScruffRandom(seed);
+//    private final EnhancedRandom random = new MizuchiRandom(seed);
+//    private final EnhancedRandom random = new RomuTrioRandom(seed);
+//    private final EnhancedRandom random = new DistinctRandom(seed);
 //    private final EnhancedRandom random = new RandomRandom(seed);
     private final float black = Color.BLACK.toFloatBits();
     private final float blue = Color.BLUE.toFloatBits();
@@ -75,26 +77,45 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float smoke = Color.toFloatBits(0f, 0f, 0f, 0.25f);
 
     /**
-     * With seed 123456789 given to a WhiskerRandom for the random types...
+     * With seed 123456789 given to a WhiskerRandom for the random types, and 0x4000 points...
      * <br>
-     * On mode 0, minimum distance was 0.003787, between point 75, [0.515751,0.836292,-0.186055] and point 139, [0.518916,0.834248,-0.186432]
-     * On mode 1, minimum distance was 0.001726, between point 244, [0.507996,0.529551,-0.679350] and point 247, [0.508196,0.530826,-0.678204]
-     * On mode 2, minimum distance was 0.004055, between point 117, [0.441669,-0.894222,-0.072774] and point 157, [0.438834,-0.895810,-0.070349]
-     * On mode 3, minimum distance was 0.008227, between point 8, [0.511021,0.423659,-0.747911] and point 147, [0.512761,0.430063,-0.743049]
-     * On mode 4, minimum distance was 0.012335, between point 130, [0.049258,-0.972008,0.229726] and point 250, [0.051183,-0.974644,0.217831]
-     * On mode 5, minimum distance was 0.004672, between point 22, [-0.802256,0.284587,-0.524781] and point 226, [-0.800069,0.288543,-0.525959]
-     * On mode 6, minimum distance was 0.013058, between point 52, [0.088732,0.995822,0.021552] and point 152, [0.090197,0.995887,0.008577]
+     * On mode 0, minimum distance was 0.000117, between point 5453, [-0.098636,0.288150,0.952492] and point 6246, [-0.098746,0.288112,0.952492]
+     * On mode 1, minimum distance was 0.000056, between point 12250, [-0.588344,-0.803925,-0.086931] and point 14921, [-0.588308,-0.803954,-0.086900]
+     * On mode 2, minimum distance was 0.000122, between point 8244, [0.704946,-0.704698,0.080327] and point 13464, [0.704867,-0.704769,0.080387]
+     * On mode 3, minimum distance was 0.000105, between point 4897, [-0.017502,-0.731484,0.681633] and point 11135, [-0.017527,-0.731553,0.681559]
+     * On mode 4, minimum distance was 0.000277, between point 9517, [-0.048890,0.193368,0.979908] and point 9778, [-0.048672,0.193202,0.979951]
+     * On mode 5, minimum distance was 0.000105, between point 4897, [-0.017502,-0.731484,0.681633] and point 11135, [-0.017527,-0.731553,0.681559]
+     * On mode 6, minimum distance was 0.000098, between point 1451, [0.650076,0.288446,0.702994] and point 6780, [0.650002,0.288472,0.703052]
+     * On mode 7, minimum distance was 0.000143, between point 2, [-0.528052,-0.029139,0.848712] and point 7833, [-0.528013,-0.029005,0.848741]
+     * <br>
+     * With seed 123456789 given to an AceRandom for the random types, and 0x4000 points...
+     * <br>
+     * On mode 0, minimum distance was 0.000000, between point 1176, [0.613156,-0.412766,-0.673546] and point 10151, [0.613156,-0.412766,-0.673546]
+     * On mode 1, minimum distance was 0.000179, between point 1937, [-0.538566,0.165698,0.826130] and point 9120, [-0.538657,0.165826,0.826045]
+     * On mode 2, minimum distance was 0.000122, between point 8244, [0.704946,-0.704698,0.080327] and point 13464, [0.704867,-0.704769,0.080387]
+     * On mode 3, minimum distance was 0.000105, between point 4897, [-0.017502,-0.731484,0.681633] and point 11135, [-0.017527,-0.731553,0.681559]
+     * On mode 4, minimum distance was 0.000277, between point 9517, [-0.048890,0.193368,0.979908] and point 9778, [-0.048672,0.193202,0.979951]
+     * On mode 5, minimum distance was 0.000105, between point 4897, [-0.017502,-0.731484,0.681633] and point 11135, [-0.017527,-0.731553,0.681559]
+     * On mode 6, minimum distance was 0.000098, between point 1451, [0.650076,0.288446,0.702994] and point 6780, [0.650002,0.288472,0.703052]
+     * On mode 7, minimum distance was 0.000143, between point 2, [-0.528052,-0.029139,0.848712] and point 7833, [-0.528013,-0.029005,0.848741]
+     * <br>
+     * AceRandom on mode 0 produced at least two identical points over a run of 16384 random lat/lon pairs,
+     * and it did so once for at least seeds 1234567890 and 9876543210, and four times for at least seed 123456789.
+     * Testing more generators, having one identical point on mode 0 is the norm, and only WhiskerRandom so far hasn't
+     * had any identical points on any modes.
      */
     public void showStats() {
-        float minDist2 = Float.MAX_VALUE;
-        int closeI = 0, closeJ = 1;
+        float minDist2 = Float.MAX_VALUE, dst2;
+        int closeI = 0, closeJ = 1, identicalPairs = 0;
         for (int i = 0; i < POINT_COUNT; i++) {
             for (int j = i + 1; j < POINT_COUNT; j++) {
                 if (minDist2 != (minDist2 = Math.min(minDist2,
-                        Vector3.dst2(points[i][0], points[i][1], points[i][2], points[j][0], points[j][1], points[j][2])))) {
+                        dst2 = Vector3.dst2(points[i][0], points[i][1], points[i][2], points[j][0], points[j][1], points[j][2])))) {
                     closeI = i;
                     closeJ = j;
                 }
+                if(dst2 == 0f && !UIUtils.ctrl())
+                    System.out.println("IDENTICAL POINT PAIR #" + ++identicalPairs + " at " + points[i][0] + " " + points[i][1] + " " + points[i][2]);
             }
         }
         System.out.printf("On mode %d, minimum distance was %f, between point %d, [%f,%f,%f] and point %d, [%f,%f,%f]\n",
@@ -119,11 +140,13 @@ public class SphereVisualizer extends ApplicationAdapter {
             public boolean keyDown(int keycode) {
                 if (keycode == Input.Keys.SPACE || keycode == Input.Keys.ENTER || keycode == Input.Keys.EQUALS) {
                     mode = (mode + 1) % modes;
-                    System.out.println("Changed to mode " + mode);
+                    if(!UIUtils.ctrl())
+                        System.out.println("Changed to mode " + mode);
                     return true;
                 } else if (keycode == Input.Keys.MINUS || keycode == Input.Keys.BACKSPACE) {
                     mode = (mode + modes - 1) % modes;
-                    System.out.println("Changed to mode " + mode);
+                    if(!UIUtils.ctrl())
+                        System.out.println("Changed to mode " + mode);
                     return true;
                 } else if (keycode == Input.Keys.P || keycode == Input.Keys.S) {
                     showStats();
@@ -134,6 +157,45 @@ public class SphereVisualizer extends ApplicationAdapter {
             }
         };
         Gdx.input.setInputProcessor(input);
+    }
+
+    @Override
+    public void render() {
+        ScreenUtils.clear(1f, 1f, 1f, 1f);
+        camera.update();
+        Arrays.fill(amounts, 0);
+        Arrays.fill(dAmounts, 0.0);
+        switch (mode) {
+            case 0: sphereTrigMode();
+                break;
+            case 1: sphereGaussianMode();
+                break;
+            case 2: sphereRotationMode();
+                break;
+            case 3: spherePairMode();
+                break;
+            case 4: sphereHaltonMode();
+                break;
+            case 5: sphereRobertsMode();
+                break;
+            case 6: sphereRobertsVDCMode();
+                break;
+            case 7: sphereBitCountMode();
+                break;
+        }
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        font.draw(batch, String.format("Mode %d at %d FPS",
+                        mode, Gdx.graphics.getFramesPerSecond()),
+                64, 518, 256+128, Align.center, true);
+        batch.end();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        viewport.update(width, height, true);
+        viewport.apply(true);
     }
 
     private void sphereTrigMode() {
@@ -291,45 +353,6 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     }
 
-    @Override
-    public void render() {
-        ScreenUtils.clear(1f, 1f, 1f, 1f);
-        camera.update();
-        Arrays.fill(amounts, 0);
-        Arrays.fill(dAmounts, 0.0);
-        switch (mode) {
-            case 0: sphereTrigMode();
-            break;
-            case 1: sphereGaussianMode();
-            break;
-            case 2: sphereRotationMode();
-            break;
-            case 3: spherePairMode();
-            break;
-            case 4: sphereHaltonMode();
-            break;
-            case 5: sphereRobertsMode();
-            break;
-            case 6: sphereRobertsVDCMode();
-            break;
-            case 7: sphereBitCountMode();
-            break;
-        }
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        font.draw(batch, String.format("Mode %d at %d FPS",
-                        mode, Gdx.graphics.getFramesPerSecond()),
-                64, 518, 256+128, Align.center, true);
-        batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        viewport.update(width, height, true);
-        viewport.apply(true);
-    }
-
     public void onSphereTrig(final int index)
     {
         float theta = random.nextExclusiveFloat();
@@ -427,23 +450,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[1] = y;
         vector[2] = z;
     }
-
-    /**
-     * This is a simplified version of <a href="https://allendowney.com/research/rand/">this
-     * algorithm by Allen Downey</a>. This version can return double values between 2.710505431213761E-20 and
-     * 0.9999999999999999, or 0x1.0p-65 and 0x1.fffffffffffffp-1 in hex notation. It cannot return 0 or 1. It has much
-     * more uniform bit distribution across its mantissa/significand bits than {@link Random#nextDouble()}. Where Random
-     * is less likely to produce a "1" bit for its lowest 5 bits of mantissa (the least significant bits numerically,
-     * but potentially important for some uses), with the least significant bit produced half as often as the most
-     * significant bit in the mantissa, this has approximately the same likelihood of producing a "1" bit for any
-     * positions in the mantissa.
-     * @return a random uniform double between 0 and 1 (both exclusive, unlike most nextDouble() implementations)
-     */
-    public double nextExclusiveDouble(){
-        final long bits = random.nextLong();
-        return NumberUtils.longBitsToDouble(1022L - Long.numberOfTrailingZeros(bits) << 52 | bits >>> 12);
-    }
-
 
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
