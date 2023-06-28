@@ -233,28 +233,13 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 th = TrigTools.asin(rho); // c
                 lon = removeExcess((centerLongitude + (atan2(ixPos * rho, rho * cos(th)))) * 0.5f);
 
-                qs = lat * 0.6366197723675814f;
-                qc = qs + 1f;
-                int sf = MathTools.fastFloor(qs) & -2;
-                int cf = MathTools.fastFloor(qc) & -2;
-                qs -= sf;
-                qc -= cf;
-                qs *= 2f - qs;
-                qc *= 2f - qc;
-                qs = qs * (-0.775f - 0.225f * qs) * ((sf & 2) - 1);
-                qc = qc * (-0.775f - 0.225f * qc) * ((cf & 2) - 1);
+                int sinIndex = (int) (lat * radToIndex) & TABLE_MASK;
+                qs = SIN_TABLE[sinIndex];
+                qc = SIN_TABLE[sinIndex + SIN_TO_COS & TABLE_MASK];
 
-
-                ps = lon * 0.6366197723675814f;
-                pc = ps + 1f;
-                sf = MathTools.fastFloor(ps) & -2;
-                cf = MathTools.fastFloor(pc) & -2;
-                ps -= sf;
-                pc -= cf;
-                ps *= 2f - ps;
-                pc *= 2f - pc;
-                ps = ps * (-0.775f - 0.225f * ps) * ((sf & 2) - 1);
-                pc = pc * (-0.775f - 0.225f * pc) * ((cf & 2) - 1);
+                sinIndex = (int) (lon * radToIndex) & TABLE_MASK;
+                ps = SIN_TABLE[sinIndex];
+                pc = SIN_TABLE[sinIndex + SIN_TO_COS & TABLE_MASK];
 
                 ax = (int) ((lon * i_pi + 1f) * width);
                 ay = (int) ((qs + 1f) * ry);
