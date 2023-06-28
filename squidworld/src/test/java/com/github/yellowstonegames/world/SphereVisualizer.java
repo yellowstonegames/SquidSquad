@@ -167,7 +167,8 @@ public class SphereVisualizer extends ApplicationAdapter {
         Arrays.fill(amounts, 0);
         Arrays.fill(dAmounts, 0.0);
         switch (mode) {
-            case 0: sphereTrigMode();
+            case 0: if(UIUtils.shift()) sphereTrigAltMode();
+            else sphereTrigMode();
                 break;
             case 1: sphereGaussianMode();
                 break;
@@ -210,6 +211,19 @@ public class SphereVisualizer extends ApplicationAdapter {
         viewport.apply(true);
     }
 
+    private void sphereTrigAltMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        random.setSeed(seed);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereTrigAlt(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
     private void sphereTrigMode() {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
@@ -449,7 +463,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
-    public void onSphereTrig(final int index)
+    public void onSphereTrigAlt(final int index)
     {
         float theta = random.nextExclusiveFloat();
         float d = random.nextExclusiveSignedFloat();
@@ -461,6 +475,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[0] = TrigTools.cosTurns(theta) * sinPhi;
         vector[1] = TrigTools.sinTurns(theta) * sinPhi;
         vector[2] = TrigTools.cosTurns(phi);
+    }
+
+    public void onSphereTrig(final int index)
+    {
+        float lon = random.nextExclusiveFloat();
+        float u = random.nextExclusiveSignedFloat();
+        float root = (float) Math.sqrt(1f - u * u);
+
+        float[] vector = points[index];
+
+        vector[0] = TrigTools.cosTurns(lon) * root;
+        vector[1] = TrigTools.sinTurns(lon) * root;
+        vector[2] = u;
+
     }
 
     public void onSphereGaussian(final int index)
@@ -552,7 +580,7 @@ public class SphereVisualizer extends ApplicationAdapter {
      * <a href="https://extremelearning.com.au/how-to-evenly-distribute-points-on-a-sphere-more-effectively-than-the-canonical-fibonacci-lattice/">Uses Martin Roberts' modified Fibonacci lattice.</a>
      * @param index a non-negative int less than {@link #POINT_COUNT}
      */
-    public void onSphereFibonacci(final int index)
+    public void onSphereFibonacciAlt(final int index)
     {
 
         float theta = (index * 0x9E3779B97F4A7C15L >>> 41) * 0x1p-23f;
@@ -566,7 +594,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[2] = TrigTools.cosTurns(phi);
     }
 
-    public void onSphereFibonacciAlt(final int index)
+    public void onSphereFibonacci(final int index)
     {
         float lat = (index + 0.36f) / (POINT_COUNT - 0.28f);
         float lon = (index * 0x9E3779B97F4A7C15L >>> 41) * 0x1p-23f;
@@ -610,7 +638,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[2] = TrigTools.cosTurns(phi);
     }
 
-    public void onSphereHammersley2(final int index)
+    public void onSphereHammersley2Alt(final int index)
     {
         float theta = (index + 0.5f) / POINT_COUNT;
         float d = (QuasiRandomTools.vanDerCorput(2, index) - 0.5f) * 2f;
@@ -624,7 +652,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[2] = TrigTools.cosSmootherTurns(phi);
     }
 
-    public void onSphereHammersley2Alt(final int index)
+    public void onSphereHammersley2(final int index)
     {
         float lat = QuasiRandomTools.vanDerCorput(2, index);
         float lon = (index + 0.5f) / POINT_COUNT;
