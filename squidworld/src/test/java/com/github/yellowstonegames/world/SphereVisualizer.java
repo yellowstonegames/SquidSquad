@@ -49,6 +49,7 @@ import java.util.Arrays;
  */
 public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 0x4000;
+    public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
     private int modes = 12;
@@ -182,13 +183,16 @@ public class SphereVisualizer extends ApplicationAdapter {
                 break;
             case 7: sphereBitCountMode();
                 break;
-            case 8: sphereFibonacciMode();
+            case 8: if(UIUtils.shift()) sphereFibonacciAltMode();
+                else sphereFibonacciMode();
                 break;
             case 9: sphereR2Mode();
                 break;
             case 10: sphereHalton2Mode();
                 break;
-            case 11: sphereHammersley2Mode();
+            case 11:
+                if(UIUtils.shift()) sphereHammersley2AltMode();
+                else sphereHammersley2Mode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -207,7 +211,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereTrigMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
@@ -221,7 +225,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereGaussianMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
@@ -235,7 +239,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereHaltonMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
@@ -248,7 +252,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereRobertsMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
@@ -260,7 +264,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
     private void sphereRobertsVDCMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
@@ -273,7 +277,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereBitCountMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
@@ -302,7 +306,7 @@ public class SphereVisualizer extends ApplicationAdapter {
 //        pole[1] *= inverse;
 //        pole[2] *= inverse;
 //        float[] rot = {1,0,0,0,1,0,0,0,1};
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
@@ -332,7 +336,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void spherePairMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
@@ -362,7 +366,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereFibonacciMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
@@ -375,8 +379,22 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private void sphereFibonacciAltMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        random.setSeed(seed);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereFibonacciAlt(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
     private void sphereR2Mode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
@@ -390,7 +408,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereHalton2Mode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
@@ -404,13 +422,27 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphereHammersley2Mode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * 1E-10f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereHammersley2(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void sphereHammersley2AltMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        random.setSeed(seed);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereHammersley2Alt(i);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -534,6 +566,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[2] = TrigTools.cosTurns(phi);
     }
 
+    public void onSphereFibonacciAlt(final int index)
+    {
+        float lat = (index + 0.36f) / (POINT_COUNT - 0.28f);
+        float lon = (index * 0x9E3779B97F4A7C15L >>> 41) * 0x1p-23f;
+        float u = 1f - 2f * lat;
+//        float u = (lat - 0.5f) * 2f; // may be a tiny bit more precise, but not the same as onSphereFibonacci().
+        float root = (float) Math.sqrt(1f - u * u);
+        float[] vector = points[index];
+
+        vector[0] = TrigTools.cosTurns(lon) * root;
+        vector[1] = TrigTools.sinTurns(lon) * root;
+        vector[2] = u;
+    }
+
     public void onSphereR2(final int index)
     {
         float theta = (QuasiRandomTools.goldenLong[1][0] * index >>> 41) * 0x1p-23f;
@@ -566,16 +612,29 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     public void onSphereHammersley2(final int index)
     {
-        double theta = (Long.reverse(index) >>> 12) * (0x1p-52 * TrigTools.PI2_D);
-        double d = (index * 2.0 / POINT_COUNT - 1.0);
-        double phi = Math.acos(d);
-        double sinPhi = Math.sin(phi);
+        float theta = (index + 0.5f) / POINT_COUNT;
+        float d = (QuasiRandomTools.vanDerCorput(2, index) - 0.5f) * 2f;
+        float phi = TrigTools.acosTurns(d);
+        float sinPhi = TrigTools.sinSmootherTurns(phi);
 
         float[] vector = points[index];
 
-        vector[0] = (float) (Math.cos(theta) * sinPhi);
-        vector[1] = (float) (Math.sin(theta) * sinPhi);
-        vector[2] = (float) (Math.cos(phi));
+        vector[0] = TrigTools.cosSmootherTurns(theta) * sinPhi;
+        vector[1] = TrigTools.sinSmootherTurns(theta) * sinPhi;
+        vector[2] = TrigTools.cosSmootherTurns(phi);
+    }
+
+    public void onSphereHammersley2Alt(final int index)
+    {
+        float lat = QuasiRandomTools.vanDerCorput(2, index);
+        float lon = (index + 0.5f) / POINT_COUNT;
+        float u = (lat - 0.5f) * 2f;
+        float root = (float) Math.sqrt(1f - u * u);
+        float[] vector = points[index];
+
+        vector[0] = TrigTools.cosSmootherTurns(lon) * root;
+        vector[1] = TrigTools.sinSmootherTurns(lon) * root;
+        vector[2] = u;
     }
 
     public static void main (String[] arg) {
