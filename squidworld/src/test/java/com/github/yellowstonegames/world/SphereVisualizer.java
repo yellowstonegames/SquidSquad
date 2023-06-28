@@ -610,32 +610,27 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     public void onSphereR2(final int index)
     {
-        float theta = (QuasiRandomTools.goldenLong[1][0] * index >>> 41) * 0x1p-23f;
-        float d = (QuasiRandomTools.goldenLong[1][1] * index >> 40) * 0x1p-23f;
-        float phi = TrigTools.acosTurns(d);
-        float sinPhi = TrigTools.sinTurns(phi);
-
+        float lon = (QuasiRandomTools.goldenLong[1][0] * index >>> 41) * 0x1p-23f;
+        float u = (QuasiRandomTools.goldenLong[1][1] * index >> 40) * 0x1p-23f;
+        float root = (float) Math.sqrt(1f - u * u);
         float[] vector = points[index];
-
-        vector[0] = TrigTools.cosTurns(theta) * sinPhi;
-        vector[1] = TrigTools.sinTurns(theta) * sinPhi;
-        vector[2] = TrigTools.cosTurns(phi);
+        vector[0] = TrigTools.cosTurns(lon) * root;
+        vector[1] = TrigTools.sinTurns(lon) * root;
+        vector[2] = u;
     }
 
     // with 2, 3: minimum distance was 0.003802
     // with 2, 7: minimum distance was 0.006096
     public void onSphereHalton2(final int index)
     {
-        float theta = QuasiRandomTools.vanDerCorput(2, index);
-        float d = (QuasiRandomTools.vanDerCorput(7, index) - 0.5f) * 2f;
-        float phi = TrigTools.acosTurns(d);
-        float sinPhi = TrigTools.sinTurns(phi);
-
+        float lat = QuasiRandomTools.vanDerCorput(2, index);
+        float lon = QuasiRandomTools.vanDerCorput(7, index);
+        float u = (lat - 0.5f) * 2f;
+        float root = (float) Math.sqrt(1f - u * u);
         float[] vector = points[index];
-
-        vector[0] = TrigTools.cosTurns(theta) * sinPhi;
-        vector[1] = TrigTools.sinTurns(theta) * sinPhi;
-        vector[2] = TrigTools.cosTurns(phi);
+        vector[0] = TrigTools.cosTurns(lon) * root;
+        vector[1] = TrigTools.sinTurns(lon) * root;
+        vector[2] = u;
     }
 
     public void onSphereHammersley2Alt(final int index)
@@ -643,13 +638,13 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (index + 0.5f) / POINT_COUNT;
         float d = (QuasiRandomTools.vanDerCorput(2, index) - 0.5f) * 2f;
         float phi = TrigTools.acosTurns(d);
-        float sinPhi = TrigTools.sinSmootherTurns(phi);
+        float sinPhi = TrigTools.sinTurns(phi);
 
         float[] vector = points[index];
 
-        vector[0] = TrigTools.cosSmootherTurns(theta) * sinPhi;
-        vector[1] = TrigTools.sinSmootherTurns(theta) * sinPhi;
-        vector[2] = TrigTools.cosSmootherTurns(phi);
+        vector[0] = TrigTools.cosTurns(theta) * sinPhi;
+        vector[1] = TrigTools.sinTurns(theta) * sinPhi;
+        vector[2] = TrigTools.cosTurns(phi);
     }
 
     public void onSphereHammersley2(final int index)
@@ -659,9 +654,8 @@ public class SphereVisualizer extends ApplicationAdapter {
         float u = (lat - 0.5f) * 2f;
         float root = (float) Math.sqrt(1f - u * u);
         float[] vector = points[index];
-
-        vector[0] = TrigTools.cosSmootherTurns(lon) * root;
-        vector[1] = TrigTools.sinSmootherTurns(lon) * root;
+        vector[0] = TrigTools.cosTurns(lon) * root;
+        vector[1] = TrigTools.sinTurns(lon) * root;
         vector[2] = u;
     }
 
