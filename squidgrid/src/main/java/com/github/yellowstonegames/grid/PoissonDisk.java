@@ -150,8 +150,7 @@ public final class PoissonDisk {
      * @param rng an EnhancedRandom
      * @return a CoordOrderedSet where each Coord corresponds to an "on" cell in map and has at least minimumDistance to any other Coord
      */
-    public static CoordOrderedSet sampleMap(Region map,
-                                                    float minimumDistance, EnhancedRandom rng) {
+    public static CoordOrderedSet sampleMap(Region map, float minimumDistance, EnhancedRandom rng) {
         return sampleMap(Coord.get(1, 1), Coord.get(map.width - 2, map.height- 2), map, minimumDistance, rng);
     }
     /**
@@ -250,6 +249,106 @@ public final class PoissonDisk {
                 activePoints.remove(listIndex);
         }
         return points;
+    }
+    /**
+     * Sub-randomly samples a Region (map)'s "on" cells, returning that Region modified in-place so it stores only
+     * Coords corresponding to an "on" cell in the original map and has at least minimumDistance between itself and any
+     * other Coord in the returned map.
+     * @param map a Region that must have at least one "on" cell
+     * @param minimumDistance the minimum distance to permit between Coords this chooses
+     * @param rng an EnhancedRandom
+     * @param limit the max number of "on" cells that can be in the Region this returns; if negative, there is no max
+     * @return map, modified in-place so each Coord corresponds to an "on" cell in map and has at least minimumDistance to any other Coord
+     */
+    public static Region separatedPoisson(Region map, float minimumDistance, EnhancedRandom rng, int limit) {
+        if(limit == 0)
+            return map.empty();
+
+        int width = map.width;
+        int height = map.height;
+        float cellSize = Math.max(minimumDistance * inverseRootTwo, 1f);
+        float minimumDistance2 = minimumDistance * minimumDistance;
+        int gridWidth = (int) (width / cellSize) + 1;
+        int gridHeight = (int) (height / cellSize) + 1;
+        Coord[][] grid = new Coord[gridWidth][gridHeight];
+        ObjectList<Coord> activePoints = new ObjectList<>();
+
+        //add first point
+
+        Coord p = map.singleRandom(rng);
+        if (p == null)
+            return map; // already empty
+
+        CoordOrderedSet points = new CoordOrderedSet(gridWidth * gridHeight);
+
+        Coord index = p.divide(cellSize);
+
+        grid[index.x][index.y] = p;
+
+        activePoints.add(p);
+        points.add(p);
+
+        //end add first point
+
+        while (activePoints.size() != 0) {
+            int listIndex = rng.nextInt(activePoints.size());
+
+            Coord point = activePoints.get(listIndex);
+            boolean found = false;
+
+            for (int k = 0; k < 20; k++) {
+                //add next point
+                //get random point around
+                float d = rng.nextFloat();
+                float radius = minimumDistance + minimumDistance * d;
+                float angle = rng.nextFloat();
+
+                float newX = radius * TrigTools.sinTurns(angle);
+                float newY = radius * TrigTools.cosTurns(angle);
+                Coord q = point.translateCapped(Math.round(newX), Math.round(newY), width, height);
+                int frustration = 0;
+                while (!map.contains(q) && frustration < 8) {
+                    angle = rng.nextFloat();
+                    newX = radius * TrigTools.sinTurns(angle);
+                    newY = radius * TrigTools.cosTurns(angle);
+                    q = point.translateCapped(Math.round(newX), Math.round(newY), width, height);
+                    frustration++;
+                }
+
+                //end get random point around
+
+
+                Coord qIndex = q.divide((int) Math.ceil(cellSize));
+                boolean tooClose = false;
+
+                for (int i = Math.max(0, qIndex.x - 2); i < Math.min(gridWidth, qIndex.x + 3) && !tooClose; i++) {
+                    for (int j = Math.max(0, qIndex.y - 2); j < Math.min(gridHeight, qIndex.y + 3); j++) {
+                        if (grid[i][j] != null && grid[i][j].distanceSq(q) < minimumDistance2) {
+                            tooClose = true;
+                            break;
+                        }
+                    }
+                }
+                if (!tooClose) {
+                    found = true;
+                    activePoints.add(q);
+                    if (map.contains(q))
+                        points.add(q);
+                    grid[qIndex.x][qIndex.y] = q;
+                }
+
+                //end add next point
+            }
+
+            if (!found)
+                activePoints.remove(listIndex);
+        }
+        map.clear();
+        points.shuffle(rng);
+        if(limit > 0 && limit < points.size())
+            points.truncate(limit);
+        map.addAll(points);
+        return map;
     }
     private static CoordObjectOrderedMap<ObjectList<Coord>> sample(Coord minPos, Coord maxPos,
                                                                    float maxSampleRadius, float radius,

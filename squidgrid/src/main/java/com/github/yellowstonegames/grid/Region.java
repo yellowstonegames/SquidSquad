@@ -5534,7 +5534,7 @@ public class Region implements Collection<Coord> {
      * have nearby cells, however. Restricts the total size of the returned Region to a maximum of {@code limit}
      * (minimum is 0 if no cells are "on"). If limit is negative, this will not restrict the size.
      * @param fraction the fraction of "on" cells to quasi-randomly select, between 0.0 and 1.0
-     * @param limit the maximum size of the array to return; may return less
+     * @param limit the maximum size of the Region to return; a negative number will make this have no limit
      * @return this, after modifications, for chaining
      */
     public Region separatedRegionBlue(float fraction, int limit)
@@ -5554,6 +5554,56 @@ public class Region implements Collection<Coord> {
                 return this;
         }
         return this;
+    }
+
+    /**
+     * Gets all but a quasi-random group of "on" cells that each has at least minimumDistance between itself and any
+     * other cell in the returned array. Works on a copy of this Region, so this object won't be modified.
+     * @param rng an EnhancedRandom to randomly choose points; may be queried quite a lot for large Regions
+     * @param minimumDistance the minimum distance between points to allow; this is a float, and distances will be rounded
+     * @return a new Coord array containing some of the "on" cells in this Region
+     */
+    public Coord[] separatedPoisson(EnhancedRandom rng, float minimumDistance) {
+        return PoissonDisk.separatedPoisson(new Region(this), minimumDistance, rng, -1).asCoords();
+    }
+
+    /**
+     * Gets all but a quasi-random group of "on" cells that each has at least minimumDistance between itself and any
+     * other cell in the returned array. Works on a copy of this Region, so this object won't be modified. This overload
+     * takes a limit; if limit is non-negative, it will be used as the maximum number of "on" cells to permit in the
+     * result. When there would otherwise be more "on" cells than the limit, this randomly chooses which ones to keep.
+     * @param rng an EnhancedRandom to randomly choose points; may be queried quite a lot for large Regions
+     * @param minimumDistance the minimum distance between points to allow; this is a float, and distances will be rounded
+     * @param limit the maximum size of the array to return; a negative number will make this have no limit
+     * @return a new Coord array containing some of the "on" cells in this Region
+     */
+    public Coord[] separatedPoisson(EnhancedRandom rng, float minimumDistance, int limit) {
+        return PoissonDisk.separatedPoisson(new Region(this), minimumDistance, rng, limit).asCoords();
+    }
+
+    /**
+     * Removes all but a quasi-random group of "on" cells that each has at least minimumDistance between itself and any
+     * other cell in the returned Region. Modifies this Region in-place.
+     * @param rng an EnhancedRandom to randomly choose points; may be queried quite a lot for large Regions
+     * @param minimumDistance the minimum distance between points to allow; this is a float, and distances will be rounded
+     * @return this, after modifications, for chaining
+     */
+    public Region separatedRegionPoisson(EnhancedRandom rng, float minimumDistance) {
+        return PoissonDisk.separatedPoisson(this, minimumDistance, rng, -1);
+    }
+
+    /**
+     * Removes all but a quasi-random group of "on" cells that each has at least minimumDistance between itself and any
+     * other cell in the returned Region. Modifies this Region in-place. This overload takes a limit; if limit is
+     * non-negative, it will be used as the maximum number of "on" cells to permit in the result. When there would
+     * otherwise be more "on" cells than the limit, this randomly chooses which ones to keep.
+     * @param rng an EnhancedRandom to randomly choose points; may be queried quite a lot for large Regions
+     * @param minimumDistance the minimum distance between points to allow; this is a float, and distances will be rounded
+     * @param limit the maximum size of the Region to return; a negative number will make this have no limit
+     * @return this, after modifications, for chaining
+     */
+    public Region separatedRegionPoisson(EnhancedRandom rng, float minimumDistance, int limit) {
+        return PoissonDisk.separatedPoisson(this, minimumDistance, rng, limit);
     }
 
     public Coord[] randomPortion(EnhancedRandom rng, int size)
