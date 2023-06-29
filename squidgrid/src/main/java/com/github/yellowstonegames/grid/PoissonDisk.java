@@ -138,9 +138,37 @@ public final class PoissonDisk {
 
     public static CoordOrderedSet sampleMap(Coord minPosition, Coord maxPosition, char[][] map,
                                                     float minimumDistance, EnhancedRandom rng, char... blocking) {
-        int width = map.length;
-        int height = map[0].length;
-        boolean restricted = (blocking != null && blocking.length > 0);
+        return sampleMap(minPosition, maxPosition, new Region(map, blocking).not(), minimumDistance, rng);
+    }
+
+    /**
+     * Sub-randomly samples a Region's "on" cells, returning a CoordOrderedSet where each Coord corresponds to an "on"
+     * cell in map and has at least minimumDistance between itself and any other Coord in the Set. This overload won't
+     * sample from the perimeter of map, but can sample from any other "on" cell.
+     * @param map a Region that must have at least one "on" cell
+     * @param minimumDistance the minimum distance to permit between Coords this chooses
+     * @param rng an EnhancedRandom
+     * @return a CoordOrderedSet where each Coord corresponds to an "on" cell in map and has at least minimumDistance to any other Coord
+     */
+    public static CoordOrderedSet sampleMap(Region map,
+                                                    float minimumDistance, EnhancedRandom rng) {
+        return sampleMap(Coord.get(1, 1), Coord.get(map.width - 2, map.height- 2), map, minimumDistance, rng);
+    }
+    /**
+     * Sub-randomly samples a Region's "on" cells, returning a CoordOrderedSet where each Coord corresponds to an "on"
+     * cell in map and has at least minimumDistance between itself and any other Coord in the Set. This overload allows
+     * specifying a smaller rectangle to sample (smaller than the whole Region) with minPosition and maxPosition.
+     * @param minPosition the inclusive minimum-x, minimum-y cell bounding the area this will sample
+     * @param maxPosition the inclusive maximum-x, maximum-y cell bounding the area this will sample
+     * @param map a Region that must have at least one "on" cell
+     * @param minimumDistance the minimum distance to permit between Coords this chooses
+     * @param rng an EnhancedRandom
+     * @return a CoordOrderedSet where each Coord corresponds to an "on" cell in map and has at least minimumDistance to any other Coord
+     */
+    public static CoordOrderedSet sampleMap(Coord minPosition, Coord maxPosition, Region map,
+                                                    float minimumDistance, EnhancedRandom rng) {
+        int width = map.width;
+        int height = map.height;
         Coord dimensions = maxPosition.subtract(minPosition);
         float cellSize = Math.max(minimumDistance * inverseRootTwo, 1f);
         float minimumDistance2 = minimumDistance * minimumDistance;
@@ -151,7 +179,7 @@ public final class PoissonDisk {
         CoordOrderedSet points = new CoordOrderedSet(128);
 
         //add first point
-        Region valid = new Region(map, blocking).notAnd(new Region(width, height).insertRectangle(minPosition.x,
+        Region valid = map.copy().and(new Region(width, height).insertRectangle(minPosition.x,
                 minPosition.y, maxPosition.x - minPosition.x + 1, maxPosition.y - minPosition.y + 1));
 
         Coord p = valid.singleRandom(rng);
@@ -183,7 +211,7 @@ public final class PoissonDisk {
                 float newY = radius * TrigTools.cosTurns(angle);
                 Coord q = point.translateCapped(Math.round(newX), Math.round(newY), width, height);
                 int frustration = 0;
-                while(restricted && !valid.contains(q) && frustration < 8)
+                while(!valid.contains(q) && frustration < 8)
                 {
                     angle = rng.nextFloat();
                     newX = radius * TrigTools.sinTurns(angle);
@@ -210,7 +238,7 @@ public final class PoissonDisk {
                     if (!tooClose) {
                         found = true;
                         activePoints.add(q);
-                        if(!restricted || valid.contains(q))
+                        if(valid.contains(q))
                             points.add(q);
                         grid[qIndex.x][qIndex.y] = q;
                     }

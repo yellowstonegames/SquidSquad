@@ -45,6 +45,8 @@ public class PoissonDiskTest {
         for (Coord c : disks) {
             if (dun[c.x][c.y] != '#')
                 dun[c.x][c.y] = 'o';
+            else
+                System.out.println("Problem at " + c);
         }
         //hl[entry.x][entry.y] = '@';
         dg.setDungeon(dun);
