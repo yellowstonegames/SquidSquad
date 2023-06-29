@@ -28,6 +28,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.tommyettinger.textra.Layout;
@@ -45,14 +46,14 @@ public class InterpolationsGraphing extends ApplicationAdapter {
     Font font;
     ShapeDrawer sd;
     SpriteBatch batch;
-    ScreenViewport view;
+    StretchViewport view;
     Layout name;
     Interpolator[] interpolators;
     int index;
     @Override
     public void create() {
         font = KnownFonts.getCozette();
-        view = new ScreenViewport();
+        view = new StretchViewport(width, height);
         batch = new SpriteBatch();
         sd = new ShapeDrawer(batch, font.mapping.get(font.solidBlock));
         interpolators = Interpolations.getInterpolatorArray();
@@ -64,7 +65,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
             int i = 0;
             for (; i < interpolators.length; i++) {
                 if((i % 3) == 0) System.out.println("<tr>");
-                current = interpolators[i];
+                current = interpolators[index = i];
                 name = font.markup("[BLACK]"+ current.tag, name = new Layout(font));
                 render();
                 Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
@@ -92,24 +93,25 @@ public class InterpolationsGraphing extends ApplicationAdapter {
             name = font.markup("[BLACK]"+ current.tag, name.clear());
         }
         ScreenUtils.clear(Color.WHITE);
+//        batch.setProjectionMatrix(view.getCamera().combined);
         batch.begin();
 
         // horizontal graph lines
         for (int i = 20; i < height; i+=40) {
-            sd.line(0, i, width, i, Color.CYAN);
+            sd.line(0, i, width, i, Color.CYAN, 1f);
         }
         // vertical graph lines
         for (int i = 20; i < width; i+=40) {
-            sd.line(i, 0, i, height, Color.CYAN);
+            sd.line(i, 0, i, height, Color.CYAN, 1f);
         }
         // x-axis
-        sd.line(0, 100, width, 100, Color.NAVY);
+        sd.line(0, 100, width, 100, Color.NAVY, 1f);
         // y-axis
-        sd.line(60, 0, 60, height, Color.NAVY);
+        sd.line(60, 0, 60, height, Color.NAVY, 1f);
         // line where y == 1
-        sd.line(0, 300, width, 300, Color.LIGHT_GRAY);
+        sd.line(0, 300, width, 300, Color.LIGHT_GRAY, 1f);
         // line where x == 1
-        sd.line(260, 0, 260, height, Color.LIGHT_GRAY);
+        sd.line(260, 0, 260, height, Color.LIGHT_GRAY, 1f);
 
         float h0, h1 = 101;
         for (int i = 0; i <= 200; i++) {
@@ -118,9 +120,10 @@ public class InterpolationsGraphing extends ApplicationAdapter {
             h1 = current.apply(101, 301, f);
             float gradient = DescriptiveColor.oklabIntToFloat(DescriptiveColor.oklabByHSL(0.75f + 0.25f * f, 1f, 0.5f, 1f));
             sd.setColor(gradient);
-            sd.line(59 + i, h0, 60 + i, h1);
+            sd.line(59 + i, h0, 60 + i, h1, 3f);
         }
 
+        /* These are for if you use ShapeRenderer, and not ShapeDrawer. */
 //        renderer.begin(view.getCamera().combined, GL_LINES);
 //
 //        // horizontal graph lines
@@ -198,6 +201,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         config.setTitle("SquidSquad Demo: Interpolations");
         config.useVsync(true);
         config.setResizable(false);
+        config.setBackBufferConfig(8, 8, 8, 8, 16, 0, 4);
         config.setWindowedMode(width, height);
         config.disableAudio(true);
         new Lwjgl3Application(new InterpolationsGraphing(), config);
