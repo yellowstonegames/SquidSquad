@@ -1893,12 +1893,13 @@ public final class DescriptiveColor {
      *
      * @param description a color description, as a lower-case String matching the above format
      * @param start the first character of the description to read from
-     * @param length how much of description to attempt to parse
+     * @param length how much of description to attempt to parse; if negative, this parses until the end
      * @return a packed Oklab int color as described
      */
     public static int describeOklab(final CharSequence description, int start, int length) {
         float lightness = 0f, saturation = 0f;
-        final String[] terms = description.toString().split("[^a-zA-Z]+");
+        final String[] terms = description.toString().substring(start,
+                length < 0 ? description.length() : start + length).split("[^a-zA-Z]+");
         mixing.clear();
         for (int i = 0; i < terms.length; i++) {
             String term = terms[i];

@@ -386,7 +386,7 @@ public final class StringTools {
      * @return true if search was found
      */
     public static boolean contains(CharSequence text, CharSequence search) {
-        return !(text == null || text.length() == 0 || search == null || search.length() <= 0)
+        return !(text == null || text.length() == 0 || search == null || search.length() == 0)
                 && containsPart(text, search) == search.length();
     }
 
@@ -400,7 +400,7 @@ public final class StringTools {
      */
     public static int containsPart(CharSequence text, CharSequence search)
     {
-        if(text == null || text.length() == 0 || search == null || (search.length() <= 0))
+        if(text == null || text.length() == 0 || search == null || (search.length() == 0))
             return 0;
         int sl = search.length(), tl = text.length() - sl, f = 0;
         char s = search.charAt(0);
@@ -426,7 +426,7 @@ public final class StringTools {
      * @return true if search was found
      */
     public static boolean contains(CharSequence text, char[] search) {
-        return !(text == null || text.length() == 0 || search == null || search.length <= 0)
+        return !(text == null || text.length() == 0 || search == null || search.length == 0)
                 && containsPart(text, search) == search.length;
     }
 
@@ -440,7 +440,7 @@ public final class StringTools {
      */
     public static int containsPart(CharSequence text, char[] search)
     {
-        if(text == null || text.length() == 0 || search == null || (search.length <= 0))
+        if(text == null || text.length() == 0 || search == null || (search.length == 0))
             return 0;
         int sl = search.length, tl = text.length() - sl, f = 0;
         char s = search[0];
@@ -480,7 +480,7 @@ public final class StringTools {
         if(text == null || text.length() == 0 || search == null || (search.length + bl + el <= 0))
             return 0;
         int sl = bl + search.length + el, tl = text.length() - sl, f = 0, sl2 = sl - el;
-        char s = (bl <= 0) ? (search.length <= 0 ? suffix.charAt(0) : search[0]) : prefix.charAt(0);
+        char s = (bl == 0) ? (search.length == 0 ? suffix.charAt(0) : search[0]) : prefix.charAt(0);
         PRIMARY:
         for (int i = 0; i <= tl; i++) {
             if(text.charAt(i) == s)
@@ -865,7 +865,7 @@ public final class StringTools {
      * @return A String With Each Word Capitalized At The Start And The Rest In Lower Case
      */
     public static String capitalize(final CharSequence original) {
-        if (original == null || original.length() <= 0) {
+        if (original == null || original.length() == 0) {
             return "";
         }
         sb.setLength(0);
@@ -889,7 +889,7 @@ public final class StringTools {
      * @return a String where the first letter of each sentence (detected as best this can) is capitalized.
      */
     public static String sentenceCase(final CharSequence original) {
-        if (original == null || original.length() <= 0) {
+        if (original == null || original.length() == 0) {
             return "";
         }
         sb.setLength(0);
