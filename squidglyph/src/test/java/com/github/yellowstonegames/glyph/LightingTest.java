@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -57,8 +58,8 @@ public class LightingTest extends ApplicationAdapter {
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
     private GlyphActor playerGlyph;
     private DijkstraMap playerToCursor;
-    private final ObjectList<Coord> toCursor = new ObjectList<>(100);
-    private final ObjectList<Coord> awaitedMoves = new ObjectList<>(50);
+    private final ObjectDeque<Coord> toCursor =     new ObjectDeque<>(100);
+    private final ObjectDeque<Coord> awaitedMoves = new ObjectDeque<>(50);
     private Coord cursor = Coord.get(-1, -1);
     private final Vector2 pos = new Vector2();
     private Runnable post;
@@ -180,7 +181,7 @@ public class LightingTest extends ApplicationAdapter {
                     // you're finding a path to a monster or loot, and want to bump into it, but here can be
                     // confusing because you would "move into yourself" as your first move without this.
                     if (!toCursor.isEmpty()) {
-                        toCursor.remove(0);
+                        toCursor.removeFirst();
                     }
                 }
                 return false;
@@ -307,9 +308,9 @@ public class LightingTest extends ApplicationAdapter {
 
         if(!gg.areChildrenActing() && !awaitedMoves.isEmpty())
         {
-            Coord m = awaitedMoves.remove(0);
+            Coord m = awaitedMoves.removeFirst();
             if (!toCursor.isEmpty())
-                toCursor.remove(0);
+                toCursor.removeFirst();
             move(playerGlyph.getLocation().toGoTo(m));
         }
         else {

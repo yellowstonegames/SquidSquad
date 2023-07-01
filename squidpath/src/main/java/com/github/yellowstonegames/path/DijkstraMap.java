@@ -16,9 +16,8 @@
 
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.*;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -119,9 +118,9 @@ public class DijkstraMap {
     /**
      * The latest path that was obtained by calling findPath(). It will not contain the value passed as a starting
      * cell; only steps that require movement will be included, and so if the path has not been found or a valid
-     * path toward a goal is impossible, this ObjectList will be empty.
+     * path toward a goal is impossible, this ObjectDeque will be empty.
      */
-    public ObjectList<Coord> path;
+    public ObjectDeque<Coord> path;
 
     private CoordOrderedSet impassable2;
 
@@ -176,7 +175,7 @@ public class DijkstraMap {
      * initialize() method before using this class.
      */
     public DijkstraMap() {
-        path = new ObjectList<>();
+        path = new ObjectDeque<>();
     }
 
     /**
@@ -207,7 +206,7 @@ public class DijkstraMap {
      */
     public DijkstraMap(final float[][] level, Measurement measurement, boolean levelIsResistanceMap) {
         this.measurement = measurement;
-        path = new ObjectList<>();
+        path = new ObjectDeque<>();
         if(levelIsResistanceMap)
             initializeByResistance(level);
         else
@@ -237,7 +236,7 @@ public class DijkstraMap {
      * @param level
      */
     public DijkstraMap(final char[][] level, char alternateWall) {
-        path = new ObjectList<>();
+        path = new ObjectDeque<>();
 
         initialize(level, alternateWall);
     }
@@ -255,7 +254,7 @@ public class DijkstraMap {
      * @param measurement how this should measure orthogonal vs. diagonal measurement, such as {@link Measurement#MANHATTAN} for 4-way only movement
      */
     public DijkstraMap(final char[][] level, Measurement measurement) {
-        path = new ObjectList<>();
+        path = new ObjectDeque<>();
         this.measurement = measurement;
 
         initialize(level);
@@ -1263,13 +1262,13 @@ public class DijkstraMap {
      *
      * @param start   your starting location
      * @param targets an array or vararg of Coords to pathfind to the nearest of
-     * @return an ObjectList of Coord that goes from a cell adjacent to start and goes to one of the targets. Copy of path.
+     * @return an ObjectDeque of Coord that goes from a cell adjacent to start and goes to one of the targets. Copy of path.
      */
-    public ObjectList<Coord> findShortcutPath(Coord start, Coord... targets) {
+    public ObjectDeque<Coord> findShortcutPath(Coord start, Coord... targets) {
         if (targets.length == 0) {
             cutShort = true;
             path.clear();
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         }
         Coord currentPos = findNearest(start, targets);
         rng.setState(start.hashCode(), (long) targets.length << 1);
@@ -1302,7 +1301,7 @@ public class DijkstraMap {
 
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
-                return new ObjectList<>(path);
+                return new ObjectDeque<>(path);
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             if (gradientMap[currentPos.x][currentPos.y] == 0)
@@ -1310,8 +1309,8 @@ public class DijkstraMap {
             path.add(currentPos);
         }
         cutShort = false;
-        Collections.reverse(path);
-        return new ObjectList<>(path);
+        path.reverse();
+        return new ObjectDeque<>(path);
     }
 
     /**
@@ -1324,9 +1323,9 @@ public class DijkstraMap {
      * @param targets the Coords that this is trying to find; it will stop once it finds enough (based on limit)
      * @return the Coords that it found first.
      */
-    public ObjectList<Coord> findNearestMultiple(Coord start, int limit, Collection<Coord> targets) {
+    public ObjectDeque<Coord> findNearestMultiple(Coord start, int limit, Collection<Coord> targets) {
         if (!initialized) return null;
-        ObjectList<Coord> found = new ObjectList<>(limit);
+        ObjectDeque<Coord> found = new ObjectDeque<>(limit);
         if (targets == null || targets.isEmpty())
             return found;
         if (targets.contains(start))
@@ -1774,9 +1773,9 @@ public class DijkstraMap {
      * @param onlyPassable a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start        the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets      a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findPath(int length, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findPath(int length, Collection<Coord> impassable,
                                      Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findPath(length, -1, impassable, onlyPassable, start, targets);
     }
@@ -1804,9 +1803,9 @@ public class DijkstraMap {
      * @param onlyPassable a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start        the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets      a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findPath(int length, int scanLimit, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findPath(int length, int scanLimit, Collection<Coord> impassable,
                                      Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findPath(null, length, scanLimit, impassable, onlyPassable, start, targets);
     }
@@ -1824,28 +1823,28 @@ public class DijkstraMap {
      * that distance out from each goal, which can save processing time on maps where only a small part matters.
      * Generally, scanLimit should be significantly greater than length.
      * <br>
-     * This overload takes a buffer parameter, an ObjectList of Coord, that the results will be appended to. If the
-     * buffer is null, a new ObjectList will be made and appended to. This caches its result in a member field, path,
+     * This overload takes a buffer parameter, an ObjectDeque of Coord, that the results will be appended to. If the
+     * buffer is null, a new ObjectDeque will be made and appended to. This caches its result in a member field, path,
      * which can be fetched after finding a path and will change with each call to a pathfinding method. Any existing
      * contents of buffer will not affect the path field of this DijkstraMap.
      *
-     * @param buffer       an existing ObjectList of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectList
+     * @param buffer       an existing ObjectDeque of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectDeque
      * @param length       the length of the path to calculate
      * @param scanLimit    how many cells away from a goal to actually process; negative to process whole map
      * @param impassable   a Set of impassable Coord positions that may change (not constant like walls); can be null
      * @param onlyPassable a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start        the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets      a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findPath(ObjectList<Coord> buffer, int length, int scanLimit, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findPath(ObjectDeque<Coord> buffer, int length, int scanLimit, Collection<Coord> impassable,
                                      Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         path.clear();
         if (!initialized || length <= 0)
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -1867,7 +1866,7 @@ public class DijkstraMap {
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -1915,7 +1914,7 @@ public class DijkstraMap {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
-                    return new ObjectList<>(path);
+                    return new ObjectDeque<>(path);
                 else
                 {
                     buffer.addAll(path);
@@ -1942,7 +1941,7 @@ public class DijkstraMap {
         frustration = 0;
         goals.clear();
         if(buffer == null)
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         else
         {
             buffer.addAll(path);
@@ -1972,9 +1971,9 @@ public class DijkstraMap {
      * @param onlyPassable   a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start          the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets        a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findAttackPath(int moveLength, int preferredRange, LineDrawer los, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findAttackPath(int moveLength, int preferredRange, LineDrawer los, Collection<Coord> impassable,
                                             Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findAttackPath(moveLength, preferredRange, preferredRange, los, impassable, onlyPassable, start, targets);
     }
@@ -2003,9 +2002,9 @@ public class DijkstraMap {
      * @param onlyPassable      a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start             the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets           a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findAttackPath(int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
+    public ObjectDeque<Coord> findAttackPath(int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
                                            Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findAttackPath(null, moveLength, minPreferredRange, maxPreferredRange, los, impassable, onlyPassable, start, targets);
     }
@@ -2025,12 +2024,12 @@ public class DijkstraMap {
      * The keys in impassable should be the positions of enemies and obstacles that cannot be moved
      * through, and will be ignored if there is a goal overlapping one.
      * <br>
-     * This overload takes a buffer parameter, an ObjectList of Coord, that the results will be appended to. If the
-     * buffer is null, a new ObjectList will be made and appended to. This caches its result in a member field, path,
+     * This overload takes a buffer parameter, an ObjectDeque of Coord, that the results will be appended to. If the
+     * buffer is null, a new ObjectDeque will be made and appended to. This caches its result in a member field, path,
      * which can be fetched after finding a path and will change with each call to a pathfinding method. Any existing
      * contents of buffer will not affect the path field of this DijkstraMap.
      *
-     * @param buffer            an existing ObjectList of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectList
+     * @param buffer            an existing ObjectDeque of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectDeque
      * @param moveLength        the length of the path to calculate; almost always, the pathfinder will try to use this length in full to obtain the best range
      * @param minPreferredRange the (inclusive) lower bound of the distance this unit will try to keep from a target
      * @param maxPreferredRange the (inclusive) upper bound of the distance this unit will try to keep from a target
@@ -2040,15 +2039,15 @@ public class DijkstraMap {
      * @param onlyPassable      a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start             the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets           a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findAttackPath(ObjectList<Coord> buffer, int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
+    public ObjectDeque<Coord> findAttackPath(ObjectDeque<Coord> buffer, int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
                                            Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         if (!initialized || moveLength <= 0)
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -2083,7 +2082,7 @@ public class DijkstraMap {
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -2138,7 +2137,7 @@ public class DijkstraMap {
             frustration = 0;
             goals.clear();
             if(buffer == null)
-                return new ObjectList<>(path);
+                return new ObjectDeque<>(path);
             else
             {
                 buffer.addAll(path);
@@ -2184,7 +2183,7 @@ public class DijkstraMap {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
-                    return new ObjectList<>(path);
+                    return new ObjectDeque<>(path);
                 else
                 {
                     buffer.addAll(path);
@@ -2212,7 +2211,7 @@ public class DijkstraMap {
         frustration = 0;
         goals.clear();
         if(buffer == null)
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         else
         {
             buffer.addAll(path);
@@ -2261,9 +2260,9 @@ public class DijkstraMap {
      * @param allies     called onlyPassable in other methods, here it also represents allies for Technique things
      * @param start      the Coord the pathfinder starts at.
      * @param targets    a Set of Coord, not an array of Coord or variable argument list as in other methods.
-     * @return an ObjectList of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
+     * @return an ObjectDeque of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
      */
-    public ObjectList<Coord> findTechniquePath(int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
+    public ObjectDeque<Coord> findTechniquePath(int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
                                                Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
         return findTechniquePath(null, moveLength, tech, dungeon, los, impassable, allies, start, targets);
     }
@@ -2293,12 +2292,12 @@ public class DijkstraMap {
      * The keys in impassable should be the positions of enemies and obstacles that cannot be moved
      * through, and will be ignored if there is a target overlapping one.
      * <br>
-     * This overload takes a buffer parameter, an ObjectList of Coord, that the results will be appended to. If the
-     * buffer is null, a new ObjectList will be made and appended to. This caches its result in a member field, path,
+     * This overload takes a buffer parameter, an ObjectDeque of Coord, that the results will be appended to. If the
+     * buffer is null, a new ObjectDeque will be made and appended to. This caches its result in a member field, path,
      * which can be fetched after finding a path and will change with each call to a pathfinding method. Any existing
      * contents of buffer will not affect the path field of this DijkstraMap.
      *
-     * @param buffer     an existing ObjectList of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectList
+     * @param buffer     an existing ObjectDeque of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectDeque
      * @param moveLength the maximum distance to try to pathfind out to; if a spot to use a Technique can be found
      *                   while moving no more than this distance, then the targetMap field in this object will have a
      *                   target Coord that is ideal for the given Technique at the x, y indices corresponding to the
@@ -2311,15 +2310,15 @@ public class DijkstraMap {
      * @param allies     called onlyPassable in other methods, here it also represents allies for Technique things
      * @param start      the Coord the pathfinder starts at.
      * @param targets    a Collection of Coord, not an array of Coord or variable argument list as in other methods.
-     * @return an ObjectList of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
+     * @return an ObjectDeque of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
      */
-    public ObjectList<Coord> findTechniquePath(ObjectList<Coord> buffer, int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
+    public ObjectDeque<Coord> findTechniquePath(ObjectDeque<Coord> buffer, int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
                                               Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
         if (!initialized || moveLength <= 0)
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -2337,7 +2336,7 @@ public class DijkstraMap {
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -2369,7 +2368,7 @@ public class DijkstraMap {
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -2483,7 +2482,7 @@ public class DijkstraMap {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
-                    return new ObjectList<>(path);
+                    return new ObjectDeque<>(path);
                 else
                 {
                     buffer.addAll(path);
@@ -2509,7 +2508,7 @@ public class DijkstraMap {
         frustration = 0;
         goals.clear();
         if(buffer == null)
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         else
         {
             buffer.addAll(path);
@@ -2548,9 +2547,9 @@ public class DijkstraMap {
      * @param onlyPassable      a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start             the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param fearSources       a vararg or array of Coord positions to run away from
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
-    public ObjectList<Coord> findFleePath(int length, float preferLongerPaths, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findFleePath(int length, float preferLongerPaths, Collection<Coord> impassable,
                                          Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
         return findFleePath(null, length, -1, preferLongerPaths, impassable, onlyPassable, start, fearSources);
     }
@@ -2585,9 +2584,9 @@ public class DijkstraMap {
      * @param onlyPassable      a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start             the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param fearSources       a vararg or array of Coord positions to run away from
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
-    public ObjectList<Coord> findFleePath(int length, int scanLimit, float preferLongerPaths, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findFleePath(int length, int scanLimit, float preferLongerPaths, Collection<Coord> impassable,
                                          Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
         return findFleePath(null, length, scanLimit, preferLongerPaths, impassable, onlyPassable, start, fearSources);
     }
@@ -2611,12 +2610,12 @@ public class DijkstraMap {
      * that distance out from each goal, which can save processing time on maps where only a small part matters.
      * Generally, scanLimit should be significantly greater than length.
      * <br>
-     * This overload takes a buffer parameter, an ObjectList of Coord, that the results will be appended to. If the
-     * buffer is null, a new ObjectList will be made and appended to. This caches its result in a member field, path,
+     * This overload takes a buffer parameter, an ObjectDeque of Coord, that the results will be appended to. If the
+     * buffer is null, a new ObjectDeque will be made and appended to. This caches its result in a member field, path,
      * which can be fetched after finding a path and will change with each call to a pathfinding method. Any existing
      * contents of buffer will not affect the path field of this DijkstraMap.
      *
-     * @param buffer            an existing ObjectList of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectList
+     * @param buffer            an existing ObjectDeque of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectDeque
      * @param length            the length of the path to calculate
      * @param scanLimit         how many steps away from a fear source to calculate; negative scans the whole map
      * @param preferLongerPaths Set this to 1.2f if you aren't sure; it will probably need tweaking for different maps.
@@ -2624,15 +2623,15 @@ public class DijkstraMap {
      * @param onlyPassable      a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start             the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param fearSources       a vararg or array of Coord positions to run away from
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
-    public ObjectList<Coord> findFleePath(ObjectList<Coord> buffer, int length, int scanLimit, float preferLongerPaths, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findFleePath(ObjectDeque<Coord> buffer, int length, int scanLimit, float preferLongerPaths, Collection<Coord> impassable,
                                          Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
         if (!initialized || length <= 0)
         {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -2642,7 +2641,7 @@ public class DijkstraMap {
         if (fearSources == null || fearSources.length < 1) {
             cutShort = true;
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -2674,7 +2673,7 @@ public class DijkstraMap {
             {
                 cutShort = true;
                 if(buffer == null)
-                    return new ObjectList<>();
+                    return new ObjectDeque<>();
                 else
                 {
                     return buffer;
@@ -2746,7 +2745,7 @@ public class DijkstraMap {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
-                    return new ObjectList<>(path);
+                    return new ObjectDeque<>(path);
                 else
                 {
                     buffer.addAll(path);
@@ -2755,7 +2754,7 @@ public class DijkstraMap {
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             if (path.size() > 0) {
-                Coord last = path.get(path.size() - 1);
+                Coord last = path.peekLast();
                 if (gradientMap[last.x][last.y] <= gradientMap[currentPos.x][currentPos.y])
                     break;
             }
@@ -2776,7 +2775,7 @@ public class DijkstraMap {
         frustration = 0;
         goals.clear();
         if(buffer == null) 
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         else
         {
             buffer.addAll(path);
@@ -2807,14 +2806,14 @@ public class DijkstraMap {
      * @param onlyPassable a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start        the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets      a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
      */
 
-    public ObjectList<Coord> findPathLarge(final int size, int length, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findPathLarge(final int size, int length, Collection<Coord> impassable,
                                           Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findPathLarge(size, length, -1, impassable, onlyPassable, start, targets);
     }
-    public ObjectList<Coord> findPathLarge(final int size, int length, final int scanLimit, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findPathLarge(final int size, int length, final int scanLimit, Collection<Coord> impassable,
                                           Collection<Coord> onlyPassable, Coord start, Coord... targets) {
 
         if (!initialized) return null;
@@ -2836,7 +2835,7 @@ public class DijkstraMap {
         if (goals.isEmpty())
         {
             cutShort = true;
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         }
 
         if(length < 0)
@@ -2873,7 +2872,7 @@ public class DijkstraMap {
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                return new ObjectList<>(path);
+                return new ObjectDeque<>(path);
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
 
@@ -2895,7 +2894,7 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        return new ObjectList<>(path);
+        return new ObjectDeque<>(path);
     }
 
     /**
@@ -2925,9 +2924,9 @@ public class DijkstraMap {
      * @param onlyPassable   a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start          the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets        a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findAttackPathLarge(int size, int moveLength, int preferredRange, LineDrawer los, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findAttackPathLarge(int size, int moveLength, int preferredRange, LineDrawer los, Collection<Coord> impassable,
                                                 Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         if (!initialized) return null;
         if (preferredRange < 0) preferredRange = 0;
@@ -2957,7 +2956,7 @@ public class DijkstraMap {
         if (goals.isEmpty())
         {
             cutShort = true;
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         }
 
         Measurement mess = measurement;
@@ -3019,7 +3018,7 @@ public class DijkstraMap {
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                return new ObjectList<>(path);
+                return new ObjectDeque<>(path);
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             path.add(currentPos);
@@ -3040,7 +3039,7 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        return new ObjectList<>(path);
+        return new ObjectDeque<>(path);
     }
 
     /**
@@ -3071,9 +3070,9 @@ public class DijkstraMap {
      * @param onlyPassable      a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start             the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param targets           a vararg or array of Coord that this will try to pathfind toward
-     * @return an ObjectList of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
      */
-    public ObjectList<Coord> findAttackPathLarge(int size, int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
+    public ObjectDeque<Coord> findAttackPathLarge(int size, int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
                                                 Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         if (!initialized) return null;
         if (minPreferredRange < 0) minPreferredRange = 0;
@@ -3104,7 +3103,7 @@ public class DijkstraMap {
         if (goals.isEmpty())
         {
             cutShort = true;
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         }
 
         Measurement mess = measurement;
@@ -3166,7 +3165,7 @@ public class DijkstraMap {
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                return new ObjectList<>(path);
+                return new ObjectDeque<>(path);
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
 
@@ -3189,7 +3188,7 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        return new ObjectList<>(path);
+        return new ObjectDeque<>(path);
     }
 
     /**
@@ -3220,9 +3219,9 @@ public class DijkstraMap {
      * @param onlyPassable      a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
      * @param start             the start of the path, should correspond to the minimum-x, minimum-y position of the pathfinder
      * @param fearSources       a vararg or array of Coord positions to run away from
-     * @return an ObjectList of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
+     * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
-    public ObjectList<Coord> findFleePathLarge(int size, int length, float preferLongerPaths, Collection<Coord> impassable,
+    public ObjectDeque<Coord> findFleePathLarge(int size, int length, float preferLongerPaths, Collection<Coord> impassable,
                                               Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
         if (!initialized) return null;
         path.clear();
@@ -3236,7 +3235,7 @@ public class DijkstraMap {
             impassable2.addAll(onlyPassable);
         if (fearSources == null || fearSources.length < 1) {
             cutShort = true;
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         }
         if (size == cachedSize && preferLongerPaths == cachedLongerPaths && impassable2.equals(cachedImpassable)
                 && Arrays.equals(fearSources, cachedFearSources)) {
@@ -3253,7 +3252,7 @@ public class DijkstraMap {
             if (goals.isEmpty())
             {
                 cutShort = true;
-                return new ObjectList<>(path);
+                return new ObjectDeque<>(path);
             }
 
             scan(impassable2, size);
@@ -3292,12 +3291,12 @@ public class DijkstraMap {
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                return new ObjectList<>(path);
+                return new ObjectDeque<>(path);
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
 
             if (path.size() > 0) {
-                Coord last = path.get(path.size() - 1);
+                Coord last = path.peekLast();
                 if (gradientMap[last.x][last.y] <= gradientMap[currentPos.x][currentPos.y])
                     break;
             }
@@ -3317,7 +3316,7 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        return new ObjectList<>(path);
+        return new ObjectDeque<>(path);
     }
 
 
@@ -3331,9 +3330,9 @@ public class DijkstraMap {
      * each call to a pathfinding method.
      *
      * @param target the target cell
-     * @return an ObjectList of Coord that make up the best path. Copy of path.
+     * @return an ObjectDeque of Coord that make up the best path. Copy of path.
      */
-    public ObjectList<Coord> findPathPreScanned(Coord target) {
+    public ObjectDeque<Coord> findPathPreScanned(Coord target) {
         return findPathPreScanned(null, target);
     }
     /**
@@ -3342,21 +3341,21 @@ public class DijkstraMap {
      * needed to find paths. Needs scan() or partialScan() to already be called and at least one goal to already be set,
      * and does not restrict the length of the path or behave as if the pathfinder has allies or enemies.
      * <br>
-     * This overload takes a buffer parameter, an ObjectList of Coord, that the results will be appended to. If the
-     * buffer is null, a new ObjectList will be made and appended to. This caches its result in a member field, path,
+     * This overload takes a buffer parameter, an ObjectDeque of Coord, that the results will be appended to. If the
+     * buffer is null, a new ObjectDeque will be made and appended to. This caches its result in a member field, path,
      * which can be fetched after finding a path and will change with each call to a pathfinding method. Any existing
      * contents of buffer will not affect the path field of this DijkstraMap.
      *
-     * @param buffer an existing ObjectList of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectList
+     * @param buffer an existing ObjectDeque of Coord that will have the result appended to it (in-place); if null, this will make a new ObjectDeque
      * @param target the target cell
-     * @return an ObjectList of Coord that make up the best path, appended to buffer (if non-null)
+     * @return an ObjectDeque of Coord that make up the best path, appended to buffer (if non-null)
      */
-    public ObjectList<Coord> findPathPreScanned(ObjectList<Coord> buffer, Coord target) {
+    public ObjectDeque<Coord> findPathPreScanned(ObjectDeque<Coord> buffer, Coord target) {
         path.clear();
         if (!initialized || goals == null || goals.isEmpty())
         {
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -3368,7 +3367,7 @@ public class DijkstraMap {
         else
         {
             if(buffer == null)
-                return new ObjectList<>();
+                return new ObjectDeque<>();
             else
             {
                 return buffer;
@@ -3405,19 +3404,19 @@ public class DijkstraMap {
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 if (buffer == null)
-                    return new ObjectList<>(path);
+                    return new ObjectDeque<>(path);
                 else {
                     buffer.addAll(path);
                     return buffer;
                 }
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
-            path.add(0, currentPos);
+            path.addFirst(currentPos);
 
         } while (gradientMap[currentPos.x][currentPos.y] != 0);
         cutShort = false;
         if(buffer == null)
-            return new ObjectList<>(path);
+            return new ObjectDeque<>(path);
         else
         {
             buffer.addAll(path);

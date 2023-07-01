@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.ds.IntObjectMap;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -120,9 +121,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Director<Map.Entry<Coord, AnimatedGlidingSprite>> monsterDirector;
     private DijkstraMap getToPlayer, playerToCursor;
     private Coord cursor;
-    private ObjectList<Coord> toCursor;
-    private ObjectList<Coord> awaitedMoves;
-    private ObjectList<Coord> nextMovePositions;
+    private ObjectDeque<Coord> toCursor;
+    private ObjectDeque<Coord> awaitedMoves;
+    private ObjectDeque<Coord> nextMovePositions;
     private String lang;
     private float[][] resistance;
     private float[][] visible;
@@ -359,11 +360,11 @@ public class DawnlikeDemo extends ApplicationAdapter {
         }
         monsterDirector = new Director<>((e) -> e.getValue().getLocation(), monsters, 125);
         //This is used to allow clicks or taps to take the player to the desired area.
-        toCursor = new ObjectList<>(200);
+        toCursor = new ObjectDeque<>(200);
         //When a path is confirmed by clicking, we draw from this List to find which cell is next to move into.
-        awaitedMoves = new ObjectList<>(200);
+        awaitedMoves = new ObjectDeque<>(200);
 
-        nextMovePositions = new ObjectList<>(200);
+        nextMovePositions = new ObjectDeque<>(200);
         //DijkstraMap is the pathfinding swiss-army knife we use here to find a path to the latest cursor position.
         //DijkstraMap.Measurement is an enum that determines the possibility or preference to enter diagonals. Here, the
         //Measurement used is EUCLIDEAN, which allows 8 directions, but will prefer orthogonal moves unless diagonal
@@ -491,7 +492,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     // you're finding a path to a monster or loot, and want to bump into it, but here can be
                     // confusing because you would "move into yourself" as your first move without this.
                     if (!toCursor.isEmpty()) {
-                        toCursor.remove(0);
+                        toCursor.removeFirst();
                     }
                 }
                 return false;
@@ -687,18 +688,18 @@ public class DawnlikeDemo extends ApplicationAdapter {
             if (!monsterDirector.isPlaying()) {
                 phase = Phase.WAIT;
                 if (!awaitedMoves.isEmpty()) {
-                    Coord m = awaitedMoves.remove(0);
+                    Coord m = awaitedMoves.removeFirst();
                     if (!toCursor.isEmpty())
-                        toCursor.remove(0);
+                        toCursor.removeFirst();
                     move(m.x, m.y);
                 }
             }
         }
         else if(phase == Phase.WAIT && !awaitedMoves.isEmpty())
         {
-            Coord m = awaitedMoves.remove(0);
+            Coord m = awaitedMoves.removeFirst();
             if (!toCursor.isEmpty())
-                toCursor.remove(0);
+                toCursor.removeFirst();
             move(m.x, m.y);
         }
         else if(phase == Phase.PLAYER_ANIM) {

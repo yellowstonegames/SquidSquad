@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.path;
 
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Measurement;
@@ -43,7 +44,7 @@ public class TestDijkstraMap {
         };
         DijkstraMap dm = new DijkstraMap(map, Measurement.EUCLIDEAN);
         dm.setBlockingRequirement(2);
-        ObjectList<Coord> path = new ObjectList<>(16);
+        ObjectDeque<Coord> path = new ObjectDeque<>(16);
 //        dm.setGoal(3, 3);
 //        dm.partialScan(10, null);
 //        dm.findPathPreScanned(path, Coord.get(5, 5));
