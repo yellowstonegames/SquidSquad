@@ -85,7 +85,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 5;
-    private static final int MODE_LIMIT = 25;
+    private static final int MODE_LIMIT = 26;
     private int mode = 24;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
@@ -347,12 +347,6 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case W: // whirl, like a spiral
                         noise.setFractalSpiral(!noise.isFractalSpiral());
                         break;
-                    case A: spec.a = spec.a + (UIUtils.shift() ? 1 : -1) & 31;
-                        System.out.println("a: " + spec.a + ", b: " + spec.b);
-                    break;
-                    case B: spec.b = spec.b + (UIUtils.shift() ? 1 : -1) & 31;
-                        System.out.println("a: " + spec.a + ", b: " + spec.b);
-                    break;
                     case Q:
                     case ESCAPE: {
                         Gdx.app.exit();
@@ -1785,29 +1779,114 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
             }
-        } else if(mode == 24){
-            if((dim & 1) == 0)
-            {
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        bright = (float) (db = (1f/255f) * (pointHashes[hashIndex].hashWithState(x, y, (int)noise.getSeed()) & 255));
-                        real[x][y] = db;
-                        renderer.color(bright, bright, bright, 1f);
-                        renderer.vertex(x, y, 0);
+        } else if(mode == 24) {
+            int time = (int)(System.currentTimeMillis() >>> 10) & 15;
+            switch (dim){
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, (int) noise.getSeed()) & 255));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
                     }
-                }
-            } else {
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        bright = (float) (db = (1f/255f) * (pointHashes[hashIndex].hashWithState(x, y, (int)noise.getSeed()) >>> 24));
-                        real[x][y] = db;
-                        renderer.color(bright, bright, bright, 1f);
-                        renderer.vertex(x, y, 0);
+                    break;
+                case 1:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, (int) noise.getSeed()) & 255));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
                     }
-                }
-
+                    break;
+                case 2:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, time >>> 1 & 1, (int) noise.getSeed()) & 255));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, time >>> 1 & 1, time >>> 2 & 1, (int) noise.getSeed()) & 255));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, time >>> 1 & 1, time >>> 2 & 1, time >>> 3 & 1, (int) noise.getSeed()) & 255));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
             }
-
+        } else if(mode == 25) {
+            int time = (int)(System.currentTimeMillis() >>> 10) & 15;
+            switch (dim){
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, (int) noise.getSeed()) >>> 24));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, (int) noise.getSeed()) >>> 24));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, time >>> 1 & 1, (int) noise.getSeed()) >>> 24));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, time >>> 1 & 1, time >>> 2 & 1, (int) noise.getSeed()) >>> 24));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, time >>> 1 & 1, time >>> 2 & 1, time >>> 3 & 1, (int) noise.getSeed()) >>> 24));
+                            real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+            }
         }
 
         Fft.transform2D(real, imag);
