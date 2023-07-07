@@ -85,8 +85,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 5;
-    private static final int MODE_LIMIT = 24;
-    private int mode = 23;
+    private static final int MODE_LIMIT = 25;
+    private int mode = 24;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -312,7 +312,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
                         break;
-                    case B: //Blur
+                    case U: //blUr
                         noise.setSharpness(noise.getSharpness() + (UIUtils.shift() ? 0.05f : -0.05f));
                         break;
                     case F: // frequency
@@ -322,7 +322,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         noise.setFractalType((noise.getFractalType() + (UIUtils.shift() ? 3 : 1)) & 3);
                         break;
                     case G: // Glitch!
-                        noise.setPointHash(pointHashes[hashIndex = (hashIndex + (UIUtils.shift() ? 4 : 1)) % 5]);
+                        noise.setPointHash(pointHashes[hashIndex = (hashIndex + (UIUtils.shift() ? pointHashes.length - 1 : 1)) % pointHashes.length]);
                         break;
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
@@ -347,6 +347,12 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case W: // whirl, like a spiral
                         noise.setFractalSpiral(!noise.isFractalSpiral());
                         break;
+                    case A: spec.a = spec.a + (UIUtils.shift() ? 1 : -1) & 31;
+                        System.out.println("a: " + spec.a + ", b: " + spec.b);
+                    break;
+                    case B: spec.b = spec.b + (UIUtils.shift() ? 1 : -1) & 31;
+                        System.out.println("a: " + spec.a + ", b: " + spec.b);
+                    break;
                     case Q:
                     case ESCAPE: {
                         Gdx.app.exit();
@@ -1779,6 +1785,29 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
             }
+        } else if(mode == 24){
+            if((dim & 1) == 0)
+            {
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bright = (float) (db = (1f/255f) * (pointHashes[hashIndex].hashWithState(x, y, (int)noise.getSeed()) & 255));
+                        real[x][y] = db;
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+            } else {
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bright = (float) (db = (1f/255f) * (pointHashes[hashIndex].hashWithState(x, y, (int)noise.getSeed()) >>> 24));
+                        real[x][y] = db;
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+
+            }
+
         }
 
         Fft.transform2D(real, imag);

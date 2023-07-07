@@ -19,6 +19,7 @@ package com.github.yellowstonegames.world.random;
 import com.github.yellowstonegames.grid.IPointHash;
 
 public class SpectatorPointHash extends IPointHash.IntImpl {
+    public int a = 8, b = 29;
     @Override
     public int hashWithState(int x, int y, int state) {
         return hashAll(x, y, state);
@@ -44,38 +45,40 @@ public class SpectatorPointHash extends IPointHash.IntImpl {
         return hashAll(x, y, z, w, u, v, state);
     }
 
-    public static int hashAll(int x, int y, int s) {
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
-        return s ^ (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
+    public int hashAll(int x, int y, int s) {
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
+        return s ^ (s << a | s >>> -a) ^ (s << b | s >>> -b);
     }
 
     public static int hashAll(int x, int y, int z, int s) {
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
-        return s ^ (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
+        return (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
     }
 
     public static int hashAll(int x, int y, int z, int w, int s) {
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
-        return s ^ (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
+        return (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
     }
 
     public static int hashAll(int x, int y, int z, int w, int u, int s) {
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ u));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
-        return s ^ (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ u));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
+        return (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
     }
 
     public static int hashAll(int x, int y, int z, int w, int u, int v, int s) {
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ u));
-        s ^= (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ v));
-        return s ^ (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ z));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ w));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ u));
+        s += (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ v));
+        return (x = (x << 3  | x >>> 29) ^ (y = (y << 24 | y >>> 8 ) + x ^ s));
     }
 
 }
