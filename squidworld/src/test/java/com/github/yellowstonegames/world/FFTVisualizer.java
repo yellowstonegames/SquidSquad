@@ -55,6 +55,7 @@ import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.PhantomNoise;
 import com.github.yellowstonegames.grid.TaffyNoise;
 import com.github.yellowstonegames.grid.ValueNoise;
+import com.github.yellowstonegames.world.random.SpectatorPointHash;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -73,8 +74,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final FlawedPointHash.RugHash rug = new FlawedPointHash.RugHash(1);
     private final FlawedPointHash.QuiltHash quilt = new FlawedPointHash.QuiltHash(1, 32);
     private final FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 64);
-    private FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
-    private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt};
+    private final FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
+    private final SpectatorPointHash spec = new SpectatorPointHash();
+    private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt, spec};
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
@@ -82,7 +84,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final ValueNoise val = new ValueNoise(noise.getSeed());
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
-    private int hashIndex = 0;
+    private int hashIndex = 5;
     private static final int MODE_LIMIT = 24;
     private int mode = 23;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
