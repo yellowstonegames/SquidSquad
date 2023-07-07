@@ -1704,9 +1704,10 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed int color start towards end by change. Both start and end should be packed Oklab
-     * ints, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
-     * of temporary Colors.
+     * Interpolates from the packed int color start towards end by change. The colors (start and end) can be either
+     * packed Oklab ints or RGBA8888 ints, and change can be between 0f (keep start) and 1f (only use end). This is a
+     * good way to reduce allocations of temporary Colors. If the inputs were Oklab colors, you will
+     * probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
      *
      * @param s      the starting color as a packed int
      * @param e      the end/target color as a packed int
@@ -1725,10 +1726,10 @@ public final class DescriptiveColor {
 
     /**
      * Interpolates from the packed Oklab int color start towards the Oklan int color end by change, but keeps the alpha
-     * of start and uses the alpha of end as an extra factor that can affect how much to change. Both start and end
-     * should be packed Oklab int colors, as from {@link #describeOklab(CharSequence)} or any of the color constants
-     * here, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
-     * of temporary Colors. You will probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
+     * of start and uses the alpha of end as an extra factor that can affect how much to change. The colors (start and
+     * end) can be either packed Oklab ints or RGBA8888 ints, and change can be between 0f (keep start) and 1f (only use
+     * end). This is a good way to reduce allocations of temporary Colors. If the inputs were Oklab colors, you will
+     * probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
      * @param start the starting color as a packed Oklab int; alpha will be preserved
      * @param end the target color as a packed Oklab int; alpha will not be used directly, and will instead be multiplied with change
      * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
@@ -1775,6 +1776,52 @@ public final class DescriptiveColor {
         return result;
     }
 
+
+    /**
+     * Mixes any number of colors with arbitrary weights per-color. Takes an array of varargs of alternating ints
+     * representing colors and weights, as with {@code color, weight, color, weight...}.
+     * If {@code colors} is null or has no items, this returns 0 (usually transparent in most color spaces). Each color
+     * can be a packed Oklab int or an RGBA8888 int, but you can't use both of those kinds of color in one call.
+     * @param colors an array or varargs that should contain alternating {@code color, weight, color, weight...} ints
+     * @return the mixed color, as a packed int in the same color space as the given int colors
+     */
+    public static int unevenMix(int... colors) {
+        if(colors == null || colors.length == 0) return 0;
+        if(colors.length <= 2) return colors[0];
+        return unevenMix(colors, 0, colors.length);
+    }
+
+    /**
+     * Mixes any number of colors with arbitrary weights per-color. Takes an array of alternating ints representing
+     * colors and weights, as with {@code color, weight, color, weight...}, starting at {@code offset} in the array and
+     * continuing for {@code size} indices in the array. The {@code size} should be an even number 2 or greater,
+     * otherwise it will be reduced by 1. The weights can be any non-negative int values; this method handles
+     * normalizing them internally. Each color can be a packed Oklab int or an RGBA8888 int, but you can't use both of
+     * those kinds of color in one call.
+     * @param colors starting at {@code offset}, this should contain alternating {@code color, weight, color, weight...} ints
+     * @param offset where to start reading from in {@code colors}
+     * @param size how many indices to read from {@code colors}; must be an even number
+     * @return the mixed color, as a packed int in the same color space as the given int colors
+     */
+    public static int unevenMix(int[] colors, int offset, int size) {
+        size &= -2;
+        final int end = offset + size;
+        if(colors == null || colors.length < end || offset < 0 || size <= 0)
+            return 0; // transparent, usually
+        int result = colors[offset];
+        float current = colors[offset + 1], total = current;
+        for (int i = offset+3; i < end; i += 2) {
+            total += colors[i];
+        }
+        total = 1f / total;
+        current *= total;
+        for (int i = offset+3; i < end; i += 2) {
+            int mixColor = colors[i-1];
+            float weight = colors[i] * total;
+            result = lerpColors(result, mixColor, weight / (current += weight));
+        }
+        return result;
+    }
 
     static {
         NAMES_BY_HUE.sort((o1, o2) -> {
