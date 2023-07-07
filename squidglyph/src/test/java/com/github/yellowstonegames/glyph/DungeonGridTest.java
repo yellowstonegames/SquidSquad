@@ -121,6 +121,12 @@ public class DungeonGridTest extends ApplicationAdapter {
                     Math.round(playerGlyph.getX()), Math.round(playerGlyph.getY()), 6.5f, Radius.CIRCLE), 0.001f, 999f));
             blockage.remake(seen).not().fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
+            if(!awaitedMoves.isEmpty())
+                awaitedMoves.removeFirst();
+            playerToCursor.clearGoals();
+            playerToCursor.resetMap();
+            playerToCursor.setGoal(playerGlyph.getLocation());
+            playerToCursor.partialScan(13, blockage);
         };
 
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
@@ -180,7 +186,7 @@ public class DungeonGridTest extends ApplicationAdapter {
                 gg.viewport.unproject(pos);
                 if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
                     // we also need to check if screenX or screenY is the same cell.
-                    if (cursor.x == screenX && cursor.y == screenY) {
+                    if (cursor.x == screenX && cursor.y == screenY || gg.areChildrenActing()) {
                         return false;
                     }
                     cursor = Coord.get(screenX, screenY);
@@ -348,7 +354,7 @@ public class DungeonGridTest extends ApplicationAdapter {
 
         if(!gg.areChildrenActing() && !awaitedMoves.isEmpty())
         {
-            Coord m = awaitedMoves.removeFirst();
+            Coord m = awaitedMoves.peekFirst();
             if (!toCursor.isEmpty())
                 toCursor.removeFirst();
             move(playerGlyph.getLocation().toGoTo(m));
