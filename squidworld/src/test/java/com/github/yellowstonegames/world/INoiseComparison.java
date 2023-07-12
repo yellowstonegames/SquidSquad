@@ -53,13 +53,14 @@ public class INoiseComparison extends ApplicationAdapter {
             new TaffyNoise(1L, 6),
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
-            new BasicHashNoise(1, new FlawedPointHash.CubeHash(1, 32))
+            new BasicHashNoise(1, new FlawedPointHash.CubeHash(1, 32)),
+            new AmogusNoise(1L),
     };
     private int index0 = 0;
-    private int index1 = 4;
+    private int index1 = 12;
     private NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
-    private int dim = 2; // this can be 0, 1, or 2; add 2 to get the actual dimensions
+    private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
     private ImmediateModeRenderer20 renderer;

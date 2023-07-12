@@ -159,18 +159,19 @@ public class AmogusNoise implements INoise {
      */
     @Override
     public float getNoise(float x, float y) {
-        final long
+        long
                 x0 = fastFloor(x),
                 y0 = fastFloor(y);
         final float xf = x - x0, yf = y - y0;
-
+        x0 *= 0xC13FA9A902A6328FL;
+        y0 *= 0x91E10DA5C79E7B1DL;
         long s = seed;
         x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
         y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final double xn = ((1 - x) * Ziggurat.normal(Hasher.mum(x0, s)) + x * Ziggurat.normal(Hasher.mum(x0+1, s)));
-        final double yn = ((1 - y) * Ziggurat.normal(Hasher.mum(y0, s)) + y * Ziggurat.normal(Hasher.mum(y0+1, s)));
+        final double xn = ((1 - x) * Ziggurat.normal(Hasher.wow(x0, s)) + x * Ziggurat.normal(Hasher.wow(x0+0xC13FA9A902A6328FL, s)));
+        final double yn = ((1 - y) * Ziggurat.normal(Hasher.wow(y0, s)) + y * Ziggurat.normal(Hasher.wow(y0+0x91E10DA5C79E7B1DL, s)));
         final double n = xn + yn;
-        
+
         final double a1 = 0.0705230784, a2 = 0.0422820123, a3 = 0.0092705272, a4 = 0.0001520143, a5 = 0.0002765672, a6 = 0.0000430638;
         final double sign = Math.signum(n), y1 = sign * n * 0.7071067811865475, y2 = y1 * y1, y3 = y1 * y2, y4 = y2 * y2, y5 = y2 * y3, y6 = y3 * y3;
         double d = 1.0 + a1 * y1 + a2 * y2 + a3 * y3 + a4 * y4 + a5 * y5 + a6 * y6;
