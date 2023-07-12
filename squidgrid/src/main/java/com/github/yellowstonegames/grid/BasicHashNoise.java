@@ -148,37 +148,17 @@ public class BasicHashNoise implements INoise {
         return new BasicHashNoise(DigitTools.intFromDec(data, 1, data.length() - 1));
     }
 
-
     /**
-     * Creates a copy of this PerlinNoise, which should be a deep copy for any mutable state but can be shallow for immutable
+     * Creates a copy of this BasicHashNoise, which should be a deep copy for any mutable state but can be shallow for immutable
      * types such as functions. This almost always just calls a copy constructor.
      *
-     * @return a copy of this PerlinNoise
+     * @return a copy of this BasicHashNoise
      */
     @Override
     public BasicHashNoise copy() {
         return new BasicHashNoise(this.seed);
     }
 
-    protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u,
-                                        float xd, float yd, float zd, float wd, float ud) {
-        final int hash =
-                (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u)
-                        * (seed) >>> 56) * 5;
-        return xd * GRADIENTS_5D[hash] + yd * GRADIENTS_5D[hash + 1] + zd * GRADIENTS_5D[hash + 2]
-                + wd * GRADIENTS_5D[hash + 3] + ud * GRADIENTS_5D[hash + 4];
-    }
-    
-    protected static float gradCoord6D(long seed, int x, int y, int z, int w, int u, int v,
-                                        float xd, float yd, float zd, float wd, float ud, float vd) {
-        final int hash =
-                (int)(
-                        (seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L *
-                                z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u ^ 0x86D516E50B04AB1BL * v) * (seed)
-                        >>> 56) * 6;
-        return xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash + 1] + zd * GRADIENTS_6D[hash + 2]
-                + wd * GRADIENTS_6D[hash + 3] + ud * GRADIENTS_6D[hash + 4] + vd * GRADIENTS_6D[hash + 5];
-    }
     /**
      * Given a float {@code a} from -1.0 to 1.0 (both inclusive), this gets a float that adjusts a to be closer to the
      * end points of that range (if less than 0, it gets closer to -1.0, otherwise it gets closer to 1.0).
