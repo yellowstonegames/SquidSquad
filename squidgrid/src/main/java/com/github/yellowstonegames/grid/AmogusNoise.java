@@ -16,11 +16,8 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.random.Ziggurat;
 import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 
@@ -28,6 +25,7 @@ import static com.github.tommyettinger.digital.MathTools.fastFloor;
  * A type of noise that tries to find out what is normal behavior for noise... and what is sus.
  * Big ups to Rogue Frontier Guy for coming up with the name.
  */
+@Beta
 public class AmogusNoise implements INoise {
     public long seed;
 

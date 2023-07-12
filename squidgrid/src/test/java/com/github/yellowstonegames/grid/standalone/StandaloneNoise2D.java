@@ -91,7 +91,7 @@ public class StandaloneNoise2D {
      * @return noise between -1 and 1
      */
     public float getNoise(final float x, final float y) {
-        return getNoiseWithSeed(x, y, seed);
+        return getNoiseWithSeed(x * frequency, y * frequency, seed);
     }
 
     public static final float F2 = 0.36602540378443864676372317075294f;
@@ -100,11 +100,11 @@ public class StandaloneNoise2D {
     public static final float LIMIT2 = 0.5f;
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Ignores the
-     * default seed (this uses the given seed) and multiplies x and y by frequency.
-     * @param x x coordinate, will be adjusted by frequency
-     * @param y y coordinate, will be adjusted by frequency
-     * @param seed the seed to use for the noise, ignoring the default seed
+     * Gets noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x or y.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
      * @return noise between -1 and 1
      */
     public static float getNoiseWithSeed(final float x, final float y, final long seed) {
