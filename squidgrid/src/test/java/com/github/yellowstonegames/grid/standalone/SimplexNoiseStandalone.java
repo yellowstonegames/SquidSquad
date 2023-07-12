@@ -88,6 +88,22 @@ public class SimplexNoiseStandalone {
         return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 59);
     }
 
+    /**
+     * Gets an 8-bit point hash of a 4D point (x, y, z, and w are all longs) and a state/seed as a long.
+     * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
+     * @param x x position; any long
+     * @param y y position; any long
+     * @param z z position; any long
+     * @param w w position; any long
+     * @param s the state; any long
+     * @return 8-bit hash of the x,y,z,w point with the given state
+     */
+    public static int hash256(long x, long y, long z, long w, long s) {
+        s ^= x * 0x881403B9339BD42DL ^ y * 0x9A69443F36F710E7L ^ z * 0xAF36D01EF7518DBBL ^ w * 0xC6D1D6C8ED0C9631L;
+        return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 56);
+    }
+
+
     protected static double gradCoord2D(long seed, int x, int y, double xd, double yd) {
         final int h = hash256(x, y, seed) << 1;
         return xd * GRADIENTS_2D[h] + yd * GRADIENTS_2D[h+1];
@@ -435,6 +451,213 @@ public class SimplexNoiseStandalone {
         return sum / (amp * ((1 << (Math.max(1, octaves))) - 1));
     }
 
+    // 4D SECTION
+
+    /**
+     * Gets noise with the lowest, fastest level of detail. Uses
+     * {@link #getSeed()} and multiplies x, y, z, and w by frequency.
+     * @param x x coordinate, will be adjusted by frequency
+     * @param y y coordinate, will be adjusted by frequency
+     * @param z z coordinate, will be adjusted by frequency
+     * @param w w coordinate, will be adjusted by frequency
+     * @return noise between -1 and 1, inclusive
+     */
+    public double getNoise(final double x, final double y, final double z, final double w) {
+        return noiseWithSeed(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+    }
+
+    /**
+     * 2D simplex noise with the lowest, fastest level of detail. Uses the
+     * seed {@code 12345L} and does not change x, y, z, or w.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param w w coordinate
+     * @return noise between -1 and 1, inclusive
+     */
+    public static double noise(final double x, final double y, final double z, final double w) {
+        return noiseWithSeed(x, y, z, w, 12345L);
+    }
+
+    /**
+     * Gets noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x, y, z, or w.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param w w coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @return noise between -1 and 1
+     */
+    public static double noiseWithSeed(final double x, final double y, final double z, final double w, final long seed) {
+        double n0, n1, n2, n3, n4;
+        double[] gradient4DLUT = GRADIENTS_4D;
+        double t = (x + y + z + w) * F4;
+        int i = (int)Math.floor(x + t);
+        int j = (int)Math.floor(y + t);
+        int k = (int)Math.floor(z + t);
+        int l = (int)Math.floor(w + t);
+        t = (i + j + k + l) * G4;
+        double X0 = i - t;
+        double Y0 = j - t;
+        double Z0 = k - t;
+        double W0 = l - t;
+        double x0 = x - X0;
+        double y0 = y - Y0;
+        double z0 = z - Z0;
+        double w0 = w - W0;
+
+        int rankx = 0;
+        int ranky = 0;
+        int rankz = 0;
+        int rankw = 0;
+
+        if (x0 > y0) rankx++; else ranky++;
+        if (x0 > z0) rankx++; else rankz++;
+        if (x0 > w0) rankx++; else rankw++;
+
+        if (y0 > z0) ranky++; else rankz++;
+        if (y0 > w0) ranky++; else rankw++;
+
+        if (z0 > w0) rankz++; else rankw++;
+
+        int i1 = 2 - rankx >>> 31;
+        int j1 = 2 - ranky >>> 31;
+        int k1 = 2 - rankz >>> 31;
+        int l1 = 2 - rankw >>> 31;
+
+        int i2 = 1 - rankx >>> 31;
+        int j2 = 1 - ranky >>> 31;
+        int k2 = 1 - rankz >>> 31;
+        int l2 = 1 - rankw >>> 31;
+
+        int i3 = -rankx >>> 31;
+        int j3 = -ranky >>> 31;
+        int k3 = -rankz >>> 31;
+        int l3 = -rankw >>> 31;
+
+        double x1 = x0 - i1 + G4;
+        double y1 = y0 - j1 + G4;
+        double z1 = z0 - k1 + G4;
+        double w1 = w0 - l1 + G4;
+
+        double x2 = x0 - i2 + 2 * G4;
+        double y2 = y0 - j2 + 2 * G4;
+        double z2 = z0 - k2 + 2 * G4;
+        double w2 = w0 - l2 + 2 * G4;
+
+        double x3 = x0 - i3 + 3 * G4;
+        double y3 = y0 - j3 + 3 * G4;
+        double z3 = z0 - k3 + 3 * G4;
+        double w3 = w0 - l3 + 3 * G4;
+
+        double x4 = x0 - 1 + 4 * G4;
+        double y4 = y0 - 1 + 4 * G4;
+        double z4 = z0 - 1 + 4 * G4;
+        double w4 = w0 - 1 + 4 * G4;
+
+        double t0 = LIMIT4 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
+        if(t0 > 0) {
+            final int h0 = (hash256(i, j, k, l, seed) & 0xFC);
+            t0 *= t0;
+            n0 = t0 * t0 * (x0 * gradient4DLUT[h0] + y0 * gradient4DLUT[h0 | 1] + z0 * gradient4DLUT[h0 | 2] + w0 * gradient4DLUT[h0 | 3]);
+        }
+        else n0 = 0;
+        double t1 = LIMIT4 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
+        if (t1 > 0) {
+            final int h1 = (hash256(i + i1, j + j1, k + k1, l + l1, seed) & 0xFC);
+            t1 *= t1;
+            n1 = t1 * t1 * (x1 * gradient4DLUT[h1] + y1 * gradient4DLUT[h1 | 1] + z1 * gradient4DLUT[h1 | 2] + w1 * gradient4DLUT[h1 | 3]);
+        }
+        else n1 = 0;
+        double t2 = LIMIT4 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
+        if (t2 > 0) {
+            final int h2 = (hash256(i + i2, j + j2, k + k2, l + l2, seed) & 0xFC);
+            t2 *= t2;
+            n2 = t2 * t2 * (x2 * gradient4DLUT[h2] + y2 * gradient4DLUT[h2 | 1] + z2 * gradient4DLUT[h2 | 2] + w2 * gradient4DLUT[h2 | 3]);
+        }
+        else n2 = 0;
+        double t3 = LIMIT4 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
+        if (t3 > 0) {
+            final int h3 = (hash256(i + i3, j + j3, k + k3, l + l3, seed) & 0xFC);
+            t3 *= t3;
+            n3 = t3 * t3 * (x3 * gradient4DLUT[h3] + y3 * gradient4DLUT[h3 | 1] + z3 * gradient4DLUT[h3 | 2] + w3 * gradient4DLUT[h3 | 3]);
+        }
+        else n3 = 0;
+        double t4 = LIMIT4 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
+        if (t4 > 0) {
+            final int h4 = (hash256(i + 1, j + 1, k + 1, l + 1, seed) & 0xFC);
+            t4 *= t4;
+            n4 = t4 * t4 * (x4 * gradient4DLUT[h4] + y4 * gradient4DLUT[h4 | 1] + z4 * gradient4DLUT[h4 | 2] + w4 * gradient4DLUT[h4 | 3]);
+        }
+        else n4 = 0;
+
+        t = (n0 + n1 + n2 + n3 + n4) * 14.7279f;
+        return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+    }
+
+    /**
+     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * {@link #getSeed()} and multiplies x, y, z, and w by frequency.
+     * @param x x coordinate, will be adjusted by frequency
+     * @param y y coordinate, will be adjusted by frequency
+     * @param z z coordinate, will be adjusted by frequency
+     * @param w w coordinate, will be adjusted by frequency
+     * @param octaves level of detail, from 1 to about 16 as a practical maximum
+     * @return noise between -1 and 1
+     */
+    public double getNoiseWithOctaves(double x, double y, double z, double w, int octaves) {
+        return noiseWithOctaves(x, y, z, w, seed, octaves, 1.0);
+    }
+
+    /**
+     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * the given seed, and multiplies x, y, z, and w by frequency.
+     * @param x x coordinate, will be adjusted by frequency
+     * @param y y coordinate, will be adjusted by frequency
+     * @param z z coordinate, will be adjusted by frequency
+     * @param w w coordinate, will be adjusted by frequency
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @param octaves level of detail, from 1 to about 16 as a practical maximum
+     * @return noise between -1 and 1
+     */
+    public static double noiseWithOctaves(double x, double y, double z, double w, long seed, int octaves) {
+        return noiseWithOctaves(x, y, z, w, seed, octaves, 1.0);
+    }
+
+    /**
+     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
+     * seed instead of {@link #getSeed()}, and multiplies x, y, z, and w by frequency.
+     * @param x x coordinate, will be adjusted by frequency
+     * @param y y coordinate, will be adjusted by frequency
+     * @param z z coordinate, will be adjusted by frequency
+     * @param w w coordinate, will be adjusted by frequency
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @param octaves level of detail, from 1 to about 16 as a practical maximum
+     * @param frequency a multiplier applied to the coordinates; lower values increase the size of features
+     * @return noise between -1 and 1
+     */
+    public static double noiseWithOctaves(double x, double y, double z, double w, long seed, int octaves, double frequency) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        double sum = noiseWithSeed(x, y, z, w, seed);
+        double amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x += x;
+            y += y;
+            z += z;
+            w += w;
+
+            amp *= 0.5;
+            sum += noiseWithSeed(x, y, z, w, seed + i) * amp;
+        }
+
+        return sum / (amp * ((1 << (Math.max(1, octaves))) - 1));
+    }
+
     // OTHER
 
     public void setSeed(long seed) {
@@ -776,6 +999,73 @@ public class SimplexNoiseStandalone {
                     -0.448549002408981, -1.174316525459290, -0.000000000000003, +0.0,
                     -0.000000000000003, -1.069324374198914, +0.660878777503967, +0.0,
                     +0.448549002408981, -1.174316525459290, +0.000000000000003, +0.0,
+            };
+    protected static final double[] GRADIENTS_4D =
+            {
+                    -0.5875167, +1.4183908, +1.4183908, +1.4183908,
+                    -0.5875167, +1.4183908, +1.4183908, -1.4183908,
+                    -0.5875167, +1.4183908, -1.4183908, +1.4183908,
+                    -0.5875167, +1.4183908, -1.4183908, -1.4183908,
+                    -0.5875167, -1.4183908, +1.4183908, +1.4183908,
+                    -0.5875167, -1.4183908, +1.4183908, -1.4183908,
+                    -0.5875167, -1.4183908, -1.4183908, +1.4183908,
+                    -0.5875167, -1.4183908, -1.4183908, -1.4183908,
+                    +1.4183908, -0.5875167, +1.4183908, +1.4183908,
+                    +1.4183908, -0.5875167, +1.4183908, -1.4183908,
+                    +1.4183908, -0.5875167, -1.4183908, +1.4183908,
+                    +1.4183908, -0.5875167, -1.4183908, -1.4183908,
+                    -1.4183908, -0.5875167, +1.4183908, +1.4183908,
+                    -1.4183908, -0.5875167, +1.4183908, -1.4183908,
+                    -1.4183908, -0.5875167, -1.4183908, +1.4183908,
+                    -1.4183908, -0.5875167, -1.4183908, -1.4183908,
+                    +1.4183908, +1.4183908, -0.5875167, +1.4183908,
+                    +1.4183908, +1.4183908, -0.5875167, -1.4183908,
+                    +1.4183908, -1.4183908, -0.5875167, +1.4183908,
+                    +1.4183908, -1.4183908, -0.5875167, -1.4183908,
+                    -1.4183908, +1.4183908, -0.5875167, +1.4183908,
+                    -1.4183908, +1.4183908, -0.5875167, -1.4183908,
+                    -1.4183908, -1.4183908, -0.5875167, +1.4183908,
+                    -1.4183908, -1.4183908, -0.5875167, -1.4183908,
+                    +1.4183908, +1.4183908, +1.4183908, -0.5875167,
+                    +1.4183908, +1.4183908, -1.4183908, -0.5875167,
+                    +1.4183908, -1.4183908, +1.4183908, -0.5875167,
+                    +1.4183908, -1.4183908, -1.4183908, -0.5875167,
+                    -1.4183908, +1.4183908, +1.4183908, -0.5875167,
+                    -1.4183908, +1.4183908, -1.4183908, -0.5875167,
+                    -1.4183908, -1.4183908, +1.4183908, -0.5875167,
+                    -1.4183908, -1.4183908, -1.4183908, -0.5875167,
+                    +0.5875167, +1.4183908, +1.4183908, +1.4183908,
+                    +0.5875167, +1.4183908, +1.4183908, -1.4183908,
+                    +0.5875167, +1.4183908, -1.4183908, +1.4183908,
+                    +0.5875167, +1.4183908, -1.4183908, -1.4183908,
+                    +0.5875167, -1.4183908, +1.4183908, +1.4183908,
+                    +0.5875167, -1.4183908, +1.4183908, -1.4183908,
+                    +0.5875167, -1.4183908, -1.4183908, +1.4183908,
+                    +0.5875167, -1.4183908, -1.4183908, -1.4183908,
+                    +1.4183908, +0.5875167, +1.4183908, +1.4183908,
+                    +1.4183908, +0.5875167, +1.4183908, -1.4183908,
+                    +1.4183908, +0.5875167, -1.4183908, +1.4183908,
+                    +1.4183908, +0.5875167, -1.4183908, -1.4183908,
+                    -1.4183908, +0.5875167, +1.4183908, +1.4183908,
+                    -1.4183908, +0.5875167, +1.4183908, -1.4183908,
+                    -1.4183908, +0.5875167, -1.4183908, +1.4183908,
+                    -1.4183908, +0.5875167, -1.4183908, -1.4183908,
+                    +1.4183908, +1.4183908, +0.5875167, +1.4183908,
+                    +1.4183908, +1.4183908, +0.5875167, -1.4183908,
+                    +1.4183908, -1.4183908, +0.5875167, +1.4183908,
+                    +1.4183908, -1.4183908, +0.5875167, -1.4183908,
+                    -1.4183908, +1.4183908, +0.5875167, +1.4183908,
+                    -1.4183908, +1.4183908, +0.5875167, -1.4183908,
+                    -1.4183908, -1.4183908, +0.5875167, +1.4183908,
+                    -1.4183908, -1.4183908, +0.5875167, -1.4183908,
+                    +1.4183908, +1.4183908, +1.4183908, +0.5875167,
+                    +1.4183908, +1.4183908, -1.4183908, +0.5875167,
+                    +1.4183908, -1.4183908, +1.4183908, +0.5875167,
+                    +1.4183908, -1.4183908, -1.4183908, +0.5875167,
+                    -1.4183908, +1.4183908, +1.4183908, +0.5875167,
+                    -1.4183908, +1.4183908, -1.4183908, +0.5875167,
+                    -1.4183908, -1.4183908, +1.4183908, +0.5875167,
+                    -1.4183908, -1.4183908, -1.4183908, +0.5875167,
             };
 
 }
