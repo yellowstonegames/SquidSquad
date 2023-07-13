@@ -16,12 +16,11 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.BinaryHeap;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.digital.BitConversion;
 
-import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +33,7 @@ class AlgorithmImplementations<V> {
 
     private final Graph<V> graph;
     private final BinaryHeap<Node<V>> heap;
-    private final ArrayDeque<Node<V>> queue;
+    private final ObjectDeque<Node<V>> queue;
     private int runID;
 
     //================================================================================
@@ -44,7 +43,7 @@ class AlgorithmImplementations<V> {
     AlgorithmImplementations(Graph<V> graph) {
         this.graph = graph;
         heap = new BinaryHeap<>();
-        queue = new ArrayDeque<>();
+        queue = new ObjectDeque<>();
     }
 
     //================================================================================
@@ -77,7 +76,7 @@ class AlgorithmImplementations<V> {
 
         vertex.resetAlgorithmAttributes(runID);
         vertex.visited = true;
-        ArrayDeque<Node<V>> queue = this.queue;
+        ObjectDeque<Node<V>> queue = this.queue;
         queue.clear();
         queue.addLast(vertex);
 
@@ -106,7 +105,7 @@ class AlgorithmImplementations<V> {
         init();
 
         vertex.resetAlgorithmAttributes(runID);
-        ArrayDeque<Node<V>> queue = this.queue;
+        ObjectDeque<Node<V>> queue = this.queue;
         queue.clear();
         queue.addLast(vertex);
 
@@ -141,34 +140,33 @@ class AlgorithmImplementations<V> {
         else return end.distance;
     }
 
-    ObjectList<V> findShortestPath(Node<V> start, Node<V> target) {
-        ObjectList<V> path = new ObjectList<>();
+    ObjectDeque<V> findShortestPath(Node<V> start, Node<V> target) {
+        ObjectDeque<V> path = new ObjectDeque<>();
         findShortestPath(start, target, path);
         return path;
     }
 
-    boolean findShortestPath(Node<V> start, Node<V> target, ObjectList<V> path) {
+    boolean findShortestPath(Node<V> start, Node<V> target, ObjectDeque<V> path) {
         return findShortestPath(start, target, path, null);
     }
 
-    ObjectList<V> findShortestPath(Node<V> start, Node<V> target, Heuristic<V> heuristic) {
-        ObjectList<V> path = new ObjectList<>();
+    ObjectDeque<V> findShortestPath(Node<V> start, Node<V> target, Heuristic<V> heuristic) {
+        ObjectDeque<V> path = new ObjectDeque<>();
         findShortestPath(start, target, path, heuristic);
         return path;
     }
 
-    boolean findShortestPath(Node<V> start, Node<V> target, ObjectList<V> path, Heuristic<V> heuristic) {
+    boolean findShortestPath(Node<V> start, Node<V> target, ObjectDeque<V> path, Heuristic<V> heuristic) {
         Node<V> end = aStarSearch(start, target, heuristic);
         if (end==null) {
             return false;
         }
         Node<V> v = end;
         while(v.prev!=null) {
-            path.add(v.object);
+            path.addFirst(v.object);
             v = v.prev;
         }
-        path.add(start.object);
-        path.reverse();
+        path.addFirst(start.object);
         return true;
     }
 
@@ -294,7 +292,7 @@ class AlgorithmImplementations<V> {
 
         ObjectList<Connection<V>> edgeList = new ObjectList<>(graph.edgeMap.values());
 
-        Collections.sort(edgeList, minSpanningTree ? weightComparator : reverseWeightComparator);
+        edgeList.sort(minSpanningTree ? weightComparator : reverseWeightComparator);
 
         int maxNodes = graph.size() - 1;
         final int totalEdges = edgeList.size();

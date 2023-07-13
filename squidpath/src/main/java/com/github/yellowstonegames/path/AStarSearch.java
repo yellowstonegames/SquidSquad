@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.IntFloatMap;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.grid.Coord;
 
 /**
@@ -46,7 +46,7 @@ public class AStarSearch {
     protected Heuristic<Coord> type;
     
     protected CostlyGraph graph;
-    protected ObjectList<Coord> path;
+    protected ObjectDeque<Coord> path;
     
     
     protected AStarSearch()
@@ -77,7 +77,7 @@ public class AStarSearch {
         height = width == 0 ? 0 : map[0].length;
         this.type = type == null ? Heuristic.EUCLIDEAN : type;
         graph = new CostlyGraph(map, (this.type != Heuristic.MANHATTAN));
-        path = new ObjectList<>(width + height);
+        path = new ObjectDeque<>(width + height);
     }
     /**
      * Builds a pathing object to run searches on.
@@ -99,7 +99,7 @@ public class AStarSearch {
         height = width == 0 ? 0 : map[0].length;
         this.type = type == null ? Heuristic.EUCLIDEAN : type;
         graph = new CostlyGraph(map, (this.type != Heuristic.MANHATTAN));
-        path = new ObjectList<>(width + height);
+        path = new ObjectDeque<>(width + height);
     }
 
     /**
@@ -152,7 +152,7 @@ public class AStarSearch {
 
     /**
      * Finds an A* path to the target from the start. If no path is possible,
-     * returns null. Reuses the returned path instead of allocating a new ObjectList,
+     * returns null. Reuses the returned path instead of allocating a new ObjectDeque,
      * so if you call this again, then the previously-returned List could change.
      *
      * @param startx the x coordinate of the start location
@@ -161,19 +161,19 @@ public class AStarSearch {
      * @param targety the y coordinate of the target location
      * @return the shortest path, or null if no path is possible
      */
-    public ObjectList<Coord> path(int startx, int starty, int targetx, int targety) {
+    public ObjectDeque<Coord> path(int startx, int starty, int targetx, int targety) {
         return path(Coord.get(startx, starty), Coord.get(targetx, targety));
     }
     /**
      * Finds an A* path to the target from the start. If no path is possible,
-     * returns null. Reuses the returned path instead of allocating a new ObjectList,
+     * returns null. Reuses the returned path instead of allocating a new ObjectDeque,
      * so if you call this again, then the previously-returned List could change.
      *
      * @param start the start location
      * @param target the target location
      * @return the shortest path, or null if no path is possible
      */
-    public ObjectList<Coord> path(Coord start, Coord target) {
+    public ObjectDeque<Coord> path(Coord start, Coord target) {
         path.clear();
         this.start = start;
         this.target = target;

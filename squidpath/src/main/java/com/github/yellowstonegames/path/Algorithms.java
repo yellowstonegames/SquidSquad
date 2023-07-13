@@ -15,12 +15,12 @@
  */
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.grid.Coord;
 
 /**
  * Most of the algorithms that operate on a {@link Graph} are defined here, with some specific cases in subclasses.
- * The most-frequently-used algorithm here is probably {@link #findShortestPath(Object, Object, ObjectList, Heuristic)},
+ * The most-frequently-used algorithm here is probably {@link #findShortestPath(Object, Object, ObjectDeque, Heuristic)},
  * or some overload of it; this is a standard A-Star algorithm backed by a priority queue that is very fast. Somewhat
  * surprisingly, it doesn't need indices like gdx-ai's IndexedAStarPathFinder needs, and this makes the code easier to
  * use. There's a good amount of other useful algorithms here, like {@link #detectCycle()} and various non-A-Star search
@@ -50,7 +50,7 @@ public class Algorithms<V> {
      * @param target the target vertex
      * @return a list of vertices from start to target containing the ordered vertices of a shortest path, including both the start and target vertices
      */
-    public ObjectList<V> findShortestPath(V start, V target) {
+    public ObjectDeque<V> findShortestPath(V start, V target) {
         return findShortestPath(start, target, null);
     }
 
@@ -60,8 +60,8 @@ public class Algorithms<V> {
      * @param target the target vertex
      * @return a list of vertices from start to target containing the ordered vertices of a shortest path, including both the start and target vertices
      */
-    public ObjectList<V> findShortestPath(V start, V target, Heuristic<V> heuristic) {
-        ObjectList<V> list = new ObjectList<>();
+    public ObjectDeque<V> findShortestPath(V start, V target, Heuristic<V> heuristic) {
+        ObjectDeque<V> list = new ObjectDeque<>();
         findShortestPath(start, target, list, heuristic);
         return list;
     }
@@ -75,7 +75,7 @@ public class Algorithms<V> {
      * @param path the list of vertices to which the path vertices should be added
      * @return true if a path was found, or false if no path could be found
      */
-    public boolean findShortestPath(V start, V target, ObjectList<V> path, Heuristic<V> heuristic) {
+    public boolean findShortestPath(V start, V target, ObjectDeque<V> path, Heuristic<V> heuristic) {
         path.clear();
         Node<V> startNode = graph.getNode(start);
         Node<V> targetNode = graph.getNode(target);

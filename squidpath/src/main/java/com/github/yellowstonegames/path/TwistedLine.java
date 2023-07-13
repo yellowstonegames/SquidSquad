@@ -16,14 +16,13 @@
 
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.FourWheelRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.DrunkenWalk;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -31,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * unlike DrunkenWalk, this won't ever generate paths that cross themselves.
  * <br>
  * This generates a fully-connected graph for a given rectangular area, then solves it with
- * {@link DefaultGraph#findShortestPath(Coord, Coord, ObjectList, Heuristic)}.
+ * {@link DefaultGraph#findShortestPath(Coord, Coord, ObjectDeque, Heuristic)}.
  * <br>
  * Created by Tommy Ettinger on 6/26/2020.
  */
@@ -41,7 +40,7 @@ public class TwistedLine {
     @NonNull
     public final DefaultGraph graph;
     @NonNull
-    public final ObjectList<Coord> lastPath;
+    public final ObjectDeque<Coord> lastPath;
 
     public TwistedLine() {
         this(40, 40, null);
@@ -55,8 +54,8 @@ public class TwistedLine {
         graph = new DefaultGraph();
         graph.width = Math.max(width, 2);
         graph.height = Math.max(height, 2);
-        this.rng = rng == null ? new FourWheelRandom() : rng;
-        lastPath = new ObjectList<>(graph.width + graph.height);
+        this.rng = rng == null ? new WhiskerRandom() : rng;
+        lastPath = new ObjectDeque<>(graph.width + graph.height);
         reinitialize();
     }
 
@@ -103,11 +102,11 @@ public class TwistedLine {
 
     }
 
-    public ObjectList<Coord> line(int startX, int startY, int endX, int endY) {
+    public ObjectDeque<Coord> line(int startX, int startY, int endX, int endY) {
         return line(Coord.get(startX, startY), Coord.get(endX, endY));
     }
 
-    public ObjectList<Coord> line(Coord start, Coord end) {
+    public ObjectDeque<Coord> line(Coord start, Coord end) {
         graph.findShortestPath(start, end, lastPath, Heuristic.EUCLIDEAN);
         return lastPath;
     }
@@ -126,17 +125,17 @@ public class TwistedLine {
     }
 
     public void setRng(EnhancedRandom rng) {
-        this.rng = rng == null ? new FourWheelRandom() : rng;
+        this.rng = rng == null ? new WhiskerRandom() : rng;
     }
 
     /**
      * Gets the last path this found, which may be empty. This returns the same reference to any path this produces,
      * and the path is cleared when a new twisted line is requested. You probably want to copy the contents of this path
      * into another list if you want to keep its contents.
-     * @return the most recent path of Coord, as an ObjectList, this found.
+     * @return the most recent path of Coord, as an ObjectDeque, this found.
      */
     @NonNull
-    public ObjectList<Coord> getLastPath() {
+    public ObjectDeque<Coord> getLastPath() {
         return lastPath;
     }
 }

@@ -18,6 +18,7 @@ package com.github.yellowstonegames.path;
 
 
 import com.github.tommyettinger.ds.IntFloatMap;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
@@ -299,7 +300,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * @param target the target vertex
 	 * @return a list of vertices from start to target containing the ordered vertices of a shortest path, including both the start and target vertices
 	 */
-	public ObjectList<Coord> findShortestPath(Coord start, Coord target) {
+	public ObjectDeque<Coord> findShortestPath(Coord start, Coord target) {
 		return algorithms.findShortestPath(start, target);
 	}
 
@@ -310,7 +311,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * @param heuristic typically predefined in {@link Heuristic}, this determines how the optimal path will be estimated
 	 * @return a list of vertices from start to target containing the ordered vertices of a shortest path, including both the start and target vertices
 	 */
-	public ObjectList<Coord> findShortestPath(Coord start, Coord target, Heuristic<Coord> heuristic) {
+	public ObjectDeque<Coord> findShortestPath(Coord start, Coord target, Heuristic<Coord> heuristic) {
 		return algorithms.findShortestPath(start, target, heuristic);
 	}
 
@@ -323,7 +324,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * @param path the list of vertices to which the path vertices should be added
 	 * @return true if a path was found, or false if no path could be found
 	 */
-	public boolean findShortestPath(Coord start, Coord target, ObjectList<Coord> path, Heuristic<Coord> heuristic) {
+	public boolean findShortestPath(Coord start, Coord target, ObjectDeque<Coord> path, Heuristic<Coord> heuristic) {
 		return algorithms.findShortestPath(start, target, path, heuristic);
 	}
 
@@ -412,9 +413,8 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 			cs[i] = (i + 1) % w5 == 0 ? '\n' : ' ';
 		}
 		final int vs = vertexMap.size(), rid = algorithms.lastRunID();
-		Node<Coord> nc;
 		for (int i = 0; i < vs; i++) {
-			nc = vertexMap.getAt(i);
+			Node<Coord> nc = vertexMap.getAt(i);
 			if(nc == null || !nc.seen || nc.lastRunID != rid || nc.distance >= 9999.5)
 				continue;
 			int d = (int) (nc.distance + 0.5), x = nc.object.x * 5, y = nc.object.y;
