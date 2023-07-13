@@ -3,6 +3,7 @@ package com.github.yellowstonegames.text;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.core.StringTools;
 
 /**
@@ -10,7 +11,7 @@ import com.github.yellowstonegames.core.StringTools;
  */
 public class ThesaurusTest {
     public static void main(String[] args) {
-        Thesaurus thesaurus  = new Thesaurus(System.currentTimeMillis() >>> 25); // changes seed roughly once/9 hours
+        Thesaurus thesaurus  = new Thesaurus(new AceRandom(System.currentTimeMillis() >>> 25)); // changes seed roughly once/9 hours
         thesaurus.addFakeWords();
 //        TreeSet<String> synonyms = new TreeSet<>();
 //        int len = thesaurus.mappings.size();
@@ -76,6 +77,12 @@ public class ThesaurusTest {
         text.append("By the light`adj` fire`noun` in my heart, I will vanquish thee!");
         text.append('\n');
         text.append("By the light`adj` fire`noun` in my heart, I will vanquish thee!");
+        text.append('\n');
+        text.append("I grant to thee, O Hero, the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun`!");
+        text.append('\n');
+        text.append("My people give to The Chosen Four our highest honor, the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun`!");
+        text.append('\n');
+        text.append("Here, it's the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun` or something.");
         for(String s : StringTools.wrap(thesaurus.process(text), 80))
         {
             System.out.println(s);

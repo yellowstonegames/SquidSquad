@@ -41,7 +41,7 @@ import static com.github.tommyettinger.ds.ObjectList.with;
  * Created by Tommy Ettinger on 5/23/2016.
  */
 public class Thesaurus {
-    protected static final Pattern wordMatch = Pattern.compile("([\\pL`]+|@)"),
+    protected static final Pattern wordMatch = Pattern.compile("([\\pL`\\|]+|@)"),
             similarFinder = Pattern.compile(".*?\\b(\\w\\w\\w\\w).*?{\\@1}.*$", "ui");
     public CaseInsensitiveOrderedMap<GapShuffler<String>> mappings;
     public ObjectList<Language.Alteration> alterations = new ObjectList<>(4);
@@ -562,73 +562,50 @@ public class Thesaurus {
             return StringTools.replace(modify(StringTools.correctABeforeVowel(dest.sb)), "\t", "");
     }
 
-    public String lookup(String word)
-    {
-        if(word.isEmpty())
+    public String lookup(String word) {
+        if (word.isEmpty())
             return word;
-        if("@".equals(word))
-        {
+        if ("@".equals(word)) {
             return defaultLanguage.word(rng, true, rng.nextInt(2, 4));
         }
         String word2 = word.toLowerCase();
         Integer num;
-        if(mappings.containsKey(word2))
-        {
+        if (mappings.containsKey(word2)) {
             String nx = mappings.get(word2).next();
-            if(nx.isEmpty())
-            {
+            if (nx.isEmpty()) {
                 return nx;
             }
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
-            {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 return nx.toUpperCase();
             }
-            if(Category.Lu.contains(word.charAt(0)))
-            {
+            if (Category.Lu.contains(word.charAt(0))) {
                 return Character.toUpperCase(nx.charAt(0)) + nx.substring(1);
             }
             return nx;
-        }
-        else if(languages.containsKey(word2))
-        {
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+        } else if (languages.containsKey(word2)) {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 return languages.get(word2).word(rng, false, rng.nextInt(2, 4)).toUpperCase();
             }
-            if(Category.Lu.contains(word.charAt(0)))
-            {
+            if (Category.Lu.contains(word.charAt(0))) {
                 return languages.get(word2).word(rng, true, rng.nextInt(2, 4));
             }
             return languages.get(word2).word(rng, false, rng.nextInt(2, 4));
-        }
-        else if((num = numbers.get(word)) != null)
-        {
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
-            {
+        } else if ((num = numbers.get(word)) != null) {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 return (numberWordInRange(2, num).toUpperCase());
-            }
-            else if(Category.Lu.contains(word.charAt(0)))
-            {
+            } else if (Category.Lu.contains(word.charAt(0))) {
                 String w = numberWordInRange(2, num);
                 return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
-            }
-            else
-            {
+            } else {
                 return (numberWordInRange(2, num));
             }
-        }
-        else if((num = numberAdjectives.get(word)) != null)
-        {
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
-            {
+        } else if ((num = numberAdjectives.get(word)) != null) {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 return (numberAdjectiveInRange(2, num).toUpperCase());
-            }
-            else if(Category.Lu.contains(word.charAt(0)))
-            {
+            } else if (Category.Lu.contains(word.charAt(0))) {
                 String w = numberAdjectiveInRange(2, num);
                 return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
-            }
-            else
-            {
+            } else {
                 return (numberAdjectiveInRange(2, num));
             }
         }
@@ -640,100 +617,75 @@ public class Thesaurus {
         private final StringBuilder temp = new StringBuilder(64);
         @Override
         public void appendSubstitution(MatchResult match, TextBuffer dest) {
-            //dest.append(lookup(match.group(0)));
             temp.setLength(0);
             match.getGroup(0, temp);
             writeLookup(dest, temp);
         }
     }
 
-    private void writeLookup(TextBuffer dest, StringBuilder word) {
-        if(word == null || word.length() <= 0)
+    private void writeLookup(TextBuffer dest, CharSequence word) {
+        if (word == null || word.length() <= 0)
             return;
         GapShuffler<String> mapping;
         Language lang;
         Integer num, numberAdj;
-        if(word.charAt(0) == '@' && word.length() == 1)
-        {
+        if(StringTools.contains(word, "|")){
+            word = rng.randomElement(Pattern.compile("\\|+").split(word));
+        }
+
+        if (word.charAt(0) == '@' && word.length() == 1) {
             dest.append(defaultLanguage.word(rng, true, rng.nextInt(2, 4)));
             return;
-        }
-        else if((mapping = mappings.get(word)) != null)
-        {
+        } else if ((mapping = mappings.get(word)) != null) {
             String nx = mapping.next();
-            if(nx.isEmpty())
+            if (nx.isEmpty())
                 return;
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
-            {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 dest.append(nx.toUpperCase());
                 return;
             }
-            if(Category.Lu.contains(word.charAt(0)))
-            {
+            if (Category.Lu.contains(word.charAt(0))) {
                 dest.append(Character.toUpperCase(nx.charAt(0)));
                 dest.append(nx.substring(1));
                 return;
             }
             dest.append(nx);
             return;
-        }
-        else if((lang = languages.get(word)) != null)
-        {
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
-            {
+        } else if ((lang = languages.get(word)) != null) {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 dest.append(lang.word(rng, false, rng.nextInt(2, 4)).toUpperCase());
-            }
-            else if(Category.Lu.contains(word.charAt(0)))
-            {
+            } else if (Category.Lu.contains(word.charAt(0))) {
                 dest.append(lang.word(rng, true, rng.nextInt(2, 4)));
-            }
-            else
-            {
+            } else {
                 dest.append(lang.word(rng, false, rng.nextInt(2, 4)));
             }
             return;
-        }
-        else if((num = numbers.get(word)) != null)
-        {
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
-            {
+        } else if ((num = numbers.get(word)) != null) {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 dest.append(numberWordInRange(2, num).toUpperCase());
-            }
-            else if(Category.Lu.contains(word.charAt(0)))
-            {
+            } else if (Category.Lu.contains(word.charAt(0))) {
                 String w = numberWordInRange(2, num);
                 dest.append(Character.toUpperCase(w.charAt(0)));
                 dest.append(w.substring(1));
-            }
-            else
-            {
+            } else {
                 dest.append(numberWordInRange(2, num));
             }
             return;
-        }
-        else if((numberAdj = numberAdjectives.get(word)) != null)
-        {
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
-            {
+        } else if ((numberAdj = numberAdjectives.get(word)) != null) {
+            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 dest.append(numberAdjectiveInRange(2, numberAdj).toUpperCase());
-            }
-            else if(Category.Lu.contains(word.charAt(0)))
-            {
+            } else if (Category.Lu.contains(word.charAt(0))) {
                 String w = numberAdjectiveInRange(2, numberAdj);
                 dest.append(Character.toUpperCase(w.charAt(0)));
                 dest.append(w.substring(1));
-            }
-            else
-            {
+            } else {
                 dest.append(numberAdjectiveInRange(2, numberAdj));
             }
             return;
         }
-        if(dest instanceof Replacer.StringBuilderBuffer)
-        {
-            ((Replacer.StringBuilderBuffer)dest).sb.append(word);
-        }
-        else
+        if (dest instanceof Replacer.StringBuilderBuffer) {
+            ((Replacer.StringBuilderBuffer) dest).sb.append(word);
+        } else
             dest.append(word.toString());
 
     }
