@@ -378,74 +378,7 @@ public class Thesaurus {
         potionTermShuffler =    mappings.get("potion`term`");
         return this;
     }
-//
-//    /**
-//     * Given an archive String saved by {@link #archiveCategories()} (probably from another version of SquidLib), this
-//     * makes the Thesaurus class act like it did in that archive, assuming the {@link #rng} is seeded the same. This
-//     * modifies the {@link #mappings} field and the {@link #categories}, {@link #adjective}, {@link #noun}, and
-//     * {@link #nouns} static fields, so it can affect other Thesaurus objects produced later (it won't change
-//     * previously-made ones, probably).
-//     *
-//     * If you didn't have an archive of the categories from some version of SquidLib, you can download one of the small
-//     * files from <a href="https://github.com/yellowstonegames/SquidLib/tree/master/archives">the 'archives' folder of the
-//     * SquidLib repo</a>; there's an archive that acts as a snapshot of SquidLib 3.0.0's Thesaurus class, for instance.
-//     * If you save the 3.0.0 archive in a libGDX application's assets folder, you can reload the 3.0.0 definitions into
-//     * a Thesaurus called {@code myThesaurus} with:
-//     * <br>
-//     * {@code myThesaurus.addArchivedCategories(Gdx.files.internal("Thesaurus-3-0-0.txt").readString("UTF-8"));}
-//     *
-//     * @param archive an archived String of categories produced by {@link #archiveCategories()}
-//     * @return this Thesaurus, but static state of the class will also be modified so this may affect other Thesaurus objects
-//     */
-//    public Thesaurus addArchivedCategories(String archive){
-//        final OrderedMap<String, ObjectList<String>> cat = Converters.convertOrderedMap(
-//                Converters.convertString,
-//                Converters.convertObjectList(Converters.convertString)
-//        ).restore(archive);
-//
-//        mappings.clear();
-//
-//        categories.clear();
-//        categories.putAll(cat);
-//
-//        adjective.clear();
-//        adjective.putAll(cat);
-//
-//        noun.clear();
-//        noun.putAll(cat);
-//
-//        nouns.clear();
-//        nouns.putAll(cat);
-//
-//        Iterator<String> it = adjective.keySet().iterator();
-//        while (it.hasNext()){
-//            if(!it.next().contains("`adj`"))
-//                it.remove();
-//        }
-//        it = noun.keySet().iterator();
-//        while (it.hasNext()){
-//            if(!it.next().contains("`noun`"))
-//                it.remove();
-//        }
-//        it = nouns.keySet().iterator();
-//        while (it.hasNext()){
-//            if(!it.next().contains("`nouns`"))
-//                it.remove();
-//        }
-//
-//        for(Map.Entry<String, ObjectList<String>> kv : categories.entrySet())
-//        {
-//            addCategory(kv.getKey(), kv.getValue());
-//        }
-//        plantTermShuffler =  mappings.get("plant`term`");
-//        fruitTermShuffler =  mappings.get("fruit`term`");
-//        nutTermShuffler =    mappings.get("nut`term`");
-//        flowerTermShuffler = mappings.get("flower`term`");
-//        potionTermShuffler = mappings.get("potion`term`");
-//
-//        return this;
-//
-//    }
+
     /**
      * Given an archive String saved by {@link #archiveCategoriesAlternate()} (probably from another version of
      * SquidLib), this makes the Thesaurus class act like it did in that archive, assuming the {@link #rng} is seeded
@@ -466,7 +399,7 @@ public class Thesaurus {
      * @return this Thesaurus, but static state of the class will also be modified so this may affect other Thesaurus objects
      */
     public Thesaurus addArchivedCategoriesAlternate(String archive){
-        String[] lines = archive.split("\r?\n");
+        String[] lines = archive.split("\\R");
         mappings.clear();
 
         categories.clear();
@@ -638,13 +571,18 @@ public class Thesaurus {
             return defaultLanguage.word(rng, true, rng.nextInt(2, 4));
         }
         String word2 = word.toLowerCase();
+        Integer num;
         if(mappings.containsKey(word2))
         {
             String nx = mappings.get(word2).next();
             if(nx.isEmpty())
+            {
                 return nx;
+            }
             if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
+            {
                 return nx.toUpperCase();
+            }
             if(Category.Lu.contains(word.charAt(0)))
             {
                 return Character.toUpperCase(nx.charAt(0)) + nx.substring(1);
@@ -653,13 +591,46 @@ public class Thesaurus {
         }
         else if(languages.containsKey(word2))
         {
-            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
+            if(word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
                 return languages.get(word2).word(rng, false, rng.nextInt(2, 4)).toUpperCase();
+            }
             if(Category.Lu.contains(word.charAt(0)))
             {
                 return languages.get(word2).word(rng, true, rng.nextInt(2, 4));
             }
             return languages.get(word2).word(rng, false, rng.nextInt(2, 4));
+        }
+        else if((num = numbers.get(word)) != null)
+        {
+            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
+            {
+                return (numberWordInRange(2, num).toUpperCase());
+            }
+            else if(Category.Lu.contains(word.charAt(0)))
+            {
+                String w = numberWordInRange(2, num);
+                return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
+            }
+            else
+            {
+                return (numberWordInRange(2, num));
+            }
+        }
+        else if((num = numberAdjectives.get(word)) != null)
+        {
+            if(word.length() > 1 && Category.Lu.contains(word.charAt(1)))
+            {
+                return (numberAdjectiveInRange(2, num).toUpperCase());
+            }
+            else if(Category.Lu.contains(word.charAt(0)))
+            {
+                String w = numberAdjectiveInRange(2, num);
+                return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
+            }
+            else
+            {
+                return (numberAdjectiveInRange(2, num));
+            }
         }
         return word;
     }
