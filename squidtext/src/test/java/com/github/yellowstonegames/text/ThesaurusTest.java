@@ -78,11 +78,15 @@ public class ThesaurusTest {
         text.append('\n');
         text.append("By the light`adj` fire`noun` in my heart, I will vanquish thee!");
         text.append('\n');
-        text.append("I grant to thee, O Hero, the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun`!");
-        text.append('\n');
-        text.append("My people give to The Chosen Four our highest honor, the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun`!");
-        text.append('\n');
-        text.append("Here, it's the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun` or something.");
+        text.append("I grant to thee, O Hero, the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun`!\n");
+        //I grant to thee, O Hero, the Inferno Glaive!
+        text.append("My people give to The Chosen Four our highest honor, the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun`!\n");
+        //My people give to The Chosen Four our highest honor, the Chill Scimitar!
+        text.append("Here, it's the Fire`noun`|Ice`noun`|Lightning`noun` Blade`noun` or something.\n");
+        //Here, it's the Storm Scythe or something.
+        for (CharSequence lang : Thesaurus.languages.keySet()) {
+            text.append('`').append(lang).append(": ").append(lang).append(' ');
+        }
         for(String s : StringTools.wrap(thesaurus.process(text), 80))
         {
             System.out.println(s);

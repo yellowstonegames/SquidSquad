@@ -41,7 +41,7 @@ import static com.github.tommyettinger.ds.ObjectList.with;
  * Created by Tommy Ettinger on 5/23/2016.
  */
 public class Thesaurus {
-    protected static final Pattern wordMatch = Pattern.compile("([\\pL`\\|]+|@)"),
+    protected static final Pattern wordMatch = Pattern.compile("([\\pL`\\|_]+|@)"),
             similarFinder = Pattern.compile(".*?\\b(\\w\\w\\w\\w).*?{\\@1}.*$", "ui");
     public CaseInsensitiveOrderedMap<GapShuffler<String>> mappings;
     public ObjectList<Language.Alteration> alterations = new ObjectList<>(4);
@@ -399,7 +399,7 @@ public class Thesaurus {
      * @return this Thesaurus, but static state of the class will also be modified so this may affect other Thesaurus objects
      */
     public Thesaurus addArchivedCategoriesAlternate(String archive){
-        String[] lines = archive.split("\\R");
+        String[] lines = archive.split("\r?\n"); // can't use \\R in case this is run on GWT
         mappings.clear();
 
         categories.clear();
