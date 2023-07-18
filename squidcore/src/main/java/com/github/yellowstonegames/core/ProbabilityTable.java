@@ -39,11 +39,11 @@ import com.github.tommyettinger.random.WhiskerRandom;
  * item, except it makes its own random choice of its own {@code T} items; you can use the nested table
  * with {@link #add(ProbabilityTable, int)} and {@link #addAllNested(ObjectIntMap)}. Actually getting a
  * randomly-selected item is easy; just use {@link #random()}.
- * 
+ *
  * @see WeightedTable An alternative for when you want to track the items separately from their weights, and don't need nested tables.
- * 
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
- * 
+ *
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
+ *
  * @param <T> The type of object to be held in the table
  */
 public class ProbabilityTable<T> {

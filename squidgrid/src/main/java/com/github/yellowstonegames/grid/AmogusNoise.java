@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -160,16 +161,24 @@ public class AmogusNoise implements INoise {
     @Override
     public float getNoise(float x, float y) {
         long
-                x0 = fastFloor(x),
-                y0 = fastFloor(y);
-        final float xf = x - x0, yf = y - y0;
+                xi = fastFloor(x),
+                yi = fastFloor(y);
+        final float xf = x - xi, yf = y - yi;
 
-        long s = seed;
+        float s = MathTools.exclusiveFloat(seed);
         x = xf * xf * (3 - 2 * xf);
         y = yf * yf * (3 - 2 * yf);
-//        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        return (((1 - y) * ((1 - x) * (LongPointHash.hashAll(x0, y0, s)) + x * (LongPointHash.hashAll(x0+1, y0, s)))
-                + y * ((1 - x) * (LongPointHash.hashAll(x0, y0 + 1, s)) + x * (LongPointHash.hashAll(x0+1, y0+1, s)))) * 0x1p-63f);
+
+        float[] muls = QuasiRandomTools.goldenFloat[1];
+        float x0 = muls[0] * (xi + s), x1 = x0 + muls[0];
+        float y0 = muls[1] * (yi + s), y1 = y0 + muls[1];
+        x0 -= fastFloor(x0);
+        x1 -= fastFloor(x1);
+        y0 -= fastFloor(y0);
+        y1 -= fastFloor(y1);
+
+        return (((float) Math.sqrt((1 - y) * ((1 - x) * (x0 * y0) + x * (x1 * y0))
+                + y * ((1 - x) * (x0 * y1) + x * (x1 * y1))) - 0.5f) * 2f);
     }
 
     /**

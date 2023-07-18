@@ -145,61 +145,6 @@ public final class StringTools {
     }
 
     /**
-     * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
-     * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
-     * not take a vararg of Object items, since that would cause confusion with the overloads that take one object, such
-     * as {@link #join(CharSequence, Iterable)}; it takes a non-vararg Object array instead.
-     * @param delimiter the String or other CharSequence to separate items in elements with
-     * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
-     *                 returns an empty String, and if items are null, they are shown as "null"
-     * @return the String representations of the items in elements, separated by delimiter and put in one String
-     */
-    public static String join(CharSequence delimiter, Object[] elements) {
-        if (elements == null || elements.length == 0) return "";
-        StringBuilder sb = new StringBuilder(64);
-        sb.append(elements[0]);
-        for (int i = 1; i < elements.length; i++) {
-            sb.append(delimiter).append(elements[i]);
-        }
-        return sb.toString();
-    }
-    /**
-     * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
-     * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
-     * elements parameter.
-     * @param delimiter the String or other CharSequence to separate items in elements with
-     * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
-     *                 returns an empty String, and if items are null, they are shown as "null"
-     * @return the String representations of the items in elements, separated by delimiter and put in one String
-     */
-    public static String join(CharSequence delimiter, Iterable<?> elements) {
-        if (elements == null) return "";
-        Iterator<?> it = elements.iterator();
-        if(!it.hasNext()) return "";
-        StringBuilder sb = new StringBuilder(64);
-        sb.append(it.next());
-        while(it.hasNext()) {
-            sb.append(delimiter).append(it.next());
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Joins the boolean array {@code elements} without delimiters into a String, using "1" for true and "0" for false.
-     * @param elements an array or vararg of booleans
-     * @return a String using 1 for true elements and 0 for false, or "N" if elements is null
-     */
-    public static String joinAlt(boolean... elements) {
-        if (elements == null) return "N";
-        if(elements.length == 0) return "";
-        StringBuilder sb = new StringBuilder(64);
-        for (int i = 0; i < elements.length; i++) {
-            sb.append(elements[i] ? '1' : '0');
-        }
-        return sb.toString();
-    }
-
-    /**
      * Like {@link #join(CharSequence, long...)}, but this appends an 'L' to each number so they can be read in by Java.
      * @param delimiter
      * @param elements
@@ -309,12 +254,111 @@ public final class StringTools {
     }
 
     /**
+     * Joins the boolean array {@code elements} without delimiters into a String, using "1" for true and "0" for false.
+     * This is "dense" because it doesn't have any delimiters between elements.
+     * @param elements an array or vararg of booleans
+     * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
+     */
+    public static String joinAlt(boolean... elements) {
+        return joinAlt('1', '0', elements);
+    }
+    /**
+     * Joins the boolean array {@code elements} without delimiters into a String, using the char {@code t} for
+     * true and the char {@code f} for false. This is "dense" because it doesn't have any delimiters between
+     * elements.
+     * @param t the char to write for true values
+     * @param f the char to write for false values
+     * @param elements an array or vararg of booleans
+     * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
+     */
+    public static String joinAlt(char t, char f, boolean... elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(64);
+        for (int i = 0; i < elements.length; i++) {
+            sb.append(elements[i] ? t : f);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Joins the boolean array {@code elements} without delimiters into a StringBuilder, using "1" for true and "0" for
+     * false. This is "dense" because it doesn't have any delimiters between elements.
+     * @param sb a StringBuilder that will be modified in-place
+     * @param elements an array or vararg of booleans
+     * @return sb after modifications (if elements was non-null)
+     */
+    public static StringBuilder appendJoinedAlt(StringBuilder sb, boolean... elements) {
+        return appendJoinedAlt(sb, '1', '0', elements);
+    }
+
+    /**
+     * Joins the boolean array {@code elements} without delimiters into a StringBuilder, using the char {@code t} for
+     * true and the char {@code f} for false. This is "dense" because it doesn't have any delimiters between
+     * elements.
+     * @param sb a StringBuilder that will be modified in-place
+     * @param t the char to write for true values
+     * @param f the char to write for false values
+     * @param elements an array or vararg of booleans
+     * @return sb after modifications (if elements was non-null)
+     */
+    public static StringBuilder appendJoinedAlt(StringBuilder sb, char t, char f, boolean... elements) {
+        if (sb == null || elements == null) return sb;
+        if(elements.length == 0) return sb;
+        for (int i = 0; i < elements.length; i++) {
+            sb.append(elements[i] ? t : f);
+        }
+        return sb;
+    }
+
+    /**
+     * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
+     * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
+     * not take a vararg of Object items, since that would cause confusion with the overloads that take one object, such
+     * as {@link #join(CharSequence, Iterable)}; it takes a non-vararg Object array instead.
+     * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
+     * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
+     *                 returns an empty String, and if items are null, they are shown as "null"
+     * @return the String representations of the items in elements, separated by delimiter and put in one String
+     */
+    public static String join(CharSequence delimiter, Object[] elements) {
+        if (elements == null || elements.length == 0) return "";
+        StringBuilder sb = new StringBuilder(elements.length << 2);
+        sb.append(elements[0]);
+        if(delimiter == null) delimiter = "";
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]);
+        }
+        return sb.toString();
+    }
+    /**
+     * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
+     * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
+     * elements parameter.
+     * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
+     * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
+     *                 returns an empty String, and if items are null, they are shown as "null"
+     * @return the String representations of the items in elements, separated by delimiter and put in one String
+     */
+    public static String join(CharSequence delimiter, Iterable<?> elements) {
+        if (elements == null) return "";
+        Iterator<?> it = elements.iterator();
+        if(!it.hasNext()) return "";
+        StringBuilder sb = new StringBuilder(64);
+        sb.append(it.next());
+        if(delimiter == null) delimiter = "";
+        while(it.hasNext()) {
+            sb.append(delimiter).append(it.next());
+        }
+        return sb.toString();
+    }
+
+    /**
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
      * not take a vararg of Object items, since that would cause confusion with the overloads that take one object, such
      * as {@link #join(CharSequence, Iterable)}; it takes a non-vararg Object array instead.
      * @param sb a StringBuilder that will be modified in-place
-     * @param delimiter the String or other CharSequence to separate items in elements with
+     * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return sb after modifications (if elements was non-null)
@@ -322,17 +366,19 @@ public final class StringTools {
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Object[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
+        if(delimiter == null) delimiter = "";
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter).append(elements[i]);
         }
         return sb;
     }
+
     /**
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
-     * elements parameter.
+     * {@code elements} parameter.
      * @param sb a StringBuilder that will be modified in-place
-     * @param delimiter the String or other CharSequence to separate items in elements with
+     * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return sb after modifications (if elements was non-null)
@@ -342,39 +388,9 @@ public final class StringTools {
         Iterator<?> it = elements.iterator();
         if(!it.hasNext()) return sb;
         sb.append(it.next());
+        if(delimiter == null) delimiter = "";
         while(it.hasNext()) {
             sb.append(delimiter).append(it.next());
-        }
-        return sb;
-    }
-
-    /**
-     * Joins the boolean array {@code elements} without delimiters into a String, using "1" for true and "0" for false.
-     * @param sb a StringBuilder that will be modified in-place
-     * @param elements an array or vararg of booleans
-     * @return sb after modifications (if elements was non-null)
-     */
-    public static StringBuilder appendJoinedAlt(StringBuilder sb, boolean... elements) {
-        if (sb == null || elements == null) return sb;
-        if(elements.length == 0) return sb;
-        for (int i = 0; i < elements.length; i++) {
-            sb.append(elements[i] ? '1' : '0');
-        }
-        return sb;
-    }
-
-    /**
-     * Like {@link #appendJoined(StringBuilder, CharSequence, long...)}, but this appends an 'L' to each number so they can be read in by Java.
-     * @param sb a StringBuilder that will be modified in-place
-     * @param delimiter CharSequence that goes between elements
-     * @param elements the array or varargs of long items to append
-     * @return sb, after modifications
-     */
-    public static StringBuilder appendJoinedAlt(StringBuilder sb, CharSequence delimiter, long... elements) {
-        if (sb == null || elements == null || elements.length == 0) return sb;
-        sb.append(elements[0]).append('L');
-        for (int i = 1; i < elements.length; i++) {
-            sb.append(delimiter).append(elements[i]).append('L');
         }
         return sb;
     }
@@ -620,10 +636,10 @@ public final class StringTools {
     }
 
     /**
-     * Like {@link String#split(String)} but doesn't use any regex for splitting (delimiter is a literal String).
+     * Like {@link String#split(String)} but doesn't use any regex for splitting (the delimiter is a literal String).
      * @param source the String to get split-up substrings from
      * @param delimiter the literal String to split on (not a regex); will not be included in the returned String array
-     * @return a String array consisting of at least one String (all of Source if nothing was split)
+     * @return a String array consisting of at least one String (the entirety of Source if nothing was split)
      */
     public static String[] split(String source, String delimiter) {
         int amount = count(source, delimiter);
