@@ -22,7 +22,7 @@ import com.github.yellowstonegames.core.Interpolations.Interpolator;
 
 /**
  * Wraps another {@link INoise} and alters its output by running it through an {@link Interpolator}. The {@code [-1,1]}
- * range for noise is mapped to the {@code [0,1]} range that Interpolator uses, and mapped back afterwards. This uses
+ * range for noise is mapped to the {@code [0,1]} range that Interpolator uses, and mapped back afterward. This uses
  * Interpolator rather than the slightly-simpler {@link InterpolationFunction} because an Interpolator can be serialized
  * just by storing its {@link Interpolator#getTag()}, and loaded by looking up its tag.
  * <br>

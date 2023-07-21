@@ -18,10 +18,8 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.LinkedHashMap;
 
 import static com.github.tommyettinger.digital.MathTools.barronSpline;
 
@@ -31,7 +29,7 @@ import static com.github.tommyettinger.digital.MathTools.barronSpline;
  */
 public final class Interpolations {
 
-    private static final ObjectObjectOrderedMap<String, Interpolator> REGISTRY = new ObjectObjectOrderedMap<>(128);
+    private static final LinkedHashMap<String, Interpolator> REGISTRY = new LinkedHashMap<>(128);
 
     /**
      * Looks up the given {@code tag} in a registry of Interpolators, and if there exists one with that name, returns
@@ -39,7 +37,7 @@ public final class Interpolations {
      * @param tag a tag used to register an Interpolator here
      * @return the Interpolator registered with the given tag, or null if none exists for that tag
      */
-    public static @Nullable Interpolator get(String tag) {
+    public static Interpolator get(String tag) {
         return REGISTRY.get(tag);
     }
 
@@ -57,22 +55,6 @@ public final class Interpolations {
      */
     public static Interpolator[] getInterpolatorArray() {
         return REGISTRY.values().toArray(new Interpolator[0]);
-    }
-
-    /**
-     * Allocates a new ObjectList, fills it with every tag registered for an Interpolator, and returns that ObjectList.
-     * @return an ObjectList containing every String tag registered for an Interpolator
-     */
-    public static ObjectList<String> getTagList() {
-        return REGISTRY.keySet().toList();
-    }
-
-    /**
-     * Allocates a new ObjectList, fills it with every registered Interpolator, and returns that ObjectList.
-     * @return an ObjectList containing every Interpolator registered
-     */
-    public static ObjectList<Interpolator> getInterpolatorList() {
-        return REGISTRY.values().toList();
     }
 
     /**
@@ -97,12 +79,12 @@ public final class Interpolations {
 
     /**
      * A simple wrapper around an {@link InterpolationFunction} so it is associated with a String {@link #tag}. This
-     * also implements InterpolationFunction, and wraps the {@link #fn} it stores to clamp the output if the input is
-     * too low or too high.
+     * also implements InterpolationFunction, and wraps the {@link #fn} it stores to clamp its input to the 0 to 1
+     * range (preventing potentially troublesome complications when large or negative inputs come in).
      */
     public static class Interpolator implements InterpolationFunction {
-        public final @NonNull String tag;
-        public final @NonNull InterpolationFunction fn;
+        public final String tag;
+        public final InterpolationFunction fn;
 
         /**
          * Calls {@link #Interpolator(String, InterpolationFunction)} with {@code "linear"} and {@link #linearFunction}.
@@ -119,24 +101,22 @@ public final class Interpolations {
          * @param tag a unique String that can be used as a key to access this with {@link Interpolations#get(String)}
          * @param fn an {@link InterpolationFunction} to wrap
          */
-        public Interpolator(@NonNull String tag, @NonNull InterpolationFunction fn) {
+        public Interpolator(String tag, InterpolationFunction fn) {
             this.tag = tag;
             this.fn = fn;
             REGISTRY.put(tag, this);
         }
 
         /**
-         * Does bounds-checking on the input before passing it to {@link #fn}. If alpha is less than, roughly,
-         * one-millionth, then this always returns 0; if alpha is greater than or equal to 1, this returns 1, and in any
-         * other case it delegates to {@link #fn}.
-         * @param alpha almost always between 0 and 1, inclusive
+         * Does bounds-checking on the input before passing it to {@link #fn}. If alpha is less than 0, it is treated as
+         * 0; if alpha is greater than 1, it is treated as 1. Note that the output is still unrestricted, so
+         * InterpolationFunctions that can produce results outside the 0-1 range still can do that.
+         * @param alpha almost always between 0 and 1, inclusive, and will be clamped to ensure that
          * @return an interpolated value based on alpha, which may (for some functions) be negative, or greater than 1
          */
         @Override
         public float apply(float alpha) {
-            if (alpha < MathTools.FLOAT_ROUNDING_ERROR) return 0;
-            if (alpha >= 1f) return 1f;
-            return fn.apply(alpha);
+            return fn.apply(Math.min(Math.max(alpha, 0f), 1f));
         }
 
         /**
@@ -145,7 +125,7 @@ public final class Interpolations {
          * returnable from {@link #get(String)}.
          * @return the tag String
          */
-        public @NonNull String getTag() {
+        public String getTag() {
             return tag;
         }
 
@@ -155,7 +135,7 @@ public final class Interpolations {
          * method clamps the result if the {@code alpha} parameter is below 0 or above 1.
          * @return the InterpolationFunction this uses
          */
-        public @NonNull InterpolationFunction getFn() {
+        public InterpolationFunction getFn() {
             return fn;
         }
 
