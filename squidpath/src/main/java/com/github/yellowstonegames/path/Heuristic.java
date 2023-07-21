@@ -16,13 +16,14 @@
 
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.grid.Coord;
 
 import java.util.Arrays;
 import java.util.List;
 
 /** A {@code Heuristic} generates estimates of the cost to move from a given node to the goal.
+ * This is a functional interface whose functional method is {@link #estimate(Object, Object)}.
  * <p>
  * With a heuristic function pathfinding algorithms can choose the node that is most likely to lead to the optimal path.
  * The notion of "most likely" is controlled by a heuristic. If the heuristic is accurate, then the algorithm will be
@@ -32,12 +33,10 @@ import java.util.List;
  * unchanging for some section of usage but the start point changes often (this is useful for mouse tracking when the
  * path is reversed). The astar package should be significantly faster when paths are short and always have one goal,
  * unless you compare it to DijkstraMap when it can reuse a scan and call
- * {@link DijkstraMap#findPathPreScanned(ObjectList, Coord)}
+ * {@link DijkstraMap#findPathPreScanned(ObjectDeque, Coord)}
  * 
  * @param <V> Type of vertex; this is usually {@link Coord}
- * 
- * @author davebaol */
-@FunctionalInterface
+ */
 public interface Heuristic<V> {
 
 	/** Calculates an estimated cost to reach the goal node from the given node.

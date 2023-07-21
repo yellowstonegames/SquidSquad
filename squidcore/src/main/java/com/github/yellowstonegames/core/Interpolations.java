@@ -87,7 +87,6 @@ public final class Interpolations {
      * class by using one of its Interpolation constants with a method reference. This is a functional interface whose
      * functional method is {@link #apply(float)}.
      */
-    @FunctionalInterface
     public interface InterpolationFunction {
         float apply(float alpha);
 

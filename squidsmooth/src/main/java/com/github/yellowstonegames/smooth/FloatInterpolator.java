@@ -20,8 +20,8 @@ import com.github.tommyettinger.digital.MathTools;
 
 /**
  * Allows using various ways of interpolating a float value to another float value as a first-class function.
+ * This is a functional interface whose functional method is {@link #apply(float, float, float)}.
  */
-@FunctionalInterface
 public interface FloatInterpolator {
     float apply(float start, float end, float change);
 

@@ -19,12 +19,12 @@ package com.github.yellowstonegames.smooth;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import com.github.tommyettinger.function.ObjToObjFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import java.util.function.Function;
 
 /**
  * Handles multiple objects that are each associated with a {@link Glider}, and allows starting and stopping the
- * gliding animation for all of those objects at once. This must be given a Function that can extract some form of
+ * gliding animation for all of those objects at once. This must be given a ObjToObjFunction that can extract some form of
  * Glider out of a C object; this is typically a method reference, such as to a getter. A Director has an Iterable
  * of C objects, often an {@link com.github.tommyettinger.ds.ObjectList} or perhaps the Values collection of an
  * {@link com.github.tommyettinger.ds.ObjectObjectMap}, that it will go through and update the Glider in each C.
@@ -38,7 +38,7 @@ import java.util.function.Function;
  * @param <C> a type that contains or is otherwise associated with a {@link Glider}, such as a {@link CoordGlider}
  */
 public class Director<C> {
-    public @NonNull Function<? super C, Glider> extractor;
+    public @NonNull ObjToObjFunction<? super C, Glider> extractor;
     public Iterable<C> container;
 
     protected long playTime = Long.MAX_VALUE;
@@ -46,16 +46,16 @@ public class Director<C> {
     protected long duration = 500L;
     protected long elapsed = 0L;
 
-    public Director(@NonNull Function<? super C, Glider> fun){
+    public Director(@NonNull ObjToObjFunction<? super C, Glider> fun){
         extractor = fun;
     }
 
-    public Director(@NonNull Function<? super C, Glider> fun, Iterable<C> coll){
+    public Director(@NonNull ObjToObjFunction<? super C, Glider> fun, Iterable<C> coll){
         this(fun);
         container = coll;
     }
 
-    public Director(@NonNull Function<? super C, Glider> fun, Iterable<C> coll, long durationMillis){
+    public Director(@NonNull ObjToObjFunction<? super C, Glider> fun, Iterable<C> coll, long durationMillis){
         this(fun);
         container = coll;
         duration = durationMillis;

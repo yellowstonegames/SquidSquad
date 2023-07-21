@@ -56,8 +56,8 @@ public class SquidInput extends InputAdapter {
      * A single-method interface used to process "typed" characters, special characters produced by unusual keys, and
      * modifiers that can affect them. SquidInput has numerous static char values that are expected to be passed
      * to handle() in place of the special keys (such as arrow keys) that do not have a standard char value.
+     * This is a functional interface whose functional method is {@link #handle(char, boolean, boolean, boolean)}.
      */
-    @FunctionalInterface
     public interface KeyHandler{
         /**
          * The only method you need to implement yourself in KeyHandler, this should react to keys such as

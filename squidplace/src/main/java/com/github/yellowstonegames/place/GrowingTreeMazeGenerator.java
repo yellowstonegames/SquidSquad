@@ -17,22 +17,21 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.function.IntToIntFunction;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.Direction;
 
-import java.util.function.IntUnaryOperator;
-
 /**
- * A maze generator that can be configured using an {@link IntUnaryOperator}, which can be customized for the app.
+ * A maze generator that can be configured using an {@link IntToIntFunction}, which can be customized for the app.
  * Based in part on code from
  * <a href="http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm">Jamis Buck's blog</a>.
- * This defaults to {@link #newest} for its IntUnaryOperator, but {@link #random} is also good to try; you can specify a
- * IntUnaryOperator with {@link #generate(IntUnaryOperator)}.
+ * This defaults to {@link #newest} for its IntToIntFunction, but {@link #random} is also good to try; you can specify a
+ * IntToIntFunction with {@link #generate(IntToIntFunction)}.
  * <br>
- * Here, an IntUnaryOperator used to choose cells takes a size (exclusive upper bound) and returns some int between 0
+ * Here, an IntToIntFunction used to choose cells takes a size (exclusive upper bound) and returns some int between 0
  * (inclusive) and that size (exclusive). These are typically lambdas.
  */
 public class GrowingTreeMazeGenerator implements PlaceGenerator {
@@ -56,7 +55,7 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
 
     /**
      * Gets the most recently-produced maze as a 2D char array, usually produced by calling {@link #generate()} or
-     * {@link #generate(IntUnaryOperator)}. This passes a direct reference and not a copy, so you can normally modify the
+     * {@link #generate(IntToIntFunction)}. This passes a direct reference and not a copy, so you can normally modify the
      * returned array to propagate changes back into this PlaceGenerator.
      *
      * @return the most recently-produced dungeon/map as a 2D char array
@@ -72,7 +71,7 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
     }
 
     /**
-     * Builds and returns a 2D char array maze by using {@link #newest} with {@link #generate(IntUnaryOperator)}.
+     * Builds and returns a 2D char array maze by using {@link #newest} with {@link #generate(IntToIntFunction)}.
      * 
      * @return {@link #dungeon}, after filling it with a maze
      */
@@ -84,12 +83,12 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
     /**
      * Builds and returns a 2D char array maze using the provided chooser method object. The most maze-like dungeons
      * use {@link #newest}, the least maze-like use {@link #oldest}, and the most jumbled use {@link #random} or a
-     * mix of others using {@link #mix(IntUnaryOperator, double, IntUnaryOperator, double)}.
+     * mix of others using {@link #mix(IntToIntFunction, double, IntToIntFunction, double)}.
      * 
      * @param choosing the callback object for making the split decision
      * @return {@link #dungeon}, after filling it with a maze
      */
-    public char[][] generate(IntUnaryOperator choosing) {
+    public char[][] generate(IntToIntFunction choosing) {
         if(dungeon == null || dungeon.length != width || dungeon[0].length != height)
             dungeon = ArrayTools.fill('#', width, height);
         else 
@@ -167,10 +166,10 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
      * └───┴───────┴───────┴─────┴─────┴─────┘
      * </pre>
      */
-    public final IntUnaryOperator newest = (size) -> size - 1;
+    public final IntToIntFunction newest = (size) -> size - 1;
     /**
      * Produces mostly straight corridors that dead-end at the map's edge; probably only useful with
-     * {@link #mix(IntUnaryOperator, double, IntUnaryOperator, double)}.
+     * {@link #mix(IntToIntFunction, double, IntToIntFunction, double)}.
      * <br>
      * Example:
      * <pre>
@@ -195,11 +194,11 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
      * └─────────┴─┴─┴─┴─────────────────────┘
      * </pre>
      */
-    public final IntUnaryOperator oldest = (size) -> 0;
+    public final IntToIntFunction oldest = (size) -> 0;
     /**
      * Produces chaotic, jumbled spans of corridors, often with dead-ends, that are similar to those produced by Prim's
      * algorithm. This works well when mixed with {@link #newest} using
-     * {@link #mix(IntUnaryOperator, double, IntUnaryOperator, double)}, and not as well when mixed with {@link #oldest}.
+     * {@link #mix(IntToIntFunction, double, IntToIntFunction, double)}, and not as well when mixed with {@link #oldest}.
      * <br>
      * Example:
      * <pre>
@@ -224,19 +223,19 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
      * └─┴───┴───────────────────┴───┴─┴─┴─┴─┘
      * </pre>
      */
-    public final IntUnaryOperator random = (size) -> rng.nextInt(size);
+    public final IntToIntFunction random = (size) -> rng.nextInt(size);
 
     /**
-     * Mixes two IntUnaryOperator values, like {@link #newest} and {@link #random}, given a weight for each, and produces
-     * a new IntUnaryOperator that randomly (respecting weight) picks one of those IntUnaryOperators each time it is used.
-     * @param methodA the first IntUnaryOperator to mix; must not be null
+     * Mixes two IntToIntFunction values, like {@link #newest} and {@link #random}, given a weight for each, and produces
+     * a new IntToIntFunction that randomly (respecting weight) picks one of those IntToIntFunctions each time it is used.
+     * @param methodA the first IntToIntFunction to mix; must not be null
      * @param chanceA the weight to favor choosing methodA
-     * @param methodB the second IntUnaryOperator to mix; must not be null
+     * @param methodB the second IntToIntFunction to mix; must not be null
      * @param chanceB the weight to favor choosing methodB
-     * @return a IntUnaryOperator that randomly picks between {@code methodA} and {@code methodB} each time it is used
+     * @return a IntToIntFunction that randomly picks between {@code methodA} and {@code methodB} each time it is used
      */
-    public IntUnaryOperator mix(final IntUnaryOperator methodA, final double chanceA,
-                              final IntUnaryOperator methodB, final double chanceB) {
+    public IntToIntFunction mix(final IntToIntFunction methodA, final double chanceA,
+                              final IntToIntFunction methodB, final double chanceB) {
         final double a = Math.max(0.0, chanceA);
         final double sum = a + Math.max(0.0, chanceB);
         if(sum <= 0.0) return random;

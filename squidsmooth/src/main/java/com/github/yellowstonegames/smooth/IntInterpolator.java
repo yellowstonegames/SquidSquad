@@ -21,8 +21,8 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 
 /**
  * Allows using various ways of interpolating an int value to another int value as a first-class function.
+ * This is a functional interface whose functional method is {@link #apply(int, int, float)}.
  */
-@FunctionalInterface
 public interface IntInterpolator {
     int apply(int start, int end, float change);
 
