@@ -261,7 +261,7 @@ public class FoamNoiseStandalone {
     }
     /**
      * Gets value noise with the lowest, fastest level of detail. Uses the given seed
-     * and does not change x, y, or z.
+     * and does not change x, y, or z. This has a different output range (0 to 1) than foam noise.
      * @param x x coordinate
      * @param y y coordinate
      * @param z z coordinate
@@ -586,7 +586,7 @@ public class FoamNoiseStandalone {
 
     @Override
     public String toString() {
-        return "ValueNoiseStandalone{seed=" + seed + "}";
+        return "FoamNoiseStandalone{seed=" + seed + "}";
     }
 
     @Override
@@ -596,11 +596,13 @@ public class FoamNoiseStandalone {
 
         FoamNoiseStandalone that = (FoamNoiseStandalone) o;
 
-        return seed == that.seed;
+        if (seed != that.seed) return false;
+        return Double.compare(that.frequency, frequency) == 0;
     }
 
     @Override
     public int hashCode() {
-        return (int) (seed ^ (seed >>> 32));
+        final long bits = NumberUtils.doubleToLongBits(frequency) * 421L;
+        return (int) (seed ^ seed >>> 32 ^ bits ^ bits >>> 32);
     }
 }

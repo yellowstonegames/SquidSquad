@@ -15,6 +15,8 @@
  */
 package com.github.yellowstonegames.grid.standalone;
 
+import com.badlogic.gdx.utils.NumberUtils;
+
 /**
  * Value noise code that depends only on libGDX.
  * <br>
@@ -53,7 +55,7 @@ public class ValueNoiseStandalone {
     // 2D SECTION
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses
+     * Gets 2D value noise with the lowest, fastest level of detail. Uses
      * {@link #getSeed()} and multiplies x and y by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -75,7 +77,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses the given seed
+     * Gets 2D value noise with the lowest, fastest level of detail. Uses the given seed
      * and does not change x or y.
      * @param x x coordinate
      * @param y y coordinate
@@ -112,7 +114,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets 2D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * {@link #getSeed()} and multiplies x and y by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -124,7 +126,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets 2D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * the given seed, and multiplies x and y by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -137,7 +139,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
+     * Gets 2D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
      * seed instead of {@link #getSeed()}, and multiplies x and y by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -166,7 +168,7 @@ public class ValueNoiseStandalone {
     // 3D SECTION
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses
+     * Gets 3D value noise with the lowest, fastest level of detail. Uses
      * {@link #getSeed()} and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -178,7 +180,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * 2D value noise with the lowest, fastest level of detail. Uses the
+     * 3D value noise with the lowest, fastest level of detail. Uses the
      * seed {@code 12345L} and does not change x, y, or z.
      * @param x x coordinate
      * @param y y coordinate
@@ -190,7 +192,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses the given seed
+     * Gets 3D value noise with the lowest, fastest level of detail. Uses the given seed
      * and does not change x, y, or z.
      * @param x x coordinate
      * @param y y coordinate
@@ -238,7 +240,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets 3D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * {@link #getSeed()} and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -251,7 +253,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets 3D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * the given seed, and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -265,7 +267,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
+     * Gets 3D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
      * seed instead of {@link #getSeed()}, and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -297,7 +299,7 @@ public class ValueNoiseStandalone {
     // 4D SECTION
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses
+     * Gets 4D value noise with the lowest, fastest level of detail. Uses
      * {@link #getSeed()} and multiplies x, y, z, and w by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -310,7 +312,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * 2D simplex noise with the lowest, fastest level of detail. Uses the
+     * 4D value noise with the lowest, fastest level of detail. Uses the
      * seed {@code 12345L} and does not change x, y, z, or w.
      * @param x x coordinate
      * @param y y coordinate
@@ -323,7 +325,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses the given seed
+     * Gets 4D value noise with the lowest, fastest level of detail. Uses the given seed
      * and does not change x, y, z, or w.
      * @param x x coordinate
      * @param y y coordinate
@@ -386,7 +388,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets 4D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * {@link #getSeed()} and multiplies x, y, z, and w by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -400,7 +402,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets 4D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * the given seed, and multiplies x, y, z, and w by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -415,7 +417,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
+     * Gets 4D value noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
      * seed instead of {@link #getSeed()}, and multiplies x, y, z, and w by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -477,11 +479,13 @@ public class ValueNoiseStandalone {
 
         ValueNoiseStandalone that = (ValueNoiseStandalone) o;
 
-        return seed == that.seed;
+        if (seed != that.seed) return false;
+        return Double.compare(that.frequency, frequency) == 0;
     }
 
     @Override
     public int hashCode() {
-        return (int) (seed ^ (seed >>> 32));
+        final long bits = NumberUtils.doubleToLongBits(frequency) * 421L;
+        return (int) (seed ^ seed >>> 32 ^ bits ^ bits >>> 32);
     }
 }
