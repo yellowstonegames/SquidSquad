@@ -16,16 +16,17 @@
 package com.github.yellowstonegames.grid.standalone;
 
 /**
- * Simplex noise code that depends only on libGDX.
+ * Value noise code that depends only on libGDX.
  * <br>
- * This is a smooth type of noise that works well if you can request multiple octaves from it.
+ * This is a somewhat-smooth type of noise that mostly works well when you request multiple octaves from it.
  * You can call {@link #noiseWithOctaves(double, double, long, int, double)} with 2 or more octaves to get higher
- * levels of detail.
+ * levels of detail. Below about 3 or 4 octaves, the quality will be poor and this will look artificial.
  * <br>
  * This is a drop-in replacement for the SimplexNoise.java file written by Stefan Gustavson in 2012.
- * Unlike that code, this allows a seed to be specified per-call because this uses hashing rather than a perm table.
+ * It (obviously) uses value noise instead of simplex noise, but otherwise follows the same ideas as my other
+ * standalone noise class(es), which could be distributed in the same folder.
  */
-public class SimplexNoiseStandalone {
+public class ValueNoiseStandalone {
 
     /**
      * Use the same seed for any noise that should be continuous (smooth) across calls to nearby points.
@@ -37,13 +38,13 @@ public class SimplexNoiseStandalone {
      */
     protected double frequency = 1.0;
 
-    public static final SimplexNoiseStandalone instance = new SimplexNoiseStandalone();
+    public static final ValueNoiseStandalone instance = new ValueNoiseStandalone();
 
-    public SimplexNoiseStandalone() {
+    public ValueNoiseStandalone() {
         this(1234567890L, 1.0);
     }
 
-    public SimplexNoiseStandalone(long seed, double frequency)
+    public ValueNoiseStandalone(long seed, double frequency)
     {
         this.seed = seed;
         this.frequency = frequency;
@@ -51,10 +52,7 @@ public class SimplexNoiseStandalone {
 
     // SHARED
 
-    protected static final double F2 = 0.36602540378443864676372317075294,
-            G2 = 0.21132486540518711774542560974902,
-            H2 = G2 * 2.0,
-            LIMIT2 = 0.5,
+    protected static final double
             F3 = (1.0 / 3.0),
             G3 = (1.0 / 6.0),
             LIMIT3 = 0.6,
@@ -103,12 +101,6 @@ public class SimplexNoiseStandalone {
         return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 56);
     }
 
-
-    protected static double gradCoord2D(long seed, int x, int y, double xd, double yd) {
-        final int h = hash256(x, y, seed) << 1;
-        return xd * GRADIENTS_2D[h] + yd * GRADIENTS_2D[h+1];
-    }
-
     /**
      * Computes the hash for a 3D int point and its dot product with a 3D double point as one step.
      * @return a double between -1.2571 and 1.2571, exclusive
@@ -132,7 +124,7 @@ public class SimplexNoiseStandalone {
     }
 
     /**
-     * 2D simplex noise with the lowest, fastest level of detail. Uses the
+     * 2D value noise with the lowest, fastest level of detail. Uses the
      * seed {@code 12345L} and does not change x or y.
      * @param x x coordinate
      * @param y y coordinate
@@ -150,57 +142,33 @@ public class SimplexNoiseStandalone {
      * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
      * @return noise between -1 and 1
      */
-    public static double noiseWithSeed(final double x, final double y, final long seed) {
-        double t = (x + y) * F2;
-        // casting Math.floor used to be slow on older JVMs; it shouldn't be since Java 16 or so.
-        int i = (int)Math.floor(x + t);
-        int j = (int)Math.floor(y + t);
+    public static double noiseWithSeed(double x, double y, final long seed) {
+        final long STEPX = 0xC13FA9A902A6328FL;
+        final long STEPY = 0x91E10DA5C79E7B1DL;
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (3 - 2 * x);
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (3 - 2 * y);
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        return ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, seed))
+                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, seed)))
+                * 0x1p-63;
+    }
 
-        t = (i + j) * G2;
-        double X0 = i - t;
-        double Y0 = j - t;
-
-        double x0 = x - X0;
-        double y0 = y - Y0;
-
-        int i1, j1;
-        if (x0 > y0) {
-            i1 = 1;
-            j1 = 0;
-        } else {
-            i1 = 0;
-            j1 = 1;
-        }
-
-        double x1 = x0 - i1 + G2;
-        double y1 = y0 - j1 + G2;
-        double x2 = x0 - 1 + H2;
-        double y2 = y0 - 1 + H2;
-
-        double n0, n1, n2;
-
-        n0 = LIMIT2 - x0 * x0 - y0 * y0;
-        if (n0 > 0) {
-            n0 *= n0;
-            n0 *= n0 * gradCoord2D(seed, i, j, x0, y0);
-        }
-        else n0 = 0.0;
-
-        n1 = LIMIT2 - x1 * x1 - y1 * y1;
-        if (n1 > 0) {
-            n1 *= n1;
-            n1 *= n1 * gradCoord2D(seed, i + i1, j + j1, x1, y1);
-        }
-        else n1 = 0.0;
-
-        n2 = LIMIT2 - x2 * x2 - y2 * y2;
-        if (n2 > 0)  {
-            n2 *= n2;
-            n2 *= n2 * gradCoord2D(seed, i + 1, j + 1, x2, y2);
-        }
-        else n2 = 0.0;
-
-        return (n0 + n1 + n2) * 99.20689070704672; // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
+    /**
+     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
+     * They should normally be used for the 3D version of R2, but we only use 2 of the 3 constants.
+     * @param x should be premultiplied by 0xC13FA9A902A6328FL
+     * @param y should be premultiplied by 0x91E10DA5C79E7B1DL
+     * @param s state, any int
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, long s) {
+        s ^= x ^ y;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
     }
 
     /**
@@ -686,7 +654,7 @@ public class SimplexNoiseStandalone {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimplexNoiseStandalone that = (SimplexNoiseStandalone) o;
+        ValueNoiseStandalone that = (ValueNoiseStandalone) o;
 
         return seed == that.seed;
     }
