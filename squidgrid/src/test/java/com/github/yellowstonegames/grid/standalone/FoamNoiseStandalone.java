@@ -94,10 +94,10 @@ public class FoamNoiseStandalone {
         final double a = valueNoise(xin, yin, seed);
         xin = p2;
         yin = p0;
-        final double b = valueNoise(xin + a, yin, seed + 0x9A827999FCEF3242L);
+        final double b = valueNoise(xin + a, yin, seed + 0x9A827999FCEF3243L);
         xin = p0;
         yin = p1;
-        final double c = valueNoise(xin + b, yin, seed + 0x3504F333F9DE6484L);
+        final double c = valueNoise(xin + b, yin, seed + 0x3504F333F9DE6486L);
         final double result = (a + b + c) * 0.3333333333333333;
         // Barron spline
         final double sharp = 0.75 * 2.2; // increase to sharpen, decrease to soften
@@ -144,7 +144,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets foam noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * {@link #getSeed()} and multiplies x and y by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -156,7 +156,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets foam noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * the given seed, and multiplies x and y by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -169,7 +169,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
+     * Gets foam noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
      * seed instead of {@link #getSeed()}, and multiplies x and y by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -198,7 +198,7 @@ public class FoamNoiseStandalone {
     // 3D SECTION
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses
+     * Gets foam noise with the lowest, fastest level of detail. Uses
      * {@link #getSeed()} and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -210,7 +210,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * 2D value noise with the lowest, fastest level of detail. Uses the
+     * 2D foam noise with the lowest, fastest level of detail. Uses the
      * seed {@code 12345L} and does not change x, y, or z.
      * @param x x coordinate
      * @param y y coordinate
@@ -222,7 +222,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * Gets noise with the lowest, fastest level of detail. Uses the given seed
+     * Gets foam noise with the lowest, fastest level of detail. Uses the given seed
      * and does not change x, y, or z.
      * @param x x coordinate
      * @param y y coordinate
@@ -230,7 +230,45 @@ public class FoamNoiseStandalone {
      * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
      * @return noise between -1 and 1
      */
-    public static double noiseWithSeed(double x, double y, double z, final long seed) {
+    public static double noiseWithSeed(double x, double y, double z, long seed) {
+        final double p0 = x;
+        final double p1 = x * -0.3333333333333333 + y * 0.9428090415820634;
+        final double p2 = x * -0.3333333333333333 + y * -0.4714045207910317 + z * 0.816496580927726;
+        final double p3 = x * -0.3333333333333333 + y * -0.4714045207910317 + z * -0.816496580927726;
+
+        double xin = p1;
+        double yin = p2;
+        double zin = p3;
+        final double a = valueNoise(xin, yin, zin, seed);
+        xin = p0;
+        yin = p2;
+        zin = p3;
+        final double b = valueNoise(xin + a, yin, zin, seed + 0x9A827999FCEF3243L);
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        final double c = valueNoise(xin + b, yin, zin, seed + 0x3504F333F9DE6486L);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        final double d = valueNoise(xin + c, yin, zin, seed + 0xCF876CCDF6CD96C9L);
+        final double result = (a + b + c + d) * 0.25;
+        // Barron spline
+        final double sharp = 0.75 * 3.3; // increase to sharpen, decrease to soften
+        final double diff = 0.5 - result;
+        final long sign = NumberUtils.doubleToLongBits(diff) >> 63, one = sign | 1;
+        return (((result + sign)) / (Double.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1.0;
+    }
+    /**
+     * Gets value noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x, y, or z.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @return noise between 0 and 1
+     */
+    public static double valueNoise(double x, double y, double z, final long seed) {
         final long STEPX = 0xD1B54A32D192ED03L;
         final long STEPY = 0xABC98388FB8FAC03L;
         final long STEPZ = 0x8CB92BA72F3D8DD7L;
@@ -252,7 +290,7 @@ public class FoamNoiseStandalone {
                 + z *
                 ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, seed))
                         + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, seed)))
-        ) * 0x1p-63;
+        ) * 0x1p-64 + 0.5;
     }
 
     /**
@@ -270,7 +308,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets foam noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * {@link #getSeed()} and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -283,7 +321,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
+     * Gets foam noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses
      * the given seed, and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
@@ -297,7 +335,7 @@ public class FoamNoiseStandalone {
     }
 
     /**
-     * Gets noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
+     * Gets foam noise with variable level of detail, with higher octaves producing more detail, more slowly. Uses the given
      * seed instead of {@link #getSeed()}, and multiplies x, y, and z by frequency.
      * @param x x coordinate, will be adjusted by frequency
      * @param y y coordinate, will be adjusted by frequency
