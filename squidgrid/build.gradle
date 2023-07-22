@@ -8,6 +8,7 @@ javadoc.exclude("emu")
 dependencies {
     api project(':squidcore')
     testImplementation project(':squidplace')
+    testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }
