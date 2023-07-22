@@ -159,11 +159,11 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
-     * They should normally be used for the 3D version of R2, but we only use 2 of the 3 constants.
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
      * @param x should be premultiplied by 0xC13FA9A902A6328FL
      * @param y should be premultiplied by 0x91E10DA5C79E7B1DL
-     * @param s state, any int
+     * @param s state, any long
      * @return a mediocre 64-bit hash
      */
     private static long hashPart(final long x, final long y, long s) {
@@ -238,7 +238,7 @@ public class ValueNoiseStandalone {
     }
 
     /**
-     * 2D simplex noise with the lowest, fastest level of detail. Uses the
+     * 2D value noise with the lowest, fastest level of detail. Uses the
      * seed {@code 12345L} and does not change x, y, or z.
      * @param x x coordinate
      * @param y y coordinate
@@ -258,108 +258,43 @@ public class ValueNoiseStandalone {
      * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
      * @return noise between -1 and 1
      */
-    public static double noiseWithSeed(final double x, final double y, final double z, final long seed) {
-        double t = (x + y + z) * F3;
-        int i = (int)Math.floor(x + t);
-        int j = (int)Math.floor(y + t);
-        int k = (int)Math.floor(z + t);
+    public static double noiseWithSeed(double x, double y, double z, final long seed) {
+        final long STEPX = 0xD1B54A32D192ED03L;
+        final long STEPY = 0xABC98388FB8FAC03L;
+        final long STEPZ = 0x8CB92BA72F3D8DD7L;
+        long xFloor = (int)Math.floor(x);
+        x -= xFloor;
+        x *= x * (3 - 2 * x);
+        long yFloor = (int)Math.floor(y);
+        y -= yFloor;
+        y *= y * (3 - 2 * y);
+        long zFloor = (int)Math.floor(z);
+        z -= zFloor;
+        z *= z * (3 - 2 * z);
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        zFloor *= STEPZ;
+        return ((1 - z) *
+                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, seed))
+                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, seed)))
+                + z *
+                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, seed))
+                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, seed)))
+        ) * 0x1p-63;
+    }
 
-        t = (i + j + k) * G3;
-        double x0 = x - (i - t);
-        double y0 = y - (j - t);
-        double z0 = z - (k - t);
-
-        int i1, j1, k1;
-        int i2, j2, k2;
-
-        if (x0 >= y0) {
-            if (y0 >= z0) {
-                i1 = 1;
-                j1 = 0;
-                k1 = 0;
-                i2 = 1;
-                j2 = 1;
-                k2 = 0;
-            } else if (x0 >= z0) {
-                i1 = 1;
-                j1 = 0;
-                k1 = 0;
-                i2 = 1;
-                j2 = 0;
-                k2 = 1;
-            } else // x0 < z0
-            {
-                i1 = 0;
-                j1 = 0;
-                k1 = 1;
-                i2 = 1;
-                j2 = 0;
-                k2 = 1;
-            }
-        } else // x0 < y0
-        {
-            if (y0 < z0) {
-                i1 = 0;
-                j1 = 0;
-                k1 = 1;
-                i2 = 0;
-                j2 = 1;
-                k2 = 1;
-            } else if (x0 < z0) {
-                i1 = 0;
-                j1 = 1;
-                k1 = 0;
-                i2 = 0;
-                j2 = 1;
-                k2 = 1;
-            } else // x0 >= z0
-            {
-                i1 = 0;
-                j1 = 1;
-                k1 = 0;
-                i2 = 1;
-                j2 = 1;
-                k2 = 0;
-            }
-        }
-
-        double x1 = x0 - i1 + G3;
-        double y1 = y0 - j1 + G3;
-        double z1 = z0 - k1 + G3;
-        double x2 = x0 - i2 + F3;
-        double y2 = y0 - j2 + F3;
-        double z2 = z0 - k2 + F3;
-        double x3 = x0 - 0.5;
-        double y3 = y0 - 0.5;
-        double z3 = z0 - 0.5;
-
-        double n = 0;
-
-        t = LIMIT3 - x0 * x0 - y0 * y0 - z0 * z0;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord3D(seed, i, j, k, x0, y0, z0);
-        }
-
-        t = LIMIT3 - x1 * x1 - y1 * y1 - z1 * z1;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord3D(seed, i + i1, j + j1, k + k1, x1, y1, z1);
-        }
-
-        t = LIMIT3 - x2 * x2 - y2 * y2 - z2 * z2;
-        if (t > 0) {
-            t *= t;
-            n += t * t * gradCoord3D(seed, i + i2, j + j2, k + k2, x2, y2, z2);
-        }
-
-        t = LIMIT3 - x3 * x3 - y3 * y3 - z3 * z3;
-        if (t > 0)  {
-            t *= t;
-            n += t * t * gradCoord3D(seed, i + 1, j + 1, k + 1, x3, y3, z3);
-        }
-
-        return 31.5f * n;
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xD1B54A32D192ED03L
+     * @param y should be premultiplied by 0xABC98388FB8FAC03L
+     * @param z should be premultiplied by 0x8CB92BA72F3D8DD7L
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, final long z, long s) {
+        s ^= x ^ y ^ z;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
     }
 
     /**
