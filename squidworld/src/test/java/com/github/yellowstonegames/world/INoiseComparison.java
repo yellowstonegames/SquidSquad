@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.world.standalone.FoamNoiseStandalone;
 
 import java.util.Arrays;
 
@@ -55,9 +56,116 @@ public class INoiseComparison extends ApplicationAdapter {
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.CubeHash(1, 32)),
             new AmogusNoise(1L),
+            new INoise() {
+                public FoamNoiseStandalone standalone = new FoamNoiseStandalone(1L, 1.0);
+
+                @Override
+                public long getSeed() {
+                    return standalone.getSeed();
+                }
+
+                @Override
+                public void setSeed(long seed) {
+                    standalone.setSeed(seed);
+                }
+
+                @Override
+                public int getMinDimension() {
+                    return 2;
+                }
+
+                @Override
+                public int getMaxDimension() {
+                    return 4;
+                }
+
+                @Override
+                public boolean canUseSeed() {
+                    return true;
+                }
+
+                @Override
+                public float getNoise(float x, float y) {
+                    return (float)standalone.getNoise(x, y);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z) {
+                    return (float)standalone.getNoise(x, y, z);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w) {
+                    return (float)standalone.getNoise(x, y, z, w);
+                }
+
+                /**
+                 * Gets 2D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+                 * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+                 *
+                 * @param x    x position; can be any finite float
+                 * @param y    y position; can be any finite float
+                 * @param seed
+                 * @return a noise value between -1.0f and 1.0f, both inclusive
+                 * @throws UnsupportedOperationException if 2D noise cannot be produced by this generator
+                 */
+                @Override
+                public float getNoiseWithSeed(float x, float y, long seed) {
+                    return (float) FoamNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(), standalone.getSeed());
+                }
+
+                /**
+                 * Gets 3D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+                 * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+                 *
+                 * @param x    x position; can be any finite float
+                 * @param y    y position; can be any finite float
+                 * @param z    z position; can be any finite float
+                 * @param seed
+                 * @return a noise value between -1.0f and 1.0f, both inclusive
+                 * @throws UnsupportedOperationException if 3D noise cannot be produced by this generator
+                 */
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                    return (float) FoamNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(), z * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                /**
+                 * Gets 4D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+                 * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+                 *
+                 * @param x    x position; can be any finite float
+                 * @param y    y position; can be any finite float
+                 * @param z    z position; can be any finite float
+                 * @param w    w position; can be any finite float
+                 * @param seed
+                 * @return a noise value between -1.0f and 1.0f, both inclusive
+                 * @throws UnsupportedOperationException if 4D noise cannot be produced by this generator
+                 */
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+                    return (float) FoamNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(),
+                            z * standalone.getFrequency(), w * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u) {
+                    return 0;
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u, float v) {
+                    return 0;
+                }
+            }
     };
     private int index0 = 0;
-    private int index1 = 12;
+    private int index1 = 13;
     private NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions
