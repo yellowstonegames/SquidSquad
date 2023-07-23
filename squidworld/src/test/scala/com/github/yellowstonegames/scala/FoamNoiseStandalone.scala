@@ -3,6 +3,8 @@ package com.github.yellowstonegames.scala
 
 import com.badlogic.gdx.utils.NumberUtils
 
+import java.lang.Double.doubleToLongBits
+
 /*
  * Copyright (c) 2022-2023 See AUTHORS file.
  *
@@ -71,9 +73,9 @@ object FoamNoiseStandalone {
     // Barron spline
     val sharp = 0.75 * 2.2 // increase to sharpen, decrease to soften
     val diff = 0.5 - result
-    val sign = NumberUtils.doubleToLongBits(diff) >> 63
-    val one = sign | 1
-    ((result + sign) / (Double.MinValue - sign + (result + sharp * diff) * one) - sign - sign) - 1.0
+    val sign = doubleToLongBits(diff) >> 63
+    val one = sign | 1L
+    ((result + sign) / (Double.MinPositiveValue - sign + (result + sharp * diff) * one) - sign - sign) - 1.0
   }
 
   /**
@@ -213,7 +215,7 @@ object FoamNoiseStandalone {
     val diff = 0.5 - result
     val sign = NumberUtils.doubleToLongBits(diff) >> 63
     val one = sign | 1
-    ((result + sign) / (Double.MinValue - sign + (result + sharp * diff) * one) - sign - sign) - 1.0
+    ((result + sign) / (Double.MinPositiveValue - sign + (result + sharp * diff) * one) - sign - sign) - 1.0
   }
 
   /**
@@ -375,7 +377,7 @@ object FoamNoiseStandalone {
     val diff = 0.5 - result
     val sign = NumberUtils.doubleToLongBits(diff) >> 63
     val one = sign | 1
-    ((result + sign) / (Double.MinValue - sign + (result + sharp * diff) * one) - sign - sign) - 1.0
+    ((result + sign) / (Double.MinPositiveValue - sign + (result + sharp * diff) * one) - sign - sign) - 1.0
   }
 
   /**
