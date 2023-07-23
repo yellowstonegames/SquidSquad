@@ -111,10 +111,8 @@ public class INoiseComparison extends ApplicationAdapter {
                  */
                 @Override
                 public float getNoiseWithSeed(float x, float y, long seed) {
-                    return (float) FoamNoiseStandalone$.MODULE$.valueNoise(
-                            x, y, standalone.getSeed()) * 2 - 1;
-//                    return (float) FoamNoiseStandalone$.MODULE$.noiseWithOctaves(
-//                            x, y, standalone.getSeed(), 2, 1.0);
+                    return (float) FoamNoiseStandalone$.MODULE$.noiseWithOctaves(
+                            x, y, standalone.getSeed(), 2, 1.0);
                 }
 
                 /**
@@ -130,10 +128,8 @@ public class INoiseComparison extends ApplicationAdapter {
                  */
                 @Override
                 public float getNoiseWithSeed(float x, float y, float z, long seed) {
-                    return (float) FoamNoiseStandalone$.MODULE$.valueNoise(
-                            x, y, z, standalone.getSeed()) * 2 - 1;
-//                    return (float) FoamNoiseStandalone$.MODULE$.noiseWithOctaves(
-//                            x, y, z, standalone.getSeed(), 2, 1.0);
+                    return (float) FoamNoiseStandalone$.MODULE$.noiseWithOctaves(
+                            x, y, z, standalone.getSeed(), 2, 1.0);
                 }
 
                 /**
@@ -150,10 +146,8 @@ public class INoiseComparison extends ApplicationAdapter {
                  */
                 @Override
                 public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-                    return (float) FoamNoiseStandalone$.MODULE$.valueNoise(
-                            x, y, z, w, standalone.getSeed()) * 2 - 1;
-//                    return (float) FoamNoiseStandalone$.MODULE$.noiseWithOctaves(
-//                            x, y, z, w, standalone.getSeed(), 2, 1.0);
+                    return (float) FoamNoiseStandalone$.MODULE$.noiseWithOctaves(
+                            x, y, z, w, standalone.getSeed(), 2, 1.0);
                 }
 
                 @Override
