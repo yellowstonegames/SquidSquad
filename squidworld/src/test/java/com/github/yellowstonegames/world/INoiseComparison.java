@@ -30,19 +30,36 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.AmogusNoise;
+import com.github.yellowstonegames.grid.BasicHashNoise;
+import com.github.yellowstonegames.grid.CyclicNoise;
+import com.github.yellowstonegames.grid.FlanNoise;
+import com.github.yellowstonegames.grid.FlawedPointHash;
+import com.github.yellowstonegames.grid.HighDimensionalValueNoise;
+import com.github.yellowstonegames.grid.INoise;
+import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
+import com.github.yellowstonegames.grid.OpenSimplex2;
+import com.github.yellowstonegames.grid.OpenSimplex2Smooth;
+import com.github.yellowstonegames.grid.PerlinNoise;
+import com.github.yellowstonegames.grid.SimplexNoise;
+import com.github.yellowstonegames.grid.SimplexNoiseHard;
+import com.github.yellowstonegames.grid.SimplexNoiseScaled;
+import com.github.yellowstonegames.grid.TaffyNoise;
+import com.github.yellowstonegames.grid.ValueNoise;
 import com.github.yellowstonegames.world.standalone.FoamNoiseStandalone;
+import com.github.yellowstonegames.world.standalone.SimplexNoiseStandalone;
+import com.github.yellowstonegames.world.standalone.ValueNoiseStandalone;
 
 import java.util.Arrays;
 
 import static com.badlogic.gdx.Input.Keys.*;
-import static com.badlogic.gdx.graphics.GL20.*;
 
 /**
  */
 public class INoiseComparison extends ApplicationAdapter {
 
-    private INoise[] noises = new INoise[]{
+    private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
             new SimplexNoiseHard(1L),
             new SimplexNoiseScaled(1L),
@@ -57,7 +74,12 @@ public class INoiseComparison extends ApplicationAdapter {
             new BasicHashNoise(1, new FlawedPointHash.CubeHash(1, 32)),
             new AmogusNoise(1L),
             new INoise() {
-                public FoamNoiseStandalone standalone = new FoamNoiseStandalone(1L, 1.0);
+                public final FoamNoiseStandalone standalone = new FoamNoiseStandalone(1L, 1.0);
+
+                @Override
+                public String getTag() {
+                    return "FoSN";
+                }
 
                 @Override
                 public long getSeed() {
@@ -99,33 +121,12 @@ public class INoiseComparison extends ApplicationAdapter {
                     return (float)standalone.getNoise(x, y, z, w);
                 }
 
-                /**
-                 * Gets 2D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-                 * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
-                 *
-                 * @param x    x position; can be any finite float
-                 * @param y    y position; can be any finite float
-                 * @param seed
-                 * @return a noise value between -1.0f and 1.0f, both inclusive
-                 * @throws UnsupportedOperationException if 2D noise cannot be produced by this generator
-                 */
                 @Override
                 public float getNoiseWithSeed(float x, float y, long seed) {
                     return (float) FoamNoiseStandalone.noiseWithSeed(
                             x * standalone.getFrequency(), y * standalone.getFrequency(), standalone.getSeed());
                 }
 
-                /**
-                 * Gets 3D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-                 * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
-                 *
-                 * @param x    x position; can be any finite float
-                 * @param y    y position; can be any finite float
-                 * @param z    z position; can be any finite float
-                 * @param seed
-                 * @return a noise value between -1.0f and 1.0f, both inclusive
-                 * @throws UnsupportedOperationException if 3D noise cannot be produced by this generator
-                 */
                 @Override
                 public float getNoiseWithSeed(float x, float y, float z, long seed) {
                     return (float) FoamNoiseStandalone.noiseWithSeed(
@@ -133,18 +134,6 @@ public class INoiseComparison extends ApplicationAdapter {
                             standalone.getSeed());
                 }
 
-                /**
-                 * Gets 4D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-                 * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
-                 *
-                 * @param x    x position; can be any finite float
-                 * @param y    y position; can be any finite float
-                 * @param z    z position; can be any finite float
-                 * @param w    w position; can be any finite float
-                 * @param seed
-                 * @return a noise value between -1.0f and 1.0f, both inclusive
-                 * @throws UnsupportedOperationException if 4D noise cannot be produced by this generator
-                 */
                 @Override
                 public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
                     return (float) FoamNoiseStandalone.noiseWithSeed(
@@ -162,12 +151,170 @@ public class INoiseComparison extends ApplicationAdapter {
                 public float getNoise(float x, float y, float z, float w, float u, float v) {
                     return 0;
                 }
-            }
+            },
+            new INoise() {
+                public final SimplexNoiseStandalone standalone = new SimplexNoiseStandalone(1L, 1.0);
+
+                @Override
+                public String getTag() {
+                    return "FoSN";
+                }
+
+                @Override
+                public long getSeed() {
+                    return standalone.getSeed();
+                }
+
+                @Override
+                public void setSeed(long seed) {
+                    standalone.setSeed(seed);
+                }
+
+                @Override
+                public int getMinDimension() {
+                    return 2;
+                }
+
+                @Override
+                public int getMaxDimension() {
+                    return 4;
+                }
+
+                @Override
+                public boolean canUseSeed() {
+                    return true;
+                }
+
+                @Override
+                public float getNoise(float x, float y) {
+                    return (float)standalone.getNoise(x, y);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z) {
+                    return (float)standalone.getNoise(x, y, z);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w) {
+                    return (float)standalone.getNoise(x, y, z, w);
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, long seed) {
+                    return (float) SimplexNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(), standalone.getSeed());
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                    return (float) SimplexNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(), z * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+                    return (float) SimplexNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(),
+                            z * standalone.getFrequency(), w * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u) {
+                    return 0;
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u, float v) {
+                    return 0;
+                }
+            },
+            new INoise() {
+                public final ValueNoiseStandalone standalone = new ValueNoiseStandalone(1L, 1.0);
+
+                @Override
+                public String getTag() {
+                    return "FoSN";
+                }
+
+                @Override
+                public long getSeed() {
+                    return standalone.getSeed();
+                }
+
+                @Override
+                public void setSeed(long seed) {
+                    standalone.setSeed(seed);
+                }
+
+                @Override
+                public int getMinDimension() {
+                    return 2;
+                }
+
+                @Override
+                public int getMaxDimension() {
+                    return 4;
+                }
+
+                @Override
+                public boolean canUseSeed() {
+                    return true;
+                }
+
+                @Override
+                public float getNoise(float x, float y) {
+                    return (float)standalone.getNoise(x, y);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z) {
+                    return (float)standalone.getNoise(x, y, z);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w) {
+                    return (float)standalone.getNoise(x, y, z, w);
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, long seed) {
+                    return (float) ValueNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(), standalone.getSeed());
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                    return (float) ValueNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(), z * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+                    return (float) ValueNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(),
+                            z * standalone.getFrequency(), w * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u) {
+                    return 0;
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u, float v) {
+                    return 0;
+                }
+            },
     };
     private int index0 = 0;
     private int index1 = 13;
-    private NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
-    private NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
+    private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
+    private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
@@ -177,8 +324,6 @@ public class INoiseComparison extends ApplicationAdapter {
     private static final float iWidth = 1f/width, iHeight = 1f/height;
     private static final float LIGHT_YELLOW = Color.toFloatBits(1f, 1f, 0.4f, 1f);
 
-    private InputAdapter input;
-    
     private Viewport view;
     private int ctr = -256;
     private boolean keepGoing = true;
@@ -197,15 +342,6 @@ public class INoiseComparison extends ApplicationAdapter {
         return n;
     }
 
-    public float basicPrepare(float n)
-    {
-//        if(n < -1f || n > 1f) {
-//            System.out.println(n);
-//            return Float.MAX_VALUE;
-//        }
-        return n * 0.5f + 0.5f;
-    }
-
     @Override
     public void create() {
         renderer = new ImmediateModeRenderer20(width * height << 1, false, true, 0);
@@ -217,7 +353,7 @@ public class INoiseComparison extends ApplicationAdapter {
         wrap0.setFractalType(Noise.FBM);
         wrap1.setFractalType(Noise.FBM);
 
-        input = new InputAdapter(){
+        InputAdapter input = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode) {
@@ -235,7 +371,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         wrap1.setWrapped(noises[index1 = (index1 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
                         break;
                     case C:
-                        if(UIUtils.shift())ctr--;
+                        if (UIUtils.shift()) ctr--;
                         else ctr++;
                         break;
                     case E: {//earlier seed
@@ -302,7 +438,7 @@ public class INoiseComparison extends ApplicationAdapter {
     public void putMap() {
         Arrays.fill(freq0, 0);
         Arrays.fill(freq1, 0);
-        renderer.begin(view.getCamera().combined, GL_POINTS);
+        renderer.begin(view.getCamera().combined, GL20.GL_POINTS);
         float bright, c = ctr * 0.25f;
         switch (dim) {
             case 0:
@@ -379,7 +515,7 @@ public class INoiseComparison extends ApplicationAdapter {
         }
         renderer.end();
         if(Gdx.input.isKeyPressed(A)){ // Analysis
-            renderer.begin(view.getCamera().combined, GL_LINES);
+            renderer.begin(view.getCamera().combined, GL20.GL_LINES);
             for (int i = 0; i < 255; i++) {
                 renderer.color(LIGHT_YELLOW);
                 renderer.vertex(i, freq0[i] * 0x1p-3f, 0);
