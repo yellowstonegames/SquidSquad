@@ -26,7 +26,7 @@ import java.util.Collection;
 
 /**
  * A general-purpose group of smoothly-changing values, either float or int, using any rules for the
- * interpolations (specifiable by {@link FloatInterpolator} and {@link IntInterpolator} functions).
+ * smooth-movement interpolations (specifiable by {@link FloatSmoother} and {@link IntSmoother} functions).
  */
 public class Glider {
     /**
@@ -41,30 +41,30 @@ public class Glider {
         public float endF;
         public int startI;
         public int endI;
-        @NonNull public FloatInterpolator interpolatorF;
-        @NonNull public IntInterpolator interpolatorI;
+        @NonNull public FloatSmoother interpolatorF;
+        @NonNull public IntSmoother interpolatorI;
 
         public Changer(@NonNull String name, float initialF){
-            this(name, initialF, initialF, FloatInterpolator.LINEAR);
+            this(name, initialF, initialF, FloatSmoother.LINEAR);
         }
         public Changer(@NonNull String name, float startF, float endF){
-            this(name, startF, endF, FloatInterpolator.LINEAR);
+            this(name, startF, endF, FloatSmoother.LINEAR);
         }
 
-        public Changer(@NonNull String name, float startF, float endF, @NonNull FloatInterpolator interpolatorF) {
+        public Changer(@NonNull String name, float startF, float endF, @NonNull FloatSmoother interpolatorF) {
             this.name = name;
             this.startF = startF;
             this.endF = endF;
             this.interpolatorF = interpolatorF;
-            this.interpolatorI = IntInterpolator.LINEAR;
+            this.interpolatorI = IntSmoother.LINEAR;
         }
 
-        public Changer(@NonNull String name, int startI, int endI, @NonNull IntInterpolator interpolatorI) {
+        public Changer(@NonNull String name, int startI, int endI, @NonNull IntSmoother interpolatorI) {
             this.name = name;
             this.startI = startI;
             this.endI = endI;
             this.interpolatorI = interpolatorI;
-            this.interpolatorF = FloatInterpolator.LINEAR;
+            this.interpolatorF = FloatSmoother.LINEAR;
         }
 
         @NonNull

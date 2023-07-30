@@ -19,19 +19,19 @@ package com.github.yellowstonegames.smooth;
 import com.github.tommyettinger.digital.MathTools;
 
 /**
- * Allows using various ways of interpolating a float value to another float value as a first-class function.
+ * Allows using various ways of smoothly interpolating a float value to another float value as a first-class function.
  * This is a functional interface whose functional method is {@link #apply(float, float, float)}.
  */
-public interface FloatInterpolator {
+public interface FloatSmoother {
     float apply(float start, float end, float change);
 
     /**
      * A method reference to {@link MathTools#lerp(float, float, float)}.
      */
-    FloatInterpolator LINEAR = MathTools::lerp;
+    FloatSmoother LINEAR = MathTools::lerp;
 
     /**
      * A method reference to {@link MathTools#lerpAngleTurns(float, float, float)}.
      */
-    FloatInterpolator ANGLE = MathTools::lerpAngleTurns;
+    FloatSmoother ANGLE = MathTools::lerpAngleTurns;
 }

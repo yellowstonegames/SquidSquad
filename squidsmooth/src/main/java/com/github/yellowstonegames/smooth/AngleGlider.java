@@ -36,15 +36,15 @@ import com.badlogic.gdx.math.Interpolation;
  */
 public class AngleGlider extends Glider {
     public AngleGlider() {
-        super(new Changer("angle", 0f, 0f, FloatInterpolator.ANGLE));
+        super(new Changer("angle", 0f, 0f, FloatSmoother.ANGLE));
     }
 
     public AngleGlider(float start) {
-        super(new Changer("angle", start, start, FloatInterpolator.ANGLE));
+        super(new Changer("angle", start, start, FloatSmoother.ANGLE));
     }
 
     public AngleGlider(float start, float end) {
-        super(new Changer("angle", start, end, FloatInterpolator.ANGLE));
+        super(new Changer("angle", start, end, FloatSmoother.ANGLE));
     }
 
     public float getAngle() {

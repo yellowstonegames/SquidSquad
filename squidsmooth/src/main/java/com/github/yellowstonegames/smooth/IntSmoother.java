@@ -20,20 +20,20 @@ import com.badlogic.gdx.math.MathUtils;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 /**
- * Allows using various ways of interpolating an int value to another int value as a first-class function.
+ * Allows using various ways of smoothly interpolating an int value to another int value as a first-class function.
  * This is a functional interface whose functional method is {@link #apply(int, int, float)}.
  */
-public interface IntInterpolator {
+public interface IntSmoother {
     int apply(int start, int end, float change);
 
     /**
      * Interpolates between start and end by change using {@link MathUtils#lerp(float, float, float)}, then rounds the
      * result to an int with {@link MathUtils#round(float)}.
      */
-    IntInterpolator LINEAR = ((start, end, change) -> MathUtils.round(MathUtils.lerp(start, end, change)));
+    IntSmoother LINEAR = ((start, end, change) -> MathUtils.round(MathUtils.lerp(start, end, change)));
 
     /**
      * A method reference to {@link DescriptiveColor#lerpColors(int, int, float)}.
      */
-    IntInterpolator COLOR = DescriptiveColor::lerpColors;
+    IntSmoother COLOR = DescriptiveColor::lerpColors;
 }

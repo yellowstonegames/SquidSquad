@@ -49,7 +49,7 @@ public class IntColorGlider extends Glider {
      * @param start the color that will fade to transparent
      */
     public IntColorGlider(int start) {
-        super(new Changer("color", start, start & 0xFFFFFF00, IntInterpolator.COLOR));
+        super(new Changer("color", start, start & 0xFFFFFF00, IntSmoother.COLOR));
     }
 
     /**
@@ -58,7 +58,7 @@ public class IntColorGlider extends Glider {
      * @param end the end color, as an int (this could be RGBA or Oklab, but should be the same kind as start)
      */
     public IntColorGlider(int start, int end) {
-        super(new Changer("color", start, end, IntInterpolator.COLOR));
+        super(new Changer("color", start, end, IntSmoother.COLOR));
     }
 
     /**
@@ -69,7 +69,7 @@ public class IntColorGlider extends Glider {
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
     public IntColorGlider(int start, int end, @Nullable Runnable completeRunner) {
-        super(Interpolation.linear, completeRunner, new Changer("color", start, end, IntInterpolator.COLOR));
+        super(Interpolation.linear, completeRunner, new Changer("color", start, end, IntSmoother.COLOR));
     }
 
     /**
@@ -81,7 +81,7 @@ public class IntColorGlider extends Glider {
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
     public IntColorGlider(int start, int end, @NonNull Interpolation interpolation, @Nullable Runnable completeRunner) {
-        super(interpolation, completeRunner, new Changer("color", start, end, IntInterpolator.COLOR));
+        super(interpolation, completeRunner, new Changer("color", start, end, IntSmoother.COLOR));
     }
 
     public IntColorGlider(IntColorGlider other) {
