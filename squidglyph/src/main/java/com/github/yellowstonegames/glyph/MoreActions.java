@@ -21,9 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
+import com.github.tommyettinger.digital.Interpolations.Interpolator;
 import com.github.yellowstonegames.grid.Direction;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.action;
@@ -349,59 +348,68 @@ public final class MoreActions {
      * Meant to be used with {@link GlyphGrid#summon(float, float, float, float, float, char, int, int, float, float, float, Interpolation, Runnable)}
      * as its {@code moveRunnable}, this makes a summoned glyph take an "arc-like" path toward the target, where it is
      * fast at the beginning and end of its motion and reaches the height of its arc at the center. This effect can also
-     * be achieved with {@link BiasGain} when its shape is less than 1.0, and with BiasGain you can change where the
-     * height of the arc is by raising or lowering the turning parameter. Using arcMoveInterpolation is still simplest.
+     * be achieved with {@link Interpolations#biasGainFunction(float, float)} when its shape is less than 1.0, and with
+     * BiasGain you can change where the height of the arc is by raising or lowering the turning parameter. Using
+     * arcMoveInterpolation is still simplest.
      */
-    public static Interpolation arcMoveInterpolation = new Interpolation() {
-        @Override
-        public float apply(float a) {
-            if (a <= 0.5f) return (1 - ((float)Math.pow(2f, -3f * (a * 2)) - 0.125f) * 1.1428572f) * 0.5f;
-            return (1 + (float) Math.pow(2f, 3f * (a * 2 - 2)) - 0.25f) * 0.5714286f;
-        }
-    };
+    public static final Interpolator arcMoveInterpolation = new Interpolator("arcMove", a -> {
+        if (a <= 0.5f) return (1 - ((float)Math.pow(2f, -3f * (a * 2)) - 0.125f) * 1.1428572f) * 0.5f;
+        return (1 + (float) Math.pow(2f, 3f * (a * 2 - 2)) - 0.25f) * 0.5714286f;
+    });
 
-    /**
-     * A wrapper around {@link MathTools#barronSpline(float, float, float)} to use it as an Interpolation.
-     * Useful because it can imitate the wide variety of symmetrical Interpolations by setting turning to 0.5 and shape
-     * to some value greater than 1, while also being able to produce the inverse of those interpolations by setting
-     * shape to some value between 0 and 1.
-     */
-    public static class BiasGain extends Interpolation {
-        /**
-         * The shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
-         * values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
-         * start like square root does, taking off very quickly, but also end like square does, landing abruptly at
-         * the ending level).
-         */
-        public final float shape;
-        /**
-         * A value between 0.0 and 1.0, inclusive, where the shape changes.
-         */
-        public final float turning;
-
-        /**
-         * Constructs a useful default BiasGain interpolation with a smoothstep-like shape.
-         * This has a shape of 2.0f and a turning of 0.5f .
-         */
-        public BiasGain() {
-            this(2f, 0.5f);
-        }
-
-        /**
-         * Constructs a BiasGain interpolation with the specified (positive) shape and specified turning (between 0 and
-         * 1 inclusive).
-         * @param shape must be positive; similar to a straight line when near 1, becomes smoothstep-like above 1, and
-         *              becomes shaped like transpose of smoothstep below 1
-         * @param turning where, between 0 and 1 inclusive, this should change from the starting curve to the ending one
-         */
-        public BiasGain (float shape, float turning) {
-            this.shape = Math.max(0.0001f, shape);
-            this.turning = Math.min(Math.max(turning, 0f), 1f);
-        }
-
-        public float apply (float a) {
-            return MathTools.barronSpline(a, shape, turning);
-        }
-    }
+    // This is here as commented-out code because there are probably links to this section of code somewhere, and even
+    // though I use Interpolator now and not libGDX Interpolation, this could still be useful to code that does need an
+    // Interpolation. Code here should use Interpolations#biasGainFunction(float, float) .
+//    /**
+//     * A wrapper around {@link MathTools#barronSpline(float, float, float)} to use it as an Interpolation.
+//     * Useful because it can imitate the wide variety of symmetrical Interpolations by setting turning to 0.5 and shape
+//     * to some value greater than 1, while also being able to produce the inverse of those interpolations by setting
+//     * shape to some value between 0 and 1.
+//     */
+//    public static class BiasGain extends Interpolation {
+//        /**
+//         * The shape parameter will cause this to imitate "smoothstep-like" splines when greater than 1 (where the
+//         * values ease into their starting and ending levels), or to be the inverse when less than 1 (where values
+//         * start like square root does, taking off very quickly, but also end like square does, landing abruptly at
+//         * the ending level).
+//         */
+//        public final float shape;
+//        /**
+//         * A value between 0.0 and 1.0, inclusive, where the shape changes.
+//         */
+//        public final float turning;
+//
+//        /**
+//         * Constructs a useful default BiasGain interpolation with a smoothstep-like shape.
+//         * This has a shape of 2.0f and a turning of 0.5f .
+//         */
+//        public BiasGain() {
+//            this(2f, 0.5f);
+//        }
+//
+//        /**
+//         * Constructs a BiasGain interpolation with the specified (positive) shape and specified turning (between 0 and
+//         * 1 inclusive).
+//         * @param shape must be positive; similar to a straight line when near 1, becomes smoothstep-like above 1, and
+//         *              becomes shaped like transpose of smoothstep below 1
+//         * @param turning where, between 0 and 1 inclusive, this should change from the starting curve to the ending one
+//         */
+//        public BiasGain (float shape, float turning) {
+//            this.shape = Math.max(0.0001f, shape);
+//            this.turning = Math.min(Math.max(turning, 0f), 1f);
+//        }
+//
+//        /**
+//         * The implementation here is the same as it is in other barronSpline() versions; this uses the shape and
+//         * turning values configured in the constructor.
+//         * @param a between 0 and 1 inclusive
+//         * @return a float between 0 and 1 inclusive
+//         */
+//        public float apply (float a) {
+//            final float d = turning - a;
+//            final int f = BitConversion.floatToIntBits(d) >> 31, n = f | 1;
+//            return (turning * n - f) * (a + f) / (Float.MIN_NORMAL - f + (a + shape * d) * n) - f;
+//        }
+//    }
 
 }
