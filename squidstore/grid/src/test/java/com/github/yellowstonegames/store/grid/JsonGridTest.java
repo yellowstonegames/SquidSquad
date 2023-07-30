@@ -19,7 +19,7 @@ package com.github.yellowstonegames.store.grid;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.ObjectFloatMap;
-import com.github.yellowstonegames.core.Interpolations;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
 import org.junit.Test;

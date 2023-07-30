@@ -18,14 +18,12 @@ package com.github.yellowstonegames.store.core;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.tommyettinger.random.*;
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.random.DistinctRandom;
+import com.github.tommyettinger.random.FourWheelRandom;
+import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.TricycleRandom;
 import com.github.yellowstonegames.core.*;
-import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import org.junit.Assert;
 import org.junit.Test;
 import regexodus.Pattern;
@@ -194,31 +192,6 @@ public class JsonCoreTest {
     }
 
     @Test
-    public void testBase() {
-        Json json = new Json(JsonWriter.OutputType.minimal);
-        JsonSupport.registerBase(json);
-        FourWheelRandom random = new FourWheelRandom(1234567890L);
-        ObjectList<Base> bases = new ObjectList<>(Base.values());
-        bases.add(Base.scrambledBase(random));
-        bases.add(Base.scrambledBase(random));
-        bases.add(Base.scrambledBase(random));
-        for(Base b : bases){
-            random.setSeed(-12345L);
-            String data = json.toJson(b);
-            Base b2 = json.fromJson(Base.class, data);
-            Assert.assertEquals(b, b2);
-            for (int i = 0; i < 100; i++) {
-                long ln = random.nextLong();
-                Assert.assertEquals(b.unsigned(ln), b2.unsigned(ln));
-                Assert.assertEquals(b.signed(ln), b2.signed(ln));
-                float fl = random.nextFloat(-100f, 100f);
-                Assert.assertEquals(b.unsigned(fl), b2.unsigned(fl));
-                Assert.assertEquals(b.signed(fl), b2.signed(fl));
-            }
-        }
-    }
-
-    @Test
     public void testProbabilityTable(){
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonCore.registerProbabilityTable(json);
@@ -286,18 +259,5 @@ public class JsonCoreTest {
         Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
-    }
-    @Test
-    public void testInterpolator() {
-        Json json = new Json(JsonWriter.OutputType.minimal);
-        JsonCore.registerInterpolator(json);
-        Interpolator bounce = Interpolations.bounce3;
-        String data = json.toJson(bounce);
-        System.out.println(data);
-        Interpolator bounce2 = json.fromJson(Interpolator.class, data);
-        Assert.assertEquals(bounce, bounce2);
-        Assert.assertEquals(bounce.apply(0.1f), bounce2.apply(0.1f), MathTools.FLOAT_ROUNDING_ERROR);
-        Assert.assertEquals(bounce.apply(0.3f), bounce2.apply(0.3f), MathTools.FLOAT_ROUNDING_ERROR);
-        Assert.assertEquals(bounce.apply(0.7f), bounce2.apply(0.7f), MathTools.FLOAT_ROUNDING_ERROR);
     }
 }

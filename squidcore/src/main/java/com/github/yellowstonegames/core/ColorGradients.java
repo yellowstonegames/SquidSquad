@@ -16,9 +16,10 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
-import com.github.yellowstonegames.core.Interpolations.InterpolationFunction;
+import com.github.tommyettinger.digital.Interpolations.InterpolationFunction;
 
 /**
  * Static methods for handling gradients of smoothly-changing colors, typically inside of {@link IntList}s.

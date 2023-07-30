@@ -26,7 +26,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.*;
-import com.github.yellowstonegames.core.Interpolations.Interpolator;
+import com.github.tommyettinger.digital.Interpolations.Interpolator;
 import regexodus.Pattern;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -360,29 +360,6 @@ public final class JsonCore {
             @Override
             public IntShuffler read(Json json, JsonValue jsonData, Class type) {
                 return IntShuffler.deserializeFromString(jsonData.asString());
-            }
-        });
-    }
-
-    /**
-     * Registers Interpolator with the given Json object, so Interpolator can be written to and read from JSON.
-     * This is a simple wrapper around each Interpolator's unique {@link Interpolator#getTag()} and
-     * {@link Interpolations#get(String)} to read it back.
-     *
-     * @param json a libGDX Json object that will have a serializer registered
-     */
-    public static void registerInterpolator(@NonNull Json json) {
-        json.addClassTag("Inlr", Interpolator.class);
-        json.setSerializer(Interpolator.class, new Json.Serializer<Interpolator>() {
-            @Override
-            public void write(Json json, Interpolator object, Class knownType) {
-                json.writeValue(object.getTag());
-            }
-
-            @Override
-            public Interpolator read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return Interpolations.get(jsonData.asString());
             }
         });
     }

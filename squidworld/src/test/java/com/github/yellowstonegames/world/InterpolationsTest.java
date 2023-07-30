@@ -19,8 +19,9 @@ package com.github.yellowstonegames.world;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Field;
+import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
-import com.github.yellowstonegames.core.Interpolations;
+import com.github.tommyettinger.digital.Interpolations;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,18 +46,22 @@ public class InterpolationsTest {
         Interpolations.Interpolator current;
         for (int i = 0; i < interpolationNames.length; i++) {
             Assert.assertNotNull(current = Interpolations.get(interpolationNames[i]));
+            Interpolation interp = (Interpolation) interpolationFields[i].get(Interpolation.class);
+            Method applier = ClassReflection.getMethod(Interpolation.class, "apply", Float.TYPE);
+            System.out.println(current.tag + " dig: 0.0->" + current.apply(0f) + ": 0.25->" + current.apply(0.25f) + ": 0.75->"+current.apply(0.75f) + ": 1.0->"+current.apply(1f));
+            System.out.println(current.tag + " GDX: 0.0->" + applier.invoke(interp, 0f) + ": 0.25->" + applier.invoke(interp, 0.25f) + ": 0.75->"+applier.invoke(interp, 0.75f) + ": 1.0->"+applier.invoke(interp, 1f));
             for (int j = 0; j <= 16; j++) {
                 Assert.assertEquals(
                         interpolationNames[i] + " on " + (j * 0.0625f),
 //                if(!MathTools.isEqual(
                         current.apply(j * 0.0625f)
-                        , ((Float) ClassReflection.getMethod(Interpolation.class, "apply", Float.TYPE)
-                                .invoke(interpolationFields[i].get(Interpolation.class), j * 0.0625f)).floatValue()
-                        , 2e-4);
+                        , (Float) applier.invoke(interp, j * 0.0625f)
+                        , 2e-4)
+//                )
+                    ;
 //                {
 //                    System.out.println("PROBLEM: " + interpolationNames[i] + " at " + (j * 0.0625f));
-//                    System.out.println("  " + current.apply(j * 0.0625f) + " vs. " + ((Float) ClassReflection.getMethod(Interpolation.class, "apply", Float.TYPE)
-//                            .invoke(interpolationFields[i].get(Interpolation.class), j * 0.0625f)).floatValue());
+//                    System.out.println("  " + current.apply(j * 0.0625f) + " vs. " + applier.invoke(interp, j * 0.0625f));
 //                }
             }
         }

@@ -28,12 +28,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.digital.Interpolations.Interpolator;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.tommyettinger.textra.Layout;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.Interpolations;
-import com.github.yellowstonegames.core.Interpolations.Interpolator;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
@@ -49,12 +49,14 @@ public class InterpolationsGraphing extends ApplicationAdapter {
     Layout name;
     Interpolator[] interpolators;
     int index;
+
     @Override
     public void create() {
         font = KnownFonts.getCozette();
         view = new StretchViewport(width, height);
         batch = new SpriteBatch();
         sd = new ShapeDrawer(batch, font.mapping.get(font.solidBlock));
+
         interpolators = Interpolations.getInterpolatorArray();
         index = 0;
         current = interpolators[index];

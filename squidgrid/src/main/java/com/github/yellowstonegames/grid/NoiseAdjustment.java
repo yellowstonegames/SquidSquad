@@ -16,9 +16,9 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.yellowstonegames.core.Interpolations;
-import com.github.yellowstonegames.core.Interpolations.InterpolationFunction;
-import com.github.yellowstonegames.core.Interpolations.Interpolator;
+import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.digital.Interpolations.InterpolationFunction;
+import com.github.tommyettinger.digital.Interpolations.Interpolator;
 
 /**
  * Wraps another {@link INoise} and alters its output by running it through an {@link Interpolator}. The {@code [-1,1]}

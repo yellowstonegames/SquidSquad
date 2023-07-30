@@ -42,7 +42,7 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.Interpolations;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.CyclicNoise;
 import com.github.yellowstonegames.grid.FlanNoise;

@@ -20,7 +20,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.yellowstonegames.core.Interpolations;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.NoiseAdjustment;
 
