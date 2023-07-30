@@ -1305,7 +1305,7 @@ public class Noise implements INoise {
     }
 
     protected static float quinticInterpolator(float t) {
-        return t * t * t * (t * (t * 6 - 15) + 10);
+        return t * t * t * (t * (t * 5.9999995f - 15.0f) + 10.0f;
     }
 
     protected static float cubicLerp(float a, float b, float c, float d, float t) {

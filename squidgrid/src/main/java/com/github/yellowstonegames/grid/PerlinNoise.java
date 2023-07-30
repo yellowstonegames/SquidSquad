@@ -229,8 +229,8 @@ public class PerlinNoise implements INoise {
                 y0 = fastFloor(y);
         final float xf = x - x0, yf = y - y0;
 
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
+        final float xa = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        final float ya = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
         return
                 emphasizeSigned(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
                                 lerp(gradCoord2D(seed, x0, y0+1, xf, yf-1), gradCoord2D(seed, x0+1, y0+1, xf - 1, yf - 1), xa),
@@ -250,9 +250,9 @@ public class PerlinNoise implements INoise {
                 z0 = fastFloor(z);
         final float xf = x - x0, yf = y - y0, zf = z - z0;
 
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
+        final float xa = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        final float ya = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        final float za = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
          return
                  emphasizeSigned(
                          lerp(
@@ -293,10 +293,10 @@ public class PerlinNoise implements INoise {
                 w0 = fastFloor(w);
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0;
 
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
+        final float xa = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        final float ya = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        final float za = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
+        final float wa = wf * wf * wf * (wf * (wf * 5.9999995f - 15.0f) + 10.0f);
         return
                 emphasizeSigned(
                         lerp(
@@ -363,11 +363,11 @@ public class PerlinNoise implements INoise {
                 u0 = fastFloor(u);
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0, uf = u - u0;
 
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
-        final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
+        final float xa = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        final float ya = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        final float za = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
+        final float wa = wf * wf * wf * (wf * (wf * 5.9999995f - 15.0f) + 10.0f);
+        final float ua = uf * uf * uf * (uf * (uf * 5.9999995f - 15.0f) + 10.0f);
         return
                 emphasizeSigned(
                 lerp(lerp(
@@ -448,12 +448,12 @@ public class PerlinNoise implements INoise {
                 u0 = fastFloor(u),
                 v0 = fastFloor(v);
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0, uf = u - u0, vf = v - v0;
-        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
-        final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
-        final float va = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 10.0f);
+        final float xa = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        final float ya = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        final float za = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
+        final float wa = wf * wf * wf * (wf * (wf * 5.9999995f - 15.0f) + 10.0f);
+        final float ua = uf * uf * uf * (uf * (uf * 5.9999995f - 15.0f) + 10.0f);
+        final float va = vf * vf * vf * (vf * (vf * 5.9999995f - 15.0f) + 10.0f);
         return emphasizeSigned(
                 lerp(
                         lerp(

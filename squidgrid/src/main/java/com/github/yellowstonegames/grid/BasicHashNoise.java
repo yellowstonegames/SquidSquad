@@ -187,8 +187,8 @@ public class BasicHashNoise implements INoise {
         final float xf = x - x0, yf = y - y0;
         
         int s = (int) seed;
-        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
+        x = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
         return ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, s) + x * pointHash.hashWithState(x0+1, y0, s))
                 + y * ((1 - x) * pointHash.hashWithState(x0, y0+1, s) + x * pointHash.hashWithState(x0+1, y0+1, s)))
                 * 0x1p-31f;
@@ -208,9 +208,9 @@ public class BasicHashNoise implements INoise {
         final float xf = x - x0, yf = y - y0, zf = z - z0;
 
         int s = (int) seed;
-        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
+        x = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
         return ((1 - z) *
                 ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, s))
                         + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, s)))
@@ -235,10 +235,10 @@ public class BasicHashNoise implements INoise {
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0;
 
         int s = (int) seed;
-        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        w = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
+        x = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
+        w = wf * wf * wf * (wf * (wf * 5.9999995f - 15.0f) + 10.0f);
         return ((1 - w) *
                 ((1 - z) *
                         ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, s))
@@ -273,11 +273,11 @@ public class BasicHashNoise implements INoise {
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0, uf = u - u0;
 
         int s = (int) seed;
-        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        w = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
-        u = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
+        x = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
+        w = wf * wf * wf * (wf * (wf * 5.9999995f - 15.0f) + 10.0f);
+        u = uf * uf * uf * (uf * (uf * 5.9999995f - 15.0f) + 10.0f);
         return ((1 - u) *
                 ((1 - w) *
                         ((1 - z) *
@@ -330,12 +330,12 @@ public class BasicHashNoise implements INoise {
         final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0, uf = u - u0, vf = v - v0;
 
         int s = (int) seed;
-        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 10.0f);
-        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 10.0f);
-        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 10.0f);
-        w = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 10.0f);
-        u = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 10.0f);
-        v = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 10.0f);
+        x = xf * xf * xf * (xf * (xf * 5.9999995f - 15.0f) + 10.0f);
+        y = yf * yf * yf * (yf * (yf * 5.9999995f - 15.0f) + 10.0f);
+        z = zf * zf * zf * (zf * (zf * 5.9999995f - 15.0f) + 10.0f);
+        w = wf * wf * wf * (wf * (wf * 5.9999995f - 15.0f) + 10.0f);
+        u = uf * uf * uf * (uf * (uf * 5.9999995f - 15.0f) + 10.0f);
+        v = vf * vf * vf * (vf * (vf * 5.9999995f - 15.0f) + 10.0f);
         return ((1 - v) *
                 ((1 - u) *
                         ((1 - w) *
