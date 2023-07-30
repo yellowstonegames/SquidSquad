@@ -48,8 +48,8 @@ public class InterpolationsTest {
             Assert.assertNotNull(current = Interpolations.get(interpolationNames[i]));
             Interpolation interp = (Interpolation) interpolationFields[i].get(Interpolation.class);
             Method applier = ClassReflection.getMethod(Interpolation.class, "apply", Float.TYPE);
-            System.out.println(current.tag + " dig: 0.0->" + current.apply(0f) + ": 0.25->" + current.apply(0.25f) + ": 0.75->"+current.apply(0.75f) + ": 1.0->"+current.apply(1f));
-            System.out.println(current.tag + " GDX: 0.0->" + applier.invoke(interp, 0f) + ": 0.25->" + applier.invoke(interp, 0.25f) + ": 0.75->"+applier.invoke(interp, 0.75f) + ": 1.0->"+applier.invoke(interp, 1f));
+            System.out.println(current.tag + " dig: 0.0->" + current.apply(0f) + ": 0x1p-24->" + current.apply(0x1p-24f) + ": 0.25->" + current.apply(0.25f) + ": 0.75->"+current.apply(0.75f) + ": 1.0->"+current.apply(1f) + ": 0x1.fffffep-1->"+current.apply(0x1.fffffep-1f));
+            System.out.println(current.tag + " GDX: 0.0->" + applier.invoke(interp, 0f) + ": 0x1p-24->" + applier.invoke(interp, 0x1p-24f) + ": 0.25->" + applier.invoke(interp, 0.25f) + ": 0.75->"+applier.invoke(interp, 0.75f) + ": 1.0->"+applier.invoke(interp, 1f) + ": 0x1.fffffep-1->"+applier.invoke(interp, 0x1.fffffep-1f));
             for (int j = 0; j <= 16; j++) {
                 Assert.assertEquals(
                         interpolationNames[i] + " on " + (j * 0.0625f),
