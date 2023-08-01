@@ -26,10 +26,8 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.*;
-import com.github.tommyettinger.digital.Interpolations.Interpolator;
-import regexodus.Pattern;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
+import regexodus.Pattern;
 
 @SuppressWarnings("rawtypes")
 public final class JsonCore {

@@ -25,7 +25,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -35,26 +34,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.FastGif;
 import com.github.tommyettinger.anim8.PaletteReducer;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.tommyettinger.digital.Interpolations;
-import com.github.yellowstonegames.grid.BlueNoise;
-import com.github.yellowstonegames.grid.CyclicNoise;
-import com.github.yellowstonegames.grid.FlanNoise;
-import com.github.yellowstonegames.grid.FlawedPointHash;
-import com.github.yellowstonegames.grid.HighDimensionalValueNoise;
-import com.github.yellowstonegames.grid.IPointHash;
-import com.github.yellowstonegames.grid.IntPointHash;
-import com.github.yellowstonegames.grid.LongPointHash;
-import com.github.yellowstonegames.grid.Noise;
-import com.github.yellowstonegames.grid.PhantomNoise;
-import com.github.yellowstonegames.grid.TaffyNoise;
-import com.github.yellowstonegames.grid.ValueNoise;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.world.random.SpectatorPointHash;
 
 import java.util.Arrays;
@@ -238,7 +222,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         0xF0F0F0FF, 0xF1F1F1FF, 0xF2F2F2FF, 0xF3F3F3FF, 0xF4F4F4FF, 0xF5F5F5FF, 0xF6F6F6FF, 0xF7F7F7FF,
                         0xF8F8F8FF, 0xF9F9F9FF, 0xFAFAFAFF, 0xFBFBFBFF, 0xFCFCFCFF, 0xFDFDFDFF, 0xFEFEFEFF, 0xFFFFFFFF,
                 });
-        IntList g = ColorGradients.toRGBA8888(ColorGradients.appendGradientChain(new IntList(256), 256, Interpolation.smooth::apply,
+        IntList g = ColorGradients.toRGBA8888(ColorGradients.appendGradientChain(new IntList(256), 256, Interpolations.smooth,
                 // cool blue
                 DescriptiveColor.oklabByHSL(0.68f, 0.85f, 0.2f, 1f),
                 DescriptiveColor.oklabByHSL(0.70f, 0.95f, 0.4f, 1f),

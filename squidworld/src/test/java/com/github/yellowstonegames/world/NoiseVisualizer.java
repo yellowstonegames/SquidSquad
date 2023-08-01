@@ -24,7 +24,6 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -33,11 +32,11 @@ import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.grid.*;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -219,7 +218,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                            float hueHigh = 0.27f; // gold
 
 
-                        IntList g = ColorGradients.toRGBA8888(ColorGradients.appendGradientChain(new IntList(256), 256, Interpolation.smooth::apply,
+                        IntList g = ColorGradients.toRGBA8888(ColorGradients.appendGradientChain(new IntList(256), 256, Interpolations.smooth,
 //                                  DescriptiveColor.oklabByHSL(0.375f, 0.6f, 0.2f, 1f)
 //                                  DescriptiveColor.oklabByHSL(0.7f, 0.6f, 0.7f, 1f)
 //                                  DescriptiveColor.oklabByHSL(0.85f, 0.9f, 0.2f, 1f)
