@@ -53,9 +53,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private long startTime;
     private enum Phase {WAIT, PLAYER_ANIM, MONSTER_ANIM}
     private SpriteBatch batch;
-    private boolean scalingShader = false;
     private Phase phase = Phase.WAIT;
-    private long animationStart;
 
     // random number generator
     private WhiskerRandom rng;
@@ -71,19 +69,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private int[][] bgColors;
     private Coord player;
     private final int fovRange = 8;
-    private Vector2 pos = new Vector2();
-
-    //Here, gridHeight refers to the total number of rows to be displayed on the screen.
-    //We're displaying 32 rows of dungeon, then 1 more row of player stats, like current health.
-    //gridHeight is 32 because that variable will be used for generating the dungeon (the actual size of the dungeon
-    //will be double gridWidth and double gridHeight), and determines how much off the dungeon is visible at any time.
-    //The bonusHeight is the number of additional rows that aren't handled like the dungeon rows and are shown in a
-    //separate area; here we use one row for player stats. The gridWidth is 48, which means we show 48 grid spaces
-    //across the whole screen, but the actual dungeon is larger. The cellWidth and cellHeight are each 16, which will
-    //match the starting dimensions of a cell in pixels, but won't be stuck at that value because a PixelPerfectViewport
-    //is used and will increase the cell size in multiples of 16 when the window is resized. While gridWidth and
-    //gridHeight are measured in spaces on the grid, cellWidth and cellHeight are the initial pixel dimensions of one
-    //cell; resizing the window can make the units cellWidth and cellHeight use smaller or larger than a pixel.
+    private final Vector2 pos = new Vector2();
 
     /** In number of cells */
     public static final int gridWidth = 32;
@@ -95,8 +81,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
     /** In number of cells */
     public static final int bigHeight = gridHeight * 2;
 
-//    /** In number of cells */
-//    public static final int bonusHeight = 0;
     /** The pixel width of a cell */
     public static final int cellWidth = 16;
     /** The pixel height of a cell */
@@ -109,7 +93,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
 
 
     private InputProcessor input;
-    private long lastDrawTime = 0;
     private Color bgColor;
     private BitmapFont font;
     private Viewport mainViewport;
@@ -143,11 +126,11 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Region floors, blockage, seen;
 
     private static final int
-            INT_WHITE = -1,
-            INT_BLACK = 255,
-            INT_BLOOD = DescriptiveColor.describe("dark dull red"),
-            INT_LIGHTING = DescriptiveColor.describe("lightest white yellow"),
-            INT_GRAY = DescriptiveColor.describe("darker gray");
+            INT_WHITE = DescriptiveColor.WHITE,
+            INT_BLACK = DescriptiveColor.BLACK,
+            INT_BLOOD = DescriptiveColor.describeOklab("dark dull red"),
+            INT_LIGHTING = DescriptiveColor.describeOklab("lightest white yellow"),
+            INT_GRAY = DescriptiveColor.describeOklab("darker gray");
 
     @Override
     public void create () {
@@ -161,7 +144,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
         rng = new WhiskerRandom(123456);
         //Some classes in SquidLib need access to a batch to render certain things, so it's a good idea to have one.
         batch = new SpriteBatch();
-        animationStart = TimeUtils.millis();
 
         mainViewport = new ScalingViewport(Scaling.fill, gridWidth, gridHeight);
         mainViewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
@@ -173,7 +155,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         font.setUseIntegerPositions(false);
         font.getData().setScale(1f/cellWidth, 1f/cellHeight);
         font.getData().markupEnabled = true;
-        bgColors = ArrayTools.fill(INT_BLACK, bigWidth, bigHeight);
+        bgColors = ArrayTools.fill(DescriptiveColor.BLACK, bigWidth, bigHeight);
 
 
         Pixmap pcur = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
@@ -533,7 +515,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 playerSprite.location.setEnd(player = Coord.get(newX, newY));
                 phase = Phase.PLAYER_ANIM;
                 playerDirector.play();
-                animationStart = TimeUtils.millis();
                 // if a monster was at the position we moved into, and so was successfully removed...
                 if(monsters.containsKey(player))
                 {
@@ -579,7 +560,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     // position of this monster.
                     if (tmp.x == player.x && tmp.y == player.y) {
                         // not sure if this stays red for very long
-                        playerSprite.setPackedColor(DescriptiveColor.rgbaIntToFloat(INT_BLOOD));
+                        playerSprite.setPackedColor(DescriptiveColor.oklabIntToFloat(INT_BLOOD));
                         health--;
                         // make sure the monster is still actively stalking/chasing the player
                         monsters.put(pos, mon);
@@ -615,20 +596,19 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //past from affecting the current frame. This isn't a problem here, but would probably be an issue if we had
         //monsters running in and out of our vision. If artifacts from previous frames show up, uncomment the next line.
         //display.clear();
-        int rainbow = DescriptiveColor.toRGBA8888(
-                DescriptiveColor.maximizeSaturation(200,
-                        (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255));
+        int rainbow = DescriptiveColor.maximizeSaturation(160,
+                        (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
         for (int i = 0; i < bigWidth; i++) {
             for (int j = 0; j < bigHeight; j++) {
                 if(visible[i][j] > 0.0) {
-                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(toCursor.contains(Coord.get(i, j))
+                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(toCursor.contains(Coord.get(i, j))
                             ? DescriptiveColor.lerpColors(bgColors[i][j], rainbow, 0.95f)
                             : DescriptiveColor.lerpColors(bgColors[i][j], INT_LIGHTING, visible[i][j] * 0.7f + 0.15f)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
-                    batch.setPackedColor(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f)));
+                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
@@ -705,7 +685,6 @@ public class DawnlikeDemo extends ApplicationAdapter {
         else if(phase == Phase.PLAYER_ANIM) {
             if (!playerDirector.isPlaying() && !monsterDirector.isPlaying()) {
                 phase = Phase.MONSTER_ANIM;
-                animationStart = TimeUtils.millis();
                 postMove();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
                 // re-calculate the distances from all cells to the player. We don't need to calculate this information on
@@ -748,11 +727,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setResizable(true);
         configuration.useVsync(true);
-        configuration.setForegroundFPS(120); // upper bound in case vsync fails
+        //// this matches the maximum foreground FPS to the refresh rate of the active monitor.
+        configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);
         configuration.setTitle("SquidSquad Dawnlike Demo");
         //// useful to know if something's wrong in a shader.
         //// you should remove the next line for a release.
-        configuration.enableGLDebugOutput(true, System.out);
+//        configuration.enableGLDebugOutput(true, System.out);
         ShaderProgram.prependVertexCode = "#version 110\n";
         ShaderProgram.prependFragmentCode = "#version 110\n";
         // these are constants in the main game class; they should match your

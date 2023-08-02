@@ -24,6 +24,8 @@ import com.github.tommyettinger.digital.Interpolations.Interpolator;
  * A simple wrapper around a digital {@link Interpolator} so it can act as a libGDX {@link Interpolation}.
  * Just pass an Interpolator to the constructor, and you have an Interpolation that uses it.
  * This also acts as a {@link FloatSmoother} using the wrapped Interpolator.
+ * If you need to go in the reverse direction and create an {@link Interpolator} from an {@link Interpolation} (let's
+ * call it {@code myInterpolation}, you can use {@code new Interpolator("myInterpolation", myInterpolation::apply)}.
  */
 public class WrapperInterpolation extends Interpolation implements FloatSmoother {
     public final Interpolator wrapped;
