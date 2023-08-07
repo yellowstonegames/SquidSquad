@@ -6832,7 +6832,7 @@ public class Noise implements INoise {
         }
 
         t = LIMIT2 - x2 * x2 - y2 * y2;
-        if (t > 0)  {
+        if (t > 0) {
             t *= t;
             n += t * t * gradCoord2D(seed, i + 1, j + 1, x2, y2);
         }
@@ -6860,6 +6860,7 @@ public class Noise implements INoise {
     /**
      * Generates FBM simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
      * (2) and gain (0.5) in 3D.
+     *
      * @param x
      * @param y
      * @param z
@@ -6874,6 +6875,7 @@ public class Noise implements INoise {
     /**
      * Generates FBM simplex noise with the given amount of octaves, given frequency, and default lacunarity
      * (2) and gain (0.5) in 3D.
+     *
      * @param x
      * @param y
      * @param z
@@ -6904,6 +6906,7 @@ public class Noise implements INoise {
     /**
      * Generates FBM simplex noise with the given amount of octaves, given frequency, and specified lacunarity (the
      * amount of frequency change between octaves) and gain ({@code 1.0f / lacunarity}) in 3D.
+     *
      * @param x
      * @param y
      * @param z
@@ -6943,6 +6946,7 @@ public class Noise implements INoise {
     /**
      * Generates FBM simplex noise with the given amount of octaves, given frequency, given lacunarity (the amount
      * of frequency change between octaves) and gain (loosely, how much to emphasize lower-frequency octaves) in 3D.
+     *
      * @param x
      * @param y
      * @param z
@@ -6982,6 +6986,7 @@ public class Noise implements INoise {
     /**
      * Generates ridged-multi simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
      * (2) and gain (0.5).
+     *
      * @param x
      * @param y
      * @param z
@@ -6996,6 +7001,7 @@ public class Noise implements INoise {
     /**
      * Generates ridged-multi simplex noise with the given amount of octaves, specified frequency, and the default
      * lacunarity (2) and gain (0.5).
+     *
      * @param x
      * @param y
      * @param z
@@ -7010,12 +7016,13 @@ public class Noise implements INoise {
     /**
      * Generates ridged-multi simplex noise with the given amount of octaves and specified lacunarity (the amount of
      * frequency change between octaves); gain is not used.
+     *
      * @param x
      * @param y
      * @param z
-     * @param seed any int
-     * @param octaves how many "layers of detail" to generate; at least 1, but note this slows down with many octaves
-     * @param frequency often about {@code 1f / 32f}, but generally adjusted for the use case
+     * @param seed       any int
+     * @param octaves    how many "layers of detail" to generate; at least 1, but note this slows down with many octaves
+     * @param frequency  often about {@code 1f / 32f}, but generally adjusted for the use case
      * @param lacunarity when {@code octaves} is 2 or more, this affects the change between layers
      * @return noise as a float between -1f and 1f
      */
@@ -7230,7 +7237,7 @@ public class Noise implements INoise {
         }
 
         t = LIMIT3 - x3 * x3 - y3 * y3 - z3 * z3;
-        if (t > 0)  {
+        if (t > 0) {
             t *= t;
             n += t * t * gradCoord3D(seed, i + 1, j + 1, k + 1, x3, y3, z3);
         }
@@ -7385,6 +7392,7 @@ public class Noise implements INoise {
         int rankz = 0;
         int rankw = 0;
 
+        // @formatter:off
         if (x0 > y0) rankx++; else ranky++;
         if (x0 > z0) rankx++; else rankz++;
         if (x0 > w0) rankx++; else rankw++;
@@ -7393,6 +7401,7 @@ public class Noise implements INoise {
         if (y0 > w0) ranky++; else rankw++;
 
         if (z0 > w0) rankz++; else rankw++;
+        // @formatter:on
 
         int i1 = 2 - rankx >>> 31;
         int j1 = 2 - ranky >>> 31;
@@ -7629,6 +7638,7 @@ public class Noise implements INoise {
         int rankw = 0;
         int ranku = 0;
 
+        // @formatter:off
         if (x0 > y0) rankx++; else ranky++;
         if (x0 > z0) rankx++; else rankz++;
         if (x0 > w0) rankx++; else rankw++;
@@ -7642,6 +7652,7 @@ public class Noise implements INoise {
         if (z0 > u0) rankz++; else ranku++;
 
         if (w0 > u0) rankw++; else ranku++;
+        // @formatter:on
 
         int i1 = 3 - rankx >>> 31;
         int j1 = 3 - ranky >>> 31;
@@ -7699,48 +7710,42 @@ public class Noise implements INoise {
 
         t = LIMIT5 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0 - u0 * u0;
         if (t < 0) n0 = 0;
-        else
-        {
+        else {
             t *= t;
             n0 = t * t * gradCoord5D(seed, i, j, k, l, h, x0, y0, z0, w0, u0);
         }
 
         t = LIMIT5 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1 - u1 * u1;
         if (t < 0) n1 = 0;
-        else
-        {
+        else {
             t *= t;
             n1 = t * t * gradCoord5D(seed, i + i1, j + j1, k + k1, l + l1, h + h1, x1, y1, z1, w1, u1);
         }
 
         t = LIMIT5 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2 - u2 * u2;
         if (t < 0) n2 = 0;
-        else
-        {
+        else {
             t *= t;
             n2 = t * t * gradCoord5D(seed, i + i2, j + j2, k + k2, l + l2, h + h2, x2, y2, z2, w2, u2);
         }
 
         t = LIMIT5 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3 - u3 * u3;
         if (t < 0) n3 = 0;
-        else
-        {
+        else {
             t *= t;
             n3 = t * t * gradCoord5D(seed, i + i3, j + j3, k + k3, l + l3, h + h3, x3, y3, z3, w3, u3);
         }
 
         t = LIMIT5 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4 - u4 * u4;
         if (t < 0) n4 = 0;
-        else
-        {
+        else {
             t *= t;
             n4 = t * t * gradCoord5D(seed, i + i4, j + j4, k + k4, l + l4, h + h4, x4, y4, z4, w4, u4);
         }
 
         t = LIMIT5 - x5 * x5 - y5 * y5 - z5 * z5 - w5 * w5 - u5 * u5;
         if (t < 0) n5 = 0;
-        else
-        {
+        else {
             t *= t;
             n5 = t * t * gradCoord5D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, x5, y5, z5, w5, u5);
         }
@@ -7927,6 +7932,7 @@ public class Noise implements INoise {
         int ranku = 0;
         int rankv = 0;
 
+        // @formatter:off
         if (x0 > y0) rankx++; else ranky++;
         if (x0 > z0) rankx++; else rankz++;
         if (x0 > w0) rankx++; else rankw++;
@@ -7946,6 +7952,7 @@ public class Noise implements INoise {
         if (w0 > v0) rankw++; else rankv++;
 
         if (u0 > v0) ranku++; else rankv++;
+        // @formatter:on
 
         int i1 = 4 - rankx >>> 31;
         int j1 = 4 - ranky >>> 31;
@@ -8026,56 +8033,49 @@ public class Noise implements INoise {
 
         n0 = LIMIT6 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0 - u0 * u0 - v0 * v0;
         if (n0 <= 0f) n0 = 0f;
-        else
-        {
+        else {
             n0 *= n0;
             n0 *= n0 * gradCoord6D(seed, i, j, k, l, h, g, x0, y0, z0, w0, u0, v0);
         }
 
         n1 = LIMIT6 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1 - u1 * u1 - v1 * v1;
         if (n1 <= 0f) n1 = 0f;
-        else
-        {
+        else {
             n1 *= n1;
             n1 *= n1 * gradCoord6D(seed, i + i1, j + j1, k + k1, l + l1, h + h1, g + g1, x1, y1, z1, w1, u1, v1);
         }
 
         n2 = LIMIT6 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2 - u2 * u2 - v2 * v2;
         if (n2 <= 0f) n2 = 0f;
-        else
-        {
+        else {
             n2 *= n2;
             n2 *= n2 * gradCoord6D(seed, i + i2, j + j2, k + k2, l + l2, h + h2, g + g2, x2, y2, z2, w2, u2, v2);
         }
 
         n3 = LIMIT6 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3 - u3 * u3 - v3 * v3;
         if (n3 <= 0f) n3 = 0f;
-        else
-        {
+        else {
             n3 *= n3;
             n3 *= n3 * gradCoord6D(seed, i + i3, j + j3, k + k3, l + l3, h + h3, g + g3, x3, y3, z3, w3, u3, v3);
         }
 
         n4 = LIMIT6 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4 - u4 * u4 - v4 * v4;
         if (n4 <= 0f) n4 = 0f;
-        else
-        {
+        else {
             n4 *= n4;
             n4 *= n4 * gradCoord6D(seed, i + i4, j + j4, k + k4, l + l4, h + h4, g + g4, x4, y4, z4, w4, u4, v4);
         }
 
         n5 = LIMIT6 - x5 * x5 - y5 * y5 - z5 * z5 - w5 * w5 - u5 * u5 - v5 * v5;
         if (n5 <= 0f) n5 = 0f;
-        else
-        {
+        else {
             n5 *= n5;
             n5 *= n5 * gradCoord6D(seed, i + i5, j + j5, k + k5, l + l5, h + h5, g + g5, x5, y5, z5, w5, u5, v5);
         }
 
         n6 = LIMIT6 - x6 * x6 - y6 * y6 - z6 * z6 - w6 * w6 - u6 * u6 - v6 * v6;
         if (n6 <= 0f) n6 = 0f;
-        else
-        {
+        else {
             n6 *= n6;
             n6 *= n6 * gradCoord6D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, g + 1, x6, y6, z6, w6, u6, v6);
         }

@@ -48,18 +48,6 @@ public class SimplexNoise implements INoise {
         this.seed = seed;
     }
 
-    protected static float gradCoord2D(long seed, int x, int y, float xd, float yd) {
-        final int h = hash256(x, y, seed) << 1;
-        return xd * GRADIENTS_2D[h] + yd * GRADIENTS_2D[h+1];
-    }
-    /**
-     * Computes the hash for a 3D int point and its dot product with a 3D float point as one step.
-     * @return a float between -1.2571 and 1.2571, exclusive
-     */
-    protected static float gradCoord3D(long seed, int x, int y, int z, float xd, float yd, float zd) {
-        final int hash = hash32(x, y, z, seed) << 2;
-        return xd * GRADIENTS_3D[hash] + yd * GRADIENTS_3D[hash + 1] + zd * GRADIENTS_3D[hash + 2];
-    }
     protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u, float xd, float yd, float zd, float wd, float ud) {
         final int hash = hash256(x, y, z, w, u, seed) << 3;
         return xd * GRADIENTS_5D[hash] + yd * GRADIENTS_5D[hash + 1] + zd * GRADIENTS_5D[hash + 2] + wd * GRADIENTS_5D[hash + 3] + ud * GRADIENTS_5D[hash + 4];
@@ -288,7 +276,6 @@ public class SimplexNoise implements INoise {
     }
 
     public static float noise(final float x, final float y, final float z, final float w, final long seed) {
-        float n0, n1, n2, n3, n4;
         final float[] GRADIENTS_4D = Noise.GRADIENTS_4D;
         float t = (x + y + z + w) * F4;
         int i = fastFloor(x + t);
@@ -310,6 +297,7 @@ public class SimplexNoise implements INoise {
         int rankz = 0;
         int rankw = 0;
 
+        // @formatter:off
         if (x0 > y0) rankx++; else ranky++;
         if (x0 > z0) rankx++; else rankz++;
         if (x0 > w0) rankx++; else rankw++;
@@ -318,6 +306,7 @@ public class SimplexNoise implements INoise {
         if (y0 > w0) ranky++; else rankw++;
 
         if (z0 > w0) rankz++; else rankw++;
+        // @formatter:on
 
         int i1 = 2 - rankx >>> 31;
         int j1 = 2 - ranky >>> 31;
@@ -354,41 +343,37 @@ public class SimplexNoise implements INoise {
         float z4 = z0 - 1 + 4 * G4;
         float w4 = w0 - 1 + 4 * G4;
 
+        float n = 0f;
         float t0 = LIMIT4 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
         if(t0 > 0) {
             final int h0 = (hash256(i, j, k, l, seed) & 0xFC);
             t0 *= t0;
-            n0 = t0 * t0 * (x0 * GRADIENTS_4D[h0] + y0 * GRADIENTS_4D[h0 + 1] + z0 * GRADIENTS_4D[h0 + 2] + w0 * GRADIENTS_4D[h0 + 3]);
+            n += t0 * t0 * (x0 * GRADIENTS_4D[h0] + y0 * GRADIENTS_4D[h0 + 1] + z0 * GRADIENTS_4D[h0 + 2] + w0 * GRADIENTS_4D[h0 + 3]);
         }
-        else n0 = 0;
         float t1 = LIMIT4 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
         if (t1 > 0) {
             final int h1 = (hash256(i + i1, j + j1, k + k1, l + l1, seed) & 0xFC);
             t1 *= t1;
-            n1 = t1 * t1 * (x1 * GRADIENTS_4D[h1] + y1 * GRADIENTS_4D[h1 + 1] + z1 * GRADIENTS_4D[h1 + 2] + w1 * GRADIENTS_4D[h1 + 3]);
+            n += t1 * t1 * (x1 * GRADIENTS_4D[h1] + y1 * GRADIENTS_4D[h1 + 1] + z1 * GRADIENTS_4D[h1 + 2] + w1 * GRADIENTS_4D[h1 + 3]);
         }
-        else n1 = 0;
         float t2 = LIMIT4 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
         if (t2 > 0) {
             final int h2 = (hash256(i + i2, j + j2, k + k2, l + l2, seed) & 0xFC);
             t2 *= t2;
-            n2 = t2 * t2 * (x2 * GRADIENTS_4D[h2] + y2 * GRADIENTS_4D[h2 + 1] + z2 * GRADIENTS_4D[h2 + 2] + w2 * GRADIENTS_4D[h2 + 3]);
+            n += t2 * t2 * (x2 * GRADIENTS_4D[h2] + y2 * GRADIENTS_4D[h2 + 1] + z2 * GRADIENTS_4D[h2 + 2] + w2 * GRADIENTS_4D[h2 + 3]);
         }
-        else n2 = 0;
         float t3 = LIMIT4 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
         if (t3 > 0) {
             final int h3 = (hash256(i + i3, j + j3, k + k3, l + l3, seed) & 0xFC);
             t3 *= t3;
-            n3 = t3 * t3 * (x3 * GRADIENTS_4D[h3] + y3 * GRADIENTS_4D[h3 + 1] + z3 * GRADIENTS_4D[h3 + 2] + w3 * GRADIENTS_4D[h3 + 3]);
+            n += t3 * t3 * (x3 * GRADIENTS_4D[h3] + y3 * GRADIENTS_4D[h3 + 1] + z3 * GRADIENTS_4D[h3 + 2] + w3 * GRADIENTS_4D[h3 + 3]);
         }
-        else n3 = 0;
         float t4 = LIMIT4 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
         if (t4 > 0) {
             final int h4 = (hash256(i + 1, j + 1, k + 1, l + 1, seed) & 0xFC);
             t4 *= t4;
-            n4 = t4 * t4 * (x4 * GRADIENTS_4D[h4] + y4 * GRADIENTS_4D[h4 + 1] + z4 * GRADIENTS_4D[h4 + 2] + w4 * GRADIENTS_4D[h4 + 3]);
+            n += t4 * t4 * (x4 * GRADIENTS_4D[h4] + y4 * GRADIENTS_4D[h4 + 1] + z4 * GRADIENTS_4D[h4 + 2] + w4 * GRADIENTS_4D[h4 + 3]);
         }
-        else n4 = 0;
 
         // debug code, for finding what constant should be used for 14.75
 //        final float ret =  (n0 + n1 + n2 + n3 + n4) * (14.7279);
@@ -399,7 +384,7 @@ public class SimplexNoise implements INoise {
 //        return ret;
         // normal return code
 //        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-        t = (n0 + n1 + n2 + n3 + n4) * 14.7279f;
+        t = n * 14.7279f;
         return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4) * 16.000f;
 //        return t / (0.5f + Math.abs(t));
@@ -442,6 +427,7 @@ public class SimplexNoise implements INoise {
         int rankw = 0;
         int ranku = 0;
 
+        // @formatter:off
         if (x0 > y0) rankx++; else ranky++;
         if (x0 > z0) rankx++; else rankz++;
         if (x0 > w0) rankx++; else rankw++;
@@ -455,6 +441,7 @@ public class SimplexNoise implements INoise {
         if (z0 > u0) rankz++; else ranku++;
 
         if (w0 > u0) rankw++; else ranku++;
+        // @formatter:on
 
         int i1 = 3 - rankx >>> 31;
         int j1 = 3 - ranky >>> 31;
@@ -607,6 +594,7 @@ public class SimplexNoise implements INoise {
         int ranku = 0;
         int rankv = 0;
 
+        // @formatter:off
         if (x0 > y0) rankx++; else ranky++;
         if (x0 > z0) rankx++; else rankz++;
         if (x0 > w0) rankx++; else rankw++;
@@ -626,6 +614,7 @@ public class SimplexNoise implements INoise {
         if (w0 > v0) rankw++; else rankv++;
 
         if (u0 > v0) ranku++; else rankv++;
+        // @formatter:on
 
         int i1 = 4 - rankx >>> 31;
         int j1 = 4 - ranky >>> 31;
@@ -852,8 +841,8 @@ public class SimplexNoise implements INoise {
 
 /*
 // Find and replace info.
-^( +)(\w+) \*\= \2 \* gradCoord3D\(seed\, ((?:[^,]+, ){2})(\w+)\, (\w+)\)\;
-$1final int h = hash32($3seed) << 2;\n$1n += t * t * ($4 * GRADIENTS_3D[h] + $5 * GRADIENTS_3D[h + 1] + $6 * GRADIENTS_3D[h + 2]);
+^( +)(\w+) \*\= \2 \* gradCoord2D\(seed\, ((?:[^,]+, ){2})(\w+)\, (\w+)\)\;
+$1final int h = hash256($3seed) << 1;\n$1n += t * t * ($4 * GRADIENTS_2D[h] + $5 * GRADIENTS_2D[h + 1]);
 
 ^( +)(\w+) \+\= t \* t \* gradCoord3D\(seed\, ((?:[^,]+, ){3})(\w+)\, (\w+)\, (\w+)\)\;
 $1final int h = hash32($3seed) << 2;\n$1$2 += t * t * ($4 * GRADIENTS_3D[h] + $5 * GRADIENTS_3D[h + 1] + $6 * GRADIENTS_3D[h + 2]);
