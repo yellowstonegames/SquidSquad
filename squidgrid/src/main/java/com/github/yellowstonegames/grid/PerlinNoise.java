@@ -167,27 +167,29 @@ public class PerlinNoise implements INoise {
     //0xE60E2B722B53AEEBL, 0xCEBD76D9EDB6A8EFL, 0xB9C9AA3A51D00B65L, 0xA6F5777F6F88983FL, 0x9609C71EB7D03F7BL, 0x86D516E50B04AB1BL
     protected static float gradCoord2D(long seed, int x, int y,
                                         float xd, float yd) {
-        final int hash = (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y) * (seed) >>> 55 & 510);
+        final int hash =
+                (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y)
+                        * (seed) >>> 55 & 510);
         return xd * GRADIENTS_2D[hash] + yd * GRADIENTS_2D[hash + 1];
     }
     protected static float gradCoord3D(long seed, int x, int y, int z, float xd, float yd, float zd) {
         final int hash =
-                (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z) * (seed)
-                        >>> 59) * 3;
+                (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z)
+                        * (seed) >>> 59) << 2;
         return (xd * GRADIENTS_3D[hash] + yd * GRADIENTS_3D[hash + 1] + zd * GRADIENTS_3D[hash + 2]);
     }
     protected static float gradCoord4D(long seed, int x, int y, int z, int w,
                                         float xd, float yd, float zd, float wd) {
         final int hash =
-                (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w) * (seed)
-                        >>> 56) & -4;
+                (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w)
+                        * (seed) >>> 56) & -4;
         return xd * GRADIENTS_4D[hash] + yd * GRADIENTS_4D[hash + 1] + zd * GRADIENTS_4D[hash + 2] + wd * GRADIENTS_4D[hash + 3];
     }
     protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u,
                                         float xd, float yd, float zd, float wd, float ud) {
         final int hash =
                 (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u)
-                        * (seed) >>> 56) * 5;
+                        * (seed) >>> 56) << 3;
         return xd * GRADIENTS_5D[hash] + yd * GRADIENTS_5D[hash + 1] + zd * GRADIENTS_5D[hash + 2]
                 + wd * GRADIENTS_5D[hash + 3] + ud * GRADIENTS_5D[hash + 4];
     }
@@ -195,10 +197,8 @@ public class PerlinNoise implements INoise {
     protected static float gradCoord6D(long seed, int x, int y, int z, int w, int u, int v,
                                         float xd, float yd, float zd, float wd, float ud, float vd) {
         final int hash =
-                (int)(
-                        (seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L *
-                                z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u ^ 0x86D516E50B04AB1BL * v) * (seed)
-                        >>> 56) * 6;
+                (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u ^ 0x86D516E50B04AB1BL * v)
+                        * (seed) >>> 56) << 3;
         return xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash + 1] + zd * GRADIENTS_6D[hash + 2]
                 + wd * GRADIENTS_6D[hash + 3] + ud * GRADIENTS_6D[hash + 4] + vd * GRADIENTS_6D[hash + 5];
     }

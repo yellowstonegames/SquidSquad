@@ -66,12 +66,13 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final FlanNoise[] flans = new FlanNoise[7];
     private final HighDimensionalValueNoise[] hdvs = new HighDimensionalValueNoise[7];
     private final ValueNoise val = new ValueNoise(noise.getSeed());
+    private final PerlinNoise perlin = new PerlinNoise(noise.getSeed());
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 5;
-    private static final int MODE_LIMIT = 26;
-    private int mode = 24;
-    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private static final int MODE_LIMIT = 27;
+    private int mode = 26;
+    private int dim = 4; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
     private float threshold = 0.5f;
@@ -112,11 +113,6 @@ public class FFTVisualizer extends ApplicationAdapter {
         n = n * 0.5f + 0.5f;
         freq0[Math.min(Math.max((int)(n * 256), 0), freq0.length -1)]++;
         return n;
-    }
-
-    public static double basicPrepare(double n)
-    {
-        return n * 0.5 + 0.5;
     }
 
     private static final double root2pi = Math.sqrt(TrigTools.PI2_D);
@@ -266,6 +262,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         cyclic.setSeed(ls);
                         val.setSeed(s);
+                        perlin.setSeed(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(ls);
                             flans[i].setSeed(ls);
@@ -281,6 +278,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         quilt.setState(s);
                         cyclic.setSeed(ls);
                         val.setSeed(s);
+                        perlin.setSeed(s);
                         for (int i = 0; i < taffies.length; i++) {
                             taffies[i].setSeed(ls);
                             flans[i].setSeed(ls);
@@ -382,42 +380,43 @@ public class FFTVisualizer extends ApplicationAdapter {
                     break;
                 case 2:
                     for (int x = 0; x < width; x++) {
+                        float xc = TrigTools.cosTurns(x * iWidth) * 64 + c, xs = TrigTools.sinTurns(x * iWidth) * 64 + c;
                         for (int y = 0; y < height; y++) {
-                            bright = basicPrepare(noise.getConfiguredNoise(x, y, c, 0x1p-4f * (x + y - c)));
+                            float yc = TrigTools.cosTurns(y * iHeight) * 64 + c, ys = TrigTools.sinTurns(y * iHeight) * 64 + c;
+                            bright = basicPrepare(noise.getConfiguredNoise(xc, yc, xs, ys));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
                         }
                     }
                     break;
-                case 3:
+                case 3: {
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f;
+                        float xc = TrigTools.cosTurns(x * iWidth) * 64, xs = TrigTools.sinTurns(x * iWidth) * 64;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f;
-                            bright = basicPrepare(noise.getConfiguredNoise(
-                                    c + xx, xx - c, yy - c,
-                                    c - yy, xx + yy));
+                            float yc = TrigTools.cosTurns(y * iHeight) * 64, ys = TrigTools.sinTurns(y * iHeight) * 64;
+                            bright = basicPrepare(noise.getConfiguredNoise(xc, yc, xs, ys, c));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
                         }
                     }
-                    break;
-                case 4:
+                }
+                break;
+                case 4: {
                     for (int x = 0; x < width; x++) {
-                        xx = x * 0.5f;
+                        float xc = TrigTools.cosTurns(x * iWidth) * 64 + c, xs = TrigTools.sinTurns(x * iWidth) * 64 + c;
                         for (int y = 0; y < height; y++) {
-                            yy = y * 0.5f;
-                            bright = basicPrepare(noise.getConfiguredNoise(
-                                    c + xx, xx - c, yy - c,
-                                    c - yy, xx + yy, yy - xx));
+                            float yc = TrigTools.cosTurns(y * iHeight) * 64 + c, ys = TrigTools.sinTurns(y * iHeight) * 64 + c,
+                                    zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 64 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 64 - c;
+                            bright = basicPrepare(noise.getConfiguredNoise(xc, yc, zc, xs, ys, zs));
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
                         }
                     }
-                    break;
+                }
+                break;
             }
         } else if(mode == 1){
             switch (dim) {
@@ -1818,8 +1817,8 @@ public class FFTVisualizer extends ApplicationAdapter {
                     break;
             }
         } else if(mode == 25) {
-            int time = (int)(System.currentTimeMillis() >>> 10) & 15;
-            switch (dim){
+            int time = (int) (System.currentTimeMillis() >>> 10) & 15;
+            switch (dim) {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
@@ -1865,6 +1864,82 @@ public class FFTVisualizer extends ApplicationAdapter {
                         for (int y = 0; y < height; y++) {
                             bright = (float) (db = (1f / 255f) * (pointHashes[hashIndex].hashWithState(x, y, time & 1, time >>> 1 & 1, time >>> 2 & 1, time >>> 3 & 1, (int) noise.getSeed()) >>> 24));
                             real[x][y] = db;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+            }
+        }else if(mode == 26) {
+            float fr = noise.getFrequency();
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = (c + x) * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = (c + y) * fr;
+                            bright = basicPrepare(perlin.getNoise(points[dim][0], points[dim][1]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    points[dim][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[dim][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[dim][1] = y * fr;
+                            bright = basicPrepare(perlin.getNoise(points[dim][0], points[dim][1], points[dim][2]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
+                        for (int y = 0; y < height; y++) {
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            bright = basicPrepare(perlin.getNoise(points[dim][0], points[dim][1], points[dim][2], points[dim][3]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    points[3][4] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            bright = basicPrepare(perlin.getNoise(points[dim][0], points[dim][1], points[dim][2], points[dim][3], points[dim][4]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            points[4][4] = TrigTools.cosTurns(cc * -0x1.8p-6f) * 4;
+                            points[4][5] = TrigTools.sinTurns(cc * -0x1.8p-6f) * 4;
+                            bright = basicPrepare(perlin.getNoise(points[dim][0], points[dim][1], points[dim][2], points[dim][3], points[dim][4], points[dim][5]));
+                            real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
                         }
