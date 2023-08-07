@@ -48,11 +48,6 @@ public class SimplexNoise implements INoise {
         this.seed = seed;
     }
 
-    protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u, float xd, float yd, float zd, float wd, float ud) {
-        final int hash = hash256(x, y, z, w, u, seed) << 3;
-        return xd * GRADIENTS_5D[hash] + yd * GRADIENTS_5D[hash + 1] + zd * GRADIENTS_5D[hash + 2] + wd * GRADIENTS_5D[hash + 3] + ud * GRADIENTS_5D[hash + 4];
-    }
-
     @Override
     public float getNoise(final float x, final float y) {
         return noise(x, y, seed);
@@ -384,8 +379,8 @@ public class SimplexNoise implements INoise {
 //        return ret;
         // normal return code
 //        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-        t = n * 14.7279f;
-        return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+        n *= 14.7279f;
+        return n / (-0.3f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4) * 16.000f;
 //        return t / (0.5f + Math.abs(t));
     }
@@ -402,7 +397,7 @@ public class SimplexNoise implements INoise {
      * @return a continuous noise value between -1.0 and 1.0, both inclusive
      */
     public static float noise(final float x, final float y, final float z, final float w, final float u, final long seed) {
-        float n0, n1, n2, n3, n4, n5;
+        float n = 0f;
         float t = (x + y + z + w + u) * F5;
         int i = fastFloor(x + t);
         int j = fastFloor(y + t);
@@ -498,55 +493,49 @@ public class SimplexNoise implements INoise {
         float u5 = u0 - 1 + 5 * G5;
 
         t = LIMIT5 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0 - u0 * u0;
-        if (t < 0) n0 = 0;
-        else
-        {
+        if (t > 0) {
             t *= t;
-            n0 = t * t * gradCoord5D(seed, i, j, k, l, h, x0, y0, z0, w0, u0);
+            final int hash = hash256(i, j, k, l, h, seed) << 3;
+            n += t * t * (x0 * GRADIENTS_5D[hash] + y0 * GRADIENTS_5D[hash + 1] + z0 * GRADIENTS_5D[hash + 2] + w0 * GRADIENTS_5D[hash + 3] + u0 * GRADIENTS_5D[hash + 4]);
         }
 
         t = LIMIT5 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1 - u1 * u1;
-        if (t < 0) n1 = 0;
-        else
-        {
+        if (t > 0) {
             t *= t;
-            n1 = t * t * gradCoord5D(seed, i + i1, j + j1, k + k1, l + l1, h + h1, x1, y1, z1, w1, u1);
+            final int hash = hash256(i + i1, j + j1, k + k1, l + l1, h + h1, seed) << 3;
+            n += t * t * (x1 * GRADIENTS_5D[hash] + y1 * GRADIENTS_5D[hash + 1] + z1 * GRADIENTS_5D[hash + 2] + w1 * GRADIENTS_5D[hash + 3] + u1 * GRADIENTS_5D[hash + 4]);
         }
 
         t = LIMIT5 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2 - u2 * u2;
-        if (t < 0) n2 = 0;
-        else
-        {
+        if (t > 0) {
             t *= t;
-            n2 = t * t * gradCoord5D(seed, i + i2, j + j2, k + k2, l + l2, h + h2, x2, y2, z2, w2, u2);
+            final int hash = hash256(i + i2, j + j2, k + k2, l + l2, h + h2, seed) << 3;
+            n += t * t * (x2 * GRADIENTS_5D[hash] + y2 * GRADIENTS_5D[hash + 1] + z2 * GRADIENTS_5D[hash + 2] + w2 * GRADIENTS_5D[hash + 3] + u2 * GRADIENTS_5D[hash + 4]);
         }
 
         t = LIMIT5 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3 - u3 * u3;
-        if (t < 0) n3 = 0;
-        else
-        {
+        if (t > 0) {
             t *= t;
-            n3 = t * t * gradCoord5D(seed, i + i3, j + j3, k + k3, l + l3, h + h3, x3, y3, z3, w3, u3);
+            final int hash = hash256(i + i3, j + j3, k + k3, l + l3, h + h3, seed) << 3;
+            n += t * t * (x3 * GRADIENTS_5D[hash] + y3 * GRADIENTS_5D[hash + 1] + z3 * GRADIENTS_5D[hash + 2] + w3 * GRADIENTS_5D[hash + 3] + u3 * GRADIENTS_5D[hash + 4]);
         }
 
         t = LIMIT5 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4 - u4 * u4;
-        if (t < 0) n4 = 0;
-        else
-        {
+        if (t > 0) {
             t *= t;
-            n4 = t * t * gradCoord5D(seed, i + i4, j + j4, k + k4, l + l4, h + h4, x4, y4, z4, w4, u4);
+            final int hash = hash256(i + i4, j + j4, k + k4, l + l4, h + h4, seed) << 3;
+            n += t * t * (x4 * GRADIENTS_5D[hash] + y4 * GRADIENTS_5D[hash + 1] + z4 * GRADIENTS_5D[hash + 2] + w4 * GRADIENTS_5D[hash + 3] + u4 * GRADIENTS_5D[hash + 4]);
         }
 
         t = LIMIT5 - x5 * x5 - y5 * y5 - z5 * z5 - w5 * w5 - u5 * u5;
-        if (t < 0) n5 = 0;
-        else
-        {
+        if (t > 0) {
             t *= t;
-            n5 = t * t * gradCoord5D(seed, i + 1, j + 1, k + 1, l + 1, h + 1, x5, y5, z5, w5, u5);
+            final int hash = hash256(i + 1, j + 1, k + 1, l + 1, h + 1, seed) << 3;
+            n += t * t * (x5 * GRADIENTS_5D[hash] + y5 * GRADIENTS_5D[hash + 1] + z5 * GRADIENTS_5D[hash + 2] + w5 * GRADIENTS_5D[hash + 3] + u5 * GRADIENTS_5D[hash + 4]);
         }
 
-        t = (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
-        return t / (-0.5f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+        n *= 10.0f;
+        return n / (-0.5f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        return (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
 //        t = (n0 + n1 + n2 + n3 + n4 + n5) * 12.000f;
 //        return t / (0.5f + Math.abs(t));
@@ -565,7 +554,7 @@ public class SimplexNoise implements INoise {
     public static float noise(final float x, final float y, final float z,
                                final float w, final float u, final float v, final long seed) {
         final float[] GRADIENTS_6D = Noise.GRADIENTS_6D;
-        float n0, n1, n2, n3, n4, n5, n6;
+        float n0, n1, n2, n3, n4, n5, n6, n = 0f;
         float t = (x + y + z + w + u + v) * F6;
         int i = fastFloor(x + t);
         int j = fastFloor(y + t);
@@ -694,78 +683,64 @@ public class SimplexNoise implements INoise {
         float v6 = v0 - 1 + 6 * G6;
 
         n0 = LIMIT6 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0 - u0 * u0 - v0 * v0;
-        if (n0 <= 0.0f) n0 = 0.0f;
-        else
-        {
+        if (n0 > 0.0f) {
             final int hash = hash256(i, j, k, l, h, g, seed) << 3;
             n0 *= n0;
-            n0 *= n0 * (GRADIENTS_6D[hash] * x0 + GRADIENTS_6D[hash + 1] * y0 + GRADIENTS_6D[hash + 2] * z0 +
+            n += n0 * n0 * (GRADIENTS_6D[hash] * x0 + GRADIENTS_6D[hash + 1] * y0 + GRADIENTS_6D[hash + 2] * z0 +
                     GRADIENTS_6D[hash + 3] * w0 + GRADIENTS_6D[hash + 4] * u0 + GRADIENTS_6D[hash + 5] * v0);
         }
 
         n1 = LIMIT6 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1 - u1 * u1 - v1 * v1;
-        if (n1 <= 0.0f) n1 = 0.0f;
-        else
-        {
+        if (n1 > 0.0f) {
             final int hash = hash256(i + i1, j + j1, k + k1, l + l1, h + h1, g + g1, seed) << 3;
             n1 *= n1;
-            n1 *= n1 * (GRADIENTS_6D[hash] * x1 + GRADIENTS_6D[hash + 1] * y1 + GRADIENTS_6D[hash + 2] * z1 +
+            n += n1 * n1 * (GRADIENTS_6D[hash] * x1 + GRADIENTS_6D[hash + 1] * y1 + GRADIENTS_6D[hash + 2] * z1 +
                     GRADIENTS_6D[hash + 3] * w1 + GRADIENTS_6D[hash + 4] * u1 + GRADIENTS_6D[hash + 5] * v1);
         }
         
         n2 = LIMIT6 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2 - u2 * u2 - v2 * v2;
-        if (n2 <= 0.0f) n2 = 0.0f;
-        else
-        {
+        if (n2 > 0.0f) {
             final int hash = hash256(i + i2, j + j2, k + k2, l + l2, h + h2, g + g2, seed) << 3;
             n2 *= n2;
-            n2 *= n2 * (GRADIENTS_6D[hash] * x2 + GRADIENTS_6D[hash + 1] * y2 + GRADIENTS_6D[hash + 2] * z2 +
+            n += n2 * n2 * (GRADIENTS_6D[hash] * x2 + GRADIENTS_6D[hash + 1] * y2 + GRADIENTS_6D[hash + 2] * z2 +
                     GRADIENTS_6D[hash + 3] * w2 + GRADIENTS_6D[hash + 4] * u2 + GRADIENTS_6D[hash + 5] * v2);
         }
 
         n3 = LIMIT6 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3 - u3 * u3 - v3 * v3;
-        if (n3 <= 0.0f) n3 = 0.0f;
-        else
-        {
+        if (n3 > 0.0f) {
             final int hash = hash256(i + i3, j + j3, k + k3, l + l3, h + h3, g + g3, seed) << 3;
             n3 *= n3;
-            n3 *= n3 * (GRADIENTS_6D[hash] * x3 + GRADIENTS_6D[hash + 1] * y3 + GRADIENTS_6D[hash + 2] * z3 +
+            n += n3 * n3 * (GRADIENTS_6D[hash] * x3 + GRADIENTS_6D[hash + 1] * y3 + GRADIENTS_6D[hash + 2] * z3 +
                     GRADIENTS_6D[hash + 3] * w3 + GRADIENTS_6D[hash + 4] * u3 + GRADIENTS_6D[hash + 5] * v3);
         }
 
         n4 = LIMIT6 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4 - u4 * u4 - v4 * v4;
-        if (n4 <= 0.0f) n4 = 0.0f;
-        else
-        {
+        if (n4 > 0.0f) {
             final int hash = hash256(i + i4, j + j4, k + k4, l + l4, h + h4, g + g4, seed) << 3;
             n4 *= n4;
-            n4 *= n4 * (GRADIENTS_6D[hash] * x4 + GRADIENTS_6D[hash + 1] * y4 + GRADIENTS_6D[hash + 2] * z4 +
+            n += n4 * n4 * (GRADIENTS_6D[hash] * x4 + GRADIENTS_6D[hash + 1] * y4 + GRADIENTS_6D[hash + 2] * z4 +
                     GRADIENTS_6D[hash + 3] * w4 + GRADIENTS_6D[hash + 4] * u4 + GRADIENTS_6D[hash + 5] * v4);
         }
 
         n5 = LIMIT6 - x5 * x5 - y5 * y5 - z5 * z5 - w5 * w5 - u5 * u5 - v5 * v5;
-        if (n5 <= 0.0f) n5 = 0.0f;
-        else
-        {
+        if (n5 > 0.0f) {
             final int hash = hash256(i + i5, j + j5, k + k5, l + l5, h + h5, g + g5, seed) << 3;
             n5 *= n5;
-            n5 *= n5 * (GRADIENTS_6D[hash] * x5 + GRADIENTS_6D[hash + 1] * y5 + GRADIENTS_6D[hash + 2] * z5 +
+            n += n5 * n5 * (GRADIENTS_6D[hash] * x5 + GRADIENTS_6D[hash + 1] * y5 + GRADIENTS_6D[hash + 2] * z5 +
                     GRADIENTS_6D[hash + 3] * w5 + GRADIENTS_6D[hash + 4] * u5 + GRADIENTS_6D[hash + 5] * v5);
         }
 
         n6 = LIMIT6 - x6 * x6 - y6 * y6 - z6 * z6 - w6 * w6 - u6 * u6 - v6 * v6;
-        if (n6 <= 0.0f) n6 = 0.0f;
-        else
-        {
+        if (n6 > 0.0f) {
             final int hash = hash256(i + 1, j + 1, k + 1, l + 1, h + 1, g + 1, seed) << 3;
             n6 *= n6;
-            n6 *= n6 * (GRADIENTS_6D[hash] * x6 + GRADIENTS_6D[hash + 1] * y6 + GRADIENTS_6D[hash + 2] * z6 +
+            n += n6 * n6 * (GRADIENTS_6D[hash] * x6 + GRADIENTS_6D[hash + 1] * y6 + GRADIENTS_6D[hash + 2] * z6 +
                     GRADIENTS_6D[hash + 3] * w6 + GRADIENTS_6D[hash + 4] * u6 + GRADIENTS_6D[hash + 5] * v6);
         }
 
 //        return  (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
-        t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
-        return t / (-0.7f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+        n *= 7.499f;
+        return n / (-0.7f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 9.000f;
 //        return t / (0.5f + Math.abs(t));
     }
@@ -846,4 +821,8 @@ $1final int h = hash256($3seed) << 1;\n$1n += t * t * ($4 * GRADIENTS_2D[h] + $5
 
 ^( +)(\w+) \+\= t \* t \* gradCoord3D\(seed\, ((?:[^,]+, ){3})(\w+)\, (\w+)\, (\w+)\)\;
 $1final int h = hash32($3seed) << 2;\n$1$2 += t * t * ($4 * GRADIENTS_3D[h] + $5 * GRADIENTS_3D[h + 1] + $6 * GRADIENTS_3D[h + 2]);
+
+^( +)(\w+) \= t \* t \* gradCoord5D\(seed\, ((?:[^,]+, ){5})(\w+)\, (\w+)\, (\w+)\, (\w+)\, (\w+)\)\;
+$1final int hash = hash256($3seed) << 3;\n$1n += t * t * ($4 * GRADIENTS_5D[hash] + $5 * GRADIENTS_5D[hash + 1] + $6 * GRADIENTS_5D[hash + 2] + $7 * GRADIENTS_5D[hash + 3] + $8 * GRADIENTS_5D[hash + 4]);
+
  */
