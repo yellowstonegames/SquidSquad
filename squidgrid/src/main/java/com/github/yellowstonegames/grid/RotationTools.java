@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.Ziggurat;
 
 /**
@@ -96,6 +97,8 @@ public final class RotationTools {
 //        }
 //    }
 
+    // Section using a long seed and randomize()
+
     /**
      *
      * @param state change this with {@code randomize((state += 0x9E3779B97F4A7C15L))}
@@ -104,6 +107,7 @@ public final class RotationTools {
     private static long randomize(long state) {
         return (state = ((state = (state ^ 0xDB4F0B9175AE2165L) * 0xC6BC279692B5CC83L) ^ state >>> 27) * 0xAEF17502108EF2D9L) ^ state >>> 25;
     }
+
     /**
      * This is just part of a larger rotation generator; it takes a target size (the side length of the matrix this will
      * return), another matrix {@code small} (with a side length 1 less than {@code targetSize}), and a random number
@@ -175,47 +179,6 @@ public final class RotationTools {
         final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new float[]{c, s, -s, c};
     }
-
-//    /**
-//     * Creates a new 1D float array that can be used as a 3D rotation matrix by
-//     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-//     * {@link TrigTools#SIN_TABLE} and three Gaussian floats using {@link Ziggurat}.
-//     * @param seed any long; will be scrambled
-//     * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
-//     */
-//    public static float[] randomRotation3D(long seed) {
-//        final int index = (int)((seed = randomize(seed ^ 0x9E3779B97F4A7C15L)) >>> -TrigTools.SIN_BITS);
-//        float x = (float) Ziggurat.normal(randomize(seed += 0x9E3779B97F4A7C15L));
-//        float y = (float) Ziggurat.normal(randomize(seed += 0x9E3779B97F4A7C15L));
-//        float z = (float) Ziggurat.normal(randomize(seed += 0x9E3779B97F4A7C15L));
-//        float sum = x * x + y * y + z * z;
-//        final float inv = 1f / (float) Math.sqrt(sum);
-//        float t = 1f;
-//        sum = 0f;
-//        t -= x *= inv; sum += t * t; t = 0f;
-//        t -= y *= inv; sum += t * t; t = 0f;
-//        t -= z *= inv; sum += t * t; t = 0f;
-//
-//        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as c
-//        x = (1 - x) * sum;
-//        y = (0 - x) * sum;
-//        z = (0 - x) * sum;
-//
-//        final float xx = x * x - 1;
-//        final float yy = y * y - 1;
-//        final float zz = z * z - 1;
-//        final float xy = x * y;
-//        final float xz = x * z;
-//        final float yz = y * z;
-//
-//        final float s = TrigTools.SIN_TABLE[index];
-//        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
-//        final float sxy = s * xy, cxy = c * xy;
-//        return new float[]{
-//                c * xx - sxy   , s * xx + cxy   , xz,
-//                cxy    - s * yy, sxy    + c * yy, yz,
-//                c * xz - s * yz, s * xz + c * yz, zz};
-//    }
 
     /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
@@ -315,5 +278,174 @@ public final class RotationTools {
      */
     public static float[] randomRotation6D(long seed, float[] rotation5D) {
         return rotateStep(seed, rotation5D, 6);
+    }
+
+    // Section using a Random generator
+
+    /**
+     * This is just part of a larger rotation generator; it takes a target size (the side length of the matrix this will
+     * return), another matrix {@code small} (with a side length 1 less than {@code targetSize}), and a random number
+     * generator, and uses the seed and some matrix operations to generate a random rotation based on {@code small}.
+     * This allocates a new {@code targetSize * targetSize}-element float array on every call and returns it. It also
+     * allocates some more temporary float arrays to work with.
+     * <br>
+     * See <a href="https://math.stackexchange.com/a/442489">Stack Exchange's links here</a>, and Graphics Gems III
+     * (specifically, the part about fast random rotation matrices, not the part about the subgroup algorithm).
+     *
+     * @param random random number generator; an EnhancedRandom from the juniper library
+     * @param small a smaller square matrix than the result should be; must have side length {@code targetSize - 1}
+     * @param targetSize the side length of the square matrix to be returned
+     * @return a 1D float array that can be treated as a rotation matrix for inputs of size {@code targetSize}
+     */
+    private static float[] rotateStep(EnhancedRandom random, float[] small, int targetSize) {
+        final int smallSize = targetSize - 1, squareSize = targetSize * targetSize;
+        // might be able to get rid of these allocations by holding onto some space...
+        float[] gauss = new float[targetSize], house = new float[squareSize], large = new float[squareSize],
+                out = new float[squareSize];
+        for (int i = 0; i < smallSize; i++) {
+            // copy the small matrix into the bottom right corner of the large matrix
+            System.arraycopy(small, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
+        }
+        large[0] = 1;
+
+        float sum = 0f, t;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = t = (float) random.nextGaussian();
+            sum += t * t;
+        }
+        final float inv = 1f / (float) Math.sqrt(sum);
+        sum = 0f;
+        t = 1f;
+        for (int i = 0; i < targetSize; i++) {
+            t -= gauss[i] *= inv;
+            sum += t * t;
+            t = 0f;
+        }
+        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
+        t = 1f;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = (t - gauss[i]) * sum;
+            t = 0f;
+        }
+        for (int row = 0, h = 0; row < targetSize; row++) {
+            for (int col = 0; col < targetSize; col++, h++) {
+                house[h] = gauss[row] * gauss[col];
+            }
+        }
+        for (int i = 0; i < targetSize; i++) {
+            house[targetSize * i + i]--;
+        }
+        matrixMultiply(house, large, out, targetSize);
+        return out;
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 2D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given seed to get an angle using
+     * {@link TrigTools#SIN_TABLE}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
+     */
+    public static float[] randomRotation2D(EnhancedRandom random) {
+        final int index = random.next(TrigTools.SIN_BITS);
+        final float s = TrigTools.SIN_TABLE[index];
+        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        return new float[]{c, s, -s, c};
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 3D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
+     */
+    public static float[] randomRotation3D(EnhancedRandom random) {
+        return rotateStep(random, randomRotation2D(random), 3);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 3D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
+     */
+    public static float[] randomRotation3D(EnhancedRandom random, float[] rotation2D) {
+        return rotateStep(random, rotation2D, 3);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 4D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
+     */
+    public static float[] randomRotation4D(EnhancedRandom random) {
+        return rotateStep(random, randomRotation3D(random), 4);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 4D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
+     */
+    public static float[] randomRotation4D(EnhancedRandom random, float[] rotation3D) {
+        return rotateStep(random, rotation3D, 4);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 5D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 25-element float array, meant as effectively a 5D rotation matrix
+     */
+    public static float[] randomRotation5D(EnhancedRandom random) {
+        return rotateStep(random, randomRotation4D(random), 5);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 5D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 25-element float array, meant as effectively a 5D rotation matrix
+     */
+    public static float[] randomRotation5D(EnhancedRandom random, float[] rotation4D) {
+        return rotateStep(random, rotation4D, 5);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 6D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 36-element float array, meant as effectively a 6D rotation matrix
+     */
+    public static float[] randomRotation6D(EnhancedRandom random) {
+        return rotateStep(random, randomRotation5D(random), 6);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 6D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}.
+     * Uses the given {@link EnhancedRandom} to get an angle using
+     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 36-element float array, meant as effectively a 6D rotation matrix
+     */
+    public static float[] randomRotation6D(EnhancedRandom random, float[] rotation5D) {
+        return rotateStep(random, rotation5D, 6);
     }
 }
