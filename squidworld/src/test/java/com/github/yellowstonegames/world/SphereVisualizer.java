@@ -39,7 +39,6 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.grid.RotationTools;
 
@@ -49,11 +48,11 @@ import java.util.Arrays;
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
-    public static final int POINT_COUNT = 1024;
+    public static final int POINT_COUNT = 256;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 14;
+    private int modes = 15;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -199,6 +198,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 12: spherePhiMode();
                 break;
             case 13: sphere5DMode();
+                break;
+            case 14: sphere5DHaltonMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -488,6 +489,19 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void sphere5DHaltonMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            inSphereFrom5D(i, GRADIENTS_5D_HALTON);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -997,6 +1011,24 @@ public class SphereVisualizer extends ApplicationAdapter {
             +1.5421515027f, +0.1809242613f, +0.6454387145f, +0.2020302919f, +1.0637799497f, 0f, 0f, 0f,
     };
 
+    protected static final float[] GRADIENTS_5D_HALTON = new float[2048];
+    static {
+        for (int i = 0; i < 256; i++) {
+            float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
+            float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
+            float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
+            float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
+            float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(13, i));
+
+            final float mag = 2f / (float)Math.sqrt(x * x + y * y + z * z);
+            GRADIENTS_5D_HALTON[i << 3 | 0] = x * mag;
+            GRADIENTS_5D_HALTON[i << 3 | 1] = y * mag;
+            GRADIENTS_5D_HALTON[i << 3 | 2] = z * mag;
+            GRADIENTS_5D_HALTON[i << 3 | 3] = w * mag;
+            GRADIENTS_5D_HALTON[i << 3 | 4] = u * mag;
+
+        }
+    }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
