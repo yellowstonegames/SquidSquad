@@ -44,8 +44,9 @@ public final class RotationTools {
      * (as a 1D float array), and an output vector to write to (as a 1D float array), and does the math to
      * rotate {@code input} using {@code rotation}, and add the results into {@code output}. This does not erase output
      * before writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
-     * rotation must be equal to or greater than the length of input times the length of output. Typically, if input has
-     * length {@code n} and output has length {@code m}, rotation has length {@code n*m}. This does no bounds checking
+     * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means this
+     * affects {@code rotation.length / input.length} items in output. Typically, if input has length {@code n} and
+     * output should receive {@code m} changes, rotation has length {@code n*m}. This does no validation
      * on {@code rotation}, hence why it is "raw" (also because it takes its inputs as unadorned 1D arrays).
      *
      * @param input an input vector of length {@code n}
@@ -55,7 +56,32 @@ public final class RotationTools {
     public static void rotate(float[] input, float[] rotation, float[] output) {
         int m = 0;
         for (int r = 0; r < input.length; r++) {
-            for (int c = 0; c < output.length; c++) {
+            for (int c = 0; m < rotation.length && c < output.length; c++) {
+                output[c] += rotation[m++] * input[r];
+            }
+        }
+    }
+
+    /**
+     * A "raw" rotation method that takes a rotation matrix (as a row-major 1D float array), an input vector to rotate
+     * (as a 1D float array), an output vector to write to (as a 1D float array), and an offset into the output vector
+     * to start writing there, and does the math to rotate {@code input} using {@code rotation}, and add the results
+     * into {@code output} starting at {@code offsetOut}. This does not erase output
+     * before writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
+     * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means this
+     * affects {@code rotation.length / input.length} items in output. Typically, if input has length {@code n} and
+     * output should receive {@code m} changes, rotation has length {@code n*m}. This does no validation
+     * on {@code rotation}, hence why it is "raw" (also because it takes its inputs as unadorned 1D arrays).
+     *
+     * @param input an input vector of length {@code n}
+     * @param rotation a rotation matrix of length {@code n*m}
+     * @param output the output vector of length {@code m} or greater; only {@code rotation.length / input.length} items will be written to
+     * @param offsetOut the index in {@code output} to start writing the rotated output
+     */
+    public static void rotate(float[] input, float[] rotation, float[] output, int offsetOut) {
+        int m = 0;
+        for (int r = 0; r < input.length; r++) {
+            for (int c = offsetOut; m < rotation.length && c < output.length; c++) {
                 output[c] += rotation[m++] * input[r];
             }
         }
@@ -463,8 +489,9 @@ public final class RotationTools {
      * (as a 1D double array), and an output vector to write to (as a 1D double array), and does the math to
      * rotate {@code input} using {@code rotation}, and add the results into {@code output}. This does not erase output
      * before writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
-     * rotation must be equal to or greater than the length of input times the length of output. Typically, if input has
-     * length {@code n} and output has length {@code m}, rotation has length {@code n*m}. This does no bounds checking
+     * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means this
+     * affects {@code rotation.length / input.length} items in output. Typically, if input has length {@code n} and
+     * output should receive {@code m} changes, rotation has length {@code n*m}. This does no validation
      * on {@code rotation}, hence why it is "raw" (also because it takes its inputs as unadorned 1D arrays).
      *
      * @param input an input vector of length {@code n}
@@ -474,7 +501,32 @@ public final class RotationTools {
     public static void rotate(double[] input, double[] rotation, double[] output) {
         int m = 0;
         for (int r = 0; r < input.length; r++) {
-            for (int c = 0; c < output.length; c++) {
+            for (int c = 0; m < rotation.length && c < output.length; c++) {
+                output[c] += rotation[m++] * input[r];
+            }
+        }
+    }
+
+    /**
+     * A "raw" rotation method that takes a rotation matrix (as a row-major 1D double array), an input vector to rotate
+     * (as a 1D double array), an output vector to write to (as a 1D double array), and an offset into the output vector
+     * to start writing there, and does the math to rotate {@code input} using {@code rotation}, and add the results
+     * into {@code output} starting at {@code offsetOut}. This does not erase output
+     * before writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
+     * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means this
+     * affects {@code rotation.length / input.length} items in output. Typically, if input has length {@code n} and
+     * output should receive {@code m} changes, rotation has length {@code n*m}. This does no validation
+     * on {@code rotation}, hence why it is "raw" (also because it takes its inputs as unadorned 1D arrays).
+     *
+     * @param input an input vector of length {@code n}
+     * @param rotation a rotation matrix of length {@code n*m}
+     * @param output the output vector of length {@code m} or greater; only {@code rotation.length / input.length} items will be written to
+     * @param offsetOut the index in {@code output} to start writing the rotated output
+     */
+    public static void rotate(double[] input, double[] rotation, double[] output, int offsetOut) {
+        int m = 0;
+        for (int r = 0; r < input.length; r++) {
+            for (int c = offsetOut; m < rotation.length && c < output.length; c++) {
                 output[c] += rotation[m++] * input[r];
             }
         }
@@ -564,21 +616,21 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 2D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given seed to get an angle using
-     * {@link TrigTools#SIN_TABLE}.
+     * {@link TrigTools#SIN_TABLE_D}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 4-element double array, meant as effectively a 2D rotation matrix
      */
     public static double[] randomDoubleRotation2D(long seed) {
         final int index = (int)(randomize(seed * 0x9E3779B974A7C15L) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
-        final double s = TrigTools.SIN_TABLE[index];
-        final double c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        final double s = TrigTools.SIN_TABLE_D[index];
+        final double c = TrigTools.SIN_TABLE_D[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new double[]{c, s, -s, c};
     }
 
     /**
      * Creates a new 1D double array that can be used as a 3D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 9-element double array, meant as effectively a 3D rotation matrix
      */
@@ -603,7 +655,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 4D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 16-element double array, meant as effectively a 4D rotation matrix
      */
@@ -628,7 +680,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 5D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 25-element double array, meant as effectively a 5D rotation matrix
      */
@@ -653,7 +705,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 6D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 36-element double array, meant as effectively a 6D rotation matrix
      */
@@ -740,14 +792,14 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 2D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given seed to get an angle using
-     * {@link TrigTools#SIN_TABLE}.
+     * {@link TrigTools#SIN_TABLE_D}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 4-element double array, meant as effectively a 2D rotation matrix
      */
     public static double[] randomDoubleRotation2D(EnhancedRandom random) {
         final int index = random.next(TrigTools.SIN_BITS);
-        final double s = TrigTools.SIN_TABLE[index];
-        final double c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        final double s = TrigTools.SIN_TABLE_D[index];
+        final double c = TrigTools.SIN_TABLE_D[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
         return new double[]{c, s, -s, c};
     }
 
@@ -755,7 +807,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 3D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 9-element double array, meant as effectively a 3D rotation matrix
      */
@@ -767,7 +819,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 3D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 16-element double array, meant as effectively a 4D rotation matrix
      */
@@ -779,7 +831,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 4D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 16-element double array, meant as effectively a 4D rotation matrix
      */
@@ -791,7 +843,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 4D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 16-element double array, meant as effectively a 4D rotation matrix
      */
@@ -803,7 +855,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 5D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 25-element double array, meant as effectively a 5D rotation matrix
      */
@@ -815,7 +867,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 5D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 25-element double array, meant as effectively a 5D rotation matrix
      */
@@ -827,7 +879,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 6D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 36-element double array, meant as effectively a 6D rotation matrix
      */
@@ -839,7 +891,7 @@ public final class RotationTools {
      * Creates a new 1D double array that can be used as a 6D rotation matrix by
      * {@link #rotate(double[], double[], double[])}.
      * Uses the given {@link EnhancedRandom} to get an angle using
-     * {@link TrigTools#SIN_TABLE}, and also calls {@link EnhancedRandom#nextGaussian()}.
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link EnhancedRandom#nextGaussian()}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 36-element double array, meant as effectively a 6D rotation matrix
      */
