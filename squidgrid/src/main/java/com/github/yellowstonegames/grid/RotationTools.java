@@ -80,8 +80,9 @@ public final class RotationTools {
      */
     public static void rotate(float[] input, float[] rotation, float[] output, int offsetOut) {
         int m = 0;
+        final int outEnd = offsetOut + rotation.length / input.length;
         for (int r = 0; r < input.length; r++) {
-            for (int c = offsetOut; m < rotation.length && c < output.length; c++) {
+            for (int c = offsetOut; m < rotation.length && c < outEnd && c < output.length; c++) {
                 output[c] += rotation[m++] * input[r];
             }
         }
@@ -525,8 +526,9 @@ public final class RotationTools {
      */
     public static void rotate(double[] input, double[] rotation, double[] output, int offsetOut) {
         int m = 0;
+        final int outEnd = offsetOut + rotation.length / input.length;
         for (int r = 0; r < input.length; r++) {
-            for (int c = offsetOut; m < rotation.length && c < output.length; c++) {
+            for (int c = offsetOut; m < rotation.length && c < outEnd && c < output.length; c++) {
                 output[c] += rotation[m++] * input[r];
             }
         }

@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
@@ -48,11 +49,11 @@ import java.util.Arrays;
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
-    public static final int POINT_COUNT = 256;
+    public static final int POINT_COUNT = 4096;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 16;
+    private int modes = 17;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -202,6 +203,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 14: sphere5DHaltonMode();
                 break;
             case 15: sphere5DR5Mode();
+                break;
+            case 16: sphere5DAceMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -522,6 +525,18 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
         renderer.end();
     }
+    private void sphere5DAceMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            inSphereFrom5D(i, GRADIENTS_5D_ACE);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
 
 
 
@@ -745,7 +760,7 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     public void inSphereFrom5D(final int index, final float[] gradients)
     {
-        final int i = (index & 255) << 3;
+        final int i = (index & gradients.length - 8 >>> 3) << 3;
         float x = gradients[i + 0];
         float y = gradients[i + 1];
         float z = gradients[i + 2];
@@ -1026,10 +1041,11 @@ public class SphereVisualizer extends ApplicationAdapter {
             +1.5421515027f, +0.1809242613f, +0.6454387145f, +0.2020302919f, +1.0637799497f, 0f, 0f, 0f,
     };
 
-    protected static final float[] GRADIENTS_5D_HALTON = new float[2048];
-    protected static final float[] GRADIENTS_5D_R5 = new float[2048];
-    static {
-        for (int i = 1; i <= 256; i++) {
+    protected final float[] GRADIENTS_5D_HALTON = new float[POINT_COUNT<<3];
+    protected final float[] GRADIENTS_5D_R5 = new float[POINT_COUNT<<3];
+    protected final float[] GRADIENTS_5D_ACE = new float[POINT_COUNT<<3];
+    {
+        for (int i = 1; i <= POINT_COUNT; i++) {
             float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
             float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
             float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
@@ -1045,7 +1061,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_HALTON[index + 3] = w * mag;
             GRADIENTS_5D_HALTON[index + 4] = u * mag;
         }
-        for (int i = 1; i <= 256; i++) {
+        for (int i = 1; i <= POINT_COUNT; i++) {
             float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][0] * i >>> 12) * 0x1p-52);
             float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][1] * i >>> 12) * 0x1p-52);
             float z = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][2] * i >>> 12) * 0x1p-52);
@@ -1060,6 +1076,13 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_R5[index + 2] = z * mag;
             GRADIENTS_5D_R5[index + 3] = w * mag;
             GRADIENTS_5D_R5[index + 4] = u * mag;
+        }
+
+        EnhancedRandom random = new AceRandom(-1234567890L);
+        float[] pole5 = new float[]{1f, 0f, 0f, 0f, 0f};
+
+        for (int i = 0; i < POINT_COUNT; i++) {
+            RotationTools.rotate(pole5, RotationTools.randomRotation5D(random), GRADIENTS_5D_ACE, i << 3);
         }
     }
     public static void main (String[] arg) {
