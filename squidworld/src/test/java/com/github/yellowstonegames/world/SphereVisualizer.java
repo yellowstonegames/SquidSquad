@@ -48,11 +48,11 @@ import java.util.Arrays;
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
-    public static final int POINT_COUNT = 0x4000;
+    public static final int POINT_COUNT = 1024;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 12;
+    private int modes = 13;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -194,6 +194,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 11:
                 if(UIUtils.shift()) sphereHammersley2AltMode();
                 else sphereHammersley2Mode();
+                break;
+            case 12: spherePhiMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -463,6 +465,24 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private void spherePhiMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSpherePhi(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+
+
+
+
+
     public void onSphereTrigAlt(final int index)
     {
         float theta = random.nextExclusiveFloat();
@@ -541,7 +561,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
     public void onSphereRobertsVDC(final int index)
     {
-        long v = Long.reverse(index) >>> 1;
+        long v = Long.reverse(index);
         float x = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][0] * index ^ v) >>> 41) * 0x1p-23);
         float y = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][1] * index ^ v) >>> 41) * 0x1p-23);
         float z = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][2] * index ^ v) >>> 41) * 0x1p-23);
@@ -657,6 +677,25 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[0] = TrigTools.cosTurns(lon) * root;
         vector[1] = TrigTools.sinTurns(lon) * root;
         vector[2] = u;
+    }
+
+    // NOTE: This is awful. Preserve this for posterity.
+    public void onSpherePhi(final int index)
+    {
+        final int i = index * 3;
+        float x = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+1) >>> 41) * 0x1p-23);
+        float y = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+2) >>> 41) * 0x1p-23);
+        float z = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+3) >>> 41) * 0x1p-23);
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+
+        float[] vector = points[index];
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
     }
 
     public static void main (String[] arg) {
