@@ -52,7 +52,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 15;
+    private int modes = 16;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -200,6 +200,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 13: sphere5DMode();
                 break;
             case 14: sphere5DHaltonMode();
+                break;
+            case 15: sphere5DR5Mode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -483,25 +485,38 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphere5DMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D);
             renderer.color(black);
-            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
         }
         renderer.end();
     }
 
     private void sphere5DHaltonMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_HALTON);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void sphere5DR5Mode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            inSphereFrom5D(i, GRADIENTS_5D_R5);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -575,9 +590,9 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
     public void onSphereRoberts(final int index)
     {
-        float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][0] * index >>> 41) * 0x1p-23);
-        float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][1] * index >>> 41) * 0x1p-23);
-        float z = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][2] * index >>> 41) * 0x1p-23);
+        float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][0] * index >>> 12) * 0x1p-52);
+        float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][1] * index >>> 12) * 0x1p-52);
+        float z = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][2] * index >>> 12) * 0x1p-52);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -592,9 +607,9 @@ public class SphereVisualizer extends ApplicationAdapter {
     public void onSphereRobertsVDC(final int index)
     {
         long v = Long.reverse(index);
-        float x = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][0] * index ^ v) >>> 41) * 0x1p-23);
-        float y = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][1] * index ^ v) >>> 41) * 0x1p-23);
-        float z = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][2] * index ^ v) >>> 41) * 0x1p-23);
+        float x = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][0] * index ^ v) >>> 12) * 0x1p-52);
+        float y = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][1] * index ^ v) >>> 12) * 0x1p-52);
+        float z = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][2] * index ^ v) >>> 12) * 0x1p-52);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -713,9 +728,9 @@ public class SphereVisualizer extends ApplicationAdapter {
     public void onSpherePhi(final int index)
     {
         final int i = index * 3;
-        float x = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+1) >>> 41) * 0x1p-23);
-        float y = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+2) >>> 41) * 0x1p-23);
-        float z = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+3) >>> 41) * 0x1p-23);
+        float x = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+1) >>> 12) * 0x1p-52);
+        float y = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+2) >>> 12) * 0x1p-52);
+        float z = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+3) >>> 12) * 0x1p-52);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -1012,21 +1027,39 @@ public class SphereVisualizer extends ApplicationAdapter {
     };
 
     protected static final float[] GRADIENTS_5D_HALTON = new float[2048];
+    protected static final float[] GRADIENTS_5D_R5 = new float[2048];
     static {
-        for (int i = 0; i < 256; i++) {
+        for (int i = 1; i <= 256; i++) {
             float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
             float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
             float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
             float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
-            float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(13, i));
+            float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(2, i));
 
-            final float mag = 2f / (float)Math.sqrt(x * x + y * y + z * z);
-            GRADIENTS_5D_HALTON[i << 3 | 0] = x * mag;
-            GRADIENTS_5D_HALTON[i << 3 | 1] = y * mag;
-            GRADIENTS_5D_HALTON[i << 3 | 2] = z * mag;
-            GRADIENTS_5D_HALTON[i << 3 | 3] = w * mag;
-            GRADIENTS_5D_HALTON[i << 3 | 4] = u * mag;
+//            float r = (float) Math.pow(QuasiRandomTools.vanDerCorput(2, i), 0.2);
+            final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z + w * w + u * u);
+            int index = i - 1 << 3;
+            GRADIENTS_5D_HALTON[index + 0] = x * mag;
+            GRADIENTS_5D_HALTON[index + 1] = y * mag;
+            GRADIENTS_5D_HALTON[index + 2] = z * mag;
+            GRADIENTS_5D_HALTON[index + 3] = w * mag;
+            GRADIENTS_5D_HALTON[index + 4] = u * mag;
+        }
+        for (int i = 1; i <= 256; i++) {
+            float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][0] * i >>> 12) * 0x1p-52);
+            float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][1] * i >>> 12) * 0x1p-52);
+            float z = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][2] * i >>> 12) * 0x1p-52);
+            float w = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][3] * i >>> 12) * 0x1p-52);
+            float u = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][4] * i >>> 12) * 0x1p-52);
 
+//            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
+            final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z + w * w + u * u);
+            int index = i - 1 << 3;
+            GRADIENTS_5D_R5[index + 0] = x * mag;
+            GRADIENTS_5D_R5[index + 1] = y * mag;
+            GRADIENTS_5D_R5[index + 2] = z * mag;
+            GRADIENTS_5D_R5[index + 3] = w * mag;
+            GRADIENTS_5D_R5[index + 4] = u * mag;
         }
     }
     public static void main (String[] arg) {
