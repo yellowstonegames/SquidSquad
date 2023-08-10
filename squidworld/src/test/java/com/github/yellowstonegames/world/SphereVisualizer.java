@@ -36,10 +36,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.random.AceRandom;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.GoldenQuasiRandom;
-import com.github.tommyettinger.random.VanDerCorputQuasiRandom;
+import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.grid.RotationTools;
@@ -63,7 +60,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private Camera camera;
     private int[] amounts = new int[512];
     private double[] dAmounts = new double[512];
-    private long seed = 123456789L;
+    private long seed = 1234567890L;
     private long startTime;
     private float[] circleCoord = new float[3];
     private final EnhancedRandom random = new AceRandom(seed);
@@ -74,6 +71,7 @@ public class SphereVisualizer extends ApplicationAdapter {
 //    private final EnhancedRandom random = new DistinctRandom(seed);
 //    private final EnhancedRandom random = new RandomRandom(seed);
     private static final float[] pole5 = new float[]{1f, 0f, 0f, 0f, 0f};
+    private static final float[] reversePole5 = new float[]{-1f, 0f, 0f, 0f, 0f};
 
 
     private final float black = Color.BLACK.toFloatBits();
@@ -123,6 +121,9 @@ public class SphereVisualizer extends ApplicationAdapter {
      * On mode 16, minimum distance was 0.011267, between point 69, [0.094057,-0.119855,-0.336831] and point 114, [0.096128,-0.109347,-0.340331]
      * Best seed: 0x2D332D421055FD30L with deviation 0.223974
      * On mode 16, minimum distance was 0.020497, between point 62, [0.442961,-0.081949,-0.126504] and point 100, [0.429359,-0.068555,-0.133967]
+     * <br>
+     * Using a balanced technique that ensures deviation is 0, we now compare by how high the min distance can be.
+     * Best seed: 0x13B542776CCE0317L with best min dist 0.289634
      */
     public void showStats() {
         float minDist2 = Float.MAX_VALUE, dst2;
@@ -172,21 +173,21 @@ public class SphereVisualizer extends ApplicationAdapter {
                     showStats();
                 } else if(keycode == Input.Keys.R) {
                     long bestSeed = seed;
-                    double lowestDeviation = Double.MAX_VALUE;
-                    for (int i = 0; i < 1000000; i++) {
-//                        random.setSeed(seed);
+                    double bestMinDist = -Double.MAX_VALUE;
+                    for (int i = 0; i < 250000; i++) {
+                        random.setSeed(seed);
                         Arrays.fill(GRADIENTS_5D_TEMP, 0f);
-                        roll(seed, GRADIENTS_5D_TEMP);
-                        double dev = evaluateDeviation(GRADIENTS_5D_TEMP);
-                        if(lowestDeviation > (lowestDeviation = Math.min(lowestDeviation, dev))){
+                        roll(random, GRADIENTS_5D_TEMP);
+                        float dist = evaluateMinDistance2(GRADIENTS_5D_TEMP);
+                        if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
                             bestSeed = seed;
                         }
                         seed += 0xDB4F0B9175AE2165L;// 0x9E3779B97F4A7C15L;
                     }
-                    System.out.printf("Best seed: 0x%016XL with deviation %f\n", bestSeed, lowestDeviation);
+                    System.out.printf("Best seed: 0x%016XL with best min dist %f\n", bestSeed, Math.sqrt(bestMinDist));
                     random.setSeed(bestSeed);
                     Arrays.fill(GRADIENTS_5D_ACE, 0f);
-                    roll(seed, GRADIENTS_5D_ACE);
+                    roll(random, GRADIENTS_5D_ACE);
                     random.setSeed(seed);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
@@ -1108,14 +1109,34 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     private void roll(final EnhancedRandom random, final float[] gradients5D) {
         for (int i = 0; i < POINT_COUNT; i++) {
-            RotationTools.rotate(SphereVisualizer.pole5, RotationTools.randomRotation5D(random), gradients5D, i << 3);
+            float[] rot = RotationTools.randomRotation5D(random);
+            RotationTools.rotate(SphereVisualizer.pole5, rot, gradients5D, i << 3);
+            RotationTools.rotate(SphereVisualizer.reversePole5, rot, gradients5D, ++i << 3);
         }
     }
 
     private void roll(long seed, final float[] gradients5D) {
         for (int i = 0; i < POINT_COUNT; i++) {
-            RotationTools.rotate(SphereVisualizer.pole5, RotationTools.randomRotation5D(seed + i), gradients5D, i << 3);
+            float[] rot = RotationTools.randomRotation5D(seed + i);
+            RotationTools.rotate(SphereVisualizer.pole5, rot, gradients5D, i << 3);
+            RotationTools.rotate(SphereVisualizer.reversePole5, rot, gradients5D, ++i << 3);
         }
+    }
+
+    private float evaluateMinDistance2(final float[] gradients5D) {
+        float minDist2 = Float.MAX_VALUE;
+        for (int i = 0; i < gradients5D.length; i += 8) {
+            float xi = gradients5D[i  ], yi = gradients5D[i+1], zi = gradients5D[i+2], wi = gradients5D[i+3], ui = gradients5D[i+4];
+            for (int j = i + 1; j < gradients5D.length; j += 8) {
+                float x = xi - gradients5D[j  ], y = yi - gradients5D[j+1], z = zi - gradients5D[j+2],
+                        w = wi - gradients5D[j+3], u = ui - gradients5D[j+4];
+                minDist2 = Math.min(minDist2, x * x + y * y + z * z + w * w + u * u);
+            }
+        }
+        return minDist2;
+    }
+    private void printMinDistance(final String name, final float[] gradients5D) {
+        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2(gradients5D)));
     }
 
     private double evaluateDeviation(final float[] gradients5D) {
@@ -1191,12 +1212,12 @@ public class SphereVisualizer extends ApplicationAdapter {
         random = new VanDerCorputQuasiRandom(1L);
         roll(random, GRADIENTS_5D_VDC);
 
-        printDeviation("Noise", GRADIENTS_5D);
-        printDeviation("Halton", GRADIENTS_5D_HALTON);
-        printDeviation("R5", GRADIENTS_5D_R5);
-        printDeviation("Ace", GRADIENTS_5D_ACE);
-        printDeviation("Golden", GRADIENTS_5D_GOLDEN);
-        printDeviation("VDC", GRADIENTS_5D_VDC);
+        printMinDistance("Noise", GRADIENTS_5D);
+        printMinDistance("Halton", GRADIENTS_5D_HALTON);
+        printMinDistance("R5", GRADIENTS_5D_R5);
+        printMinDistance("Ace", GRADIENTS_5D_ACE);
+        printMinDistance("Golden", GRADIENTS_5D_GOLDEN);
+        printMinDistance("VDC", GRADIENTS_5D_VDC);
     }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
