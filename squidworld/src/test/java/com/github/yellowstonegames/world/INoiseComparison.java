@@ -157,7 +157,7 @@ public class INoiseComparison extends ApplicationAdapter {
 
                 @Override
                 public String getTag() {
-                    return "FoSN";
+                    return "SiSN";
                 }
 
                 @Override
@@ -236,7 +236,7 @@ public class INoiseComparison extends ApplicationAdapter {
 
                 @Override
                 public String getTag() {
-                    return "FoSN";
+                    return "VaSN";
                 }
 
                 @Override

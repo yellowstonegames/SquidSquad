@@ -28,10 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.digital.Interpolations.Interpolator;
 import com.github.yellowstonegames.grid.*;
 
@@ -49,10 +46,10 @@ public class NoiseComparison extends ApplicationAdapter {
     private Noise bare = new Noise(1, 1, Noise.SIMPLEX_FRACTAL, 1);
     private final float[] args = {
             1f,   // 0, spline shape
-            0f,   // 1, spline turning
+            0.5f, // 1, spline turning
             2f,   // 2, maelstrom exponent
             1f,   // 3, maelstrom mul
-            1f,  // 4, maelstrom sub
+            1f,   // 4, maelstrom sub
     };
 //    private FloatToFloatFunction fff = (f) -> INoise.noiseSpline(f, args[0], args[1]);
 //    private FloatToFloatFunction fff = (f) -> (TrigTools.cos(f * 4f * TrigTools.PI2) > 0.9f) ? f < 0.1f ? 1f : 0.5f : -0.2f;
@@ -66,7 +63,7 @@ public class NoiseComparison extends ApplicationAdapter {
                 new Interpolator("cosineSquared", (f) -> MathTools.square(TrigTools.cosTurns(f + f * f))),
                 new Interpolator("sineHalf", (f) -> TrigTools.sinTurns(f * 0.5f)),
         };
-    private int currentAdjustment = 0;
+    private int currentAdjustment = 1;
 
 //    private FloatToFloatFunction fff = (f) -> {
 //        if(f > 0.7f && f < 0.8f) return TrigTools.cos((f - 0.75f) * 9f * TrigTools.PI2);
@@ -147,9 +144,12 @@ public class NoiseComparison extends ApplicationAdapter {
             @Override
             public boolean keyDown(int keycode) {
                 switch (keycode) {
-                    case P: //pause
-                    case SPACE:
+                    case P: //print
+                        System.out.printf("dimension %d, octaves %d, hash %d\nadjustment %d, args [%s]\n", dim, octaves, hashIndex, currentAdjustment, Base.BASE10.join(", ", args));
+                        break;
+                    case SPACE: //pause
                         keepGoing = !keepGoing;
+                        break;
                     case C:
                         if(UIUtils.shift())ctr--;
                         else ctr++;
