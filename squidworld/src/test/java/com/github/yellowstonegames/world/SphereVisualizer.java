@@ -830,7 +830,7 @@ public class SphereVisualizer extends ApplicationAdapter {
      * <br>
      * x: +0.52959638973427, y: +0.31401370534460, z: -0.14792091580658, w: -0.00781214643439, u: -0.58206620017072
      */
-    protected static final float[] GRADIENTS_5D = {
+    private static final float[] GRADIENTS_5D = {
             -1.6797903571f, -0.0690921662f, -0.7098031356f, -0.5887570823f, +0.5683970756f, 0f, 0f, 0f,
             -1.0516780588f, -0.2945340815f, -1.4440603796f, +0.7418854274f, -0.4141480030f, 0f, 0f, 0f,
             +1.0641252713f, -1.5650070200f, +0.4156350353f, +0.1130875224f, +0.4825444684f, 0f, 0f, 0f,
@@ -1089,13 +1089,13 @@ public class SphereVisualizer extends ApplicationAdapter {
             +1.5421515027f, +0.1809242613f, +0.6454387145f, +0.2020302919f, +1.0637799497f, 0f, 0f, 0f,
     };
 
-    protected final float[] GRADIENTS_5D_HALTON = new float[POINT_COUNT<<3];
-    protected final float[] GRADIENTS_5D_R5 = new float[POINT_COUNT<<3];
-    protected final float[] GRADIENTS_5D_ACE = new float[POINT_COUNT<<3];
-    protected final float[] GRADIENTS_5D_GOLDEN = new float[POINT_COUNT<<3];
-    protected final float[] GRADIENTS_5D_VDC = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_HALTON = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_R5 = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_ACE = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_GOLDEN = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_VDC = new float[POINT_COUNT<<3];
 
-    protected final float[] GRADIENTS_5D_TEMP = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_TEMP = new float[POINT_COUNT<<3];
 
     private void roll(final EnhancedRandom random, final float[] pole, final float[] gradients5D) {
         for (int i = 0; i < POINT_COUNT; i++) {
@@ -1103,7 +1103,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
     }
 
-    protected double evaluateDeviation(final float[] gradients5D) {
+    private double evaluateDeviation(final float[] gradients5D) {
         double x = 0, y = 0, z = 0, w = 0, u = 0;
         for (int i = 0; i < gradients5D.length; i += 8) {
             x += gradients5D[i  ];
@@ -1115,7 +1115,24 @@ public class SphereVisualizer extends ApplicationAdapter {
         return Math.sqrt((x * x + y * y + z * z + w * w + u * u) / 5.0); // RMS Error
     }
 
+    private void printDeviation(final String name, final float[] gradients5D) {
+        double x = 0, y = 0, z = 0, w = 0, u = 0;
+        for (int i = 0; i < gradients5D.length; i += 8) {
+            x += gradients5D[i  ];
+            y += gradients5D[i+1];
+            z += gradients5D[i+2];
+            w += gradients5D[i+3];
+            u += gradients5D[i+4];
+        }
+        double rmsError = Math.sqrt((x * x + y * y + z * z + w * w + u * u) / 5.0); // Root Mean Squared Error
+        System.out.printf("%s:  x: %.8f, y: %.8f, z: %.8f, w: %.8f, u: %.8f, rms error: %.8f\n",
+                name, x, y, z, w, u, rmsError);
+    }
+
     {
+        for (int i = 0; i < GRADIENTS_5D.length; i++) {
+            GRADIENTS_5D[i] *= 0.5f;
+        }
         for (int i = 1; i <= POINT_COUNT; i++) {
             float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
             float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
@@ -1132,6 +1149,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_HALTON[index + 3] = w * mag;
             GRADIENTS_5D_HALTON[index + 4] = u * mag;
         }
+
         for (int i = 1; i <= POINT_COUNT; i++) {
             float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][0] * i >>> 12) * 0x1p-52);
             float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][1] * i >>> 12) * 0x1p-52);
@@ -1149,7 +1167,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_R5[index + 4] = u * mag;
         }
 
-        EnhancedRandom random = new AceRandom(-1234567890L);
+        EnhancedRandom random = new AceRandom(0x00000000075C3836L);
         roll(random, pole5, GRADIENTS_5D_ACE);
 
         random = new GoldenQuasiRandom(-1234567890L);
@@ -1157,6 +1175,13 @@ public class SphereVisualizer extends ApplicationAdapter {
 
         random = new VanDerCorputQuasiRandom(1L);
         roll(random, pole5, GRADIENTS_5D_VDC);
+
+        printDeviation("Noise", GRADIENTS_5D);
+        printDeviation("Halton", GRADIENTS_5D_HALTON);
+        printDeviation("R5", GRADIENTS_5D_R5);
+        printDeviation("Ace", GRADIENTS_5D_ACE);
+        printDeviation("Golden", GRADIENTS_5D_GOLDEN);
+        printDeviation("VDC", GRADIENTS_5D_VDC);
     }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
