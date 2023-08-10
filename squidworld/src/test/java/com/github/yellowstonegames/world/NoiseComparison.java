@@ -62,8 +62,9 @@ public class NoiseComparison extends ApplicationAdapter {
                 new Interpolator("parameterPowSpline", (f) -> MathTools.barronSpline((float) Math.pow(args[2], f) * args[3] - args[4], args[0], args[1])),
                 new Interpolator("cosineSquared", (f) -> MathTools.square(TrigTools.cosTurns(f + f * f))),
                 new Interpolator("sineHalf", (f) -> TrigTools.sinTurns(f * 0.5f)),
+                new Interpolator("bumps", (f) -> Math.min(Math.max(f * 3f - 1f, 0f), 1f)),
         };
-    private int currentAdjustment = 1;
+    private int currentAdjustment = 7;
 
 //    private FloatToFloatFunction fff = (f) -> {
 //        if(f > 0.7f && f < 0.8f) return TrigTools.cos((f - 0.75f) * 9f * TrigTools.PI2);
@@ -127,6 +128,9 @@ public class NoiseComparison extends ApplicationAdapter {
         renderer = new ImmediateModeRenderer20(width * height << 1, false, true, 0);
         view = new ScreenViewport();
 
+        bare.setCellularReturnType(Noise.DISTANCE);
+        noise.setCellularReturnType(Noise.DISTANCE);
+
         bare.setFractalOctaves(1);
         noise.setFractalOctaves(octaves);
         wrap.setFractalOctaves(octaves);
@@ -145,7 +149,7 @@ public class NoiseComparison extends ApplicationAdapter {
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case P: //print
-                        System.out.printf("dimension %d, octaves %d, hash %d\nadjustment %d, args [%s]\n", dim, octaves, hashIndex, currentAdjustment, Base.BASE10.join(", ", args));
+                        System.out.printf("dimension %d, octaves %d, hash %d\nadjustment %s, args [%s]\n", dim, octaves, hashIndex, adjustments[currentAdjustment].tag, Base.BASE10.join(", ", args));
                         break;
                     case SPACE: //pause
                         keepGoing = !keepGoing;

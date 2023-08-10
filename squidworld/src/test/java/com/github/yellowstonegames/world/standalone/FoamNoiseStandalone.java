@@ -102,7 +102,7 @@ public class FoamNoiseStandalone {
         // Barron spline
         final double sharp = 0.75 * 2.2; // increase to sharpen, decrease to soften
         final double diff = 0.5 - result;
-        final long sign = NumberUtils.doubleToLongBits(diff) >> 63, one = sign | 1;
+        final long sign = NumberUtils.doubleToLongBits(diff) >> 63, one = sign | 1L;
         return (((result + sign)) / (Double.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1.0;
     }
 
