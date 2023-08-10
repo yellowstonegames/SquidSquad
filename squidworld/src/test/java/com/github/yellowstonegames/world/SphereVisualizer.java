@@ -39,6 +39,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.GoldenQuasiRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.grid.RotationTools;
@@ -53,7 +54,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 17;
+    private int modes = 18;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -205,6 +206,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 15: sphere5DR5Mode();
                 break;
             case 16: sphere5DAceMode();
+                break;
+            case 17: sphere5DGoldenMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -532,6 +535,18 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_ACE);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+    private void sphere5DGoldenMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            inSphereFrom5D(i, GRADIENTS_5D_GOLDEN);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -1044,6 +1059,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     protected final float[] GRADIENTS_5D_HALTON = new float[POINT_COUNT<<3];
     protected final float[] GRADIENTS_5D_R5 = new float[POINT_COUNT<<3];
     protected final float[] GRADIENTS_5D_ACE = new float[POINT_COUNT<<3];
+    protected final float[] GRADIENTS_5D_GOLDEN = new float[POINT_COUNT<<3];
     {
         for (int i = 1; i <= POINT_COUNT; i++) {
             float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
@@ -1078,11 +1094,18 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_R5[index + 4] = u * mag;
         }
 
-        EnhancedRandom random = new AceRandom(-1234567890L);
         float[] pole5 = new float[]{1f, 0f, 0f, 0f, 0f};
+
+        EnhancedRandom random = new AceRandom(-1234567890L);
 
         for (int i = 0; i < POINT_COUNT; i++) {
             RotationTools.rotate(pole5, RotationTools.randomRotation5D(random), GRADIENTS_5D_ACE, i << 3);
+        }
+
+        random = new GoldenQuasiRandom(-1234567890L);
+
+        for (int i = 0; i < POINT_COUNT; i++) {
+            RotationTools.rotate(pole5, RotationTools.randomRotation5D(random), GRADIENTS_5D_GOLDEN, i << 3);
         }
     }
     public static void main (String[] arg) {
