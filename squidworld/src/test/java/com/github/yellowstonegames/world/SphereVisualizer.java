@@ -34,7 +34,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
@@ -51,7 +50,7 @@ import java.util.Arrays;
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
-    public static final int POINT_COUNT = 4096;
+    public static final int POINT_COUNT = 256;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
@@ -112,8 +111,18 @@ public class SphereVisualizer extends ApplicationAdapter {
      * had any identical points on any modes.
      * <br>
      * For the reroll, triggered by pressing R:
+     * <br>
      * Best seed: 0x00000000075C3836L with deviation 3.054775
      * On mode 16, minimum distance was 0.003993, between point 548, [-0.295835,-0.091365,-0.203120] and point 598, [-0.295112,-0.093114,-0.206636]
+     * Best seed: 0xD1762C9090678AF4L with deviation 0.550118
+     * On mode 16, minimum distance was 0.002164, between point 1422, [0.150965,-0.189108,0.412487] and point 2300, [0.150250,-0.188314,0.410605]
+     * <br>
+     * With POINT_COUNT=256:
+     * <br>
+     * Best seed: 0x00000000076455CEL with deviation 0.263218
+     * On mode 16, minimum distance was 0.011267, between point 69, [0.094057,-0.119855,-0.336831] and point 114, [0.096128,-0.109347,-0.340331]
+     * Best seed: 0x2D332D421055FD30L with deviation 0.223974
+     * On mode 16, minimum distance was 0.020497, between point 62, [0.442961,-0.081949,-0.126504] and point 100, [0.429359,-0.068555,-0.133967]
      */
     public void showStats() {
         float minDist2 = Float.MAX_VALUE, dst2;
@@ -164,20 +173,20 @@ public class SphereVisualizer extends ApplicationAdapter {
                 } else if(keycode == Input.Keys.R) {
                     long bestSeed = seed;
                     double lowestDeviation = Double.MAX_VALUE;
-                    for (int i = 0; i < 1024; i++) {
-                        random.setSeed(seed);
+                    for (int i = 0; i < 1000000; i++) {
+//                        random.setSeed(seed);
                         Arrays.fill(GRADIENTS_5D_TEMP, 0f);
-                        roll(random, pole5, GRADIENTS_5D_TEMP);
+                        roll(seed, GRADIENTS_5D_TEMP);
                         double dev = evaluateDeviation(GRADIENTS_5D_TEMP);
                         if(lowestDeviation > (lowestDeviation = Math.min(lowestDeviation, dev))){
                             bestSeed = seed;
                         }
-                        seed++;
+                        seed += 0xDB4F0B9175AE2165L;// 0x9E3779B97F4A7C15L;
                     }
                     System.out.printf("Best seed: 0x%016XL with deviation %f\n", bestSeed, lowestDeviation);
                     random.setSeed(bestSeed);
                     Arrays.fill(GRADIENTS_5D_ACE, 0f);
-                    roll(random, pole5, GRADIENTS_5D_ACE);
+                    roll(seed, GRADIENTS_5D_ACE);
                     random.setSeed(seed);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
@@ -1097,9 +1106,15 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     private final float[] GRADIENTS_5D_TEMP = new float[POINT_COUNT<<3];
 
-    private void roll(final EnhancedRandom random, final float[] pole, final float[] gradients5D) {
+    private void roll(final EnhancedRandom random, final float[] gradients5D) {
         for (int i = 0; i < POINT_COUNT; i++) {
-            RotationTools.rotate(pole, RotationTools.randomRotation5D(random), gradients5D, i << 3);
+            RotationTools.rotate(SphereVisualizer.pole5, RotationTools.randomRotation5D(random), gradients5D, i << 3);
+        }
+    }
+
+    private void roll(long seed, final float[] gradients5D) {
+        for (int i = 0; i < POINT_COUNT; i++) {
+            RotationTools.rotate(SphereVisualizer.pole5, RotationTools.randomRotation5D(seed + i), gradients5D, i << 3);
         }
     }
 
@@ -1167,14 +1182,14 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_R5[index + 4] = u * mag;
         }
 
-        EnhancedRandom random = new AceRandom(0x00000000075C3836L);
-        roll(random, pole5, GRADIENTS_5D_ACE);
+        EnhancedRandom random = new AceRandom(0x2D332D421055FD30L);
+        roll(random, GRADIENTS_5D_ACE);
 
         random = new GoldenQuasiRandom(-1234567890L);
-        roll(random, pole5, GRADIENTS_5D_GOLDEN);
+        roll(random, GRADIENTS_5D_GOLDEN);
 
         random = new VanDerCorputQuasiRandom(1L);
-        roll(random, pole5, GRADIENTS_5D_VDC);
+        roll(random, GRADIENTS_5D_VDC);
 
         printDeviation("Noise", GRADIENTS_5D);
         printDeviation("Halton", GRADIENTS_5D_HALTON);
@@ -1187,7 +1202,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
         config.setResizable(false);
-        config.useVsync(false);
+        config.useVsync(true);
         config.setForegroundFPS(0);
         config.setWindowedMode(512, 530);
         new Lwjgl3Application(new SphereVisualizer(), config);
