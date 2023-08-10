@@ -74,6 +74,9 @@ public class SphereVisualizer extends ApplicationAdapter {
 //    private final EnhancedRandom random = new RomuTrioRandom(seed);
 //    private final EnhancedRandom random = new DistinctRandom(seed);
 //    private final EnhancedRandom random = new RandomRandom(seed);
+    private static final float[] pole5 = new float[]{1f, 0f, 0f, 0f, 0f};
+
+
     private final float black = Color.BLACK.toFloatBits();
     private final float blue = Color.BLUE.toFloatBits();
     private final float cyan = Color.CYAN.toFloatBits();
@@ -107,6 +110,10 @@ public class SphereVisualizer extends ApplicationAdapter {
      * and it did so once for at least seeds 1234567890 and 9876543210, and four times for at least seed 123456789.
      * Testing more generators, having one identical point on mode 0 is the norm, and only WhiskerRandom so far hasn't
      * had any identical points on any modes.
+     * <br>
+     * For the reroll, triggered by pressing R:
+     * Best seed: 0x00000000075C3836L with deviation 3.054775
+     * On mode 16, minimum distance was 0.003993, between point 548, [-0.295835,-0.091365,-0.203120] and point 598, [-0.295112,-0.093114,-0.206636]
      */
     public void showStats() {
         float minDist2 = Float.MAX_VALUE, dst2;
@@ -154,6 +161,24 @@ public class SphereVisualizer extends ApplicationAdapter {
                     return true;
                 } else if (keycode == Input.Keys.P || keycode == Input.Keys.S) {
                     showStats();
+                } else if(keycode == Input.Keys.R) {
+                    long bestSeed = seed;
+                    double lowestDeviation = Double.MAX_VALUE;
+                    for (int i = 0; i < 1024; i++) {
+                        random.setSeed(seed);
+                        Arrays.fill(GRADIENTS_5D_TEMP, 0f);
+                        roll(random, pole5, GRADIENTS_5D_TEMP);
+                        double dev = evaluateDeviation(GRADIENTS_5D_TEMP);
+                        if(lowestDeviation > (lowestDeviation = Math.min(lowestDeviation, dev))){
+                            bestSeed = seed;
+                        }
+                        seed++;
+                    }
+                    System.out.printf("Best seed: 0x%016XL with deviation %f\n", bestSeed, lowestDeviation);
+                    random.setSeed(bestSeed);
+                    Arrays.fill(GRADIENTS_5D_ACE, 0f);
+                    roll(random, pole5, GRADIENTS_5D_ACE);
+                    random.setSeed(seed);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
 
@@ -311,7 +336,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereBitCount(i);
@@ -400,7 +424,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereFibonacci(i);
@@ -414,7 +437,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereFibonacciAlt(i);
@@ -428,7 +450,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereR2(i);
@@ -442,7 +463,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereHalton2(i);
@@ -456,7 +476,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereHammersley2(i);
@@ -470,7 +489,6 @@ public class SphereVisualizer extends ApplicationAdapter {
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
-        random.setSeed(seed);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereHammersley2Alt(i);
@@ -1076,6 +1094,27 @@ public class SphereVisualizer extends ApplicationAdapter {
     protected final float[] GRADIENTS_5D_ACE = new float[POINT_COUNT<<3];
     protected final float[] GRADIENTS_5D_GOLDEN = new float[POINT_COUNT<<3];
     protected final float[] GRADIENTS_5D_VDC = new float[POINT_COUNT<<3];
+
+    protected final float[] GRADIENTS_5D_TEMP = new float[POINT_COUNT<<3];
+
+    private void roll(final EnhancedRandom random, final float[] pole, final float[] gradients5D) {
+        for (int i = 0; i < POINT_COUNT; i++) {
+            RotationTools.rotate(pole, RotationTools.randomRotation5D(random), gradients5D, i << 3);
+        }
+    }
+
+    protected double evaluateDeviation(final float[] gradients5D) {
+        double x = 0, y = 0, z = 0, w = 0, u = 0;
+        for (int i = 0; i < gradients5D.length; i += 8) {
+            x += gradients5D[i  ];
+            y += gradients5D[i+1];
+            z += gradients5D[i+2];
+            w += gradients5D[i+3];
+            u += gradients5D[i+4];
+        }
+        return Math.sqrt((x * x + y * y + z * z + w * w + u * u) / 5.0); // RMS Error
+    }
+
     {
         for (int i = 1; i <= POINT_COUNT; i++) {
             float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
@@ -1110,25 +1149,14 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_R5[index + 4] = u * mag;
         }
 
-        float[] pole5 = new float[]{1f, 0f, 0f, 0f, 0f};
-
         EnhancedRandom random = new AceRandom(-1234567890L);
-
-        for (int i = 0; i < POINT_COUNT; i++) {
-            RotationTools.rotate(pole5, RotationTools.randomRotation5D(random), GRADIENTS_5D_ACE, i << 3);
-        }
+        roll(random, pole5, GRADIENTS_5D_ACE);
 
         random = new GoldenQuasiRandom(-1234567890L);
-
-        for (int i = 0; i < POINT_COUNT; i++) {
-            RotationTools.rotate(pole5, RotationTools.randomRotation5D(random), GRADIENTS_5D_GOLDEN, i << 3);
-        }
+        roll(random, pole5, GRADIENTS_5D_GOLDEN);
 
         random = new VanDerCorputQuasiRandom(1L);
-
-        for (int i = 0; i < POINT_COUNT; i++) {
-            RotationTools.rotate(pole5, RotationTools.randomRotation5D(random), GRADIENTS_5D_VDC, i << 3);
-        }
+        roll(random, pole5, GRADIENTS_5D_VDC);
     }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
