@@ -150,15 +150,15 @@ public class DollopNoiseStandalone {
 
         int hash = hash256(i, j, seed);
 
-        if(hash <= 230) // 25 out of 256 values result in a dollop
+        if(hash <= 240) // 15 out of 256 values result in a dollop
             return -1.0;
 
         double x0 = x - i;
         double y0 = y - j;
 
-        double angle = (Math.atan2(y0, x0) + Math.PI) * (3.5 / Math.PI);
+        double angle = (Math.atan2(y0, x0) + Math.PI) * (5.5 / Math.PI);
 
-        double mag = 1.0 - Math.sqrt(x0 * x0 + y0 * y0) * (3 + wobbleWrappedTight(seed ^ hash, angle, 7));
+        double mag = 1.0 - Math.sqrt(x0 * x0 + y0 * y0) * (3.5 + wobbleWrappedTight(seed ^ hash, angle, 11));
 
         return Math.max(-1.0, mag);
 

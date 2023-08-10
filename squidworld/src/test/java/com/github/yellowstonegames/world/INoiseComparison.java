@@ -47,6 +47,7 @@ import com.github.yellowstonegames.grid.SimplexNoiseHard;
 import com.github.yellowstonegames.grid.SimplexNoiseScaled;
 import com.github.yellowstonegames.grid.TaffyNoise;
 import com.github.yellowstonegames.grid.ValueNoise;
+import com.github.yellowstonegames.world.standalone.DollopNoiseStandalone;
 import com.github.yellowstonegames.world.standalone.FoamNoiseStandalone;
 import com.github.yellowstonegames.world.standalone.SimplexNoiseStandalone;
 import com.github.yellowstonegames.world.standalone.ValueNoiseStandalone;
@@ -310,9 +311,87 @@ public class INoiseComparison extends ApplicationAdapter {
                     return 0;
                 }
             },
+            new INoise() {
+                public final DollopNoiseStandalone standalone = new DollopNoiseStandalone(1L, 1.0);
+
+                @Override
+                public String getTag() {
+                    return "DoSN";
+                }
+
+                @Override
+                public long getSeed() {
+                    return standalone.getSeed();
+                }
+
+                @Override
+                public void setSeed(long seed) {
+                    standalone.setSeed(seed);
+                }
+
+                @Override
+                public int getMinDimension() {
+                    return 2;
+                }
+
+                @Override
+                public int getMaxDimension() {
+                    return 4;
+                }
+
+                @Override
+                public boolean canUseSeed() {
+                    return true;
+                }
+
+                @Override
+                public float getNoise(float x, float y) {
+                    return (float)standalone.getNoise(x, y);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z) {
+                    return (float)standalone.getNoise(x + z, y + z);
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w) {
+                    return (float)standalone.getNoise(x + z, y + w);
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, long seed) {
+                    return (float) DollopNoiseStandalone.noiseWithSeed(
+                            x * standalone.getFrequency(), y * standalone.getFrequency(), standalone.getSeed());
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, long seed) {
+                    return (float) DollopNoiseStandalone.noiseWithSeed(
+                            (x+z) * standalone.getFrequency(), (y+z) * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                @Override
+                public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+                    return (float) DollopNoiseStandalone.noiseWithSeed(
+                            (x+z) * standalone.getFrequency(), (y+w) * standalone.getFrequency(),
+                            standalone.getSeed());
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u) {
+                    return 0;
+                }
+
+                @Override
+                public float getNoise(float x, float y, float z, float w, float u, float v) {
+                    return 0;
+                }
+            },
     };
     private int index0 = 0;
-    private int index1 = 13;
+    private int index1 = 14;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions
