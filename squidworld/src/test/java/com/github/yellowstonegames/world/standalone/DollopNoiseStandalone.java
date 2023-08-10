@@ -49,16 +49,16 @@ public class DollopNoiseStandalone {
     // SHARED
 
     /**
-     * Gets an 8-bit point hash of a 2D point (x and y are both longs) and a state/seed as a long.
+     * Gets a 64-bit point hash of a 2D point (x and y are both longs) and a state/seed as a long.
      * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
      * @param x x position; any long
      * @param y y position; any long
      * @param s the state/seed; any long
-     * @return 8-bit hash of the x,y point with the given state
+     * @return 64-bit hash of the x,y point with the given state
      */
-    public static int hash256(long x, long y, long s) {
+    public static long hashAll(long x, long y, long s) {
         s ^= x * 0x8CB92BA72F3D8DD7L ^ y * 0xABC98388FB8FAC03L;
-        return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 56);
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
     }
 
     /**
@@ -148,17 +148,17 @@ public class DollopNoiseStandalone {
         long i = Math.round(x);
         long j = Math.round(y);
 
-        int hash = hash256(i, j, seed);
+        long hash = hashAll(i, j, seed);
 
-        if(hash <= 240) // 15 out of 256 values result in a dollop
+        if(hash >= 0x9800000000000000L) // 1 out of 24 values result in a dollop
             return -1.0;
 
         double x0 = x - i;
         double y0 = y - j;
 
-        double angle = (Math.atan2(y0, x0) + Math.PI) * (5.5 / Math.PI);
+        double angle = (Math.atan2(y0, x0) + Math.PI) * (3.5 / Math.PI);
 
-        double mag = 1.0 - Math.sqrt(x0 * x0 + y0 * y0) * (3.5 + wobbleWrappedTight(seed ^ hash, angle, 11));
+        double mag = 1.0 - Math.sqrt(x0 * x0 + y0 * y0) * (3.5 + wobbleWrappedTight(seed ^ hash, angle, 7));
 
         return Math.max(-1.0, mag);
 
