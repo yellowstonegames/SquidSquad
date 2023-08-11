@@ -70,8 +70,10 @@ public class SphereVisualizer extends ApplicationAdapter {
 //    private final EnhancedRandom random = new RomuTrioRandom(seed);
 //    private final EnhancedRandom random = new DistinctRandom(seed);
 //    private final EnhancedRandom random = new RandomRandom(seed);
-    private static final float[] pole5 = new float[]{1f, 0f, 0f, 0f, 0f};
-    private static final float[] reversePole5 = new float[]{-1f, 0f, 0f, 0f, 0f};
+    private static final float[] POLE_5 = new float[]{1f, 0f, 0f, 0f, 0f};
+    private static final float[] POLE_REVERSE_5 = new float[]{-1f, 0f, 0f, 0f, 0f};
+    private static final double[] POLE_5_D = new double[]{1.0, 0., 0., 0., 0.};
+    private static final double[] POLE_REVERSE_5_D = new double[]{-1.0, 0., 0., 0., 0.};
 
 
     private final float black = Color.BLACK.toFloatBits();
@@ -1111,16 +1113,24 @@ public class SphereVisualizer extends ApplicationAdapter {
     private void roll(final EnhancedRandom random, final float[] gradients5D) {
         for (int i = 0; i < POINT_COUNT; i++) {
             float[] rot = RotationTools.randomRotation5D(random);
-            RotationTools.rotate(SphereVisualizer.pole5, rot, gradients5D, i << 3);
-            RotationTools.rotate(SphereVisualizer.reversePole5, rot, gradients5D, ++i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_5, rot, gradients5D, i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5, rot, gradients5D, ++i << 3);
         }
     }
 
-    private void roll(long seed, final float[] gradients5D) {
+    private static void roll(final EnhancedRandom random, final double[] gradients5D) {
+        for (int i = 0; i < POINT_COUNT; i++) {
+            double[] rot = RotationTools.randomDoubleRotation5D(random);
+            RotationTools.rotate(SphereVisualizer.POLE_5_D, rot, gradients5D, i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5_D, rot, gradients5D, ++i << 3);
+        }
+    }
+
+    private static void roll(long seed, final float[] gradients5D) {
         for (int i = 0; i < POINT_COUNT; i++) {
             float[] rot = RotationTools.randomRotation5D(seed + i);
-            RotationTools.rotate(SphereVisualizer.pole5, rot, gradients5D, i << 3);
-            RotationTools.rotate(SphereVisualizer.reversePole5, rot, gradients5D, ++i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_5, rot, gradients5D, i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5, rot, gradients5D, ++i << 3);
         }
     }
 
@@ -1150,6 +1160,32 @@ public class SphereVisualizer extends ApplicationAdapter {
             u += gradients5D[i+4];
         }
         return Math.sqrt((x * x + y * y + z * z + w * w + u * u) / 5.0); // RMS Error
+    }
+
+    private static void shuffleBlocks(final EnhancedRandom random, final float[] items, final int blockSize) {
+        final int length = items.length / blockSize;
+        for (int i = length - 1; i > 0; i--) {
+            int a = i * blockSize, b = random.nextInt(i + 1) * blockSize;
+            float temp;
+            for (int j = 0; j < blockSize; j++) {
+                temp = items[a + j];
+                items[a + j] = items[b + j];
+                items[b + j] = temp;
+            }
+        }
+    }
+
+    private static void shuffleBlocks(final EnhancedRandom random, final double[] items, final int blockSize) {
+        final int length = items.length / blockSize;
+        for (int i = length - 1; i > 0; i--) {
+            int a = i * blockSize, b = random.nextInt(i + 1) * blockSize;
+            double temp;
+            for (int j = 0; j < blockSize; j++) {
+                temp = items[a + j];
+                items[a + j] = items[b + j];
+                items[b + j] = temp;
+            }
+        }
     }
 
     private void printDeviation(final String name, final float[] gradients5D) {
@@ -1206,6 +1242,12 @@ public class SphereVisualizer extends ApplicationAdapter {
 
         EnhancedRandom random = new AceRandom(0xEE36A34B8BEC3EFEL);
         roll(random, GRADIENTS_5D_ACE);
+        shuffleBlocks(random, GRADIENTS_5D_ACE, 8);
+
+        double[] GRADIENTS_5D_ACE_D = new double[POINT_COUNT<<3];
+        random.setSeed(0xEE36A34B8BEC3EFEL);
+        roll(random, GRADIENTS_5D_ACE_D);
+        shuffleBlocks(random, GRADIENTS_5D_ACE_D, 8);
 
         random = new GoldenQuasiRandom(-1234567890L);
         roll(random, GRADIENTS_5D_GOLDEN);
@@ -1220,10 +1262,12 @@ public class SphereVisualizer extends ApplicationAdapter {
         printMinDistance("Golden", GRADIENTS_5D_GOLDEN);
         printMinDistance("VDC", GRADIENTS_5D_VDC);
 
+
+
         System.out.println("private static final float[] GRADIENTS_5D = {");
-        for (int i = 0; i < GRADIENTS_5D_ACE.length; i += 8) {
-            System.out.printf("    %0+12.9ff, %0+12.9ff, %0+12.9ff, %0+12.9ff, %0+12.9ff, 0f, 0f, 0f,\n",
-                    GRADIENTS_5D_ACE[i], GRADIENTS_5D_ACE[i+1], GRADIENTS_5D_ACE[i+2], GRADIENTS_5D_ACE[i+3], GRADIENTS_5D_ACE[i+4]);
+        for (int i = 0; i < GRADIENTS_5D_ACE_D.length; i += 8) {
+            System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
+                    GRADIENTS_5D_ACE_D[i], GRADIENTS_5D_ACE_D[i+1], GRADIENTS_5D_ACE_D[i+2], GRADIENTS_5D_ACE_D[i+3], GRADIENTS_5D_ACE_D[i+4]);
         }
         System.out.println("};");
     }
