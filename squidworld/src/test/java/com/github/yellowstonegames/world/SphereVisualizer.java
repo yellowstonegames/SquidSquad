@@ -71,6 +71,11 @@ public class SphereVisualizer extends ApplicationAdapter {
 //    private final EnhancedRandom random = new RomuTrioRandom(seed);
 //    private final EnhancedRandom random = new DistinctRandom(seed);
 //    private final EnhancedRandom random = new RandomRandom(seed);
+    private static final float[] POLE_3 = new float[]{1f, 0f, 0f};
+    private static final float[] POLE_REVERSE_3 = new float[]{-1f, 0f, 0f};
+    private static final double[] POLE_3_D = new double[]{1.0, 0., 0.};
+    private static final double[] POLE_REVERSE_3_D = new double[]{-1.0, 0., 0.};
+
     private static final float[] POLE_5 = new float[]{1f, 0f, 0f, 0f, 0f};
     private static final float[] POLE_REVERSE_5 = new float[]{-1f, 0f, 0f, 0f, 0f};
     private static final double[] POLE_5_D = new double[]{1.0, 0., 0., 0., 0.};
@@ -1346,21 +1351,25 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
         System.out.println("};\n");
 
+        random = new AceRandom(0xEE36A34B8BEC3EFEL);
+        double[] rot3 = RotationTools.randomDoubleRotation3D(random);
+
         double[] GRADIENTS_3D_SHAPE_D = new double[32 << 2];
         int p = 0;
         for (int i = 0; i < ShapeTools.UNIT_DODECAHEDRON_VERTICES_D.length; i++, p += 4) {
-            System.arraycopy(ShapeTools.UNIT_DODECAHEDRON_VERTICES_D[i], 0, GRADIENTS_3D_SHAPE_D, p, 3);
+            RotationTools.rotate(ShapeTools.UNIT_DODECAHEDRON_VERTICES_D[i], rot3, GRADIENTS_3D_SHAPE_D, p);
         }
         for (int i = 0; i < ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D.length; i++, p += 4) {
-            System.arraycopy(ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D[i], 0, GRADIENTS_3D_SHAPE_D, p, 3);
+            RotationTools.rotate(ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D[i], rot3, GRADIENTS_3D_SHAPE_D, p);
         }
-        random = new AceRandom(0xEE36A34B8BEC3EFEL);
-        shuffleBlocks(random, GRADIENTS_3D_SHAPE_D, 4);
 
         System.out.println("private static final float[] GRADIENTS_3D = {");
-        for (int i = 0; i < GRADIENTS_3D_SHAPE_D.length; i += 4) {
-            System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f,\n",
-                    GRADIENTS_3D_SHAPE_D[i], GRADIENTS_3D_SHAPE_D[i+1], GRADIENTS_3D_SHAPE_D[i+2]);
+        for (int b = 0; b < 8; b++) {
+            shuffleBlocks(random, GRADIENTS_3D_SHAPE_D, 4);
+            for (int i = 0; i < GRADIENTS_3D_SHAPE_D.length; i += 4) {
+                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f,\n",
+                        GRADIENTS_3D_SHAPE_D[i], GRADIENTS_3D_SHAPE_D[i + 1], GRADIENTS_3D_SHAPE_D[i + 2]);
+            }
         }
         System.out.println("};\n");
     }
