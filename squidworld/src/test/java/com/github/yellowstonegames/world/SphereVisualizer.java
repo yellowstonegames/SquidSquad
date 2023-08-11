@@ -140,6 +140,7 @@ public class SphereVisualizer extends ApplicationAdapter {
      * Best seed: 0xEE36A34B8BEC3EFEL with best min dist 0.309696
      * In 6D:
      * Best seed: 0x19844719072412C4L with best min dist 0.366712
+     * Best seed: 0x43588A64DE2C7C2BL with best min dist 0.379867
      */
     public void showStats() {
         float minDist2 = Float.MAX_VALUE, dst2;
@@ -228,7 +229,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                         Arrays.fill(GRADIENTS_6D_ACE, 0f);
                         roll6D(rotator, GRADIENTS_6D_ACE);
                         shuffleBlocks(random, GRADIENTS_6D_ACE, 8);
-                        System.out.println("private static final float[] GRADIENTS_6D = {");
+                        System.out.println("public static final float[] GRADIENTS_6D = {");
                         for (int i = 0; i < GRADIENTS_6D_ACE.length; i += 8) {
                             System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
                                     GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i+1], GRADIENTS_6D_ACE[i+2], GRADIENTS_6D_ACE[i+3], GRADIENTS_6D_ACE[i+4], GRADIENTS_6D_ACE[i+5]);
@@ -239,7 +240,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                         startTime = TimeUtils.millis();
                         long bestSeed = seed;
                         double bestMinDist = -Double.MAX_VALUE;
-                        for (int i = 0; i < 100000; i++) {
+                        for (int i = 0; i < 10000000; i++) {
                             random.setState(seed, seed, seed, seed, seed);
                             Arrays.fill(GRADIENTS_6D_TEMP, 0f);
                             roll6D(random, GRADIENTS_6D_TEMP);
@@ -255,7 +256,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                         Arrays.fill(GRADIENTS_6D_ACE, 0f);
                         roll6D(random, GRADIENTS_6D_ACE);
                         shuffleBlocks(random, GRADIENTS_6D_ACE, 8);
-                        System.out.println("private static final float[] GRADIENTS_6D = {");
+                        System.out.println("public static final float[] GRADIENTS_6D = {");
                         for (int i = 0; i < GRADIENTS_6D_ACE.length; i += 8) {
                             System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
                                     GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i+1], GRADIENTS_6D_ACE[i+2], GRADIENTS_6D_ACE[i+3], GRADIENTS_6D_ACE[i+4], GRADIENTS_6D_ACE[i+5]);
