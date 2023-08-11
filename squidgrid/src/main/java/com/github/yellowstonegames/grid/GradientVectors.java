@@ -30,7 +30,7 @@ public final class GradientVectors {
      * point being on the unit hypersphere, but earlier gradient vectors used a different
      * distance to the origin.
      * <br>
-     * These points were randomly selected, but 1 million sets of candidate points were tried
+     * These points were randomly selected, but 10 million sets of candidate points were tried
      * (all also random) and this set had the greatest minimum distance between any two points.
      * For every point on the sphere present here, the polar opposite of that point is also
      * present, ensuring there is no bias along any particular axis. The points were also
