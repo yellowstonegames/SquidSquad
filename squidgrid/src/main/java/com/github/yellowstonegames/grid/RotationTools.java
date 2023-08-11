@@ -22,6 +22,8 @@ import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.Ziggurat;
 
+import java.util.Arrays;
+
 /**
  * This has tools for generating and applying matrix rotations, potentially in higher dimensions than the typical 2 or
  * 3. You can use {@link #randomRotation2D(long)} to very quickly generate a single 2D rotation matrix, and to get a 3D
@@ -934,7 +936,8 @@ public final class RotationTools {
             randomize();
         }
 
-        public Rotator randomize() {
+        public void randomize() {
+//            String store = random.stringSerialize();
             final int index = random.next(TrigTools.SIN_BITS);
             rotation[2] = -(rotation[1] = TrigTools.SIN_TABLE[index]);
             rotation[0] = rotation[3] = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
@@ -947,7 +950,10 @@ public final class RotationTools {
                     System.arraycopy(rotation, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
                 }
                 large[0] = 1;
-
+                for (int i = 1, t = targetSize; i < targetSize; i++, t += targetSize) {
+                    large[i] = 0;
+                    large[t] = 0;
+                }
                 float sum = 0f, t;
                 for (int i = 0; i < targetSize; i++) {
                     gauss[i] = t = (float) random.nextGaussian();
@@ -975,10 +981,16 @@ public final class RotationTools {
                 for (int i = 0; i < targetSize; i++) {
                     house[targetSize * i + i]--;
                 }
+                Arrays.fill(rotation, 0);
                 matrixMultiply(house, large, rotation, targetSize);
+//                if(Float.isNaN(rotation[1])) {
+//                    break;
+//                }
             }
-
-            return this;
+//            if(Float.isNaN(rotation[1])) {
+//                System.out.println("TRASH! " + store);
+//                System.exit(0);
+//            }
         }
 
         /**
@@ -1019,9 +1031,9 @@ public final class RotationTools {
          */
         public void rotate(float[] input, float[] output, int offsetOut) {
             int m = 0;
-            final int outEnd = Math.min(offsetOut + dimension, output.length), dim2 = rotation.length;
+            final int outEnd = offsetOut + dimension, dim2 = rotation.length;
             for (int r = 0; r < input.length; r++) {
-                for (int c = offsetOut; m < dim2 && c < outEnd; c++) {
+                for (int c = offsetOut; m < dim2 && c < outEnd && c < output.length; c++) {
                     output[c] += rotation[m++] * input[r];
                 }
             }

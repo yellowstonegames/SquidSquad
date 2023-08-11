@@ -190,8 +190,8 @@ public class SphereVisualizer extends ApplicationAdapter {
                 } else if(keycode == Input.Keys.R) {
                     long bestSeed = seed;
                     double bestMinDist = -Double.MAX_VALUE;
-                    for (int i = 0; i < 2500000; i++) {
-                        random.setSeed(seed);
+                    for (int i = 0; i < 100000; i++) {
+                        random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
                         Arrays.fill(GRADIENTS_5D_TEMP, 0f);
                         roll5D(random, GRADIENTS_5D_TEMP);
                         float dist = evaluateMinDistance2(GRADIENTS_5D_TEMP);
@@ -206,30 +206,62 @@ public class SphereVisualizer extends ApplicationAdapter {
                     roll5D(random, GRADIENTS_5D_ACE);
                     random.setSeed(seed);
                 } else if(keycode == Input.Keys.NUM_6) {
-                    long bestSeed = seed;
-                    double bestMinDist = -Double.MAX_VALUE;
-                    for (int i = 0; i < 2500000; i++) {
-                        random.setSeed(seed);
-                        Arrays.fill(GRADIENTS_6D_TEMP, 0f);
-                        roll6D(random, GRADIENTS_6D_TEMP);
-                        float dist = evaluateMinDistance2_6(GRADIENTS_6D_TEMP);
-                        if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
-                            bestSeed = seed;
+                    if(UIUtils.shift()) {
+                        startTime = TimeUtils.millis();
+                        long bestSeed = seed;
+                        double bestMinDist = -Double.MAX_VALUE;
+                        RotationTools.Rotator rotator = new RotationTools.Rotator(6, random);
+                        for (int i = 0; i < 100000; i++) {
+                            random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
+                            random.stringDeserialize("AceR`-B57A320CFBEF3~-57080C1D00C9E1A0~-7A9B48DF183E4A73~76CC474918D335C1~3DDF1B8EC95CBC49`");
+                            Arrays.fill(GRADIENTS_6D_TEMP, 0f);
+                            roll6D(rotator, GRADIENTS_6D_TEMP);
+                            float dist = evaluateMinDistance2_6(GRADIENTS_6D_TEMP);
+                            if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
+                                bestSeed = seed;
+                            }
+                            seed += 0xDB4F0B9175AE2165L;// 0x9E3779B97F4A7C15L;
                         }
-                        seed += 0xDB4F0B9175AE2165L;// 0x9E3779B97F4A7C15L;
+                        System.out.printf("Best seed: 0x%016XL with best min dist %f\n", bestSeed, Math.sqrt(bestMinDist));
+                        System.out.println("Processing took " + TimeUtils.timeSinceMillis(startTime) * 1E-3 + " seconds.");
+                        random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
+                        Arrays.fill(GRADIENTS_6D_ACE, 0f);
+                        roll6D(rotator, GRADIENTS_6D_ACE);
+                        shuffleBlocks(random, GRADIENTS_6D_ACE, 8);
+                        System.out.println("private static final float[] GRADIENTS_6D = {");
+                        for (int i = 0; i < GRADIENTS_6D_ACE.length; i += 8) {
+                            System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
+                                    GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i+1], GRADIENTS_6D_ACE[i+2], GRADIENTS_6D_ACE[i+3], GRADIENTS_6D_ACE[i+4], GRADIENTS_6D_ACE[i+5]);
+                        }
+                        System.out.println("};");
                     }
-                    System.out.printf("Best seed: 0x%016XL with best min dist %f\n", bestSeed, Math.sqrt(bestMinDist));
-                    random.setSeed(bestSeed);
-                    Arrays.fill(GRADIENTS_6D_ACE, 0f);
-                    roll6D(random, GRADIENTS_6D_ACE);
-                    shuffleBlocks(random, GRADIENTS_6D_ACE, 8);
-                    System.out.println("private static final float[] GRADIENTS_6D = {");
-                    for (int i = 0; i < GRADIENTS_6D_ACE.length; i += 8) {
-                        System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
-                                GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i+1], GRADIENTS_6D_ACE[i+2], GRADIENTS_6D_ACE[i+3], GRADIENTS_6D_ACE[i+4], GRADIENTS_6D_ACE[i+5]);
+                    else {
+                        startTime = TimeUtils.millis();
+                        long bestSeed = seed;
+                        double bestMinDist = -Double.MAX_VALUE;
+                        for (int i = 0; i < 100000; i++) {
+                            random.setState(seed, seed, seed, seed, seed);
+                            Arrays.fill(GRADIENTS_6D_TEMP, 0f);
+                            roll6D(random, GRADIENTS_6D_TEMP);
+                            float dist = evaluateMinDistance2_6(GRADIENTS_6D_TEMP);
+                            if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
+                                bestSeed = seed;
+                            }
+                            seed += 0xDB4F0B9175AE2165L;// 0x9E3779B97F4A7C15L;
+                        }
+                        System.out.printf("Best seed: 0x%016XL with best min dist %f\n", bestSeed, Math.sqrt(bestMinDist));
+                        System.out.println("Processing took " + TimeUtils.timeSinceMillis(startTime) * 1E-3 + " seconds.");
+                        random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
+                        Arrays.fill(GRADIENTS_6D_ACE, 0f);
+                        roll6D(random, GRADIENTS_6D_ACE);
+                        shuffleBlocks(random, GRADIENTS_6D_ACE, 8);
+                        System.out.println("private static final float[] GRADIENTS_6D = {");
+                        for (int i = 0; i < GRADIENTS_6D_ACE.length; i += 8) {
+                            System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
+                                    GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i+1], GRADIENTS_6D_ACE[i+2], GRADIENTS_6D_ACE[i+3], GRADIENTS_6D_ACE[i+4], GRADIENTS_6D_ACE[i+5]);
+                        }
+                        System.out.println("};");
                     }
-                    System.out.println("};");
-
                     random.setSeed(seed);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
@@ -1197,6 +1229,14 @@ public class SphereVisualizer extends ApplicationAdapter {
             float[] rot = RotationTools.randomRotation6D(seed + i);
             RotationTools.rotate(SphereVisualizer.POLE_6, rot, gradients6D, i << 3);
             RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6, rot, gradients6D, ++i << 3);
+        }
+    }
+
+    private void roll6D(final RotationTools.Rotator rotator, final float[] gradients6D) {
+        for (int i = 0; i < POINT_COUNT; i++) {
+            rotator.randomize();
+            rotator.rotate(SphereVisualizer.POLE_6, gradients6D, i << 3);
+            rotator.rotate(SphereVisualizer.POLE_REVERSE_6, gradients6D, ++i << 3);
         }
     }
 
