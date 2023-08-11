@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.ShapeTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.grid.Coord;
@@ -1343,7 +1344,25 @@ public class SphereVisualizer extends ApplicationAdapter {
             System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
                     GRADIENTS_5D_ACE_D[i], GRADIENTS_5D_ACE_D[i+1], GRADIENTS_5D_ACE_D[i+2], GRADIENTS_5D_ACE_D[i+3], GRADIENTS_5D_ACE_D[i+4]);
         }
-        System.out.println("};");
+        System.out.println("};\n");
+
+        double[] GRADIENTS_3D_SHAPE_D = new double[32 << 2];
+        int p = 0;
+        for (int i = 0; i < ShapeTools.UNIT_DODECAHEDRON_VERTICES_D.length; i++, p += 4) {
+            System.arraycopy(ShapeTools.UNIT_DODECAHEDRON_VERTICES_D[i], 0, GRADIENTS_3D_SHAPE_D, p, 3);
+        }
+        for (int i = 0; i < ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D.length; i++, p += 4) {
+            System.arraycopy(ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D[i], 0, GRADIENTS_3D_SHAPE_D, p, 3);
+        }
+        random = new AceRandom(0xEE36A34B8BEC3EFEL);
+        shuffleBlocks(random, GRADIENTS_3D_SHAPE_D, 4);
+
+        System.out.println("private static final float[] GRADIENTS_3D = {");
+        for (int i = 0; i < GRADIENTS_3D_SHAPE_D.length; i += 4) {
+            System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f,\n",
+                    GRADIENTS_3D_SHAPE_D[i], GRADIENTS_3D_SHAPE_D[i+1], GRADIENTS_3D_SHAPE_D[i+2]);
+        }
+        System.out.println("};\n");
     }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
