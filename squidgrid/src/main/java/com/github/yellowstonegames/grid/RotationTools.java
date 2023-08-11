@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.Ziggurat;
 
@@ -377,7 +378,7 @@ public final class RotationTools {
 
     /**
      * Creates a new 1D float array that can be used as a 2D rotation matrix by
-     * {@link #rotate(float[], float[], float[])}. Uses the given seed to get an angle using
+     * {@link #rotate(float[], float[], float[])}. Uses the given {@link EnhancedRandom} to get an angle using
      * {@link TrigTools#SIN_TABLE}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
@@ -793,7 +794,7 @@ public final class RotationTools {
 
     /**
      * Creates a new 1D double array that can be used as a 2D rotation matrix by
-     * {@link #rotate(double[], double[], double[])}. Uses the given seed to get an angle using
+     * {@link #rotate(double[], double[], double[])}. Uses the given {@link EnhancedRandom} to get an angle using
      * {@link TrigTools#SIN_TABLE_D}.
      * @param random an EnhancedRandom from juniper
      * @return a newly-allocated 4-element double array, meant as effectively a 2D rotation matrix
@@ -899,5 +900,132 @@ public final class RotationTools {
      */
     public static double[] randomDoubleRotation6D(EnhancedRandom random, double[] rotation5D) {
         return rotateStep(random, rotation5D, 6);
+    }
+
+    /**
+     * A wrapper around similar logic to {@link RotationTools}, but with no allocation after construction.
+     * Operates on a fixed dimension; create different Rotator instances to rotate different dimensions.
+     * You can rotate a float array with length equal to {@link #dimension} with {@link #rotate(float[], float[])}.
+     */
+    public static class Rotator {
+        public final int dimension;
+        public EnhancedRandom random;
+        // size is dimension
+        private final float[] gauss;
+        // size of each is dimension*dimension
+        private final float[] house;
+        private final float[] large;
+        private final float[] rotation;
+
+        public Rotator(){
+            this(2, null);
+        }
+        public Rotator(int dimension){
+            this(dimension, null);
+        }
+        public Rotator(int dimension, EnhancedRandom random) {
+            this.dimension = Math.max(2, dimension);
+            this.random = random == null ? new AceRandom() : random;
+            gauss = new float[this.dimension];
+            house = new float[this.dimension * this.dimension];
+            large = new float[this.dimension * this.dimension];
+            rotation = new float[this.dimension * this.dimension];
+
+            randomize();
+        }
+
+        public Rotator randomize() {
+            final int index = random.next(TrigTools.SIN_BITS);
+            rotation[2] = -(rotation[1] = TrigTools.SIN_TABLE[index]);
+            rotation[0] = rotation[3] = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+
+            for (int targetSize = 3; targetSize <= dimension; targetSize++) {
+                final int smallSize = targetSize - 1;
+
+                for (int i = 0; i < smallSize; i++) {
+                    // copy the small matrix into the bottom right corner of the large matrix
+                    System.arraycopy(rotation, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
+                }
+                large[0] = 1;
+
+                float sum = 0f, t;
+                for (int i = 0; i < targetSize; i++) {
+                    gauss[i] = t = (float) random.nextGaussian();
+                    sum += t * t;
+                }
+                final float inv = 1f / (float) Math.sqrt(sum);
+                sum = 0f;
+                t = 1f;
+                for (int i = 0; i < targetSize; i++) {
+                    t -= gauss[i] *= inv;
+                    sum += t * t;
+                    t = 0f;
+                }
+                sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
+                t = 1f;
+                for (int i = 0; i < targetSize; i++) {
+                    gauss[i] = (t - gauss[i]) * sum;
+                    t = 0f;
+                }
+                for (int row = 0, h = 0; row < targetSize; row++) {
+                    for (int col = 0; col < targetSize; col++, h++) {
+                        house[h] = gauss[row] * gauss[col];
+                    }
+                }
+                for (int i = 0; i < targetSize; i++) {
+                    house[targetSize * i + i]--;
+                }
+                matrixMultiply(house, large, rotation, targetSize);
+            }
+
+            return this;
+        }
+
+        /**
+         * A rotation method that uses this Rotator's rotation matrix and takes an input vector to rotate (as a 1D
+         * float array), and an output vector to write to (as a 1D float array), does the math to rotate {@code input}
+         * using this Rotator, and adds the results into {@code output}. This does not erase output before writing to
+         * it, so it can be called more than once to sum multiple rotations if so desired. The length of output can be
+         * arbitrarily large, so this is complete when it has completely processed rotation. That means this affects
+         * {@link #dimension} items in output. Almost always, both {@code input} and the writeable part of
+         * {@code output} should have a length equal to {@link #dimension}.
+         *
+         * @param input an input vector of length {@link #dimension}
+         * @param output the output vector of length {@link #dimension}
+         */
+        public void rotate(float[] input, float[] output) {
+            int m = 0;
+            final int dim2 = rotation.length;
+            for (int r = 0; r < dimension; r++) {
+                for (int c = 0; m < dim2 && c < output.length; c++) {
+                    output[c] += rotation[m++] * input[r];
+                }
+            }
+        }
+
+        /**
+         * A rotation method that uses this Rotator's rotation matrix and takes an input vector to rotate (as a 1D
+         * float array), and an output vector to write to (as a 1D float array), and an offset into the output vector
+         * to start writing there, does the math to rotate {@code input} using this Rotator, and adds the results
+         * into {@code output} starting at {@code offsetOut}. This does not erase output before writing to
+         * it, so it can be called more than once to sum multiple rotations if so desired. The length of output can be
+         * arbitrarily large, so this is complete when it has completely processed rotation. That means this affects
+         * {@link #dimension} items in output. Almost always, both {@code input} and the writeable part of
+         * {@code output} should have a length equal to {@link #dimension}.
+         *
+         * @param input an input vector of length {@link #dimension}
+         * @param output the output vector of length {@link #dimension}
+         * @param offsetOut the index in {@code output} to start writing the rotated output
+         */
+        public void rotate(float[] input, float[] output, int offsetOut) {
+            int m = 0;
+            final int outEnd = Math.min(offsetOut + dimension, output.length), dim2 = rotation.length;
+            for (int r = 0; r < input.length; r++) {
+                for (int c = offsetOut; m < dim2 && c < outEnd; c++) {
+                    output[c] += rotation[m++] * input[r];
+                }
+            }
+        }
+
     }
 }
