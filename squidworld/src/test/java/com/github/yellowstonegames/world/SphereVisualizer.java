@@ -60,7 +60,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private Camera camera;
     private int[] amounts = new int[512];
     private double[] dAmounts = new double[512];
-    private long seed = 1234567890L;
+    private long seed = 123456789L;
     private long startTime;
     private float[] circleCoord = new float[3];
     private final EnhancedRandom random = new AceRandom(seed);
@@ -124,6 +124,7 @@ public class SphereVisualizer extends ApplicationAdapter {
      * <br>
      * Using a balanced technique that ensures deviation is 0, we now compare by how high the min distance can be.
      * Best seed: 0x13B542776CCE0317L with best min dist 0.289634
+     * Best seed: 0xEE36A34B8BEC3EFEL with best min dist 0.309696
      */
     public void showStats() {
         float minDist2 = Float.MAX_VALUE, dst2;
@@ -174,7 +175,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                 } else if(keycode == Input.Keys.R) {
                     long bestSeed = seed;
                     double bestMinDist = -Double.MAX_VALUE;
-                    for (int i = 0; i < 250000; i++) {
+                    for (int i = 0; i < 2500000; i++) {
                         random.setSeed(seed);
                         Arrays.fill(GRADIENTS_5D_TEMP, 0f);
                         roll(random, GRADIENTS_5D_TEMP);
@@ -522,7 +523,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphere5DMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
@@ -535,63 +536,63 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void sphere5DHaltonMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_HALTON);
             renderer.color(black);
-            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
         }
         renderer.end();
     }
 
     private void sphere5DR5Mode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_R5);
             renderer.color(black);
-            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
         }
         renderer.end();
     }
     private void sphere5DAceMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_ACE);
             renderer.color(black);
-            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
         }
         renderer.end();
     }
     private void sphere5DGoldenMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_GOLDEN);
             renderer.color(black);
-            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
         }
         renderer.end();
     }
     private void sphere5DVDCMode() {
-        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 4f,
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
                 c = TrigTools.sinSmootherTurns(theta),
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_VDC);
             renderer.color(black);
-            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
         }
         renderer.end();
     }
@@ -1203,7 +1204,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_R5[index + 4] = u * mag;
         }
 
-        EnhancedRandom random = new AceRandom(0x2D332D421055FD30L);
+        EnhancedRandom random = new AceRandom(0xEE36A34B8BEC3EFEL);
         roll(random, GRADIENTS_5D_ACE);
 
         random = new GoldenQuasiRandom(-1234567890L);
@@ -1218,6 +1219,13 @@ public class SphereVisualizer extends ApplicationAdapter {
         printMinDistance("Ace", GRADIENTS_5D_ACE);
         printMinDistance("Golden", GRADIENTS_5D_GOLDEN);
         printMinDistance("VDC", GRADIENTS_5D_VDC);
+
+        System.out.println("private static final float[] GRADIENTS_5D = {");
+        for (int i = 0; i < GRADIENTS_5D_ACE.length; i += 8) {
+            System.out.printf("    %0+12.9ff, %0+12.9ff, %0+12.9ff, %0+12.9ff, %0+12.9ff, 0f, 0f, 0f,\n",
+                    GRADIENTS_5D_ACE[i], GRADIENTS_5D_ACE[i+1], GRADIENTS_5D_ACE[i+2], GRADIENTS_5D_ACE[i+3], GRADIENTS_5D_ACE[i+4]);
+        }
+        System.out.println("};");
     }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
