@@ -37,12 +37,15 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.ShapeTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.grid.RotationTools;
 
 import java.util.Arrays;
+
+import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
@@ -1238,6 +1241,69 @@ public class SphereVisualizer extends ApplicationAdapter {
             rotator.randomize();
             rotator.rotate(SphereVisualizer.POLE_6, gradients6D, i << 3);
             rotator.rotate(SphereVisualizer.POLE_REVERSE_6, gradients6D, ++i << 3);
+        }
+    }
+
+    /**
+     * Computes the integral of {@code pow(sin(t), m)}, dt from 0 to x, recursively.
+     * <a href="https://stackoverflow.com/a/59279721">Ported from this StackOverflow answer by user Erik</a>.
+     * @param x
+     * @param m
+     * @return
+     */
+    private static float int_sin_m(float x, int m) {
+        if(m == 0) return x;
+        if(m == 1) return 1 - cosSmoother(x);
+        return (m - 1f) / m * int_sin_m(x, m - 2) - cosSmoother(x) * (float)Math.pow(sinSmoother(x), (m - 1f) / m);
+    }
+
+    /**
+     * Returns func inverse of target between lower and upper.
+     * inverse is accurate to an absolute tolerance of 1E-10f, and
+     * must be monotonically increasing over the interval lower to upper.
+     * <a href="https://stackoverflow.com/a/59279721">Ported from this StackOverflow answer by user Erik</a>.
+     * @param func
+     * @param target
+     * @param lower
+     * @param upper
+     * @return
+     */
+    private static float inverse_increasing(FloatToFloatFunction func, float target, float lower, float upper) {
+        float atol = 1E-5f;
+        float mid = (lower + upper) * 0.5f, approx = func.applyAsFloat(mid);
+        while(Math.abs(approx - target) > atol) {
+            if (approx > target)
+                upper = mid;
+            else
+                lower = mid;
+            mid = (upper + lower) * 0.5f;
+            approx = func.applyAsFloat(mid);
+        }
+        return mid;
+    }
+    /**
+     * <a href="https://stackoverflow.com/a/59279721">Ported from this StackOverflow answer by user Erik</a>.
+     */
+    private void uniformND(int d, float[] data, int block) {
+        int n = data.length / block;
+
+        for (int i = 0, b = 0; i < n; i++, b += block) {
+            Arrays.fill(data, b + 2, b + d, 1f);
+            float t = i / (float)n;
+            data[b] = sinSmootherTurns(t);
+            data[b+1] = cosSmootherTurns(t);
+        }
+
+        for (int dim = 2, gold = 0; dim < d; dim++, gold++) {
+            long offset = QuasiRandomTools.goldenLong[d-2][gold];
+            float mult = MathTools.gamma(dim * 0.5f + 0.5f) / MathTools.gamma(dim * 0.5f) / (float) Math.sqrt(Math.PI);
+            for (int i = 0, b = 0; i < n; i++, b += block) {
+                int finalDim = dim;
+                float degree = inverse_increasing((y -> mult * int_sin_m(y, finalDim - 1)), (i * offset >>> 40) * 0x1p-24f, 0, PI);
+                for (int j = 0; j < dim; j++)
+                    data[b+j] *= sinSmoother(degree);
+                data[b+dim] *= cosSmoother(degree);
+            }
         }
     }
 
