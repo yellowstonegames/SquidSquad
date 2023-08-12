@@ -55,7 +55,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private int modes = 19;
+    private int modes = 20;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -324,6 +324,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 17: sphere5DGoldenMode();
                 break;
             case 18: sphere5DVDCMode();
+                break;
+            case 19: sphere5DUniformMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -668,6 +670,18 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             inSphereFrom5D(i, GRADIENTS_5D_VDC);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
+        }
+        renderer.end();
+    }
+    private void sphere5DUniformMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            inSphereFrom5D(i, GRADIENTS_5D_U);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 125f + 260, points[i][1] * 125f + 260, 0);
         }
@@ -1284,6 +1298,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
         return mid;
     }
+    private static final float[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59};
     /**
      * <a href="https://stackoverflow.com/a/59279721">Ported from this StackOverflow answer by user Erik</a>.
      */
@@ -1298,11 +1313,13 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
 
         for (int dim = 2, gold = 0; dim < d; dim++, gold++) {
-            long offset = QuasiRandomTools.goldenLong[d-2][gold];
+//            long offset = QuasiRandomTools.goldenLong[d-2][gold];
+            float offset = (float)Math.sqrt(PRIMES[gold]);
             float mult = MathTools.gamma(dim * 0.5f + 0.5f) / MathTools.gamma(dim * 0.5f) / (float) Math.sqrt(Math.PI);
             for (int i = 0, b = 0; i < n; i++, b += block) {
                 int finalDim = dim;
-                float degree = inverse_increasing((y -> mult * int_sin_m(y, finalDim - 1)), (i * offset >>> 40) * 0x1p-24f, 0, PI);
+                float big = i * offset;
+                float degree = inverse_increasing((y -> mult * int_sin_m(y, finalDim - 1)), big - (long)big, 0, PI);
                 for (int j = 0; j < dim; j++)
                     data[b+j] *= sinSmoother(degree);
                 data[b+dim] *= cosSmoother(degree);
