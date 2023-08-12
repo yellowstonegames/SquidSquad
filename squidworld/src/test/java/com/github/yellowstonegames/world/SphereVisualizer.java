@@ -1182,10 +1182,13 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float[] GRADIENTS_5D_ACE = new float[POINT_COUNT<<3];
     private final float[] GRADIENTS_5D_GOLDEN = new float[POINT_COUNT<<3];
     private final float[] GRADIENTS_5D_VDC = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_U = new float[POINT_COUNT<<3];
 
     private final float[] GRADIENTS_5D_TEMP = new float[POINT_COUNT<<3];
 
     private final float[] GRADIENTS_6D_ACE = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_6D_U = new float[POINT_COUNT<<3];
+
     private final float[] GRADIENTS_6D_TEMP = new float[POINT_COUNT<<3];
 
     private void roll5D(final EnhancedRandom random, final float[] gradients5D) {
@@ -1429,7 +1432,27 @@ public class SphereVisualizer extends ApplicationAdapter {
             GRADIENTS_5D_R5[index + 4] = u * mag;
         }
 
-        EnhancedRandom random = new AceRandom(0xEE36A34B8BEC3EFEL);
+        EnhancedRandom random;
+        random = new AceRandom(123456789L);
+        uniformND(5, GRADIENTS_5D_TEMP, 8);
+        float[] rot5 = RotationTools.randomRotation5D(123456789L);
+
+        for (int i = 0, p = 0; i < 256; i++, p += 8) {
+            RotationTools.rotate(GRADIENTS_5D_TEMP, p, 5, rot5, GRADIENTS_5D_U, p);
+        }
+        Arrays.fill(GRADIENTS_5D_TEMP, 0f);
+        shuffleBlocks(random, GRADIENTS_5D_U, 8);
+
+        uniformND(6, GRADIENTS_6D_U, 8);
+        float[] rot6 = RotationTools.randomRotation6D(123456789L);
+
+        for (int i = 0, p = 0; i < 256; i++, p += 8) {
+            RotationTools.rotate(GRADIENTS_6D_TEMP, p, 6, rot6, GRADIENTS_6D_U, p);
+        }
+        Arrays.fill(GRADIENTS_6D_TEMP, 0f);
+        shuffleBlocks(random, GRADIENTS_6D_U, 8);
+
+        random = new AceRandom(0xEE36A34B8BEC3EFEL);
         roll5D(random, GRADIENTS_5D_ACE);
         shuffleBlocks(random, GRADIENTS_5D_ACE, 8);
 
@@ -1450,15 +1473,23 @@ public class SphereVisualizer extends ApplicationAdapter {
         printMinDistance("Ace", GRADIENTS_5D_ACE);
         printMinDistance("Golden", GRADIENTS_5D_GOLDEN);
         printMinDistance("VDC", GRADIENTS_5D_VDC);
-
+        printMinDistance("Uniform", GRADIENTS_5D_U);
 
 
         System.out.println("private static final float[] GRADIENTS_5D = {");
-        for (int i = 0; i < GRADIENTS_5D_ACE_D.length; i += 8) {
+        for (int i = 0; i < GRADIENTS_5D_U.length; i += 8) {
             System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
-                    GRADIENTS_5D_ACE_D[i], GRADIENTS_5D_ACE_D[i+1], GRADIENTS_5D_ACE_D[i+2], GRADIENTS_5D_ACE_D[i+3], GRADIENTS_5D_ACE_D[i+4]);
+                    GRADIENTS_5D_U[i], GRADIENTS_5D_U[i+1], GRADIENTS_5D_U[i+2], GRADIENTS_5D_U[i+3], GRADIENTS_5D_U[i+4]);
         }
         System.out.println("};\n");
+
+
+//        System.out.println("private static final float[] GRADIENTS_5D = {");
+//        for (int i = 0; i < GRADIENTS_5D_ACE_D.length; i += 8) {
+//            System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
+//                    GRADIENTS_5D_ACE_D[i], GRADIENTS_5D_ACE_D[i+1], GRADIENTS_5D_ACE_D[i+2], GRADIENTS_5D_ACE_D[i+3], GRADIENTS_5D_ACE_D[i+4]);
+//        }
+//        System.out.println("};\n");
 
         random = new AceRandom(0xEE36A34B8BEC3EFEL);
         double[] rot3 = RotationTools.randomDoubleRotation3D(random);
