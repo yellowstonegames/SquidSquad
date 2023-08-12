@@ -1513,6 +1513,25 @@ public class SphereVisualizer extends ApplicationAdapter {
         double[] GRADIENTS_3D_SHAPE_D = new double[32 << 2];
         double[] rot4 = RotationTools.randomDoubleRotation4D(0xEE36A34B8BEC3EFEL);
         double[] GRADIENTS_4D_SHAPE_D = new double[64 << 2];
+        double[] rot2 = RotationTools.randomDoubleRotation2D(-0xEE36A34B8BEC3EFEL);
+        double[] GRADIENTS_2D_SHAPE_D = new double[256 << 1];
+
+        double[] items = new double[4];
+        // the next block was used to generate GRADIENTS_4D_D, just below it.
+        if(false) {
+            double big = Math.sqrt(2) + 1,
+                    b = big / Math.sqrt(1 + big * big + big * big + big * big),
+                    s = 1.0 / Math.sqrt(1 + big * big + big * big + big * big);
+            System.out.println("private static final double[] GRADIENTS_4D_D = {");
+            for (int i = 0; i < 64; i++) {
+                Arrays.fill(items, b);
+                items[i >>> 4] = s;
+                for (int j = 0; j < 4; j++)
+                    items[j] *= -(i >>> j & 1) | 1;
+                System.out.printf("    %0+13.10f, %0+13.10f, %0+13.10f, %0+13.10f,\n", items[0], items[1], items[2], items[3]);
+            }
+            System.out.println("};\n");
+        }
         double[] GRADIENTS_4D_D = {
                 +0.2325878195, +0.5615166683, +0.5615166683, +0.5615166683,
                 -0.2325878195, +0.5615166683, +0.5615166683, +0.5615166683,
@@ -1594,6 +1613,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         for (; p < GRADIENTS_4D_D.length; p += 4) {
             RotationTools.rotate(GRADIENTS_4D_D, p, 4, rot4, GRADIENTS_4D_SHAPE_D, p);
         }
+
+        p = 0;
+
+        for (; p < GRADIENTS_2D_SHAPE_D.length; p += 2) {
+            items[0] = SIN_TABLE_D[p << 5];
+            items[1] = SIN_TABLE_D[(p << 5) + SIN_TO_COS & TABLE_MASK];
+            RotationTools.rotate(items, 0, 2, rot2, GRADIENTS_2D_SHAPE_D, p);
+        }
+        System.out.println("private static final float[] GRADIENTS_2D = {");
+        for (int i = 0; i < GRADIENTS_2D_SHAPE_D.length; i += 2) {
+            System.out.printf("    %0+13.10ff, %0+13.10ff,\n",
+                    GRADIENTS_2D_SHAPE_D[i], GRADIENTS_2D_SHAPE_D[i + 1]);
+        }
+        System.out.println("};\n");
 
         System.out.println("private static final float[] GRADIENTS_3D = {");
         for (int b = 0; b < 8; b++) {
