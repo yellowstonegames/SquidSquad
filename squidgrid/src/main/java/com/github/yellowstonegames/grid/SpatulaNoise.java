@@ -23,6 +23,12 @@ import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 
+/**
+ * A non-functional kind of value noise that will probably be deleted soon.
+ * This is based on Transfinite Interpolation between curving 1D lines that use varying Barron splines to adjust their
+ * shapes and turning points. This doesn't seem to work at corners, probably because the turning and shape info are
+ * obtained from the edge between two vertices, and the corners need to only use the vertex.
+ */
 @Beta
 public class SpatulaNoise implements INoise {
     public long seed;
@@ -273,7 +279,9 @@ public class SpatulaNoise implements INoise {
         final int
                 x0 = fastFloor(x),
                 y0 = fastFloor(y);
-        final float xf = x - x0, yf = y - y0;
+        float xf = x - x0, yf = y - y0;
+        xf *= xf * (3f - 2f * xf);
+        yf *= yf * (3f - 2f * yf);
 
         final long x0y0 = LongPointHash.hashAll(x0, y0, seed);
         final long x1y0 = LongPointHash.hashAll(x0+1, y0, seed);
