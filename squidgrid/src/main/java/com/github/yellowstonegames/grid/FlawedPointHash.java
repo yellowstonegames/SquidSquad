@@ -19,6 +19,9 @@ package com.github.yellowstonegames.grid;
 import com.github.yellowstonegames.core.IFlawed;
 import com.github.yellowstonegames.core.annotations.Beta;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 /**
  * An interface for point hashes that are statistically biased, as well as a holder for inner classes that implement
  * this. The point hashes here are mostly chosen because they are aesthetically interesting, at least on some of their
@@ -146,7 +149,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public void setSize(int size) {
-            this.size = 32 - Integer.numberOfLeadingZeros(Math.max(1, size));
+            this.size = 32 - Integer.numberOfLeadingZeros(max(1, size));
             mask = (1L << this.size) - 1L;
         }
 
@@ -275,7 +278,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public void setSize(int size) {
-            this.size = 32 - Integer.numberOfLeadingZeros(Math.max(1, size));
+            this.size = 32 - Integer.numberOfLeadingZeros(max(1, size));
             mask = (1L << this.size) - 1L;
         }
 
@@ -432,7 +435,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public void setSize(int size) {
-            this.size = 32 - Integer.numberOfLeadingZeros(Math.max(1, size));
+            this.size = 32 - Integer.numberOfLeadingZeros(max(1, size));
             mask = (1L << this.size) - 1L;
         }
 
@@ -603,6 +606,89 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         public int hashWithState(int x, int y, int z, int w, int u, int v, int state) {
             return ((((((state ^ 0x811c9dc5 ^ x) * 0x1000193 ^ y) * 0x1000193 ^ z) * 0x1000193
                     ^ w) * 0x1000193 ^ u) * 0x1000193 ^ v) * 0x1000193;
+        }
+    }
+
+    class FlowerHash extends IPointHash.LongImpl implements FlawedPointHash {
+        public FlowerHash() {
+            super();
+        }
+
+        public FlowerHash(long state) {
+            super(state);
+        }
+
+        public long getState() {
+            return state;
+        }
+
+        public long hashLongs(long x, long y, long s) {
+            x = Math.abs(x);
+            y = Math.abs(y);
+            return LongPointHash.hashAll(min(x, y), max(x, y), s);
+        }
+
+        public long hashLongs(long x, long y, long z, long s) {
+            x = Math.abs(x);
+            y = Math.abs(y);
+            z = Math.abs(z);
+            long min = min(x, min(y, z));
+            long mid = max(min(x, y), min(max(x, y), z));
+            long max = max(x, max(y, z));
+            return LongPointHash.hashAll(min, mid, max, s);
+        }
+
+        public long hashLongs(long x, long y, long z, long w, long s) {
+            x = Math.abs(x);
+            y = Math.abs(y);
+            z = Math.abs(z);
+            w = Math.abs(w);
+            long min = min(x, min(y, z));
+            long mid = max(min(x, y), min(max(x, y), z));
+            long max = max(x, max(y, z));
+            if(w < max) {
+                if(w >= mid) {
+                    return LongPointHash.hashAll(min, mid, w, max, s);
+                } else if(w >= min) {
+                    return LongPointHash.hashAll(min, w, mid, max, s);
+                } else {
+                    return LongPointHash.hashAll(w, min, mid, max, s);
+                }
+            }
+            return LongPointHash.hashAll(min, mid, max, w, s);
+        }
+
+        public long hashLongs(long x, long y, long z, long w, long u, long s) {
+            return hashLongs(x, hashLongs(y, hashLongs(z, hashLongs(w, u, s), s), s), s);
+        }
+
+        public long hashLongs(long x, long y, long z, long w, long u, long v, long s) {
+            return hashLongs(x, hashLongs(y, hashLongs(z, hashLongs(w, hashLongs(u, v, s), s), s), s), s);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int state) {
+            return (int)(hashLongs(x, y, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int state) {
+            return (int)(hashLongs(x, y, z, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int state) {
+            return (int)(hashLongs(x, y, z, w, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int u, int state) {
+            return (int)(hashLongs(x, y, z, w, u, state) >>> 32);
+        }
+
+        @Override
+        public int hashWithState(int x, int y, int z, int w, int u, int v, int state) {
+            return (int)(hashLongs(x, y, z, w, u, v, state) >>> 32);
         }
     }
 
