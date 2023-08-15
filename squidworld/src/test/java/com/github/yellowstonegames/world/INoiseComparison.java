@@ -30,23 +30,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.yellowstonegames.grid.AmogusNoise;
-import com.github.yellowstonegames.grid.BasicHashNoise;
-import com.github.yellowstonegames.grid.CyclicNoise;
-import com.github.yellowstonegames.grid.FlanNoise;
-import com.github.yellowstonegames.grid.FlawedPointHash;
-import com.github.yellowstonegames.grid.HighDimensionalValueNoise;
-import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.Noise;
-import com.github.yellowstonegames.grid.NoiseWrapper;
-import com.github.yellowstonegames.grid.OpenSimplex2;
-import com.github.yellowstonegames.grid.OpenSimplex2Smooth;
-import com.github.yellowstonegames.grid.PerlinNoise;
-import com.github.yellowstonegames.grid.SimplexNoise;
-import com.github.yellowstonegames.grid.SimplexNoiseHard;
-import com.github.yellowstonegames.grid.SimplexNoiseScaled;
-import com.github.yellowstonegames.grid.TaffyNoise;
-import com.github.yellowstonegames.grid.ValueNoise;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.world.standalone.DollopNoiseStandalone;
 import com.github.yellowstonegames.world.standalone.FoamNoiseStandalone;
 import com.github.yellowstonegames.world.standalone.SimplexNoiseStandalone;
@@ -74,6 +58,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.CubeHash(1, 32)),
             new AmogusNoise(1L),
+            new SpatulaNoise(1),
             new INoise() {
                 public final FoamNoiseStandalone standalone = new FoamNoiseStandalone(1L, 1.0);
 
@@ -391,7 +376,7 @@ public class INoiseComparison extends ApplicationAdapter {
             },
     };
     private int index0 = 0;
-    private int index1 = 14;
+    private int index1 = 13;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions

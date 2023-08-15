@@ -280,8 +280,8 @@ public class SpatulaNoise implements INoise {
         final long x0y1 = LongPointHash.hashAll(x0, y0+1, seed);
         final long x1y1 = LongPointHash.hashAll(x0+1, y0+1, seed);
 
-        final float xs = MathTools.lerp(hobble(x0y0, x1y0, xf), hobble(x0y1, x1y1, xf), yf);
-        final float ys = MathTools.lerp(hobble(x0y0, x0y1, yf), hobble(x1y0, x1y1, yf), xf);
+        final float xs = (1 - yf) * hobble(x0y0, x1y0, xf) + yf * hobble(x0y1, x1y1, xf);
+        final float ys = (1 - xf) * hobble(x0y0, x0y1, yf) + xf * hobble(x1y0, x1y1, yf);
         final float b = ((1 - xf) * (1 - yf) * x0y0 + xf * yf * x1y1 + xf * (1 - yf) * x1y0 + (1 - xf) * yf * x0y1) * 0x0.ffffffp-63f;
         return xs + ys - b;
     }
