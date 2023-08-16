@@ -57,6 +57,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
+            new SpatulaNoise(1L),
             new INoise() {
                 public final FoamNoiseStandalone standalone = new FoamNoiseStandalone(1L, 1.0);
 
@@ -373,8 +374,8 @@ public class INoiseComparison extends ApplicationAdapter {
                 }
             },
     };
-    private int index0 = 0;
-    private int index1 = 11;
+    private int index0 = 10;
+    private int index1 = 12;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions
@@ -470,6 +471,10 @@ public class INoiseComparison extends ApplicationAdapter {
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
                         wrap0.setFrequency(freq);
                         wrap1.setFrequency(freq);
+                        break;
+                    case W: // fwactaw spiwaw
+                        wrap0.setFractalSpiral(!wrap0.isFractalSpiral());
+                        wrap1.setFractalSpiral(!wrap1.isFractalSpiral());
                         break;
                     case R: // fRactal type
                         wrap0.setFractalType((wrap0.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
@@ -600,9 +605,9 @@ public class INoiseComparison extends ApplicationAdapter {
                 renderer.vertex(i+1, freq0[i+1] * 0x1p-3f, 0);
             }
             renderer.color(LIGHT_YELLOW);
-            renderer.vertex(255, 0 * 0x1p-3f, 0);
+            renderer.vertex(255, 0, 0);
             renderer.color(LIGHT_YELLOW);
-            renderer.vertex(256, 0 * 0x1p-3f, 0);
+            renderer.vertex(256, 0, 0);
             for (int i = 0; i < 255; i++) {
                 renderer.color(LIGHT_YELLOW);
                 renderer.vertex(i+width, freq1[i] * 0x1p-3f, 0);
@@ -610,9 +615,9 @@ public class INoiseComparison extends ApplicationAdapter {
                 renderer.vertex(i+1+width, freq1[i+1] * 0x1p-3f, 0);
             }
             renderer.color(LIGHT_YELLOW);
-            renderer.vertex(255+width, 0 * 0x1p-3f, 0);
+            renderer.vertex(255+width, 0, 0);
             renderer.color(LIGHT_YELLOW);
-            renderer.vertex(256+width, 0 * 0x1p-3f, 0);
+            renderer.vertex(256+width, 0, 0);
             renderer.end();
         }
     }
