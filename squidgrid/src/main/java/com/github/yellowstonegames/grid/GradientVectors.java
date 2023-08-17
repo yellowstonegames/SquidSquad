@@ -33,7 +33,7 @@ public final class GradientVectors {
      * This particular set of 256 gradient vectors is either optimal or very close to optimal for a this size of a
      * set of vectors.
      */
-    private static final float[] GRADIENTS_2D = {
+    public static final float[] GRADIENTS_2D = {
             -0.9995640469f, -0.0295248389f,
             -0.9999875727f, -0.0049854169f,
             -0.9998087434f, +0.0195570081f,
@@ -579,7 +579,7 @@ public final class GradientVectors {
      * This particular set of 64 gradient vectors is either optimal or very close to optimal for a power-of-two-sized
      * set of vectors.
      */
-    private static final float[] GRADIENTS_4D = {
+    public static final float[] GRADIENTS_4D = {
             -0.2274190502f, -0.3113227362f, -0.8799927568f, +0.2774373400f,
             +0.2039312187f, -0.1576987328f, -0.8976177631f, +0.3575269488f,
             +0.6075589717f, -0.2456316703f, -0.6894140560f, +0.3086185963f,
