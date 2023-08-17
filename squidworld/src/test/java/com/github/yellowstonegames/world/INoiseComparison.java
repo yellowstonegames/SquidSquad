@@ -45,6 +45,7 @@ import static com.badlogic.gdx.Input.Keys.*;
  */
 public class INoiseComparison extends ApplicationAdapter {
 
+    private final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1L);
     private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
             new SimplexNoiseHard(1L),
@@ -59,7 +60,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
             new SpatulaNoise(1L),
-            new NoiseAdjustment(new PerlinNoiseAnalysis(1L), Interpolations.linear), // limits output range
+            new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
     };
     private int index0 = 12;
     private int index1 = 13;
