@@ -16,10 +16,13 @@
 
 package com.github.yellowstonegames.world;
 
+import static com.github.tommyettinger.digital.MathTools.lerp;
+
 public class PerlinNoiseEvaluator {
     public static void main(String[] args) {
         final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(-5L);
-        analysis.analyzeGradCoord3D();
+//        analysis.analyzeGradCoord3D();
+        analysis.analyzeExtremes3D();
     }
     public static void mainBrute(String[] args) {
         final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1234567890L);

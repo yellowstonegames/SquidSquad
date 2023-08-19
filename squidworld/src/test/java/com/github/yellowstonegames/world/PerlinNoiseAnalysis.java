@@ -190,7 +190,7 @@ public class PerlinNoiseAnalysis implements INoise {
                                         float xd, float yd, float zd, float wd) {
         final int hash =
                 (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w)
-                        * (seed) >>> 56) & -4;
+                        * (seed) >>> 56) & 252;
         return xd * GRADIENTS_4D[hash] + yd * GRADIENTS_4D[hash + 1] + zd * GRADIENTS_4D[hash + 2] + wd * GRADIENTS_4D[hash + 3];
     }
     public float gradCoord5D(long seed, int x, int y, int z, int w, int u,
@@ -673,8 +673,12 @@ public class PerlinNoiseAnalysis implements INoise {
                 for (float zf = 0.9999f; zf < 1f; zf += 0x1p-24f) {
                     for (int h = 0; h < 32; h++) {
                         float value = specifyGradCoord3D(h, xf, yf, zf);
-                        if(min3 != (min3 = min(min3, value))) {minX = xf; minY = yf; minZ = zf;}
-                        if(max3 != (max3 = max(max3, value))) {maxX = xf; maxY = yf; maxZ = zf;}
+                        if(min3 != (min3 = min(min3, value))) {
+                            minX = xf; minY = yf; minZ = zf;
+                        }
+                        if(max3 != (max3 = max(max3, value))) {
+                            maxX = xf; maxY = yf; maxZ = zf;
+                        }
                     }
                 }
             }
@@ -682,5 +686,38 @@ public class PerlinNoiseAnalysis implements INoise {
             System.out.printf("Lowest: x=%.13f y=%.13f z=%.13f ; Highest: x=%.13f y=%.13f z=%.13f\n", minX, minY, minZ, maxX, maxY, maxZ);
         }
         System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nTook %.3f seconds.\n", min3, max3, (System.currentTimeMillis() - startTime) * 1E-3);
+    }
+
+    public void analyzeExtremes3D() {
+        min3 = Float.MAX_VALUE;
+        max3 = -Float.MAX_VALUE;
+
+        float xf, yf, zf;
+        {
+            //Lowest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861
+            xf = 0.9999998211861f;
+            yf = 0.9999999403954f;
+            zf = 0.9999998211861f;
+            for (int h0 = 0; h0 < 32; h0++) {
+                float g0 = specifyGradCoord3D(h0, xf, yf, zf);
+                for (int h1 = 0; h1 < 32; h1++) {
+                    float g1 = specifyGradCoord3D(h1, xf - 1, yf, zf);
+                    float value = lerp(g0, g1, xf);
+                    min3 = min(min3, value);
+                    max3 = max(max3, value);
+                    System.out.printf("g0: %.13f with %d, g1: %.13f with %d\n", g0, h0, g1, h1);
+                }
+            }
+            System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\n", min3, max3);
+        }
+//        {
+//            //Highest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861
+//            xf = ;
+//            for (int h0 = 0; h0 < 32; h0++) {
+//                for (int h1 = 0; h1 < 32; h1++) {
+//
+//                }
+//            }
+//        }
     }
 }

@@ -136,7 +136,7 @@ public class PerlinNoise implements INoise {
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #serializeToString()}, and
      * {@link #copy()}.
      *
      * @param data a serialized String, typically produced by {@link #serializeToString()}
