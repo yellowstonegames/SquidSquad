@@ -613,6 +613,8 @@ public class PerlinNoiseAnalysis implements INoise {
     }
 
     public void analyze3D() {
+        min3 = Float.MAX_VALUE;
+        max3 = -Float.MAX_VALUE;
         long startTime = System.currentTimeMillis();
         for (int i = 0, h0 = 0; i < 0x100000; i++, h0 += 0x9E3779B9) {
             for (int j = 0, h1 = 0; j < 0x100000; j++, h1 += 0xC13FA9A9) {
@@ -650,5 +652,35 @@ public class PerlinNoiseAnalysis implements INoise {
             }
             System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %d in %.3f seconds.\n", min3, max3, h0, (System.currentTimeMillis() - startTime) * 1E-3);
         }
+    }
+
+    /**
+     * Lowest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861 ; Highest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861
+     * In 3D, Perlin:
+     * Min: -1.6245012283325
+     * Max: 1.6245012283325
+     * Took 662.294 seconds.
+     */
+    public void analyzeGradCoord3D() {
+        min3 = Float.MAX_VALUE;
+        max3 = -Float.MAX_VALUE;
+        float minX = min3, minY = min3, minZ = min3;
+        float maxX = max3, maxY = max3, maxZ = max3;
+        long startTime = System.currentTimeMillis();
+        int it = 0;
+        for (float xf = 0.9999f; xf < 1f; xf += 0x1p-24f, it++) {
+            for (float yf = 0.9999f; yf < 1f; yf += 0x1p-24f) {
+                for (float zf = 0.9999f; zf < 1f; zf += 0x1p-24f) {
+                    for (int h = 0; h < 32; h++) {
+                        float value = specifyGradCoord3D(h, xf, yf, zf);
+                        if(min3 != (min3 = min(min3, value))) {minX = xf; minY = yf; minZ = zf;}
+                        if(max3 != (max3 = max(max3, value))) {maxX = xf; maxY = yf; maxZ = zf;}
+                    }
+                }
+            }
+            System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %d in %.3f seconds.\n", min3, max3, it, (System.currentTimeMillis() - startTime) * 1E-3);
+            System.out.printf("Lowest: x=%.13f y=%.13f z=%.13f ; Highest: x=%.13f y=%.13f z=%.13f\n", minX, minY, minZ, maxX, maxY, maxZ);
+        }
+        System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nTook %.3f seconds.\n", min3, max3, (System.currentTimeMillis() - startTime) * 1E-3);
     }
 }
