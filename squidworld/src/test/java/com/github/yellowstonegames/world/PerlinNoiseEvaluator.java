@@ -16,16 +16,19 @@
 
 package com.github.yellowstonegames.world;
 
-import static com.github.tommyettinger.digital.MathTools.lerp;
-
+/**
+ * TL;DR: The range of D-dimensional Perlin noise is ±√(D / 4.0) .
+ * Scale this by its inverse, so ±1.0 / √(D / 4.0) , to get our noise in the right range.
+ * That is, according to <a href="https://digitalfreepen.com/2017/06/20/range-perlin-noise.html">this article</a>.
+ */
 public class PerlinNoiseEvaluator {
-    public static void main(String[] args) {
+    public static void mainAn(String[] args) {
         final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(-5L);
 //        analysis.analyzeGradCoord3D();
         analysis.analyzeExtremes3D();
     }
-    public static void mainBrute(String[] args) {
-        final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1234567890L);
+    public static void main(String[] args) {
+        final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(-1234567890L);
 //        {
 //            @Override
 //            public float gradCoord2D(long seed, int x, int y, float xd, float yd) {
@@ -80,14 +83,16 @@ In 3D, Perlin:
 Min: -0.7905685305595
 Max: 0.8010496497154
 */
-        for (float fx = 0f; fx < 600; fx += 0x1p-3f) {
-            for (float fy = 0f; fy < 600; fy += 0x1p-3f) {
-                for (float fz = 0f; fz < 600; fz += 0x1p-3f) {
+        final float LIMIT = 256f, INC = 0x0.FFFCp-2f;
+        for (float fx = -LIMIT; fx < LIMIT; fx += INC) {
+            for (float fy = -LIMIT; fy < LIMIT; fy += INC) {
+                for (float fz = -LIMIT; fz < LIMIT; fz += INC) {
                     analysis.getNoise(fx, fy, fz);
                 }
             }
-            if(fx == ((int)fx & -4)) System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %.0f in %.3f seconds.\n", analysis.min3, analysis.max3, fx, (System.currentTimeMillis() - startTime) * 1E-3);
+            if((int)(fx+0.5f) == ((int)(fx+0.5f) | 15))
+                System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %f in %.3f seconds.\n", analysis.min3, analysis.max3, fx, (System.currentTimeMillis() - startTime) * 1E-3);
         }
-        System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\n", analysis.min3, analysis.max3);
+        System.out.printf("FINAL: In 3D, Perlin: \nMin: %.13f\nMax: %.13f\n", analysis.min3, analysis.max3);
     }
 }

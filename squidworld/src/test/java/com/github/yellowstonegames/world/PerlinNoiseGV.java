@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.SimplexNoise;
@@ -24,8 +24,6 @@ import com.github.yellowstonegames.grid.SimplexNoise;
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.tommyettinger.digital.MathTools.lerp;
 import static com.github.yellowstonegames.grid.GradientVectors.*;
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 /**
  * "Classic" Perlin noise, written by Ken Perlin before he created {@link SimplexNoise Simplex Noise}, with minor
@@ -33,21 +31,25 @@ import static java.lang.Math.min;
  * single {@code long} seed. Perlin Noise can have significant grid-aligned and 45-degree-diagonal artifacts when too
  * few octaves are used, but sometimes this is irrelevant, such as when sampling 3D noise on the surface of a sphere.
  */
-public class PerlinNoiseAnalysis implements INoise {
-    public static final PerlinNoiseAnalysis instance = new PerlinNoiseAnalysis();
+public class PerlinNoiseGV implements INoise {
+    public static final PerlinNoiseGV instance = new PerlinNoiseGV();
+
+    public static float towardsZero(float x) {
+        return BitConversion.intBitsToFloat(BitConversion.floatToIntBits(x) - 2);
+    }
+
+    public static final float SCALE2 = towardsZero(1f/ (float) Math.sqrt(2f / 4f));
+    public static final float SCALE3 = towardsZero(1f/ (float) Math.sqrt(3f / 4f));
+    public static final float SCALE4 = towardsZero(1f); // special case that is simpler
+    public static final float SCALE5 = towardsZero(1f/ (float) Math.sqrt(5f / 4f));
+    public static final float SCALE6 = towardsZero(1f/ (float) Math.sqrt(6f / 4f));
+
     public long seed;
-
-    public float min2 = Float.MAX_VALUE, max2 = -Float.MAX_VALUE;
-    public float min3 = Float.MAX_VALUE, max3 = -Float.MAX_VALUE;
-    public float min4 = Float.MAX_VALUE, max4 = -Float.MAX_VALUE;
-    public float min5 = Float.MAX_VALUE, max5 = -Float.MAX_VALUE;
-    public float min6 = Float.MAX_VALUE, max6 = -Float.MAX_VALUE;
-
-    public PerlinNoiseAnalysis() {
+    public PerlinNoiseGV() {
         this(0x1337BEEFCAFEL);
     }
 
-    public PerlinNoiseAnalysis(final long seed) {
+    public PerlinNoiseGV(final long seed) {
         this.seed = seed;
     }
 
@@ -144,56 +146,56 @@ public class PerlinNoiseAnalysis implements INoise {
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #serializeToString()}, and
      * {@link #copy()}.
      *
      * @param data a serialized String, typically produced by {@link #serializeToString()}
      * @return this INoise, after being modified (if possible)
      */
     @Override
-    public PerlinNoiseAnalysis deserializeFromString(String data) {
+    public PerlinNoiseGV deserializeFromString(String data) {
         seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
         return this;
     }
 
-    public static PerlinNoiseAnalysis recreateFromString(String data) {
-        return new PerlinNoiseAnalysis(DigitTools.longFromDec(data, 1, data.length() - 1));
+    public static PerlinNoiseGV recreateFromString(String data) {
+        return new PerlinNoiseGV(DigitTools.longFromDec(data, 1, data.length() - 1));
     }
 
 
     /**
-     * Creates a copy of this PerlinNoiseAnalysis, which should be a deep copy for any mutable state but can be shallow for immutable
+     * Creates a copy of this PerlinNoise, which should be a deep copy for any mutable state but can be shallow for immutable
      * types such as functions. This almost always just calls a copy constructor.
      *
-     * @return a copy of this PerlinNoiseAnalysis
+     * @return a copy of this PerlinNoise
      */
     @Override
-    public PerlinNoiseAnalysis copy() {
-        return new PerlinNoiseAnalysis(this.seed);
+    public PerlinNoiseGV copy() {
+        return new PerlinNoiseGV(this.seed);
     }
 
     //0xE60E2B722B53AEEBL, 0xCEBD76D9EDB6A8EFL, 0xB9C9AA3A51D00B65L, 0xA6F5777F6F88983FL, 0x9609C71EB7D03F7BL, 0x86D516E50B04AB1BL
-    public float gradCoord2D(long seed, int x, int y,
+    protected static float gradCoord2D(long seed, int x, int y,
                                         float xd, float yd) {
         final int hash =
                 (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y)
                         * (seed) >>> 55 & 510);
         return xd * GRADIENTS_2D[hash] + yd * GRADIENTS_2D[hash + 1];
     }
-    public float gradCoord3D(long seed, int x, int y, int z, float xd, float yd, float zd) {
+    protected static float gradCoord3D(long seed, int x, int y, int z, float xd, float yd, float zd) {
         final int hash =
                 (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z)
                         * (seed) >>> 59) << 2;
         return (xd * GRADIENTS_3D[hash] + yd * GRADIENTS_3D[hash + 1] + zd * GRADIENTS_3D[hash + 2]);
     }
-    public float gradCoord4D(long seed, int x, int y, int z, int w,
+    protected static float gradCoord4D(long seed, int x, int y, int z, int w,
                                         float xd, float yd, float zd, float wd) {
         final int hash =
                 (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w)
-                        * (seed) >>> 56) & 252;
+                        * (seed) >>> 56) & -4;
         return xd * GRADIENTS_4D[hash] + yd * GRADIENTS_4D[hash + 1] + zd * GRADIENTS_4D[hash + 2] + wd * GRADIENTS_4D[hash + 3];
     }
-    public float gradCoord5D(long seed, int x, int y, int z, int w, int u,
+    protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u,
                                         float xd, float yd, float zd, float wd, float ud) {
         final int hash =
                 (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u)
@@ -202,7 +204,7 @@ public class PerlinNoiseAnalysis implements INoise {
                 + wd * GRADIENTS_5D[hash + 3] + ud * GRADIENTS_5D[hash + 4];
     }
     
-    public float gradCoord6D(long seed, int x, int y, int z, int w, int u, int v,
+    protected static float gradCoord6D(long seed, int x, int y, int z, int w, int u, int v,
                                         float xd, float yd, float zd, float wd, float ud, float vd) {
         final int hash =
                 (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u ^ 0x86D516E50B04AB1BL * v)
@@ -210,26 +212,21 @@ public class PerlinNoiseAnalysis implements INoise {
         return xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash + 1] + zd * GRADIENTS_6D[hash + 2]
                 + wd * GRADIENTS_6D[hash + 3] + ud * GRADIENTS_6D[hash + 4] + vd * GRADIENTS_6D[hash + 5];
     }
-
-    public float specifyGradCoord3D(int hash, float xd, float yd, float zd) {
-        hash = hash << 2 & 124;
-        return (xd * GRADIENTS_3D[hash] + yd * GRADIENTS_3D[hash + 1] + zd * GRADIENTS_3D[hash + 2]);
-    }
-
-
     /**
      * Given a float {@code a} from -1.0 to 1.0 (both inclusive), this gets a float that adjusts a to be closer to the
      * end points of that range (if less than 0, it gets closer to -1.0, otherwise it gets closer to 1.0).
      * <br>
      * Used to increase the frequency of high and low results, which
      * improves the behavior of ridged and billow noise.
+     * <br>
+     * The actual numbers here are just slightly off of normal "quintic" interpolation, because this tries to avoid
+     * returning any numbers that are just slightly out-of-bounds, and has to make tiny adjustments to do so.
      * @param a a float between -1.0f and 1.0f inclusive
      * @return a float between -1.0f and 1.0f inclusive that is more likely to be near the extremes
      */
-    public float emphasizeSigned(float a)
-    {
-        a = a * 0.5f + 0.5f;
-        return a * a * (6.0f - 4.0f * a) - 1.0f;
+    public float emphasizeSigned(float a) {
+        a = a * 0.49999997f + 0.49999997f;
+        return a * a * a * (20f + a * ((a - 2.5f) * 12f)) - 1.0000014f;
     }
 
     @Override
@@ -246,12 +243,10 @@ public class PerlinNoiseAnalysis implements INoise {
 
         final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 9.999998f);
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
-        final float value = lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
+        return
+                emphasizeSigned(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
                                 lerp(gradCoord2D(seed, x0, y0+1, xf, yf-1), gradCoord2D(seed, x0+1, y0+1, xf - 1, yf - 1), xa),
-                                ya) * MathTools.ROOT2; // * 1.4142;
-        min2 = min(min2, value);
-        max2 = max(max2, value);
-        return value;
+                                ya) * SCALE2);//* 0.875;// * 1.4142;
     }
 
     @Override
@@ -270,7 +265,8 @@ public class PerlinNoiseAnalysis implements INoise {
         final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 9.999998f);
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
-        final float value =
+         return
+                 emphasizeSigned(
                          lerp(
                                  lerp(
                                          lerp(
@@ -292,11 +288,7 @@ public class PerlinNoiseAnalysis implements INoise {
                                                  gradCoord3D(seed, x0+1, y0+1, z0+1, xf - 1, yf - 1, zf-1),
                                                  xa),
                                          ya),
-                                 za);// * 1.1547f;// * 1.1547005383792515f; // this is sqrt(3)/2.0
-        // was * 1.0625f);
-        min3 = min(min3, value);
-        max3 = max(max3, value);
-        return value;
+                                 za) * SCALE3); // 1.0625f
     }
 
     @Override
@@ -317,7 +309,7 @@ public class PerlinNoiseAnalysis implements INoise {
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
-        final float value =
+        return
                 emphasizeSigned(
                         lerp(
                                 lerp(
@@ -364,10 +356,7 @@ public class PerlinNoiseAnalysis implements INoise {
                                                         xa),
                                                 ya),
                                         za),
-                                wa));// * 0.555f);
-        min4 = min(min4, value);
-        max4 = max(max4, value);
-        return value;
+                                wa) * SCALE4);//0.555f);
     }
 
 
@@ -391,7 +380,7 @@ public class PerlinNoiseAnalysis implements INoise {
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
-        final float value =
+        return
                 emphasizeSigned(
                 lerp(lerp(
                         lerp(
@@ -453,10 +442,7 @@ public class PerlinNoiseAnalysis implements INoise {
                                                 ya),
                                         za),
                                 wa),
-                        ua));// * 0.7777777f);
-        min5 = min(min5, value);
-        max5 = max(max5, value);
-        return value;
+                        ua) * SCALE5);//0.7777777f);
     }
 
     @Override
@@ -480,8 +466,7 @@ public class PerlinNoiseAnalysis implements INoise {
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
         final float va = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 9.999998f);
-        final float value =
-                emphasizeSigned(
+        return emphasizeSigned(
                 lerp(
                         lerp(
                                 lerp(
@@ -607,118 +592,6 @@ public class PerlinNoiseAnalysis implements INoise {
                                                 za),
                                         wa),
                                 ua),
-                        va));// * 1.61f);
-        min6 = min(min6, value);
-        max6 = max(max6, value);
-        return value;
-    }
-
-    public void analyze3D() {
-        min3 = Float.MAX_VALUE;
-        max3 = -Float.MAX_VALUE;
-        long startTime = System.currentTimeMillis();
-        for (int i = 0, h0 = 0; i < 0x100000; i++, h0 += 0x9E3779B9) {
-            for (int j = 0, h1 = 0; j < 0x100000; j++, h1 += 0xC13FA9A9) {
-                for (float xf = 0.0998f; xf < 1f; xf += 0.2001f) {
-                    for (float yf = 0.0998f; yf < 1f; yf += 0.2001f) {
-                        for (float zf = 0.0998f; zf < 1f; zf += 0.2001f) {
-                            final float value =
-                                    lerp(
-                                            lerp(
-                                                    lerp(
-                                                            specifyGradCoord3D(h0, xf, yf, zf),
-                                                            specifyGradCoord3D(h0 >>> 5, xf - 1, yf, zf),
-                                                            xf),
-                                                    lerp(
-                                                            specifyGradCoord3D(h0 >>> 10, xf, yf - 1, zf),
-                                                            specifyGradCoord3D(h0 >>> 15, xf - 1, yf - 1, zf),
-                                                            xf),
-                                                    yf),
-                                            lerp(
-                                                    lerp(
-                                                            specifyGradCoord3D(h1, xf, yf, zf - 1),
-                                                            specifyGradCoord3D(h1 >>> 5, xf - 1, yf, zf - 1),
-                                                            xf),
-                                                    lerp(
-                                                            specifyGradCoord3D(h1 >>> 10, xf, yf - 1, zf - 1),
-                                                            specifyGradCoord3D(h1 >>> 15, xf - 1, yf - 1, zf - 1),
-                                                            xf),
-                                                    yf),
-                                            zf);
-                            min3 = min(min3, value);
-                            max3 = max(max3, value);
-                        }
-                    }
-                }
-            }
-            System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %d in %.3f seconds.\n", min3, max3, h0, (System.currentTimeMillis() - startTime) * 1E-3);
-        }
-    }
-
-    /**
-     * Lowest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861 ; Highest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861
-     * In 3D, Perlin:
-     * Min: -1.6245012283325
-     * Max: 1.6245012283325
-     * Took 662.294 seconds.
-     */
-    public void analyzeGradCoord3D() {
-        min3 = Float.MAX_VALUE;
-        max3 = -Float.MAX_VALUE;
-        float minX = min3, minY = min3, minZ = min3;
-        float maxX = max3, maxY = max3, maxZ = max3;
-        long startTime = System.currentTimeMillis();
-        int it = 0;
-        for (float xf = 0.9999f; xf < 1f; xf += 0x1p-24f, it++) {
-            for (float yf = 0.9999f; yf < 1f; yf += 0x1p-24f) {
-                for (float zf = 0.9999f; zf < 1f; zf += 0x1p-24f) {
-                    for (int h = 0; h < 32; h++) {
-                        float value = specifyGradCoord3D(h, xf, yf, zf);
-                        if(min3 != (min3 = min(min3, value))) {
-                            minX = xf; minY = yf; minZ = zf;
-                        }
-                        if(max3 != (max3 = max(max3, value))) {
-                            maxX = xf; maxY = yf; maxZ = zf;
-                        }
-                    }
-                }
-            }
-            System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %d in %.3f seconds.\n", min3, max3, it, (System.currentTimeMillis() - startTime) * 1E-3);
-            System.out.printf("Lowest: x=%.13f y=%.13f z=%.13f ; Highest: x=%.13f y=%.13f z=%.13f\n", minX, minY, minZ, maxX, maxY, maxZ);
-        }
-        System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nTook %.3f seconds.\n", min3, max3, (System.currentTimeMillis() - startTime) * 1E-3);
-    }
-
-    public void analyzeExtremes3D() {
-        min3 = Float.MAX_VALUE;
-        max3 = -Float.MAX_VALUE;
-
-        float xf, yf, zf;
-        {
-            //Lowest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861
-            xf = 0.9999998211861f;
-            yf = 0.9999999403954f;
-            zf = 0.9999998211861f;
-            for (int h0 = 0; h0 < 32; h0++) {
-                float g0 = specifyGradCoord3D(h0, xf, yf, zf);
-                for (int h1 = 0; h1 < 32; h1++) {
-                    float g1 = specifyGradCoord3D(h1, xf - 1, yf, zf);
-                    float value = lerp(g0, g1, xf);
-                    min3 = min(min3, value);
-                    max3 = max(max3, value);
-                    System.out.printf("g0: %.13f with %d, g1: %.13f with %d\n", g0, h0, g1, h1);
-                }
-            }
-            System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\n", min3, max3);
-        }
-//        {
-//            //Highest: x=0.9999998211861 y=0.9999999403954 z=0.9999998211861
-//            xf = ;
-//            for (int h0 = 0; h0 < 32; h0++) {
-//                for (int h1 = 0; h1 < 32; h1++) {
-//
-//                }
-//            }
-//        }
+                        va) * SCALE6);//1.61f);
     }
 }

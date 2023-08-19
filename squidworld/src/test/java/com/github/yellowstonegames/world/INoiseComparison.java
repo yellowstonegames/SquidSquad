@@ -53,6 +53,14 @@ public class INoiseComparison extends ApplicationAdapter {
             new OpenSimplex2(1L),
             new OpenSimplex2Smooth(1L),
             new PerlinNoise(1L),
+            new NoiseAdjustment(new PerlinNoiseGV(1L), new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
+                @Override
+                public float apply(float alpha) {
+                    if(alpha < 0f) System.out.println(alpha + " is too low!");
+                    if(alpha > 1f) System.out.println(alpha + " is too high!");
+                    return super.apply(alpha);
+                }
+            }),
             new CyclicNoise(1L, 5, 4),
             new FlanNoise(1L, 6),
             new TaffyNoise(1L, 6),
@@ -62,8 +70,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new SpatulaNoise(1L),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
     };
-    private int index0 = 12;
-    private int index1 = 13;
+    private int index0 = 5;
+    private int index1 = 6;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions
@@ -153,7 +161,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     }
                     case D: //dimension
-                        dim = (dim + (UIUtils.shift() ? 2 : 1)) % 4;
+                        dim = (dim + (UIUtils.shift() ? 3 : 1)) % 4;
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
