@@ -210,6 +210,13 @@ public class PerlinNoiseAnalysis implements INoise {
         return xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash + 1] + zd * GRADIENTS_6D[hash + 2]
                 + wd * GRADIENTS_6D[hash + 3] + ud * GRADIENTS_6D[hash + 4] + vd * GRADIENTS_6D[hash + 5];
     }
+
+    public float specifyGradCoord3D(int hash, float xd, float yd, float zd) {
+        hash = hash << 2 & 124;
+        return (xd * GRADIENTS_3D[hash] + yd * GRADIENTS_3D[hash + 1] + zd * GRADIENTS_3D[hash + 2]);
+    }
+
+
     /**
      * Given a float {@code a} from -1.0 to 1.0 (both inclusive), this gets a float that adjusts a to be closer to the
      * end points of that range (if less than 0, it gets closer to -1.0, otherwise it gets closer to 1.0).
@@ -239,9 +246,9 @@ public class PerlinNoiseAnalysis implements INoise {
 
         final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 9.999998f);
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
-        final float value = emphasizeSigned(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
+        final float value = lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
                                 lerp(gradCoord2D(seed, x0, y0+1, xf, yf-1), gradCoord2D(seed, x0+1, y0+1, xf - 1, yf - 1), xa),
-                                ya));// * MathTools.ROOT2); // * 1.4142;
+                                ya) * MathTools.ROOT2; // * 1.4142;
         min2 = min(min2, value);
         max2 = max(max2, value);
         return value;
@@ -264,7 +271,6 @@ public class PerlinNoiseAnalysis implements INoise {
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
         final float value =
-                 emphasizeSigned(
                          lerp(
                                  lerp(
                                          lerp(
@@ -286,7 +292,7 @@ public class PerlinNoiseAnalysis implements INoise {
                                                  gradCoord3D(seed, x0+1, y0+1, z0+1, xf - 1, yf - 1, zf-1),
                                                  xa),
                                          ya),
-                                 za));// * 1.0625f);
+                                 za);// * 1.1547005383792515f;// * 1.0625f);
         min3 = min(min3, value);
         max3 = max(max3, value);
         return value;
@@ -604,6 +610,45 @@ public class PerlinNoiseAnalysis implements INoise {
         min6 = min(min6, value);
         max6 = max(max6, value);
         return value;
+    }
 
+    public void analyze3D() {
+        long startTime = System.currentTimeMillis();
+        for (int i = 0, h0 = 0; i < 0x100000; i++, h0 += 0x9E3779B9) {
+            for (int j = 0, h1 = 0; j < 0x100000; j++, h1 += 0xC13FA9A9) {
+                for (float xf = 0.0998f; xf < 1f; xf += 0.2001f) {
+                    for (float yf = 0.0998f; yf < 1f; yf += 0.2001f) {
+                        for (float zf = 0.0998f; zf < 1f; zf += 0.2001f) {
+                            final float value =
+                                    lerp(
+                                            lerp(
+                                                    lerp(
+                                                            specifyGradCoord3D(h0, xf, yf, zf),
+                                                            specifyGradCoord3D(h0 >>> 5, xf - 1, yf, zf),
+                                                            xf),
+                                                    lerp(
+                                                            specifyGradCoord3D(h0 >>> 10, xf, yf - 1, zf),
+                                                            specifyGradCoord3D(h0 >>> 15, xf - 1, yf - 1, zf),
+                                                            xf),
+                                                    yf),
+                                            lerp(
+                                                    lerp(
+                                                            specifyGradCoord3D(h1, xf, yf, zf - 1),
+                                                            specifyGradCoord3D(h1 >>> 5, xf - 1, yf, zf - 1),
+                                                            xf),
+                                                    lerp(
+                                                            specifyGradCoord3D(h1 >>> 10, xf, yf - 1, zf - 1),
+                                                            specifyGradCoord3D(h1 >>> 15, xf - 1, yf - 1, zf - 1),
+                                                            xf),
+                                                    yf),
+                                            zf);
+                            min3 = min(min3, value);
+                            max3 = max(max3, value);
+                        }
+                    }
+                }
+            }
+            System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %d in %.3f seconds.\n", min3, max3, h0, (System.currentTimeMillis() - startTime) * 1E-3);
+        }
     }
 }

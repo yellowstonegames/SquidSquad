@@ -17,8 +17,12 @@
 package com.github.yellowstonegames.world;
 
 public class PerlinNoiseEvaluator {
+    public static void mainAn(String[] args) {
+        final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(-5L);
+        analysis.analyze3D();
+    }
     public static void main(String[] args) {
-        final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1L);
+        final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1234567890L);
 //        {
 //            @Override
 //            public float gradCoord2D(long seed, int x, int y, float xd, float yd) {
@@ -53,6 +57,7 @@ public class PerlinNoiseEvaluator {
 //            }
 //        };
 
+        long startTime = System.currentTimeMillis();
         /*
 To 1024f by steps of 0x1p-4f...
 
@@ -66,5 +71,20 @@ Max: 0.8834772109985
             }
         }
         System.out.printf("In 2D, Perlin: \nMin: %.13f\nMax: %.13f\n", analysis.min2, analysis.max2);
+/*
+Iteration 508 in 2533.923 seconds.
+In 3D, Perlin:
+Min: -0.7905685305595
+Max: 0.8010496497154
+*/
+        for (float fx = 0f; fx < 600; fx += 0x1p-3f) {
+            for (float fy = 0f; fy < 600; fy += 0x1p-3f) {
+                for (float fz = 0f; fz < 600; fz += 0x1p-3f) {
+                    analysis.getNoise(fx, fy, fz);
+                }
+            }
+            if(fx == ((int)fx & -4)) System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\nIteration %.0f in %.3f seconds.\n", analysis.min3, analysis.max3, fx, (System.currentTimeMillis() - startTime) * 1E-3);
+        }
+        System.out.printf("In 3D, Perlin: \nMin: %.13f\nMax: %.13f\n", analysis.min3, analysis.max3);
     }
 }
