@@ -51,11 +51,11 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
  */
 public class SphereVisualizer extends ApplicationAdapter {
-    public static final int POINT_COUNT = 256;
+    public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 0;
-    private int modes = 20;
+    private int mode = 20;
+    private int modes = 22;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -293,6 +293,9 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 3: spherePairMode();
                 break;
             case 4: sphereHaltonMode();
+            case 20: sphereHaltonMode();
+                break;
+            case 21: sphereHaltonLogitMode();
                 break;
             case 5: sphereRobertsMode();
                 break;
@@ -391,6 +394,19 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
             onSphereHalton(i);
+            renderer.color(black);
+            renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void sphereHaltonLogitMode() {
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED,
+                c = TrigTools.sinSmootherTurns(theta),
+                s = TrigTools.cosSmootherTurns(theta);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < POINT_COUNT; i++) {
+            onSphereHaltonLogit(i);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -753,6 +769,22 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[1] = y;
         vector[2] = z;
     }
+    public void onSphereHaltonLogit(final int index)
+    {
+        float x = (float) logit(QuasiRandomTools.vanDerCorput(3, index));
+        float y = (float) logit(QuasiRandomTools.vanDerCorput(5, index));
+        float z = (float) logit(QuasiRandomTools.vanDerCorput(7, index));
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+
+        float[] vector = points[index];
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
     public void onSphereRoberts(final int index)
     {
         float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][0] * index >>> 12) * 0x1p-52);
@@ -923,6 +955,18 @@ public class SphereVisualizer extends ApplicationAdapter {
         vector[0] = x * mag;
         vector[1] = y * mag;
         vector[2] = z * mag;
+    }
+
+    /**
+     * Meant to imitate {@link MathTools#probit(double)} using the simpler logit function. This scales the actual logit
+     * function by {@code Math.sqrt(Math.PI/8.0)}, which makes it have the same slope as probit when x is 0.5. The
+     * permissible values for x are between 0.0 and 1.0 inclusive. If you pass 0, you will get negative infinity, and if
+     * you pass 1, you will get positive infinity.
+     * @param x between 0 and 1, inclusive if you do accept infinite outputs, or exclusive if you do not
+     * @return an approximately-normal-distributed double with mu = 0.0, sigma = 1.0
+     */
+    public static double logit(double x) {
+        return 0.6266570686577501 * Math.log(x / (1.0 - x));
     }
 
     /**
@@ -1520,8 +1564,8 @@ public class SphereVisualizer extends ApplicationAdapter {
         // the next block was used to generate GRADIENTS_4D_D, just below it.
         if(false) {
             double big = Math.sqrt(2) + 1,
-                    b = big / Math.sqrt(1 + big * big + big * big + big * big),
-                    s = 1.0 / Math.sqrt(1 + big * big + big * big + big * big);
+                    b = big / Math.sqrt(1.0 + big * big * 3.0),
+                    s = 1.0 / Math.sqrt(1.0 + big * big * 3.0);
             System.out.println("private static final double[] GRADIENTS_4D_D = {");
             for (int i = 0; i < 64; i++) {
                 Arrays.fill(items, b);
