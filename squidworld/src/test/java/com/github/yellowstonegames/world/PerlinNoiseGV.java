@@ -16,9 +16,8 @@
 
 package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.SimplexNoise;
 
@@ -31,6 +30,13 @@ import static com.github.yellowstonegames.grid.GradientVectors.*;
  * adjustments. This uses quintic interpolation throughout (which was an improvement found in Simplex Noise), and has a
  * single {@code long} seed. Perlin Noise can have significant grid-aligned and 45-degree-diagonal artifacts when too
  * few octaves are used, but sometimes this is irrelevant, such as when sampling 3D noise on the surface of a sphere.
+ * <br>
+ * This variant also uses different {@link com.github.yellowstonegames.grid.GradientVectors gradient vectors} than the
+ * ones used in "Improved Perlin Noise." Here all the gradient vectors are unit vectors, like in the original Perlin
+ * Noise, which makes some calculations regarding the range the functions can return easier... in theory. In practice,
+ * the somewhat-flawed gradient vectors used in earlier iterations of Perlin Noise permitted a very different range
+ * calculation, and so this class uses a carefully-crafted sigmoid function to move around the most frequent values to
+ * roughly match earlier Perlin Noise results, but without risking going out-of-range.
  */
 public class PerlinNoiseGV implements INoise {
     public static final PerlinNoiseGV instance = new PerlinNoiseGV();
@@ -45,15 +51,17 @@ public class PerlinNoiseGV implements INoise {
     public static final float SCALE5 = towardsZero(1f/ (float) Math.sqrt(5f / 4f));
     public static final float SCALE6 = towardsZero(1f/ (float) Math.sqrt(6f / 4f));
 
-    public float[] eqAdd = {
+    private final float[] eqAdd = {
             1f/1.75f, 0.8f/1.75f, 0.6f/1.75f, 0.4f/1.75f, 0.2f/1.75f
-    }, eqMul = {
+    };
+    private final float[] eqMul = {
             calculateEqualizeAdjustment(eqAdd[0]),
             calculateEqualizeAdjustment(eqAdd[1]),
             calculateEqualizeAdjustment(eqAdd[2]),
             calculateEqualizeAdjustment(eqAdd[3]),
             calculateEqualizeAdjustment(eqAdd[4]),
     };
+
     public long seed;
 
     public PerlinNoiseGV() {
@@ -148,7 +156,7 @@ public class PerlinNoiseGV implements INoise {
      */
     @Override
     public String serializeToString() {
-        return "`" + seed + "`";
+        return "`" + seed + "~" + Base.BASE10.join("~", eqAdd) +"`";
     }
 
     /**
@@ -165,14 +173,27 @@ public class PerlinNoiseGV implements INoise {
      */
     @Override
     public PerlinNoiseGV deserializeFromString(String data) {
-        seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
+        int pos;
+        seed = Base.BASE10.readLong(data, 1, pos = data.indexOf('~'));
+        setEqualization(2, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        setEqualization(3, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        setEqualization(4, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        setEqualization(5, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        setEqualization(6, Base.BASE10.readFloat(data, pos+1, data.indexOf('`', pos+1)));
         return this;
     }
 
     public static PerlinNoiseGV recreateFromString(String data) {
-        return new PerlinNoiseGV(DigitTools.longFromDec(data, 1, data.length() - 1));
+        int pos;
+        long seed = Base.BASE10.readLong(data, 1, pos = data.indexOf('~'));
+        PerlinNoiseGV pn = new PerlinNoiseGV(seed);
+        pn.setEqualization(2, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        pn.setEqualization(3, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        pn.setEqualization(4, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        pn.setEqualization(5, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
+        pn.setEqualization(6, Base.BASE10.readFloat(data, pos+1, data.indexOf('`', pos+1)));
+        return pn;
     }
-
 
     /**
      * Creates a copy of this PerlinNoise, which should be a deep copy for any mutable state but can be shallow for immutable
@@ -182,7 +203,10 @@ public class PerlinNoiseGV implements INoise {
      */
     @Override
     public PerlinNoiseGV copy() {
-        return new PerlinNoiseGV(this.seed);
+        PerlinNoiseGV pn = new PerlinNoiseGV(this.seed);
+        System.arraycopy(eqAdd, 0, pn.eqAdd, 0, eqAdd.length);
+        System.arraycopy(eqMul, 0, pn.eqMul, 0, eqMul.length);
+        return pn;
     }
 
     //0xE60E2B722B53AEEBL, 0xCEBD76D9EDB6A8EFL, 0xB9C9AA3A51D00B65L, 0xA6F5777F6F88983FL, 0x9609C71EB7D03F7BL, 0x86D516E50B04AB1BL
@@ -254,10 +278,45 @@ public class PerlinNoiseGV implements INoise {
         return Math.copySign(a / (((bias - 1f) * (1f - a)) + 1f), x);
     }
 
+    /**
+     *
+     * @param dimension between 2 and 6, inclusive
+     * @return the {@code add} value currently used to equalize noise
+     */
+    public float getEqualization(int dimension) {
+        return eqAdd[Math.min(Math.max(dimension, 2), 6) - 2];
+    }
+
+    /**
+     *
+     * @param dimension between 2 and 6, inclusive
+     * @param value the {@code add} value to use when equalizing noise
+     */
+    public void setEqualization(int dimension, float value) {
+        dimension = Math.min(Math.max(dimension, 2), 6) - 2;
+        eqMul[dimension] = calculateEqualizeAdjustment(eqAdd[dimension] = Math.max(0f, value));
+    }
+
+    /**
+     * Given inputs as {@code x} in the range -1.0 to 1.0 that are too biased towards 0.0, this "squashes" the range
+     * softly to widen it and spread it away from 0.0 without increasing bias anywhere else.
+     * @param x a float between -1 and 1
+     * @param add if greater than 1, this will have nearly no effect; the lower this goes below 1, the more this will
+     *           separate results near the center of the range. This must be greater than or equal to 0.0
+     * @param mul typically the result of calling {@link #calculateEqualizeAdjustment(float)} on {@code add}
+     * @return a float with a slightly different distribution from {@code x}, but still between -1 and 1
+     */
     public static float equalize(float x, float add, float mul) {
         return x * mul / (float) Math.sqrt(add + x * x);
     }
 
+    /**
+     * Gets the value to optimally use for {@code mul} in {@link #equalize(float, float, float)}, given the value that
+     * will be used as {@code add} there. If mul is calculated in some other way, inputs in the -1 to 1 range won't have
+     * outputs in the -1 to 1 range from equalize().
+     * @param add the value that will be used as {@code add} in a call to {@link #equalize(float, float, float)}
+     * @return the value to use as {@code mul} in {@link #equalize(float, float, float)}
+     */
     public static float calculateEqualizeAdjustment(float add) {
         return 1f / equalize(1f, add, 1f);
     }
