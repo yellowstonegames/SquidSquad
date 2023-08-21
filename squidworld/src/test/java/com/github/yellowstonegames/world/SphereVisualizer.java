@@ -962,6 +962,9 @@ public class SphereVisualizer extends ApplicationAdapter {
      * function by {@code Math.sqrt(Math.PI/8.0)}, which makes it have the same slope as probit when x is 0.5. The
      * permissible values for x are between 0.0 and 1.0 inclusive. If you pass 0, you will get negative infinity, and if
      * you pass 1, you will get positive infinity.
+     * <br>
+     * NOTE: this is usually slower than {@link MathTools#probit(double)}, and this doesn't produce a correct Gaussian
+     * distribution. For generating Gaussian variables, {@link Ziggurat#normal(long)} is generally fastest.
      * @param x between 0 and 1, inclusive if you do accept infinite outputs, or exclusive if you do not
      * @return an approximately-normal-distributed double with mu = 0.0, sigma = 1.0
      */
