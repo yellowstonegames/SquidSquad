@@ -32,10 +32,6 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
-import com.github.yellowstonegames.world.standalone.DollopNoiseStandalone;
-import com.github.yellowstonegames.world.standalone.FoamNoiseStandalone;
-import com.github.yellowstonegames.world.standalone.SimplexNoiseStandalone;
-import com.github.yellowstonegames.world.standalone.ValueNoiseStandalone;
 
 import java.util.Arrays;
 
@@ -53,7 +49,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new OpenSimplex2(1L),
             new OpenSimplex2Smooth(1L),
             new PerlinNoise(1L),
-            new NoiseAdjustment(new PerlinNoiseGV(1L), new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
+            new NoiseAdjustment(new PerlinNoise(1L), new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
                 @Override
                 public float apply(float alpha) {
                     if(alpha < 0f) System.out.println(alpha + " is too low!");

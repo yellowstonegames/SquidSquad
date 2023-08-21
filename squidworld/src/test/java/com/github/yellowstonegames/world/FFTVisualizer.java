@@ -68,7 +68,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final ValueNoise val = new ValueNoise(noise.getSeed());
     private final PerlinNoise perlin = new PerlinNoise(noise.getSeed());
     private final NoiseAdjustment perlinGV = new NoiseAdjustment(
-            new PerlinNoiseGV(1L), new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
+            new PerlinNoise(1L), new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
         @Override
         public float apply(float alpha) {
             if(alpha < 0f) System.out.println(alpha + " is too low!");
