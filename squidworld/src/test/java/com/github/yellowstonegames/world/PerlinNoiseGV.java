@@ -203,7 +203,6 @@ public class PerlinNoiseGV implements INoise {
         return xd * GRADIENTS_5D__ALT[hash] + yd * GRADIENTS_5D__ALT[hash + 1] + zd * GRADIENTS_5D__ALT[hash + 2]
                 + wd * GRADIENTS_5D__ALT[hash + 3] + ud * GRADIENTS_5D__ALT[hash + 4];
     }
-    
     protected static float gradCoord6D(long seed, int x, int y, int z, int w, int u, int v,
                                         float xd, float yd, float zd, float wd, float ud, float vd) {
         final int hash =
@@ -227,6 +226,21 @@ public class PerlinNoiseGV implements INoise {
     public static float emphasizeSigned(float a) {
         a = a * 0.49999997f + 0.49999997f;
         return a * a * a * (20f + a * ((a - 2.5f) * 12f)) - 1.0000014f;
+    }
+
+    /**
+     * Emphasizes or de-emphasizes extreme values using Schlick's bias function when {@code x} is between 0 and 1
+     * (inclusive), or effectively {@code -bias(-x)} when x is between -1 and 0. The bias parameter is handled a little
+     * differently from how Schlick implemented it; here, {@code bias=1} produces a straight line (no bias), bias
+     * between 0 and 1 is shaped like the {@link com.github.tommyettinger.digital.MathTools#cbrt(float)} function, and
+     * bias greater than 1 is shaped like {@link com.github.tommyettinger.digital.MathTools#cube(float)}.
+     * @param x between -1 and 1, inclusive
+     * @param bias any float greater than 0 (exclusive)
+     * @return a biased float between -1 and 1, inclusive
+     */
+    public static float signedBias(float x, float bias) {
+        final float a = Math.abs(x);
+        return Math.copySign(a / (((bias - 1f) * (1f - a)) + 1f), x);
     }
 
     @Override
