@@ -45,16 +45,8 @@ public class PerlinNoiseGV implements INoise {
     public static final float SCALE5 = towardsZero(1f/ (float) Math.sqrt(5f / 4f));
     public static final float SCALE6 = towardsZero(1f/ (float) Math.sqrt(6f / 4f));
 
-    public float[] bias = {
-            (1.2f/2f),
-            (1.2f/3f),
-            (1.2f/4f),
-            (1.2f/5f),
-            (1.2f/6f),
-    };
-
     public float[] eqAdd = {
-            20f, 0.8f, 0.6f, 0.4f, 0.2f
+            1f/1.75f, 0.8f/1.75f, 0.6f/1.75f, 0.4f/1.75f, 0.2f/1.75f
     }, eqMul = {
             calculateEqualizeAdjustment(eqAdd[0]),
             calculateEqualizeAdjustment(eqAdd[1]),
