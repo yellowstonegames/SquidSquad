@@ -52,6 +52,16 @@ public class PerlinNoiseGV implements INoise {
             (1.2f/5f),
             (1.2f/6f),
     };
+
+    public float[] eqAdd = {
+            20f, 0.8f, 0.6f, 0.4f, 0.2f
+    }, eqMul = {
+            calculateEqualizeAdjustment(eqAdd[0]),
+            calculateEqualizeAdjustment(eqAdd[1]),
+            calculateEqualizeAdjustment(eqAdd[2]),
+            calculateEqualizeAdjustment(eqAdd[3]),
+            calculateEqualizeAdjustment(eqAdd[4]),
+    };
     public long seed;
 
     public PerlinNoiseGV() {
@@ -252,6 +262,14 @@ public class PerlinNoiseGV implements INoise {
         return Math.copySign(a / (((bias - 1f) * (1f - a)) + 1f), x);
     }
 
+    public static float equalize(float x, float add, float mul) {
+        return x * mul / (float) Math.sqrt(add + x * x);
+    }
+
+    public static float calculateEqualizeAdjustment(float add) {
+        return 1f / equalize(1f, add, 1f);
+    }
+
     @Override
     public float getNoise(final float x, final float y) {
         return getNoiseWithSeed(x, y, seed);
@@ -267,9 +285,9 @@ public class PerlinNoiseGV implements INoise {
         final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 9.999998f);
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
         return
-                signedBias(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
+                equalize(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
                                 lerp(gradCoord2D(seed, x0, y0+1, xf, yf-1), gradCoord2D(seed, x0+1, y0+1, xf - 1, yf - 1), xa),
-                                ya) * SCALE2, bias[0]);//* 0.875;// * 1.4142;
+                                ya) * SCALE2, eqAdd[0], eqMul[0]);//* 0.875;// * 1.4142;
     }
 
     @Override
@@ -289,7 +307,7 @@ public class PerlinNoiseGV implements INoise {
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
          return
-                 signedBias(
+                 equalize(
                          lerp(
                                  lerp(
                                          lerp(
@@ -311,7 +329,7 @@ public class PerlinNoiseGV implements INoise {
                                                  gradCoord3D(seed, x0+1, y0+1, z0+1, xf - 1, yf - 1, zf-1),
                                                  xa),
                                          ya),
-                                 za) * SCALE3, bias[1]); // 1.0625f
+                                 za) * SCALE3, eqAdd[1], eqMul[1]); // 1.0625f
     }
 
     @Override
@@ -333,7 +351,7 @@ public class PerlinNoiseGV implements INoise {
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         return
-                signedBias(
+                equalize(
                         lerp(
                                 lerp(
                                         lerp(
@@ -379,7 +397,7 @@ public class PerlinNoiseGV implements INoise {
                                                         xa),
                                                 ya),
                                         za),
-                                wa) * SCALE4, bias[2]);//0.555f);
+                                wa) * SCALE4, eqAdd[2], eqMul[2]);//0.555f);
     }
 
 
@@ -404,7 +422,7 @@ public class PerlinNoiseGV implements INoise {
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
         return
-                signedBias(
+                equalize(
                 lerp(lerp(
                         lerp(
                                 lerp(
@@ -465,7 +483,7 @@ public class PerlinNoiseGV implements INoise {
                                                 ya),
                                         za),
                                 wa),
-                        ua) * SCALE5, bias[3]);//0.7777777f);
+                        ua) * SCALE5, eqAdd[3], eqMul[3]);//0.7777777f);
     }
 
     @Override
@@ -489,7 +507,7 @@ public class PerlinNoiseGV implements INoise {
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
         final float va = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 9.999998f);
-        return signedBias(
+        return equalize(
                 lerp(
                         lerp(
                                 lerp(
@@ -615,6 +633,6 @@ public class PerlinNoiseGV implements INoise {
                                                 za),
                                         wa),
                                 ua),
-                        va) * SCALE6, bias[4]);//1.61f);
+                        va) * SCALE6, eqAdd[4], eqMul[4]);//1.61f);
     }
 }
