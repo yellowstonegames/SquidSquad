@@ -1393,56 +1393,56 @@ public final class GradientVectors {
             +0.7756626606f, -0.3521449566f, +0.1992188394f, +0.4065485597f, +0.2126327157f, -0.1554318368f, 0.0f, 0.0f,
             +0.2094173431f, +0.3208656609f, -0.0221391916f, -0.1584120095f, -0.4314405322f, +0.8009146452f, 0.0f, 0.0f,
     };
-
-    // TEMPORARY BLOCK
-
-    private static void shuffleBlocks(final EnhancedRandom random, final float[] items, final int blockSize) {
-        final int length = items.length / blockSize;
-        for (int i = length - 1; i > 0; i--) {
-            int a = i * blockSize, b = random.nextInt(i + 1) * blockSize;
-            float temp;
-            for (int j = 0; j < blockSize; j++) {
-                temp = items[a + j];
-                items[a + j] = items[b + j];
-                items[b + j] = temp;
-            }
-        }
-    }
-
-    @Beta
-    public static final float[] GRADIENTS_4D__ALT = new float[256 << 2];
-    @Beta
-    public static final float[] GRADIENTS_5D__ALT = new float[256 << 3];
-    @Beta
-    public static final float[] GRADIENTS_6D__ALT = new float[256 << 3];
-
-    static {
-        AceRandom random = new AceRandom(123456789L * 123456789L);
-        float[] tmp = new float[Noise.GRADIENTS_4D.length];
-        for (int i = 0; i < Noise.GRADIENTS_4D.length; i++) {
-            tmp[i] = Noise.GRADIENTS_4D[i] / 2.525999457116492f;
-        }
-        for (int i = 0; i < GRADIENTS_4D__ALT.length; i += tmp.length) {
-            shuffleBlocks(random, tmp, 4);
-            System.arraycopy(tmp, 0, GRADIENTS_4D__ALT, i, tmp.length);
-        }
-
-        random.setSeed(123456789L * 123456789L);
-        tmp = new float[Noise.GRADIENTS_5D.length];
-        for (int i = 0; i < Noise.GRADIENTS_5D.length; i++) {
-            tmp[i] = Noise.GRADIENTS_5D[i] * 0.5f;
-        }
-        for (int i = 0; i < GRADIENTS_5D__ALT.length; i += tmp.length) {
-            shuffleBlocks(random, tmp, 8);
-            System.arraycopy(tmp, 0, GRADIENTS_5D__ALT, i, tmp.length);
-        }
-
-        random.setSeed(123456789L * 123456789L);
-        tmp = new float[Noise.GRADIENTS_6D.length];
-        System.arraycopy(Noise.GRADIENTS_6D, 0, tmp, 0, Noise.GRADIENTS_6D.length);
-        for (int i = 0; i < GRADIENTS_6D__ALT.length; i += tmp.length) {
-            shuffleBlocks(random, tmp, 8);
-            System.arraycopy(tmp, 0, GRADIENTS_6D__ALT, i, tmp.length);
-        }
-    }
+//
+//    // TEMPORARY BLOCK
+//
+//    private static void shuffleBlocks(final EnhancedRandom random, final float[] items, final int blockSize) {
+//        final int length = items.length / blockSize;
+//        for (int i = length - 1; i > 0; i--) {
+//            int a = i * blockSize, b = random.nextInt(i + 1) * blockSize;
+//            float temp;
+//            for (int j = 0; j < blockSize; j++) {
+//                temp = items[a + j];
+//                items[a + j] = items[b + j];
+//                items[b + j] = temp;
+//            }
+//        }
+//    }
+//
+//    @Beta
+//    public static final float[] GRADIENTS_4D__ALT = new float[256 << 2];
+//    @Beta
+//    public static final float[] GRADIENTS_5D__ALT = new float[256 << 3];
+//    @Beta
+//    public static final float[] GRADIENTS_6D__ALT = new float[256 << 3];
+//
+//    static {
+//        AceRandom random = new AceRandom(123456789L * 123456789L);
+//        float[] tmp = new float[Noise.GRADIENTS_4D.length];
+//        for (int i = 0; i < Noise.GRADIENTS_4D.length; i++) {
+//            tmp[i] = Noise.GRADIENTS_4D[i] / 2.5259994571165f;
+//        }
+//        for (int i = 0; i < GRADIENTS_4D__ALT.length; i += tmp.length) {
+//            shuffleBlocks(random, tmp, 4);
+//            System.arraycopy(tmp, 0, GRADIENTS_4D__ALT, i, tmp.length);
+//        }
+//
+//        random.setSeed(123456789L * 123456789L);
+//        tmp = new float[Noise.GRADIENTS_5D.length];
+//        for (int i = 0; i < Noise.GRADIENTS_5D.length; i++) {
+//            tmp[i] = Noise.GRADIENTS_5D[i] * 0.5f;
+//        }
+//        for (int i = 0; i < GRADIENTS_5D__ALT.length; i += tmp.length) {
+//            shuffleBlocks(random, tmp, 8);
+//            System.arraycopy(tmp, 0, GRADIENTS_5D__ALT, i, tmp.length);
+//        }
+//
+//        random.setSeed(123456789L * 123456789L);
+//        tmp = new float[Noise.GRADIENTS_6D.length];
+//        System.arraycopy(Noise.GRADIENTS_6D, 0, tmp, 0, Noise.GRADIENTS_6D.length);
+//        for (int i = 0; i < GRADIENTS_6D__ALT.length; i += tmp.length) {
+//            shuffleBlocks(random, tmp, 8);
+//            System.arraycopy(tmp, 0, GRADIENTS_6D__ALT, i, tmp.length);
+//        }
+//    }
 }

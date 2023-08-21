@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.SimplexNoise;
@@ -44,7 +45,15 @@ public class PerlinNoiseGV implements INoise {
     public static final float SCALE5 = towardsZero(1f/ (float) Math.sqrt(5f / 4f));
     public static final float SCALE6 = towardsZero(1f/ (float) Math.sqrt(6f / 4f));
 
+    public float[] bias = {
+            (1.2f/2f),
+            (1.2f/3f),
+            (1.2f/4f),
+            (1.2f/5f),
+            (1.2f/6f),
+    };
     public long seed;
+
     public PerlinNoiseGV() {
         this(0x1337BEEFCAFEL);
     }
@@ -193,23 +202,23 @@ public class PerlinNoiseGV implements INoise {
         final int hash =
                 (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w)
                         * (seed) >>> 56) & -4;
-        return xd * GRADIENTS_4D__ALT[hash] + yd * GRADIENTS_4D__ALT[hash + 1] + zd * GRADIENTS_4D__ALT[hash + 2] + wd * GRADIENTS_4D__ALT[hash + 3];
+        return xd * GRADIENTS_4D[hash] + yd * GRADIENTS_4D[hash + 1] + zd * GRADIENTS_4D[hash + 2] + wd * GRADIENTS_4D[hash + 3];
     }
     protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u,
                                         float xd, float yd, float zd, float wd, float ud) {
         final int hash =
                 (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u)
                         * (seed) >>> 56) << 3;
-        return xd * GRADIENTS_5D__ALT[hash] + yd * GRADIENTS_5D__ALT[hash + 1] + zd * GRADIENTS_5D__ALT[hash + 2]
-                + wd * GRADIENTS_5D__ALT[hash + 3] + ud * GRADIENTS_5D__ALT[hash + 4];
+        return xd * GRADIENTS_5D[hash] + yd * GRADIENTS_5D[hash + 1] + zd * GRADIENTS_5D[hash + 2]
+                + wd * GRADIENTS_5D[hash + 3] + ud * GRADIENTS_5D[hash + 4];
     }
     protected static float gradCoord6D(long seed, int x, int y, int z, int w, int u, int v,
                                         float xd, float yd, float zd, float wd, float ud, float vd) {
         final int hash =
                 (int)((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w ^ 0x9609C71EB7D03F7BL * u ^ 0x86D516E50B04AB1BL * v)
                         * (seed) >>> 56) << 3;
-        return xd * GRADIENTS_6D__ALT[hash] + yd * GRADIENTS_6D__ALT[hash + 1] + zd * GRADIENTS_6D__ALT[hash + 2]
-                + wd * GRADIENTS_6D__ALT[hash + 3] + ud * GRADIENTS_6D__ALT[hash + 4] + vd * GRADIENTS_6D__ALT[hash + 5];
+        return xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash + 1] + zd * GRADIENTS_6D[hash + 2]
+                + wd * GRADIENTS_6D[hash + 3] + ud * GRADIENTS_6D[hash + 4] + vd * GRADIENTS_6D[hash + 5];
     }
     /**
      * Given a float {@code a} from -1.0 to 1.0 (both inclusive), this gets a float that adjusts a to be closer to the
@@ -258,9 +267,9 @@ public class PerlinNoiseGV implements INoise {
         final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 9.999998f);
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
         return
-                emphasizeSigned(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
+                signedBias(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+1, y0, xf - 1, yf), xa),
                                 lerp(gradCoord2D(seed, x0, y0+1, xf, yf-1), gradCoord2D(seed, x0+1, y0+1, xf - 1, yf - 1), xa),
-                                ya) * SCALE2);//* 0.875;// * 1.4142;
+                                ya) * SCALE2, bias[0]);//* 0.875;// * 1.4142;
     }
 
     @Override
@@ -280,7 +289,7 @@ public class PerlinNoiseGV implements INoise {
         final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
          return
-                 emphasizeSigned(
+                 signedBias(
                          lerp(
                                  lerp(
                                          lerp(
@@ -302,7 +311,7 @@ public class PerlinNoiseGV implements INoise {
                                                  gradCoord3D(seed, x0+1, y0+1, z0+1, xf - 1, yf - 1, zf-1),
                                                  xa),
                                          ya),
-                                 za) * SCALE3); // 1.0625f
+                                 za) * SCALE3, bias[1]); // 1.0625f
     }
 
     @Override
@@ -324,7 +333,7 @@ public class PerlinNoiseGV implements INoise {
         final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         return
-                emphasizeSigned(
+                signedBias(
                         lerp(
                                 lerp(
                                         lerp(
@@ -370,7 +379,7 @@ public class PerlinNoiseGV implements INoise {
                                                         xa),
                                                 ya),
                                         za),
-                                wa) * SCALE4);//0.555f);
+                                wa) * SCALE4, bias[2]);//0.555f);
     }
 
 
@@ -395,7 +404,7 @@ public class PerlinNoiseGV implements INoise {
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
         return
-                emphasizeSigned(
+                signedBias(
                 lerp(lerp(
                         lerp(
                                 lerp(
@@ -456,7 +465,7 @@ public class PerlinNoiseGV implements INoise {
                                                 ya),
                                         za),
                                 wa),
-                        ua) * SCALE5);//0.7777777f);
+                        ua) * SCALE5, bias[3]);//0.7777777f);
     }
 
     @Override
@@ -480,7 +489,7 @@ public class PerlinNoiseGV implements INoise {
         final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
         final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
         final float va = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 9.999998f);
-        return emphasizeSigned(
+        return signedBias(
                 lerp(
                         lerp(
                                 lerp(
@@ -606,6 +615,6 @@ public class PerlinNoiseGV implements INoise {
                                                 za),
                                         wa),
                                 ua),
-                        va) * SCALE6);//1.61f);
+                        va) * SCALE6, bias[4]);//1.61f);
     }
 }
