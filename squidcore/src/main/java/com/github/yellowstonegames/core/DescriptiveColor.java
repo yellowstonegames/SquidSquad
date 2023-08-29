@@ -1776,7 +1776,6 @@ public final class DescriptiveColor {
         return result;
     }
 
-
     /**
      * Mixes any number of colors with arbitrary weights per-color. Takes an array of varargs of alternating ints
      * representing colors and weights, as with {@code color, weight, color, weight...}.

@@ -397,6 +397,7 @@ public class SimplexNoise implements INoise {
      * @return a continuous noise value between -1.0 and 1.0, both inclusive
      */
     public static float noise(final float x, final float y, final float z, final float w, final float u, final long seed) {
+        final float[] GRADIENTS_5D = Noise.GRADIENTS_5D;
         float n = 0f;
         float t = (x + y + z + w + u) * F5;
         int i = fastFloor(x + t);

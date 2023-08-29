@@ -43,9 +43,9 @@ import java.util.Date;
 public class WorldMapWriter extends ApplicationAdapter {
     private static final int AA = 1;
 
-//    private static final int width = 1920, height = 1080;
+    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
-    private static final int width = 800, height = 400; // mimic, elliptical
+//    private static final int width = 800, height = 400; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 128, height = 128; // space view, MimicLocal
@@ -108,14 +108,14 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
+        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
         noise = fn;
 
-        noise.setInterpolation(Noise.QUINTIC);
+//        noise.setInterpolation(Noise.QUINTIC);
 
 //        if(FLOWING_LAND)
 //            noise = new Noise.Adapted3DFrom5D(fn);

@@ -132,8 +132,8 @@ using JitPack.
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.3.3
+  - `digitalVersion`=0.4.0
   - `funderbyVersion`=0.1.1
-  - `jdkgdxdsVersion`=1.4.0
-  - `juniperVersion`=0.3.5
+  - `jdkgdxdsVersion`=1.4.1
+  - `juniperVersion`=0.3.8
   - `regExodusVersion`=0.1.15
