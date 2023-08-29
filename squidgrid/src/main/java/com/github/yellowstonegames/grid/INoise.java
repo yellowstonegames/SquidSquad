@@ -136,7 +136,7 @@ public interface INoise {
      * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
      * in by {@link #deserializeFromString(String)} to reassign the described state to another INoise. The syntax here
      * should always start and end with the {@code `} character, which is used by
-     * {@link Serializer#deserializeFromString(String)} to identify the portion of a String that can be read back. The
+     * {@link #deserializeFromString(String)} to identify the portion of a String that can be read back. The
      * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
