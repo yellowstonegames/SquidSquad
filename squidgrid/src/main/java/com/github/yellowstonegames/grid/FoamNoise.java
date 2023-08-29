@@ -16,6 +16,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 
 /**
  * Foam noise code as an {@link INoise} implementation.
@@ -45,10 +46,9 @@ public class FoamNoise implements INoise {
     // 2D SECTION
 
     /**
-     * Gets foam noise with the lowest, fastest level of detail. Uses
-     * {@link #getSeed()} and multiplies x and y by frequency.
-     * @param x x coordinate, will be adjusted by frequency
-     * @param y y coordinate, will be adjusted by frequency
+     * Gets 2D noise using {@link #getSeed()}.
+     * @param x x coordinate
+     * @param y y coordinate
      * @return noise between -1 and 1, inclusive
      */
     public float getNoise(final float x, final float y) {
@@ -87,7 +87,7 @@ public class FoamNoise implements INoise {
     }
 
     /**
-     * Gets value noise with the lowest, fastest level of detail. Uses the given seed
+     * Gets 2D value noise with the lowest, fastest level of detail. Uses the given seed
      * and does not change x or y. This has a different output range (0 to 1) than foam noise.
      * @param x x coordinate
      * @param y y coordinate
@@ -126,11 +126,11 @@ public class FoamNoise implements INoise {
     // 3D SECTION
 
     /**
-     * Gets foam noise with the lowest, fastest level of detail. Uses
-     * {@link #getSeed()} and multiplies x, y, and z by frequency.
-     * @param x x coordinate, will be adjusted by frequency
-     * @param y y coordinate, will be adjusted by frequency
-     * @param z z coordinate, will be adjusted by frequency
+     * Gets 3D noise using {@link #getSeed()}.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
      * @return noise between -1 and 1, inclusive
      */
     public float getNoise(final float x, final float y, final float z) {
@@ -226,12 +226,12 @@ public class FoamNoise implements INoise {
     // 4D SECTION
 
     /**
-     * Gets 4D foam noise with the lowest, fastest level of detail. Uses
-     * {@link #getSeed()} and multiplies x, y, z, and w by frequency.
-     * @param x x coordinate, will be adjusted by frequency
-     * @param y y coordinate, will be adjusted by frequency
-     * @param z z coordinate, will be adjusted by frequency
-     * @param w w coordinate, will be adjusted by frequency
+     * Gets 4D foam noise using {@link #getSeed()}.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param w w coordinate
      * @return noise between -1 and 1, inclusive
      */
     public float getNoise(final float x, final float y, final float z, final float w) {
@@ -287,6 +287,7 @@ public class FoamNoise implements INoise {
         final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
+
     /**
      * Gets 4D value noise with the lowest, fastest level of detail. Uses the given seed
      * and does not change x, y, z, or w. This has a different output range (0 to 1) than foam noise.
@@ -353,8 +354,7 @@ public class FoamNoise implements INoise {
     // 5D SECTION
 
     /**
-     * Gets 5D noise with a default or pre-set seed.
-     * Currently, this throws an UnsupportedOperationException.
+     * Gets 5D noise with {@link #getSeed()}.
      *
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
@@ -362,16 +362,14 @@ public class FoamNoise implements INoise {
      * @param w w position; can be any finite float
      * @param u u position; can be any finite float
      * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
      */
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        throw new UnsupportedOperationException();
+        return getNoiseWithSeed(x, y, z, w, u, seed);
     }
 
     /**
      * Gets 5D noise with a specific seed.
-     * Currently, this throws an UnsupportedOperationException.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float
@@ -380,11 +378,142 @@ public class FoamNoise implements INoise {
      * @param u    u position; can be any finite float
      * @param seed any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
      */
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        throw new UnsupportedOperationException();
+        final float p0 = x *  0.8157559148337911f + y *  0.5797766823136037f;
+        final float p1 = x * -0.7314923478726791f + y *  0.6832997137249108f;
+        final float p2 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * 0.9486832980505138f;
+        final float p3 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w *   0.8944271909999159f;
+        final float p4 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u *  0.7745966692414833f;
+        final float p5 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u * -0.7745966692414836f;
+
+        float xin = p1;
+        float yin = p2;
+        float zin = p3;
+        float win = p4;
+        float uin = p5;
+        final float a = valueNoise(seed, xin, yin, zin, win, uin);
+        xin = p0;
+        yin = p2;
+        zin = p3;
+        win = p4;
+        uin = p5;
+        final float b = valueNoise(seed + 0x9A827999FCEF3243L, xin + a, yin, zin, win, uin);
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        win = p4;
+        uin = p5;
+        final float c = valueNoise(seed + 0x3504F333F9DE6486L, xin + b, yin, zin, win, uin);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p4;
+        uin = p5;
+        final float d = valueNoise(seed + 0xCF876CCDF6CD96C9L, xin + c, yin, zin, win, uin);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p5;
+        final float e = valueNoise(seed + 0x6A09E667F3BCC90CL, xin + d, yin, zin, win, uin);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p4;
+        final float f = valueNoise(seed + 0x48C6001F0ABFB4FL, xin + e, yin, zin, win, uin);
+
+        final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
+        final float sharp = 0.75f * 5.5f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    /**
+     * Gets 5D value noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x, y, z, w, or u. This has a different output range (0 to 1) than foam noise.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param w w coordinate
+     * @param u u coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @return noise between 0 and 1
+     */
+    public static float valueNoise(long seed, float x, float y, float z, float w, float u) {
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (3 - 2 * x);
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (3 - 2 * y);
+        long zFloor = (long)Math.floor(z);
+        z -= zFloor;
+        z *= z * (3 - 2 * z);
+        long wFloor = (long)Math.floor(w);
+        w -= wFloor;
+        w *= w * (3 - 2 * w);
+        long uFloor = (long)Math.floor(u);
+        u -= uFloor;
+        u *= u * (3 - 2 * u);
+        //0xE19B01AA9D42C633L, 0xC6D1D6C8ED0C9631L, 0xAF36D01EF7518DBBL, 0x9A69443F36F710E7L, 0x881403B9339BD42DL
+        xFloor *= 0xE19B01AA9D42C633L;
+        yFloor *= 0xC6D1D6C8ED0C9631L;
+        zFloor *= 0xAF36D01EF7518DBBL;
+        wFloor *= 0x9A69443F36F710E7L;
+        uFloor *= 0x881403B9339BD42DL;
+        return ((1 - u) *
+                ((1 - w) *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor, wFloor, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor, uFloor, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor, seed))))
+                        + (w *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor, seed)))
+                        )))
+                + (u *
+                ((1 - w) *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor, wFloor, uFloor + 0x881403B9339BD42DL, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor, uFloor + 0x881403B9339BD42DL, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor + 0x881403B9339BD42DL, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor, uFloor + 0x881403B9339BD42DL, seed))))
+                        + (w *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed) + x * hashPart(xFloor + 0xE19B01AA9D42C633L, yFloor + 0xC6D1D6C8ED0C9631L, zFloor + 0xAF36D01EF7518DBBL, wFloor + 0x9A69443F36F710E7L, uFloor + 0x881403B9339BD42DL, seed)))
+                        ))))
+        ) * 0x1p-64f + 0.5f;
+    }
+
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xE19B01AA9D42C633L
+     * @param y should be premultiplied by 0xC6D1D6C8ED0C9631L
+     * @param z should be premultiplied by 0xAF36D01EF7518DBBL
+     * @param w should be premultiplied by 0x9A69443F36F710E7L
+     * @param u should be premultiplied by 0x881403B9339BD42DL
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, final long z, final long w, final long u, long s) {
+        s ^= x ^ y ^ z ^ w ^ u;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
     }
 
     // 6D SECTION
