@@ -87,7 +87,7 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getRobotoCondensed().scaleTo(37, 53);
         fonts = KnownFonts.getAll();
         for(Font f : fonts)
-            f.scaleTo(32f * f.cellWidth / f.cellHeight, 32).fitCell(16, 32, true);
+            f.scaleTo(32f * f.originalCellWidth / f.originalCellHeight, 32).fitCell(16, 32, true);
         font = fonts[0];
 
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
@@ -145,8 +145,10 @@ public class FontTest extends ApplicationAdapter {
     public void render() {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float x = 0, y = layout.getHeight();
         font = fonts[(int) (System.currentTimeMillis() >>> 10 & 0x7FFFFFFF) % fonts.length];
+//        layout.setFont(font);
+//        font.calculateSize(layout);
+        float x = 0, y = layout.getHeight();
         batch.begin();
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
