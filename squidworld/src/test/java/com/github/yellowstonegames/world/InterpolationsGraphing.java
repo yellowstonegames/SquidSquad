@@ -25,11 +25,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.Interpolations.Interpolator;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.tommyettinger.textra.Layout;
@@ -49,6 +51,31 @@ public class InterpolationsGraphing extends ApplicationAdapter {
     Layout name;
     Interpolator[] interpolators;
     int index;
+    /**
+     * Converts the four HSLA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
+     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
+     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
+     * It also includes a change to the hue (the fractional part of {@code h}) so cyan is less frequent and orange is
+     * more frequent.
+     *
+     * @param h hue, usually from 0.0 to 1.0, but only the fractional part is used
+     * @param s saturation, from 0.0 to 1.0
+     * @param l lightness, from 0.0 to 1.0
+     * @param a alpha, from 0.0 to 1.0
+     * @return an RGBA8888-format int
+     */
+    public static float hsl2rgb(final float h, final float s, final float l, final float a) {
+        float x = Math.min(Math.max(Math.abs(h * 6f - 3f) - 1f, 0f), 1f);
+        float y = h + (2f / 3f);
+        float z = h + (1f / 3f);
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = (l + s * Math.min(l, 1f - l));
+        float d = 2f * (1f - l / (v + 1e-10f));
+        return Color.toFloatBits(v * MathUtils.lerp(1f, x, d), v * MathUtils.lerp(1f, y, d), v * MathUtils.lerp(1f, z, d), a);
+    }
 
     @Override
     public void create() {
@@ -57,6 +84,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         batch = new SpriteBatch();
         sd = new ShapeDrawer(batch, font.mapping.get(font.solidBlock));
 
+        Interpolator adjusted = new Interpolations.Interpolator("adjustedHue", a -> MathTools.barronSpline(a, 1.7f, 0.9f));
         interpolators = Interpolations.getInterpolatorArray();
         index = 0;
         current = interpolators[index];
@@ -119,7 +147,8 @@ public class InterpolationsGraphing extends ApplicationAdapter {
             float f = i / 200f;
             h0 = h1;
             h1 = current.apply(101, 301, f);
-            float gradient = DescriptiveColor.oklabIntToFloat(DescriptiveColor.oklabByHSL(0.75f + 0.25f * f, 1f, 0.5f, 1f));
+            float gradient = hsl2rgb(current.apply(f), 1f, 0.5f, 1f);
+//            float gradient = DescriptiveColor.oklabIntToFloat(DescriptiveColor.oklabByHSL(0.75f + 0.25f * f, 1f, 0.5f, 1f));
             sd.setColor(gradient);
             sd.line(59 + i, h0, 60 + i, h1, 3f);
         }
@@ -199,7 +228,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidSquad Demo: Interpolations");
+        config.setTitle("Graphing Interpolations");
         config.useVsync(true);
         config.setResizable(false);
         config.setBackBufferConfig(8, 8, 8, 8, 16, 0, 4);
