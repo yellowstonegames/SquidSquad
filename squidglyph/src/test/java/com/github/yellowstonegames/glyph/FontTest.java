@@ -113,31 +113,31 @@ public class FontTest extends ApplicationAdapter {
         }
 
 //        font.markup("[#00FF00FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", glyphs[0] = new LongList());
-//        font.markup("The [dark richer red]MAW[] of the [/][|lighter blue mint]wendigo[] [*]appears[*]!", glyphs[1] = new LongList());
-//        font.markup("The [_][dark dull blue purple]BLADE[] of [*][/][|dark richest yellow]KINGS[] strikes!", glyphs[2] = new LongList());
-//        font.markup("[;]Each cap[], [,]All lower[], [!]Caps lock[], [?]Unknown[]?", glyphs[3] = new LongList());
+//        font.markup("The [dark richer red]MAW[ ] of the [/][|lighter blue mint]wendigo[ ] [*]appears[*]!", glyphs[1] = new LongList());
+//        font.markup("The [_][dark dull blue purple]BLADE[ ] of [*][/][|dark richest yellow]KINGS[ ] strikes!", glyphs[2] = new LongList());
+//        font.markup("[;]Each cap[ ], [,]All lower[ ], [!]Caps lock[ ], [?]Unknown[ ]?", glyphs[3] = new LongList());
 
 //        font.markup("[#007711FF]Hello, [~]World[~]Universe[.]$[=]$[^]$[^]!", layout);
 //
-//        font.markup("\n[*]Водяной[] — в славянской мифологии дух, обитающий в воде, хозяин вод[^][BLUE][[2][]."
-//                + "\nВоплощение стихии воды как отрицательного и опасного начала[^][BLUE][[3][[citation needed][].", layout);
+//        font.markup("\n[*]Водяной[ ] — в славянской мифологии дух, обитающий в воде, хозяин вод[^][BLUE][[2][ ]."
+//                + "\nВоплощение стихии воды как отрицательного и опасного начала[^][BLUE][[3][[citation needed][ ].", layout);
 //
-        font.markup("\nThe [dark rich red]MAW[] of the [/][lighter dull sky]wendigo[/] (wendigo)[] [*]appears[*]!"
-                        + "\nThe [_][dark gray]BLADE[] of [*][/][rich light yellow]DYNAST-KINGS[] strikes!"
-                        + "\n[_][;]Each cap, [,]All lower, [!]Caps lock[], [?]Unknown[]?"
-                        + "\n[dark dull bronze yellow]φ[] = (1 + 5[^]0.5[^]) * 0.5"
-                        + "\n[dull light orange]¿Qué son estos? ¡Arribate, mijo![]"
-                        + "\nPchnąć[] w tę łódź [dark tan]jeża[] lub ośm skrzyń [rich purple]fig[]."
+        font.markup("\nThe [dark rich red]MAW[ ] of the [/][lighter dull sky]wendigo[/] (wendigo)[ ] [*]appears[*]!"
+                        + "\nThe [_][dark gray]BLADE[ ] of [*][/][rich light yellow]DYNAST-KINGS[ ] strikes!"
+                        + "\n[_][;]Each cap, [,]All lower, [!]Caps lock[ ], [?]Unknown[ ]?"
+                        + "\n[dark dull bronze yellow]φ[ ] = (1 + 5[^]0.5[^]) * 0.5"
+                        + "\n[dull light orange]¿Qué son estos? ¡Arribate, mijo![ ]"
+                        + "\nPchnąć[ ] w tę łódź [dark tan]jeża[ ] lub ośm skrzyń [rich purple]fig[ ]."
                 , layout);
 
-//        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[] admonished."
-//                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your heads[] by morning. But alas, I am stricken with" +
-//                " unreasonable mercy for your [~]wretched[~] souls. To [darker grey][*]the Trappists[] ye shall go; I am in need of" +
-//                " a [darkest bronze]stout brew[].\"", layout);
+//        font.markup("\"You are ever more the [/]fool[/] than the pitiable cutpurse who [*]dares waylay[*] my castle road!\" the [dark rich gold]King[ ] admonished."
+//                +" \"Forsooth! Had [_]I[_] my right mind, I would have [dark red]both of [_]your heads[ ] by morning. But alas, I am stricken with" +
+//                " unreasonable mercy for your [~]wretched[~] souls. To [darker grey][*]the Trappists[ ] ye shall go; I am in need of" +
+//                " a [darkest bronze]stout brew[ ].\"", layout);
 
-//        font.markup("\"[/][~]HOSTILE ACTION DETECTED[].\" The computerized voice was barely audible over the klaxons blaring throughout [darker rich purple][_]Starship Andromalius[]."
-//                +" \"[!]Would somebody shut that thing off[!]? We're quite aware by now!\" [orange]Captain Luiz Tigre[] shouted at no one in particular, while frantically flipping the remaining" +
-//                " switches on the capacitor controls. \"Sir, we need to get the [silver]teleprojector[] online. Send a party aboard, say they're negotiators.\" [light sky]First Admiral Zototh[] said with urgency." +
+//        font.markup("\"[/][~]HOSTILE ACTION DETECTED[ ].\" The computerized voice was barely audible over the klaxons blaring throughout [darker rich purple][_]Starship Andromalius[ ]."
+//                +" \"[!]Would somebody shut that thing off[!]? We're quite aware by now!\" [orange]Captain Luiz Tigre[ ] shouted at no one in particular, while frantically flipping the remaining" +
+//                " switches on the capacitor controls. \"Sir, we need to get the [silver]teleprojector[ ] online. Send a party aboard, say they're negotiators.\" [light sky]First Admiral Zototh[ ] said with urgency." +
 //                " \"[*]Negotiators[*]? Are you serious?\" \"I said to [/]say[/] they're negotiators... just with really big guns.\"", layout);
     }
 
