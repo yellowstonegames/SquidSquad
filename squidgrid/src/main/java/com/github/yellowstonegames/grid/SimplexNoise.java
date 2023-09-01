@@ -20,7 +20,6 @@ import com.github.yellowstonegames.core.DigitTools;
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.yellowstonegames.grid.LongPointHash.hash256;
 import static com.github.yellowstonegames.grid.LongPointHash.hash32;
-import static com.github.yellowstonegames.grid.Noise.*;
 
 /**
  * Simplex noise functions, in 2D, 3D, 4D, 5D, and 6D. This variety scales the result with multiplication by a constant,
@@ -107,7 +106,7 @@ public class SimplexNoise implements INoise {
             LIMIT6 = 0.8375f;
 
     public static float noise(final float x, final float y, final long seed) {
-        final float[] GRADIENTS_2D = Noise.GRADIENTS_2D;
+        final float[] GRADIENTS_2D = GradientVectors.GRADIENTS_2D;
 
         float t = (x + y) * F2;
         int i = fastFloor(x + t);
@@ -161,7 +160,7 @@ public class SimplexNoise implements INoise {
     }
 
     public static float noise(final float x, final float y, final float z, final long seed) {
-        final float[] GRADIENTS_3D = Noise.GRADIENTS_3D;
+        final float[] GRADIENTS_3D = GradientVectors.GRADIENTS_3D;
 
         float t = (x + y + z) * F3;
         int i = fastFloor(x + t);
@@ -267,11 +266,11 @@ public class SimplexNoise implements INoise {
             n += t * t * (x3 * GRADIENTS_3D[h] + y3 * GRADIENTS_3D[h + 1] + z3 * GRADIENTS_3D[h + 2]);
         }
 
-        return 31.5f * n;
+        return 39.59758f * n;
     }
 
     public static float noise(final float x, final float y, final float z, final float w, final long seed) {
-        final float[] GRADIENTS_4D = Noise.GRADIENTS_4D;
+        final float[] GRADIENTS_4D = GradientVectors.GRADIENTS_4D;
         float t = (x + y + z + w) * F4;
         int i = fastFloor(x + t);
         int j = fastFloor(y + t);
@@ -379,7 +378,7 @@ public class SimplexNoise implements INoise {
 //        return ret;
         // normal return code
 //        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-        n *= 14.7279f;
+        n *= 37.20266f;
         return n / (-0.3f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4) * 16.000f;
 //        return t / (0.5f + Math.abs(t));
@@ -397,7 +396,7 @@ public class SimplexNoise implements INoise {
      * @return a continuous noise value between -1.0 and 1.0, both inclusive
      */
     public static float noise(final float x, final float y, final float z, final float w, final float u, final long seed) {
-        final float[] GRADIENTS_5D = Noise.GRADIENTS_5D;
+        final float[] GRADIENTS_5D = GradientVectors.GRADIENTS_5D;
         float n = 0f;
         float t = (x + y + z + w + u) * F5;
         int i = fastFloor(x + t);
@@ -535,7 +534,7 @@ public class SimplexNoise implements INoise {
             n += t * t * (x5 * GRADIENTS_5D[hash] + y5 * GRADIENTS_5D[hash + 1] + z5 * GRADIENTS_5D[hash + 2] + w5 * GRADIENTS_5D[hash + 3] + u5 * GRADIENTS_5D[hash + 4]);
         }
 
-        n *= 10.0f;
+        n *= 20.0f;
         return n / (-0.5f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        return (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
 //        t = (n0 + n1 + n2 + n3 + n4 + n5) * 12.000f;
@@ -553,8 +552,8 @@ public class SimplexNoise implements INoise {
 //        return t;
 
     public static float noise(final float x, final float y, final float z,
-                               final float w, final float u, final float v, final long seed) {
-        final float[] GRADIENTS_6D = Noise.GRADIENTS_6D;
+                              final float w, final float u, final float v, final long seed) {
+        final float[] GRADIENTS_6D = GradientVectors.GRADIENTS_6D;
         float n0, n1, n2, n3, n4, n5, n6, n = 0f;
         float t = (x + y + z + w + u + v) * F6;
         int i = fastFloor(x + t);
@@ -698,7 +697,7 @@ public class SimplexNoise implements INoise {
             n += n1 * n1 * (GRADIENTS_6D[hash] * x1 + GRADIENTS_6D[hash + 1] * y1 + GRADIENTS_6D[hash + 2] * z1 +
                     GRADIENTS_6D[hash + 3] * w1 + GRADIENTS_6D[hash + 4] * u1 + GRADIENTS_6D[hash + 5] * v1);
         }
-        
+
         n2 = LIMIT6 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2 - u2 * u2 - v2 * v2;
         if (n2 > 0.0f) {
             final int hash = hash256(i + i2, j + j2, k + k2, l + l2, h + h2, g + g2, seed) << 3;

@@ -267,7 +267,7 @@ public class SimplexNoiseGV implements INoise {
             n += t * t * (x3 * GRADIENTS_3D[h] + y3 * GRADIENTS_3D[h + 1] + z3 * GRADIENTS_3D[h + 2]);
         }
 
-        return 31.5f * 1.2570662091f * n;
+        return 39.59758f * n;
     }
 
     public static float noise(final float x, final float y, final float z, final float w, final long seed) {
@@ -379,7 +379,7 @@ public class SimplexNoiseGV implements INoise {
 //        return ret;
         // normal return code
 //        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-        n *= 14.7279f * 2.5259992983f;
+        n *= 37.20266f;
         return n / (-0.3f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4) * 16.000f;
 //        return t / (0.5f + Math.abs(t));
@@ -535,7 +535,7 @@ public class SimplexNoiseGV implements INoise {
             n += t * t * (x5 * GRADIENTS_5D[hash] + y5 * GRADIENTS_5D[hash + 1] + z5 * GRADIENTS_5D[hash + 2] + w5 * GRADIENTS_5D[hash + 3] + u5 * GRADIENTS_5D[hash + 4]);
         }
 
-        n *= 10.0f * 2.0f;
+        n *= 20.0f;
         return n / (-0.5f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        return (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
 //        t = (n0 + n1 + n2 + n3 + n4 + n5) * 12.000f;
