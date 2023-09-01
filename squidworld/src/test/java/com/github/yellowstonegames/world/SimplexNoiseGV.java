@@ -267,7 +267,7 @@ public class SimplexNoiseGV implements INoise {
             n += t * t * (x3 * GRADIENTS_3D[h] + y3 * GRADIENTS_3D[h + 1] + z3 * GRADIENTS_3D[h + 2]);
         }
 
-        return 31.5f * n;
+        return 31.5f * 1.2570662091f * n;
     }
 
     public static float noise(final float x, final float y, final float z, final float w, final long seed) {
@@ -379,7 +379,7 @@ public class SimplexNoiseGV implements INoise {
 //        return ret;
         // normal return code
 //        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-        n *= 14.7279f;
+        n *= 14.7279f * 2.5259992983f;
         return n / (-0.3f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        t = (n0 + n1 + n2 + n3 + n4) * 16.000f;
 //        return t / (0.5f + Math.abs(t));
@@ -535,7 +535,7 @@ public class SimplexNoiseGV implements INoise {
             n += t * t * (x5 * GRADIENTS_5D[hash] + y5 * GRADIENTS_5D[hash + 1] + z5 * GRADIENTS_5D[hash + 2] + w5 * GRADIENTS_5D[hash + 3] + u5 * GRADIENTS_5D[hash + 4]);
         }
 
-        n *= 10.0f;
+        n *= 10.0f * 2.0f;
         return n / (-0.5f * (1f - Math.abs(n)) + 1f);// gain function for [-1, 1] domain and range
 //        return (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
 //        t = (n0 + n1 + n2 + n3 + n4 + n5) * 12.000f;
@@ -845,16 +845,3 @@ public class SimplexNoiseGV implements INoise {
                         + Noise.GRADIENTS_6D[4] * Noise.GRADIENTS_6D[4] + Noise.GRADIENTS_6D[5] * Noise.GRADIENTS_6D[5]));
     }
 }
-
-/*
-// Find and replace info.
-^( +)(\w+) \*\= \2 \* gradCoord2D\(seed\, ((?:[^,]+, ){2})(\w+)\, (\w+)\)\;
-$1final int h = hash256($3seed) << 1;\n$1n += t * t * ($4 * GRADIENTS_2D[h] + $5 * GRADIENTS_2D[h + 1]);
-
-^( +)(\w+) \+\= t \* t \* gradCoord3D\(seed\, ((?:[^,]+, ){3})(\w+)\, (\w+)\, (\w+)\)\;
-$1final int h = hash32($3seed) << 2;\n$1$2 += t * t * ($4 * GRADIENTS_3D[h] + $5 * GRADIENTS_3D[h + 1] + $6 * GRADIENTS_3D[h + 2]);
-
-^( +)(\w+) \= t \* t \* gradCoord5D\(seed\, ((?:[^,]+, ){5})(\w+)\, (\w+)\, (\w+)\, (\w+)\, (\w+)\)\;
-$1final int hash = hash256($3seed) << 3;\n$1n += t * t * ($4 * GRADIENTS_5D[hash] + $5 * GRADIENTS_5D[hash + 1] + $6 * GRADIENTS_5D[hash + 2] + $7 * GRADIENTS_5D[hash + 3] + $8 * GRADIENTS_5D[hash + 4]);
-
- */

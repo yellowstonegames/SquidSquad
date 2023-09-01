@@ -159,7 +159,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     }
                     case D: //dimension
-                        dim = (dim + (UIUtils.shift() ? 5 : 1)) % 6;
+                        dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
