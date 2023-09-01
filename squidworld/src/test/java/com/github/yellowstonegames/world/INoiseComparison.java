@@ -42,35 +42,37 @@ import static com.badlogic.gdx.Input.Keys.*;
 public class INoiseComparison extends ApplicationAdapter {
 
     private final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1L);
+    private static final Interpolations.Interpolator watcher = new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
+        @Override
+        public float apply(float alpha) {
+            if(alpha < 0f) System.out.println(alpha + " is too low!");
+            if(alpha > 1f) System.out.println(alpha + " is too high!");
+            return super.apply(alpha);
+        }
+    };
     private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
+            new NoiseAdjustment(new SimplexNoiseGV(1L), watcher),
             new SimplexNoiseHard(1L),
             new SimplexNoiseScaled(1L),
-            new OpenSimplex2(1L),
-            new OpenSimplex2Smooth(1L),
+//            new OpenSimplex2(1L),
+//            new OpenSimplex2Smooth(1L),
             new PerlinNoise(1L),
-            new NoiseAdjustment(new PerlinNoise(1L), new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
-                @Override
-                public float apply(float alpha) {
-                    if(alpha < 0f) System.out.println(alpha + " is too low!");
-                    if(alpha > 1f) System.out.println(alpha + " is too high!");
-                    return super.apply(alpha);
-                }
-            }),
+            new NoiseAdjustment(new PerlinNoise(1L), watcher),
             new CyclicNoise(1L, 5, 4),
             new FlanNoise(1L, 6),
             new TaffyNoise(1L, 6),
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
-            new SpatulaNoise(1L),
+//            new SpatulaNoise(1L),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
     };
-    private int index0 = 5;
-    private int index1 = 6;
+    private int index0 = 0;
+    private int index1 = 1;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
-    private int dim = 0; // this can be 0, 1, or 2; add 2 to get the actual dimensions
+    private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
     private ImmediateModeRenderer20 renderer;
@@ -157,7 +159,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     }
                     case D: //dimension
-                        dim = (dim + (UIUtils.shift() ? 3 : 1)) % 4;
+                        dim = (dim + (UIUtils.shift() ? 5 : 1)) % 6;
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
@@ -238,54 +240,54 @@ public class INoiseComparison extends ApplicationAdapter {
                     }
                 }
                 break;
-//            case 3: {
-//                for (int x = 0; x < width; x++) {
-//                    float xc = TrigTools.cosTurns(x * iWidth) * 32, xs = TrigTools.sinTurns(x * iWidth) * 32;
-//                    for (int y = 0; y < height; y++) {
-//                        float yc = TrigTools.cosTurns(y * iHeight) * 32, ys = TrigTools.sinTurns(y * iHeight) * 32;
-//                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, c, wrap0.getSeed()));
-//                        renderer.color(bright, bright, bright, 1f);
-//                        renderer.vertex(x, y, 0);
-//                        bright = prepare1(wrap1.getNoiseWithSeed(xc, yc, xs, ys, c, wrap1.getSeed()));
-//                        renderer.color(bright, bright, bright, 1f);
-//                        renderer.vertex(x + width, y, 0);
-//                    }
-//                }
-//            }
-//                break;
-//            case 4: {
-//                for (int x = 0; x < width; x++) {
-//                    float xc = TrigTools.cosTurns(x * iWidth) * 32 + c, xs = TrigTools.sinTurns(x * iWidth) * 32 + c;
-//                    for (int y = 0; y < height; y++) {
-//                        float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c,
-//                                zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 32 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 32 - c;
-//                        bright = prepare0(wrap0.getNoiseWithSeed(
-//                                xc, yc, zc, xs, ys, zs, wrap0.getSeed()));
-//                        renderer.color(bright, bright, bright, 1f);
-//                        renderer.vertex(x, y, 0);
-//                        bright = prepare1(wrap1.getNoiseWithSeed(
-//                                xc, yc, zc, xs, ys, zs, wrap1.getSeed()));
-//                        renderer.color(bright, bright, bright, 1f);
-//                        renderer.vertex(x + width, y, 0);
-//                    }
-//                }
-//            }
-//                break;
-            case 3:
-            case 4:
-            case 5:
-                float mul = (TrigTools.sin(c * 0.01f) + 1.5f) * 4f;
-                for (int a = 0, x = -width >> 1; a < width; a++, x++) {
-                    for (int b = 0, y = -height >> 1; b < height; b++, y++) {
-                        bright = prepare0(wrap0.getNoiseWithSeed(x * mul, y * mul, wrap0.getSeed()));
+            case 3: {
+                for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 32, xs = TrigTools.sinTurns(x * iWidth) * 32;
+                    for (int y = 0; y < height; y++) {
+                        float yc = TrigTools.cosTurns(y * iHeight) * 32, ys = TrigTools.sinTurns(y * iHeight) * 32;
+                        bright = prepare0(wrap0.getNoiseWithSeed(xc, yc, xs, ys, c, wrap0.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
-                        renderer.vertex(a, b, 0);
-                        bright = prepare1(wrap1.getNoiseWithSeed(x * mul, y * mul, wrap1.getSeed()));
+                        renderer.vertex(x, y, 0);
+                        bright = prepare1(wrap1.getNoiseWithSeed(xc, yc, xs, ys, c, wrap1.getSeed()));
                         renderer.color(bright, bright, bright, 1f);
-                        renderer.vertex(a + width, b, 0);
+                        renderer.vertex(x + width, y, 0);
                     }
                 }
+            }
                 break;
+            case 4: {
+                for (int x = 0; x < width; x++) {
+                    float xc = TrigTools.cosTurns(x * iWidth) * 32 + c, xs = TrigTools.sinTurns(x * iWidth) * 32 + c;
+                    for (int y = 0; y < height; y++) {
+                        float yc = TrigTools.cosTurns(y * iHeight) * 32 + c, ys = TrigTools.sinTurns(y * iHeight) * 32 + c,
+                                zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 32 - c, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 32 - c;
+                        bright = prepare0(wrap0.getNoiseWithSeed(
+                                xc, yc, zc, xs, ys, zs, wrap0.getSeed()));
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                        bright = prepare1(wrap1.getNoiseWithSeed(
+                                xc, yc, zc, xs, ys, zs, wrap1.getSeed()));
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x + width, y, 0);
+                    }
+                }
+            }
+                break;
+//            case 3:
+//            case 4:
+//            case 5:
+//                float mul = (TrigTools.sin(c * 0.01f) + 1.5f) * 4f;
+//                for (int a = 0, x = -width >> 1; a < width; a++, x++) {
+//                    for (int b = 0, y = -height >> 1; b < height; b++, y++) {
+//                        bright = prepare0(wrap0.getNoiseWithSeed(x * mul, y * mul, wrap0.getSeed()));
+//                        renderer.color(bright, bright, bright, 1f);
+//                        renderer.vertex(a, b, 0);
+//                        bright = prepare1(wrap1.getNoiseWithSeed(x * mul, y * mul, wrap1.getSeed()));
+//                        renderer.color(bright, bright, bright, 1f);
+//                        renderer.vertex(a + width, b, 0);
+//                    }
+//                }
+//                break;
         }
         renderer.end();
         if(Gdx.input.isKeyPressed(A)){ // Analysis
