@@ -23,6 +23,7 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -10278,8 +10279,10 @@ public class Noise implements INoise {
 
     /**
      * 256 x,y pairs, all on the unit circle.
+     * Marked as Beta because it is likely to be removed in favor of the points in {@link GradientVectors}.
      */
-    protected static final float[] GRADIENTS_2D = {
+    @Beta
+    public static final float[] GRADIENTS_2D = {
             +0.6499429579167653f, +0.7599829941876370f,
             -0.1551483029088119f, +0.9878911904175052f,
             -0.8516180517334043f, +0.5241628506120981f,
@@ -10541,8 +10544,10 @@ public class Noise implements INoise {
     /**
      * The 32 vertices of a rhombic triacontahedron, scaled to have a magnitude of about 1.2571 .
      * These are organized into groups of four; the fourth is always ignored, and is 0.
+     * Marked as Beta because it is likely to be removed in favor of the points in {@link GradientVectors}.
      */
-    protected static final float[] GRADIENTS_3D =
+    @Beta
+    public static final float[] GRADIENTS_3D =
             {
                     -0.448549002408981f, +1.174316525459290f, +0.000000000000001f, +0.0f,
                     +0.000000000000001f, +1.069324374198914f, +0.660878777503967f, +0.0f,
@@ -10579,7 +10584,12 @@ public class Noise implements INoise {
             };
 
 
-    protected static final float[] GRADIENTS_4D =
+    /**
+     * 64 points in 4D.
+     * Marked as Beta because it is likely to be removed in favor of the points in {@link GradientVectors}.
+     */
+    @Beta
+    public static final float[] GRADIENTS_4D =
             {
                     -0.5875167f, +1.4183908f, +1.4183908f, +1.4183908f,
                     -0.5875167f, +1.4183908f, +1.4183908f, -1.4183908f,
@@ -10653,8 +10663,10 @@ public class Noise implements INoise {
      * This may bias slightly in some directions. The sums of the x, y, z, w, and u components of all 256 vectors are:
      * <br>
      * x: +0.52959638973427, y: +0.31401370534460, z: -0.14792091580658, w: -0.00781214643439, u: -0.58206620017072
+     * Marked as Beta because it is likely to be removed in favor of the points in {@link GradientVectors}.
      */
-    protected static final float[] GRADIENTS_5D = {
+    @Beta
+    public static final float[] GRADIENTS_5D = {
             -1.6797903571f, -0.0690921662f, -0.7098031356f, -0.5887570823f, +0.5683970756f, 0f, 0f, 0f,
             -1.0516780588f, -0.2945340815f, -1.4440603796f, +0.7418854274f, -0.4141480030f, 0f, 0f, 0f,
             +1.0641252713f, -1.5650070200f, +0.4156350353f, +0.1130875224f, +0.4825444684f, 0f, 0f, 0f,
@@ -10913,7 +10925,12 @@ public class Noise implements INoise {
             +1.5421515027f, +0.1809242613f, +0.6454387145f, +0.2020302919f, +1.0637799497f, 0f, 0f, 0f,
     };
 
-    protected static final float[] GRADIENTS_6D = {
+    /**
+     * 256 6D points chosen at random, all lying on a hypersphere.
+     * Marked as Beta because it is likely to be removed in favor of the points in {@link GradientVectors}.
+     */
+    @Beta
+    public static final float[] GRADIENTS_6D = {
             +0.31733186f, +0.04359915f, -0.63578104f, +0.60224147f, -0.06199565f, +0.35587048f, +0f, +0f,
             -0.54645425f, -0.75981513f, -0.03514434f, +0.13137365f, +0.29650029f, +0.13289887f, +0f, +0f,
             +0.72720729f, -0.01705130f, +0.10403853f, +0.57016794f, +0.10006650f, -0.35348266f, +0f, +0f,
