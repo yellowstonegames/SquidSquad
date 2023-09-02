@@ -87,9 +87,9 @@ float cyclicNoise(vec3 p){
     protected final float lacunarity = 1.6f;
     protected final float gain = 0.625f;
     protected long seed;
-    protected transient float[][][] rotations = new float[5][4][];
-    protected transient float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
-    protected transient float[][] outputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
+    protected transient float[][][] rotations = new float[6][4][];
+    protected transient float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6], new float[7]};
+    protected transient float[][] outputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6], new float[7]};
     public CyclicNoise() {
         this(3);
     }
@@ -144,7 +144,7 @@ float cyclicNoise(vec3 p){
         setSeed(seed, frequency);
     }
     /**
-     * Sets the seed, and in doing so creates 20 new rotation matrices for different dimensions to use. Note that this
+     * Sets the seed, and in doing so creates 24 new rotation matrices for different dimensions to use. Note that this
      * may be considerably more expensive than a typical setter, because of how much it allocates.
      * @param seed any long
      * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
@@ -158,6 +158,7 @@ float cyclicNoise(vec3 p){
             rotations[2][i] = RotationTools.randomRotation4D(seed, rotations[1][i]);
             rotations[3][i] = RotationTools.randomRotation5D(seed, rotations[2][i]);
             rotations[4][i] = RotationTools.randomRotation6D(seed, rotations[3][i]);
+            rotations[5][i] = RotationTools.randomRotation7D(seed, rotations[4][i]);
         }
     }
 
@@ -495,6 +496,84 @@ float cyclicNoise(vec3 p){
         }
         return noise * total;
     }
+
+    public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        float noise = 0f;
+
+        float amp = start;
+
+        final float warp = 0.3f;
+        float warpTrk = 1.2f;
+        final float warpTrkGain = 1.5f;
+
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
+        v *= frequency;
+        m *= frequency;
+
+        float xx, yy, zz, ww, uu, vv, mm;
+        for (int i = 0; i < octaves; i++) {
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
+            ww = TrigTools.sin((w-2) * warpTrk) * warp;
+            uu = TrigTools.sin((u-2) * warpTrk) * warp;
+            vv = TrigTools.sin((v-2) * warpTrk) * warp;
+            mm = TrigTools.sin((m-2) * warpTrk) * warp;
+
+            inputs[5][0] = x + mm;
+            inputs[5][1] = y + xx;
+            inputs[5][2] = z + yy;
+            inputs[5][3] = w + zz;
+            inputs[5][4] = u + ww;
+            inputs[5][5] = v + uu;
+            inputs[5][6] = m + vv;
+            Arrays.fill(outputs[5], 0f);
+            RotationTools.rotate(inputs[5], rotations[5][i & 3], outputs[5]);
+            xx = outputs[5][0];
+            yy = outputs[5][1];
+            zz = outputs[5][2];
+            ww = outputs[5][3];
+            uu = outputs[5][4];
+            vv = outputs[5][5];
+            mm = outputs[5][6];
+
+            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
+            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
+            int us = (int) (uu * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
+            int vs = (int) (vv * radToIndex) & TABLE_MASK, vc = vs + SIN_TO_COS & TABLE_MASK;
+            int ms = (int) (mm * radToIndex) & TABLE_MASK, mc = ms + SIN_TO_COS & TABLE_MASK;
+
+            noise += TrigTools.sinTurns((
+                                    + SIN_TABLE[xc] * SIN_TABLE[ms]
+                                    + SIN_TABLE[yc] * SIN_TABLE[xs]
+                                    + SIN_TABLE[zc] * SIN_TABLE[ys]
+                                    + SIN_TABLE[wc] * SIN_TABLE[zs]
+                                    + SIN_TABLE[uc] * SIN_TABLE[ws]
+                                    + SIN_TABLE[vc] * SIN_TABLE[us]
+                                    + SIN_TABLE[mc] * SIN_TABLE[vs]
+                    ) * (0.5f/7f)
+            ) * amp;
+
+            x = xx * lacunarity;
+            y = yy * lacunarity;
+            z = zz * lacunarity;
+            w = ww * lacunarity;
+            u = uu * lacunarity;
+            v = vv * lacunarity;
+            m = mm * lacunarity;
+
+            warpTrk *= warpTrkGain;
+            amp *= gain;
+        }
+        return noise * total;
+    }
+
     private static final float radToIndex = TABLE_SIZE / PI2;
 
     @Override

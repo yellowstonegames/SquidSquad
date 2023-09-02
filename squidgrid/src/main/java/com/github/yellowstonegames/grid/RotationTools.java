@@ -343,6 +343,32 @@ public final class RotationTools {
     public static float[] randomRotation6D(long seed, float[] rotation5D) {
         return rotateStep(seed, rotation5D, 6);
     }
+    
+    /**
+     * Creates a new 1D float array that can be used as a 7D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * @param seed any long; will be scrambled
+     * @return a newly-allocated 49-element float array, meant as effectively a 7D rotation matrix
+     */
+    public static float[] randomRotation7D(long seed) {
+        return rotateStep(seed, randomRotation6D(seed - 7), 7);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 7D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
+     * {@link Ziggurat}, and uses an existing 6D rotation matrix to avoid redoing
+     * any generation work already done for 6D. There will probably be some correlation between the appearance of the 5D
+     * rotation this will build upon and the 7D rotation this produces, but other factors may make this irrelevant when
+     * used for noise.
+     * @param seed any long; will be scrambled
+     * @param rotation6D an existing 6D rotation matrix stored in a 1D float array; often produced by {@link #randomRotation6D(long)}
+     * @return a newly-allocated 49-element float array, meant as effectively a 7D rotation matrix
+     */
+    public static float[] randomRotation7D(long seed, float[] rotation6D) {
+        return rotateStep(seed, rotation6D, 7);
+    }
 
     // Section using a Random generator
 
@@ -514,6 +540,31 @@ public final class RotationTools {
      */
     public static float[] randomRotation6D(EnhancedRandom random, float[] rotation5D) {
         return rotateStep(random, rotation5D, 6);
+    }
+    /**
+     * Creates a new 1D float array that can be used as a 7D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * @param random an EnhancedRandom from juniper
+     * @return a newly-allocated 49-element float array, meant as effectively a 7D rotation matrix
+     */
+    public static float[] randomRotation7D(EnhancedRandom random) {
+        return rotateStep(random, randomRotation6D(random), 7);
+    }
+
+    /**
+     * Creates a new 1D float array that can be used as a 7D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Uses the given EnhancedRandom random to get Gaussian floats using
+     * {@link Ziggurat}, and uses an existing 6D rotation matrix to avoid redoing
+     * any generation work already done for 6D. There will probably be some correlation between the appearance of the 5D
+     * rotation this will build upon and the 7D rotation this produces, but other factors may make this irrelevant when
+     * used for noise.
+     * @param random an EnhancedRandom from juniper
+     * @param rotation6D an existing 6D rotation matrix stored in a 1D float array; often produced by {@link #randomRotation6D(long)}
+     * @return a newly-allocated 49-element float array, meant as effectively a 7D rotation matrix
+     */
+    public static float[] randomRotation7D(EnhancedRandom random, float[] rotation6D) {
+        return rotateStep(random, rotation6D, 7);
     }
 
     /**

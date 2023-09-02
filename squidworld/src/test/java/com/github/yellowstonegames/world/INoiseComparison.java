@@ -65,6 +65,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
+            new CyclicNoise(1L, 3),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
     };
     private int index0 = 0;
