@@ -10227,6 +10227,14 @@ public class Noise implements INoise {
                 '}';
     }
 
+    // These are used for Perlin noise.
+    public static final float SCALE2 = 1.4142133f,  ADD2 = 1.0f/1.75f, MUL2 = 1.2535664f;
+    public static final float SCALE3 = 1.1547003f,  ADD3 = 0.8f/1.75f, MUL3 = 1.2071217f;
+    public static final float SCALE4 = 0.9999999f,  ADD4 = 0.6f/1.75f, MUL4 = 1.1588172f;
+    public static final float SCALE5 = 0.89442706f, ADD5 = 0.4f/1.75f, MUL5 = 1.1084094f;
+    public static final float SCALE6 = 0.81649643f, ADD6 = 0.2f/1.75f, MUL6 = 1.0555973f;
+
+    // These are used for Simplex noise.
     public static final float F2 = 0.36602540378443864676372317075294f;
     public static final float G2 = 0.21132486540518711774542560974902f;
     public static final float H2 = G2 * 2.0f;

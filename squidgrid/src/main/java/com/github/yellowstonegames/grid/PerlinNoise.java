@@ -51,12 +51,16 @@ public class PerlinNoise implements INoise {
 
     public static final float SCALE2 = towardsZero(1f/ (float) Math.sqrt(2f / 4f));
     public static final float SCALE3 = towardsZero(1f/ (float) Math.sqrt(3f / 4f));
-    public static final float SCALE4 = towardsZero(1f); // special case that is simpler
+    public static final float SCALE4 = towardsZero(1f)                            ;
     public static final float SCALE5 = towardsZero(1f/ (float) Math.sqrt(5f / 4f));
     public static final float SCALE6 = towardsZero(1f/ (float) Math.sqrt(6f / 4f));
 
     private final float[] eqAdd = {
-            1f/1.75f, 0.8f/1.75f, 0.6f/1.75f, 0.4f/1.75f, 0.2f/1.75f
+            1f/1.75f,
+            0.8f/1.75f,
+            0.6f/1.75f,
+            0.4f/1.75f,
+            0.2f/1.75f,
     };
     private final float[] eqMul = {
             calculateEqualizeAdjustment(eqAdd[0]),
@@ -304,6 +308,11 @@ public class PerlinNoise implements INoise {
     /**
      * Given inputs as {@code x} in the range -1.0 to 1.0 that are too biased towards 0.0, this "squashes" the range
      * softly to widen it and spread it away from 0.0 without increasing bias anywhere else.
+     * <br>
+     * This starts with a common sigmoid function, {@code x / sqrt(add + x * x)}, but instead of approaching -1 and 1
+     * but never reaching them, this multiplies the result so the line crosses -1 when x is -1, and crosses 1 when x is
+     * 1. It has a smooth derivative, if that matters to you.
+     *
      * @param x a float between -1 and 1
      * @param add if greater than 1, this will have nearly no effect; the lower this goes below 1, the more this will
      *           separate results near the center of the range. This must be greater than or equal to 0.0
@@ -318,11 +327,14 @@ public class PerlinNoise implements INoise {
      * Gets the value to optimally use for {@code mul} in {@link #equalize(float, float, float)}, given the value that
      * will be used as {@code add} there. If mul is calculated in some other way, inputs in the -1 to 1 range won't have
      * outputs in the -1 to 1 range from equalize().
+     * <br>
+     * This is mathematically the same as using {@code 1f / equalize(1f, add, 1f)}, but has a faster implementation.
+     *
      * @param add the value that will be used as {@code add} in a call to {@link #equalize(float, float, float)}
      * @return the value to use as {@code mul} in {@link #equalize(float, float, float)}
      */
     public static float calculateEqualizeAdjustment(float add) {
-        return 1f / equalize(1f, add, 1f);
+        return (float) Math.sqrt(add + 1f);
     }
 
     @Override
