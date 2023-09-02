@@ -7278,7 +7278,7 @@ public class Noise implements INoise {
             n += t * t * gradCoord3D(seed, i + 1, j + 1, k + 1, x3, y3, z3);
         }
 
-        return 31.5f * n;
+        return 39.59758f * n;
     }
 
     // 4D Simplex
@@ -7507,7 +7507,7 @@ public class Noise implements INoise {
 
 //        float n = (t0 + t1 + t2 + t3 + t4) * 141.000f;
 //        return n / (0.750f + Math.abs(n));
-        float t = (t0 + t1 + t2 + t3 + t4) * 14.7279f;
+        float t = (t0 + t1 + t2 + t3 + t4) * 37.20266f;
         return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
     }
     
@@ -7788,7 +7788,7 @@ public class Noise implements INoise {
 
 //        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 32.000f;
 //        return n / (0.700f + Math.abs(n));
-        t = (n0 + n1 + n2 + n3 + n4 + n5) * 10.0f;
+        t = (n0 + n1 + n2 + n3 + n4 + n5) * 20.0f;
         return t / (-0.5f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
     }
 
