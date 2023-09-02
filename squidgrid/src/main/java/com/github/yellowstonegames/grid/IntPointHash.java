@@ -93,7 +93,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by Pelle Evensen's
      * rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary hash used here has
      * been stripped down heavily, both for speed and because unless points are selected specifically to target
-     flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
+     * flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
      * @param x x position, as an int
      * @param y y position, as an int
      * @param z z position, as an int
@@ -189,7 +189,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by Pelle Evensen's
      * rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary hash used here has
      * been stripped down heavily, both for speed and because unless points are selected specifically to target
-     flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
+     * flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
      * @param x x position, as an int
      * @param y y position, as an int
      * @param z z position, as an int
@@ -284,7 +284,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by Pelle Evensen's
      * rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary hash used here has
      * been stripped down heavily, both for speed and because unless points are selected specifically to target
-     flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
+     * flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
      * @param x x position, as an int
      * @param y y position, as an int
      * @param z z position, as an int
@@ -358,7 +358,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by Pelle Evensen's
      * rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary hash used here has
      * been stripped down heavily, both for speed and because unless points are selected specifically to target
-     flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
+     * flaws in the hash, it doesn't need the intense resistance to bad inputs that rrxmrrxmsx_0 has.
      * @param x x position, as an int
      * @param y y position, as an int
      * @param z z position, as an int

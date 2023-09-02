@@ -80,6 +80,12 @@ public class PerlinNoise implements INoise {
         this.seed = seed;
     }
 
+    public PerlinNoise(PerlinNoise other) {
+        this.seed = other.seed;
+        System.arraycopy(other.eqAdd, 0, this.eqAdd, 0, other.eqAdd.length);
+        System.arraycopy(other.eqMul, 0, this.eqMul, 0, other.eqMul.length);
+    }
+
     /**
      * Gets the minimum dimension supported by this generator, which is 2.
      *
