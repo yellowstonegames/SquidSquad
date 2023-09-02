@@ -26,7 +26,11 @@ import com.github.yellowstonegames.core.DigitTools;
 /**
  * K.jpg's OpenSimplex 2, faster variant.
  * This is a variant on the Simplex Noise algorithm in 2D, and a subtly different algorithm in 3D and 4D. This does not
- * support 5D or 6D noise.
+ * support 5D or 6D noise. This is very similar to {@link OpenSimplex2Smooth}, but has more separate "spots" or
+ * "surflets" with noticeable gaps between areas of similar results. It is faster than OpenSimplex2Smooth, though.
+ * <br>
+ * OpenSimplex2.java was originally by KdotJPG, who released it into the public domain.
+ * <a href="https://github.com/KdotJPG/OpenSimplex2/blob/45cc32d5bf09ec89732ea108669417b6cad4546d/LICENSE">Original license</a>.
  */
 public class OpenSimplex2 implements INoise {
     public long seed;

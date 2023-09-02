@@ -65,11 +65,10 @@ public class INoiseComparison extends ApplicationAdapter {
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
-//            new SpatulaNoise(1L),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
     };
     private int index0 = 0;
-    private int index1 = 1;
+    private int index1 = 12;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
@@ -359,7 +358,6 @@ public class INoiseComparison extends ApplicationAdapter {
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
-            new SpatulaNoise(1L),
             new INoise() {
                 public final FoamNoiseStandalone standalone = new FoamNoiseStandalone(1L, 1.0);
 

@@ -112,7 +112,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 5, 1.6f, 0.625f);
+        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 5, 1.6f, 0.625f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 0.5f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 1f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 1f, 1f);
