@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -39,7 +40,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
-    static final boolean WRITE = true;
+    static final boolean WRITE = false;
 
     private static final int width = 300, height = 420;
 
@@ -51,6 +52,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
     Layout name;
     Interpolator[] interpolators;
     int index;
+    double[] k = new double[]{1.0, 1.0};
     /**
      * Converts the four HSLA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
      * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
@@ -84,9 +86,10 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         batch = new SpriteBatch();
         sd = new ShapeDrawer(batch, font.mapping.get(font.solidBlock));
 
-        Interpolator adjusted = new Interpolations.Interpolator("adjustedHue", a -> MathTools.barronSpline(a, 1.7f, 0.9f));
+//        Interpolator adjusted = new Interpolations.Interpolator("adjustedHue", a -> MathTools.barronSpline(a, 1.7f, 0.9f));
+        Interpolator kAdaptive = new Interpolations.Interpolator("kAdaptive", x -> (float) Math.pow(1.0 - Math.pow(1.0 - x, 1.0/k[1]), 1.0/k[0]));
         interpolators = Interpolations.getInterpolatorArray();
-        index = 0;
+        index = interpolators.length - 1;
         current = interpolators[index];
         name = font.markup("[BLACK]"+ current.tag, name = new Layout(font));
         if(WRITE){
@@ -121,6 +124,19 @@ public class InterpolationsGraphing extends ApplicationAdapter {
             current = interpolators[index = (index + interpolators.length - 1) % interpolators.length];
             name = font.markup("[BLACK]"+ current.tag, name.clear());
         }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+            k[0] = Math.max(0.001, k[0] + Gdx.graphics.getDeltaTime() * (UIUtils.shift() ? -1 : 1));
+            name = font.markup(String.format("[BLACK]a=%.8f, b=%.8f", k[0], k[1]), name.clear());
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.B)){
+            k[1] = Math.max(0.001, k[1] + Gdx.graphics.getDeltaTime() * (UIUtils.shift() ? -1 : 1));
+            name = font.markup(String.format("[BLACK]a=%.8f, b=%.8f", k[0], k[1]), name.clear());
+        }
+        //print
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)){
+            System.out.printf("a = %.8f , b = %.8f \n", k[0], k[1]);
+        }
         ScreenUtils.clear(Color.WHITE);
 //        batch.setProjectionMatrix(view.getCamera().combined);
         batch.begin();
@@ -147,8 +163,8 @@ public class InterpolationsGraphing extends ApplicationAdapter {
             float f = i / 200f;
             h0 = h1;
             h1 = current.apply(101, 301, f);
-            float gradient = hsl2rgb(current.apply(f), 1f, 0.5f, 1f);
-//            float gradient = DescriptiveColor.oklabIntToFloat(DescriptiveColor.oklabByHSL(0.75f + 0.25f * f, 1f, 0.5f, 1f));
+//            float gradient = hsl2rgb(current.apply(f), 1f, 0.5f, 1f);
+            float gradient = DescriptiveColor.oklabIntToFloat(DescriptiveColor.oklabByHSL(0.75f + 0.25f * f, 1f, 0.5f, 1f));
             sd.setColor(gradient);
             sd.line(59 + i, h0, 60 + i, h1, 3f);
         }

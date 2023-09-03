@@ -65,11 +65,14 @@ public class INoiseComparison extends ApplicationAdapter {
             new ValueNoise(1L),
             new HighDimensionalValueNoise(1L, 6),
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
+            new CyclicNoise(1L, 1),
             new CyclicNoise(1L, 3),
+            new SorbetNoise(1L, 1),
+            new SorbetNoise(1L, 3),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
     };
-    private int index0 = 0;
-    private int index1 = 12;
+    private int index0 = 12;
+    private int index1 = 14;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
