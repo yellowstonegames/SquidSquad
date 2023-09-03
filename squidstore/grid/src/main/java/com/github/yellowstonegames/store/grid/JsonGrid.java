@@ -656,6 +656,34 @@ public final class JsonGrid {
         });
     }
 
+    // To get BasicHashNoise to ser/deser, we would need all IPointHash to be possible to create from a String...
+
+//    /**
+//     * Registers BasicHashNoise with the given Json object, so BasicHashNoise can be written to and read from JSON.
+//     * This is a simple wrapper around BasicHashNoise's built-in {@link BasicHashNoise#serializeToString()} and
+//     * {@link BasicHashNoise#deserializeFromString(String)} methods.
+//     *
+//     * @param json a libGDX Json object that will have a serializer registered
+//     */
+//    public static void registerBasicHashNoise(@NonNull Json json) {
+//        json.addClassTag("ValN", BasicHashNoise.class);
+//        json.setSerializer(BasicHashNoise.class, new Json.Serializer<BasicHashNoise>() {
+//            @Override
+//            public void write(Json json, BasicHashNoise object, Class knownType) {
+//                json.writeObjectStart(BasicHashNoise.class, knownType);
+//                json.writeValue("v", object.seed);
+//                json.writeValue("h", object.pointHash);
+//                json.writeObjectEnd();
+//            }
+//
+//            @Override
+//            public BasicHashNoise read(Json json, JsonValue jsonData, Class type) {
+//                if (jsonData == null || jsonData.isNull() || !jsonData.has("v") || !jsonData.has("h")) return null;
+//                return new BasicHashNoise(jsonData.get("v").asInt(), json.readValue("h", IPointHash.class, jsonData));
+//            }
+//        });
+//    }
+
     /**
      * Registers SpatialMap with the given Json object, so SpatialMap can be written to and read from JSON.
      * This also registers Coord, CoordObjectOrderedMap, and IntObjectOrderedMap with the given Json object.

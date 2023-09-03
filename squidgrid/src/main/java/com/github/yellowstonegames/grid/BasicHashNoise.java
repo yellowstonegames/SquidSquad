@@ -17,12 +17,16 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.annotations.Beta;
+
+import java.util.Objects;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
-import static com.github.yellowstonegames.grid.Noise.*;
 
-@Beta
+/**
+ * Makes 2D through 6D value noise that simply preserves the behavior of an {@link IPointHash}, including intentional
+ * (or unintentional) artifacts that the point hash produces. This is more useful with intentionally-flawed point hashes
+ * from {@link FlawedPointHash}, such as {@link com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash}.
+ */
 public class BasicHashNoise implements INoise {
     public static final BasicHashNoise instance = new BasicHashNoise();
     public int seed;
@@ -157,21 +161,6 @@ public class BasicHashNoise implements INoise {
     @Override
     public BasicHashNoise copy() {
         return new BasicHashNoise(this.seed);
-    }
-
-    /**
-     * Given a float {@code a} from -1.0 to 1.0 (both inclusive), this gets a float that adjusts a to be closer to the
-     * end points of that range (if less than 0, it gets closer to -1.0, otherwise it gets closer to 1.0).
-     * <br>
-     * Used to increase the frequency of high and low results, which
-     * improves the behavior of ridged and billow noise.
-     * @param a a float between -1.0f and 1.0f inclusive
-     * @return a float between -1.0f and 1.0f inclusive that is more likely to be near the extremes
-     */
-    public float emphasizeSigned(float a)
-    {
-        a = a * 0.5f + 0.5f;
-        return a * a * (6.0f - 4.0f * a) - 1.0f;
     }
 
     @Override
@@ -403,5 +392,28 @@ public class BasicHashNoise implements INoise {
                                                 + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s)))
                                 ))))))
         ) * 0x1p-31f;
+    }
+
+    @Override
+    public String toString() {
+        return "BasicHashNoise{" +
+                "seed=" + seed +
+                ", pointHash=" + pointHash +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BasicHashNoise that = (BasicHashNoise) o;
+
+        return seed == that.seed;
+    }
+
+    @Override
+    public int hashCode() {
+        return seed;
     }
 }

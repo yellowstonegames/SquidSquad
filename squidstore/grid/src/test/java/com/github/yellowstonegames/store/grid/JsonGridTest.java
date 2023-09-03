@@ -385,6 +385,20 @@ public class JsonGridTest {
         System.out.println();
     }
 
+//    @Test
+//    public void testBasicHashNoise() {
+//        Json json = new Json(JsonWriter.OutputType.minimal);
+//        JsonGrid.registerBasicHashNoise(json);
+//        BasicHashNoise noise, noise2;
+//        noise = new BasicHashNoise(-987654321, new FlawedPointHash.FlowerHash(123456789));
+//        String data = json.toJson(noise);
+//        System.out.println(data);
+//        noise2 = json.fromJson(BasicHashNoise.class, data);
+//        Assert.assertEquals(noise, noise2);
+//        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+//        System.out.println();
+//    }
+
     @Test
     public void testHighDimensionalValueNoise() {
         Json json = new Json(JsonWriter.OutputType.minimal);
