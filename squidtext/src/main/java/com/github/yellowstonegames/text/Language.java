@@ -5499,7 +5499,7 @@ public class Language {
         @Override
         public int hashCode() {
             long result;
-            result = Hasher.shax.hash64(replacer.getPattern().stringSerialize());
+            result = Hasher.shax.hash64(replacer.getPattern().serializeToString());
             result = 31L * result + BitConversion.doubleToRawLongBits(chance);
             result ^= result >>> 32;
             return (int) (0xFFFFFFFFL & result);
@@ -5514,12 +5514,12 @@ public class Language {
         }
 
         public String stringSerialize() {
-            return replacer.getPattern().stringSerialize() + '\2' + replacement + '\4' + chance;
+            return replacer.getPattern().serializeToString() + '\2' + replacement + '\4' + chance;
         }
 
         public static Alteration stringDeserialize(String data) {
             int split2 = data.indexOf('\2'), split4 = data.indexOf('\4');
-            return new Alteration(Pattern.stringDeserialize(data.substring(0, split2)),
+            return new Alteration(Pattern.deserializeFromString(data.substring(0, split2)),
                     data.substring(split2 + 1, split4),
                     Double.parseDouble(data.substring(split4 + 1)));
         }

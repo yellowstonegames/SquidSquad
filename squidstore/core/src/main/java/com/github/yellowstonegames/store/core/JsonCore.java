@@ -375,13 +375,13 @@ public final class JsonCore {
         json.setSerializer(Pattern.class, new Json.Serializer<Pattern>() {
             @Override
             public void write(Json json, Pattern object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeValue(object.serializeToString());
             }
 
             @Override
             public Pattern read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Pattern.stringDeserialize(jsonData.asString());
+                return Pattern.deserializeFromString(jsonData.asString());
             }
         });
     }
