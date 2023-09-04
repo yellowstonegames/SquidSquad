@@ -381,6 +381,31 @@ public final class JsonGrid {
     }
 
     /**
+     * Registers INoise with the given Json object, so INoise can be written to and read from JSON.
+     * This is a simple wrapper around INoise's built-in {@link INoise#stringSerialize()} and
+     * {@link INoise.Serializer#deserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerINoise(@NonNull Json json) {
+        json.addClassTag("INoi", INoise.class);
+        json.setSerializer(INoise.class, new Json.Serializer<INoise>() {
+            @Override
+            public void write(Json json, INoise object, Class knownType) {
+                json.writeObjectStart(INoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public INoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return INoise.Serializer.deserialize(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
      * Registers Noise with the given Json object, so Noise can be written to and read from JSON.
      * This is a simple wrapper around Noise's built-in {@link Noise#stringSerialize()} and
      * {@link Noise#stringDeserialize(String)} methods.
