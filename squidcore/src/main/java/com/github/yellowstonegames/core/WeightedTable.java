@@ -190,11 +190,11 @@ public class WeightedTable {
         return ((state >>> 33) <= mixed[column << 1]) ? column : mixed[column << 1 | 1];
     }
 
-    public String serializeToString()
+    public String stringSerialize()
     {
         return StringTools.join(",", mixed);
     }
-    public static WeightedTable deserializeFromString(String data)
+    public static WeightedTable stringDeserialize(String data)
     {
         if(data == null || data.isEmpty())
             return null;

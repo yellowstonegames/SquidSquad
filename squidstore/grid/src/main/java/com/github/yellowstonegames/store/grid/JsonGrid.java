@@ -90,8 +90,8 @@ public final class JsonGrid {
 
     /**
      * Registers Region with the given Json object, so Region can be written to and read from JSON.
-     * This is a simple wrapper around Region's built-in {@link Region#serializeToString()} and
-     * {@link Region#deserializeFromString(String)} methods.
+     * This is a simple wrapper around Region's built-in {@link Region#stringSerialize()} and
+     * {@link Region#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -100,13 +100,13 @@ public final class JsonGrid {
         json.setSerializer(Region.class, new Json.Serializer<Region>() {
             @Override
             public void write(Json json, Region object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeValue(object.stringSerialize());
             }
 
             @Override
             public Region read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Region.deserializeFromString(jsonData.asString());
+                return Region.stringDeserialize(jsonData.asString());
             }
         });
     }
@@ -357,8 +357,8 @@ public final class JsonGrid {
 
     /**
      * Registers Radiance with the given Json object, so Radiance can be written to and read from JSON.
-     * This is a simple wrapper around Radiance's built-in {@link Radiance#serializeToString()} and
-     * {@link Radiance#deserializeFromString(String)} methods.
+     * This is a simple wrapper around Radiance's built-in {@link Radiance#stringSerialize()} and
+     * {@link Radiance#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -368,22 +368,22 @@ public final class JsonGrid {
             @Override
             public void write(Json json, Radiance object, Class knownType) {
                 json.writeObjectStart(Radiance.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
             @Override
             public Radiance read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
-                return Radiance.deserializeFromString(jsonData.get("v").asString());
+                return Radiance.stringDeserialize(jsonData.get("v").asString());
             }
         });
     }
 
     /**
      * Registers Noise with the given Json object, so Noise can be written to and read from JSON.
-     * This is a simple wrapper around Noise's built-in {@link Noise#serializeToString()} and
-     * {@link Noise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around Noise's built-in {@link Noise#stringSerialize()} and
+     * {@link Noise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -393,22 +393,22 @@ public final class JsonGrid {
             @Override
             public void write(Json json, Noise object, Class knownType) {
                 json.writeObjectStart(Noise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
             @Override
             public Noise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
-                return new Noise(1).deserializeFromString(jsonData.get("v").asString());
+                return new Noise(1).stringDeserialize(jsonData.get("v").asString());
             }
         });
     }
 
     /**
      * Registers NoiseWrapper with the given Json object, so NoiseWrapper can be written to and read from JSON.
-     * This is a simple wrapper around NoiseWrapper's built-in {@link NoiseWrapper#serializeToString()} and
-     * {@link NoiseWrapper#deserializeFromString(String)} methods.
+     * This is a simple wrapper around NoiseWrapper's built-in {@link NoiseWrapper#stringSerialize()} and
+     * {@link NoiseWrapper#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -418,22 +418,22 @@ public final class JsonGrid {
             @Override
             public void write(Json json, NoiseWrapper object, Class knownType) {
                 json.writeObjectStart(NoiseWrapper.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
             @Override
             public NoiseWrapper read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
-                return new NoiseWrapper().deserializeFromString(jsonData.get("v").asString());
+                return new NoiseWrapper().stringDeserialize(jsonData.get("v").asString());
             }
         });
     }
 
     /**
      * Registers NoiseAdjustment with the given Json object, so NoiseAdjustment can be written to and read from JSON.
-     * This is a simple wrapper around NoiseAdjustment's built-in {@link NoiseAdjustment#serializeToString()} and
-     * {@link NoiseAdjustment#deserializeFromString(String)} methods.
+     * This is a simple wrapper around NoiseAdjustment's built-in {@link NoiseAdjustment#stringSerialize()} and
+     * {@link NoiseAdjustment#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -443,22 +443,22 @@ public final class JsonGrid {
             @Override
             public void write(Json json, NoiseAdjustment object, Class knownType) {
                 json.writeObjectStart(NoiseAdjustment.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
             @Override
             public NoiseAdjustment read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
-                return new NoiseAdjustment().deserializeFromString(jsonData.get("v").asString());
+                return new NoiseAdjustment().stringDeserialize(jsonData.get("v").asString());
             }
         });
     }
 
     /**
      * Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.
-     * This is a simple wrapper around PhantomNoise's built-in {@link PhantomNoise#serializeToString()} and
-     * {@link PhantomNoise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around PhantomNoise's built-in {@link PhantomNoise#stringSerialize()} and
+     * {@link PhantomNoise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -468,7 +468,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, PhantomNoise object, Class knownType) {
                 json.writeObjectStart(PhantomNoise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
@@ -482,8 +482,8 @@ public final class JsonGrid {
 
     /**
      * Registers TaffyNoise with the given Json object, so TaffyNoise can be written to and read from JSON.
-     * This is a simple wrapper around TaffyNoise's built-in {@link TaffyNoise#serializeToString()} and
-     * {@link TaffyNoise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around TaffyNoise's built-in {@link TaffyNoise#stringSerialize()} and
+     * {@link TaffyNoise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -493,7 +493,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, TaffyNoise object, Class knownType) {
                 json.writeObjectStart(TaffyNoise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
@@ -507,8 +507,8 @@ public final class JsonGrid {
 
     /**
      * Registers FlanNoise with the given Json object, so FlanNoise can be written to and read from JSON.
-     * This is a simple wrapper around FlanNoise's built-in {@link FlanNoise#serializeToString()} and
-     * {@link FlanNoise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around FlanNoise's built-in {@link FlanNoise#stringSerialize()} and
+     * {@link FlanNoise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -518,7 +518,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, FlanNoise object, Class knownType) {
                 json.writeObjectStart(FlanNoise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
@@ -532,8 +532,8 @@ public final class JsonGrid {
 
     /**
      * Registers CyclicNoise with the given Json object, so CyclicNoise can be written to and read from JSON.
-     * This is a simple wrapper around CyclicNoise's built-in {@link CyclicNoise#serializeToString()} and
-     * {@link CyclicNoise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around CyclicNoise's built-in {@link CyclicNoise#stringSerialize()} and
+     * {@link CyclicNoise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -543,7 +543,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, CyclicNoise object, Class knownType) {
                 json.writeObjectStart(CyclicNoise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
@@ -557,8 +557,8 @@ public final class JsonGrid {
 
     /**
      * Registers SimplexNoise with the given Json object, so SimplexNoise can be written to and read from JSON.
-     * This is a simple wrapper around SimplexNoise's built-in {@link SimplexNoise#serializeToString()} and
-     * {@link SimplexNoise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around SimplexNoise's built-in {@link SimplexNoise#stringSerialize()} and
+     * {@link SimplexNoise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -568,7 +568,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, SimplexNoise object, Class knownType) {
                 json.writeObjectStart(SimplexNoise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
@@ -582,8 +582,8 @@ public final class JsonGrid {
 
     /**
      * Registers SimplexNoiseScaled with the given Json object, so SimplexNoiseScaled can be written to and read from JSON.
-     * This is a simple wrapper around SimplexNoiseScaled's built-in {@link SimplexNoiseScaled#serializeToString()} and
-     * {@link SimplexNoiseScaled#deserializeFromString(String)} methods.
+     * This is a simple wrapper around SimplexNoiseScaled's built-in {@link SimplexNoiseScaled#stringSerialize()} and
+     * {@link SimplexNoiseScaled#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -593,7 +593,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, SimplexNoiseScaled object, Class knownType) {
                 json.writeObjectStart(SimplexNoiseScaled.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
 
             }
@@ -608,8 +608,8 @@ public final class JsonGrid {
 
     /**
      * Registers HighDimensionalValueNoise with the given Json object, so HighDimensionalValueNoise can be written to and read from JSON.
-     * This is a simple wrapper around HighDimensionalValueNoise's built-in {@link HighDimensionalValueNoise#serializeToString()} and
-     * {@link HighDimensionalValueNoise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around HighDimensionalValueNoise's built-in {@link HighDimensionalValueNoise#stringSerialize()} and
+     * {@link HighDimensionalValueNoise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -619,7 +619,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, HighDimensionalValueNoise object, Class knownType) {
                 json.writeObjectStart(HighDimensionalValueNoise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
@@ -633,8 +633,8 @@ public final class JsonGrid {
 
     /**
      * Registers ValueNoise with the given Json object, so ValueNoise can be written to and read from JSON.
-     * This is a simple wrapper around ValueNoise's built-in {@link ValueNoise#serializeToString()} and
-     * {@link ValueNoise#deserializeFromString(String)} methods.
+     * This is a simple wrapper around ValueNoise's built-in {@link ValueNoise#stringSerialize()} and
+     * {@link ValueNoise#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -644,7 +644,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, ValueNoise object, Class knownType) {
                 json.writeObjectStart(ValueNoise.class, knownType);
-                json.writeValue("v", object.serializeToString());
+                json.writeValue("v", object.stringSerialize());
                 json.writeObjectEnd();
             }
 
@@ -660,8 +660,8 @@ public final class JsonGrid {
 
 //    /**
 //     * Registers BasicHashNoise with the given Json object, so BasicHashNoise can be written to and read from JSON.
-//     * This is a simple wrapper around BasicHashNoise's built-in {@link BasicHashNoise#serializeToString()} and
-//     * {@link BasicHashNoise#deserializeFromString(String)} methods.
+//     * This is a simple wrapper around BasicHashNoise's built-in {@link BasicHashNoise#stringSerialize()} and
+//     * {@link BasicHashNoise#stringDeserialize(String)} methods.
 //     *
 //     * @param json a libGDX Json object that will have a serializer registered
 //     */

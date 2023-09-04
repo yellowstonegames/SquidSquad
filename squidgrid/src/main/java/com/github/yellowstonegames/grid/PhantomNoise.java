@@ -174,11 +174,11 @@ public class PhantomNoise implements INoise {
         return "PhaN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + hasher.seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }
 
-    public PhantomNoise deserializeFromString(String data) {
+    public PhantomNoise stringDeserialize(String data) {
                 if(data == null || data.length() < 7)
             return this;
         int pos;

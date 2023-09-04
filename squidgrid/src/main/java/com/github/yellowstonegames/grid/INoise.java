@@ -134,34 +134,34 @@ public interface INoise {
 
     /**
      * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
-     * in by {@link #deserializeFromString(String)} to reassign the described state to another INoise. The syntax here
+     * in by {@link #stringDeserialize(String)} to reassign the described state to another INoise. The syntax here
      * should always start and end with the {@code `} character, which is used by
-     * {@link #deserializeFromString(String)} to identify the portion of a String that can be read back. The
+     * {@link #stringDeserialize(String)} to identify the portion of a String that can be read back. The
      * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringDeserialize(String)}, and
      * {@link #copy()}.
      * @return a String that describes this INoise for serialization
      */
-    default String serializeToString() {
-        throw new UnsupportedOperationException("serializeToString() is not supported.");
+    default String stringSerialize() {
+        throw new UnsupportedOperationException("stringSerialize() is not supported.");
     }
 
     /**
-     * Given a serialized String produced by {@link #serializeToString()}, reassigns this INoise to have the described
+     * Given a serialized String produced by {@link #stringSerialize()}, reassigns this INoise to have the described
      * state from the given String. The serialized String must have been produced by the same class as this object is.
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringSerialize()}, and
      * {@link #copy()}.
-     * @param data a serialized String, typically produced by {@link #serializeToString()}
+     * @param data a serialized String, typically produced by {@link #stringSerialize()}
      * @return this INoise, after being modified (if possible)
      */
-    default INoise deserializeFromString(String data) {
-        throw new UnsupportedOperationException("deserializeFromString() is not supported.");
+    default INoise stringDeserialize(String data) {
+        throw new UnsupportedOperationException("stringDeserialize() is not supported.");
     }
 
     /**
@@ -299,7 +299,7 @@ public interface INoise {
          * Given a (typically freshly-constructed and never-reused) INoise, this registers that instance by its
          * {@link INoise#getTag()} in a Map, so that this type of INoise can be deserialized correctly by
          * {@link #deserialize(String)}. The INoise type must implement {@link INoise#getTag()},
-         * {@link INoise#serializeToString()}, {@link INoise#deserializeFromString(String)}, and {@link INoise#copy()}.
+         * {@link INoise#stringSerialize()}, {@link INoise#stringDeserialize(String)}, and {@link INoise#copy()}.
          *
          * @param random a (typically freshly-constructed) INoise that should never be reused elsewhere
          */
@@ -340,15 +340,15 @@ public interface INoise {
         }
 
         /**
-         * Given an INoise that implements {@link #serializeToString()} and {@link #getTag()}, this produces a
+         * Given an INoise that implements {@link #stringSerialize()} and {@link #getTag()}, this produces a
          * serialized String that stores the exact state of the INoise. This serialized String can be read back in by
          * {@link #deserialize(String)}.
          *
-         * @param noise an INoise that implements {@link #serializeToString()} and {@link #getTag()}
+         * @param noise an INoise that implements {@link #stringSerialize()} and {@link #getTag()}
          * @return a String that can be read back in by {@link #deserialize(String)}
          */
         public static String serialize(INoise noise) {
-            return noise.getTag() + noise.serializeToString();
+            return noise.getTag() + noise.stringSerialize();
         }
 
         /**
@@ -356,7 +356,7 @@ public interface INoise {
          * (as with {@link #register(INoise)}), this reads in the deserialized data and returns a new INoise
          * of the appropriate type. This relies on the {@link INoise#getTag() tag} of the type being registered at
          * deserialization time, though it doesn't actually need to be registered at serialization time. This cannot
-         * read back the direct output of {@link INoise#serializeToString()}; it needs the tag prepended by
+         * read back the direct output of {@link INoise#stringSerialize()}; it needs the tag prepended by
          * {@link #serialize(INoise)} to work.
          *
          * @param data serialized String data probably produced by {@link #serialize(INoise)}
@@ -370,7 +370,7 @@ public interface INoise {
             INoise root = NOISE_BY_TAG.get(tagData);
             if (root == null)
                 throw new RuntimeException("Tag in given data is invalid or unknown.");
-            return root.copy().deserializeFromString(data.substring(idx));
+            return root.copy().stringDeserialize(data.substring(idx));
         }
 
     }

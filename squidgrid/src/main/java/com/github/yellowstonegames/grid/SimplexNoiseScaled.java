@@ -755,11 +755,11 @@ public class SimplexNoiseScaled implements INoise {
         return "SiSN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + "`";
     }
 
-    public SimplexNoiseScaled deserializeFromString(String data) {
+    public SimplexNoiseScaled stringDeserialize(String data) {
         seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
         return this;
     }

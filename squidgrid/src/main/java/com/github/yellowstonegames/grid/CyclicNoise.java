@@ -180,7 +180,7 @@ float cyclicNoise(vec3 p){
         return "CycN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + '~' + octaves + '~' + frequency + '`';
     }
 
@@ -189,7 +189,7 @@ float cyclicNoise(vec3 p){
         return new CyclicNoise(seed, octaves, frequency);
     }
 
-    public CyclicNoise deserializeFromString(String data) {
+    public CyclicNoise stringDeserialize(String data) {
         if(data == null || data.length() < 5)
             return this;
         int pos;

@@ -3164,7 +3164,7 @@ public class Language {
     /**
      * An array that stores all the hand-made Language constants; it does not store randomly-generated languages
      * nor does it store modifications or mixes of languages. The order these are stored in is related to the numeric
-     * codes for languages in the {@link #serializeToString()} output, but neither is dependent on the other if this
+     * codes for languages in the {@link #stringSerialize()} output, but neither is dependent on the other if this
      * array is changed for some reason (which is not recommended, but not out of the question). If this is modified,
      * then it is probably a bad idea to assign null to any elements in registered; special care is taken to avoid null
      * elements in its original state, so some code may rely on the items being usable and non-null.
@@ -4856,7 +4856,7 @@ public class Language {
             sb.setLength(0);
             sb.append(next.summary);
             for (int i = 0; i < mods.size(); i++) {
-                sb.append('℗').append(next.modifiers.get(i).serializeToString());
+                sb.append('℗').append(next.modifiers.get(i).stringSerialize());
             }
             next.summarize(sb.toString());
         }
@@ -4878,7 +4878,7 @@ public class Language {
             sb.setLength(0);
             sb.append(next.summary);
             for (int i = 0; i < mods.length; i++) {
-                sb.append('℗').append(next.modifiers.get(i).serializeToString());
+                sb.append('℗').append(next.modifiers.get(i).stringSerialize());
             }
             next.summarize(sb.toString());
         }
@@ -5038,11 +5038,11 @@ public class Language {
     }
 
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return (summary == null) ? "" : summary;
     }
 
-    public static Language deserializeFromString(String data) {
+    public static Language stringDeserialize(String data) {
         if (data == null || data.equals(""))
             return ENGLISH.copy();
         int poundIndex = data.indexOf('#'), snailIndex = data.indexOf('@'), tempBreak = data.indexOf('℗'),
@@ -5078,7 +5078,7 @@ public class Language {
             while ((prevTildeIndex = data.indexOf('℗', tildeIndex + 1)) >= 0) {
                 tildeIndex = data.indexOf('℗', prevTildeIndex + 1);
                 if (tildeIndex < 0) tildeIndex = data.length();
-                mods.add(Modifier.deserializeFromString(data.substring(prevTildeIndex, tildeIndex)));
+                mods.add(Modifier.stringDeserialize(data.substring(prevTildeIndex, tildeIndex)));
             }
         }
         Language flg = mixAll(pairs.toArray());
@@ -5432,16 +5432,16 @@ public class Language {
                     '}';
         }
 
-        public String serializeToString() {
+        public String stringSerialize() {
             if (alterations.length == 0) return "\6";
             modSB.setLength(0);
             modSB.append('\6');
             for (int i = 0; i < alterations.length; i++)
-                modSB.append(alterations[i].serializeToString()).append('\6');
+                modSB.append(alterations[i].stringSerialize()).append('\6');
             return modSB.toString();
         }
 
-        public static Modifier deserializeFromString(String data) {
+        public static Modifier stringDeserialize(String data) {
             int currIdx = data.indexOf(6), altIdx = currIdx, matches = 0;
             while (currIdx >= 0) {
                 if ((currIdx = data.indexOf(6, currIdx + 1)) < 0)
@@ -5450,7 +5450,7 @@ public class Language {
             }
             Alteration[] alts = new Alteration[matches];
             for (int i = 0; i < matches; i++) {
-                alts[i] = Alteration.deserializeFromString(data.substring(altIdx + 1, altIdx = data.indexOf(6, altIdx + 1)));
+                alts[i] = Alteration.stringDeserialize(data.substring(altIdx + 1, altIdx = data.indexOf(6, altIdx + 1)));
             }
             return new Modifier(alts);
         }
@@ -5499,7 +5499,7 @@ public class Language {
         @Override
         public int hashCode() {
             long result;
-            result = Hasher.shax.hash64(replacer.getPattern().serializeToString());
+            result = Hasher.shax.hash64(replacer.getPattern().stringSerialize());
             result = 31L * result + BitConversion.doubleToRawLongBits(chance);
             result ^= result >>> 32;
             return (int) (0xFFFFFFFFL & result);
@@ -5513,13 +5513,13 @@ public class Language {
                     '}';
         }
 
-        public String serializeToString() {
-            return replacer.getPattern().serializeToString() + '\2' + replacement + '\4' + chance;
+        public String stringSerialize() {
+            return replacer.getPattern().stringSerialize() + '\2' + replacement + '\4' + chance;
         }
 
-        public static Alteration deserializeFromString(String data) {
+        public static Alteration stringDeserialize(String data) {
             int split2 = data.indexOf('\2'), split4 = data.indexOf('\4');
-            return new Alteration(Pattern.deserializeFromString(data.substring(0, split2)),
+            return new Alteration(Pattern.stringDeserialize(data.substring(0, split2)),
                     data.substring(split2 + 1, split4),
                     Double.parseDouble(data.substring(split4 + 1)));
         }
@@ -5640,8 +5640,8 @@ public class Language {
                     midPunctuationFrequency, maxChars);
         }
 
-        public String serializeToString() {
-            return language.serializeToString() + '℘' +
+        public String stringSerialize() {
+            return language.stringSerialize() + '℘' +
                     rng.stringSerialize(Base.BASE16) + '℘' +
                     minWords + '℘' +
                     maxWords + '℘' +
@@ -5650,10 +5650,10 @@ public class Language {
                     BitConversion.doubleToRawLongBits(midPunctuationFrequency) + '℘' +
                     maxChars;
         }
-        public static SentenceForm deserializeFromString(String ser)
+        public static SentenceForm stringDeserialize(String ser)
         {
             int gap = ser.indexOf('℘');
-            Language lang = Language.deserializeFromString(ser.substring(0, gap));
+            Language lang = Language.stringDeserialize(ser.substring(0, gap));
             EnhancedRandom rng = Deserializer.deserialize(ser.substring(gap+1, gap = ser.indexOf('℘', gap + 1)));
             int minWords = Base.BASE10.readInt(ser, gap + 1, gap = ser.indexOf('℘', gap + 1));
             int maxWords = Base.BASE10.readInt(ser, gap + 1, gap = ser.indexOf('℘', gap + 1));

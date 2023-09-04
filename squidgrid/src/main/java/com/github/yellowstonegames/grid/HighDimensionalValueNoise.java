@@ -64,11 +64,11 @@ public class HighDimensionalValueNoise implements INoise {
         return "HDVN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + '~' + dim + '`';
     }
 
-    public HighDimensionalValueNoise deserializeFromString(String data) {
+    public HighDimensionalValueNoise stringDeserialize(String data) {
         if(data == null || data.length() < 5)
             return this;
         int pos;

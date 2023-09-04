@@ -261,11 +261,11 @@ public class OpenSimplex2 implements INoise {
         return new OpenSimplex2(seed);
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + '`';
     }
 
-    public OpenSimplex2 deserializeFromString(String data) {
+    public OpenSimplex2 stringDeserialize(String data) {
         if(data == null || data.length() < 3)
             return this;
         this.seed = DigitTools.intFromDec(data, 1, data.indexOf('`', 2));

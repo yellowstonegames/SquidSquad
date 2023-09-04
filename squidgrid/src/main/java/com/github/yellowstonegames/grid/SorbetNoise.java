@@ -35,8 +35,8 @@ public class SorbetNoise extends CyclicNoise {
         super(seed, octaves);
     }
 
-    public SorbetNoise deserializeFromString(String data) {
-        super.deserializeFromString(data);
+    public SorbetNoise stringDeserialize(String data) {
+        super.stringDeserialize(data);
         return this;
     }
 

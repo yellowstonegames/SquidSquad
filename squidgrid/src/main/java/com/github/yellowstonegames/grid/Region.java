@@ -6048,13 +6048,13 @@ public class Region implements Collection<Coord> {
         return Hasher.hash64(seed, data) ^ Hasher.randomize2(Hasher.randomize2(height) + width);
     }
 
-    public String serializeToString()
+    public String stringSerialize()
     {
         return width +
                 "," + height +
                 "," + StringTools.joinAlt(",",data);
     }
-    public static Region deserializeFromString(String s)
+    public static Region stringDeserialize(String s)
     {
         if(s == null || s.isEmpty())
             return null;
@@ -6070,7 +6070,7 @@ public class Region implements Collection<Coord> {
 
     /**
      * Constructs a Region using a vararg for data. Primarily meant for generated code, since
-     * {@link #serializeToString()} produces a String that happens to be a valid parameter list for this method.
+     * {@link #stringSerialize()} produces a String that happens to be a valid parameter list for this method.
      * @param width width of the Region to produce
      * @param height height of the Region to produce
      * @param data array or vararg of long containing the exact data, probably from an existing Region

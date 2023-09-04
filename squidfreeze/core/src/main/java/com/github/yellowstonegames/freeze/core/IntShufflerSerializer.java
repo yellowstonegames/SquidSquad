@@ -30,12 +30,12 @@ public class IntShufflerSerializer extends Serializer<IntShuffler> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final IntShuffler data) {
-        output.writeString(data.serializeToString());
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public IntShuffler read(final Kryo kryo, final Input input, final Class<? extends IntShuffler> dataClass) {
-        return IntShuffler.deserializeFromString(input.readString());
+        return IntShuffler.stringDeserialize(input.readString());
     }
 
     @Override

@@ -23,7 +23,6 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.tommyettinger.digital.TrigTools.*;
@@ -687,11 +686,11 @@ public class Noise implements INoise {
     }
     /**
      * Writes all fields of this Noise (except for the {@link #getPointHash()}, which must be stored separately) to a
-     * String and returns it. The result of this method can be used by {@link #deserializeFromString(String)}, though if
+     * String and returns it. The result of this method can be used by {@link #stringDeserialize(String)}, though if
      * you need a particular IPointHash value, you need to set it yourself on the result of that method.
-     * @return a String that stores the data of this Noise object; can be read by {@link #deserializeFromString(String)}
+     * @return a String that stores the data of this Noise object; can be read by {@link #stringDeserialize(String)}
      */
-    public String serializeToString(){
+    public String stringSerialize(){
         return "`" + seed + '~' + noiseType + '~' + octaves + '~' +
                 fractalType + '~' + interpolation + '~' +
                 cellularReturnType + '~' + cellularDistanceFunction + '~' + (fractalSpiral ? '1' : '0') + '~' +
@@ -704,13 +703,13 @@ public class Noise implements INoise {
     }
 
     /**
-     * Reads in a String that was produced by {@link #serializeToString()} and produces a copy of the Noise that was
-     * stored into it. Note that neither this method nor serializeToString changes {@link #getPointHash()} from its
+     * Reads in a String that was produced by {@link #stringSerialize()} and produces a copy of the Noise that was
+     * stored into it. Note that neither this method nor stringSerialize changes {@link #getPointHash()} from its
      * default value, so if you need a different value for that, you need to set it yourself on the result of this.
-     * @param data a String produced by {@link #serializeToString()}
+     * @param data a String produced by {@link #stringSerialize()}
      * @return a new Noise object matching the data stored in the given String
      */
-    public Noise deserializeFromString(String data){
+    public Noise stringDeserialize(String data){
         if(data == null || data.length() < 27)
             return this;
         int pos;

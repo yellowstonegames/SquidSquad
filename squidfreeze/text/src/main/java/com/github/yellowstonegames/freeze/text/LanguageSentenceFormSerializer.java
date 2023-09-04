@@ -30,11 +30,11 @@ public class LanguageSentenceFormSerializer extends Serializer<Language.Sentence
 
     @Override
     public void write(final Kryo kryo, final Output output, final Language.SentenceForm data) {
-        output.writeString(data.serializeToString());
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public Language.SentenceForm read(final Kryo kryo, final Input input, final Class<? extends Language.SentenceForm> dataClass) {
-        return Language.SentenceForm.deserializeFromString(input.readString());
+        return Language.SentenceForm.stringDeserialize(input.readString());
     }
 }

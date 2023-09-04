@@ -126,7 +126,7 @@ public class CoreTest {
             Assert.assertEquals(data.random(0L), data2.random(0L));
             Assert.assertEquals(data.random(1L), data2.random(1L));
             Assert.assertEquals(data.random(2L), data2.random(2L));
-            Assert.assertEquals(data.serializeToString(), data2.serializeToString());
+            Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
             Assert.assertEquals(data, data2);
         }
     }
@@ -148,7 +148,7 @@ public class CoreTest {
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.next(), data2.next());
-            Assert.assertEquals(data.serializeToString(), data2.serializeToString());
+            Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
             Assert.assertEquals(data, data2);
         }
     }

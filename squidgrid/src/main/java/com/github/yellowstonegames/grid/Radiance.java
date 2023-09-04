@@ -296,7 +296,7 @@ public class Radiance {
         return result;
     }
 
-    public String serializeToString()
+    public String stringSerialize()
     {
         StringBuilder sb = new StringBuilder(48);
         sb.append('`');
@@ -309,7 +309,7 @@ public class Radiance {
         return sb.toString();
     }
     
-    public static Radiance deserializeFromString(String data)
+    public static Radiance stringDeserialize(String data)
     {
         if(data == null) return null;
         int idx = 0;

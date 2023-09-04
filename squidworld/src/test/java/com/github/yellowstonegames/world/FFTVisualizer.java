@@ -1551,7 +1551,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     frames.add(p);
                 }
                 Gdx.files.local("out/").mkdirs();
-                String ser = noise.serializeToString() + "_" + dim + "_" + System.currentTimeMillis();
+                String ser = noise.stringSerialize() + "_" + dim + "_" + System.currentTimeMillis();
                 System.out.println(ser);
 //                        gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 16);
                 gif.write(Gdx.files.local("out/" + ser + ".gif"), frames, 16);

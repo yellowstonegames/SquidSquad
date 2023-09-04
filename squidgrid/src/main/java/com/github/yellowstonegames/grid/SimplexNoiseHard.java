@@ -781,11 +781,11 @@ public class SimplexNoiseHard implements INoise {
         return "SiHN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + "`";
     }
 
-    public SimplexNoiseHard deserializeFromString(String data) {
+    public SimplexNoiseHard stringDeserialize(String data) {
         seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
         return this;
     }

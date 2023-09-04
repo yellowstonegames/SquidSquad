@@ -223,11 +223,11 @@ public class FlanNoise implements INoise {
         return "FlaN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + '~' + dim + '~' + detail + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }
 
-    public FlanNoise deserializeFromString(String data) {
+    public FlanNoise stringDeserialize(String data) {
         if(data == null || data.length() < 7)
             return this;
         int pos;

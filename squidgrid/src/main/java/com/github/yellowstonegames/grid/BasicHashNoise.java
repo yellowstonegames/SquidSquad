@@ -18,8 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import java.util.Objects;
-
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 
 /**
@@ -113,37 +111,37 @@ public class BasicHashNoise implements INoise {
 
     /**
      * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
-     * in by {@link #deserializeFromString(String)} to reassign the described state to another INoise. The syntax here
+     * in by {@link #stringDeserialize(String)} to reassign the described state to another INoise. The syntax here
      * should always start and end with the {@code `} character, which is used by
-     * {@link Serializer#deserializeFromString(String)} to identify the portion of a String that can be read back. The
+     * {@link Serializer#stringDeserialize(String)} to identify the portion of a String that can be read back. The
      * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringDeserialize(String)}, and
      * {@link #copy()}.
      *
      * @return a String that describes this INoise for serialization
      */
     @Override
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + "`";
     }
 
     /**
-     * Given a serialized String produced by {@link #serializeToString()}, reassigns this INoise to have the described
+     * Given a serialized String produced by {@link #stringSerialize()}, reassigns this INoise to have the described
      * state from the given String. The serialized String must have been produced by the same class as this object is.
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #deserializeFromString(String)}, and
+     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringDeserialize(String)}, and
      * {@link #copy()}.
      *
-     * @param data a serialized String, typically produced by {@link #serializeToString()}
+     * @param data a serialized String, typically produced by {@link #stringSerialize()}
      * @return this INoise, after being modified (if possible)
      */
     @Override
-    public BasicHashNoise deserializeFromString(String data) {
+    public BasicHashNoise stringDeserialize(String data) {
         seed = (DigitTools.intFromDec(data, 1, data.length() - 1));
         return this;
     }

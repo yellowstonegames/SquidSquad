@@ -775,11 +775,11 @@ public class SimplexNoise implements INoise {
         return "SimN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + "`";
     }
 
-    public SimplexNoise deserializeFromString(String data) {
+    public SimplexNoise stringDeserialize(String data) {
         seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
         return this;
     }

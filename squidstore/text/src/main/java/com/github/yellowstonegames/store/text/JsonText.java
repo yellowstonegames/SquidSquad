@@ -45,8 +45,8 @@ public final class JsonText {
     
     /**
      * Registers Language with the given Json object, so Language can be written to and read from JSON.
-     * This is a simple wrapper around Language's built-in {@link Language#serializeToString()} and
-     * {@link Language#deserializeFromString(String)} methods. Out of an abundance of caution, this also
+     * This is a simple wrapper around Language's built-in {@link Language#stringSerialize()} and
+     * {@link Language#stringDeserialize(String)} methods. Out of an abundance of caution, this also
      * registers Pattern from RegExodus, because that class serializes into a much more compact form with
      * custom registration than without, and because there's a risk with unregistered Pattern
      * serialization (using Json) of hitting an infinite cycle. There's no such risk with it registered.
@@ -59,13 +59,13 @@ public final class JsonText {
         json.setSerializer(Language.class, new Json.Serializer<Language>() {
             @Override
             public void write(Json json, Language object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeValue(object.stringSerialize());
             }
 
             @Override
             public Language read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Language.deserializeFromString(jsonData.asString());
+                return Language.stringDeserialize(jsonData.asString());
             }
         });
     }
@@ -82,13 +82,13 @@ public final class JsonText {
         json.setSerializer(Language.SentenceForm.class, new Json.Serializer<Language.SentenceForm>() {
             @Override
             public void write(Json json, Language.SentenceForm object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeValue(object.stringSerialize());
             }
 
             @Override
             public Language.SentenceForm read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Language.SentenceForm.deserializeFromString(jsonData.asString());
+                return Language.SentenceForm.stringDeserialize(jsonData.asString());
             }
         });
     }

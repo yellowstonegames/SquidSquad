@@ -30,11 +30,11 @@ public class LanguageSerializer extends Serializer<Language> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final Language data) {
-        output.writeString(data.serializeToString());
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public Language read(final Kryo kryo, final Input input, final Class<? extends Language> dataClass) {
-        return Language.deserializeFromString(input.readString());
+        return Language.stringDeserialize(input.readString());
     }
 }

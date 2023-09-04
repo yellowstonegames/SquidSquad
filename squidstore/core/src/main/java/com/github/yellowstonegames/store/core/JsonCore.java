@@ -319,8 +319,8 @@ public final class JsonCore {
 
     /**
      * Registers WeightedTable with the given Json object, so WeightedTable can be written to and read from JSON.
-     * This is a simple wrapper around WeightedTable's built-in {@link WeightedTable#serializeToString()} and
-     * {@link WeightedTable#deserializeFromString(String)} methods.
+     * This is a simple wrapper around WeightedTable's built-in {@link WeightedTable#stringSerialize()} and
+     * {@link WeightedTable#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -329,21 +329,21 @@ public final class JsonCore {
         json.setSerializer(WeightedTable.class, new Json.Serializer<WeightedTable>() {
             @Override
             public void write(Json json, WeightedTable object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeValue(object.stringSerialize());
             }
 
             @Override
             public WeightedTable read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return WeightedTable.deserializeFromString(jsonData.asString());
+                return WeightedTable.stringDeserialize(jsonData.asString());
             }
         });
     }
 
     /**
      * Registers IntShuffler with the given Json object, so IntShuffler can be written to and read from JSON.
-     * This is a simple wrapper around IntShuffler's built-in {@link IntShuffler#serializeToString()} and
-     * {@link IntShuffler#deserializeFromString(String)} methods.
+     * This is a simple wrapper around IntShuffler's built-in {@link IntShuffler#stringSerialize()} and
+     * {@link IntShuffler#stringDeserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -352,20 +352,20 @@ public final class JsonCore {
         json.setSerializer(IntShuffler.class, new Json.Serializer<IntShuffler>() {
             @Override
             public void write(Json json, IntShuffler object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeValue(object.stringSerialize());
             }
 
             @Override
             public IntShuffler read(Json json, JsonValue jsonData, Class type) {
-                return IntShuffler.deserializeFromString(jsonData.asString());
+                return IntShuffler.stringDeserialize(jsonData.asString());
             }
         });
     }
 
     /**
      * Registers Pattern with the given Json object, so Pattern can be written to and read from JSON.
-     * This is a simple wrapper around Pattern's built-in {@link Pattern#serializeToString()} and
-     * {@link Pattern#deserializeFromString(String)} methods. Note that Pattern is in regexodus, a
+     * This is a simple wrapper around Pattern's built-in {@link Pattern#stringSerialize()} and
+     * {@link Pattern#stringDeserialize(String)} methods. Note that Pattern is in regexodus, a
      * dependency of squidcore.
      *
      * @param json a libGDX Json object that will have a serializer registered
@@ -375,13 +375,13 @@ public final class JsonCore {
         json.setSerializer(Pattern.class, new Json.Serializer<Pattern>() {
             @Override
             public void write(Json json, Pattern object, Class knownType) {
-                json.writeValue(object.serializeToString());
+                json.writeValue(object.stringSerialize());
             }
 
             @Override
             public Pattern read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Pattern.deserializeFromString(jsonData.asString());
+                return Pattern.stringDeserialize(jsonData.asString());
             }
         });
     }

@@ -229,7 +229,7 @@ public class IntShuffler {
         return new IntShuffler(this);
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         StringBuilder sb = new StringBuilder("`");
         Base.BASE36.appendSigned(sb, bound);
         sb.append('~');
@@ -245,7 +245,7 @@ public class IntShuffler {
         return sb.append('`').toString();
     }
 
-    public static IntShuffler deserializeFromString(@NonNull String data) {
+    public static IntShuffler stringDeserialize(@NonNull String data) {
         if(data.length() < 13) return null;
         int idx = 0;
         int bound = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));

@@ -139,7 +139,7 @@ public class RadialNoiseWrapper extends NoiseWrapper {
     }
 
     @Override
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + Serializer.serialize(wrapped) + '~' +
                 seed + '~' +
                 frequency + '~' +
@@ -153,7 +153,7 @@ public class RadialNoiseWrapper extends NoiseWrapper {
     }
 
     @Override
-    public RadialNoiseWrapper deserializeFromString(String data) {
+    public RadialNoiseWrapper stringDeserialize(String data) {
         int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
         setWrapped(Serializer.deserialize(data.substring(1, pos)));
         setSeed(Base.BASE10.readLong(data, pos+1, pos = data.indexOf('~', pos+2)));

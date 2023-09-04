@@ -34,9 +34,9 @@ import regexodus.Pattern;
  * chain, so it chooses the next word based on the previous two words. This is meant to allow easy
  * serialization of the necessary data to call chain(); if you can store the {@link #words} and {@link #processed}
  * arrays in some serialized form, then you can reassign them to the same fields to avoid calling analyze(). One way to
- * do this conveniently is to use {@link #serializeToString()} after calling analyze() once and to save the resulting
+ * do this conveniently is to use {@link #stringSerialize()} after calling analyze() once and to save the resulting
  * String; then, rather than calling analyze() again on future runs, you would call
- * {@link #deserializeFromString(String)} to create the MarkovText without needing any repeated analysis.
+ * {@link #stringDeserialize(String)} to create the MarkovText without needing any repeated analysis.
  * <br>
  * Created by Tommy Ettinger on 1/30/2018.
  */
@@ -307,13 +307,13 @@ public class MarkovText {
     }
 
     /**
-     * Returns a representation of this MarkovText as a String; use {@link #deserializeFromString(String)} to get a
+     * Returns a representation of this MarkovText as a String; use {@link #stringDeserialize(String)} to get a
      * MarkovText back from this String. The {@link #words} and {@link #processed} fields must have been given values by
      * either direct assignment, calling {@link #analyze(CharSequence)}, or building this MarkovTest with the
-     * aforementioned deserializeToString method. Uses spaces to separate words and a tab to separate the two fields.
+     * aforementioned destringSerialize method. Uses spaces to separate words and a tab to separate the two fields.
      * @return a String that can be used to store the analyzed words and frequencies in this MarkovText
      */
-    public String serializeToString()
+    public String stringSerialize()
     {
         StringBuilder sb = new StringBuilder();
         StringTools.appendJoined(sb, " ", words);
@@ -324,11 +324,11 @@ public class MarkovText {
     }
 
     /**
-     * Recreates an already-analyzed MarkovText given a String produced by {@link #serializeToString()}.
-     * @param data a String returned by {@link #serializeToString()}
+     * Recreates an already-analyzed MarkovText given a String produced by {@link #stringSerialize()}.
+     * @param data a String returned by {@link #stringSerialize()}
      * @return a MarkovText that is ready to generate text with {@link #chain(long)}
      */
-    public static MarkovText deserializeFromString(String data)
+    public static MarkovText stringDeserialize(String data)
     {
         int split = data.indexOf('\t');
         MarkovText markov = new MarkovText();

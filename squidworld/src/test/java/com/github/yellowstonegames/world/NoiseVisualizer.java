@@ -172,7 +172,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case BACKSLASH:
-                        noise.deserializeFromString(Gdx.app.getClipboard().getContents());
+                        noise.stringDeserialize(Gdx.app.getClipboard().getContents());
                         break;
                     case W:
                         if((noise.getNoiseType() & -2) == Noise.CUBIC) noise.setFrequency(0x1p-4f);
@@ -302,7 +302,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                            1f));
 //                            gif.palette.paletteArray[i] = DescriptiveColor.toRGBA8888(DescriptiveColor.oklabByHSL((i + 100 & 255) * 0x1p-8f, 1f, i * 0x1p-10f + 0.5f, 1f));
 //                        }
-                        String ser = noise.serializeToString() + "_" + System.currentTimeMillis();
+                        String ser = noise.stringSerialize() + "_" + System.currentTimeMillis();
                         System.out.println(ser);
 //                        gif.write(Gdx.files.local("out/cube" + System.currentTimeMillis() + ".gif"), frames, 16);
                         gif.write(Gdx.files.local("out/" + ser + ".gif"), frames, 16);

@@ -115,9 +115,9 @@ public class WorldWildGridDemo extends ApplicationAdapter {
 //        }
 //        basis = WorldMapGenerator.MimicMap.reprojectToElliptical(basis);
 //// at this point you could get the GreasedRegion as a String, and save the compressed output to a file:
-//// Gdx.files.local("map.txt").writeString(LZSPlus.compress(basis.serializeToString()), false, "UTF16");
+//// Gdx.files.local("map.txt").writeString(LZSPlus.compress(basis.stringSerialize()), false, "UTF16");
 //// you could reload basis without needing the original map image with
-//// basis = GreasedRegion.deserializeFromString(LZSPlus.decompress(Gdx.files.local("map.txt").readString("UTF16")));
+//// basis = GreasedRegion.stringDeserialize(LZSPlus.decompress(Gdx.files.local("map.txt").readString("UTF16")));
 //// it's also possible to store the compressed map as a String in code, but you need to be careful about escaped chars.
 //        world = new WorldMapGenerator.LocalMimicMap(seed, basis, FastNoise.instance, 0.8);
 //        pix.dispose();

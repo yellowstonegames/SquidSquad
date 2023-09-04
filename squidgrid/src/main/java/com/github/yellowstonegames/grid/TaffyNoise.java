@@ -129,11 +129,11 @@ public class TaffyNoise implements INoise {
         return "TafN";
     }
 
-    public String serializeToString() {
+    public String stringSerialize() {
         return "`" + seed + '~' + dim + '~' + BitConversion.floatToReversedIntBits(1f/sharpness) + '`';
     }
 
-    public TaffyNoise deserializeFromString(String data) {
+    public TaffyNoise stringDeserialize(String data) {
         if(data == null || data.length() < 7)
             return this;
         int pos;
