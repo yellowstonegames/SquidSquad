@@ -1945,7 +1945,7 @@ public final class DescriptiveColor {
     public static int describeOklab(final CharSequence description, int start, int length) {
         float lightness = 0f, saturation = 0f;
         final String[] terms = description.toString().substring(start,
-                length < 0 ? description.length() : start + length).split("[^a-zA-Z]+");
+                length < 0 ? description.length() : start + length).split("[^a-zA-Z0-9_]+");
         mixing.clear();
         for (int i = 0; i < terms.length; i++) {
             String term = terms[i];
@@ -1966,7 +1966,7 @@ public final class DescriptiveColor {
                                 continue;
                         }
                     }
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.get(term), 1);
                     break;
                 case 'b':
                     if (len > 3 && (term.charAt(3) == 'g')) { // bright
@@ -1986,7 +1986,7 @@ public final class DescriptiveColor {
                                 continue;
                         }
                     }
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.get(term), 1);
                     break;
                 case 'p':
                     if (len > 2 && (term.charAt(2) == 'l')) { // pale
@@ -2007,7 +2007,7 @@ public final class DescriptiveColor {
                                 continue;
                         }
                     }
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.get(term), 1);
                     break;
                 case 'w':
                     if (len > 3 && (term.charAt(3) == 'k')) { // weak
@@ -2027,7 +2027,7 @@ public final class DescriptiveColor {
                                 continue;
                         }
                     }
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.get(term), 1);
                     break;
                 case 'r':
                     if (len > 1 && (term.charAt(1) == 'i')) { // rich
@@ -2043,7 +2043,7 @@ public final class DescriptiveColor {
                                 continue;
                         }
                     }
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.get(term), 1);
                     break;
                 case 'd':
                     if (len > 1 && (term.charAt(1) == 'a')) { // dark
@@ -2087,15 +2087,28 @@ public final class DescriptiveColor {
                                 continue;
                         }
                     }
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.get(term), 1);
+                    break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    if(mixing.size() >= 2)
+                        mixing.set((mixing.size() & -2) - 1, DigitTools.intFromDec(term));
                     break;
                 default:
-                    mixing.add(NAMED.get(term));
+                    mixing.add(NAMED.get(term), 1);
                     break;
             }
         }
-        if(mixing.size() == 0) return 0;
-        int result = mix(mixing.items, 0, mixing.size());
+        if(mixing.isEmpty()) return 0;
+        int result = unevenMix(mixing.items, 0, mixing.size());
         if(result == PLACEHOLDER) return result;
 
         if (lightness > 0) result = lighten(result, lightness);
