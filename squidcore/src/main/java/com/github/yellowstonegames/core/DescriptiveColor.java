@@ -1863,7 +1863,10 @@ public final class DescriptiveColor {
      * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
      * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
      * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
-     * "palemax" or (its equivalent) "palemost", where only the word length is checked.
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked. The case of adjectives doesn't
+     * matter here; they can be all-caps, all lower-case, or mixed-case without issues. The names of colors, however,
+     * are case-sensitive, because you can combine other named color palettes with the one here, and at least in one
+     * common situation (merging libGDX Colors with the palette here), the other palette uses all-caps names only.
      * <br>
      * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
      * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
@@ -1881,7 +1884,7 @@ public final class DescriptiveColor {
      * {@link #processColorMarkup(CharSequence)}). Otherwise, the whole CharSequence is parsed as a color description,
      * and the result is converted to an RGBA int.
      *
-     * @param description a color description, as a lower-case String matching the above format, or a {@code #}-prefixed hex color
+     * @param description a color description, as a String or other CharSequence matching the above format, or a {@code #}-prefixed hex color
      * @return a packed RGBA int color as described
      */
     public static int describe(final CharSequence description) {
@@ -1917,7 +1920,10 @@ public final class DescriptiveColor {
      * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
      * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
      * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
-     * "palemax" or (its equivalent) "palemost", where only the word length is checked.
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked. The case of adjectives doesn't
+     * matter here; they can be all-caps, all lower-case, or mixed-case without issues. The names of colors, however,
+     * are case-sensitive, because you can combine other named color palettes with the one here, and at least in one
+     * common situation (merging libGDX Colors with the palette here), the other palette uses all-caps names only.
      * <br>
      * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
      * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
@@ -1930,7 +1936,7 @@ public final class DescriptiveColor {
      * This overload always considers its input a color description, and won't parse hex colors. It only handles the
      * simplest case, where the full provided {@code description} is only a color description.
      *
-     * @param description a color description, as a lower-case String matching the above format
+     * @param description a color description, as a String or other CharSequence matching the above format
      * @return a packed Oklab int color as described
      */
     public static int describeOklab(final CharSequence description) {
@@ -1956,7 +1962,10 @@ public final class DescriptiveColor {
      * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
      * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
      * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
-     * "palemax" or (its equivalent) "palemost", where only the word length is checked.
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked. The case of adjectives doesn't
+     * matter here; they can be all-caps, all lower-case, or mixed-case without issues. The names of colors, however,
+     * are case-sensitive, because you can combine other named color palettes with the one here, and at least in one
+     * common situation (merging libGDX Colors with the palette here), the other palette uses all-caps names only.
      * <br>
      * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
      * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
@@ -1970,7 +1979,7 @@ public final class DescriptiveColor {
      * starting index in {@code description} to read from and a maximum {@code length} to read before stopping. If
      * {@code length} is negative, this reads the rest of {@code description} after {@code start}.
      *
-     * @param description a color description, as a lower-case String matching the above format
+     * @param description a color description, as a String or other CharSequence matching the above format
      * @param start the first character index of the description to read from
      * @param length how much of description to attempt to parse; if negative, this parses until the end
      * @return a packed Oklab int color as described
@@ -1985,9 +1994,10 @@ public final class DescriptiveColor {
             String term = terms[i];
             if (term == null || term.isEmpty()) continue;
             final int len = term.length();
-            switch (Category.caseDown(term.charAt(0))) {
+            switch (term.charAt(0)) {
+                case 'L':
                 case 'l':
-                    if (len > 2 && (term.charAt(2) == 'g')) { // light
+                    if (len > 2 && (term.charAt(2) == 'g' || term.charAt(2) == 'G')) { // light
                         switch (len) {
                             case 9:
                                 lightness += 0.150f;
@@ -2002,8 +2012,9 @@ public final class DescriptiveColor {
                     }
                     mixing.add(NAMED.get(term), 1);
                     break;
+                case 'B':
                 case 'b':
-                    if (len > 3 && (term.charAt(3) == 'g')) { // bright
+                    if (len > 3 && (term.charAt(3) == 'g' || term.charAt(3) == 'G')) { // bright
                         switch (len) {
                             case 10:
                                 lightness += 0.150f;
@@ -2022,8 +2033,9 @@ public final class DescriptiveColor {
                     }
                     mixing.add(NAMED.get(term), 1);
                     break;
+                case 'P':
                 case 'p':
-                    if (len > 2 && (term.charAt(2) == 'l')) { // pale
+                    if (len > 2 && (term.charAt(2) == 'l' || term.charAt(2) == 'L')) { // pale
                         switch (len) {
                             case 8: // palemost
                             case 7: // palerer
@@ -2043,8 +2055,9 @@ public final class DescriptiveColor {
                     }
                     mixing.add(NAMED.get(term), 1);
                     break;
+                case 'W':
                 case 'w':
-                    if (len > 3 && (term.charAt(3) == 'k')) { // weak
+                    if (len > 3 && (term.charAt(3) == 'k' || term.charAt(3) == 'K')) { // weak
                         switch (len) {
                             case 8:
                                 lightness -= 0.150f;
@@ -2063,8 +2076,9 @@ public final class DescriptiveColor {
                     }
                     mixing.add(NAMED.get(term), 1);
                     break;
+                case 'R':
                 case 'r':
-                    if (len > 1 && (term.charAt(1) == 'i')) { // rich
+                    if (len > 1 && (term.charAt(1) == 'i' || term.charAt(1) == 'I')) { // rich
                         switch (len) {
                             case 8:
                                 saturation += 0.25f;
@@ -2079,8 +2093,9 @@ public final class DescriptiveColor {
                     }
                     mixing.add(NAMED.get(term), 1);
                     break;
+                case 'D':
                 case 'd':
-                    if (len > 1 && (term.charAt(1) == 'a')) { // dark
+                    if (len > 1 && (term.charAt(1) == 'a' || term.charAt(1) == 'A')) { // dark
                         switch (len) {
                             case 8:
                                 lightness -= 0.150f;
@@ -2092,7 +2107,7 @@ public final class DescriptiveColor {
                                 lightness -= 0.150f;
                                 continue;
                         }
-                    } else if (len > 1 && (term.charAt(1) == 'u')) { // dull
+                    } else if (len > 1 && (term.charAt(1) == 'u' || term.charAt(1) == 'U')) { // dull
                         switch (len) {
                             case 8:
                                 saturation -= 0.25f;
@@ -2104,7 +2119,7 @@ public final class DescriptiveColor {
                                 saturation -= 0.1f;
                                 continue;
                         }
-                    } else if (len > 3 && (term.charAt(3) == 'p')) { // deep
+                    } else if (len > 3 && (term.charAt(3) == 'p' || term.charAt(3) == 'P')) { // deep
                         switch (len) {
                             case 8:
                                 lightness -= 0.150f;
@@ -2141,7 +2156,7 @@ public final class DescriptiveColor {
                     break;
             }
         }
-        if(mixing.isEmpty()) return 0;
+        if(mixing.size() < 2) return PLACEHOLDER;
         int result = unevenMix(mixing.items, 0, mixing.size());
         if(result == PLACEHOLDER) return result;
 
