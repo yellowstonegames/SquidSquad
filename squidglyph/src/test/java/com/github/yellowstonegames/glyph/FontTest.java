@@ -96,19 +96,19 @@ public class FontTest extends ApplicationAdapter {
         font.resizeDistanceField(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backgrounds = new int[(int) Math.ceil(800 / font.cellWidth)][(int) Math.ceil(640 / font.cellHeight)];
         int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
-                nw = DescriptiveColor.describe("dull peach butter"), ne = DescriptiveColor.describe("dark brown");
+                nw = DescriptiveColor.describe("dull peach butter"), ne = DescriptiveColor.describe("dark brown^3 purple");
         backgrounds[0][0] = sw;
         backgrounds[0][backgrounds[0].length - 1] = nw;
         backgrounds[backgrounds.length - 1][0] = se;
         backgrounds[backgrounds.length - 1][backgrounds[0].length - 1] = ne;
         for (int x = 1; x < backgrounds.length - 1; x++) {
             backgrounds[x][0] = DescriptiveColor.lerpColors(sw, se, x / (float) backgrounds.length);
-            backgrounds[x][backgrounds[0].length - 1] = DescriptiveColor.lerpColors(nw, ne, x / (float) backgrounds.length);
+            backgrounds[x][backgrounds[0].length - 1] = DescriptiveColor.lerpColors(nw, ne, x / (backgrounds.length - 1F));
         }
         for (int x = 0; x < backgrounds.length; x++) {
             int s = backgrounds[x][0], e = backgrounds[x][backgrounds[0].length - 1];
             for (int y = 1; y < backgrounds[0].length - 1; y++) {
-                backgrounds[x][y] = DescriptiveColor.lerpColors(s, e, y / (float) backgrounds[0].length);
+                backgrounds[x][y] = DescriptiveColor.lerpColors(s, e, y / (backgrounds[0].length - 1f));
             }
         }
 

@@ -22,11 +22,7 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import regexodus.MatchResult;
-import regexodus.Pattern;
-import regexodus.Replacer;
-import regexodus.Substitution;
-import regexodus.TextBuffer;
+import regexodus.*;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.yellowstonegames.core.Gamut.GAMUT_DATA;
@@ -1849,23 +1845,39 @@ public final class DescriptiveColor {
 
     /**
      * Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.
-     * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
-     * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
-     * {@link #NAMED} and tracked; if there is more than one of these color name words, the colors will be mixed using
-     * {@link #mix(int[], int, int)}, or if there is just one color name word, then the corresponding color
-     * will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
-     * "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
-     * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. If a color name
-     * or adjective is invalid, it is considered the same as adding the invalid "color" {@link #PLACEHOLDER}.
+     * Color descriptions consist of one or more alphabetical words, separated by non-alphanumeric characters (typically
+     * spaces and/or hyphens, though the underscore is treated as a letter). Any word that is the name of a color in
+     * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
+     * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
+     * word, then the corresponding color will be used. A number can be present after a color name (separated by any
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color name
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the char
+     * {@code '^'}, but other punctuation like {@code ':'} is equally valid. You can also repeat a color name to
+     * increase its weight.
+     * <br>
+     * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
+     * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
+     * or "-est" appended to make their effect twice or three times as strong. Technically, the chars appended to an
+     * adjective don't matter, only their count, so "lightaa" is the same as "lighter" and "richcat" is the same as
+     * "richest". There's an unofficial fourth level as well, used when any 4 characters are appended to an adjective
+     * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
+     * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
+     * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked.
+     * <br>
+     * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
+     * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
+     * placeholder for other code).
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
-     * and "lightest richer apricot-olive".
+     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
+     * "red^3 orange", and "dark deep blue^7 cyan^3".
      * <br>
      * This method will check the first character of description and may change how it parses depending on that char.
      * If the first char is {@code #}, and there are 6 characters remaining, this parses those 6 characters as a hex
-     * color in RGB888 format. If the first char is {@code #} and there are 8 or more characters remaining, it parses
-     * 8 of those characters as an RGBA8888 hex color. If the first char is {@code |}, that char is ignored and the rest
-     * of the CharSequence is treated as a color description (this is to ease parsing markup for
+     * color in RGB888 format (treating it as opaque). If the first char is {@code #} and there are 8 or more characters
+     * remaining, it parses 8 of those characters as an RGBA8888 hex color. If the first char is {@code |}, that char is
+     * ignored and the rest of the CharSequence is treated as a color description (this is to ease parsing markup for
      * {@link #processColorMarkup(CharSequence)}). Otherwise, the whole CharSequence is parsed as a color description,
      * and the result is converted to an RGBA int.
      *
@@ -1887,36 +1899,15 @@ public final class DescriptiveColor {
 
     /**
      * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
-     * Color descriptions consist of one or more lower-case words, separated by non-alphabetical characters (typically
-     * spaces and/or hyphens). Any word that is the name of a color in this palette will be looked up in
-     * {@link #NAMED} and tracked; if there is more than one of these color name words, the colors will be mixed using
-     * {@link #mix(int[], int, int)}, or if there is just one color name word, then the corresponding color
-     * will be used. The special adjectives "light" and "dark" change the intensity of the described color; likewise,
-     * "rich" and "dull" change the saturation (the difference of the chromatic channels from grayscale). All of these
-     * adjectives can have "-er" or "-est" appended to make their effect twice or three times as strong. Technically,
-     * the chars appended to an adjective don't matter, only their count, so "lightaa" is the same as "lighter" and
-     * "richcat" is the same as "richest". There's an unofficial fourth level as well, used when any 4 characters are
-     * appended to an adjective (as in "darkmost"); it has four times the effect of the original adjective. If a color
-     * name or adjective is invalid, it is considered the same as adding the invalid "color" {@link #PLACEHOLDER}.
-     * <br>
-     * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
-     * and "lightest richer apricot-olive".
-     * <br>
-     * This always considers its input a color description, won't parse hex colors, and always uses the full text.
-     *
-     * @param description a color description, as a lower-case String matching the above format
-     * @return a packed Oklab int color as described
-     */
-    public static int describeOklab(final CharSequence description) {
-        return describeOklab(description, 0, description.length());
-    }
-    /**
-     * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
-     * Color descriptions consist of one or more alphabetical words, separated by non-alphabetical characters (typically
+     * Color descriptions consist of one or more alphabetical words, separated by non-alphanumeric characters (typically
      * spaces and/or hyphens, though the underscore is treated as a letter). Any word that is the name of a color in
      * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
-     * words, the colors will be mixed using {@link #mix(int[], int, int)}, or if there is just one color name word,
-     * then the corresponding color will be used.
+     * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
+     * word, then the corresponding color will be used. A number can be present after a color name (separated by any
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color name
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the char
+     * {@code '^'}, but other punctuation like {@code ':'} is equally valid. You can also repeat a color name to
+     * increase its weight.
      * <br>
      * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
      * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
@@ -1933,25 +1924,68 @@ public final class DescriptiveColor {
      * placeholder for other code).
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
-     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", and "weakmost celery".
+     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
+     * "red^3 orange", and "dark deep blue^7 cyan^3".
      * <br>
-     * This overload always considers its input a color description, and won't parse hex colors.
+     * This overload always considers its input a color description, and won't parse hex colors. It only handles the
+     * simplest case, where the full provided {@code description} is only a color description.
      *
      * @param description a color description, as a lower-case String matching the above format
-     * @param start the first character of the description to read from
+     * @return a packed Oklab int color as described
+     */
+    public static int describeOklab(final CharSequence description) {
+        return describeOklab(description, 0, description.length());
+    }
+    /**
+     * Parses a color description and returns the approximate color it describes, as a packed Oklab int color.
+     * Color descriptions consist of one or more alphabetical words, separated by non-alphanumeric characters (typically
+     * spaces and/or hyphens, though the underscore is treated as a letter). Any word that is the name of a color in
+     * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
+     * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
+     * word, then the corresponding color will be used. A number can be present after a color name (separated by any
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color name
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the char
+     * {@code '^'}, but other punctuation like {@code ':'} is equally valid. You can also repeat a color name to
+     * increase its weight.
+     * <br>
+     * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
+     * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
+     * or "-est" appended to make their effect twice or three times as strong. Technically, the chars appended to an
+     * adjective don't matter, only their count, so "lightaa" is the same as "lighter" and "richcat" is the same as
+     * "richest". There's an unofficial fourth level as well, used when any 4 characters are appended to an adjective
+     * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
+     * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
+     * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked.
+     * <br>
+     * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
+     * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
+     * placeholder for other code).
+     * <br>
+     * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
+     * "red^3 orange", and "dark deep blue^7 cyan^3".
+     * <br>
+     * This overload always considers its input a color description, and won't parse hex colors. You can specify a
+     * starting index in {@code description} to read from and a maximum {@code length} to read before stopping. If
+     * {@code length} is negative, this reads the rest of {@code description} after {@code start}.
+     *
+     * @param description a color description, as a lower-case String matching the above format
+     * @param start the first character index of the description to read from
      * @param length how much of description to attempt to parse; if negative, this parses until the end
      * @return a packed Oklab int color as described
      */
     public static int describeOklab(final CharSequence description, int start, int length) {
         float lightness = 0f, saturation = 0f;
         final String[] terms = description.toString().substring(start,
-                length < 0 ? description.length() : start + length).split("[^a-zA-Z0-9_]+");
+                length < 0 ? description.length() - start : Math.min(description.length(), start + length))
+                .split("[^a-zA-Z0-9_]+");
         mixing.clear();
         for (int i = 0; i < terms.length; i++) {
             String term = terms[i];
             if (term == null || term.isEmpty()) continue;
             final int len = term.length();
-            switch (term.charAt(0)) {
+            switch (Category.caseDown(term.charAt(0))) {
                 case 'l':
                     if (len > 2 && (term.charAt(2) == 'g')) { // light
                         switch (len) {
