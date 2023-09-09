@@ -43,6 +43,20 @@ public class RegexLimitTest {
         }
         Assert.assertTrue(pattern.matcher(sb).matches());
     }
+    
+    /**
+     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
+     * This does not crash RegExodus! The 2001-era code wins! Cue the dancing baby GIF!
+     */
+    @Test
+    public void testGroupedOrRegExodus() {
+        regexodus.Pattern pattern = regexodus.Pattern.compile("(a|b)+");
+        StringBuilder sb = new StringBuilder(LIMIT);
+        for (int i = 0; i < LIMIT; i++) {
+            sb.append('a');
+        }
+        Assert.assertTrue(pattern.matcher(sb).matches());
+    }
 
     /**
      * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
@@ -51,6 +65,35 @@ public class RegexLimitTest {
     @Test(expected = StackOverflowError.class)
     public void testNCGroupedOrJUR() {
         Pattern pattern = Pattern.compile("(?:a|b)+");
+        StringBuilder sb = new StringBuilder(LIMIT);
+        for (int i = 0; i < LIMIT; i++) {
+            sb.append('a');
+        }
+        Assert.assertTrue(pattern.matcher(sb).matches());
+    }
+
+    /**
+     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
+     * Using an independent non-capturing group actually allows this to pass!
+     */
+    @Test
+    public void testINCGroupedOrJUR() {
+        Pattern pattern = Pattern.compile("(?>a|b)+");
+        StringBuilder sb = new StringBuilder(LIMIT);
+        for (int i = 0; i < LIMIT; i++) {
+            sb.append('a');
+        }
+        Assert.assertTrue(pattern.matcher(sb).matches());
+    }
+
+    /**
+     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
+     * Using a character class works where a normal (non-independent) group crashes. It isn't applicable in the same
+     * places, though.
+     */
+    @Test
+    public void testCharClassJUR() {
+        Pattern pattern = Pattern.compile("[ab]+");
         StringBuilder sb = new StringBuilder(LIMIT);
         for (int i = 0; i < LIMIT; i++) {
             sb.append('a');
