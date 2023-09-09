@@ -79,6 +79,19 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         return Color.toFloatBits(v * MathUtils.lerp(1f, x, d), v * MathUtils.lerp(1f, y, d), v * MathUtils.lerp(1f, z, d), a);
     }
 
+    public static float forwardLightOttosson(float L) {
+        final float k1 = 0.206f, k3 = 1.17087f, k2 = 0.03f;
+        L = (L * (L + k1)) / (k3 * (L + k2));
+        return L * L * (256f/255f);
+    }
+
+    public static float reverseLightOttosson(float L) {
+        L = (float) Math.sqrt(L * 0x0.ffp0f);
+        final float k1 = 0.206f, k3 = 1.17087f; // k2 = 0.03, but that is already included.
+        final float t = (k3 * L - k1);
+        return (t + (float) Math.sqrt(t * t + 0.1405044f * L)) * 0.5f;
+    }
+
     @Override
     public void create() {
         font = KnownFonts.getCozette();
@@ -90,6 +103,10 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         Interpolator kAdaptive = new Interpolations.Interpolator("kAdaptive", x -> (float) Math.pow(1.0 - Math.pow(1.0 - x, 1.0/k[1]), 1.0/k[0]));
         Interpolator reverseLight = new Interpolator("reverseLight", DescriptiveColor::reverseLight);
         Interpolator forwardLight = new Interpolator("forwardLight", DescriptiveColor::forwardLight);
+        Interpolator reverseLightO = new Interpolator("reverseLightO", InterpolationsGraphing::reverseLightOttosson);
+        Interpolator forwardLightO = new Interpolator("forwardLightO", InterpolationsGraphing::forwardLightOttosson);
+        Interpolator forwardReverseLight = new Interpolator("forwardReverseLight", f -> DescriptiveColor.reverseLight(DescriptiveColor.forwardLight(f)));
+        Interpolator forwardReverseLightO = new Interpolator("forwardReverseLightO", f -> reverseLightOttosson(forwardLightOttosson(f)));
         Interpolator pow0_625In = new Interpolator("pow0_625In", Interpolations.powInFunction(0.625f));
         Interpolator pow1_6In = new Interpolator("pow1_6In", Interpolations.powInFunction(1.6f));
         Interpolator pow0_6In = new Interpolator("pow0_6In", Interpolations.powInFunction(0.6f));
