@@ -40,7 +40,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
-    static final boolean WRITE = false;
+    static final boolean WRITE = true;
 
     private static final int width = 300, height = 420;
 
@@ -88,6 +88,14 @@ public class InterpolationsGraphing extends ApplicationAdapter {
 
 //        Interpolator adjusted = new Interpolations.Interpolator("adjustedHue", a -> MathTools.barronSpline(a, 1.7f, 0.9f));
         Interpolator kAdaptive = new Interpolations.Interpolator("kAdaptive", x -> (float) Math.pow(1.0 - Math.pow(1.0 - x, 1.0/k[1]), 1.0/k[0]));
+        Interpolator reverseLight = new Interpolator("reverseLight", DescriptiveColor::reverseLight);
+        Interpolator forwardLight = new Interpolator("forwardLight", DescriptiveColor::forwardLight);
+        Interpolator pow0_625In = new Interpolator("pow0_625In", Interpolations.powInFunction(0.625f));
+        Interpolator pow1_6In = new Interpolator("pow1_6In", Interpolations.powInFunction(1.6f));
+        Interpolator pow0_6In = new Interpolator("pow0_6In", Interpolations.powInFunction(0.6f));
+        Interpolator pow1_666In = new Interpolator("pow1_666In", Interpolations.powInFunction(1.666f));
+        Interpolator pow0_666In = new Interpolator("pow0_666In", Interpolations.powInFunction(0.666f));
+        Interpolator pow1_5In = new Interpolator("pow1_5In", Interpolations.powInFunction(1.5f));
         interpolators = Interpolations.getInterpolatorArray();
         index = interpolators.length - 1;
         current = interpolators[index];

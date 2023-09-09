@@ -22,7 +22,11 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import regexodus.*;
+import regexodus.MatchResult;
+import regexodus.Pattern;
+import regexodus.Replacer;
+import regexodus.Substitution;
+import regexodus.TextBuffer;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 import static com.github.yellowstonegames.core.Gamut.GAMUT_DATA;
