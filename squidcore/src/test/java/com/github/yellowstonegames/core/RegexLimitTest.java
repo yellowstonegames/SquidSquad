@@ -43,7 +43,7 @@ public class RegexLimitTest {
         }
         Assert.assertTrue(pattern.matcher(sb).matches());
     }
-    
+
     /**
      * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
      * This does not crash RegExodus! The 2001-era code wins! Cue the dancing baby GIF!
