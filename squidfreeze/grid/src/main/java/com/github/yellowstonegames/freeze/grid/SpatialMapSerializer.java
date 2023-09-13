@@ -24,7 +24,6 @@ import com.github.yellowstonegames.grid.SpatialMap;
 /**
  * Serializer for {@link SpatialMap}; needs the type of the SpatialMap's values registered.
  */
-@SuppressWarnings("rawtypes")
 public class SpatialMapSerializer extends CollectionSerializer<SpatialMap<?>> {
     public SpatialMapSerializer() {
         setImmutable(false);

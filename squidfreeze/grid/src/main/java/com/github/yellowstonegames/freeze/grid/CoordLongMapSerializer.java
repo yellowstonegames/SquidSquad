@@ -21,39 +21,39 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordFloatMap;
+import com.github.yellowstonegames.grid.CoordLongMap;
 
 /**
- * Serializer for {@link CoordFloatMap}; needs {@link CoordSerializer} registered for {@link Coord}.
+ * Serializer for {@link CoordLongMap}; needs {@link CoordSerializer} registered for {@link Coord}.
  */
-public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
+public class CoordLongMapSerializer extends Serializer<CoordLongMap> {
 
-    public CoordFloatMapSerializer() {
+    public CoordLongMapSerializer() {
         setAcceptsNull(false);
     }
 
     @Override
-    public void write(final Kryo kryo, final Output output, final CoordFloatMap data) {
+    public void write(final Kryo kryo, final Output output, final CoordLongMap data) {
         int length = data.size();
         output.writeInt(length, true);
-        for (CoordFloatMap.EntryIterator<?> it = new CoordFloatMap.EntryIterator<>(data); it.hasNext(); ) {
-            CoordFloatMap.Entry<?> ent = it.next();
+        for (CoordLongMap.EntryIterator<?> it = new CoordLongMap.EntryIterator<>(data); it.hasNext(); ) {
+            CoordLongMap.Entry<?> ent = it.next();
             kryo.writeObject(output, ent.key);
-            output.writeFloat(ent.value);
+            output.writeLong(ent.value);
         }
     }
 
     @Override
-    public CoordFloatMap read(final Kryo kryo, final Input input, final Class<? extends CoordFloatMap> dataClass) {
+    public CoordLongMap read(final Kryo kryo, final Input input, final Class<? extends CoordLongMap> dataClass) {
         int length = input.readInt(true);
-        CoordFloatMap data = new CoordFloatMap(length);
+        CoordLongMap data = new CoordLongMap(length);
         for (int i = 0; i < length; i++)
-            data.put(kryo.readObject(input, Coord.class), input.readFloat());
+            data.put(kryo.readObject(input, Coord.class), input.readLong());
         return data;
     }
 
     @Override
-    public CoordFloatMap copy(Kryo kryo, CoordFloatMap original) {
-        return new CoordFloatMap(original);
+    public CoordLongMap copy(Kryo kryo, CoordLongMap original) {
+        return new CoordLongMap(original);
     }
 }

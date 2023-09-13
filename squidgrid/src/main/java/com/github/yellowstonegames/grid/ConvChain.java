@@ -27,7 +27,7 @@ import java.util.Collection;
  * <br>
  * Ported from <a href="https://github.com/mxgmn/ConvChain">ConvChain</a> (which is in the public domain).
  */
-public class ConvChain {
+public final class ConvChain {
 
     private ConvChain()
     {

@@ -23,7 +23,6 @@ import com.github.yellowstonegames.old.v300.*;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-@SuppressWarnings("rawtypes")
 public final class JsonOld {
     private JsonOld() {
     }

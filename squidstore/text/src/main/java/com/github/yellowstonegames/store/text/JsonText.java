@@ -26,7 +26,6 @@ import com.github.yellowstonegames.text.*;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-@SuppressWarnings("rawtypes")
 public final class JsonText {
     private JsonText() {
     }

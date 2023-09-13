@@ -25,7 +25,6 @@ import com.github.yellowstonegames.grid.CoordObjectMap;
  * Serializer for {@link CoordObjectMap}; needs {@link CoordSerializer} registered for Coord, and a serializer
  * registered for whatever Object type the Map has for its values.
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap<?>> {
     public CoordObjectMapSerializer() {
         setImmutable(false);
