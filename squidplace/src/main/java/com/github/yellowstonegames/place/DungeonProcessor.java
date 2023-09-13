@@ -71,7 +71,7 @@ import java.util.Arrays;
  * <br>
  * Example map with a custom-representation lake: https://gist.github.com/tommyettinger/0055075f9de59c452d25
  *
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author Tommy Ettinger - https://github.com/tommyettinger
  */
 public class DungeonProcessor implements PlaceGenerator{

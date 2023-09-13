@@ -18,6 +18,7 @@ package com.github.yellowstonegames.core;
 
 import org.junit.Assert;
 import org.junit.Test;
+import regexodus.PatternSyntaxException;
 
 import java.util.regex.Pattern;
 
@@ -46,20 +47,6 @@ public class RegexLimitTest {
 
     /**
      * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
-     * This does not crash RegExodus! The 2001-era code wins! Cue the dancing baby GIF!
-     */
-    @Test
-    public void testGroupedOrRegExodus() {
-        regexodus.Pattern pattern = regexodus.Pattern.compile("(a|b)+");
-        StringBuilder sb = new StringBuilder(LIMIT);
-        for (int i = 0; i < LIMIT; i++) {
-            sb.append('a');
-        }
-        Assert.assertTrue(pattern.matcher(sb).matches());
-    }
-
-    /**
-     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
      * Using a non-capturing group does not help java.util.regex code; this also crashes.
      */
     @Test(expected = StackOverflowError.class)
@@ -74,7 +61,7 @@ public class RegexLimitTest {
 
     /**
      * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
-     * Using an independent non-capturing group actually allows this to pass!
+     * Using an independent non-capturing group actually allows this to pass! Note that this is likely to fail on GWT.
      */
     @Test
     public void testINCGroupedOrJUR() {
@@ -101,4 +88,62 @@ public class RegexLimitTest {
         Assert.assertTrue(pattern.matcher(sb).matches());
     }
 
+
+    /**
+     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
+     * This does not crash RegExodus! The 2001-era code wins! Cue the dancing baby GIF!
+     */
+    @Test
+    public void testGroupedOrRegExodus() {
+        regexodus.Pattern pattern = regexodus.Pattern.compile("(a|b)+");
+        StringBuilder sb = new StringBuilder(LIMIT);
+        for (int i = 0; i < LIMIT; i++) {
+            sb.append('a');
+        }
+        Assert.assertTrue(pattern.matcher(sb).matches());
+    }
+
+
+    /**
+     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
+     * This does not crash RegExodus either!
+     */
+    @Test
+    public void testNCGroupedOrRegExodus() {
+        regexodus.Pattern pattern = regexodus.Pattern.compile("(?:a|b)+");
+        StringBuilder sb = new StringBuilder(LIMIT);
+        for (int i = 0; i < LIMIT; i++) {
+            sb.append('a');
+        }
+        Assert.assertTrue(pattern.matcher(sb).matches());
+    }
+
+    /**
+     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
+     * This does not crash RegExodus either!
+     */
+    @Test
+    public void testCharClassRegExodus() {
+        regexodus.Pattern pattern = regexodus.Pattern.compile("[ab]+");
+        StringBuilder sb = new StringBuilder(LIMIT);
+        for (int i = 0; i < LIMIT; i++) {
+            sb.append('a');
+        }
+        Assert.assertTrue(pattern.matcher(sb).matches());
+    }
+
+    /**
+     * <a href="https://youtrack.jetbrains.com/issue/KT-46211/Kotlin-Native-Stack-overflow-crash-in-Regex-classes-with-simple-pattern-and-very-large-input#focus=Comments-27-6469342.0-0">Based on this Kotlin bug report</a>.
+     * The atomic or independent non-capturing group syntax doesn't seem to be fully implemented in RegExodus. You can
+     * have one atomic group, but it can't be repeated with {@code +}, {@code *}, or similar qualifiers.
+     */
+    @Test(expected = PatternSyntaxException.class)
+    public void testINCGroupedOrRegExodus() {
+        regexodus.Pattern pattern = regexodus.Pattern.compile("(?>a|b)+");
+        StringBuilder sb = new StringBuilder(LIMIT);
+        for (int i = 0; i < LIMIT; i++) {
+            sb.append('a');
+        }
+        Assert.assertTrue(pattern.matcher(sb).matches());
+    }
 }

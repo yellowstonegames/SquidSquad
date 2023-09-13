@@ -36,7 +36,7 @@ import com.github.yellowstonegames.grid.Coord;
  * a cost map.
  * @see CostlyGraph the pathfinding class this is based on; CostlyGraph can be used independently
  * @see DijkstraMap a sometimes-faster pathfinding algorithm that can pathfind to multiple goals
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author Tommy Ettinger - optimized code
  * @author earlygrey - wrote and really optimized simple-graphs, which this uses heavily
  */

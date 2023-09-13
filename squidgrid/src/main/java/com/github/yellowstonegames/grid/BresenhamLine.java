@@ -29,20 +29,19 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * {@link #drawLineArray(Coord, Coord)}, or {@link #isReachable(Coord, Coord, float[][])}.
  * The more verbose name of the pair is the instance method.
  *
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author Lewis Potter
  * @author Tommy Ettinger
  * @author smelC
  */
 public class BresenhamLine implements LineDrawer {
 
-    public final ObjectList<Coord> lastLine;
+    public final ObjectList<Coord> lastLine = new ObjectList<>();
 
     /**
      * Makes a new BresenhamLine and initializes its only state, {@link #lastLine}.
      */
     public BresenhamLine() {
-        lastLine = new ObjectList<>();
     }
 
     /**

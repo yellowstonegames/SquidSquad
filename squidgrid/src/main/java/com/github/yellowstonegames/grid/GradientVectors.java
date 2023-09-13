@@ -16,10 +16,6 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.random.AceRandom;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.yellowstonegames.core.annotations.Beta;
-
 public final class GradientVectors {
     /**
      * No need to instantiate.

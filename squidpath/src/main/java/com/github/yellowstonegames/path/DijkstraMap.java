@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -26,7 +25,6 @@ import com.github.yellowstonegames.path.technique.Technique;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * A group of pathfinding algorithms that explore in all directions equally, and are commonly used when there is more

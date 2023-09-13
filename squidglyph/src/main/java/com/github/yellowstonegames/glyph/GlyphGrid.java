@@ -30,8 +30,6 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.IntLongOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.function.IntIntPredicate;
 import com.github.tommyettinger.textra.ColorLookup;

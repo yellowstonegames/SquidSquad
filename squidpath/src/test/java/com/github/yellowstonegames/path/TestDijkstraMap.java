@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.ObjectDeque;
-import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Measurement;
 

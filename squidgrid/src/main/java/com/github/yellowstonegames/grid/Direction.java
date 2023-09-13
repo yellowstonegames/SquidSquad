@@ -25,7 +25,7 @@ import com.github.tommyettinger.digital.TrigTools;
  * The grid referenced has x positive to the right and y positive downwards on
  * screen.
  *
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  */
 public enum Direction {
 
@@ -91,7 +91,7 @@ public enum Direction {
     /**
      * Gets an estimate at the correct direction that a position lies in given the distance towards it on the x and y
      * axes. If x and y are both between -1 and 1 inclusive, this will always be accurate, and should be faster than
-     * {@link #getDirection(int, int)} by avoiding trigonometry or any other math on doubles. If at least one of x or y
+     * {@link #getDirection(int, int)} by avoiding trigonometry or any other math on floats. If at least one of x or y
      * is 0, then this will also be accurate and will produce either a cardinal direction or NONE if both are 0. If x
      * and y are both non-zero, this will always produce a diagonal, even if a cardinal direction should be more
      * accurate; this behavior may sometimes be desirable to detect when some position is even slightly off from a true

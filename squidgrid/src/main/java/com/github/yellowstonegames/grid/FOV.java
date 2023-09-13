@@ -71,8 +71,8 @@ import static com.github.yellowstonegames.grid.OrthoLine.reachable;
  * {@link #reuseRippleFOV(float[][], float[][], int, int, int, float, Radius)}
  * and {@link #reuseRippleFOV(float[][], float[][], int, int, int, float, Radius, float, float)}
  * use internal static state, resetting it on each call; this makes them
- * ineligible for use in multi-threaded code. The other methods use Shadow FOV,
- * and are potentially usable in multi-threaded code.
+ * ineligible for use in multithreaded code. The other methods use Shadow FOV,
+ * and are potentially usable in multithreaded code.
  * <br>
  * Static methods are provided to add together FOV maps in the simple way
  * (disregarding visibility of distant FOV from a given cell), or the more
@@ -94,7 +94,7 @@ import static com.github.yellowstonegames.grid.OrthoLine.reachable;
  * <br>
  * This class is not thread-safe. This is generally true for most of SquidSquad.
  *
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author Tommy Ettinger
  */
 public class FOV {

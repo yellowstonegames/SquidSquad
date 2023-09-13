@@ -30,17 +30,17 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * Supports rolling multiple virtual dice of arbitrary size, summing all, the highest <i>n</i>, or the lowest <i>n</i>
  * dice, treating dice as "exploding" as in some tabletop games (where the max result is rolled again and added),
  * getting a value from inside a range, and applying simple arithmetic modifiers to the result (like adding a number).
- * Typically you'll want to use the {@link #roll(String)} method if you have a String like {@code "2d8+6"} that you want
- * to evaluate once, or the various other methods if you have int variables for things like "number of dice to roll" and
- * "sides on each die." Important to note are the {@link Rule} inner class and the code that uses it, such as
+ * Typically, you'll want to use the {@link #roll(String)} method if you have a String like {@code "2d8+6"} that you
+ * want to evaluate once, or the various other methods if you have int variables for things like "number of dice to
+ * roll" and "sides on each die." Important to note are the {@link Rule} inner class and the code that uses it, such as
  * {@link #parseRollRule(String)} to parse dice notation and generate a Rule, and {@link #runRollRule(Rule)} to roll
  * dice according to that rule. Using Rule-related code is preferred if you want to perform a roll more than a few times
- * or to hold onto the instructions for a dice roll to use at a later time.
+ * or to hold onto the instructions for a die roll to use at a later time.
  * <br>
  * Based on code from the Blacken library.
  *
  * @author yam655
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author Tommy Ettinger
  */
 public class Dice {

@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Basic radius strategy implementations likely to be used for roguelikes.
  *
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  */
 public enum Radius {
 

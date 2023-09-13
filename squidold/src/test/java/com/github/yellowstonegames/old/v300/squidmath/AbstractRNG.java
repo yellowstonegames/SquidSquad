@@ -193,7 +193,7 @@ public abstract class AbstractRNG implements IRNG {
      * Returns a random non-negative integer between 0 (inclusive) and the given bound (exclusive),
      * or 0 if the bound is 0. The bound can be negative, which will produce 0 or a negative result.
      * <br>
-     * Credit goes to Daniel Lemire, http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+     * <a href="http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/">Credit goes to Daniel Lemire</a>.
      *
      * @param bound the outer bound (exclusive), can be negative or positive
      * @return the found number

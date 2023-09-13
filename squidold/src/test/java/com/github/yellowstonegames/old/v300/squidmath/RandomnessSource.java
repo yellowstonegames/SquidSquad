@@ -23,7 +23,7 @@ import java.io.Serializable;
  * generator. It is a replacement for Java's built-in Random for
  * improved performance.
  *
- * @author Eben Howard - http://squidpony.com - howard@squidpony.com
+ * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  */
 public interface RandomnessSource extends Serializable {
 

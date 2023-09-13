@@ -16,7 +16,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
 
 /**
  * Foam noise code as an {@link INoise} implementation.

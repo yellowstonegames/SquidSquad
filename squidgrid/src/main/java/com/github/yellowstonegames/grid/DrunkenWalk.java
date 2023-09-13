@@ -104,8 +104,9 @@ public class DrunkenWalk {
     }
 
     /**
-     * Internal use. Drunkard's walk algorithm, single step. Based on Michael Patraw's C code, used for cave carving.
-     * http://mpatraw.github.io/libdrunkard/
+     * Internal use. Drunkard's walk algorithm, single step.
+     * <a href="http://mpatraw.github.io/libdrunkard/">Based on Michael Patraw's C code, used for cave carving</a>
+     * (broken link).
      * @param currentX the x coordinate of the current point
      * @param currentY the y coordinate of the current point
      * @param targetX the x coordinate of the point to wobble towards
@@ -122,10 +123,9 @@ public class DrunkenWalk {
         int dx = targetX - currentX;
         int dy = targetY - currentY;
 
-        if (dx >  1) dx = 1;
-        if (dx < -1) dx = -1;
-        if (dy >  1) dy = 1;
-        if (dy < -1) dy = -1;
+        // integer signum or sign-of, thanks to project nayuki
+        dx = (dx >> 31 | -dx >>> 31);
+        dy = (dy >> 31 | -dy >>> 31);
 
         float r = rng.nextFloat();
         Direction dir;

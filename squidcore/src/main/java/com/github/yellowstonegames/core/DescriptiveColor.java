@@ -737,15 +737,15 @@ public final class DescriptiveColor {
      * distributed between 0 and 512, and absolute mean error of less than
      * 1E-6 in the same scenario. Uses a bit-twiddling method similar to one
      * presented in Hacker's Delight and also used in early 3D graphics (see
-     * https://en.wikipedia.org/wiki/Fast_inverse_square_root for more, but
+     * <a href="https://en.wikipedia.org/wiki/Fast_inverse_square_root">Wikipedia</a> for more, but
      * this code approximates cbrt(x) and not 1/sqrt(x)). This specific code
-     * was originally by Marc B. Reynolds, posted in his "Stand-alone-junk"
-     * repo: https://github.com/Marc-B-Reynolds/Stand-alone-junk/blob/master/src/Posts/ballcube.c#L182-L197 .
+     * was originally by Marc B. Reynolds,
+     * <a href="https://github.com/Marc-B-Reynolds/Stand-alone-junk/blob/master/src/Posts/ballcube.c#L182-L197">posted in his "Stand-alone-junk" repo</a>.
      * It's worth noting that while hardware instructions for finding the
      * square root of a float have gotten extremely fast, the same is not
      * true for the cube root (which has to allow negative inputs), so while
      * the bit-twiddling inverse square root is no longer a beneficial
-     * optimization on current hardware, this does seem to help.
+     * optimization on current hardware, this does seem to help cube roots.
      * <br>
      * This is used when converting from RGB to Oklab, as an intermediate step.
      * @param x any non-negative finite float to find the cube root of
@@ -892,7 +892,7 @@ public final class DescriptiveColor {
         final float s = cbrtPositive(0.0883097947f * r + 0.2818474174f * g + 0.6302613616f * b);
 
         return (
-                Math.min(Math.max((int)(forwardLight(0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
+                       Math.min(Math.max((int)(forwardLight(0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f), 0), 255)
                         | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
                         | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
                         | (rgba) << 24);

@@ -23,7 +23,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.github.tommyettinger.ds.IntIntMap;
-import com.github.tommyettinger.ds.IntLongMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.glyph.GlyphActor;
 import com.github.yellowstonegames.glyph.GlyphGrid;

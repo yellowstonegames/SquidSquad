@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
