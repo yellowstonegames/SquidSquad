@@ -90,9 +90,9 @@ import static com.github.yellowstonegames.grid.OrthoLine.reachable;
  * by FOV, you can pass that float[][] to {@link #cellsByDescendingValue(float[][])}
  * and iterate over the returned map's {@link CoordFloatOrderedMap#entrySet()} or
  * {@link CoordFloatOrderedMap#order()}. These approaches will start iteration at the
- * highest-value cell and continue to lower and lower values.
- * <br>
- * This class is not thread-safe. This is generally true for most of SquidSquad.
+ * highest-value cell and continue to lower and lower values. You can also reuse an
+ * existing CoordFloatOrderedMap using {@link #fillCellsByDescendingValue(float[][], CoordFloatOrderedMap)},
+ * which is a better choice than cellsByDescendingValue() if you call it every frame.
  *
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
@@ -1855,14 +1855,50 @@ public final class FOV {
      * {@link #reuseRippleFOV(float[][], float[][], int, int, float, Radius)}, or a similar method, this gets a
      * {@link CoordFloatOrderedMap} containing only the visible Coord cells as keys, associated with their visibility
      * levels, and ordered so the most-visible cell (typically where the viewer is) is first in the iteration order.
-     * Lower visibility values will go later and later in the iteration order.
+     * Lower visibility values will go later and later in the iteration order. This method allocates a new
+     * CoordFloatOrderedMap; if you want to reuse an existing one, use
+     * {@link #fillCellsByDescendingValue(float[][], CoordFloatOrderedMap)} instead.
      * @param fovMap a rectangular 2D float array ideally containing values greater than 0 and less than or equal to 1
      * @return a CoordFloatOrderedMap containing the non-zero values in fovMap, ordered from the highest value to lowest
      */
     public static CoordFloatOrderedMap cellsByDescendingValue(float[][] fovMap) {
-        CoordFloatOrderedMap cells = CoordFloatOrderedMap.fromArray2D(fovMap, 1E-32f, 1f);
+        CoordFloatOrderedMap cells = new CoordFloatOrderedMap(fovMap.length * fovMap[0].length + 72 >>> 3, 0.5f);
+        for (int x = 0; x < fovMap.length; x++) {
+            for (int y = 0; y < fovMap[x].length; y++) {
+                final float f = fovMap[x][y];
+                if (f > 0f) {
+                    cells.put(Coord.get(x, y), f);
+                }
+            }
+        }
         cells.sortByValue(FloatComparators.OPPOSITE_COMPARATOR);
         return cells;
+    }
+    /**
+     * Given a typical FOV map produced by {@link #reuseFOV(float[][], float[][], int, int)},
+     * {@link #reuseRippleFOV(float[][], float[][], int, int, float, Radius)}, or a similar method and a
+     * {@link CoordFloatOrderedMap} {@code modifying} to clear and reuse in-place, this fills {@code modifying}
+     * with only the visible Coord cells as keys, associated with their visibility
+     * levels, and ordered so the most-visible cell (typically where the viewer is) is first in the iteration order.
+     * Lower visibility values will go later and later in the iteration order. This is meant to reuse a
+     * CoordFloatOrderedMap to avoid allocations, but if you don't have one, you could easily call
+     * {@link #cellsByDescendingValue(float[][])} to get a starting point.
+     * @param fovMap a rectangular 2D float array ideally containing values greater than 0 and less than or equal to 1
+     * @param modifying a {@link CoordFloatOrderedMap} that will have its contents cleared and then refilled by this
+     * @return {@code modifying} now containing the non-zero values in fovMap, ordered from the highest value to lowest
+     */
+    public static CoordFloatOrderedMap fillCellsByDescendingValue(float[][] fovMap, CoordFloatOrderedMap modifying) {
+        modifying.clear();
+        for (int x = 0; x < fovMap.length; x++) {
+            for (int y = 0; y < fovMap[x].length; y++) {
+                final float f = fovMap[x][y];
+                if (f > 0f) {
+                    modifying.put(Coord.get(x, y), f);
+                }
+            }
+        }
+        modifying.sortByValue(FloatComparators.OPPOSITE_COMPARATOR);
+        return modifying;
     }
 
 }
