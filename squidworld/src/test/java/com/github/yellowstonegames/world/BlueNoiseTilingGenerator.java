@@ -41,7 +41,7 @@ import java.util.Date;
 
 /**
  * Porting Bart Wronski's blue noise generator from NumPy to Java, see
- * https://bartwronski.com/2021/04/21/superfast-void-and-cluster-blue-noise-in-python-numpy-jax/ for more.
+ * <a href="https://bartwronski.com/2021/04/21/superfast-void-and-cluster-blue-noise-in-python-numpy-jax/">here</a> for more.
  * <br>
  * This makes use of some of the more unusual and powerful features in jdkgdxds; that's the reason this tool was moved
  * from SquidLib (which already has existing code to analyze blue noise, and so seemed like a nice fit) to SquidSquad.

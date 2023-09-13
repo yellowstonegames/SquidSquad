@@ -24,7 +24,7 @@ import java.io.Serializable;
  * A slight variant on RNG that always uses a stateful RandomessSource and so can have its state
  * set or retrieved using setState() or getState().
  * Created by Tommy Ettinger on 9/15/2015.
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class StatefulRNG extends RNG implements Serializable, IStatefulRNG {
 

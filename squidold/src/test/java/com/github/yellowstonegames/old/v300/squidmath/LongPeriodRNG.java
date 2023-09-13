@@ -55,8 +55,8 @@ import java.util.Arrays;
  * generates for a given seed, changed on October 19, 2017.
  * <br>
  * Created by Tommy Ettinger on 3/21/2016.
- * Ported from CC0-licensed C code by Sebastiano Vigna, at http://xorshift.di.unimi.it/xorshift1024star.c
- * @author Tommy Ettinger
+ * <a href="http://xorshift.di.unimi.it/xorshift1024star.c">Ported from this CC0-licensed C code by Sebastiano Vigna</a>.
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class LongPeriodRNG implements RandomnessSource, Serializable {
 
@@ -241,7 +241,7 @@ public class LongPeriodRNG implements RandomnessSource, Serializable {
     /**
      * Can return any long, positive or negative, of any size permissible in a 64-bit signed integer.
      * <br>
-     * Written by Sebastiano Vigna, from http://xorshift.di.unimi.it/xorshift1024star.c
+     * <a href="http://xorshift.di.unimi.it/xorshift1024star.c">Written by Sebastiano Vigna</a>.
      *
      * @return any long, all 64 bits are random
      */
@@ -275,7 +275,7 @@ public class LongPeriodRNG implements RandomnessSource, Serializable {
      * This is the jump function for the generator. It is equivalent to 2^512 calls to nextLong(); it can be used to
      * generate 2^512 non-overlapping subsequences for parallel computations. Alters the state of this object.
      * <br>
-     * Written by Sebastiano Vigna, from http://xorshift.di.unimi.it/xorshift1024star.c , don't ask how it works.
+     * <a href="http://xorshift.di.unimi.it/xorshift1024star.c">Written by Sebastiano Vigna</a>.
      */
     public void jump() {
 

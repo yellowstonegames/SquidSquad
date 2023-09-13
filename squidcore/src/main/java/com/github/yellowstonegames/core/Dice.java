@@ -41,7 +41,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author yam655
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class Dice {
     

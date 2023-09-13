@@ -34,7 +34,7 @@ import java.io.Serializable;
  * <br>
  * Written in 2015 by Sebastiano Vigna (vigna@acm.org)
  * @author Sebastiano Vigna
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class LightRNG implements RandomnessSource, StatefulRandomness, SkippingRandomness, Serializable
 {
@@ -131,7 +131,7 @@ public class LightRNG implements RandomnessSource, StatefulRandomness, SkippingR
      * and like that method will always advance state exactly once (equivalent to one call to
      * {@link #nextLong()}).
      * <br>
-     * Credit goes to Daniel Lemire, http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+     * <a href="http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/">Credit goes to Daniel Lemire</a>.
      *
      * @param bound the outer bound (exclusive), can be negative or positive
      * @return the found number

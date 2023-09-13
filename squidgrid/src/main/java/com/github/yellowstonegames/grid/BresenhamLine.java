@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author Lewis Potter
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  * @author smelC
  */
 public class BresenhamLine implements LineDrawer {

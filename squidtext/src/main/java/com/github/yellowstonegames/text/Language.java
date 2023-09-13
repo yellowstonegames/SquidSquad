@@ -58,7 +58,7 @@ import java.util.Set;
  * <br>
  * @see Thesaurus Thesaurus uses this class a lot to generate things like plant names and the titles of nations.
  * @see Translator Translator uses a Language to reversibly translate English text to nonsense.
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class Language {
     public final String[] openingVowels, midVowels, openingConsonants, midConsonants, closingConsonants,

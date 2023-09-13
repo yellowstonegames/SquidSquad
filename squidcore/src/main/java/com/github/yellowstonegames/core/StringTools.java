@@ -32,7 +32,7 @@ import java.util.List;
  * Each Word, Capitalizing the first word in a sentence, replacing "a improper usage of a" with "an improved
  * replacement using an," etc. This also has a lot of predefined categories of chars that are considered widely enough
  * supported by fonts, like {@link #COMMON_PUNCTUATION} and {@link #LATIN_LETTERS_UPPER}.
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public final class StringTools {
     /**

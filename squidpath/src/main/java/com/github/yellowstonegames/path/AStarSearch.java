@@ -37,7 +37,7 @@ import com.github.yellowstonegames.grid.Coord;
  * @see CostlyGraph the pathfinding class this is based on; CostlyGraph can be used independently
  * @see DijkstraMap a sometimes-faster pathfinding algorithm that can pathfind to multiple goals
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
- * @author Tommy Ettinger - optimized code
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a> - optimized code
  * @author earlygrey - wrote and really optimized simple-graphs, which this uses heavily
  */
 public class AStarSearch {

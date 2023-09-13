@@ -72,7 +72,7 @@ public class RNG implements Serializable, IRNG {
     /**
      * A subclass of java.util.Random that uses a RandomnessSource supplied by the user instead of the default.
      *
-     * @author Tommy Ettinger
+     * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
      */
     public static class CustomRandom extends Random {
 
@@ -777,7 +777,7 @@ public class RNG implements Serializable, IRNG {
      * bound over 1 billion. This method is no more "hasty" than {@link #nextInt(int)}, but it is a little
      * faster than that method because this avoids special behavior for when bound is negative.
      * <br>
-     * Credit goes to Daniel Lemire, http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+     * <a href="http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/">Credit goes to Daniel Lemire</a>.
      *
      * @param bound the outer bound (exclusive), can be negative or positive
      * @return the found number

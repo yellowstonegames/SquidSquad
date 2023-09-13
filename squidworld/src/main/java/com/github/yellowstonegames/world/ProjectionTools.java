@@ -21,7 +21,7 @@ package com.github.yellowstonegames.world;
  * <a href="https://github.com/jkunimune15/Map-Projections/blob/9f820aba788ba0b37a1c67128a4c861d243b4a46/src/utils/NumericalAnalysis.java">his Map-Projections repo</a>.
  * There may have been some small changes made. Copied to SquidSquad with the rest of SquidWorld.
  * @author jkunimune
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class ProjectionTools {
     /**

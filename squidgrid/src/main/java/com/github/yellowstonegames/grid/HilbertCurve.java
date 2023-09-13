@@ -33,7 +33,7 @@ package com.github.yellowstonegames.grid;
  * curves," like the more-common and easier-to-calculate Z-order curve, the Hilbert
  * Curve doesn't move diagonally or jump long distances between sequential points, so it
  * very often tends to have very close distances for very nearby 2D points.
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public final class HilbertCurve {
     public static final int DEPTH = 8;
@@ -95,7 +95,8 @@ public final class HilbertCurve {
 
     /**
      * Encode a number n as a Gray code; Gray codes have a relation to the Hilbert curve and may be useful.
-     * Source: http://xn--2-umb.com/15/hilbert , http://aggregate.org/MAGIC/#Gray%20Code%20Conversion
+     * Source: <a href="http://xn--2-umb.com/15/hilbert">2π.com (page no longer exists)</a>,
+     * <a href="http://aggregate.org/MAGIC/#Gray%20Code%20Conversion">The Aggregate Magic Algorithms</a>
      * @param n any int
      * @return the gray code for n
      */
@@ -105,7 +106,8 @@ public final class HilbertCurve {
 
     /**
      * Decode a number from a Gray code n; Gray codes have a relation to the Hilbert curve and may be useful.
-     * Source: http://xn--2-umb.com/15/hilbert , http://aggregate.org/MAGIC/#Gray%20Code%20Conversion
+     * Source: <a href="http://xn--2-umb.com/15/hilbert">2π.com (page no longer exists)</a>,
+     * <a href="http://aggregate.org/MAGIC/#Gray%20Code%20Conversion">The Aggregate Magic Algorithms</a>
      * @param n a gray code, as produced by grayEncode
      * @return the decoded int
      */
@@ -121,7 +123,7 @@ public final class HilbertCurve {
      * This assumes x and y are between 0 and 255, inclusive.
      * This uses a lookup table for the 256x256 Hilbert Curve, which should make it faster than calculating the
      * distance along the Hilbert Curve repeatedly.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="<a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.">and-what-happened blog post</a>.
      * @param x between 0 and 255 inclusive
      * @param y between 0 and 255 inclusive
      * @return the distance to travel along the 256x256 Hilbert Curve to get to the given x, y point.
@@ -136,7 +138,7 @@ public final class HilbertCurve {
      * position. This assumes x, y, and z are between 0 and 7, inclusive.
      * This uses a lookup table for the 8x8x8 Hilbert Curve, which should make it faster than calculating the
      * distance along the Hilbert Curve repeatedly.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param x between 0 and 7 inclusive
      * @param y between 0 and 7 inclusive
      * @param z between 0 and 7 inclusive
@@ -160,7 +162,7 @@ public final class HilbertCurve {
     /*
      * Takes an x, y position and returns the length to travel along the 256x256 Hilbert curve to reach that position.
      * This assumes x and y are between 0 and 255, inclusive.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param x between 0 and 255 inclusive
      * @param y between 0 and 255 inclusive
      * @return the distance to travel along the 256x256 Hilbert Curve to get to the given x, y point.
@@ -227,7 +229,7 @@ public final class HilbertCurve {
      * Takes a position as a Morton code, with interleaved x and y bits and x in the least significant bit, and returns
      * the length to travel along the 256x256 Hilbert Curve to reach that position.
      * This uses 16 bits of the Morton code and requires that the code is non-negative.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param morton a Morton code that interleaves two 8-bit unsigned numbers, with x as index1 and y as index2.
      * @return a distance to travel down the Hilbert Curve to reach the location that can be decoded from morton.
      */
@@ -345,7 +347,7 @@ public final class HilbertCurve {
      * Takes a position as a Coord called pt and returns the length to travel along the 256x256 Hilbert curve to reach
      * that position.
      * This assumes pt.x and pt.y are between 0 and 255, inclusive.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param pt a Coord with values between 0 and 255, inclusive
      * @return a distance from the start of the 256x256 Hilbert curve to get to the position of pt
      */
@@ -551,7 +553,7 @@ public final class HilbertCurve {
      * Takes two 8-bit unsigned integers index1 and index2, and returns a Morton code, with interleaved index1 and
      * index2 bits and index1 in the least significant bit. With this method, index1 and index2 can have up to 8 bits.
      * This returns a 16-bit Morton code and WILL encode information in the sign bit if the inputs are large enough.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param index1 a non-negative integer using at most 8 bits, to be placed in the "x" slots
      * @param index2 a non-negative integer using at most 8 bits, to be placed in the "y" slots
      * @return a Morton code/Z-Code that interleaves the two numbers into one 16-bit char
@@ -578,7 +580,7 @@ public final class HilbertCurve {
      * Takes two 8-bit unsigned integers index1 and index2, and returns a Morton code, with interleaved index1 and
      * index2 bits and index1 in the least significant bit. With this method, index1 and index2 can have up to 8 bits.
      * This returns a 32-bit Morton code but only uses 16 bits, and will not encode information in the sign bit.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param index1 a non-negative integer using at most 8 bits, to be placed in the "x" slots
      * @param index2 a non-negative integer using at most 8 bits, to be placed in the "y" slots
      * @return a Morton code that interleaves the two numbers as one 32-bit int, but only in 16 bits of it
@@ -606,7 +608,7 @@ public final class HilbertCurve {
      * Takes a Morton code, with interleaved x and y bits and x in the least significant bit, and returns the Coord
      * representing the same x, y position.
      * This uses 16 bits of the Morton code and requires that the code is non-negative.
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param morton an int containing two interleaved numbers, from 0 to 255 each
      * @return a Coord matching the x and y extracted from the Morton code
      */
@@ -634,8 +636,8 @@ public final class HilbertCurve {
     /**
      * Takes a Morton code, with interleaved x and y bits and x in the least significant bit, and returns the Coord
      * representing the same x, y position.
-     * This takes a a 16-bit Z-Code with data in the sign bit, as returned by zEncode().
-     * Source: http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html
+     * This takes a 16-bit Z-Code with data in the sign bit, as returned by zEncode().
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param morton an int containing two interleaved numbers, from 0 to 255 each
      * @return a Coord matching the x and y extracted from the Morton code
      */

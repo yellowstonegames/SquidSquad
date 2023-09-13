@@ -95,7 +95,7 @@ import static com.github.yellowstonegames.grid.OrthoLine.reachable;
  * This class is not thread-safe. This is generally true for most of SquidSquad.
  *
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class FOV {
     private static final Direction[] ccw = new Direction[]

@@ -29,7 +29,7 @@ import java.util.*;
  * documentation strings in this class.
  * <br>
  * Big thanks to smelc for the concept in his hgameshrogue library.
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  * @author smelC
  */
 public abstract class AbstractRNG implements IRNG {

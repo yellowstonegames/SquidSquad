@@ -12477,9 +12477,10 @@ public final class FullPalette {
 
 
     /**
-     * DawnBringer's 32-color palette, as posted on the Pixel Joint forums,
-     * http://www.pixeljoint.com/forum/forum_posts.asp?TID=16247 , and since then used in lots of pixel art.
-     * Some useful previews can be seen here https://github.com/geoffb/dawnbringer-palettes , and the order
+     * DawnBringer's 32-color palette, as posted on,
+     * <a href="http://www.pixeljoint.com/forum/forum_posts.asp?TID=16247">the Pixel Joint forums</a> , and since then
+     * used in lots of pixel art. Some useful previews can be seen
+     * <a href="https://github.com/geoffb/dawnbringer-palettes">here</a>, and the order
      * this array uses is the same as the previews at the bottom of that page.
      * <br>
      * <a href="http://i.imgur.com/2xSFryj.png">Preview of all 32 colors, with names</a>

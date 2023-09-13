@@ -90,7 +90,7 @@ import static com.github.yellowstonegames.old.v300.CrossHash.Water.*;
  * optimizations that HotSpot performs, and probably won't do as well on GWT or Android.
  * <br>
  * Created by Tommy Ettinger on 1/16/2016.
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class CrossHash {
     public static long hash64(final CharSequence data) {
@@ -778,8 +778,8 @@ public class CrossHash {
      * in Arrays.hashCode and the default CrossHash algorithm (FNV-1a) are evident, and Sip (implementing
      * SipHash) does approximately as well as Lightning, with no clear patterns visible (Sip has been removed
      * from SquidLib because it needs a lot of code and is slower than Mist). The
-     * idea is from a technical report on visual uses for hashing,
-     * http://www.clockandflame.com/media/Goulburn06.pdf .
+     * idea is from
+     * <a href="http://www.clockandflame.com/media/Goulburn06.pdf">a technical report on visual uses for hashing</a>.
      * <ul>
      * <li>{@link Arrays#hashCode(int[])}: http://i.imgur.com/S4Gh1sX.png</li>
      * <li>{@link CrossHash#hash(int[])}: http://i.imgur.com/x8SDqvL.png</li>

@@ -69,10 +69,10 @@ import java.util.Arrays;
  * {@link Region#singleRandom(EnhancedRandom)} on that to choose random cells, optionally removing the chosen cells if you don't
  * want duplicates.
  * <br>
- * Example map with a custom-representation lake: https://gist.github.com/tommyettinger/0055075f9de59c452d25
+ * <a href="https://gist.github.com/tommyettinger/0055075f9de59c452d25">Example map with a custom-representation lake</a>
  *
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
- * @author Tommy Ettinger - https://github.com/tommyettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class DungeonProcessor implements PlaceGenerator{
 

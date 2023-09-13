@@ -41,7 +41,7 @@ import com.github.tommyettinger.digital.MathTools;
  * <br>
  * Created by Tommy Ettinger on 9/22/2018.
  * @author Alan Wolfe
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class LowStorageShuffler {
     public final int bound;

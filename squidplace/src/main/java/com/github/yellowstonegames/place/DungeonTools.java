@@ -27,7 +27,7 @@ import java.util.*;
  * Includes various utilities for random floor-finding, but also provides ways to take dungeons that use '#'
  * for walls and make a copy that uses unicode box drawing characters.
  *
- * @author Tommy Ettinger - https://github.com/tommyettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  * Created by Tommy Ettinger on 4/1/2015.
  */
 public class DungeonTools {

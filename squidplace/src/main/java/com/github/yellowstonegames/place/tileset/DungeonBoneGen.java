@@ -21,9 +21,10 @@ import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Region;
 
 /**
- * Generate a dungeon using Sean T. Barrett's Herringbone Wang Tiles method. http://nothings.org/gamedev/herringbone/
+ * Generates a dungeon as a 2D char array using
+ * <a href="http://nothings.org/gamedev/herringbone/">Sean T. Barrett's Herringbone Wang Tiles method</a>
  * Created by Tommy Ettinger on 3/10/2015.
- * @author Tommy Ettinger - https://github.com/tommyettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class DungeonBoneGen {
 

@@ -48,7 +48,7 @@ import static com.github.tommyettinger.digital.Hasher.*;
  * Feistel network. This also uses a different seed for each round.
  *
  * @author Alan Wolfe
- * @author Tommy Ettinger
+ * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 @Beta
 public class IntShuffler {
