@@ -826,7 +826,8 @@ public class MixedGenerator implements PlaceGenerator {
 
     /**
      * Internal use. Drunkard's walk algorithm, single step. Based on Michael Patraw's C code, used for cave carving.
-     * http://mpatraw.github.io/libdrunkard/
+     * <a href="http://mpatraw.github.io/libdrunkard/">Based on Michael Patraw's C code, used for cave carving</a>
+     * (broken link).
      * @param current the current point
      * @param target the point to wobble towards
      * @param weight between 0.5 and 1.0, usually. 0.6 makes very random caves, 0.9 is almost a straight line.

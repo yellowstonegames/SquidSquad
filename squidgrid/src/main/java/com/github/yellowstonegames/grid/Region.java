@@ -5095,7 +5095,8 @@ public class Region implements Collection<Coord> {
      * are multiples of 16. If working is null or is too small, then this won't reuse it and will allocate an
      * appropriately-sized array for internal use.
      * <br>
-     * Ported from https://github.com/commonsmachinery/blockhash/blob/master/blockhash.c , which is MIT-licensed.
+     * Ported from <a href="https://github.com/commonsmachinery/blockhash/blob/master/blockhash.c">blockhash by commonsmachinery</a>,
+     * which is MIT-licensed.
      * @param into should be a long array of length 1 or 4; the contents don't matter and this will be where output is written to
      * @param working should be an int array of length 64 (if into has length 1) or 256 (if into has length 4); may be null if you like garbage collection
      */

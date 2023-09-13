@@ -34,7 +34,8 @@ import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
 
 /**
- * Port of Zachary Carter's world generation technique, https://github.com/zacharycarter/mapgen
+ * Port of <a href="https://github.com/zacharycarter/mapgen">Zachary Carter's world generation technique</a>, with
+ * substantial changes.
  * Biome, moisture, heat, and height maps can all be requested from the generated world.
  * You can press 's' or 'p' to play a spinning animation of the world turning.
  * <a href="https://i.imgur.com/z3rlN53.gifv">Preview GIF of a spinning planet.</a>

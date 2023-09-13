@@ -22,7 +22,7 @@ import com.github.yellowstonegames.grid.*;
 /**
  * Utility class for finding areas where game-specific terrain features might be suitable to place.
  * Example placement for alongStraightWalls, using all regions where there's an extended straight wall in a room to
- * place a rack of bows (as curly braces): https://gist.github.com/tommyettinger/2b69a265bd93304f091b
+ * place a rack of bows (as curly braces): <a href="https://gist.github.com/tommyettinger/2b69a265bd93304f091b">here</a>.
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public class Placement {

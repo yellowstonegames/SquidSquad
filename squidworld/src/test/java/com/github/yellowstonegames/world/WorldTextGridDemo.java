@@ -47,7 +47,8 @@ import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
 
 /**
  * Map generator that uses text to show features at a location as well as color.
- * Port of Zachary Carter's world generation technique, https://github.com/zacharycarter/mapgen
+ * Port of <a href="https://github.com/zacharycarter/mapgen">Zachary Carter's world generation technique</a>, with
+ * substantial changes.
  * It seems to mostly work now, though it only generates one view of the map that it renders (but biome, moisture, heat,
  * and height maps can all be requested from it).
  */

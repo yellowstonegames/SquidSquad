@@ -829,7 +829,7 @@ public class Language {
      * languages when using this or any of the generators. Many fantasy tropes come from older literature written with
      * major cultural biases, and real-world cultural elements can be much more interesting to players than yet another
      * depiction of a "jungle savage" with stereotypical traits. Consider drawing from existing lists of real-world
-     * technological discoveries, like https://en.wikipedia.org/wiki/History_of_science_and_technology_in_Africa , for
+     * technological discoveries, like <a href="https://en.wikipedia.org/wiki/History_of_science_and_technology_in_Africa">this one on Wikipedia</a>, for
      * inspiration when world-building; though some groups may not have developed agriculture by early medieval times,
      * their neighbors may be working iron and studying astronomy just a short distance away.
      * <br>

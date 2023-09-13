@@ -1919,8 +1919,9 @@ public class CrossHash {
      * program when the same hash results are wanted for some inputs.
      * <br>
      * A group of 48 static, final, pre-initialized Mist members are present in this class, 24 with the
-     * name of a letter in the Greek alphabet (this uses the convention on Wikipedia,
-     * https://en.wikipedia.org/wiki/Greek_alphabet#Letters , where lambda is spelled with a 'b') and 24 with the same
+     * name of a letter in the Greek alphabet (this uses
+     * <a href="https://en.wikipedia.org/wiki/Greek_alphabet#Letters">the convention on Wikipedia</a> where lambda is
+     * spelled with a 'b') and 24 with the same
      * name followed by an underscore, such as {@link #alpha_}. The whole group of 48 pre-initialized members are also
      * present in a static array called {@code predefined}. These can be useful when, for example, you want to get
      * multiple hashes of a single array or String as part of cuckoo hashing or similar techniques that need multiple

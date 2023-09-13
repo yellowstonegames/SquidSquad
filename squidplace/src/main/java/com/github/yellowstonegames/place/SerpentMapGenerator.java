@@ -30,8 +30,8 @@ import com.github.yellowstonegames.grid.HilbertCurve;
  * can be used in conjunction with RoomFinder to find where separate room, corridor, and cave areas have been placed.
  * <br>
  * To get a sense of what kinds of map this generates, you can look at a sample map on
- * https://gist.github.com/tommyettinger/93b47048fc8a209a9712 , which also includes a snippet of Java code that can
- * generate that map.
+ * <a href="https://gist.github.com/tommyettinger/93b47048fc8a209a9712">this Gist</a>, which also includes a snippet of
+ * Java code that can generate that map.
  * <br>
  * The name comes from a vivid dream I had about gigantic, multi-colored snakes that completely occupied a roguelike
  * dungeon. Shortly after, I made the connection to the Australian mythology I'd heard about the Rainbow Serpent, which
