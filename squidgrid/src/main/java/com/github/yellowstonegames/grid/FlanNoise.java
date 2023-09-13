@@ -100,7 +100,7 @@ public class FlanNoise implements INoise {
         input = new float[dim];
         vertices = new float[vc][dim];
         this.seed = seed;
-        AceRandom random = new AceRandom(vc);
+        AceRandom random = new AceRandom(seed^vc);
         for (int v = 0; v < vc; v++) {
             float sum = 0f;
             for (int d = 0; d < dim; d++) {
@@ -120,7 +120,7 @@ public class FlanNoise implements INoise {
 
     public FlanNoise reassign(long seed, int dimension, float sharpness, int detail) {
         this.sharpness = 0.625f / sharpness;
-        boolean unchanged = (dim == Math.max(2, dimension) && this.detail == detail);
+        boolean unchanged = (dim == Math.max(2, dimension) && this.detail == detail && this.seed == seed);
         if(!unchanged) {
             dim = Math.max(2, dimension);
             this.detail = detail;
@@ -128,7 +128,8 @@ public class FlanNoise implements INoise {
             points = new float[vc];
             input = new float[dim];
             vertices = new float[vc][dim];
-            AceRandom random = new AceRandom(vc);
+            this.seed = seed;
+            AceRandom random = new AceRandom(seed^vc);
             for (int v = 0; v < vc; v++) {
                 float sum = 0f;
                 for (int d = 0; d < dim; d++) {
@@ -144,7 +145,6 @@ public class FlanNoise implements INoise {
 
             inverse = 1f / vc;
         }
-        this.seed = seed;
         return this;
     }
 
@@ -214,7 +214,7 @@ public class FlanNoise implements INoise {
 
     @Override
     public void setSeed(long seed) {
-        this.seed = seed;
+        reassign(seed, dim, 0.625f / sharpness, detail);
     }
 
     @Override

@@ -79,10 +79,11 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final Interpolations.Interpolator equalizer = new Interpolations.Interpolator("EQUALIZER", (alpha -> PerlinNoise.equalize((alpha - 0.5f) * 2f, eq[0], eq[1]) * 0.5f + 0.5f));
     private final NoiseAdjustment adjustableNoise = new NoiseAdjustment(noise, equalizer);
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
+    private final SorbetNoise sorbet = new SorbetNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 5;
-    private static final int MODE_LIMIT = 28;
-    private int mode = 16;
+    private static final int MODE_LIMIT = 29;
+    private int mode = 28;
     private int dim = 4; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
@@ -177,7 +178,7 @@ public class FFTVisualizer extends ApplicationAdapter {
         for (int i = 0; i < 7; i++) {
             phantoms[i] = new PhantomNoise(noise.getSeed() + ~i * 55555555L, 2 + i);
             taffies[i] = new TaffyNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
-            flans[i] = new FlanNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
+            flans[i] = new FlanNoise(noise.getSeed()+ ~i * 55555555L, 2 + i, 3, 4);
             hdvs[i] = new HighDimensionalValueNoise(noise.getSeed()+ ~i * 55555555L, 2 + i);
         }
         noise.setNoiseType(Noise.TAFFY_FRACTAL);
@@ -272,6 +273,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         rug.setState(s);
                         quilt.setState(s);
                         cyclic.setSeed(ls);
+                        sorbet.setSeed(ls);
                         val.setSeed(s);
                         perlin.setSeed(s);
                         adjustableNoise.setSeed(s);
@@ -289,6 +291,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         rug.setState(s);
                         quilt.setState(s);
                         cyclic.setSeed(ls);
+                        sorbet.setSeed(ls);
                         val.setSeed(s);
                         perlin.setSeed(s);
                         adjustableNoise.setSeed(s);
@@ -322,10 +325,12 @@ public class FFTVisualizer extends ApplicationAdapter {
                     case H: // higher octaves
                         noise.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
                         cyclic.setOctaves(octaves + 1);
+                        sorbet.setOctaves(octaves + 1);
                         break;
                     case L: // lower octaves
                         noise.setFractalOctaves((octaves = octaves + 7 & 7) + 1);
                         cyclic.setOctaves(octaves + 1);
+                        sorbet.setOctaves(octaves + 1);
                         break;
                     case I: // inverse mode
                         if (inverse = !inverse) {
@@ -2029,6 +2034,83 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                 }
                 break;
+            }
+        } else if (mode == 28) {
+            float fr = noise.getFrequency();
+            switch (dim) {
+                case 0:
+                    for (int x = 0; x < width; x++) {
+                        points[0][0] = (c+x)*fr;
+                        for (int y = 0; y < height; y++) {
+                            points[0][1] = (c+y)*fr;
+                            bright = basicPrepare(sorbet.getNoise(points[0][0], points[0][1]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 1:
+                    points[1][2] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[1][0] = x * fr;
+                        for (int y = 0; y < height; y++) {
+                            points[1][1] = y * fr;
+                            bright = basicPrepare(sorbet.getNoise(points[1][0], points[1][1], points[1][2]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 2:
+                    cc = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[2][0] = TrigTools.cosTurns(x * iWidth) * 4 + cc;
+                        points[2][1] = TrigTools.sinTurns(x * iWidth) * 4 + cc;
+                        for (int y = 0; y < height; y++) {
+                            points[2][2] = TrigTools.cosTurns(y * iHeight) * 4 + cc;
+                            points[2][3] = TrigTools.sinTurns(y * iHeight) * 4 + cc;
+                            bright = basicPrepare(sorbet.getNoise(points[2][0], points[2][1], points[2][2], points[2][3]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 3:
+                    points[3][4] = c * fr;
+                    for (int x = 0; x < width; x++) {
+                        points[3][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[3][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[3][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[3][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            bright = basicPrepare(sorbet.getNoise(points[3][0], points[3][1], points[3][2], points[3][3], points[3][4]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
+                case 4:
+                default:
+                    cc = c * fr;
+                    points[4][4] = TrigTools.cosTurns(cc * -0x1.8p-6f) * 4;
+                    points[4][5] = TrigTools.sinTurns(cc * -0x1.8p-6f) * 4;
+                    for (int x = 0; x < width; x++) {
+                        points[4][0] = TrigTools.cosTurns(x * iWidth) * 4;
+                        points[4][1] = TrigTools.sinTurns(x * iWidth) * 4;
+                        for (int y = 0; y < height; y++) {
+                            points[4][2] = TrigTools.cosTurns(y * iHeight) * 4;
+                            points[4][3] = TrigTools.sinTurns(y * iHeight) * 4;
+                            bright = basicPrepare(sorbet.getNoise(points[4][0], points[4][1], points[4][2], points[4][3], points[4][4], points[4][5]));
+                            real[x][y] = bright;
+                            renderer.color(bright, bright, bright, 1f);
+                            renderer.vertex(x, y, 0);
+                        }
+                    }
+                    break;
             }
         }
 
