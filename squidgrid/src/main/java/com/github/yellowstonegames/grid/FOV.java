@@ -21,6 +21,8 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -85,25 +87,23 @@ import static com.github.yellowstonegames.grid.OrthoLine.reachable;
  * or {@link #mixVisibleFOVsInto(float[][], float[][], float[][]...)}.
  * <br>
  * If you want to iterate through cells that are visible in a float[][] returned
- * by FOV, you can pass that float[][] to the constructor for Region, and
- * you can use the Region as a reliably-ordered Collection of Coord (among
- * other things). The order Region iterates in is somewhat strange, and
- * doesn't, for example, start at the center of an FOV map, but it will be the
- * same every time you create a Region with the same FOV map (or the same
- * visible Coords).
+ * by FOV, you can pass that float[][] to {@link #cellsByDescendingValue(float[][])}
+ * and iterate over the returned map's {@link CoordFloatOrderedMap#entrySet()} or
+ * {@link CoordFloatOrderedMap#order()}. These approaches will start iteration at the
+ * highest-value cell and continue to lower and lower values.
  * <br>
  * This class is not thread-safe. This is generally true for most of SquidSquad.
  *
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
-public class FOV {
+public final class FOV {
     private static final Direction[] ccw = new Direction[]
             {Direction.UP_RIGHT, Direction.UP_LEFT, Direction.DOWN_LEFT, Direction.DOWN_RIGHT, Direction.UP_RIGHT};
     private static final Direction[] ccw_full = new Direction[]{Direction.RIGHT, Direction.UP_RIGHT, Direction.UP,
             Direction.UP_LEFT, Direction.LEFT, Direction.DOWN_LEFT, Direction.DOWN, Direction.DOWN_RIGHT};
     private static final ObjectDeque<Coord> dq = new ObjectDeque<>(256);
-    private static final Region lightWorkspace = new Region(256, 256);
+    private static final CoordSet lightWorkspace = new CoordSet(400, 0.5f);
     private static final ObjectList<Coord> neighbors = new ObjectList<>(8);
     private static final float[] directionRanges = new float[8];
 
@@ -539,9 +539,9 @@ public class FOV {
         float decay = 1.0f / radius;
         ArrayTools.fill(light, 0);
         light[startX][startY] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        angle *= 0.002777777777777778f;
+        angle *= (1f/360f);
         angle -= MathTools.fastFloor(angle);
-        span *= 0.002777777777777778f;
+        span *= (1f/360f);
 
 
         light = shadowCastLimited(1, 1.0f, 0.0f, 0, 1, 1, 0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, angle, span);
@@ -611,7 +611,7 @@ public class FOV {
     public static float[][] reuseRippleFOV(float[][] resistanceMap, float[][] light, int rippleLooseness, int x, int y, float radius, Radius radiusTechnique) {
         ArrayTools.fill(light, 0);
         light[x][y] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        lightWorkspace.resizeAndEmpty(light.length, light[0].length);
+
         doRippleFOV(light, Math.min(Math.max(rippleLooseness, 1), 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique);
         return light;
     }
@@ -672,10 +672,10 @@ public class FOV {
     public static float[][] reuseRippleFOV(float[][] resistanceMap, float[][] light, int rippleLooseness, int x, int y, float radius, Radius radiusTechnique, float angle, float span) {
         ArrayTools.fill(light, 0);
         light[x][y] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        lightWorkspace.resizeAndEmpty(light.length, light[0].length);
-        angle *= 0.002777777777777778f;
+
+        angle *= (1f/360f);
         angle -= MathTools.fastFloor(angle);
-        span *= 0.002777777777777778f;
+        span *= (1f/360f);
         doRippleFOV(light, Math.min(Math.max(rippleLooseness, 1), 6), x, y, 1.0f / radius, radius, resistanceMap, radiusTechnique, angle, span);
         return light;
     }
@@ -854,7 +854,7 @@ public class FOV {
         }
 
         if (map[x][y] >= 1 || indirects >= lit) {
-            FOV.lightWorkspace.insert(x, y);
+            FOV.lightWorkspace.add(Coord.get(x, y));
         }
         return light;
     }
@@ -1144,7 +1144,7 @@ public class FOV {
         radius = Math.max(1, radius);
         ArrayTools.fill(light, 0);
         light[startX][startY] = 1;//make the starting space full power
-        angle *= 0.002777777777777778f;
+        angle *= (1f/360f);
         angle -= MathTools.fastFloor(angle);
 
         light = shadowCastPersonalized(1, 1.0f, 0.0f, 0, 1, 1, 0,   radius, startX, startY, light, resistanceMap, radiusTechnique, angle, directionRanges);
@@ -1848,6 +1848,21 @@ public class FOV {
             }
         }
         return portion;
+    }
+
+    /**
+     * Given a typical FOV map produced by {@link #reuseFOV(float[][], float[][], int, int)},
+     * {@link #reuseRippleFOV(float[][], float[][], int, int, float, Radius)}, or a similar method, this gets a
+     * {@link CoordFloatOrderedMap} containing only the visible Coord cells as keys, associated with their visibility
+     * levels, and ordered so the most-visible cell (typically where the viewer is) is first in the iteration order.
+     * Lower visibility values will go later and later in the iteration order.
+     * @param fovMap a rectangular 2D float array ideally containing values greater than 0 and less than or equal to 1
+     * @return a CoordFloatOrderedMap containing the non-zero values in fovMap, ordered from the highest value to lowest
+     */
+    public static CoordFloatOrderedMap cellsByDescendingValue(float[][] fovMap) {
+        CoordFloatOrderedMap cells = CoordFloatOrderedMap.fromArray2D(fovMap, 1E-32f, 1f);
+        cells.sortByValue(FloatComparators.OPPOSITE_COMPARATOR);
+        return cells;
     }
 
 }
