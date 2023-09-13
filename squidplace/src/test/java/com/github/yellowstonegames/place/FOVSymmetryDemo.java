@@ -54,5 +54,13 @@ public class FOVSymmetryDemo {
                 }
             }
         }
+        Coord start = random.randomElement(floors);
+        float[][] lightMap = FOV.reuseFOVSymmetrical(res, light, start.x, start.y, 8f, Radius.CIRCLE);
+        CoordFloatOrderedMap des = FOV.cellsByDescendingValue(lightMap);
+        Region lightRegion = new Region(lightMap, 1E-32f, Float.MAX_VALUE);
+        System.out.println("Descending Value Map size      : " + des.size());
+        System.out.println("Region size                    : " + lightRegion.size());
+        FOV.fillCellsByDescendingValue(lightMap, des);
+        System.out.println("Fill Descending Value Map size : " + des.size());
     }
 }
