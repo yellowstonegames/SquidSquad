@@ -36,7 +36,7 @@ import com.github.tommyettinger.random.FourWheelRandom;
  * make the case where the path crosses itself more likely.
  * <br>
  * Based on <a href="https://github.com/mpatraw/butterfly">Michael Patraw's C code, used for cave carving in his map
- * generator.</a>
+ * generator</a> (broken link).
  */
 public final class DrunkenWalk {
     private DrunkenWalk(){}

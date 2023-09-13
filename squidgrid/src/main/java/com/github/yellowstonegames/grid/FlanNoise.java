@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
@@ -99,16 +100,15 @@ public class FlanNoise implements INoise {
         input = new float[dim];
         vertices = new float[vc][dim];
         this.seed = seed;
+        AceRandom random = new AceRandom(vc);
         for (int v = 0; v < vc; v++) {
-            double sum = 0.0;
+            float sum = 0f;
             for (int d = 0; d < dim; d++) {
-                double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
-                g -= (int)g;
-                g = EnhancedRandom.probit(g);
-                vertices[v][d] = (float) g;
+                float g = (float) random.nextGaussian();
+                vertices[v][d] = g;
                 sum += g * g;
             }
-            sum = 1f / Math.sqrt(sum);
+            sum = 1f / (float) Math.sqrt(sum);
             for (int d = 0; d < dim; d++) {
                 vertices[v][d] *= sum;
             }
@@ -128,16 +128,15 @@ public class FlanNoise implements INoise {
             points = new float[vc];
             input = new float[dim];
             vertices = new float[vc][dim];
+            AceRandom random = new AceRandom(vc);
             for (int v = 0; v < vc; v++) {
-                double sum = 0.0;
+                float sum = 0f;
                 for (int d = 0; d < dim; d++) {
-                    double g = QuasiRandomTools.goldenFloat[dim-1][d] * (v + 1);
-                    g -= (int)g;
-                    g = EnhancedRandom.probit(g);
-                    vertices[v][d] = (float) g;
+                    float g = (float) random.nextGaussian();
+                    vertices[v][d] = g;
                     sum += g * g;
                 }
-                sum = 1f / Math.sqrt(sum);
+                sum = 1f / (float) Math.sqrt(sum);
                 for (int d = 0; d < dim; d++) {
                     vertices[v][d] *= sum;
                 }
@@ -256,11 +255,15 @@ public class FlanNoise implements INoise {
         return new FlanNoise(seed, dim, 0.625f / sharpness, detail);
     }
 
-    public float getNoise(float... args) {
+    public float getNoise(float[] args) {
+        return getNoise(args, 0, args.length);
+    }
+    public float getNoise(float[] args, int offset, int length) {
+        int dim = Math.min(this.dim, length);
         for (int v = 0; v < vc; v++) {
             points[v] = 0.0f;
             for (int d = 0; d < dim; d++) {
-                points[v] += args[d] * vertices[v][d];
+                points[v] += args[d+offset] * vertices[v][d];
             }
         }
         float result = 0.0f;
@@ -335,57 +338,52 @@ public class FlanNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y) {
-        if(dim > 2) Arrays.fill(input, 2, input.length, 0f);
         if(dim >= 2) {
             input[0] = x;
             input[1] = y;
-            return getNoise(input);
+            return getNoise(input, 0, 2);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 2D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        if(dim > 3) Arrays.fill(input, 3, input.length, 0f);
         if(dim >= 3) {
             input[0] = x;
             input[1] = y;
             input[2] = z;
-            return getNoise(input);
+            return getNoise(input, 0, 3);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 3D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        if(dim > 4) Arrays.fill(input, 4, input.length, 0f);
         if(dim >= 4) {
             input[0] = x;
             input[1] = y;
             input[2] = z;
             input[3] = w;
-            return getNoise(input);
+            return getNoise(input, 0, 4);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 4D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        if(dim > 5) Arrays.fill(input, 5, input.length, 0f);
         if(dim >= 5) {
             input[0] = x;
             input[1] = y;
             input[2] = z;
             input[3] = w;
             input[4] = u;
-            return getNoise(input);
+            return getNoise(input, 0, 5);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 5D noise.");
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        if(dim > 6) Arrays.fill(input, 6, input.length, 0f);
         if(dim >= 6) {
             input[0] = x;
             input[1] = y;
@@ -393,7 +391,7 @@ public class FlanNoise implements INoise {
             input[3] = w;
             input[4] = u;
             input[5] = v;
-            return getNoise(input);
+            return getNoise(input, 0, 6);
         }
         throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }

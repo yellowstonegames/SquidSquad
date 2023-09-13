@@ -82,7 +82,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 5;
     private static final int MODE_LIMIT = 28;
-    private int mode = 27;
+    private int mode = 16;
     private int dim = 4; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
