@@ -489,6 +489,27 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testOpenSimplex2Smooth() {
+        Kryo kryo = new Kryo();
+        kryo.register(OpenSimplex2Smooth.class, new OpenSimplex2SmoothSerializer());
+
+        OpenSimplex2Smooth data = new OpenSimplex2Smooth(-9876543210L);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            OpenSimplex2Smooth data2 = kryo.readObject(input, OpenSimplex2Smooth.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
     @Test
     public void testPerlinNoise() {
         Kryo kryo = new Kryo();

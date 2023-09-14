@@ -851,6 +851,28 @@ public class OpenSimplex2Smooth implements INoise {
         return x < xi ? xi - 1 : xi;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OpenSimplex2Smooth that = (OpenSimplex2Smooth) o;
+
+        return seed == that.seed;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (seed ^ (seed >>> 32));
+    }
+
+    @Override
+    public String toString() {
+        return "OpenSimplex2Smooth{" +
+                "seed=" + seed +
+                '}';
+    }
+
     /*
      * Lookup Tables & Gradients
      */
