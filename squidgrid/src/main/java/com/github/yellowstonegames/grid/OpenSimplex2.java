@@ -759,6 +759,27 @@ public class OpenSimplex2 implements INoise {
         return x < 0 ? (int)(x - 0.5f) : (int)(x + 0.5f);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OpenSimplex2 that = (OpenSimplex2) o;
+
+        return seed == that.seed;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (seed ^ (seed >>> 32));
+    }
+
+    @Override
+    public String toString() {
+        return "OpenSimplex2{" +
+                "seed=" + seed +
+                '}';
+    }
     /*
      * gradients
      */
