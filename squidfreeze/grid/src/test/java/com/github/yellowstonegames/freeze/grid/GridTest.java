@@ -471,6 +471,28 @@ public class GridTest {
     }
 
     @Test
+    public void testPerlinNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(PerlinNoise.class, new PerlinNoiseSerializer());
+
+        PerlinNoise data = new PerlinNoise(-9876543210L);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            PerlinNoise data2 = kryo.readObject(input, PerlinNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testValueNoise() {
         Kryo kryo = new Kryo();
         kryo.register(ValueNoise.class, new ValueNoiseSerializer());
