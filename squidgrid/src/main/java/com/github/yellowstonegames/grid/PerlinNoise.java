@@ -45,8 +45,55 @@ import static com.github.yellowstonegames.grid.GradientVectors.*;
 public class PerlinNoise implements INoise {
     public static final PerlinNoise instance = new PerlinNoise();
 
+    /**
+     * Given a float {@code x}, this returns the second-closest float to x in the direction of zero.
+     * If x is {@code 0f}, {@code -0f}, {@link Float#MIN_VALUE}, {@code -Float.MIN_VALUE}, or
+     * {@code Float.MIN_VALUE - Float.MIN_VALUE}, this is undefined and will probably produce an incorrect result.
+     * This is very similar to {@code Math.nextAfter(x, 0.0)}, but is defined on more platforms, and skips the closest
+     * number in the direction of zero.
+     * <br>
+     * This static method is likely to be moved to {@link com.github.tommyettinger.digital.MathTools} at some point.
+     * @param x a non-zero float that must be finite and should not be extremely close to 0
+     * @return a float closer to 0 than x
+     */
     public static float towardsZero(float x) {
         return BitConversion.intBitsToFloat(BitConversion.floatToIntBits(x) - 2);
+    }
+
+    /**
+     * Given a float {@code a} from -1.0 to 1.0 (both inclusive), this gets a float that adjusts a to be closer to the
+     * end points of that range (if less than 0, it gets closer to -1.0, otherwise it gets closer to 1.0).
+     * <br>
+     * Used to increase the frequency of high and low results, which
+     * improves the behavior of ridged and billow noise.
+     * <br>
+     * The actual numbers here are just slightly off of normal "quintic" interpolation, because this tries to avoid
+     * returning any numbers that are just slightly out-of-bounds, and has to make tiny adjustments to do so.
+     * <br>
+     * This static method is likely to be moved to {@link com.github.tommyettinger.digital.MathTools} at some point.
+     * @param a a float between -1.0f and 1.0f inclusive
+     * @return a float between -1.0f and 1.0f inclusive that is more likely to be near the extremes
+     */
+    public static float emphasizeSigned(float a) {
+        a = a * 0.49999997f + 0.49999997f;
+        return a * a * a * (20f + a * ((a - 2.5f) * 12f)) - 1.0000014f;
+    }
+
+    /**
+     * Emphasizes or de-emphasizes extreme values using Schlick's bias function when {@code x} is between 0 and 1
+     * (inclusive), or effectively {@code -bias(-x)} when x is between -1 and 0. The bias parameter is handled a little
+     * differently from how Schlick implemented it; here, {@code bias=1} produces a straight line (no bias), bias
+     * between 0 and 1 is shaped like the {@link com.github.tommyettinger.digital.MathTools#cbrt(float)} function, and
+     * bias greater than 1 is shaped like {@link com.github.tommyettinger.digital.MathTools#cube(float)}.
+     * <br>
+     * This static method is likely to be moved to {@link com.github.tommyettinger.digital.MathTools} at some point.
+     * @param x between -1 and 1, inclusive
+     * @param bias any float greater than 0 (exclusive)
+     * @return a biased float between -1 and 1, inclusive
+     */
+    public static float signedBias(float x, float bias) {
+        final float a = Math.abs(x);
+        return Math.copySign(a / (((bias - 1f) * (1f - a)) + 1f), x);
     }
 
     public static final float SCALE2 = towardsZero(1f/ (float) Math.sqrt(2f / 4f));
@@ -78,6 +125,26 @@ public class PerlinNoise implements INoise {
 
     public PerlinNoise(final long seed) {
         this.seed = seed;
+    }
+
+    /**
+     * A constructor that allows specifying the {@link #getEqualization(int) equalization values} for all dimensions
+     * this supports (2 through 6 inclusive), as well as the seed. Equalization values are typically less than 1.0
+     * and get smaller as the dimension increases.
+     * @param seed any long
+     * @param eq2 defaults to {@code 1.0f/1.75f}
+     * @param eq3 defaults to {@code 0.8f/1.75f}
+     * @param eq4 defaults to {@code 0.6f/1.75f}
+     * @param eq5 defaults to {@code 0.4f/1.75f}
+     * @param eq6 defaults to {@code 0.2f/1.75f}
+     */
+    public PerlinNoise(final long seed, final float eq2, final float eq3, final float eq4, final float eq5, final float eq6) {
+        this.seed = seed;
+        eqMul[0] = calculateEqualizeAdjustment(eqAdd[0] = Math.max(0f, eq2));
+        eqMul[1] = calculateEqualizeAdjustment(eqAdd[1] = Math.max(0f, eq3));
+        eqMul[2] = calculateEqualizeAdjustment(eqAdd[2] = Math.max(0f, eq4));
+        eqMul[3] = calculateEqualizeAdjustment(eqAdd[3] = Math.max(0f, eq5));
+        eqMul[4] = calculateEqualizeAdjustment(eqAdd[4] = Math.max(0f, eq6));
     }
 
     public PerlinNoise(PerlinNoise other) {
@@ -156,17 +223,8 @@ public class PerlinNoise implements INoise {
 
     /**
      * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
-     * in by {@link #stringDeserialize(String)} to reassign the described state to another INoise. The syntax here
-     * should always start and end with the {@code `} character, which is used by
-     * {@link Serializer#stringDeserialize(String)} to identify the portion of a String that can be read back. The
-     * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
-     * <br>
-     * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
-     * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringDeserialize(String)}, and
-     * {@link #copy()}.
-     *
-     * @return a String that describes this INoise for serialization
+     * in by {@link #stringDeserialize(String)} to reassign the described state to another INoise.
+     * @return a String that describes this PerlinNoise for serialization
      */
     @Override
     public String stringSerialize() {
@@ -174,16 +232,11 @@ public class PerlinNoise implements INoise {
     }
 
     /**
-     * Given a serialized String produced by {@link #stringSerialize()}, reassigns this INoise to have the described
-     * state from the given String. The serialized String must have been produced by the same class as this object is.
-     * <br>
-     * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
-     * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringSerialize()}, and
-     * {@link #copy()}.
+     * Given a serialized String produced by {@link #stringSerialize()}, reassigns this PerlinNoise to have the
+     * described state from the given String. The serialized String must have been produced by a PerlinNoise.
      *
      * @param data a serialized String, typically produced by {@link #stringSerialize()}
-     * @return this INoise, after being modified (if possible)
+     * @return this PerlinNoise, after being modified (if possible)
      */
     @Override
     public PerlinNoise stringDeserialize(String data) {
@@ -199,14 +252,12 @@ public class PerlinNoise implements INoise {
 
     public static PerlinNoise recreateFromString(String data) {
         int pos;
-        long seed = Base.BASE10.readLong(data, 1, pos = data.indexOf('~'));
-        PerlinNoise pn = new PerlinNoise(seed);
-        pn.setEqualization(2, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
-        pn.setEqualization(3, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
-        pn.setEqualization(4, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
-        pn.setEqualization(5, Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)));
-        pn.setEqualization(6, Base.BASE10.readFloat(data, pos+1, data.indexOf('`', pos+1)));
-        return pn;
+        return new PerlinNoise(Base.BASE10.readLong(data, 1, pos = data.indexOf('~')),
+            Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)),
+            Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)),
+            Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)),
+            Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+1)),
+            Base.BASE10.readFloat(data, pos+1, data.indexOf('`', pos+1)));
     }
 
     /**
@@ -259,37 +310,6 @@ public class PerlinNoise implements INoise {
                         * (seed) >>> 56) << 3;
         return xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash + 1] + zd * GRADIENTS_6D[hash + 2]
                 + wd * GRADIENTS_6D[hash + 3] + ud * GRADIENTS_6D[hash + 4] + vd * GRADIENTS_6D[hash + 5];
-    }
-    /**
-     * Given a float {@code a} from -1.0 to 1.0 (both inclusive), this gets a float that adjusts a to be closer to the
-     * end points of that range (if less than 0, it gets closer to -1.0, otherwise it gets closer to 1.0).
-     * <br>
-     * Used to increase the frequency of high and low results, which
-     * improves the behavior of ridged and billow noise.
-     * <br>
-     * The actual numbers here are just slightly off of normal "quintic" interpolation, because this tries to avoid
-     * returning any numbers that are just slightly out-of-bounds, and has to make tiny adjustments to do so.
-     * @param a a float between -1.0f and 1.0f inclusive
-     * @return a float between -1.0f and 1.0f inclusive that is more likely to be near the extremes
-     */
-    public static float emphasizeSigned(float a) {
-        a = a * 0.49999997f + 0.49999997f;
-        return a * a * a * (20f + a * ((a - 2.5f) * 12f)) - 1.0000014f;
-    }
-
-    /**
-     * Emphasizes or de-emphasizes extreme values using Schlick's bias function when {@code x} is between 0 and 1
-     * (inclusive), or effectively {@code -bias(-x)} when x is between -1 and 0. The bias parameter is handled a little
-     * differently from how Schlick implemented it; here, {@code bias=1} produces a straight line (no bias), bias
-     * between 0 and 1 is shaped like the {@link com.github.tommyettinger.digital.MathTools#cbrt(float)} function, and
-     * bias greater than 1 is shaped like {@link com.github.tommyettinger.digital.MathTools#cube(float)}.
-     * @param x between -1 and 1, inclusive
-     * @param bias any float greater than 0 (exclusive)
-     * @return a biased float between -1 and 1, inclusive
-     */
-    public static float signedBias(float x, float bias) {
-        final float a = Math.abs(x);
-        return Math.copySign(a / (((bias - 1f) * (1f - a)) + 1f), x);
     }
 
     /**
