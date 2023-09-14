@@ -15,6 +15,7 @@
  */
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 
 /**
@@ -735,7 +736,6 @@ public class FoamNoise implements INoise {
 
     // OTHER
 
-
     /**
      * Returns the String "FoaN", to be used as a unique tag for this generator.
      *
@@ -783,6 +783,22 @@ public class FoamNoise implements INoise {
 
     public long getSeed() {
         return seed;
+    }
+
+    @Override
+    public String stringSerialize() {
+        return "`" + seed + "`";
+    }
+
+    @Override
+    public FoamNoise stringDeserialize(String data) {
+        setSeed(Base.BASE10.readLong(data, 1, data.length() - 1));
+        return this;
+    }
+
+    @Override
+    public FoamNoise copy() {
+        return new FoamNoise(this.seed);
     }
 
     @Override
