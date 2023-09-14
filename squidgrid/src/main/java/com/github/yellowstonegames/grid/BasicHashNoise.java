@@ -16,14 +16,14 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.yellowstonegames.core.DigitTools;
-
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 
 /**
  * Makes 2D through 6D value noise that simply preserves the behavior of an {@link IPointHash}, including intentional
  * (or unintentional) artifacts that the point hash produces. This is more useful with intentionally-flawed point hashes
- * from {@link FlawedPointHash}, such as {@link com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash}.
+ * from {@link FlawedPointHash}, such as {@link com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash}. Note that
+ * because this uses an arbitrary IPointHash (and that interface doesn't define any way to serialize itself), you can't
+ * serialize or deserialize a BasicHashNoise to or from a String. Binary serialization (such as using Kryo) still works.
  */
 public class BasicHashNoise implements INoise {
     public static final BasicHashNoise instance = new BasicHashNoise();
@@ -110,55 +110,38 @@ public class BasicHashNoise implements INoise {
     }
 
     /**
-     * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
-     * in by {@link #stringDeserialize(String)} to reassign the described state to another INoise. The syntax here
-     * should always start and end with the {@code `} character, which is used by
-     * {@link Serializer#stringDeserialize(String)} to identify the portion of a String that can be read back. The
-     * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
-     * <br>
-     * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
-     * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringDeserialize(String)}, and
-     * {@link #copy()}.
+     * Because this needs to write an {@link IPointHash}, but that interface can't be serialized, this throws an
+     * {@link UnsupportedOperationException} only.
      *
-     * @return a String that describes this INoise for serialization
+     * @return never returns normally
      */
     @Override
     public String stringSerialize() {
-        return "`" + seed + "`";
+        throw new UnsupportedOperationException("BasicHashNoise cannot be serialized to a String because there \n" +
+                "is no way to serialize or deserialize an arbitrary IPointHash, which BasicHashNoise uses.");
     }
 
     /**
-     * Given a serialized String produced by {@link #stringSerialize()}, reassigns this INoise to have the described
-     * state from the given String. The serialized String must have been produced by the same class as this object is.
-     * <br>
-     * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
-     * implement any serialization methods, but they aren't serializable by the methods in this class or in
-     * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringDeserialize(String)}, and
-     * {@link #copy()}.
+     * Because this needs to read an {@link IPointHash}, but that interface can't be deserialized, this throws an
+     * {@link UnsupportedOperationException} only.
      *
      * @param data a serialized String, typically produced by {@link #stringSerialize()}
-     * @return this INoise, after being modified (if possible)
+     * @return never returns normally
      */
     @Override
     public BasicHashNoise stringDeserialize(String data) {
-        seed = (DigitTools.intFromDec(data, 1, data.length() - 1));
-        return this;
-    }
-
-    public static BasicHashNoise recreateFromString(String data) {
-        return new BasicHashNoise(DigitTools.intFromDec(data, 1, data.length() - 1));
+        throw new UnsupportedOperationException("BasicHashNoise cannot be deserialized from a String because there \n" +
+                "is no way to serialize or deserialize an arbitrary IPointHash, which BasicHashNoise uses.");
     }
 
     /**
-     * Creates a copy of this BasicHashNoise, which should be a deep copy for any mutable state but can be shallow for immutable
-     * types such as functions. This almost always just calls a copy constructor.
-     *
+     * Creates a copy of this BasicHashNoise, which is a shallow copy here and assumes {@link #pointHash} has no mutable
+     * state that could need a deep copy.
      * @return a copy of this BasicHashNoise
      */
     @Override
     public BasicHashNoise copy() {
-        return new BasicHashNoise(this.seed);
+        return new BasicHashNoise(this.seed, pointHash);
     }
 
     @Override
