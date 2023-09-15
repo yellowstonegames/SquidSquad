@@ -16,18 +16,18 @@
 
 package com.github.yellowstonegames.grid;
 
-import static com.github.yellowstonegames.grid.QuasiRandomTools.goldenLong;
+import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_LONGS;
 
 public class QuasiRandomThings {
 
     public static void main(String[] args) {
         System.out.println("new float[][] {");
-        for (int outer = 0; outer < goldenLong.length; outer++) {
+        for (int outer = 0; outer < GOLDEN_LONGS.length; outer++) {
             System.out.print("{ ");
-            for (int inner = 0; inner < goldenLong[outer].length; inner++) {
+            for (int inner = 0; inner < GOLDEN_LONGS[outer].length; inner++) {
                 if(inner > 0 && (inner % 5) == 0)
                     System.out.print("\n  ");
-                System.out.printf("%1.16ff, ", (goldenLong[outer][inner] >>> 1) * 0x1p-63);
+                System.out.printf("%1.16ff, ", (GOLDEN_LONGS[outer][inner] >>> 1) * 0x1p-63);
             }
             System.out.println("},");
         }

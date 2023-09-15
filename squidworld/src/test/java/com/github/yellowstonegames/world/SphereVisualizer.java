@@ -787,9 +787,9 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
     public void onSphereRoberts(final int index)
     {
-        float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][0] * index >>> 12) * 0x1p-52);
-        float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][1] * index >>> 12) * 0x1p-52);
-        float z = (float) MathTools.probit((QuasiRandomTools.goldenLong[2][2] * index >>> 12) * 0x1p-52);
+        float x = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[2][0] * index >>> 12) * 0x1p-52);
+        float y = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[2][1] * index >>> 12) * 0x1p-52);
+        float z = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[2][2] * index >>> 12) * 0x1p-52);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -804,9 +804,9 @@ public class SphereVisualizer extends ApplicationAdapter {
     public void onSphereRobertsVDC(final int index)
     {
         long v = Long.reverse(index);
-        float x = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][0] * index ^ v) >>> 12) * 0x1p-52);
-        float y = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][1] * index ^ v) >>> 12) * 0x1p-52);
-        float z = (float) MathTools.probit(((QuasiRandomTools.goldenLong[2][2] * index ^ v) >>> 12) * 0x1p-52);
+        float x = (float) MathTools.probit(((QuasiRandomTools.GOLDEN_LONGS[2][0] * index ^ v) >>> 12) * 0x1p-52);
+        float y = (float) MathTools.probit(((QuasiRandomTools.GOLDEN_LONGS[2][1] * index ^ v) >>> 12) * 0x1p-52);
+        float z = (float) MathTools.probit(((QuasiRandomTools.GOLDEN_LONGS[2][2] * index ^ v) >>> 12) * 0x1p-52);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -820,9 +820,9 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
     public void onSphereBitCount(final int index)
     {
-        long a = QuasiRandomTools.goldenLong[2][0] * index;
-        long b = QuasiRandomTools.goldenLong[2][1] * index;
-        long c = QuasiRandomTools.goldenLong[2][2] * index;
+        long a = QuasiRandomTools.GOLDEN_LONGS[2][0] * index;
+        long b = QuasiRandomTools.GOLDEN_LONGS[2][1] * index;
+        long c = QuasiRandomTools.GOLDEN_LONGS[2][2] * index;
         float x = Long.bitCount(a) - 31.5f + a * 0x1p-64f;
         float y = Long.bitCount(b) - 31.5f + b * 0x1p-64f;
         float z = Long.bitCount(c) - 31.5f + c * 0x1p-64f;
@@ -872,8 +872,8 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     public void onSphereR2(final int index)
     {
-        float lon = (QuasiRandomTools.goldenLong[1][0] * index >>> 41) * 0x1p-23f;
-        float u = (QuasiRandomTools.goldenLong[1][1] * index >> 40) * 0x1p-23f;
+        float lon = (QuasiRandomTools.GOLDEN_LONGS[1][0] * index >>> 41) * 0x1p-23f;
+        float u = (QuasiRandomTools.GOLDEN_LONGS[1][1] * index >> 40) * 0x1p-23f;
         float root = (float) Math.sqrt(1f - u * u);
         float[] vector = points[index];
         vector[0] = TrigTools.cosTurns(lon) * root;
@@ -1480,11 +1480,11 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
 
         for (int i = 1; i <= POINT_COUNT; i++) {
-            float x = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][0] * i >>> 12) * 0x1p-52);
-            float y = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][1] * i >>> 12) * 0x1p-52);
-            float z = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][2] * i >>> 12) * 0x1p-52);
-            float w = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][3] * i >>> 12) * 0x1p-52);
-            float u = (float) MathTools.probit((QuasiRandomTools.goldenLong[4][4] * i >>> 12) * 0x1p-52);
+            float x = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][0] * i >>> 12) * 0x1p-52);
+            float y = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][1] * i >>> 12) * 0x1p-52);
+            float z = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][2] * i >>> 12) * 0x1p-52);
+            float w = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][3] * i >>> 12) * 0x1p-52);
+            float u = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][4] * i >>> 12) * 0x1p-52);
 
 //            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
             final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z + w * w + u * u);

@@ -70,8 +70,9 @@ public class INoiseComparison extends ApplicationAdapter {
             new SorbetNoise(1L, 1),
             new SorbetNoise(1L, 3),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
+            new ToothNoise(),
     };
-    private int index0 = 12;
+    private int index0 = 17;
     private int index1 = 14;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);

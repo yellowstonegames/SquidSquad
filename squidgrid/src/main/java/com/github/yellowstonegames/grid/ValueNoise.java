@@ -633,7 +633,7 @@ public class ValueNoise implements INoise {
 
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 
     @Override

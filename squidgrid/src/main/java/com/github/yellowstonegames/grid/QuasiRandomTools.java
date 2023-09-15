@@ -107,7 +107,7 @@ public final class QuasiRandomTools {
      * points, you raise the index. If buffer is null or cannot hold {@code dimensions} items, a new float array is
      * created and returned. See
      * <a href="http://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences/">Roberts' blog</a>
-     * for more detailed info. This uses the constants in {@link #goldenLong}.
+     * for more detailed info. This uses the constants in {@link #GOLDEN_LONGS}.
      * @param buffer a float array to assign into; if null or too-small, an appropriately-sized array will be created
      * @param position the position in buffer to start assigning values into
      * @param dimensions how many dimensions a point should have, clamped between 1 and 50 inclusive
@@ -122,7 +122,7 @@ public final class QuasiRandomTools {
             buffer = new float[dimensions];
         }
         for (int d = 0; d < dimensions; d++) {
-            buffer[position++] = (index * goldenLong[dimensions-1][d] >>> 40) * 0x1p-24f;
+            buffer[position++] = (index * GOLDEN_LONGS[dimensions-1][d] >>> 40) * 0x1p-24f;
         }
         return buffer;
     }
@@ -137,7 +137,7 @@ public final class QuasiRandomTools {
      * harmonious number raised to successive negative powers from -1 down to and including -n. This is useful for
      * higher-dimensional versions of the R2 sequence.
      */
-    public static final float[][] goldenFloat = new float[][] {
+    public static final float[][] GOLDEN_FLOATS = new float[][] {
 { 0.6180339887498949f, },
 { 0.7548776662466927f, 0.5698402909980532f, },
 { 0.8191725133961645f, 0.6710436067037893f, 0.5497004779019703f, },
@@ -415,7 +415,7 @@ public final class QuasiRandomTools {
   0.5344911010677502f, 0.5272615978989069f, 0.5201298806725497f, 0.5130946267403133f, 0.5061545313439161f, },
 };
 
-    public static final long[][] goldenLong = {
+    public static final long[][] GOLDEN_LONGS = {
             {0x9E3779B97F4A7C15L},
             {0xC13FA9A902A6328FL, 0x91E10DA5C79E7B1DL},
             {0xD1B54A32D192ED03L, 0xABC98388FB8FAC03L, 0x8CB92BA72F3D8DD7L},

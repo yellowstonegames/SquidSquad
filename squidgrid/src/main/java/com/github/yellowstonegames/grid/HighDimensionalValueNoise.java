@@ -98,7 +98,7 @@ public class HighDimensionalValueNoise implements INoise {
     }
 
     protected float noise(final int dim, float... args) {
-        final long[] gold = QuasiRandomTools.goldenLong[dim];
+        final long[] gold = QuasiRandomTools.GOLDEN_LONGS[dim];
         final long hashSeed = gold[dim] * seed;
         long hash;
         for (int i = 0; i < dim; i++) {
@@ -125,7 +125,7 @@ public class HighDimensionalValueNoise implements INoise {
     }
 
     protected float getNoise2D(float x, float y) {
-        final long[] gold = QuasiRandomTools.goldenLong[2];
+        final long[] gold = QuasiRandomTools.GOLDEN_LONGS[2];
         final long hashSeed = gold[2] * seed;
         long hash;
         floors[0] = MathTools.longFloor(x);
@@ -251,11 +251,11 @@ public class HighDimensionalValueNoise implements INoise {
         throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }
 
-    public static final HighDimensionalValueNoise instance2D = new HighDimensionalValueNoise(QuasiRandomTools.goldenLong[12][0], 2);
-    public static final HighDimensionalValueNoise instance3D = new HighDimensionalValueNoise(QuasiRandomTools.goldenLong[13][0], 3);
-    public static final HighDimensionalValueNoise instance4D = new HighDimensionalValueNoise(QuasiRandomTools.goldenLong[14][0], 4);
-    public static final HighDimensionalValueNoise instance5D = new HighDimensionalValueNoise(QuasiRandomTools.goldenLong[15][0], 5);
-    public static final HighDimensionalValueNoise instance6D = new HighDimensionalValueNoise(QuasiRandomTools.goldenLong[16][0], 6);
-    public static final HighDimensionalValueNoise instance7D = new HighDimensionalValueNoise(QuasiRandomTools.goldenLong[17][0], 7);
-    public static final HighDimensionalValueNoise instance8D = new HighDimensionalValueNoise(QuasiRandomTools.goldenLong[18][0], 8);
+    public static final HighDimensionalValueNoise instance2D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[12][0], 2);
+    public static final HighDimensionalValueNoise instance3D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[13][0], 3);
+    public static final HighDimensionalValueNoise instance4D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[14][0], 4);
+    public static final HighDimensionalValueNoise instance5D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[15][0], 5);
+    public static final HighDimensionalValueNoise instance6D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[16][0], 6);
+    public static final HighDimensionalValueNoise instance7D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[17][0], 7);
+    public static final HighDimensionalValueNoise instance8D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[18][0], 8);
 }

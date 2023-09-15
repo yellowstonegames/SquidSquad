@@ -429,11 +429,11 @@ public class PhantomNoise implements INoise {
         throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }
 
-    public static final PhantomNoise instance2D = new PhantomNoise(QuasiRandomTools.goldenLong[2][0], 2);
-    public static final PhantomNoise instance3D = new PhantomNoise(QuasiRandomTools.goldenLong[3][0], 3);
-    public static final PhantomNoise instance4D = new PhantomNoise(QuasiRandomTools.goldenLong[4][0], 4);
-    public static final PhantomNoise instance5D = new PhantomNoise(QuasiRandomTools.goldenLong[5][0], 5);
-    public static final PhantomNoise instance6D = new PhantomNoise(QuasiRandomTools.goldenLong[6][0], 6);
-    public static final PhantomNoise instance7D = new PhantomNoise(QuasiRandomTools.goldenLong[7][0], 7);
-    public static final PhantomNoise instance8D = new PhantomNoise(QuasiRandomTools.goldenLong[8][0], 8);
+    public static final PhantomNoise instance2D = new PhantomNoise(QuasiRandomTools.GOLDEN_LONGS[2][0], 2);
+    public static final PhantomNoise instance3D = new PhantomNoise(QuasiRandomTools.GOLDEN_LONGS[3][0], 3);
+    public static final PhantomNoise instance4D = new PhantomNoise(QuasiRandomTools.GOLDEN_LONGS[4][0], 4);
+    public static final PhantomNoise instance5D = new PhantomNoise(QuasiRandomTools.GOLDEN_LONGS[5][0], 5);
+    public static final PhantomNoise instance6D = new PhantomNoise(QuasiRandomTools.GOLDEN_LONGS[6][0], 6);
+    public static final PhantomNoise instance7D = new PhantomNoise(QuasiRandomTools.GOLDEN_LONGS[7][0], 7);
+    public static final PhantomNoise instance8D = new PhantomNoise(QuasiRandomTools.GOLDEN_LONGS[8][0], 8);
 }
