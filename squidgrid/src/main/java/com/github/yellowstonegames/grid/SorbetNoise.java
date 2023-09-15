@@ -22,7 +22,12 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * A mix of {@link CyclicNoise} with value noise; much less periodic than CyclicNoise alone. Largely based upon
  * <a href="https://www.shadertoy.com/view/3tcyD7">this ShaderToy by jeyko</a>, which in turn is based on
  * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>. This uses cyclic noise with a
- * dimension one higher than requested, and uses a call to {@link ValueNoise#valueNoise} to fill that parameter.
+ * dimension one higher than requested, and uses a call to {@link SimplexNoise#noise} to fill that parameter.
+ * <br>
+ * This is still very much in beta. 3D SorbetNoise can often have very obvious waves of high and low values pass through
+ * the noise field in straight-line bands. Higher dimensions tend to look better. This is somewhat unusual because this
+ * uses SimplexNoise, which looks drastically worse in dimensions 5 and up, but because CyclicNoise looks better around
+ * those dimensions, the quality changes offset each other.
  */
 @Beta
 public class SorbetNoise extends CyclicNoise {
@@ -31,8 +36,16 @@ public class SorbetNoise extends CyclicNoise {
         this(0xD1CEDBEEFBABBL, 3);
     }
 
+    public SorbetNoise(int octaves) {
+        super(octaves);
+    }
+
     public SorbetNoise(long seed, int octaves) {
         super(seed, octaves);
+    }
+
+    public SorbetNoise(long seed, int octaves, float frequency) {
+        super(seed, octaves, frequency);
     }
 
     public SorbetNoise stringDeserialize(String data) {
@@ -43,14 +56,14 @@ public class SorbetNoise extends CyclicNoise {
     public float getNoise(float x, float y) {
         float xx = x * 0.25f;
         float yy = y * 0.25f;
-        return super.getNoise(x, y, 2.00f * SimplexNoise.noise(xx, yy, seed));
+        return super.getNoise(x, y, 4f/2.00f * SimplexNoise.noise(xx, yy, seed));
     }
 
     public float getNoise(float x, float y, float z) {
         float xx = x * 0.25f;
         float yy = y * 0.25f;
         float zz = z * 0.25f;
-        return super.getNoise(x, y, z, 2.00f * SimplexNoise.noise(xx, yy, zz, seed));
+        return super.getNoise(x, y, z, 4f/3.00f * SimplexNoise.noise(xx, yy, zz, seed));
     }
 
     public float getNoise(float x, float y, float z, float w) {
@@ -58,7 +71,7 @@ public class SorbetNoise extends CyclicNoise {
         float yy = y * 0.25f;
         float zz = z * 0.25f;
         float ww = w * 0.25f;
-        return super.getNoise(x, y, z, w, 2.00f * SimplexNoise.noise(xx, yy, zz, ww, seed));
+        return super.getNoise(x, y, z, w, 4f/4.00f * SimplexNoise.noise(xx, yy, zz, ww, seed));
     }
 
     public float getNoise(float x, float y, float z, float w, float u) {
@@ -67,7 +80,7 @@ public class SorbetNoise extends CyclicNoise {
         float zz = z * 0.25f;
         float ww = w * 0.25f;
         float uu = u * 0.25f;
-        return super.getNoise(x, y, z, w, u, 2.00f * SimplexNoise.noise(xx, yy, zz, ww, uu, seed));
+        return super.getNoise(x, y, z, w, u, 4f/5.00f * SimplexNoise.noise(xx, yy, zz, ww, uu, seed));
     }
 
     public float getNoise(float x, float y, float z, float w, float u, float v) {
@@ -77,12 +90,17 @@ public class SorbetNoise extends CyclicNoise {
         float ww = w * 0.25f;
         float uu = u * 0.25f;
         float vv = v * 0.25f;
-        return super.getNoise(x, y, z, w, u, v, 2.00f * SimplexNoise.noise(xx, yy, zz, ww, uu, vv, seed));
+        return super.getNoise(x, y, z, w, u, v, 4f/6.00f * SimplexNoise.noise(xx, yy, zz, ww, uu, vv, seed));
     }
 
     @Override
     public String toString() {
         return "SorbetNoise with seed: " + seed + ", octaves:" + octaves;
+    }
+
+    @Override
+    public String getTag() {
+        return "SorN";
     }
 
     @Override
