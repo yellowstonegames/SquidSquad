@@ -68,7 +68,7 @@ public class ToothNoise implements INoise{
         float sx = sin(1+x*GOLDEN_FLOATS[0][0] + sin(2+x*GOLDEN_FLOATS[2][0] + sin(3+x*GOLDEN_FLOATS[4][0] + y)));
         float sy = sin(4+y*GOLDEN_FLOATS[1][1] + sin(5+y*GOLDEN_FLOATS[3][1] + sin(6+y*GOLDEN_FLOATS[5][1] + x)));
         float q = (sx + sy) * (12f/2f);
-        return sin(7+q*GOLDEN_FLOATS[6][0] + sin(8+q*GOLDEN_FLOATS[6][1] + sin(9+q*GOLDEN_FLOATS[6][2] + x + y)));
+        return sin(7+q*GOLDEN_FLOATS[6][0] + sin(8+q*GOLDEN_FLOATS[6][1] + sin(9+q*GOLDEN_FLOATS[6][2])));
     }
 
     @Override
@@ -76,11 +76,17 @@ public class ToothNoise implements INoise{
         return noise(x, y, z);
     }
     public static float noise(float x, float y, float z) {
-        float sx = LineWobble.wobble(121212, 1+x*GOLDEN_FLOATS[0][0] + sin(2+x*GOLDEN_FLOATS[3][0] + sin(3+x*GOLDEN_FLOATS[6][0] + z - y)));
-        float sy = LineWobble.wobble(343434, 4+y*GOLDEN_FLOATS[1][1] + sin(5+y*GOLDEN_FLOATS[4][1] + sin(6+y*GOLDEN_FLOATS[7][1] + x - z)));
-        float sz = LineWobble.wobble(565656, 7+z*GOLDEN_FLOATS[2][2] + sin(8+z*GOLDEN_FLOATS[5][2] + sin(9+z*GOLDEN_FLOATS[8][2] + y - x)));
-        float q = (sx + sy + sz) * (12f/3f);
-        return LineWobble.wobble(123456789, 10+q*GOLDEN_FLOATS[9][0] + sin(11+q*GOLDEN_FLOATS[9][1] + sin(12+q*GOLDEN_FLOATS[9][2])));
+        float sx = sin(1+x*GOLDEN_FLOATS[0][0] + sin(2+z*GOLDEN_FLOATS[3][0] + sin(3+y*GOLDEN_FLOATS[6][0])));
+        float sy = sin(4+z*GOLDEN_FLOATS[1][1] + sin(5+y*GOLDEN_FLOATS[4][1] + sin(6+x*GOLDEN_FLOATS[7][1])));
+        float sz = sin(7+y*GOLDEN_FLOATS[2][2] + sin(8+x*GOLDEN_FLOATS[5][2] + sin(9+z*GOLDEN_FLOATS[8][2])));
+        float qx = sin((sy + sz) + x) * 3f;
+        float qy = sin((sx + sz) + y) * 3f;
+        float qz = sin((sx + sy) + z) * 3f;
+        return (
+                sin(10+qz*GOLDEN_FLOATS[9][0] + sin(11+qy*GOLDEN_FLOATS[9][1] + sin(12+qx*GOLDEN_FLOATS[9][2]))) +
+                sin(13+qy*GOLDEN_FLOATS[9][3] + sin(14+qx*GOLDEN_FLOATS[9][4] + sin(15+qz*GOLDEN_FLOATS[9][5]))) +
+                sin(16+qx*GOLDEN_FLOATS[9][6] + sin(17+qz*GOLDEN_FLOATS[9][7] + sin(18+qy*GOLDEN_FLOATS[9][8])))) * (1f/3f)
+                ;
     }
 
     @Override
