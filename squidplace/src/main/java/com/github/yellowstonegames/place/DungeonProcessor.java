@@ -1207,7 +1207,7 @@ public class DungeonProcessor implements PlaceGenerator{
                         maps[1][x][y] = cmgMap[x][y];
                 }
             }
-            finder.corridors.put(deep, new ObjectList<Region>());
+            finder.corridors.put(deep, new ObjectList<>());
             finder.allCorridors.or(deep);
             finder.allFloors.or(deep);
             potential.andNot(flooded);

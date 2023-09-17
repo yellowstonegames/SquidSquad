@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.ObjectFloatMap;
+import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.store.core.JsonCore;
@@ -49,6 +50,8 @@ public final class JsonGrid {
         registerCoordObjectOrderedMap(json);
         registerCoordFloatMap(json);
         registerCoordFloatOrderedMap(json);
+        registerCoordLongMap(json);
+        registerCoordLongOrderedMap(json);
         registerSpatialMap(json);
         registerRadiance(json);
         registerLightingManager(json);
@@ -212,7 +215,7 @@ public final class JsonGrid {
                     writer.write('{');
                 } catch (IOException ignored) {
                 }
-                Iterator<ObjectFloatMap.Entry<Coord>> es = new ObjectFloatMap.Entries<Coord>(object).iterator();
+                Iterator<ObjectFloatMap.Entry<Coord>> es = new ObjectFloatMap.Entries<>(object).iterator();
                 while (es.hasNext()) {
                     ObjectFloatMap.Entry<Coord> e = es.next();
                     try {
@@ -287,6 +290,105 @@ public final class JsonGrid {
                 CoordFloatOrderedMap data = new CoordFloatOrderedMap(jsonData.size);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(Float.TYPE, value));
+                }
+                return data;
+            }
+        });
+    }
+
+
+    /**
+     * Registers CoordLongMap with the given Json object, so CoordLongMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordLongMap(@NonNull Json json) {
+        json.addClassTag("ClM", CoordLongMap.class);
+        registerCoord(json);
+        json.setSerializer(CoordLongMap.class, new Json.Serializer<CoordLongMap>() {
+            @Override
+            public void write(Json json, CoordLongMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<ObjectLongMap.Entry<Coord>> es = new ObjectLongMap.Entries<>(object).iterator();
+                while (es.hasNext()) {
+                    ObjectLongMap.Entry<Coord> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue(), Long.TYPE);
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordLongMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordLongMap data = new CoordLongMap(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(Long.TYPE, value));
+                }
+                return data;
+            }
+        });
+    }
+
+    /**
+     * Registers CoordLongOrderedMap with the given Json object, so CoordLongOrderedMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordLongOrderedMap(@NonNull Json json) {
+        json.addClassTag("ClOM", CoordLongOrderedMap.class);
+        registerCoord(json);
+        json.setSerializer(CoordLongOrderedMap.class, new Json.Serializer<CoordLongOrderedMap>() {
+            @Override
+            public void write(Json json, CoordLongOrderedMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<ObjectLongMap.Entry<Coord>> es = new CoordLongOrderedMap.OrderedMapEntries<>(object).iterator();
+                while (es.hasNext()) {
+                    ObjectLongMap.Entry<Coord> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue(), Long.TYPE);
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordLongOrderedMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordLongOrderedMap data = new CoordLongOrderedMap(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(Long.TYPE, value));
                 }
                 return data;
             }

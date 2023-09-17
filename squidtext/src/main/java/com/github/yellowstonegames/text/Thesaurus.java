@@ -1648,7 +1648,7 @@ public class Thesaurus {
             adjective = new CaseInsensitiveOrderedMap<>(categories),
             noun = new CaseInsensitiveOrderedMap<>(categories),
             nouns = new CaseInsensitiveOrderedMap<>(categories);
-    public static final CaseInsensitiveOrderedMap<Language> languages = new CaseInsensitiveOrderedMap<Language>(
+    public static final CaseInsensitiveOrderedMap<Language> languages = new CaseInsensitiveOrderedMap<>(
             Language.registeredNames.length);
     static {
         for (int i = 0; i < Language.registeredNames.length; i++) {

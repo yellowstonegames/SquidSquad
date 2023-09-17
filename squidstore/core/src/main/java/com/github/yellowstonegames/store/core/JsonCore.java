@@ -50,9 +50,9 @@ public final class JsonCore {
 
         registerDiceRule(json);
         registerGapShuffler(json);
+        registerIntShuffler(json);
         registerProbabilityTable(json);
         registerWeightedTable(json);
-        registerIntShuffler(json);
 
         registerPattern(json);
     }

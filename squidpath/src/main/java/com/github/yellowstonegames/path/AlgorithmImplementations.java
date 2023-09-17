@@ -358,7 +358,7 @@ class AlgorithmImplementations<V> {
     boolean containsCycle(Graph<V> graph) {
         if (graph.size() < 3 || graph.getEdgeCount() < 3) return false;
         init();
-        HashSet<Node<V>> set =  new HashSet<Node<V>>();
+        HashSet<Node<V>> set = new HashSet<>();
         for (Node<V> v : graph.getNodes()) {
             v.resetAlgorithmAttributes(runID);
             if (detectCycleDFS(v, null, set)) {

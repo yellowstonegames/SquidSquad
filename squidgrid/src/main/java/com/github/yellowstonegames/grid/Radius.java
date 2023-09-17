@@ -341,7 +341,7 @@ public enum Radius {
 
     public List<Coord> pointsInside(int centerX, int centerY, int radiusLength, boolean surpassEdges, int width, int height, List<Coord> buf)
     {
-        List<Coord> contents = buf == null ? new ObjectList<Coord>((int)Math.ceil(area(radiusLength))) : buf;
+        List<Coord> contents = buf == null ? new ObjectList<>((int) Math.ceil(area(radiusLength))) : buf;
         if(!surpassEdges && (centerX < 0 || centerX >= width || centerY < 0 || centerY >= height))
             return contents;
         if(radiusLength < 1) {

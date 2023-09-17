@@ -408,7 +408,7 @@ public class DungeonTools {
      */
     public static ObjectList<Coord> ensurePath(char[][] map, EnhancedRandom rng, char replacement, char... blocking) {
         if (map == null || map.length <= 0 || blocking == null || blocking.length <= 0)
-            return new ObjectList<Coord>(0);
+            return new ObjectList<>(0);
         int width = map.length, height = map[0].length;
         ObjectList<Coord> points = pointPath(width, height, rng);
         char[] blocks = new char[blocking.length];
@@ -424,7 +424,7 @@ public class DungeonTools {
 
     public static ObjectList<Coord> allMatching(char[][] map, char... matching) {
         if (map == null || map.length <= 0 || matching == null || matching.length <= 0)
-            return new ObjectList<Coord>(0);
+            return new ObjectList<>(0);
         return new ObjectList<>(new Region(map, matching));
     }
 
@@ -447,7 +447,7 @@ public class DungeonTools {
      * @see Radius#inCircle(int, int, int, boolean, int, int, List) if you want to keep the Coords within the bounds of the map
      */
     public static List<Coord> circle(int x, int y, int radius, /* @Nullable */ List<Coord> buf) {
-        final List<Coord> result = buf == null ? new ObjectList<Coord>() : buf;
+        final List<Coord> result = buf == null ? new ObjectList<>() : buf;
         radius = Math.max(0, radius);
         for (int dx = -radius; dx <= radius; ++dx) {
             final int high = (int) Math.floor(Math.sqrt(radius * radius - dx * dx));

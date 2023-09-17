@@ -50,7 +50,7 @@ public class UndirectedGraph<V> extends Graph<V>{
 
     @Override
     protected Connection<V> obtainEdge() {
-        return new Connection.UndirectedConnection<V>();
+        return new Connection.UndirectedConnection<>();
     }
 
     @Override
