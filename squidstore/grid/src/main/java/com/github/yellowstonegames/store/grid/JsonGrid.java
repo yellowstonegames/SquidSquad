@@ -56,12 +56,14 @@ public final class JsonGrid {
         registerSpatialMap(json);
         registerRadiance(json);
         registerLightingManager(json);
+//        registerBasicHashNoise(json); // Cannot be serialized to JSON without IPointHash being serializable, too.
+        registerCyclicNoise(json);
+        registerFlanNoise(json);
+        registerFoamNoise(json);
         registerNoise(json);
         registerNoiseWrapper(json);
         registerPhantomNoise(json);
         registerTaffyNoise(json);
-        registerFlanNoise(json);
-        registerCyclicNoise(json);
         registerSimplexNoise(json);
         registerSimplexNoiseScaled(json);
         registerValueNoise(json);
@@ -684,7 +686,7 @@ public final class JsonGrid {
     /**
      * Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.
      * This is a simple wrapper around PhantomNoise's built-in {@link PhantomNoise#stringSerialize()} and
-     * {@link PhantomNoise#stringDeserialize(String)} methods.
+     * {@link PhantomNoise#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -709,7 +711,7 @@ public final class JsonGrid {
     /**
      * Registers TaffyNoise with the given Json object, so TaffyNoise can be written to and read from JSON.
      * This is a simple wrapper around TaffyNoise's built-in {@link TaffyNoise#stringSerialize()} and
-     * {@link TaffyNoise#stringDeserialize(String)} methods.
+     * {@link TaffyNoise#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -734,7 +736,7 @@ public final class JsonGrid {
     /**
      * Registers FlanNoise with the given Json object, so FlanNoise can be written to and read from JSON.
      * This is a simple wrapper around FlanNoise's built-in {@link FlanNoise#stringSerialize()} and
-     * {@link FlanNoise#stringDeserialize(String)} methods.
+     * {@link FlanNoise#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -759,7 +761,7 @@ public final class JsonGrid {
     /**
      * Registers CyclicNoise with the given Json object, so CyclicNoise can be written to and read from JSON.
      * This is a simple wrapper around CyclicNoise's built-in {@link CyclicNoise#stringSerialize()} and
-     * {@link CyclicNoise#stringDeserialize(String)} methods.
+     * {@link CyclicNoise#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -782,9 +784,34 @@ public final class JsonGrid {
     }
 
     /**
+     * Registers FoamNoise with the given Json object, so FoamNoise can be written to and read from JSON.
+     * This is a simple wrapper around FoamNoise's built-in {@link FoamNoise#stringSerialize()} and
+     * {@link FoamNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerFoamNoise(@NonNull Json json) {
+        json.addClassTag("FoaN", FoamNoise.class);
+        json.setSerializer(FoamNoise.class, new Json.Serializer<FoamNoise>() {
+            @Override
+            public void write(Json json, FoamNoise object, Class knownType) {
+                json.writeObjectStart(FoamNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public FoamNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return FoamNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
      * Registers SimplexNoise with the given Json object, so SimplexNoise can be written to and read from JSON.
      * This is a simple wrapper around SimplexNoise's built-in {@link SimplexNoise#stringSerialize()} and
-     * {@link SimplexNoise#stringDeserialize(String)} methods.
+     * {@link SimplexNoise#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -809,7 +836,7 @@ public final class JsonGrid {
     /**
      * Registers SimplexNoiseScaled with the given Json object, so SimplexNoiseScaled can be written to and read from JSON.
      * This is a simple wrapper around SimplexNoiseScaled's built-in {@link SimplexNoiseScaled#stringSerialize()} and
-     * {@link SimplexNoiseScaled#stringDeserialize(String)} methods.
+     * {@link SimplexNoiseScaled#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -835,7 +862,7 @@ public final class JsonGrid {
     /**
      * Registers HighDimensionalValueNoise with the given Json object, so HighDimensionalValueNoise can be written to and read from JSON.
      * This is a simple wrapper around HighDimensionalValueNoise's built-in {@link HighDimensionalValueNoise#stringSerialize()} and
-     * {@link HighDimensionalValueNoise#stringDeserialize(String)} methods.
+     * {@link HighDimensionalValueNoise#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -860,7 +887,7 @@ public final class JsonGrid {
     /**
      * Registers ValueNoise with the given Json object, so ValueNoise can be written to and read from JSON.
      * This is a simple wrapper around ValueNoise's built-in {@link ValueNoise#stringSerialize()} and
-     * {@link ValueNoise#stringDeserialize(String)} methods.
+     * {@link ValueNoise#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */

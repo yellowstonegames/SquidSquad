@@ -796,6 +796,10 @@ public class FoamNoise implements INoise {
         return this;
     }
 
+    public static FoamNoise recreateFromString(String data) {
+        return new FoamNoise(Base.BASE10.readLong(data, 1, data.length() - 1));
+    }
+
     @Override
     public FoamNoise copy() {
         return new FoamNoise(this.seed);
