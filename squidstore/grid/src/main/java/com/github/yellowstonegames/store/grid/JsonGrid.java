@@ -68,11 +68,11 @@ public final class JsonGrid {
         registerOpenSimplex2Smooth(json);
         registerPerlinNoise(json);
         registerPhantomNoise(json);
-//        registerRadialNoiseWrapper(json);
+        registerRadialNoiseWrapper(json);
         registerSimplexNoise(json);
         registerSimplexNoiseHard(json);
         registerSimplexNoiseScaled(json);
-//        registerSorbetNoise(json);
+        registerSorbetNoise(json);
         registerTaffyNoise(json);
         registerValueNoise(json);
     }
@@ -691,6 +691,31 @@ public final class JsonGrid {
     }
 
     /**
+     * Registers RadialNoiseWrapper with the given Json object, so RadialNoiseWrapper can be written to and read from JSON.
+     * This is a simple wrapper around RadialNoiseWrapper's built-in {@link RadialNoiseWrapper#stringSerialize()} and
+     * {@link RadialNoiseWrapper#stringDeserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerRadialNoiseWrapper(@NonNull Json json) {
+        json.addClassTag("NAdj", RadialNoiseWrapper.class);
+        json.setSerializer(RadialNoiseWrapper.class, new Json.Serializer<RadialNoiseWrapper>() {
+            @Override
+            public void write(Json json, RadialNoiseWrapper object, Class knownType) {
+                json.writeObjectStart(RadialNoiseWrapper.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public RadialNoiseWrapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return new RadialNoiseWrapper().stringDeserialize(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
      * Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.
      * This is a simple wrapper around PhantomNoise's built-in {@link PhantomNoise#stringSerialize()} and
      * {@link PhantomNoise#recreateFromString(String)} methods.
@@ -1015,6 +1040,31 @@ public final class JsonGrid {
             public PerlinNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return PerlinNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers SorbetNoise with the given Json object, so SorbetNoise can be written to and read from JSON.
+     * This is a simple wrapper around SorbetNoise's built-in {@link SorbetNoise#stringSerialize()} and
+     * {@link SorbetNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSorbetNoise(@NonNull Json json) {
+        json.addClassTag("PerN", SorbetNoise.class);
+        json.setSerializer(SorbetNoise.class, new Json.Serializer<SorbetNoise>() {
+            @Override
+            public void write(Json json, SorbetNoise object, Class knownType) {
+                json.writeObjectStart(SorbetNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public SorbetNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return SorbetNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }

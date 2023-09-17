@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
@@ -51,6 +52,16 @@ public class SorbetNoise extends CyclicNoise {
     public SorbetNoise stringDeserialize(String data) {
         super.stringDeserialize(data);
         return this;
+    }
+
+    public static SorbetNoise recreateFromString(String data) {
+        if(data == null || data.length() < 5)
+            return null;
+        int pos;
+        long seed =   DigitTools.longFromDec(data, 1, pos = data.indexOf('~'));
+        int octaves = DigitTools.intFromDec(data, pos+1, pos = data.indexOf('~', pos+1));
+        float freq  = DigitTools.intFromDec(data, pos+1, data.indexOf('`', pos+1));
+        return new SorbetNoise(seed, octaves, freq);
     }
 
     public float getNoise(float x, float y) {
