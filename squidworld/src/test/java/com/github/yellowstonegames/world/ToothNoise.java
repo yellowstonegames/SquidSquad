@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.grid;
+package com.github.yellowstonegames.world;
 
-import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.grid.INoise;
 
 import static com.github.tommyettinger.digital.TrigTools.sin;
 import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_FLOATS;
@@ -26,7 +26,7 @@ import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_FLOATS;
  * Not very good right now! Use only experimentally.
  */
 @Beta
-public class ToothNoise implements INoise{
+public class ToothNoise implements INoise {
     public ToothNoise() {
         // no state!
     }

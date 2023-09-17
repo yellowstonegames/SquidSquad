@@ -22,15 +22,31 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Performs randomized flood-fill operations on arbitrarily-shaped areas, until a volume is reached.
+ * Randomized flood-fills are useful for generating areas as if they were produced by a fluid process, such as a cloud
+ * of smoke or gas, or a literal spill of liquid over an uneven floor. The {@link #getPassable() passable} Region this
+ * uses allows limiting the "fluid" from spilling into walls or making other impossible movements.
+ * <br>
+ * This is commonly used by constructing a Spill (specifying at least the valid cells the spill can expand into) and
+ * calling {@link #run(Coord, int)} or {@link #run(Region, int)} with the desired volume for the spill and its starting
+ * location(s). You can get the resulting {@link #getSpillMap() spillMap} returned from run() or by a getter later;
+ * it may need to be copied (using {@link Region#copy()}, or put into another Region using
+ * {@link Region#remake(Region)}) to avoid getting the spillMap overwritten by a later run() call.
  * <br>
  * This is a simple wrapper around {@link Region#spill(Region, int, EnhancedRandom, Region, Region)} to help handle its
  * several arguments more cleanly.
  */
 public class Spill {
-    private Region buffer, buffer2;
+    private final transient Region buffer;
+    private final transient Region buffer2;
     protected Region spillMap, passable;
     protected EnhancedRandom random;
 
+    /**
+     * Calls {@link #Spill(Region)} with a new empty 32x32 Region.
+     */
+    public Spill() {
+        this(new Region(32, 32));
+    }
     /**
      * Calls {@link #Spill(Region)} by creating a Region from {@code passable} with
      * {@link Region#Region(char[][], char)} and a "yes" char of {@code '.'}.
