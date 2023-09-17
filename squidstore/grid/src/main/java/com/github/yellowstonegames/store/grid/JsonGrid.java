@@ -60,14 +60,17 @@ public final class JsonGrid {
         registerCyclicNoise(json);
         registerFlanNoise(json);
         registerFoamNoise(json);
+        registerHighDimensionalValueNoise(json);
+        registerNoiseAdjustment(json);
         registerNoise(json);
         registerNoiseWrapper(json);
+        registerOpenSimplex2(json);
+        registerOpenSimplex2Smooth(json);
         registerPhantomNoise(json);
         registerTaffyNoise(json);
         registerSimplexNoise(json);
         registerSimplexNoiseScaled(json);
         registerValueNoise(json);
-        registerHighDimensionalValueNoise(json);
     }
 
     /**
@@ -855,6 +858,58 @@ public final class JsonGrid {
             public SimplexNoiseScaled read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return SimplexNoiseScaled.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers OpenSimplex2 with the given Json object, so OpenSimplex2 can be written to and read from JSON.
+     * This is a simple wrapper around OpenSimplex2's built-in {@link OpenSimplex2#stringSerialize()} and
+     * {@link OpenSimplex2#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerOpenSimplex2(@NonNull Json json) {
+        json.addClassTag("OSFN", OpenSimplex2.class);
+        json.setSerializer(OpenSimplex2.class, new Json.Serializer<OpenSimplex2>() {
+            @Override
+            public void write(Json json, OpenSimplex2 object, Class knownType) {
+                json.writeObjectStart(OpenSimplex2.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+
+            }
+
+            @Override
+            public OpenSimplex2 read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return OpenSimplex2.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers OpenSimplex2Smooth with the given Json object, so OpenSimplex2Smooth can be written to and read from JSON.
+     * This is a simple wrapper around OpenSimplex2Smooth's built-in {@link OpenSimplex2Smooth#stringSerialize()} and
+     * {@link OpenSimplex2Smooth#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerOpenSimplex2Smooth(@NonNull Json json) {
+        json.addClassTag("OSSN", OpenSimplex2Smooth.class);
+        json.setSerializer(OpenSimplex2Smooth.class, new Json.Serializer<OpenSimplex2Smooth>() {
+            @Override
+            public void write(Json json, OpenSimplex2Smooth object, Class knownType) {
+                json.writeObjectStart(OpenSimplex2Smooth.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+
+            }
+
+            @Override
+            public OpenSimplex2Smooth read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return OpenSimplex2Smooth.recreateFromString(jsonData.get("v").asString());
             }
         });
     }

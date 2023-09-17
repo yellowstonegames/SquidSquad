@@ -272,6 +272,10 @@ public class OpenSimplex2 implements INoise {
         return this;
     }
 
+    public static OpenSimplex2 recreateFromString(String data) {
+        return new OpenSimplex2(DigitTools.longFromDec(data, 1, data.length() - 1));
+    }
+
     /**
      * Returns a typically-four-character String constant that should uniquely identify this INoise as well as possible.
      * If a duplicate tag is already registered and {@link Serializer#register(INoise)} attempts to register the same
