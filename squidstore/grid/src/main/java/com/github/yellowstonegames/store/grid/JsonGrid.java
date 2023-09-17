@@ -66,10 +66,14 @@ public final class JsonGrid {
         registerNoiseWrapper(json);
         registerOpenSimplex2(json);
         registerOpenSimplex2Smooth(json);
+        registerPerlinNoise(json);
         registerPhantomNoise(json);
-        registerTaffyNoise(json);
+//        registerRadialNoiseWrapper(json);
         registerSimplexNoise(json);
+        registerSimplexNoiseHard(json);
         registerSimplexNoiseScaled(json);
+//        registerSorbetNoise(json);
+        registerTaffyNoise(json);
         registerValueNoise(json);
     }
 
@@ -844,7 +848,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerSimplexNoiseScaled(@NonNull Json json) {
-        json.addClassTag("SmSN", SimplexNoiseScaled.class);
+        json.addClassTag("SiSN", SimplexNoiseScaled.class);
         json.setSerializer(SimplexNoiseScaled.class, new Json.Serializer<SimplexNoiseScaled>() {
             @Override
             public void write(Json json, SimplexNoiseScaled object, Class knownType) {
@@ -858,6 +862,32 @@ public final class JsonGrid {
             public SimplexNoiseScaled read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return SimplexNoiseScaled.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers SimplexNoiseHard with the given Json object, so SimplexNoiseHard can be written to and read from JSON.
+     * This is a simple wrapper around SimplexNoiseHard's built-in {@link SimplexNoiseHard#stringSerialize()} and
+     * {@link SimplexNoiseHard#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSimplexNoiseHard(@NonNull Json json) {
+        json.addClassTag("SiHN", SimplexNoiseHard.class);
+        json.setSerializer(SimplexNoiseHard.class, new Json.Serializer<SimplexNoiseHard>() {
+            @Override
+            public void write(Json json, SimplexNoiseHard object, Class knownType) {
+                json.writeObjectStart(SimplexNoiseHard.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+
+            }
+
+            @Override
+            public SimplexNoiseHard read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return SimplexNoiseHard.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -960,6 +990,31 @@ public final class JsonGrid {
             public ValueNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return ValueNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers PerlinNoise with the given Json object, so PerlinNoise can be written to and read from JSON.
+     * This is a simple wrapper around PerlinNoise's built-in {@link PerlinNoise#stringSerialize()} and
+     * {@link PerlinNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPerlinNoise(@NonNull Json json) {
+        json.addClassTag("PerN", PerlinNoise.class);
+        json.setSerializer(PerlinNoise.class, new Json.Serializer<PerlinNoise>() {
+            @Override
+            public void write(Json json, PerlinNoise object, Class knownType) {
+                json.writeObjectStart(PerlinNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public PerlinNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return PerlinNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
