@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.ObjectFloatMap;
+import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
@@ -296,7 +297,6 @@ public final class JsonGrid {
         });
     }
 
-
     /**
      * Registers CoordLongMap with the given Json object, so CoordLongMap can be written to and read from JSON.
      * This also registers Coord with the given Json object, since it is used for the keys.
@@ -389,6 +389,105 @@ public final class JsonGrid {
                 CoordLongOrderedMap data = new CoordLongOrderedMap(jsonData.size);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(Long.TYPE, value));
+                }
+                return data;
+            }
+        });
+    }
+
+
+    /**
+     * Registers CoordIntMap with the given Json object, so CoordIntMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordIntMap(@NonNull Json json) {
+        json.addClassTag("CiM", CoordIntMap.class);
+        registerCoord(json);
+        json.setSerializer(CoordIntMap.class, new Json.Serializer<CoordIntMap>() {
+            @Override
+            public void write(Json json, CoordIntMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<ObjectIntMap.Entry<Coord>> es = new ObjectIntMap.Entries<>(object).iterator();
+                while (es.hasNext()) {
+                    ObjectIntMap.Entry<Coord> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue(), Integer.TYPE);
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordIntMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordIntMap data = new CoordIntMap(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(Integer.TYPE, value));
+                }
+                return data;
+            }
+        });
+    }
+
+    /**
+     * Registers CoordIntOrderedMap with the given Json object, so CoordIntOrderedMap can be written to and read from JSON.
+     * This also registers Coord with the given Json object, since it is used for the keys.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCoordIntOrderedMap(@NonNull Json json) {
+        json.addClassTag("CiOM", CoordIntOrderedMap.class);
+        registerCoord(json);
+        json.setSerializer(CoordIntOrderedMap.class, new Json.Serializer<CoordIntOrderedMap>() {
+            @Override
+            public void write(Json json, CoordIntOrderedMap object, Class knownType) {
+                Writer writer = json.getWriter();
+                try {
+                    writer.write('{');
+                } catch (IOException ignored) {
+                }
+                Iterator<ObjectIntMap.Entry<Coord>> es = new CoordIntOrderedMap.OrderedMapEntries<>(object).iterator();
+                while (es.hasNext()) {
+                    ObjectIntMap.Entry<Coord> e = es.next();
+                    try {
+                        String k = json.toJson(e.getKey());
+                        json.setWriter(writer);
+                        json.writeValue(k);
+                        writer.write(':');
+                        json.writeValue(e.getValue(), Integer.TYPE);
+                        if (es.hasNext())
+                            writer.write(',');
+                    } catch (IOException ignored) {
+                    }
+                }
+                try {
+                    writer.write('}');
+                } catch (IOException ignored) {
+                }
+            }
+
+            @Override
+            public CoordIntOrderedMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CoordIntOrderedMap data = new CoordIntOrderedMap(jsonData.size);
+                for (JsonValue value = jsonData.child; value != null; value = value.next) {
+                    data.put(json.fromJson(Coord.class, value.name), json.readValue(Integer.TYPE, value));
                 }
                 return data;
             }
