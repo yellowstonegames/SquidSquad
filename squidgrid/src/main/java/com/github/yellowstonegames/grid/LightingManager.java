@@ -39,7 +39,9 @@ import java.util.Objects;
  * GlyphMap). To place user-interface lighting effects that don't affect the in-game-world lights, you can use
  * {@link #updateUI(Coord, Radiance)}, which is called after {@link #update()} but before {@link #draw(int[][])}.
  * <br>
- * Created by Tommy Ettinger on 11/2/2018.
+ * Honestly, this class is quite complex, and you should really take a look at a demo that uses it to see how the
+ * different parts fit together. If you have the SquidSquad test sources, LightingTest in squidglyph provides a
+ * relatively simple example using many colors of light.
  */
 public class LightingManager {
 
@@ -54,7 +56,7 @@ public class LightingManager {
     public float[][] resistances;
     /**
      * What the "viewer" (as passed to {@link #calculateFOV(Coord)}) can see either nearby without light or because an
-     * area in line-of-sight has light in it. Edited by {@link #calculateFOV(Coord)} and {@link  #update()}, but
+     * area in line-of-sight has light in it. Edited by {@link #calculateFOV(Coord)} and {@link #update()}, but
      * not {@link #updateUI(Coord, Radiance)} (which is meant for effects that are purely user-interface).
      */
     public float[][] fovResult;
@@ -66,8 +68,8 @@ public class LightingManager {
     /**
      * Used for calculations involving {@link #fovResult}, generally with each colored light individually updating this
      * 2D array and then having this array wiped clean. This serves as an intermediate storage step between the update
-     * methods and {@link #mixColoredLighting(float)}; the latter depends on this to be set by an update method or by
-     * {@link #calculateFOV}.
+     * methods and {@link #mixColoredLighting(float, int)}; the latter depends on this to be set by an update method or
+     * by {@link #calculateFOV}.
      */
     public float[][] lightFromFOV;
 
@@ -82,11 +84,11 @@ public class LightingManager {
      */
     public int[][] colorLighting;
     /**
-     * Temporary storage array used for calculations involving {@link #colorLighting}; it sometimes may make sense for
-     * other code to use this as temporary storage as well. To make effective use of this field, you will probably need
+     * Represents the Oklab colors associated with lights in {@link #lightFromFOV}.
+     * To make effective use of this field, you will probably need
      * to be reading the source for LightingManager.
      */
-    public int[][] tempColorLighting;
+    public int[][] fovLightColors;
     /**
      * Width of the 2D arrays used in this, as obtained from {@link #resistances}.
      */
@@ -125,7 +127,7 @@ public class LightingManager {
      */
     public LightingManager()
     {
-        this(new float[20][20], DescriptiveColor.BLACK, Radius.CIRCLE, 4.0f);
+        this(new float[20][20], DescriptiveColor.TRANSPARENT, Radius.CIRCLE, 4.0f);
     }
 
     /**
@@ -138,7 +140,7 @@ public class LightingManager {
      */
     public LightingManager(float[][] resistance)
     {
-        this(resistance, DescriptiveColor.BLACK, Radius.CIRCLE, 4.0f);
+        this(resistance, DescriptiveColor.TRANSPARENT, Radius.CIRCLE, 4.0f);
     }
     /**
      * Given a resistance array as produced by {@link FOV#generateResistances(char[][])}
@@ -177,7 +179,7 @@ public class LightingManager {
         losResult = new float[width][height];
         colorLighting = ArrayTools.fill(DescriptiveColor.WHITE, width, height);
         lightingStrength = new float[width][height];
-        tempColorLighting = new int[width][height];
+        fovLightColors = new int[width][height];
         Coord.expandPoolTo(width, height);
         lights = new CoordObjectOrderedMap<>(32);
         noticeable = new Region(width, height);
@@ -275,15 +277,19 @@ public class LightingManager {
     }
 
     /**
-     * Edits {@link #colorLighting} by adding in and mixing the colors in {@link #tempColorLighting}, with the strength
-     * of light in tempColorLighting boosted by flare (which can be any finite float greater than -1f, but is usually
-     * from 0f to 1f when increasing strength).
-     * Primarily used internally, but exposed so outside code can do the same things this class can.
-     * @param flare boosts the effective strength of lighting in {@link #tempColorLighting}; usually from 0 to 1
+     * Edits {@link #colorLighting} by adding in and mixing the colors in {@link #fovLightColors}, with the strength
+     * of light in fovLightColors boosted by flare (which can be any finite float greater than -1f, but is usually
+     * from 0f to 1f when increasing strength). The strengths of each colored light is determined by
+     * {@link #lightFromFOV} and the colors of lights are determined by {@link #fovLightColors}. If a color of light is
+     * fully transparent, this skips that light.
+     * <br>
+     * This is very limited-use; the related method {@link #mixColoredLighting(float, int)} is used as part of
+     * {@link #update()}, but this method is meant for when multiple colors of FOV light need to be mixed at once.
+     * @param flare boosts the effective strength of lighting in {@link #fovLightColors}; usually from 0 to 1
      */
     public void mixColoredLighting(float flare)
     {
-        int[][] basis = colorLighting, other = tempColorLighting;
+        int[][] basis = colorLighting, other = fovLightColors;
         float[][] basisStrength = lightingStrength, otherStrength = lightFromFOV;
         flare += 1f;
         float bs;
@@ -349,12 +355,16 @@ public class LightingManager {
     }
 
     /**
-     * Edits {@link #colorLighting} by adding in and mixing the given color where the light strength in {@link #lightFromFOV}
-     * is greater than 0, with that strength boosted by flare (which can be any finite float greater than -1f, but is
-     * usually from 0f to 1f when increasing strength).
-     * Primarily used internally, but exposed so outside code can do the same things this class can.
-     * @param flare boosts the effective strength of lighting in {@link #tempColorLighting}; usually from 0 to 1
-     * @param color the color to mix in where the light strength in {@link #lightFromFOV} is greater than 0
+     * Edits {@link #colorLighting} by adding in and mixing the given color where the light strength in
+     * {@link #lightFromFOV} is greater than 0, with that strength boosted by flare (which can be any finite float
+     * greater than -1f, but is usually from 0f to 1f when increasing strength). This draws its existing lighting
+     * strength from {@link #lightingStrength} and its existing light colors from {@link #colorLighting}; it modifies
+     * both of these.
+     * <br>
+     * This has limited use outside this class, unless you are reimplementing part of {@link #update()} or something
+     * like it.
+     * @param flare boosts the effective strength of lighting in {@link #lightFromFOV}; usually from 0 to 1
+     * @param color the Oklab color to mix in where the light strength in {@link #lightFromFOV} is greater than 0
      */
     public void mixColoredLighting(float flare, int color)
     {
@@ -430,7 +440,6 @@ public class LightingManager {
      */
     public void update()
     {
-        Radiance radiance;
         ArrayTools.fill(lightingStrength, 0f);
         ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
         final int sz = lights.size();
@@ -439,7 +448,7 @@ public class LightingManager {
             pos = lights.keyAt(i);
             if(!noticeable.contains(pos))
                 continue;
-            radiance = lights.getAt(i);
+            Radiance radiance = lights.getAt(i);
             if(radiance == null) continue;
             FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
@@ -455,7 +464,6 @@ public class LightingManager {
      */
     public void updateAll()
     {
-        Radiance radiance;
         for (int x = 0; x < width; x++) {
             PER_CELL:
             for (int y = 0; y < height; y++) {
@@ -472,10 +480,9 @@ public class LightingManager {
         ArrayTools.fill(lightingStrength, 0f);
         ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
         final int sz = lights.size();
-        Coord pos;
         for (int i = 0; i < sz; i++) {
-            pos = lights.keyAt(i);
-            radiance = lights.getAt(i);
+            Coord pos = lights.keyAt(i);
+            Radiance radiance = lights.getAt(i);
             if(radiance == null) continue;
             FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
