@@ -97,7 +97,7 @@ to July 2011, when Java 7 came out.
 
 # How?
 
-You'll probably want to see [the one standalone demo here](https://github.com/yellowstonegames/SquidLib-Demos/tree/master/SquidSquad/DawnlikeDemo);
+You'll probably want to see [the one standalone demo here](https://github.com/yellowstonegames/SquidLib-Demos/tree/master/SquidSquad/DawnSquad);
 it's in SquidLib-Demos and uses the wonderful DawnLike tileset by DragonDePlatino and DawnBringer. This demo is also
 present as a test in `squidsmooth`, but the standalone version of it shows how you can use SquidSquad in a complete
 libGDX application.
@@ -124,11 +124,14 @@ Copy over any changes you want, reload your Gradle project, and you're done. The
 they will probably all be in the dependencies, but this ensures all the versions are up-to-date and necessary other
 projects are present.
 
-These fetch SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the best such
-release is `4.0.0-alpha3`. For anything else, you'll need JitPack, where you should use a recent commit from
+Liftoff fetches SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the best
+such release is `4.0.0-alpha3`. For anything else, you'll need JitPack, where you should use a recent commit from
 [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property. The group is
 different for JitPack builds of SquidSquad; change `com.squidpony` to `com.github.yellowstonegames.squidsquad` when
-using JitPack.
+using JitPack. JitPack is generally recommended over the Maven Central alpha releases, because you can (and really
+should) specify an exact commit to use on the Commits tab (click "Get It" on any commit except -SNAPSHOT; this will
+provide useful info below once it... eventually... builds). I strongly discourage using JitPack's -SNAPSHOT versions,
+because they can change without warning and don't tell you what commit you are actually using; use a commit instead!
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 

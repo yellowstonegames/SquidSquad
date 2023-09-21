@@ -380,7 +380,7 @@ public class FFTVisualizer extends ApplicationAdapter {
 //        threshold = (TimeUtils.millis() >>> 10 & 3) * 0x40p-8f + 0x20p-8f;
         renderer.begin(view.getCamera().combined, GL_POINTS);
         float bright, nf = noise.getFrequency(), c = (paused ? startTime : TimeUtils.timeSinceMillis(startTime))
-                * (noise.getNoiseType() >= Noise.MUTANT ? 0x3p-10f : 0x1p-10f) / nf, xx, yy, cc;
+                * (noise.getNoiseType() >= Noise.MUTANT ? 0x3p-10f : 0x1p-10f) / nf, cc;
         double db;
         ArrayTools.fill(imag, 0.0);
         if(mode == 0) {
@@ -450,7 +450,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * odd256(x, y, (int) noise.getSeed()));
+                            bright = (float) (db = (1.0/255.0) * odd256(x, y, (int) noise.getSeed()));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -459,7 +459,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     break;
 //                    for (int x = 0; x < width; x++) {
 //                        for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1f/255f) * IntPointHash.hash256(x, y, (int)noise.getSeed()));
+//                            bright = (float) (db = (1.0/255.0) * IntPointHash.hash256(x, y, (int)noise.getSeed()));
 //                            real[x][y] = db;
 //                            renderer.color(bright, bright, bright, 1f);
 //                            renderer.vertex(x, y, 0);
@@ -469,7 +469,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 1:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * LongPointHash.hash256(x, y, noise.getSeed()));
+                            bright = (float) (db = (1.0/255.0) * LongPointHash.hash256(x, y, noise.getSeed()));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -479,7 +479,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 2:
 //                    for (int x = 0; x < width; x++) {
 //                        for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1f/255f) * Noise.HastyPointHash.hash256(x, y, noise.getSeed()));
+//                            bright = (float) (db = (1.0/255.0) * Noise.HastyPointHash.hash256(x, y, noise.getSeed()));
 //                            real[x][y] = db;
 //                            renderer.color(bright, bright, bright, 1f);
 //                            renderer.vertex(x, y, 0);
@@ -487,7 +487,7 @@ public class FFTVisualizer extends ApplicationAdapter {
 //                    }
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * fancy256(x - (width >>> 1), y - (height >>> 1), (int)noise.getSeed()));
+                            bright = (float) (db = (1.0/255.0) * fancy256(x - (width >>> 1), y - (height >>> 1), (int)noise.getSeed()));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -497,7 +497,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 default:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * castle256(x, y, noise.getSeed()));
+                            bright = (float) (db = (1.0/255.0) * castle256(x, y, noise.getSeed()));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -507,7 +507,7 @@ public class FFTVisualizer extends ApplicationAdapter {
 //                case 1:
 //                    for (int x = 0; x < width; x++) {
 //                        for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1f/255f) * hash256(x, y, ctr, noise.getSeed()));
+//                            bright = (float) (db = (1.0/255.0) * hash256(x, y, ctr, noise.getSeed()));
 //                            real[x][y] = db;
 //                            renderer.color(bright, bright, bright, 1f);
 //                            renderer.vertex(x, y, 0);
@@ -517,7 +517,7 @@ public class FFTVisualizer extends ApplicationAdapter {
 //                case 2:
 //                    for (int x = 0; x < width; x++) {
 //                        for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1f/255f) * hash256(x, y, ctr, x + y - ctr, noise.getSeed()));
+//                            bright = (float) (db = (1.0/255.0) * hash256(x, y, ctr, x + y - ctr, noise.getSeed()));
 //                            real[x][y] = db;
 //                            renderer.color(bright, bright, bright, 1f);
 //                            renderer.vertex(x, y, 0);
@@ -527,7 +527,7 @@ public class FFTVisualizer extends ApplicationAdapter {
 //                case 3:
 //                    for (int x = 0; x < width; x++) {
 //                        for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1f/255f) * hash256(ctr + x, x - ctr, y - ctr,
+//                            bright = (float) (db = (1.0/255.0) * hash256(ctr + x, x - ctr, y - ctr,
 //                                    ctr - y, x + y, y - x, noise.getSeed()));
 //                            real[x][y] = db;
 //                            renderer.color(bright, bright, bright, 1f);
@@ -773,7 +773,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * (BlueNoise.get(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -783,8 +783,8 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 1:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1f/255f) * (BlueNoise.getSeeded(x, y, noise.getSeed()) + 128));
-                            bright = (float) (db = (1f/255f) * (BlueNoise.getSeeded(x, y, (int)noise.getSeed()) + 128));
+//                            bright = (float) (db = (1.0/255.0) * (BlueNoise.getSeeded(x, y, noise.getSeed()) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.getSeeded(x, y, (int)noise.getSeed()) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -794,7 +794,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 2:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * (BlueNoise.getSeeded(x, y, (int)noise.getSeed()) & 255));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.getSeeded(x, y, (int)noise.getSeed()) & 255));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -804,7 +804,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 default:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * (getSeededOmniTiling(x, y, (int)noise.getSeed()) + 128));
+                            bright = (float) (db = (1.0/255.0) * (getSeededOmniTiling(x, y, (int)noise.getSeed()) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -818,7 +818,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[(int)noise.getSeed() & 63]) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[(int)noise.getSeed() & 63]) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -828,7 +828,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 1:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[0]) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[0]) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -838,7 +838,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 2:
 //                    for (int x = 0; x < width; x++) {
 //                        for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1f/255f) * (BlueNoise.getSeededTriangular(x, y, noise.getSeed()) + 128));
+//                            bright = (float) (db = (1.0/255.0) * (BlueNoise.getSeededTriangular(x, y, noise.getSeed()) + 128));
 //                            real[x][y] = db;
 //                            renderer.color(bright, bright, bright, 1f);
 //                            renderer.vertex(x, y, 0);
@@ -859,7 +859,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 default:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1f/255f) * (BlueNoise.getSeededTriangular(x, y, (int)noise.getSeed()) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.getSeededTriangular(x, y, (int)noise.getSeed()) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
