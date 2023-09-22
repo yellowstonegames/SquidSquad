@@ -70,10 +70,9 @@ public class INoiseComparison extends ApplicationAdapter {
             new SorbetNoise(1L, 1),
             new SorbetNoise(1L, 3),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
-            new ToothNoise(),
     };
-    private int index0 = 17;
-    private int index1 = 14;
+    private int index0 = 0;
+    private int index1 = 0;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
@@ -176,7 +175,8 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     case R: // fRactal type
                         wrap0.setFractalType((wrap0.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
-                        wrap1.setFractalType((wrap1.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
+                        if(!UIUtils.ctrl())
+                            wrap1.setFractalType((wrap1.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
                         break;
                     case H: // higher octaves
                         wrap0.setFractalOctaves((octaves = octaves + 1 & 7) + 1);
