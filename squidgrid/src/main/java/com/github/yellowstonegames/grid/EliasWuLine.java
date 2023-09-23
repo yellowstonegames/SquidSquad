@@ -31,13 +31,52 @@ import com.github.tommyettinger.ds.ObjectList;
  */
 public class EliasWuLine {
     
-    private ObjectList<Coord> path;
+    private final ObjectList<Coord> path;
     private float[][] lightMap;
-    private int width = -1, height = -1;
-    private float threshold;
+    private int width = 1, height = 1;
+    private transient float threshold = 0;
 
     public EliasWuLine() {
+        this(64, 64);
+    }
+
+    public EliasWuLine(int width, int height) {
         path = new ObjectList<>();
+        this.width = Math.max(1, width);
+        this.height = Math.max(1, height);
+        lightMap = new float[this.width][this.height];
+    }
+
+    public void setSize(int width, int height) {
+        width = Math.max(1, width);
+        height = Math.max(1, height);
+        if(this.width != (this.width = width) || this.height != (this.height = height)) {
+            lightMap = new float[this.width][this.height];
+        }
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        width = Math.max(1, width);
+        if(this.width != (this.width = width)) {
+            lightMap = new float[this.width][this.height];
+        }
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        height = Math.max(1, height);
+        if(this.height != (this.height = height)) {
+            for (int x = 0; x < width; x++) {
+                lightMap[x] = new float[height];
+            }
+        }
     }
 
     public float[][] lightMap(float startx, float starty, float endx, float endy) {
@@ -55,16 +94,7 @@ public class EliasWuLine {
      * @return
      */
     public ObjectList<Coord> line(float startx, float starty, float endx, float endy) {
-        threshold = 0f;
-        path.clear();
-        int tw = (int) (Math.max(startx, endx) + 1);
-        int th = (int) (Math.max(starty, endy) + 1);
-        if(width < tw || height < th)
-            lightMap = new float[width = tw][height = th];
-        else
-            ArrayTools.fill(lightMap, 0f);
-        runLine(startx, starty, endx, endy);
-        return path;
+        return line(startx, starty, endx, endy, 0f);
     }
     /**
      * Gets the line between the two points.
@@ -80,12 +110,7 @@ public class EliasWuLine {
                                                 float brightnessThreshold) {
         threshold = brightnessThreshold;
         path.clear();
-        int tw = (int) (Math.max(startx, endx) + 1);
-        int th = (int) (Math.max(starty, endy) + 1);
-        if(width < tw || height < th)
-            lightMap = new float[width = tw][height = th];
-        else
-            ArrayTools.fill(lightMap, 0f);
+        ArrayTools.fill(lightMap, 0f);
         runLine(startx, starty, endx, endy);
         return path;
     }
