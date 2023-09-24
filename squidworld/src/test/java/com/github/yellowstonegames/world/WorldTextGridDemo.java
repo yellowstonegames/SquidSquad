@@ -94,7 +94,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     public void create() {
         stage = new Stage();
         display = new GlyphGrid(
-                KnownFonts.getIosevka().adjustLineHeight(1.25f),
+                KnownFonts.getIosevka().setDescent(10),
                 bigWidth, bigHeight, true);
         view = display.viewport = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
