@@ -129,7 +129,7 @@ public interface LineDrawer {
      * @param buffer        an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    boolean isReachable(@NonNull Coord start, @NonNull Coord target, @NonNull float[][] resistanceMap,
+    boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
                         ObjectList<Coord> buffer);
 
     /**
@@ -178,7 +178,7 @@ public interface LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     boolean isReachable(int startX, int startY, int targetX, int targetY,
-                        @NonNull float[][] resistanceMap, ObjectList<Coord> buffer);
+                        float[][] resistanceMap, ObjectList<Coord> buffer);
 
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
@@ -202,7 +202,7 @@ public interface LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                        @NonNull float[][] resistanceMap, ObjectList<Coord> buffer);
+                        float[][] resistanceMap, ObjectList<Coord> buffer);
 
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
@@ -216,7 +216,7 @@ public interface LineDrawer {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    boolean isReachable(@NonNull Coord start, @NonNull Coord target, @NonNull float[][] resistanceMap);
+    boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap);
 
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap}
@@ -233,7 +233,7 @@ public interface LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     boolean isReachable(int startX, int startY, int targetX, int targetY,
-                        @NonNull float[][] resistanceMap);
+                        float[][] resistanceMap);
 
     /**
      * Checks whether the starting point can see the target point, using the {@code maxLength} and {@code resistanceMap}
@@ -251,7 +251,7 @@ public interface LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                        @NonNull float[][] resistanceMap);
+                        float[][] resistanceMap);
 
     /**
      * Generates a 2D Bresenham line between two points.

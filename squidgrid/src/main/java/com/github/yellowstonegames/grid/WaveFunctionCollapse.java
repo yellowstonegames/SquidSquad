@@ -75,7 +75,7 @@ public class WaveFunctionCollapse {
      * @param width the width of the output 2D array to produce
      * @param height the height of the output 2D array to produce
      */
-    public WaveFunctionCollapse(@NonNull int[][] itemGrid, int order, int width, int height, EnhancedRandom random){
+    public WaveFunctionCollapse(int[][] itemGrid, int order, int width, int height, EnhancedRandom random){
         this(itemGrid, order, width, height, random, true, false, 1, 0);
     }
     /**
@@ -99,7 +99,7 @@ public class WaveFunctionCollapse {
      * @param symmetry the level of symmetry to consider when imitating areas; between 1 and 8, inclusive, but usually 1
      * @param ground not sure what this does, to be honest; should usually be 0
      */
-    public WaveFunctionCollapse(@NonNull int[][] itemGrid, int order, int width, int height, EnhancedRandom random,
+    public WaveFunctionCollapse(int[][] itemGrid, int order, int width, int height, @NonNull EnhancedRandom random,
                                 boolean periodicInput, boolean periodicOutput, int symmetry, int ground)
     {
         targetWidth = width;

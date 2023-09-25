@@ -148,7 +148,7 @@ public class OrthoLine implements LineDrawer {
      * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean reachable(@NonNull Coord start, @NonNull Coord target, @NonNull float[][] resistanceMap,
+    public static boolean reachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
                                     ObjectList<Coord> buffer){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
@@ -170,7 +170,7 @@ public class OrthoLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY,
-                                    @NonNull float[][] resistanceMap, ObjectList<Coord> buffer){
+                                    float[][] resistanceMap, ObjectList<Coord> buffer){
         return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
     }
     /**
@@ -192,7 +192,7 @@ public class OrthoLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                    @NonNull float[][] resistanceMap, ObjectList<Coord> buffer) {
+                                    float[][] resistanceMap, ObjectList<Coord> buffer) {
         int dx = targetX - startX, dy = targetY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
         int signX = dx >> 31 | 1, signY = dy >> 31 | 1, x = startX, y = startY;
 
@@ -247,7 +247,7 @@ public class OrthoLine implements LineDrawer {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean reachable(@NonNull Coord start, @NonNull Coord target, @NonNull float[][] resistanceMap){
+    public static boolean reachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
     /**
@@ -264,7 +264,7 @@ public class OrthoLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY,
-                                    @NonNull float[][] resistanceMap){
+                                    float[][] resistanceMap){
         return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap);
     }
     /**
@@ -282,7 +282,7 @@ public class OrthoLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                    @NonNull float[][] resistanceMap) {
+                                    float[][] resistanceMap) {
         if(maxLength <= 0) return false;
 
         int dx = targetX - startX, dy = targetY - startY, nx = Math.abs(dx), ny = Math.abs(dy);
@@ -685,7 +685,7 @@ public class OrthoLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     @Override
-    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, @NonNull float[][] resistanceMap,
+    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
                                ObjectList<Coord> buffer){
         return reachable(start.x, start.y, target.x, target.y, resistanceMap, buffer);
     }
@@ -739,7 +739,7 @@ public class OrthoLine implements LineDrawer {
      */
     @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY,
-                               @NonNull float[][] resistanceMap, ObjectList<Coord> buffer){
+                               float[][] resistanceMap, ObjectList<Coord> buffer){
         return reachable(startX, startY, targetX, targetY, resistanceMap, buffer);
     }
 
@@ -765,7 +765,7 @@ public class OrthoLine implements LineDrawer {
      */
     @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                               @NonNull float[][] resistanceMap, ObjectList<Coord> buffer) {
+                               float[][] resistanceMap, ObjectList<Coord> buffer) {
         return reachable(startX, startY, targetX, targetY, maxLength, resistanceMap, buffer);
     }
 
@@ -781,7 +781,7 @@ public class OrthoLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     @Override
-    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, @NonNull float[][] resistanceMap){
+    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap){
         return reachable(start.x, start.y, target.x, target.y, resistanceMap);
     }
 
@@ -800,7 +800,7 @@ public class OrthoLine implements LineDrawer {
      */
     @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY,
-                               @NonNull float[][] resistanceMap){
+                               float[][] resistanceMap){
         return reachable(startX, startY, targetX, targetY, resistanceMap);
     }
 
@@ -820,7 +820,7 @@ public class OrthoLine implements LineDrawer {
      */
     @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                               @NonNull float[][] resistanceMap){
+                               float[][] resistanceMap){
         return reachable(startX, startY, targetX, targetY, maxLength, resistanceMap);
     }
     /**

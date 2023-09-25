@@ -294,7 +294,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      * @return an infinite Iterator over elements of type T.
      */
     @Override
-    public Iterator<T> iterator() {
+    public @NonNull Iterator<T> iterator() {
         return this;
     }
 

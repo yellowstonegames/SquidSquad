@@ -18,9 +18,13 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectList;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Contains methods to draw anti-aliased lines based on floating-point coordinates.
+ * This isn't accurately drawing lines, because it has no way of determining if a line should be blocked by an obstacle.
+ * This means every {@link #isReachable(Coord, Coord, float[][])} method returns false. This is most useful for
+ * calculating a "soft" light map along a beam with anti-aliased edges.
  * <br>
  * Because of the way this line is calculated, endpoints may be swapped and
  * therefore the list may not be in start-to-end order.
@@ -29,7 +33,7 @@ import com.github.tommyettinger.ds.ObjectList;
  * which is in turn based on work by Wu.
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  */
-public class EliasWuLine {
+public class EliasWuLine implements LineDrawer {
     
     private final ObjectList<Coord> path;
     private float[][] lightMap;
@@ -80,8 +84,38 @@ public class EliasWuLine {
     }
 
     public float[][] lightMap(float startx, float starty, float endx, float endy) {
-        line(startx, starty, endx, endy);
+        floatLine(startx, starty, endx, endy);
         return lightMap;
+    }
+
+    /**
+     * Gets the line between the two points. Uses the previously set brightness threshold, or 0 if it has not been set.
+     *
+     * @param startx
+     * @param starty
+     * @param endx
+     * @param endy
+     * @return
+     */
+    public ObjectList<Coord> floatLine(float startx, float starty, float endx, float endy) {
+        return floatLine(startx, starty, endx, endy, path, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Gets the line between the two points. Uses the previously set brightness threshold, or 0 if it has not been set.
+     *
+     * @param startx
+     * @param starty
+     * @param endx
+     * @param endy
+     * @return
+     */
+    public ObjectList<Coord> floatLine(float startx, float starty, float endx, float endy,
+                                       ObjectList<Coord> buffer, int maxLength) {
+        buffer.clear();
+        ArrayTools.fill(lightMap, 0f);
+        runLine(startx, starty, endx, endy, buffer, maxLength);
+        return buffer;
     }
 
     /**
@@ -91,34 +125,47 @@ public class EliasWuLine {
      * @param starty
      * @param endx
      * @param endy
+     * @param brightnessThreshold between 0.0 (default) and 1.0; only Coords with higher brightness will be included
      * @return
      */
-    public ObjectList<Coord> line(float startx, float starty, float endx, float endy) {
-        return line(startx, starty, endx, endy, 0f);
-    }
-    /**
-     * Gets the line between the two points.
-     *
-     * @param startx
-     * @param starty
-     * @param endx
-     * @param endy
-     * @param brightnessThreshold between 0.0 (default) and 1.0; only Points with higher brightness will be included
-     * @return
-     */
-    public ObjectList<Coord> line(float startx, float starty, float endx, float endy,
-                                                float brightnessThreshold) {
+    public ObjectList<Coord> floatLine(float startx, float starty, float endx, float endy,
+                                       ObjectList<Coord> buffer, int maxLength, float brightnessThreshold) {
         threshold = brightnessThreshold;
-        path.clear();
+        buffer.clear();
         ArrayTools.fill(lightMap, 0f);
-        runLine(startx, starty, endx, endy);
-        return path;
+        runLine(startx, starty, endx, endy, buffer, maxLength);
+        return buffer;
     }
-    public ObjectList<Coord> line(Coord start, Coord end) {
-        return line(start.x, start.y, end.x, end.y);
+    @Override
+    public ObjectList<Coord> drawLine(Coord start, Coord end) {
+        return drawLine(start.x, start.y, end.x, end.y);
     }
-    public ObjectList<Coord> line(Coord start, Coord end, float brightnessThreshold) {
-        return line(start.x, start.y, end.x, end.y, brightnessThreshold);
+    public ObjectList<Coord> drawLine(Coord start, Coord end, float brightnessThreshold) {
+        return floatLine(start.x, start.y, end.x, end.y, path, Integer.MAX_VALUE, brightnessThreshold);
+    }
+
+    @Override
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY) {
+        return floatLine(startX, startY, targetX, targetY);
+    }
+
+    @Override
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength) {
+        return floatLine(startX, startY, targetX, targetY, path, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, ObjectList<Coord> buffer) {
+        return floatLine(startX, startY, targetX, targetY, buffer, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
+        return floatLine(startX, startY, targetX, targetY, buffer, maxLength);
+    }
+
+    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer, float brightnessThreshold) {
+        return floatLine(startX, startY, targetX, targetY, buffer, maxLength, brightnessThreshold);
     }
 
     public ObjectList<Coord> getLastPath()
@@ -133,10 +180,10 @@ public class EliasWuLine {
      * @param y
      * @param c
      */
-    private void mark(float x, float y, float c) {
+    private void mark(float x, float y, float c, ObjectList<Coord> buffer, int maxLength) {
         //check bounds overflow from antialiasing
-        if (x > -1 && x < width && y > -1 && y < height && c > threshold) {
-            path.add(Coord.get((int) x, (int) y));
+        if (buffer.size() < maxLength && x > -1 && x < width && y > -1 && y < height && c > threshold) {
+            buffer.add(Coord.get((int) x, (int) y));
             lightMap[(int) x][(int) y] = c;
         }
     }
@@ -149,7 +196,7 @@ public class EliasWuLine {
         return 1 - x + (int) (x);
     }
 
-    private void runLine(float startx, float starty, float endx, float endy) {
+    private void runLine(float startx, float starty, float endx, float endy, ObjectList<Coord> buffer, int maxLength) {
         float x1 = startx, y1 = starty, x2 = endx, y2 = endy;
         float grad, xd, yd, xgap, xend, yend, yf, brightness1, brightness2;
         int x, ix1, ix2, iy1, iy2;
@@ -198,11 +245,11 @@ public class EliasWuLine {
         brightness2 = frac(yend) * xgap;
 
         if (shallow) {
-            mark(ix1, iy1, brightness1);
-            mark(ix1, iy1 + 1, brightness2);
+            mark(ix1, iy1, brightness1, buffer, maxLength);
+            mark(ix1, iy1 + 1, brightness2, buffer, maxLength);
         } else {
-            mark(iy1, ix1, brightness1);
-            mark(iy1 + 1, ix1, brightness2);
+            mark(iy1, ix1, brightness1, buffer, maxLength);
+            mark(iy1 + 1, ix1, brightness2, buffer, maxLength);
         }
 
         yf = yend + grad;
@@ -222,11 +269,11 @@ public class EliasWuLine {
             brightness2 = frac(yf);
 
             if (shallow) {
-                mark(x, yf, brightness1);
-                mark(x, yf + 1, brightness2);
+                mark(x, yf, brightness1, buffer, maxLength);
+                mark(x, yf + 1, brightness2, buffer, maxLength);
             } else {
-                mark(yf, x, brightness1);
-                mark(yf + 1, x, brightness2);
+                mark(yf, x, brightness1, buffer, maxLength);
+                mark(yf + 1, x, brightness2, buffer, maxLength);
             }
 
             yf += grad;
@@ -236,12 +283,62 @@ public class EliasWuLine {
         brightness2 = frac(yend) * xgap;
 
         if (shallow) {
-            mark(ix2, iy2, brightness1);
-            mark(ix2, iy2 + 1, brightness2);
+            mark(ix2, iy2, brightness1, buffer, maxLength);
+            mark(ix2, iy2 + 1, brightness2, buffer, maxLength);
         } else {
-            mark(iy2, ix2, brightness1);
-            mark(iy2 + 1, ix2, brightness2);
+            mark(iy2, ix2, brightness1, buffer, maxLength);
+            mark(iy2 + 1, ix2, brightness2, buffer, maxLength);
         }
 
+    }
+
+    @Override
+    public ObjectList<Coord> getLastLine() {
+        return path;
+    }
+
+    @Override
+    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap, ObjectList<Coord> buffer) {
+        return false;
+    }
+
+    @Override
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, float[][] resistanceMap, ObjectList<Coord> buffer) {
+        return false;
+    }
+
+    @Override
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength, float[][] resistanceMap, ObjectList<Coord> buffer) {
+        return false;
+    }
+
+    @Override
+    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap) {
+        return false;
+    }
+
+    @Override
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, float[][] resistanceMap) {
+        return false;
+    }
+
+    @Override
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength, float[][] resistanceMap) {
+        return false;
+    }
+
+    @Override
+    public Coord[] drawLineArray(Coord a, Coord b) {
+        return drawLine(a, b).toArray(new Coord[0]);
+    }
+
+    @Override
+    public Coord[] drawLineArray(int startX, int startY, int targetX, int targetY) {
+        return drawLine(startX, startY, targetX, targetY).toArray(new Coord[0]);
+    }
+
+    @Override
+    public Coord[] drawLineArray(int startX, int startY, int targetX, int targetY, int maxLength) {
+        return drawLine(startX, startY, targetX, targetY, maxLength).toArray(new Coord[0]);
     }
 }

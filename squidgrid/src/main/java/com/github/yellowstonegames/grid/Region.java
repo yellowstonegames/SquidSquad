@@ -26,6 +26,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.LZSEncoding;
 import com.github.yellowstonegames.core.StringTools;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -6194,7 +6195,7 @@ public class Region implements Collection<Coord> {
     }
 
     @Override
-    public Iterator<Coord> iterator() {
+    public @NonNull Iterator<Coord> iterator() {
         return new GRIterator();
     }
 

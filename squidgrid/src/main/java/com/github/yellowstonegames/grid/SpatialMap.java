@@ -97,7 +97,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
     }
 
     @Override
-    public Iterator<V> iterator() {
+    public @NonNull Iterator<V> iterator() {
         return idMap.values().iterator();
     }
 
