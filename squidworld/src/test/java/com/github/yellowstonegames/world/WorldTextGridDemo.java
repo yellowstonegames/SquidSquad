@@ -63,7 +63,6 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     private static final int shownWidth = 64, shownHeight = 32;
     private Stage stage;
     private GlyphGrid display;//, overlay;
-    private InputProcessor input;
     private Viewport view;
     private Camera camera;
     private EnhancedRandom rng;
@@ -71,7 +70,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     private Vector3 position, previousPosition, nextPosition, temp;
 //    private MimicWorldMap world;
     private HyperellipticalWorldMap world;
-    private DetailedWorldMapView wmv;
+    private BlendedWorldMapView wmv;
     private Thesaurus thesaurus;
     private PoliticalMapper pm;
     private ObjectList<PoliticalMapper.Faction> factions;
@@ -80,8 +79,6 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     private long counter;
     private long ttg; // time to generate
     private float moveAmount;
-    private static int black = 0x000000FF,
-            white = 0xFFFFFFFF;
 
     private static final char[] BIOME_CHARS = new char[66];
     static {
@@ -104,7 +101,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
         Noise noise = new Noise(rng.nextInt(), 1.0f, Noise.FOAM, 1);
 //        world = new MimicWorldMap(seedA, noise, 0.8f); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, noise, 0.8f);
-        wmv = new DetailedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
         thesaurus = new Thesaurus(rng.nextLong(), rng.nextLong());
         pm = new PoliticalMapper();
         atlas = new IntObjectOrderedMap<>(80);
@@ -114,10 +111,10 @@ public class WorldTextGridDemo extends ApplicationAdapter {
         previousPosition = position.cpy();
         nextPosition = position.cpy();
         temp = new Vector3();
-        input = new InputAdapter(){
+        InputProcessor input = new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                switch (keycode){
+                switch (keycode) {
                     case Input.Keys.ENTER:
                         seedA = rng.nextLong();
                         seedB = rng.nextLong() | 1L;
@@ -158,9 +155,9 @@ public class WorldTextGridDemo extends ApplicationAdapter {
                 nextPosition.set(MathUtils.clamp(nextPosition.x, 0, bigWidth - 1), MathUtils.clamp(nextPosition.y, 0, bigHeight - 1), nextPosition.z);
                 counter = System.currentTimeMillis();
                 moveAmount = 0f;
-                int bc = wmv.biomeMapper.getBiomeCode((int)(nextPosition.x), (int)(nextPosition.y));
-                int code = wmv.biomeMapper.biomeCodeData[(int)(nextPosition.x)][(int)(nextPosition.y)];
-                System.out.printf("%c at %s with priority %d and biome A %s, B %s\n", BIOME_CHARS[bc], nextPosition, code >>> 20, wmv.biomeMapper.getBiomeTable()[wmv.biomeMapper.extractPartA(code)], wmv.biomeMapper.getBiomeTable()[wmv.biomeMapper.extractPartB(code)]);
+                int bc = wmv.biomeMapper.getBiomeCode((int) (nextPosition.x), (int) (nextPosition.y));
+                int code = wmv.biomeMapper.biomeCodeData[(int) (nextPosition.x)][(int) (nextPosition.y)];
+                System.out.printf("%c at %s with biome %s\n", BIOME_CHARS[bc], nextPosition, wmv.biomeMapper.getBiomeTable()[code]);
                 return true;
             }
         };
@@ -239,42 +236,11 @@ public class WorldTextGridDemo extends ApplicationAdapter {
 //        generate(rng.nextLong(), rng.nextLong());
         display.backgrounds = wmv.getColorMap();
         int[][] oklab = wmv.getColorMapOklab();
-        BiomeMapper.DetailedBiomeMapper dbm = wmv.getBiomeMapper();
-        int hc, tc, codeA, codeB;
-        float mix;
-        int[][] heightCodeData = world.heightCodeData;
+        BiomeMapper.BlendedBiomeMapper bbm = wmv.getBiomeMapper();
         for (int y = 0; y < bigHeight; y++) {
-            PER_CELL:
             for (int x = 0; x < bigWidth; x++) {
-                hc = heightCodeData[x][y];
-                if (hc == 1000)
-                    continue;
-                tc = dbm.heatCodeData[x][y];
-                if (tc == 0) {
-                    switch (hc) {
-                        case 0:
-                        case 1:
-                        case 2:
-                            display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[30], oklab[x][y])));
-                            continue PER_CELL;
-                        case 3:
-                            display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], oklab[x][y])));
-                            continue PER_CELL;
-                    }
-                }
-                switch (hc) {
-                    case 0:
-                    case 1:
-                    case 2:
-                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
-                        break;
-                    case 3:
-                        display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
-                        break;
-                    default:
-                        int bc = dbm.getBiomeCode(x,y);
-                        display.put(x, y, BIOME_CHARS[bc], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[bc], oklab[x][y])));
-                }
+                int bc = bbm.getBiomeCode(x, y);
+                display.put(x, y, BIOME_CHARS[bc], toRGBA8888(DescriptiveColor.offsetLightness(oklab[x][y])));
             }
         }
         int dark = toRGBA8888(0xFE808040);
