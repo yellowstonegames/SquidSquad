@@ -55,7 +55,13 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
  * it is something to be aware of.
  */
 public class FlowingWorldMapWriter extends ApplicationAdapter {
+
+    // generating a 256x256 gif and apng, 240 frames, foam noise, blended world map:
+    // World #1, LimeTobacco, completed in      242466 ms
+    // same as above, but with a detailed world map:
+    // World #1, BrownsapAlder, completed in    241347 ms
     private static final int width = 256, height = 256;
+//    private static final int width = 300, height = 300;
 
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
@@ -209,13 +215,13 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingPear/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
-        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
+//        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSorbet/";
 //        path = "out/worldsAnimated/" + date + "/FlowingCyclic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplexCentral/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplexOuter/";
-//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
@@ -229,8 +235,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
-        writer.setDitherStrength(0.75f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.WREN);
+        writer.setDitherStrength(1f);
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
@@ -244,15 +250,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         thesaurus = new Thesaurus(rng);
 
 //        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1); // between 69783ms and 72929ms
-        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
+//        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
 //        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);  // between 35894ms and 42264ms
+        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);  // between 35894ms and 42264ms
 
-//        fn.setInterpolation(Noise.HERMITE);
+        fn.setInterpolation(Noise.HERMITE);
 
         iNoise = new Noise3DFrom5D(fn);
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms

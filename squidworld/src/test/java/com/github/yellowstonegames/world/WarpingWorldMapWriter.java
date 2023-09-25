@@ -26,10 +26,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.anim8.AnimatedGif;
-import com.github.tommyettinger.anim8.AnimatedPNG;
-import com.github.tommyettinger.anim8.Dithered;
-import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
@@ -59,8 +56,6 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
     private int baseSeed = 1234567890;
 
     private Noise terrainRidgedNoise, terrainBasicNoise, heatNoise, moistureNoise, otherRidgedNoise;
-
-    private static float[] WOBBLE = null;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -94,7 +89,8 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/WarpingTaffy/";
 //        path = "out/worldsAnimated/" + date + "/WarpingMutant/";
 //        path = "out/worldsAnimated/" + date + "/WarpingSimplex/";
-        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
+//        path = "out/worldsAnimated/" + date + "/WarpingClassic/";
+        path = "out/worldsAnimated/" + date + "/WarpingFoam/";
 //        path = "out/worldsAnimated/" + date + "/WarpingValue/";
 //        path = "out/worldsAnimated/" + date + "/WarpingHoney/";
 
@@ -109,9 +105,9 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
-        writer.setDitherStrength(0.75f);
-        writer.fastAnalysis = true;
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.WREN);
+        writer.setDitherStrength(1f);
+//        writer.fastAnalysis = true;
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
@@ -210,7 +206,9 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
-        wmv = new DetailedWorldMapView(world);
+        
+//        wmv = new DetailedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
 
         //generate(seed);
         rng.setSeed(seed);
@@ -268,7 +266,7 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
         hash = Hasher.balam.hash64(name);
         worldTime = System.currentTimeMillis();
         world.rng.setSeed(hash);
-        WOBBLE = LineWobble.generateLookupTable(world.rng.nextInt(), FRAMES, 7, 3);
+//        WOBBLE = LineWobble.generateLookupTable(world.rng.nextInt(), FRAMES, 7, 3);
         if (ALIEN_COLORS) {
             wmv.initialize(world.rng.nextFloat(), world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() * 0.2f + 0.9f);
         }
@@ -276,11 +274,12 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //        try {
             for (int i = 0; i < FRAMES; i++) {
                 float angle = i / (float) FRAMES;
-                terrainBasicNoise.setMutation(WOBBLE[(i + 141) % FRAMES] * 0.375f * terrainBasicNoise.getFrequency());
-                terrainRidgedNoise.setMutation(WOBBLE[(i + 283) % FRAMES] * 0.3125f * terrainRidgedNoise.getFrequency());
-                heatNoise.setMutation(WOBBLE[(i + 127) % FRAMES] * 0.25f * heatNoise.getFrequency());
-                moistureNoise.setMutation(WOBBLE[(i + 257) % FRAMES] * 0.125f * moistureNoise.getFrequency());
-                otherRidgedNoise.setMutation(WOBBLE[(i + 197) % FRAMES] * 0.0625f * otherRidgedNoise.getFrequency());
+                int index = (int)(angle * TrigTools.TABLE_SIZE);
+                terrainBasicNoise.setMutation(TrigTools.SIN_TABLE[index + 2222 & TrigTools.TABLE_MASK]);
+                terrainRidgedNoise.setMutation(TrigTools.SIN_TABLE[index + 3333 & TrigTools.TABLE_MASK]);
+                heatNoise.setMutation(TrigTools.SIN_TABLE[index + 5555 & TrigTools.TABLE_MASK]);
+                moistureNoise.setMutation(TrigTools.SIN_TABLE[index + 7777 & TrigTools.TABLE_MASK]);
+                otherRidgedNoise.setMutation(TrigTools.SIN_TABLE[index + 11111 & TrigTools.TABLE_MASK]);
 
                 world.setCenterLongitude(angle * TrigTools.PI2);
                 generate(hash);
@@ -301,7 +300,7 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
             }
             Array<Pixmap> pms = new Array<>(pm);
             writer.setDitherStrength(0.75f);
-            writer.palette = new PaletteReducer(pms);
+            writer.palette = new QualityPalette(pms);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
             apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);

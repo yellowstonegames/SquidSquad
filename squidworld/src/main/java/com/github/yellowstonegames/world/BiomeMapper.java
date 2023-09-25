@@ -878,12 +878,12 @@ public interface BiomeMapper {
                                 wetLow = wetHigh = 5;
                             }
                             else if(moist <= MOISTURE_MID[i]) {
-                                moistMix = MathTools.map(MOISTURE_MID[i - 1], MOISTURE_MID[i], 0f, 1f, moist);
+                                moistMix = MathTools.norm(MOISTURE_MID[i - 1], MOISTURE_MID[i], moist);
                                 wetLow = i-1;
                                 wetHigh = i;
                             }
                             else {
-                                moistMix = MathTools.map(MOISTURE_MID[i], MOISTURE_MID[i + 1], 0f, 1f, moist);
+                                moistMix = MathTools.norm(MOISTURE_MID[i], MOISTURE_MID[i + 1], moist);
                                 wetLow = i;
                                 wetHigh = i+1;
                             }
@@ -902,12 +902,12 @@ public interface BiomeMapper {
                                 hotLow = hotHigh = 5;
                             }
                             else if(hot <= HEAT_MID[i]) {
-                                hotMix = MathTools.map(HEAT_MID[i - 1], HEAT_MID[i], 0f, 1f, hot);
+                                hotMix = MathTools.norm(HEAT_MID[i - 1], HEAT_MID[i], hot);
                                 hotLow = i-1;
                                 hotHigh = i;
                             }
                             else {
-                                hotMix = MathTools.map(HEAT_MID[i], HEAT_MID[i + 1], 0f, 1f, hot);
+                                hotMix = MathTools.norm(HEAT_MID[i], HEAT_MID[i + 1], hot);
                                 hotLow = i;
                                 hotHigh = i+1;
                             }
