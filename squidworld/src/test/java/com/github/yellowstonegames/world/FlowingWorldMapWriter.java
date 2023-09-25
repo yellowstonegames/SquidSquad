@@ -57,11 +57,18 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
 public class FlowingWorldMapWriter extends ApplicationAdapter {
 
     // generating a 256x256 gif and apng, 240 frames, foam noise, blended world map:
-    // World #1, LimeTobacco, completed in      242466 ms
+    // World #1, LimeTobacco, completed in         242466 ms
     // same as above, but with a detailed world map:
-    // World #1, BrownsapAlder, completed in    241347 ms
-    private static final int width = 256, height = 256;
-//    private static final int width = 300, height = 300;
+    // World #1, BrownsapAlder, completed in       241347 ms
+    // with a detailed world map and Perlin noise:
+    // World #1, TuftedBudEucalyptus, completed in  57233 ms
+    // with blended world map and Cyclic noise (3 octaves, 2f frequency):
+    // World #1, GrayLarch, completed in           111201 ms
+
+
+//    private static final int width = 256, height = 256;
+
+    private static final int width = 300, height = 300;
 
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
@@ -217,11 +224,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSorbet/";
-//        path = "out/worldsAnimated/" + date + "/FlowingCyclic/";
+        path = "out/worldsAnimated/" + date + "/FlowingCyclic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplexCentral/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplexOuter/";
-        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
+//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
@@ -256,10 +263,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
-        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);  // between 35894ms and 42264ms
+//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);  // between 35894ms and 42264ms
 
-        fn.setInterpolation(Noise.HERMITE);
+//        fn.setInterpolation(Noise.HERMITE); // the default
 
+        INoise fn = new CyclicNoise(seed, 3, 2f);
         iNoise = new Noise3DFrom5D(fn);
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
@@ -276,7 +284,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         world = new GlobeMap(seed, width, height, iNoise, 1.25f);
 
 
-        wmv = new DetailedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
+//        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
         rng.setSeed(seed);
