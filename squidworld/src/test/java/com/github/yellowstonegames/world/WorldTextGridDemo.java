@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -89,6 +90,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     
     @Override
     public void create() {
+//        System.out.printf("%.8ff, %.8ff, %.8ff, 1f\n\n", DescriptiveColor.red(0xFF7A8121), DescriptiveColor.green(0xFF7A8121), DescriptiveColor.blue(0xFF7A8121));
         stage = new Stage();
         display = new GlyphGrid(
                 KnownFonts.getIosevka().setDescent(10),
@@ -263,8 +265,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     @Override
     public void render() {
         // standard clear the background routine for libGDX
-        Gdx.gl.glClearColor(0.13333334f, 0.1254902f, 0.20392157f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(0.12310492f, 0.11901531f, 0.19759080f, 1f);
         Gdx.gl.glDisable(GL20.GL_BLEND);
         if(!nextPosition.epsilonEquals(previousPosition)) {
             moveAmount = (System.currentTimeMillis() - counter) * 0.001f;
