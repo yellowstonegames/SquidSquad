@@ -393,37 +393,37 @@ public class FoamNoise implements INoise {
         float zin = p3;
         float win = p4;
         float uin = p5;
-        final float a = valueNoise(seed, xin, yin, zin, win, uin);
+        final float a = valueNoise(xin, yin, zin, win, uin, seed);
         xin = p0;
         yin = p2;
         zin = p3;
         win = p4;
         uin = p5;
-        final float b = valueNoise(seed + 0x9A827999FCEF3243L, xin + a, yin, zin, win, uin);
+        final float b = valueNoise(xin + a, yin, zin, win, uin, seed + 0x9A827999FCEF3243L);
         xin = p0;
         yin = p1;
         zin = p3;
         win = p4;
         uin = p5;
-        final float c = valueNoise(seed + 0x3504F333F9DE6486L, xin + b, yin, zin, win, uin);
+        final float c = valueNoise(xin + b, yin, zin, win, uin, seed + 0x3504F333F9DE6486L);
         xin = p0;
         yin = p1;
         zin = p2;
         win = p4;
         uin = p5;
-        final float d = valueNoise(seed + 0xCF876CCDF6CD96C9L, xin + c, yin, zin, win, uin);
+        final float d = valueNoise(xin + c, yin, zin, win, uin, seed + 0xCF876CCDF6CD96C9L);
         xin = p0;
         yin = p1;
         zin = p2;
         win = p3;
         uin = p5;
-        final float e = valueNoise(seed + 0x6A09E667F3BCC90CL, xin + d, yin, zin, win, uin);
+        final float e = valueNoise(xin + d, yin, zin, win, uin, seed + 0x6A09E667F3BCC90CL);
         xin = p0;
         yin = p1;
         zin = p2;
         win = p3;
         uin = p4;
-        final float f = valueNoise(seed + 0x48C6001F0ABFB4FL, xin + e, yin, zin, win, uin);
+        final float f = valueNoise(xin + e, yin, zin, win, uin, seed + 0x48C6001F0ABFB4FL);
 
         final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
         final float sharp = 0.75f * 5.5f;
@@ -435,15 +435,16 @@ public class FoamNoise implements INoise {
     /**
      * Gets 5D value noise with the lowest, fastest level of detail. Uses the given seed
      * and does not change x, y, z, w, or u. This has a different output range (0 to 1) than foam noise.
-     * @param x x coordinate
-     * @param y y coordinate
-     * @param z z coordinate
-     * @param w w coordinate
-     * @param u u coordinate
+     *
+     * @param x    x coordinate
+     * @param y    y coordinate
+     * @param z    z coordinate
+     * @param w    w coordinate
+     * @param u    u coordinate
      * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
      * @return noise between 0 and 1
      */
-    public static float valueNoise(long seed, float x, float y, float z, float w, float u) {
+    public static float valueNoise(float x, float y, float z, float w, float u, long seed) {
         final long STEPX = 0xE19B01AA9D42C633L;
         final long STEPY = 0xC6D1D6C8ED0C9631L;
         final long STEPZ = 0xAF36D01EF7518DBBL;
@@ -566,49 +567,49 @@ public class FoamNoise implements INoise {
         float win = p6;
         float uin = p1;
         float vin = p4;
-        final float a = valueNoise(seed, xin, yin, zin, win, uin, vin);
+        final float a = valueNoise(xin, yin, zin, win, uin, vin, seed);
         xin = p2;
         yin = p6;
         zin = p0;
         win = p4;
         uin = p5;
         vin = p3;
-        final float b = valueNoise(seed + 0x9A827999FCEF3243L, xin + a, yin, zin, win, uin, vin);
+        final float b = valueNoise(xin + a, yin, zin, win, uin, vin, seed + 0x9A827999FCEF3243L);
         xin = p1;
         yin = p2;
         zin = p3;
         win = p4;
         uin = p6;
         vin = p5;
-        final float c = valueNoise(seed + 0x3504F333F9DE6486L, xin + b, yin, zin, win, uin, vin);
+        final float c = valueNoise(xin + b, yin, zin, win, uin, vin, seed + 0x3504F333F9DE6486L);
         xin = p6;
         yin = p0;
         zin = p2;
         win = p5;
         uin = p4;
         vin = p1;
-        final float d = valueNoise(seed + 0xCF876CCDF6CD96C9L, xin + c, yin, zin, win, uin, vin);
+        final float d = valueNoise(xin + c, yin, zin, win, uin, vin, seed + 0xCF876CCDF6CD96C9L);
         xin = p2;
         yin = p1;
         zin = p5;
         win = p0;
         uin = p3;
         vin = p6;
-        final float e = valueNoise(seed + 0x6A09E667F3BCC90CL, xin + d, yin, zin, win, uin, vin);
+        final float e = valueNoise(xin + d, yin, zin, win, uin, vin, seed + 0x6A09E667F3BCC90CL);
         xin = p0;
         yin = p4;
         zin = p6;
         win = p3;
         uin = p1;
         vin = p2;
-        final float f = valueNoise(seed + 0x48C6001F0ABFB4FL, xin + e, yin, zin, win, uin, vin);
+        final float f = valueNoise(xin + e, yin, zin, win, uin, vin, seed + 0x48C6001F0ABFB4FL);
         xin = p5;
         yin = p1;
         zin = p2;
         win = p3;
         uin = p4;
         vin = p0;
-        final float g = valueNoise(seed + 0x9F0ED99BED9B2D92L, xin + f, yin, zin, win, uin, vin);
+        final float g = valueNoise(xin + f, yin, zin, win, uin, vin, seed + 0x9F0ED99BED9B2D92L);
         final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
         final float sharp = 0.75f * 6.6f;
         final float diff = 0.5f - result;
@@ -616,7 +617,7 @@ public class FoamNoise implements INoise {
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    float valueNoise(long seed, float x, float y, float z, float w, float u, float v) {
+    public static float valueNoise(float x, float y, float z, float w, float u, float v, long seed) {
         final long STEPX = 0xE60E2B722B53AEEBL;
         final long STEPY = 0xCEBD76D9EDB6A8EFL;
         final long STEPZ = 0xB9C9AA3A51D00B65L;
@@ -668,18 +669,18 @@ public class FoamNoise implements INoise {
                         + (u *
                         ((1 - w) *
                                 ((1 - z) *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + 0xA127B, vFloor, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + 0xA127B, vFloor, seed)))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, seed)))
                                         + z *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor, seed))))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed))))
                                 + (w *
                                 ((1 - z) *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed)))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed)))
                                         + z *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor, seed)))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed)))
                                 )))))
                 + (v *
                 ((1 - u) *
@@ -701,18 +702,18 @@ public class FoamNoise implements INoise {
                         + (u *
                         ((1 - w) *
                                 ((1 - z) *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed)))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed)))
                                         + z *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + 0xA127B, vFloor + STEPV, seed))))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed))))
                                 + (w *
                                 ((1 - z) *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed)))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed)))
                                         + z *
-                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed))
-                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + 0xA127B, vFloor + STEPV, seed)))
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed)))
                                 ))))))
         ) * 0x1p-64f + 0.5f;
     }
