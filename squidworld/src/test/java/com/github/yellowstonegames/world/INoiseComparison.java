@@ -52,7 +52,9 @@ public class INoiseComparison extends ApplicationAdapter {
     };
     private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
-            new NoiseAdjustment(new SimplexNoise(1L), watcher),
+            new FoamNoise(1L),
+            new FoamplexNoise(1L),
+//            new NoiseAdjustment(new SimplexNoise(1L), watcher),
             new SimplexNoiseHard(1L),
             new SimplexNoiseScaled(1L),
 //            new OpenSimplex2(1L),
