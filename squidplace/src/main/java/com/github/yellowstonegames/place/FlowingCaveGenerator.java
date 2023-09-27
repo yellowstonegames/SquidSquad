@@ -174,8 +174,8 @@ public class FlowingCaveGenerator implements PlaceGenerator {
         remakeEnvironment = true;
         gen.generate(type, width, height);
         ca.remake(gen.region);
-        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.9f);
-        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.9f);
+        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.85f);
+        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.85f);
         ca.current.remake(gen.region.deteriorate(rng, 0.9f));
         gen.region.or(ca.runBasicSmoothing());
         ca.current.remake(gen.region.removeEdges().largestPart());

@@ -27,8 +27,9 @@ public class PlaceGeneratorSampler {
         DungeonProcessor proc = new DungeonProcessor(42, 42, random);
 
         PlaceGenerator[] generators = {
-                new ConnectingMapGenerator(42, 42, random),
+                new DungeonProcessor(42, 42, random),
                 new FlowingCaveGenerator(42, 42, TilesetType.DEFAULT_DUNGEON, random),
+                new ConnectingMapGenerator(42, 42, random),
                 new GrowingTreeMazeGenerator(42, 42, random),
                 new MixedGenerator(42, 42, random),
                 new PacMazeGenerator(42, 42, random),

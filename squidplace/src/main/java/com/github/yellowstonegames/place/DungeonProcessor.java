@@ -16,20 +16,18 @@
 
 package com.github.yellowstonegames.place;
 
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.PoissonDisk;
 import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
 import com.github.yellowstonegames.place.tileset.TilesetType;
-
-import java.util.Arrays;
 
 /**
  * A good way to create a more-complete dungeon, layering different effects and modifications on top of a dungeon
@@ -873,6 +871,7 @@ public class DungeonProcessor implements PlaceGenerator{
             reuse.writeCharsInto(map, '#');
             finder.reset(map, environmentType);
         }
+        environment = finder.environment;
         return dungeon;
     }
 
@@ -911,20 +910,17 @@ public class DungeonProcessor implements PlaceGenerator{
         char[][] map = DungeonTools.wallWrap(baseDungeon);
         width = map.length;
         height = map[0].length;
-        int[][] env2 = new int[width][height];
-        for (int x = 0; x < width; x++) {
-            System.arraycopy(environment[x], 0, env2[x], 0, height);
-        }
+        int[][] env2 = ArrayTools.copy(environment);
         Region flooder = new Region(map, '\t'), reuse = new Region(width, height);
         int[][] scan = new int[width][height];
         int frustrated = 0;
-        if(flooder.size() > 0) {
+        if(!flooder.isEmpty()) {
             stairsUp = flooder.singleRandom(rng);
             reuse.insert(stairsUp);
             flooder.dijkstraScan(scan, reuse);
             if(reuse.size() < flooder.size() * 0.125f) flooder.clear();
         }
-        if(flooder.size() == 0) {
+        if(flooder.isEmpty()) {
             do {
                 flooder.refill(map, '.');
                 stairsUp = flooder.singleRandom(rng);
@@ -997,10 +993,7 @@ public class DungeonProcessor implements PlaceGenerator{
         }
         seedFixed = false;
         char[][] map = DungeonTools.wallWrap(baseDungeon);
-        int[][] env2 = new int[width][height];
-        for (int x = 0; x < width; x++) {
-            System.arraycopy(environment[x], 0, env2[x], 0, height);
-        }
+        int[][] env2 = ArrayTools.copy(environment);
         stairsUp = null;
         stairsDown = null;
 
@@ -1100,10 +1093,7 @@ public class DungeonProcessor implements PlaceGenerator{
     protected char[][] makeDoors(ObjectList<char[][]> rooms, ObjectList<char[][]> corridors, char[][] allCaves,
                                char[][] allCorridors)
     {
-        char[][] map = new char[width][height];
-        for (int x = 0; x < width; x++) {
-            Arrays.fill(map[x], '#');
-        }
+        char[][] map = ArrayTools.fill('#', width, height);
         if(doorFX == 0 || (rooms.isEmpty() && corridors.isEmpty()))
             return map;
         boolean doubleDoors = false;
@@ -1153,12 +1143,10 @@ public class DungeonProcessor implements PlaceGenerator{
     }
     protected char[][][] makeLake(ObjectList<char[][]> rooms, ObjectList<char[][]> caves)
     {
-        char[][][] maps = new char[2][width][height];
+        char[][][] maps = new char[2][][];
+        maps[0] = ArrayTools.fill('#', width, height);
+        maps[1] = ArrayTools.fill('#', width, height);
         char[][] fusedMap;
-        for (int x = 0; x < width; x++) {
-            Arrays.fill(maps[0][x], '#');
-            Arrays.fill(maps[1][x], '#');
-        }
         if((lakeFX == 0 && mazeFX == 0) || (rooms.isEmpty() && caves.isEmpty()))
             return maps;
         int lakeFill = lakeFX, mazeFill = mazeFX;
