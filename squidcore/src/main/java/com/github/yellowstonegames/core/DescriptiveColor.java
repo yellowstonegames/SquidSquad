@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
@@ -1718,11 +1719,11 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed Oklab int color start towards the Oklan int color end by change, but keeps the alpha
+     * Interpolates from the packed Oklab int color start towards the Oklab int color end by change, but keeps the alpha
      * of start and uses the alpha of end as an extra factor that can affect how much to change. The colors (start and
-     * end) can be either packed Oklab ints or RGBA8888 ints, and change can be between 0f (keep start) and 1f (only use
-     * end). This is a good way to reduce allocations of temporary Colors. If the inputs were Oklab colors, you will
-     * probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
+     * end) must be packed Oklab ints, and change can be between 0f (keep start) and 1f (only use end). This is a good
+     * way to reduce allocations of temporary Colors. Since the inputs are Oklab colors, you will probably want to
+     * convert the color for rendering with {@link #toRGBA8888(int)}.
      * @param start the starting color as a packed Oklab int; alpha will be preserved
      * @param end the target color as a packed Oklab int; alpha will not be used directly, and will instead be multiplied with change
      * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
@@ -1732,7 +1733,7 @@ public final class DescriptiveColor {
         final int
                 sL = (start & 0xFF), sA = (start >>> 8) & 0xFF, sB = (start >>> 16) & 0xFF, sAlpha = start & 0xFF000000,
                 eL = (end & 0xFF), eA = (end >>> 8) & 0xFF, eB = (end >>> 16) & 0xFF, eAlpha = end >>> 24;
-        change *= eAlpha / 255f;
+        change *= eAlpha * (1f / 255f);
         return (((int) (sL + change * (eL - sL)) & 0xFF)
                 | (((int) (sA + change * (eA - sA)) & 0xFF) << 8)
                 | (((int) (sB + change * (eB - sB)) & 0xFF) << 16)
@@ -2015,16 +2016,16 @@ public final class DescriptiveColor {
                         switch (len) {
                             case 10:
                                 lightness += 0.150f;
-                                saturation += 0.25f;
+                                saturation += 00.20000f;
                             case 9:
                                 lightness += 0.150f;
-                                saturation += 0.2f;
+                                saturation += 00.2000f;
                             case 8:
                                 lightness += 0.150f;
-                                saturation += 0.1f;
+                                saturation += 00.20f;
                             case 6:
                                 lightness += 0.150f;
-                                saturation += 0.1f;
+                                saturation += 00.20f;
                                 continue;
                         }
                     }
@@ -2037,16 +2038,16 @@ public final class DescriptiveColor {
                             case 8: // palemost
                             case 7: // palerer
                                 lightness += 0.150f;
-                                saturation -= 0.25f;
+                                saturation -= 00.20000f;
                             case 6: // palest
                                 lightness += 0.150f;
-                                saturation -= 0.2f;
+                                saturation -= 00.2000f;
                             case 5: // paler
                                 lightness += 0.150f;
-                                saturation -= 0.15f;
+                                saturation -= 00.200f;
                             case 4: // pale
                                 lightness += 0.150f;
-                                saturation -= 0.1f;
+                                saturation -= 00.20f;
                                 continue;
                         }
                     }
@@ -2058,16 +2059,16 @@ public final class DescriptiveColor {
                         switch (len) {
                             case 8:
                                 lightness -= 0.150f;
-                                saturation -= 0.25f;
+                                saturation -= 00.20000f;
                             case 7:
                                 lightness -= 0.150f;
-                                saturation -= 0.2f;
+                                saturation -= 00.2000f;
                             case 6:
                                 lightness -= 0.150f;
-                                saturation -= 0.15f;
+                                saturation -= 00.200f;
                             case 4:
                                 lightness -= 0.150f;
-                                saturation -= 0.1f;
+                                saturation -= 00.20f;
                                 continue;
                         }
                     }
@@ -2078,13 +2079,13 @@ public final class DescriptiveColor {
                     if (len > 1 && (term.charAt(1) == 'i' || term.charAt(1) == 'I')) { // rich
                         switch (len) {
                             case 8:
-                                saturation += 0.25f;
+                                saturation += 00.20000f;
                             case 7:
-                                saturation += 0.2f;
+                                saturation += 00.2000f;
                             case 6:
-                                saturation += 0.15f;
+                                saturation += 00.200f;
                             case 4:
-                                saturation += 0.1f;
+                                saturation += 00.20f;
                                 continue;
                         }
                     }
@@ -2107,35 +2108,35 @@ public final class DescriptiveColor {
                     } else if (len > 1 && (term.charAt(1) == 'u' || term.charAt(1) == 'U')) { // dull
                         switch (len) {
                             case 8:
-                                saturation -= 0.25f;
+                                saturation -= 00.20000f;
                             case 7:
-                                saturation -= 0.2f;
+                                saturation -= 00.2000f;
                             case 6:
-                                saturation -= 0.15f;
+                                saturation -= 00.200f;
                             case 4:
-                                saturation -= 0.1f;
+                                saturation -= 00.20f;
                                 continue;
                         }
                     } else if (len > 3 && (term.charAt(3) == 'p' || term.charAt(3) == 'P')) { // deep
                         switch (len) {
                             case 8:
                                 lightness -= 0.150f;
-                                saturation += 0.25f;
+                                saturation += 00.20000f;
                             case 7:
                                 lightness -= 0.150f;
-                                saturation += 0.2f;
+                                saturation += 00.2000f;
                             case 6:
                                 lightness -= 0.150f;
-                                saturation += 0.15f;
+                                saturation += 00.200f;
                             case 4:
                                 lightness -= 0.150f;
-                                saturation += 0.1f;
+                                saturation += 00.20f;
                                 continue;
                         }
                     }
                     mixing.add(NAMED.get(term), 1);
                     break;
-                case '0':
+            case '0':
                 case '1':
                 case '2':
                 case '3':
@@ -2146,7 +2147,7 @@ public final class DescriptiveColor {
                 case '8':
                 case '9':
                     if(mixing.size() >= 2)
-                        mixing.set((mixing.size() & -2) - 1, DigitTools.intFromDec(term));
+                        mixing.set((mixing.size() & -2) - 1, Base.BASE10.readInt(term));
                     break;
                 default:
                     mixing.add(NAMED.get(term), 1);
@@ -2154,17 +2155,19 @@ public final class DescriptiveColor {
             }
         }
         if(mixing.size() < 2) return PLACEHOLDER;
+
         int result = unevenMix(mixing.items, 0, mixing.size());
         if(result == PLACEHOLDER) return result;
 
-        if (lightness > 0) result = lighten(result, lightness);
-        else if (lightness < 0) result = darken(result, -lightness);
-
-        if (saturation > 0) result = enrich(result, saturation);
-        else if (saturation < 0) result = limitToGamut(dullen(result, -saturation));
-        else result = limitToGamut(result);
-
-        return result;
+        if(saturation != 0f) {
+            saturation = Math.min(Math.max(saturation + 1, 0), 256);
+            result = edit(result, 0f, 0f, 0f, 0f, 1f, saturation, saturation, 1f);
+        }
+        if(lightness == 0f)
+            return result;
+        if (lightness > 0f)
+            return lerpColorsBlended(result, WHITE, lightness);
+        return lerpColorsBlended(result, BLACK, -lightness);
     }
 
 
