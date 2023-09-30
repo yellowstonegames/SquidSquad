@@ -102,12 +102,18 @@ it's in SquidLib-Demos and uses the wonderful DawnLike tileset by DragonDePlatin
 present as a test in `squidsmooth`, but the standalone version of it shows how you can use SquidSquad in a complete
 libGDX application.
 
-If you use ProGuard, you need to add this line to your `proguard.pro` file; it allows `squidcore` to function after
-ProGuard does its optimizations.
+If you use ProGuard on desktop or iOS platforms, you need to add a line to your `proguard.pro` file. This allows
+`squidcore` to function after ProGuard does its optimizations:
 
 ```
 -optimizations !code/simplification/string
 ```
+
+Note that this line will be added automatically to the Android R8 configuration,
+which is subtly different from ProGuard configuration on any other platform.
+If you only use ProGuard on Android (where it's really using R8), you shouldn't need
+to change any `.pro` files manually to use SquidSquad. You may still need to make
+changes to those files to keep things like scene2d.ui from libGDX.
 
 # Get?
 
