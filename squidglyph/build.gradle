@@ -3,11 +3,15 @@ ext.projectName = 'SquidGlyph'
 eclipse.project.name = ext.projectName
 sourceSets.test.resources.srcDirs += [ file('../assets').path ]
 
+java.withSourcesJar()
+
 dependencies {
     api project(':squidcore')
     api project(':squidgrid')
     api "com.github.tommyettinger:textratypist:$typistVersion"
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    sourcesElements "com.github.tommyettinger:textratypist:$typistVersion:sources"
+    sourcesElements "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
 
     testImplementation project(':squidplace')
     testImplementation project(':squidtext')

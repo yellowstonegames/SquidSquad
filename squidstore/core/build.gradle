@@ -4,6 +4,8 @@ eclipse.project.name = ext.projectName
 sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
 javadoc.destinationDir = file("../../docs/squidstore/$name/apidocs")
 
+java.withSourcesJar()
+
 dependencies {
     api project(':squidcore')
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -12,12 +14,8 @@ dependencies {
         exclude module: 'juniper'
         exclude module: 'digital'
     }
-    api("com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"){
-        exclude module: 'juniper'
-        exclude module: 'digital'
-    }
-    api "com.github.tommyettinger:juniper:$juniperVersion"
-    api "com.github.tommyettinger:digital:$digitalVersion"
+    sourcesElements "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+    sourcesElements "com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion:sources"
 
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"

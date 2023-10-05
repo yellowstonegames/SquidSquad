@@ -2160,7 +2160,7 @@ public final class DescriptiveColor {
         if(result == PLACEHOLDER) return result;
 
         if(saturation != 0f) {
-            saturation = Math.min(Math.max(saturation + 1, 0), 256);
+            saturation = Math.min(Math.max(saturation + 1, 0), 1000);
             result = edit(result, 0f, 0f, 0f, 0f, 1f, saturation, saturation, 1f);
         }
         if(lightness == 0f)

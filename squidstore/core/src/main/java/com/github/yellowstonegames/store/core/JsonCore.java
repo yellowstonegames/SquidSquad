@@ -364,8 +364,8 @@ public final class JsonCore {
 
     /**
      * Registers Pattern with the given Json object, so Pattern can be written to and read from JSON.
-     * This is a simple wrapper around Pattern's built-in {@link Pattern#stringSerialize()} and
-     * {@link Pattern#stringDeserialize(String)} methods. Note that Pattern is in regexodus, a
+     * This is a simple wrapper around Pattern's built-in {@link Pattern#serializeToString()} and
+     * {@link Pattern#deserializeFromString(String)} methods. Note that Pattern is in regexodus, a
      * dependency of squidcore.
      *
      * @param json a libGDX Json object that will have a serializer registered

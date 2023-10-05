@@ -123,7 +123,7 @@ public final class HilbertCurve {
      * This assumes x and y are between 0 and 255, inclusive.
      * This uses a lookup table for the 256x256 Hilbert Curve, which should make it faster than calculating the
      * distance along the Hilbert Curve repeatedly.
-     * Source: <a href="<a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.">and-what-happened blog post</a>.
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
      * @param x between 0 and 255 inclusive
      * @param y between 0 and 255 inclusive
      * @return the distance to travel along the 256x256 Hilbert Curve to get to the given x, y point.
