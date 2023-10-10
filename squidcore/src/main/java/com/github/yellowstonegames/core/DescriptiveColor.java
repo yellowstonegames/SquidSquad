@@ -1703,15 +1703,16 @@ public final class DescriptiveColor {
      * good way to reduce allocations of temporary Colors. If the inputs were Oklab colors, you will
      * probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
      *
-     * @param s      the starting color as a packed int
-     * @param e      the end/target color as a packed int
+     * @see #mix(int[], int, int)
+     * @param start    the starting color as a packed int; may be RGBA or Oklab
+     * @param end      the end/target color as a packed int; must be the same color space as start
      * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
-     * @return a packed Oklab int that represents a color between start and end
+     * @return a packed int in the same color space as start and end, that represents a color between start and end
      */
-    public static int lerpColors(final int s, final int e, final float change) {
+    public static int lerpColors(final int start, final int end, final float change) {
         final int
-                sL = (s & 0xFF), sA = (s >>> 8) & 0xFF, sB = (s >>> 16) & 0xFF, sAlpha = s >>> 24 & 0xFF,
-                eL = (e & 0xFF), eA = (e >>> 8) & 0xFF, eB = (e >>> 16) & 0xFF, eAlpha = e >>> 24 & 0xFF;
+                sL = (start & 0xFF), sA = (start >>> 8) & 0xFF, sB = (start >>> 16) & 0xFF, sAlpha = start >>> 24 & 0xFF,
+                eL = (end & 0xFF), eA = (end >>> 8) & 0xFF, eB = (end >>> 16) & 0xFF, eAlpha = end >>> 24 & 0xFF;
         return (((int) (sL + change * (eL - sL)) & 0xFF)
                 | (((int) (sA + change * (eA - sA)) & 0xFF) << 8)
                 | (((int) (sB + change * (eB - sB)) & 0xFF) << 16)
@@ -1724,6 +1725,8 @@ public final class DescriptiveColor {
      * end) must be packed Oklab ints, and change can be between 0f (keep start) and 1f (only use end). This is a good
      * way to reduce allocations of temporary Colors. Since the inputs are Oklab colors, you will probably want to
      * convert the color for rendering with {@link #toRGBA8888(int)}.
+     *
+     * @see #mix(int[], int, int)
      * @param start the starting color as a packed Oklab int; alpha will be preserved
      * @param end the target color as a packed Oklab int; alpha will not be used directly, and will instead be multiplied with change
      * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
@@ -1745,10 +1748,14 @@ public final class DescriptiveColor {
      * should be packed Oklab ints. This is a good way to reduce allocations of temporary Colors. This
      * clamps each component to the valid range for a packed Oklab int, but not to the Oklab gamut. You will
      * probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
+     * The additive mixing this does will amplify any difference from {@link #GRAY}, which is the neutral color here.
+     * If you mix several int colors that are each, approximately, grayish-green, then with enough colors the result
+     * will be a vivid, saturated green.
      * <br>
      * This is probably faster than {@link #lerpColors(int, int, float)} because it uses
      * entirely int math, though the clamping it does might not help speed.
      *
+     * @see #additiveMix(int[], int, int)
      * @param start    the starting color as a packed int
      * @param end      the end/target color as a packed int
      * @return a packed Oklab int that represents a color between start and end
@@ -1769,6 +1776,8 @@ public final class DescriptiveColor {
      * TextraTypist for "no color found").
      * This is mostly useful in conjunction with {@link IntList}, using its {@code items}
      * for colors, typically 0 for offset, and its {@code size} for size.
+     *
+     * @see #lerpColors(int, int, float)
      * @param colors an array of packed int colors; all should use the same color space
      * @param offset the index of the first item in {@code colors} to use
      * @param size how many items from {@code colors} to use
@@ -1779,8 +1788,7 @@ public final class DescriptiveColor {
         if(colors == null || colors.length < end || offset < 0 || size <= 0)
             return PLACEHOLDER; // transparent super-dark-blue, used to indicate "not found"
         int result = PLACEHOLDER;
-        while(colors[offset] == PLACEHOLDER)
-        {
+        while(colors[offset] == PLACEHOLDER) {
             offset++;
         }
         if(offset < end)
@@ -1798,6 +1806,8 @@ public final class DescriptiveColor {
      * representing colors and weights, as with {@code color, weight, color, weight...}.
      * If {@code colors} is null or has no items, this returns 0 (usually transparent in most color spaces). Each color
      * can be a packed Oklab int or an RGBA8888 int, but you can't use both of those kinds of color in one call.
+     *
+     * @see #lerpColors(int, int, float)
      * @param colors an array or varargs that should contain alternating {@code color, weight, color, weight...} ints
      * @return the mixed color, as a packed int in the same color space as the given int colors
      */
@@ -1814,6 +1824,8 @@ public final class DescriptiveColor {
      * otherwise it will be reduced by 1. The weights can be any non-negative int values; this method handles
      * normalizing them internally. Each color can be a packed Oklab int or an RGBA8888 int, but you can't use both of
      * those kinds of color in one call.
+     *
+     * @see #lerpColors(int, int, float)
      * @param colors starting at {@code offset}, this should contain alternating {@code color, weight, color, weight...} ints
      * @param offset where to start reading from in {@code colors}
      * @param size how many indices to read from {@code colors}; must be an even number
@@ -1823,16 +1835,22 @@ public final class DescriptiveColor {
         size &= -2;
         final int end = offset + size;
         if(colors == null || colors.length < end || offset < 0 || size <= 0)
-            return 0; // transparent, usually
+            return PLACEHOLDER; // transparent super-dark-blue, used to indicate "not found"
+        while(colors[offset] == PLACEHOLDER) {
+            if((offset += 2) >= end) return PLACEHOLDER;
+        }
         int result = colors[offset];
         float current = colors[offset + 1], total = current;
         for (int i = offset+3; i < end; i += 2) {
-            total += colors[i];
+            if(colors[i-1] != PLACEHOLDER)
+                total += colors[i];
         }
         total = 1f / total;
         current *= total;
         for (int i = offset+3; i < end; i += 2) {
             int mixColor = colors[i-1];
+            if(mixColor == PLACEHOLDER)
+                continue;
             float weight = colors[i] * total;
             result = lerpColors(result, mixColor, weight / (current += weight));
         }
@@ -1841,13 +1859,19 @@ public final class DescriptiveColor {
 
     /**
      * Given several colors, this gets an even mix of all colors in equal measure, mixing them additively and clamping.
-     * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER} (a transparent placeholder used by
-     * TextraTypist for "no color found").
+     * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER} (a transparent placeholder used to
+     * mean "no color found").
      * This is mostly useful in conjunction with {@link IntList}, using its {@code items}
      * for colors, typically 0 for offset, and its {@code size} for size.
      * The additive mixing this does will amplify any difference from {@link #GRAY}, which is the neutral color here.
      * If you mix several int colors that are each, approximately, grayish-green, then with enough colors the result
      * will be a vivid, saturated green.
+     * <br>
+     * This is probably faster than {@link #mix(int[], int, int)} because this uses only int math, and should also be
+     * faster than individually mixing colors with {@link #addColors(int, int)} because it only clamps once. This does
+     * produce different results than either of those.
+     *
+     * @see #addColors(int, int)
      * @param colors an array of packed int colors; all should use the same color space
      * @param offset the index of the first item in {@code colors} to use
      * @param size how many items from {@code colors} to use
@@ -1858,8 +1882,7 @@ public final class DescriptiveColor {
         if(colors == null || colors.length < end || offset < 0 || size <= 0)
             return PLACEHOLDER; // transparent super-dark-blue, used to indicate "not found"
         int L = 0x80, A = 0x7F, B = 0x7F, O = 0x7F;
-        while(colors[offset] == PLACEHOLDER)
-        {
+        while(colors[offset] == PLACEHOLDER) {
             offset++;
         }
         if(offset < end) {
