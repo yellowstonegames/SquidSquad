@@ -501,7 +501,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 prunedDungeon[newX][newY] = '/';
                 lineDungeon[newX][newY] = '/';
                 // changes to the map mean the resistances for FOV need to be regenerated.
-                resistance = FOV.generateSimpleResistances(prunedDungeon);
+                FOV.fillSimpleResistancesInto(prunedDungeon, resistance);
                 // recalculate FOV, store it in fovmap for the render to use.
                 ArrayTools.set(visible, oldVisible);
                 justHidden.refill(oldVisible, 0f).not();
@@ -641,7 +641,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     }
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(justHidden.contains(i, j)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
@@ -649,13 +649,13 @@ public class DawnlikeDemo extends ApplicationAdapter {
                                     DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f), change)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(lineDungeon[i][j], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
                 }
             }
         }

@@ -1510,7 +1510,8 @@ public final class FOV {
      * slightly obscure light, closed doors obscure almost all light coming from the other side, walls block all light,
      * and anything else does not obscure light.
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()
+     * @see #generateSimpleResistances(char[][])
+     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
      * @return a resistance map suitable for use with the FOV class, with clear cells assigned 0.0f and blocked ones 1.0f
      */
     public static float[][] generateResistances(char[][] map) {
@@ -1551,6 +1552,54 @@ public final class FOV {
     }
 
     /**
+     * Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
+     * be used with most of the methods in FOV, like {@link #reuseFOV(float[][], float[][], int, int, float)}. It
+     * expects any doors to be represented by '+' if closed or '/' if open, any walls to be '#' or box drawing
+     * characters, and it doesn't care what other chars are used (only doors, including open ones, and walls obscure
+     * light and thus have a resistance by default). Open doors slightly obscure light, closed doors obscure almost all
+     * light coming from the other side, walls block all light, and anything else does not obscure light.
+     *
+     * @param map a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
+     * @param into a 2D float array that should have the same dimensions as {@code map}; will be modified completely
+     * @return {@code into} modified so it acts as a resistance map, with clear cells assigned 0.0f and blocked ones 1.0f
+     */
+    public static float[][] fillResistancesInto(char[][] map, float[][] into) {
+        int width = Math.min(map.length, into.length);
+        int height = Math.min(map[0].length, into[0].length);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                switch (map[i][j]) {
+                    case ' ':
+                    case '\1':
+                    case '├':
+                    case '┤':
+                    case '┴':
+                    case '┬':
+                    case '┌':
+                    case '┐':
+                    case '└':
+                    case '┘':
+                    case '│':
+                    case '─':
+                    case '┼':
+                    case '#':
+                        into[i][j] = 1.0f;
+                        break;
+                    case '/':
+                        into[i][j] = 0.15f;
+                        break;
+                    case '+':
+                        into[i][j] = 0.95f;
+                        break;
+                    default:
+                        into[i][j] = 0.0f;
+                }
+            }
+        }
+        return into;
+    }
+
+    /**
      * Given a char[][] for the map that should use box drawing characters, produces a float[][] with triple width and
      * triple height that can be used with FOV methods like {@link #reuseFOV(float[][], float[][], int, int, float)}
      * in classes that use subcell lighting. Importantly, this only considers a "thin line" of wall to be blocking
@@ -1559,7 +1608,7 @@ public final class FOV {
      * be '#', and it doesn't care what other chars are used (only doors, including open ones, and walls obscure light
      * and thus have a resistance normally).
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()
+     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
      * @return a resistance map suitable for use with the FOV class and subcell lighting, with triple width/height
      */
     public static float[][] generateResistances3x3(char[][] map) {
@@ -1667,7 +1716,7 @@ public final class FOV {
      * open, and any walls to be '#' or box drawing characters. This will assign 1.0f resistance to walls and closed
      * doors or 0.0f for any other cell.
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()
+     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
      * @return a resistance map suitable for use with the FOV class, but with no partially transparent cells
      */
     public static float[][] generateSimpleResistances(char[][] map) {
@@ -1703,6 +1752,50 @@ public final class FOV {
     }
 
     /**
+     * Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
+     * be used with most of the methods in FOV, like {@link #reuseFOV(float[][], float[][], int, int, float)}, but does
+     * not treat any cells as partly transparent, only fully-blocking or fully-permitting light. This is mainly useful
+     * if you expect the FOV radius to be very high or (effectively) infinite, since anything less than complete
+     * blockage would be passed through by infinite-radius FOV. This expects any doors to be represented by '+' if
+     * closed or '/' if open, and any walls to be '#' or box drawing characters. This will assign 1.0f resistance to
+     * walls and closed doors or 0.0f for any other cell.
+     *
+     * @param map a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
+     * @param into a 2D float array that should have the same dimensions as {@code map}; will be modified completely
+     * @return {@code into} modified so it acts as a resistance map, with clear cells assigned 0.0f and blocked ones 1.0f
+     */
+    public static float[][] fillSimpleResistancesInto(char[][] map, float[][] into) {
+        int width = Math.min(map.length, into.length);
+        int height = Math.min(map[0].length, into[0].length);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                switch (map[i][j]) {
+                    case ' ':
+                    case '\1':
+                    case '├':
+                    case '┤':
+                    case '┴':
+                    case '┬':
+                    case '┌':
+                    case '┐':
+                    case '└':
+                    case '┘':
+                    case '│':
+                    case '─':
+                    case '┼':
+                    case '#':
+                    case '+':
+                        into[i][j] = 1.0f;
+                        break;
+                    default:
+                        into[i][j] = 0.0f;
+                }
+            }
+        }
+        return into;
+    }
+
+    /**
      * Given a char[][] for the map that should use box drawing characters, produces a float[][] with triple width and
      * triple height that can be used with FOV's methods that expect a resistance map (like
      * {@link #reuseFOV(float[][], float[][], int, int, float)}) in classes that use subcell lighting. This expects
@@ -1710,7 +1803,7 @@ public final class FOV {
      * cells that block all subcells within their area to be '#'. This will assign 1.0f resistance to walls and closed
      * doors where a line of the box drawing char would block light, or 0.0f for any other subcell.
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()
+     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
      * @return a resistance map suitable for use with the FOV class and subcell lighting, with triple width/height
      */
     public static float[][] generateSimpleResistances3x3(char[][] map) {
@@ -1808,7 +1901,7 @@ public final class FOV {
      * sound (making walls that are 2-cells-thick block all sound, but 1-cell-thick walls won't), the ' ' and Unicode 1
      * cells block all sound, and everything else lets sound through.
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()
+     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
      * @return a resistance map meant for sound resistance rather than light, with clear cells assigned 0.0f and fully-blocked ones 1.0f
      */
     public static float[][] generateSoundResistances(char[][] map) {
