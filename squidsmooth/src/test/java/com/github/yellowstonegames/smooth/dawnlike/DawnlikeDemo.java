@@ -313,7 +313,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
-        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, 9f, Radius.CIRCLE);
+        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         ArrayTools.set(lightLevels, previousLightLevels);
         // 0.0 is the upper bound (inclusive), so any Coord in visible that is more well-lit than 0.0 will _not_ be in
@@ -364,7 +364,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         playerToCursor = new DijkstraMap(bareDungeon, Measurement.EUCLIDEAN);
         getToPlayer = new DijkstraMap(bareDungeon, Measurement.EUCLIDEAN);
         //These next two lines mark the player as something we want paths to go to or from, and get the distances to the
-        // player from all walkable cells in the dungeon.
+        // player from somewhat-nearby walkable cells in the dungeon.
         playerToCursor.setGoal(player);
         // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
         // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
@@ -606,21 +606,33 @@ public class DawnlikeDemo extends ApplicationAdapter {
         }
     }
 
-    private void postMove()
+    private void afterMove()
     {
         phase = Phase.MONSTER_ANIM;
         // updates our mutable player array in-place, because a Coord like player is immutable.
         playerArray[0] = player;
         int monCount = monsters.size();
-        // recalculate FOV, store it in fovmap for the render to use.
+        // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
+        // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
         ArrayTools.set(lightLevels, previousLightLevels);
+        // assigns to justHidden all cells that were visible in lightLevels in the last turn.
         justHidden.refill(previousLightLevels, 0f).not();
+        // recalculate FOV, store it in lightLevels for the render to use.
         FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
         blockage.refill(lightLevels, 0f);
+        // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
         justSeen.remake(seen);
+        // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+        // then, seen has all of those cells that have been visible (ever) included in with its cells.
         seen.or(blockage.not());
+        // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
         justSeen.notAnd(seen);
+        // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+        // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
         justHidden.andNot(blockage);
+        // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+        // adjacent to those cells.
         blockage.fringe8way();
         // handle monster turns
         for(int ci = 0; ci < monCount; ci++) {
@@ -832,7 +844,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         else if(phase == Phase.PLAYER_ANIM) {
             if (!playerDirector.isPlaying() && !monsterDirector.isPlaying()) {
                 phase = Phase.MONSTER_ANIM;
-                postMove();
+                afterMove();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
                 // re-calculate the distances from all cells to the player. We don't need to calculate this information on
                 // each part of a many-cell move (just the end), nor do we need to calculate it whenever the mouse moves.

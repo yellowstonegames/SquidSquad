@@ -114,8 +114,9 @@ public class VisionFramework {
     public VisionFramework() {
 
     }
+
     public void restart(char[][] dungeon, Coord playerPosition) {
-        if(dungeon == null || dungeon.length == 0 || dungeon[0] == null || dungeon[0].length == 0)
+        if (dungeon == null || dungeon.length == 0 || dungeon[0] == null || dungeon[0].length == 0)
             return;
         dungeonWidth = dungeon.length;
         dungeonHeight = dungeon[0].length;
@@ -153,6 +154,30 @@ public class VisionFramework {
         // 0xFF7F7F50 is fully opaque, pure gray, and about 30% lightness.
         // It affects the default color each cell has, and could change when there is (for instance) a stain or a mark.
         backgroundColors = ArrayTools.fill(0xFF7F7F50, dungeonWidth, dungeonHeight);
+    }
 
+    public void afterMove() {
+        // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
+        // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
+        ArrayTools.set(lightLevels, previousLightLevels);
+        // assigns to justHidden all cells that were visible in lightLevels in the last turn.
+        justHidden.refill(previousLightLevels, 0f).not();
+        // recalculate FOV, store it in lightLevels for the render to use.
+        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
+        blockage.refill(lightLevels, 0f);
+        // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
+        justSeen.remake(seen);
+        // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+        // then, seen has all of those cells that have been visible (ever) included in with its cells.
+        seen.or(blockage.not());
+        // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
+        justSeen.notAnd(seen);
+        // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+        // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
+        justHidden.andNot(blockage);
+        // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+        // adjacent to those cells.
+        blockage.fringe8way();
     }
 }
