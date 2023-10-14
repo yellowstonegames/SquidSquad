@@ -560,31 +560,62 @@ public class DawnlikeDemo extends ApplicationAdapter {
             if (prunedDungeon[newX][newY] == '+') {
                 prunedDungeon[newX][newY] = '/';
                 lineDungeon[newX][newY] = '/';
-                // changes to the map mean the resistances for FOV need to be regenerated.
-                FOV.fillSimpleResistancesInto(prunedDungeon, resistance);
-                // recalculate FOV, store it in fovmap for the render to use.
+                // changes to the map mean the changed cell may have a different light resistance.
+                resistance[newX][newY] = FOV.simpleResistance(prunedDungeon[newX][newY]);
+
+                // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
+                // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
                 ArrayTools.set(lightLevels, previousLightLevels);
+                // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
+                // recalculate FOV, store it in lightLevels for the render to use.
                 FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+                // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lightLevels, 0f);
+                // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
                 justSeen.remake(seen);
+                // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+                // then, seen has all of those cells that have been visible (ever) included in with its cells.
                 seen.or(blockage.not());
+                // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
                 justSeen.notAnd(seen);
+                // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+                // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
                 justHidden.andNot(blockage);
+                // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+                // adjacent to those cells.
                 blockage.fringe8way();
+                // takes box-drawing characters (walls) in lineDungeon that would have segments that aren't visible in
+                // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
                 LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
             } else {
-                // recalculate FOV, store it in fovmap for the render to use.
+                // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
+                // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
                 ArrayTools.set(lightLevels, previousLightLevels);
+                // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
+                // recalculate FOV, store it in lightLevels for the render to use.
                 FOV.reuseFOV(resistance, lightLevels, newX, newY, fovRange, Radius.CIRCLE);
+                // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lightLevels, 0f);
+                // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
                 justSeen.remake(seen);
+                // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+                // then, seen has all of those cells that have been visible (ever) included in with its cells.
                 seen.or(blockage.not());
+                // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
                 justSeen.notAnd(seen);
+                // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+                // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
                 justHidden.andNot(blockage);
+                // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+                // adjacent to those cells.
                 blockage.fringe8way();
+                // takes box-drawing characters (walls) in lineDungeon that would have segments that aren't visible in
+                // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
                 LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
+
+
                 playerSprite.location.setStart(player);
                 playerSprite.location.setEnd(player = next);
                 phase = Phase.PLAYER_ANIM;
@@ -606,34 +637,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
         }
     }
 
-    private void afterMove()
+    private void afterChange()
     {
         phase = Phase.MONSTER_ANIM;
         // updates our mutable player array in-place, because a Coord like player is immutable.
         playerArray[0] = player;
         int monCount = monsters.size();
-        // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
-        // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
-        ArrayTools.set(lightLevels, previousLightLevels);
-        // assigns to justHidden all cells that were visible in lightLevels in the last turn.
-        justHidden.refill(previousLightLevels, 0f).not();
-        // recalculate FOV, store it in lightLevels for the render to use.
-        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
-        // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
-        blockage.refill(lightLevels, 0f);
-        // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
-        justSeen.remake(seen);
-        // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
-        // then, seen has all of those cells that have been visible (ever) included in with its cells.
-        seen.or(blockage.not());
-        // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
-        justSeen.notAnd(seen);
-        // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
-        // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
-        justHidden.andNot(blockage);
-        // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
-        // adjacent to those cells.
-        blockage.fringe8way();
         // handle monster turns
         for(int ci = 0; ci < monCount; ci++) {
             Coord pos = monsters.keyAt(ci);
@@ -844,7 +853,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         else if(phase == Phase.PLAYER_ANIM) {
             if (!playerDirector.isPlaying() && !monsterDirector.isPlaying()) {
                 phase = Phase.MONSTER_ANIM;
-                afterMove();
+                afterChange();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
                 // re-calculate the distances from all cells to the player. We don't need to calculate this information on
                 // each part of a many-cell move (just the end), nor do we need to calculate it whenever the mouse moves.
