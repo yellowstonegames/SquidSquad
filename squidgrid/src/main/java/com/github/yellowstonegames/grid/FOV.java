@@ -1503,6 +1503,71 @@ public final class FOV {
     }
 
     /**
+     * Given a single char, returns what {@link #generateResistances(char[][])} or
+     * {@link #fillResistancesInto(char[][], float[][])} would consider as its light resistance value.
+     * This means that for a wall char ({@code '#'} or a box drawing character) or an impossible-to-see character
+     * ({@code ' '} or {@code ((char)1)}), this returns a resistance of 1f, for an open door ({@code '/'}) this returns
+     * 0.15f, for a closed door ({@code '+'}) this returns 0.95f, and for any other char, this returns 0f.
+     * @param cell a single char that uses the place-map conventions the rest of this class uses
+     * @return the light resistance value for a cell represented by {@code cell}
+     */
+    public static float resistance(char cell) {
+        switch (cell) {
+            case ' ':
+            case '\1':
+            case '├':
+            case '┤':
+            case '┴':
+            case '┬':
+            case '┌':
+            case '┐':
+            case '└':
+            case '┘':
+            case '│':
+            case '─':
+            case '┼':
+            case '#':
+                return 1.0f;
+            case '/':
+                return 0.15f;
+            case '+':
+                return 0.95f;
+        }
+        return 0.0f;
+    }
+
+    /**
+     * Given a single char, returns what {@link #generateSimpleResistances(char[][])} or
+     * {@link #fillSimpleResistancesInto(char[][], float[][])} would consider as its light resistance value.
+     * This means that for a wall char ({@code '#'} or a box drawing character), a closed door ({@code '+'}), or an
+     * impossible-to-see character ({@code ' '} or {@code ((char)1)}), this returns a resistance of 1f, and for any
+     * other char, this returns 0f.
+     * @param cell a single char that uses the place-map conventions the rest of this class uses
+     * @return the light resistance value for a cell represented by {@code cell}
+     */
+    public static float simpleResistance(char cell) {
+        switch (cell) {
+            case ' ':
+            case '\1':
+            case '├':
+            case '┤':
+            case '┴':
+            case '┬':
+            case '┌':
+            case '┐':
+            case '└':
+            case '┘':
+            case '│':
+            case '─':
+            case '┼':
+            case '#':
+            case '+':
+                return 1.0f;
+        }
+        return 0.0f;
+    }
+
+    /**
      * Given a char[][] for the map, produces a float[][] that can be used with most of the methods in FOV, like
      * {@link #reuseFOV(float[][], float[][], int, int, float)}. It expects any doors to be represented by '+' if
      * closed or '/' if open, any walls to be '#' or box drawing characters, and it doesn't care what other chars are
