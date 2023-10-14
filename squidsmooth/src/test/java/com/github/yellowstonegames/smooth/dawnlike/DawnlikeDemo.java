@@ -19,8 +19,13 @@ package com.github.yellowstonegames.smooth.dawnlike;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -30,15 +35,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.random.ChopRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
@@ -66,13 +69,84 @@ public class DawnlikeDemo extends ApplicationAdapter {
     // This maps chars, such as '#', to specific images, such as a pillar.
     private IntObjectMap<TextureAtlas.AtlasRegion> charMapping;
 
-    private char[][] bareDungeon, lineDungeon, prunedDungeon;
-    // these use packed Oklab int colors, which avoid the overhead of creating new Color objects
+    /**
+     * The dungeon map using only {@code '#'} for walls and {@code '.'} for floors.
+     */
+    private char[][] bareDungeon;
+    /**
+     * The dungeon map using box-drawing characters or {@code '#'} for walls, and any other chars for other terrain.
+     */
+    private char[][] lineDungeon;
+    /**
+     * The same as {@link #lineDungeon}, but with any branches of walls that can't be seen trimmed off to only show what
+     * is actually visible given the current field of view and the cells seen earlier.
+     */
+    private char[][] prunedDungeon;
+    /**
+     * A resistance map, as produced by {@link FOV#generateSimpleResistances(char[][])} from the current dungeon map.
+     */
+    private float[][] resistance;
+    /**
+     * The fraction of how lit a cell is currently, with 1.0 fully lit and 0.0 pitch-black.
+     */
+    private float[][] lightLevels;
+    /**
+     * The value that {@link #lightLevels} held in the previous turn or short period of time.
+     */
+    private float[][] previousLightLevels;
+    /**
+     * The background color tints as packed Oklab int colors, which avoid the overhead of creating new Color objects.
+     * Use {@link DescriptiveColor} to get, describe, or create Oklab int colors.
+     */
     private int[][] bgColors;
+
+    // Region is a hard-to-explain class, but it's an incredibly useful one for map generation and many other
+    // tasks; it stores a region of "on" cells where everything not in that region is considered "off," and can be used
+    // as a Collection of Coord points. However, it's more than that! Because of how it is implemented, it can perform
+    // bulk operations on as many as 64 points at a time, and can efficiently do things like expanding the "on" area to
+    // cover adjacent cells that were "off", retracting the "on" area away from "off" cells to shrink it, getting the
+    // surface ("on" cells that are adjacent to "off" cells) or fringe ("off" cells that are adjacent to "on" cells),
+    // and generally useful things like picking a random point from all "on" cells.
+    // Here, we use a Region to store:
+    // all floors that the player can walk on,
+    // a small rim of cells just beyond the player's vision that blocks pathfinding to areas we can't see a path to,
+    // all cells that we have seen in the past,
+    // all cells we just became able to see on this turn or short period of time,
+    // and all cells we were able to see, but just became hidden on this turn or short period of time.
+    // In most roguelikes, there would be one "floors" and one "seen" per dungeon floor, but just one of the rest total.
+    /**
+     * All floors that the player can walk on.
+     */
+    private Region floors;
+    /**
+     * A small rim of cells just beyond the player's vision that blocks pathfinding to areas we can't see a path to.
+     */
+    private Region blockage;
+    /**
+     * All cells that we have seen in the past, on this dungeon map.
+     */
+    private Region seen;
+    /**
+     * All cells we just became able to see on this turn or short period of time.
+     */
+    private Region justSeen;
+    /**
+     * All cells we were able to see, but just became hidden on this turn or short period of time.
+     */
+    private Region justHidden;
+
+    /**
+     * How far the player can see without other light sources.
+     */
+    private int fovRange = 8;
+
+    /**
+     * The 2D position of the player (the moving character who the FOV centers upon).
+     */
     private Coord player;
+
     private final Coord[] playerArray = new Coord[1];
 
-    private int fovRange = 8;
     private final Vector2 pos = new Vector2();
 
     /** In number of cells */
@@ -110,23 +184,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private ObjectDeque<Coord> awaitedMoves;
     private ObjectDeque<Coord> nextMovePositions;
     private String lang;
-    private float[][] resistance;
-    private float[][] visible;
-    private float[][] oldVisible;
     private TextureAtlas.AtlasRegion solid;
     private int health = 9;
-
-    // GreasedRegion is a hard-to-explain class, but it's an incredibly useful one for map generation and many other
-    // tasks; it stores a region of "on" cells where everything not in that region is considered "off," and can be used
-    // as a Collection of Coord points. However, it's more than that! Because of how it is implemented, it can perform
-    // bulk operations on as many as 64 points at a time, and can efficiently do things like expanding the "on" area to
-    // cover adjacent cells that were "off", retracting the "on" area away from "off" cells to shrink it, getting the
-    // surface ("on" cells that are adjacent to "off" cells) or fringe ("off" cells that are adjacent to "on" cells),
-    // and generally useful things like picking a random point from all "on" cells.
-    // Here, we use a GreasedRegion to store all floors that the player can walk on, a small rim of cells just beyond
-    // the player's vision that blocks pathfinding to areas we can't see a path to, and we also store all cells that we
-    // have seen in the past in a GreasedRegion (in most roguelikes, there would be one of these per dungeon floor).
-    private Region floors, blockage, seen, justSeen, justHidden;
 
     private static final int
             INT_BLOOD = DescriptiveColor.describeOklab("deepest red"),
@@ -216,8 +275,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
         bareDungeon = dungeonGen.getBarePlaceGrid();
 
         resistance = FOV.generateSimpleResistances(lineDungeon);
-        visible = new float[dungeonWidth][dungeonHeight];
-        oldVisible = new float[dungeonWidth][dungeonHeight];
+        lightLevels = new float[dungeonWidth][dungeonHeight];
+        previousLightLevels = new float[dungeonWidth][dungeonHeight];
 
         prunedDungeon = ArrayTools.copy(lineDungeon);
         // here, we need to get a random floor cell to place the player upon, without the possibility of putting him
@@ -254,12 +313,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
-        FOV.reuseFOV(resistance, visible, player.x, player.y, 9f, Radius.CIRCLE);
-        ArrayTools.set(visible, oldVisible);
+        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, 9f, Radius.CIRCLE);
+        ArrayTools.set(lightLevels, previousLightLevels);
         // 0.0 is the upper bound (inclusive), so any Coord in visible that is more well-lit than 0.0 will _not_ be in
         // the blockage Collection, but anything 0.0 or less will be in it. This lets us use blockage to prevent access
         // to cells we can't see from the start of the move.
-        blockage = blockage == null ? new Region(visible, 0f) : blockage.refill(visible, 0f);
+        blockage = blockage == null ? new Region(lightLevels, 0f) : blockage.refill(lightLevels, 0f);
         // Here we mark the initially seen cells as anything that wasn't included in the unseen "blocked" region.
         // We invert the copy's contents to prepare for a later step, which makes blockage contain only the cells that
         // are above 0.0, then copy it to save this step as the seen cells. We will modify seen later independently of
@@ -503,10 +562,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 // changes to the map mean the resistances for FOV need to be regenerated.
                 FOV.fillSimpleResistancesInto(prunedDungeon, resistance);
                 // recalculate FOV, store it in fovmap for the render to use.
-                ArrayTools.set(visible, oldVisible);
-                justHidden.refill(oldVisible, 0f).not();
-                FOV.reuseFOV(resistance, visible, player.x, player.y, fovRange, Radius.CIRCLE);
-                blockage.refill(visible, 0f);
+                ArrayTools.set(lightLevels, previousLightLevels);
+                justHidden.refill(previousLightLevels, 0f).not();
+                FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+                blockage.refill(lightLevels, 0f);
                 justSeen.remake(seen);
                 seen.or(blockage.not());
                 justSeen.notAnd(seen);
@@ -515,10 +574,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
             } else {
                 // recalculate FOV, store it in fovmap for the render to use.
-                ArrayTools.set(visible, oldVisible);
-                justHidden.refill(oldVisible, 0f).not();
-                FOV.reuseFOV(resistance, visible, newX, newY, fovRange, Radius.CIRCLE);
-                blockage.refill(visible, 0f);
+                ArrayTools.set(lightLevels, previousLightLevels);
+                justHidden.refill(previousLightLevels, 0f).not();
+                FOV.reuseFOV(resistance, lightLevels, newX, newY, fovRange, Radius.CIRCLE);
+                blockage.refill(lightLevels, 0f);
                 justSeen.remake(seen);
                 seen.or(blockage.not());
                 justSeen.notAnd(seen);
@@ -553,10 +612,10 @@ public class DawnlikeDemo extends ApplicationAdapter {
         playerArray[0] = player;
         int monCount = monsters.size();
         // recalculate FOV, store it in fovmap for the render to use.
-        ArrayTools.set(visible, oldVisible);
-        justHidden.refill(oldVisible, 0f).not();
-        FOV.reuseFOV(resistance, visible, player.x, player.y, fovRange, Radius.CIRCLE);
-        blockage.refill(visible, 0f);
+        ArrayTools.set(lightLevels, previousLightLevels);
+        justHidden.refill(previousLightLevels, 0f).not();
+        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        blockage.refill(lightLevels, 0f);
         justSeen.remake(seen);
         seen.or(blockage.not());
         justSeen.notAnd(seen);
@@ -568,7 +627,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
             AnimatedGlidingSprite mon = monsters.getAt(ci);
             if(mon == null) continue;
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
-            if (visible[pos.x][pos.y] > 0.1) {
+            if (lightLevels[pos.x][pos.y] > 0.1) {
                 // the player's position is set as a goal by findPath(), later.
                 getToPlayer.clearGoals();
                 // clear the buffer, we fill it next
@@ -625,19 +684,19 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
         for (int i = 0; i < dungeonWidth; i++) {
             for (int j = 0; j < dungeonHeight; j++) {
-                if(visible[i][j] > 0.01) {
+                if(lightLevels[i][j] > 0.01) {
                     if(justSeen.contains(i, j)){
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.fade(
                                         toCursor.contains(Coord.get(i, j))
                                                 ? rainbow
-                                                : DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, visible[i][j] * 0.7f + 0.15f)), 1f - change)));
+                                                : DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
                     }
                     else {
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(toCursor.contains(Coord.get(i, j))
                                 ? rainbow
-                                : DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, visible[i][j] * 0.7f + 0.15f))));
+                                : DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
                     }
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
@@ -645,7 +704,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 } else if(justHidden.contains(i, j)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
-                            DescriptiveColor.lerpColors(DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, oldVisible[i][j] * 0.7f + 0.15f)),
+                            DescriptiveColor.lerpColors(DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, previousLightLevels[i][j] * 0.7f + 0.15f)),
                                     DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f), change)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
@@ -663,7 +722,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         AnimatedGlidingSprite monster;
         for (int i = 0; i < dungeonWidth; i++) {
             for (int j = 0; j < dungeonHeight; j++) {
-                if (visible[i][j] > 0.0) {
+                if (lightLevels[i][j] > 0.0) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         // like with scenery, monsters fade in when just seen in the last frame.
                         if(justSeen.contains(i, j))
@@ -789,7 +848,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     playerToCursor.setGoal(player);
                     // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
                     // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
-                    // GreasedRegion that contains the cells just past the edge of the player's FOV area.
+                    // Region that contains the cells just past the edge of the player's FOV area.
                     playerToCursor.partialScan(13, blockage);
                 }
             }
@@ -820,7 +879,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 if(player.x == x && player.y == y)
                     System.out.print('@');
                 else
-                    System.out.print(visible[x][y] > 0f ? '+' : '_');
+                    System.out.print(lightLevels[x][y] > 0f ? '+' : '_');
             }
             System.out.println();
         }
