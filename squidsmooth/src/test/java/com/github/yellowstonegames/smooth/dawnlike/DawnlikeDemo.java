@@ -98,7 +98,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
      * The background color tints as packed Oklab int colors, which avoid the overhead of creating new Color objects.
      * Use {@link DescriptiveColor} to get, describe, or create Oklab int colors.
      */
-    private int[][] bgColors;
+    private int[][] backgroundColors;
 
     // Region is a hard-to-explain class, but it's an incredibly useful one for map generation and many other
     // tasks; it stores a region of "on" cells where everything not in that region is considered "off," and can be used
@@ -314,6 +314,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
         FOV.reuseFOV(resistance, lightLevels, player.x, player.y, 9f, Radius.CIRCLE);
+        // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         ArrayTools.set(lightLevels, previousLightLevels);
         // 0.0 is the upper bound (inclusive), so any Coord in visible that is more well-lit than 0.0 will _not_ be in
         // the blockage Collection, but anything 0.0 or less will be in it. This lets us use blockage to prevent access
@@ -405,7 +406,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         font.getData().markupEnabled = true;
         // 0xFF848350 is fully opaque, slightly-yellow-brown, and about 30% lightness.
         // It affects the default color each cell has, and changes when there is a blood stain.
-        bgColors = ArrayTools.fill(0xFF828150, dungeonWidth, dungeonHeight);
+        backgroundColors = ArrayTools.fill(0xFF828150, dungeonWidth, dungeonHeight);
 
         Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
         Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
@@ -596,7 +597,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
                             if(rng.nextBoolean())
-                                bgColors[newX+x][newY+y] = INT_BLOOD;
+                                backgroundColors[newX+x][newY+y] = INT_BLOOD;
                         }
                     }
                 }
@@ -691,12 +692,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
                                 DescriptiveColor.fade(
                                         toCursor.contains(Coord.get(i, j))
                                                 ? rainbow
-                                                : DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
+                                                : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
                     }
                     else {
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(toCursor.contains(Coord.get(i, j))
                                 ? rainbow
-                                : DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
+                                : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
                     }
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
@@ -704,14 +705,14 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 } else if(justHidden.contains(i, j)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
-                            DescriptiveColor.lerpColors(DescriptiveColor.addColors(bgColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, previousLightLevels[i][j] * 0.7f + 0.15f)),
-                                    DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f), change)));
+                            DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, previousLightLevels[i][j] * 0.7f + 0.15f)),
+                                    DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), change)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
-                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(bgColors[i][j], INT_GRAY, 0.6f)));
+                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f)));
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
