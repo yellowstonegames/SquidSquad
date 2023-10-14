@@ -156,7 +156,45 @@ public class VisionFramework {
         backgroundColors = ArrayTools.fill(0xFF7F7F50, dungeonWidth, dungeonHeight);
     }
 
-    public void afterMove() {
+    public void edit(int newX, int newY, char newCell) {
+        edit(Coord.get(newX, newY), newCell);
+    }
+
+    public void edit(Coord changedPosition, char newCell) {
+        lineDungeon[changedPosition.x][changedPosition.y] = newCell;
+        prunedDungeon[changedPosition.x][changedPosition.y] = newCell;
+        resistance[changedPosition.x][changedPosition.y] = FOV.simpleResistance(newCell);
+
+        // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
+        // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
+        ArrayTools.set(lightLevels, previousLightLevels);
+        // assigns to justHidden all cells that were visible in lightLevels in the last turn.
+        justHidden.refill(previousLightLevels, 0f).not();
+        // recalculate FOV, store it in lightLevels for the render to use.
+        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
+        blockage.refill(lightLevels, 0f);
+        // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
+        justSeen.remake(seen);
+        // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+        // then, seen has all of those cells that have been visible (ever) included in with its cells.
+        seen.or(blockage.not());
+        // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
+        justSeen.notAnd(seen);
+        // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+        // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
+        justHidden.andNot(blockage);
+        // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+        // adjacent to those cells.
+        blockage.fringe8way();
+    }
+
+    public void move(int newX, int newY) {
+        move(Coord.get(newX, newY));
+    }
+
+    public void move(Coord nextPosition) {
+        player = nextPosition;
         // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
         // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
         ArrayTools.set(lightLevels, previousLightLevels);
