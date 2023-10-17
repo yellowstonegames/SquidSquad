@@ -51,7 +51,7 @@ public class LightingManager {
     public Radius radiusStrategy;
     /**
      * The 2D array of light-resistance values from 0.0f to 1.0f for each cell on the map, as produced by
-     * {@link FOV#generateResistances(char[][])}.
+     * {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
      */
     public float[][] resistances;
     /**
@@ -84,7 +84,7 @@ public class LightingManager {
      */
     public int[][] colorLighting;
     /**
-     * Represents the Oklab colors associated with lights in {@link #lightFromFOV}.
+     * Represents the Oklab int colors associated with lights in {@link #lightFromFOV}.
      * To make effective use of this field, you will probably need
      * to be reading the source for LightingManager.
      */
@@ -98,8 +98,8 @@ public class LightingManager {
      */
     public int height;
     /**
-     * The packed float color to mix background cells with when a cell has lighting and is within line-of-sight, but has
-     * no background color to start with (its color is a packed Oklab int, {@link DescriptiveColor#TRANSPARENT}).
+     * The packed Oklab int color to mix background cells with when a cell has lighting and is within line-of-sight, but
+     * has no background color to start with. Its color defaults to {@link DescriptiveColor#TRANSPARENT}.
      */
     public int backgroundColor;
     /**
@@ -526,11 +526,14 @@ public class LightingManager {
     }
 
     /**
-     * Given a 2D array that should hold RGBA8888 int colors, fills the 2D array with different colors based on what
+     * Given a 2D array that should hold RGBA int colors, fills the 2D array with different RGBA colors based on what
      * lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
      * sources can do. You should usually call {@link #update()} before each call to draw(), but you may want to make
      * custom changes to the lighting in between those two calls (that is the only place those changes will be noticed).
      * A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
+     * <br>
+     * A special case here is that a value of {@code 0} in {@code backgrounds} will be treated as
+     * {@link #backgroundColor}, not necessarily as fully transparent.
      * @param backgrounds a 2D int array, which will be modified in-place
      */
     public void draw(int[][] backgrounds)
@@ -539,15 +542,45 @@ public class LightingManager {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (losResult[x][y] > 0.0f && fovResult[x][y] > 0.0f) {
-                        current = backgrounds[x][y];
-                        if(current == 0f)
-                            current = backgroundColor;
-                        backgrounds[x][y] = DescriptiveColor.toRGBA8888(DescriptiveColor.lerpColorsBlended(current,
-                                colorLighting[x][y], lightingStrength[x][y] * 0.4f));
+                    current = backgrounds[x][y]; // here current is RGBA
+                    if(current == 0)
+                        current = backgroundColor;
+                    else
+                        current = DescriptiveColor.fromRGBA8888(current); // now current is Oklab
+                    backgrounds[x][y] = DescriptiveColor.toRGBA8888(DescriptiveColor.lerpColorsBlended(current,
+                            colorLighting[x][y], lightingStrength[x][y] * 0.4f));
                 }
             }
         }
     }
+
+    /**
+     * Given a 2D array that should hold Oklab int colors, fills the 2D array with different Oklab colors based on what
+     * lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
+     * sources can do. You should usually call {@link #update()} before each call to draw(), but you may want to make
+     * custom changes to the lighting in between those two calls (that is the only place those changes will be noticed).
+     * A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
+     * <br>
+     * A special case here is that a value of {@code 0} in {@code backgrounds} will be treated as
+     * {@link #backgroundColor}, not as the (invalid) Oklab color that is represented by 0 .
+     * @param backgrounds a 2D int array, which will be modified in-place
+     */
+    public void drawOklab(int[][] backgrounds)
+    {
+        int current;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (losResult[x][y] > 0.0f && fovResult[x][y] > 0.0f) {
+                        current = backgrounds[x][y]; // here current is Oklab
+                        if(current == 0)
+                            current = backgroundColor;
+                        backgrounds[x][y] = DescriptiveColor.lerpColorsBlended(current,
+                                colorLighting[x][y], lightingStrength[x][y] * 0.4f);
+                }
+            }
+        }
+    }
+
     /**
      * Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.
      * Runs part of the calculations to draw lighting as if all radii are at their widest, but does no actual drawing.
