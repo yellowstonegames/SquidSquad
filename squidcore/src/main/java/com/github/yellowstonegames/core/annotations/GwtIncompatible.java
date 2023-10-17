@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * An annotation for the GWT compiler.
+ * An annotation for the GWT compiler that makes a piece of code ignored on GWT only.
  * 
  * @author smelC
  */

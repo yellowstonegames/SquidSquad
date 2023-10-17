@@ -218,4 +218,17 @@ public class VisionFramework {
         // adjacent to those cells.
         blockage.fringe8way();
     }
+
+    public int getMovingCreatureColor(int x, int y, float timeSpent) {
+        if (lightLevels[x][y] > 0.0) {
+                if(justSeen.contains(x, y))
+                    return DescriptiveColor.fade(DescriptiveColor.GRAY, 1f - timeSpent);
+                else
+                    return DescriptiveColor.GRAY;
+        }
+        else if(justHidden.contains(x, y)) {
+            return DescriptiveColor.fade(DescriptiveColor.GRAY, timeSpent);
+        }
+        return DescriptiveColor.TRANSPARENT;
+    }
 }
