@@ -134,11 +134,15 @@ public class DawnlikeDemo extends ApplicationAdapter {
      * All cells we were able to see, but just became hidden on this turn or short period of time.
      */
     private Region justHidden;
+    /**
+     * Contains only the cells that have a value greater than 0 in {@link #lightLevels}.
+     */
+    public Region inView;
 
     /**
      * How far the player can see without other light sources.
      */
-    private int fovRange = 8;
+    private final int fovRange = 8;
 
     /**
      * The 2D position of the player (the moving character who the FOV centers upon).
@@ -326,6 +330,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // the blocked cells, so a copy is correct here. Most methods on Region objects will modify the
         // Region they are called on, which can greatly help efficiency on long chains of operations.
         seen = seen == null ? blockage.not().copy() : seen.remake(blockage.not());
+        inView = inView == null ? seen.copy() : inView.remake(seen);
         justSeen = justSeen == null ? seen.copy() : justSeen.remake(seen);
         justHidden = justHidden == null ? new Region(dungeonWidth, dungeonHeight) : justHidden.resizeAndEmpty(dungeonWidth, dungeonHeight);
         // Here is one of those methods on a Region; fringe8way takes a Region (here, the set of cells
@@ -575,8 +580,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
                 justSeen.remake(seen);
                 // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+                inView.remake(blockage.not());
                 // then, seen has all of those cells that have been visible (ever) included in with its cells.
-                seen.or(blockage.not());
+                seen.or(inView);
                 // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
                 justSeen.notAnd(seen);
                 // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
@@ -601,8 +607,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
                 justSeen.remake(seen);
                 // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+                inView.remake(blockage.not());
                 // then, seen has all of those cells that have been visible (ever) included in with its cells.
-                seen.or(blockage.not());
+                seen.or(inView);
                 // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
                 justSeen.notAnd(seen);
                 // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible

@@ -38,14 +38,24 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.ShapeTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatToFloatFunction;
-import com.github.tommyettinger.random.*;
-import com.github.yellowstonegames.grid.Coord;
+import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.GoldenQuasiRandom;
+import com.github.tommyettinger.random.VanDerCorputQuasiRandom;
+import com.github.tommyettinger.random.Ziggurat;
 import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.grid.RotationTools;
 
 import java.util.Arrays;
 
-import static com.github.tommyettinger.digital.TrigTools.*;
+import static com.github.tommyettinger.digital.TrigTools.PI;
+import static com.github.tommyettinger.digital.TrigTools.SIN_TABLE_D;
+import static com.github.tommyettinger.digital.TrigTools.SIN_TO_COS;
+import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
+import static com.github.tommyettinger.digital.TrigTools.cosSmoother;
+import static com.github.tommyettinger.digital.TrigTools.cosSmootherTurns;
+import static com.github.tommyettinger.digital.TrigTools.sinSmoother;
+import static com.github.tommyettinger.digital.TrigTools.sinSmootherTurns;
 
 /**
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
@@ -66,7 +76,6 @@ public class SphereVisualizer extends ApplicationAdapter {
     private double[] dAmounts = new double[512];
     private long seed = 123456789L;
     private long startTime;
-    private float[] circleCoord = new float[3];
     private final EnhancedRandom random = new AceRandom(seed);
 //    private final EnhancedRandom random = new WhiskerRandom(seed);
 //    private final EnhancedRandom random = new ScruffRandom(seed);
@@ -167,7 +176,6 @@ public class SphereVisualizer extends ApplicationAdapter {
     @Override
     public void create() {
         startTime = TimeUtils.millis();
-        Coord.expandPoolTo(512, 512);
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("Cozette-standard.fnt"));
         font.setColor(Color.BLACK);

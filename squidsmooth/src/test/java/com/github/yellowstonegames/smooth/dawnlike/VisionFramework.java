@@ -99,6 +99,10 @@ public class VisionFramework {
      * In most roguelikes, this would be temporary and only one would need to exist in total.
      */
     public Region justHidden;
+    /**
+     * Contains only the cells that have a value greater than 0 in {@link #lightLevels}.
+     */
+    public Region inView;
 
     // TODO: Change player and fovRange to a CoordFloatOrderedMap or something similar.
     /**
@@ -207,8 +211,10 @@ public class VisionFramework {
         // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
         justSeen.remake(seen);
         // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+        // that gets stored in inView.
+        inView.remake(blockage.not());
         // then, seen has all of those cells that have been visible (ever) included in with its cells.
-        seen.or(blockage.not());
+        seen.or(inView);
         // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
         justSeen.notAnd(seen);
         // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible

@@ -315,6 +315,8 @@ public class Thesaurus {
      *     <li>bottle`noun` : bottle, canister, flagon, flask, jug, phial, vial</li>
      *     <li>bottle`adj` : brown glass, clear glass, curvaceous glass, dull pewter, fluted crystal, green glass, rough-cut glass, sharp-edged tin, shining silver, smoky glass, tarnished silver</li>
      *     <li>calabash`noun` : calabash, hollow gourd, milk carton, waterskin, wineskin</li>
+     *     <li>lotion`noun` : balm, cream, lotion, oil, ointment, poultice</li>
+     *     <li>lotion`adj` : greasy, herbal, lumpy, pleasant, reeking, runny, slimy, soothing, sticky, stinking</li>
      *     <li>smart`adj` : aware, brilliant, clever, cunning, genius, mindful, smart, wise</li>
      *     <li>smart`noun` : acumen, awareness, cunning, genius, knowledge, mindfulness, smarts, wisdom</li>
      *     <li>stupid`adj` : careless, complacent, dull, dumb, foolish, idiotic, moronic, reckless, sloppy, stupid</li>
@@ -329,12 +331,14 @@ public class Thesaurus {
      *     <li>explorer`noun` : explorer, nomad, pathfinder, questant, seeker, wanderer</li>
      *     <li>hunter`nouns` : hunters, poachers, stalkers, trackers, trappers, wardens</li>
      *     <li>explorer`nouns` : explorers, nomads, pathfinders, questants, seekers, wanderers</li>
-     *     <li>rage`noun` : anger, frenzy, fury, rage, vengeance, wrath</li>
+     *     <li>rage`noun` : anger, frenzy, fury, rage, rancor, vengeance, wrath</li>
+     *     <li>rage`adj` : angry, frenzied, furious, raging, rancorous, vengeful, wrathful</li>
      *     <li>ominous`adj` : baleful, fateful, foreboding, ominous, portentous</li>
-     *     <li>infinite`adj` : countless, infinite, manifold, boundless, myriad, thousandfold, unlimited</li>
+     *     <li>infinite`adj` : boundless, countless, infinite, manifold, myriad, thousandfold, unlimited</li>
      *     <li>impossible`adj` : abominable, forbidden, impossible, incomprehensible, indescribable, ineffable, unearthly, unspeakable</li>
      *     <li>gaze`noun` : eye, gaze, observation, purveyance, stare, watch</li>
      *     <li>pain`noun` : agony, excruciation, misery, pain, torture</li>
+     *     <li>pain`adj` : agonizing, excruciating, miserable, painful, tortuous</li>
      *     <li>god`noun` : deity, father, god, king, lord, lordship, ruler</li>
      *     <li>goddess`noun` : deity, goddess, lady, ladyship, mother, queen, ruler</li>
      *     <li>hero`noun` : champion, crusader, hero, knight, savior</li>
@@ -352,11 +356,11 @@ public class Thesaurus {
      * See {@link #makePlantName()}, {@link #makeFruitName()}, {@link #makeNutName()}, {@link #makeFlowerName()},
      * {@link #makeVegetableName()}, and {@link #makePotionDescription()} for more info and examples.
      * <ul>
-     *     <li>plant`term` : @'s bush`noun`, @'s bush`noun`-bush`noun`, @'s bush`noun`-tree`noun`, @'s color`adj`\tleaf`noun`, @'s color`adj` flower`noun`, @'s color`adj` tree`noun`, @'s flower`noun`, @'s flower`noun`-bush`noun`, @'s ground`noun`\tleaf`noun`, @'s sensory`adj`-leaf`noun`, @'s shape`adj` bush`noun`, @'s shape`adj` flower`noun`, @'s tree`noun`, @'s tree`noun`-bush`noun`, @'s tree`noun`-tree`noun`, bush`noun` of @, bush`noun`-bush`noun`, bush`noun`-bush`noun` of @, bush`noun`-tree`noun`, bush`noun`-tree`noun` of @, color`adj`\tleaf`noun` bush`noun`, color`adj`\tleaf`noun` tree`noun`, color`adj` bush`noun`, color`adj` flower`noun`, color`adj` flower`noun` of @, color`adj` fruit`noun` tree`noun`, color`adj` nut`noun` tree`noun`, color`adj` tree`noun`, color`adj`-leaf`noun` bush`noun`, color`adj`-leaf`noun` flower`noun`, color`adj`-leaf`noun` tree`noun`, color`adj`-vegetable`noun` tree`noun`, flavor`adj` fruit`noun` tree`noun`, flavor`adj` nut`noun` tree`noun`, flavor`noun`\tleaf`noun` tree`noun`, flower`noun` of @, flower`noun`-bush`noun`, flower`noun`-bush`noun` of @, fruit`noun` bush`noun`, fruit`noun` tree`noun`, ground`noun`\tflower`noun`, ground`noun`\tleaf`noun`, ground`noun`\tleaf`noun` of @, ground`noun`\tvegetable`noun`, leaf`noun` of @, nut`noun` bush`noun`, nut`noun` tree`noun`, sensory`adj` bush`noun`, sensory`adj` bush`noun`-bush`noun`, sensory`adj` bush`noun`-tree`noun`, sensory`adj` flower`noun` of @, sensory`adj` flower`noun`-bush`noun`, sensory`adj` flower`noun`-flower`noun`, sensory`adj` tree`noun`, sensory`adj` tree`noun` of @, sensory`adj` tree`noun`-bush`noun`, sensory`adj` tree`noun`-tree`noun`, sensory`adj`-leaf`noun` bush`noun`, sensory`adj`-leaf`noun` flower`noun`, sensory`adj`-leaf`noun` of @, sensory`adj`-leaf`noun` tree`noun`, shape`adj` bush`noun` of @, shape`adj` flower`noun`, shape`adj`-fruit`noun` tree`noun`, shape`adj`-leaf`noun` flower`noun`, shape`adj`-leaf`noun` tree`noun`, shape`adj`-vegetable`noun` tree`noun`, tree`noun`-bush`noun`, tree`noun`-bush`noun` of @, tree`noun`-tree`noun`, tree`noun`-tree`noun` of @, vegetable`noun` bush`noun`, vegetable`noun` tree`noun`, vegetable`noun`-leaf`noun` tree`noun`</li>
-     *     <li>fruit`term` : @'s color`adj` fruit`noun`, @'s flavor`adj` fruit`noun`, @'s fruit`noun`, color`adj` fruit`noun`, color`adj` fruit`noun` of @, color`adj` fruit`noun`-fruit`noun`, flavor`adj` fruit`noun`, flavor`adj` fruit`noun` of @, flavor`adj` fruit`noun`-fruit`noun`, fruit`noun` of @, shape`adj` fruit`noun`, shape`adj` fruit`noun`-fruit`noun`</li>
+     *     <li>plant`term` : @'s bush`noun`, @'s bush`noun`-bush`noun`, @'s bush`noun`-tree`noun`, @'s color`adj`	leaf`noun`, @'s color`adj` flower`noun`, @'s color`adj` tree`noun`, @'s flower`noun`, @'s flower`noun`-bush`noun`, @'s ground`noun`	leaf`noun`, @'s sensory`adj`-leaf`noun`, @'s shape`adj` bush`noun`, @'s shape`adj` flower`noun`, @'s tree`noun`, @'s tree`noun`-bush`noun`, @'s tree`noun`-tree`noun`, bush`noun` of @, bush`noun`-bush`noun`, bush`noun`-bush`noun` of @, bush`noun`-tree`noun`, bush`noun`-tree`noun` of @, color`adj`	leaf`noun` bush`noun`, color`adj`	leaf`noun` tree`noun`, color`adj` bush`noun`, color`adj` flower`noun`, color`adj` flower`noun` of @, color`adj` fruit`noun` tree`noun`, color`adj` nut`noun` tree`noun`, color`adj` tree`noun`, color`adj`-leaf`noun` bush`noun`, color`adj`-leaf`noun` flower`noun`, color`adj`-leaf`noun` tree`noun`, color`adj`-vegetable`noun` tree`noun`, flavor`adj` fruit`noun` tree`noun`, flavor`adj` nut`noun` tree`noun`, flavor`noun`	leaf`noun` tree`noun`, flower`noun` of @, flower`noun`-bush`noun`, flower`noun`-bush`noun` of @, fruit`noun` bush`noun`, fruit`noun` tree`noun`, ground`noun`	flower`noun`, ground`noun`	leaf`noun`, ground`noun`	leaf`noun` of @, ground`noun`	vegetable`noun`, leaf`noun` of @, nut`noun` bush`noun`, nut`noun` tree`noun`, sensory`adj` bush`noun`, sensory`adj` bush`noun`-bush`noun`, sensory`adj` bush`noun`-tree`noun`, sensory`adj` flower`noun` of @, sensory`adj` flower`noun`-bush`noun`, sensory`adj` flower`noun`-flower`noun`, sensory`adj` tree`noun`, sensory`adj` tree`noun` of @, sensory`adj` tree`noun`-bush`noun`, sensory`adj` tree`noun`-tree`noun`, sensory`adj`-leaf`noun` bush`noun`, sensory`adj`-leaf`noun` flower`noun`, sensory`adj`-leaf`noun` of @, sensory`adj`-leaf`noun` tree`noun`, shape`adj` bush`noun` of @, shape`adj` flower`noun`, shape`adj`-fruit`noun` tree`noun`, shape`adj`-leaf`noun` flower`noun`, shape`adj`-leaf`noun` tree`noun`, shape`adj`-vegetable`noun` tree`noun`, tree`noun`-bush`noun`, tree`noun`-bush`noun` of @, tree`noun`-tree`noun`, tree`noun`-tree`noun` of @, vegetable`noun` bush`noun`, vegetable`noun` tree`noun`, vegetable`noun`-leaf`noun` tree`noun`</li>
+     *     <li>fruit`term` : @'s color`adj` fruit`noun`, @'s flavor`adj` fruit`noun`, @'s fruit`noun`, @'s sensory`adj` fruit`noun`, @'s shape`adj` fruit`noun`, color`adj` fruit`noun`, color`adj` fruit`noun` of @, color`adj` fruit`noun`-fruit`noun`, flavor`adj` fruit`noun`, flavor`adj` fruit`noun` of @, flavor`adj` fruit`noun`-fruit`noun`, fruit`noun` of @, nut`noun`-fruit`noun`, sensory`adj` fruit`noun`, sensory`adj` fruit`noun` of @, sensory`adj` fruit`noun`-fruit`noun`, shape`adj` fruit`noun`, shape`adj` fruit`noun` of @, shape`adj` fruit`noun`-fruit`noun`, vegetable`noun`-fruit`noun`</li>
      *     <li>nut`term` : @'s color`adj` nut`noun`, @'s flavor`adj` nut`noun`, @'s nut`noun`, color`adj` nut`noun`, color`adj` nut`noun` of @, flavor`adj` nut`noun`, nut`noun` of @, sensory`adj` nut`noun`</li>
-     *     <li>vegetable`term` : @'s color`adj` vegetable`noun`, @'s flavor`adj` vegetable`noun`, @'s vegetable`noun`, @'s vegetable`noun`-vegetable`noun`, color`adj` sensory`adj` vegetable`noun`, color`adj` vegetable`noun`, color`adj` vegetable`noun` of @, color`adj` vegetable`noun`-vegetable`noun`, flavor`adj` vegetable`noun`, flavor`adj` vegetable`noun`-vegetable`noun`, sensory`adj` shape`adj` vegetable`noun`, sensory`adj` vegetable`noun`, sensory`adj` vegetable`noun`-vegetable`noun`, shape`adj` color`adj` vegetable`noun`, shape`adj` vegetable`noun`, shape`adj` vegetable`noun`-vegetable`noun`, vegetable`noun` of @</li>
-     *     <li>flower`term` : @'s color`adj` flower`noun`, @'s flower`noun`, @'s shape`adj` flower`noun`, color`adj` flower`noun`, color`adj` flower`noun` of @, color`adj`-leaf`noun` flower`noun`, flower`noun` of @, ground`noun`\tflower`noun`, sensory`adj` flower`noun` of @, sensory`adj` flower`noun`-flower`noun`, sensory`adj`-leaf`noun` flower`noun`, shape`adj` flower`noun`, shape`adj`-leaf`noun` flower`noun`</li>
+     *     <li>vegetable`term` : @'s color`adj` vegetable`noun`, @'s flavor`adj` vegetable`noun`, @'s ground`noun`-vegetable`noun`, @'s vegetable`noun`, @'s vegetable`noun`-vegetable`noun`, color`adj` ground`noun`-vegetable`noun`, color`adj` sensory`adj` vegetable`noun`, color`adj` vegetable`noun`, color`adj` vegetable`noun` of @, color`adj` vegetable`noun`-vegetable`noun`, flavor`adj` ground`noun`-vegetable`noun`, flavor`adj` vegetable`noun`, flavor`adj` vegetable`noun`-vegetable`noun`, ground`noun`-vegetable`noun`, sensory`adj` ground`noun`-vegetable`noun`, sensory`adj` shape`adj` vegetable`noun`, sensory`adj` vegetable`noun`, sensory`adj` vegetable`noun`-vegetable`noun`, shape`adj` color`adj` vegetable`noun`, shape`adj` ground`noun`-vegetable`noun`, shape`adj` vegetable`noun`, shape`adj` vegetable`noun`-vegetable`noun`, vegetable`noun` of @</li>
+     *     <li>flower`term` : @'s color`adj` flower`noun`, @'s flower`noun`, @'s shape`adj` flower`noun`, color`adj` flower`noun`, color`adj` flower`noun` of @, color`adj`-leaf`noun` flower`noun`, flower`noun` of @, ground`noun`	flower`noun`, sensory`adj` flower`noun` of @, sensory`adj` flower`noun`-flower`noun`, sensory`adj`-leaf`noun` flower`noun`, shape`adj` flower`noun`, shape`adj`-leaf`noun` flower`noun`</li>
      *     <li>potion`term` : a bottle`adj` bottle`noun` containing a few drops of a color`adj` liquid`noun`, a bottle`adj` bottle`noun` filled with a color`adj` liquid`noun`, a bottle`adj` bottle`noun` filled with a liquid`adj` color`adj` liquid`noun`, a bottle`adj` bottle`noun` half-filled with a liquid`adj` color`adj` liquid`noun`, a calabash`noun` filled with a color`adj` liquid`noun`</li>
      * </ul>
      * Capitalizing the first letter in the keyword where it appears in text you call process() on will capitalize the
@@ -1329,17 +1333,25 @@ public class Thesaurus {
     );
     private static final ObjectList<String> fruitTerms = with(
             "fruit`noun` of @",
-            "color`adj` fruit`noun` of @",
             "flavor`adj` fruit`noun` of @",
+            "color`adj` fruit`noun` of @",
+            "shape`adj` fruit`noun` of @",
+            "sensory`adj` fruit`noun` of @",
             "@'s fruit`noun`",
             "@'s flavor`adj` fruit`noun`",
             "@'s color`adj` fruit`noun`",
+            "@'s shape`adj` fruit`noun`",
+            "@'s sensory`adj` fruit`noun`",
             "flavor`adj` fruit`noun`",
             "color`adj` fruit`noun`",
             "shape`adj` fruit`noun`",
+            "sensory`adj` fruit`noun`",
             "flavor`adj` fruit`noun`-fruit`noun`",
             "color`adj` fruit`noun`-fruit`noun`",
-            "shape`adj` fruit`noun`-fruit`noun`"
+            "shape`adj` fruit`noun`-fruit`noun`",
+            "sensory`adj` fruit`noun`-fruit`noun`",
+            "vegetable`noun`-fruit`noun`",
+            "nut`noun`-fruit`noun`"
     );
     private static final ObjectList<String> nutTerms = with(
             "nut`noun` of @",
@@ -1368,7 +1380,13 @@ public class Thesaurus {
             "flavor`adj` vegetable`noun`-vegetable`noun`",
             "color`adj` vegetable`noun`-vegetable`noun`",
             "sensory`adj` vegetable`noun`-vegetable`noun`",
-            "shape`adj` vegetable`noun`-vegetable`noun`"
+            "shape`adj` vegetable`noun`-vegetable`noun`",
+            "ground`noun`-vegetable`noun`",
+            "@'s ground`noun`-vegetable`noun`",
+            "shape`adj` ground`noun`-vegetable`noun`",
+            "sensory`adj` ground`noun`-vegetable`noun`",
+            "color`adj` ground`noun`-vegetable`noun`",
+            "flavor`adj` ground`noun`-vegetable`noun`"
     );
     private static final ObjectList<String> flowerTerms = with(
             "flower`noun` of @",
@@ -1392,7 +1410,7 @@ public class Thesaurus {
             "a bottle`adj` bottle`noun` half-filled with a liquid`adj` color`adj` liquid`noun`",
             "a bottle`adj` bottle`noun` containing a few drops of a color`adj` liquid`noun`"
         );
-    public static final CaseInsensitiveOrderedMap<ObjectList<String>> categories = CaseInsensitiveOrderedMap.with(
+    public static final CaseInsensitiveOrderedMap<ObjectList<String>> categories = CaseInsensitiveOrderedMap.<ObjectList<String>>with(
             "calm`adj`",
             with("harmonious", "peaceful", "pleasant", "serene", "placid", "tranquil", "calm"),
             "calm`noun`",
@@ -1573,6 +1591,10 @@ public class Thesaurus {
             with("clear glass", "smoky glass", "green glass", "brown glass", "fluted crystal", "tarnished silver", "dull pewter", "shining silver", "curvaceous glass", "rough-cut glass", "sharp-edged tin"),
             "calabash`noun`",
             with("hollow gourd", "calabash", "milk carton", "waterskin", "wineskin"),
+            "lotion`noun`",
+            with("lotion", "balm", "ointment", "oil", "poultice", "cream"),
+            "lotion`adj`",
+            with("greasy", "herbal", "runny", "slimy", "sticky", "soothing", "lumpy", "pleasant", "stinking", "reeking"),
             "smart`adj`",
             with("brilliant", "smart", "genius", "wise", "clever", "cunning", "mindful", "aware"),
             "smart`noun`",
@@ -1602,7 +1624,9 @@ public class Thesaurus {
             "explorer`nouns`",
             with("explorers", "pathfinders", "seekers", "questants", "wanderers", "nomads"),
             "rage`noun`",
-            with("rage", "fury", "anger", "wrath", "frenzy", "vengeance"),
+            with("rage", "fury", "anger", "wrath", "frenzy", "vengeance", "rancor"),
+            "rage`adj`",
+            with("raging", "furious", "angry", "wrathful", "frenzied", "vengeful", "rancorous"),
             "ominous`adj`",
             with("ominous", "foreboding", "fateful", "baleful", "portentous"),
             "infinite`adj`",
@@ -1613,6 +1637,8 @@ public class Thesaurus {
             with("eye", "gaze", "stare", "observation", "purveyance", "watch"),
             "pain`noun`",
             with("pain", "agony", "misery", "excruciation", "torture"),
+            "pain`adj`",
+            with("painful", "agonizing", "miserable", "excruciating", "tortuous"),
             "god`noun`",
             with("god", "deity", "ruler", "king", "father", "lord", "lordship"),
             "goddess`noun`",
@@ -1637,12 +1663,12 @@ public class Thesaurus {
             with("power", "force", "potency", "strength", "authority", "dominance"),
             "power`adj`",
             with("powerful", "forceful", "potent", "strong", "authoritative", "dominant"),
-            "plant`term`",     plantTerms,
-            "fruit`term`",     fruitTerms,
-            "nut`term`",       nutTerms,
+            "plant`term`", plantTerms,
+            "fruit`term`", fruitTerms,
+            "nut`term`", nutTerms,
             "vegetable`term`", vegetableTerms,
-            "flower`term`",    flowerTerms,
-            "potion`term`",    potionTerms
+            "flower`term`", flowerTerms,
+            "potion`term`", potionTerms
     );
     public static final CaseInsensitiveOrderedMap<ObjectList<String>>
             adjective = new CaseInsensitiveOrderedMap<>(categories),
