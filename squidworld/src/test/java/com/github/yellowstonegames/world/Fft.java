@@ -22,6 +22,8 @@
  */
 package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.BitConversion;
+
 import java.util.Arrays;
 
 public final class Fft {
@@ -85,7 +87,7 @@ public final class Fft {
 		int n = real.length;
 		if (n != imag.length)
 			throw new IllegalArgumentException("Mismatched lengths");
-		int levels = 31 - Integer.numberOfLeadingZeros(n);  // Equal to floor(log2(n))
+		int levels = 31 - BitConversion.countLeadingZeros(n);  // Equal to floor(log2(n))
 		if (1 << levels != n)
 			throw new IllegalArgumentException("Length is not a power of 2");
 		loadTables(n);

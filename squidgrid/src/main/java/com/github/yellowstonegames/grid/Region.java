@@ -1548,7 +1548,7 @@ public class Region implements Collection<Coord> {
                 }
             }
             else {
-                int shift = Long.numberOfLeadingZeros(yEndMask);
+                int shift = BitConversion.countLeadingZeros(yEndMask);
                 if (ySections == 1) {
                     for (int x = 0; x < width; x++) {
                         data[x] = Long.reverse(data[x]) >>> shift;
@@ -5169,7 +5169,7 @@ public class Region implements Collection<Coord> {
 
     private static float atVDCSequence(int idx)
     {
-        int leading = Integer.numberOfLeadingZeros(idx);
+        int leading = BitConversion.countLeadingZeros(idx);
         return (Integer.reverse(idx) >>> leading) / (1.0 * (1 << (32 - leading)));
     }
     */
@@ -5288,7 +5288,7 @@ public class Region implements Collection<Coord> {
         for (int x = width - 1; x >= 0; x--) {
             for (int s = ySections - 1; s >= 0; s--) {
                 if ((w = (data[x * ySections + s])) != 0) {
-                    return Coord.get(x, (s << 6) | 63 - Long.numberOfLeadingZeros(w));
+                    return Coord.get(x, (s << 6) | 63 - BitConversion.countLeadingZeros(w));
                 }
             }
         }
@@ -5301,7 +5301,7 @@ public class Region implements Collection<Coord> {
         for (int x = width - 1; x >= 0; x--) {
             for (int s = ySections - 1; s >= 0; s--) {
                 if ((w = (data[x * ySections + s])) != 0) {
-                    return ((s << 6) | 63 - Long.numberOfLeadingZeros(w)) * width + x;
+                    return ((s << 6) | 63 - BitConversion.countLeadingZeros(w)) * width + x;
                 }
             }
         }
@@ -6419,7 +6419,7 @@ public class Region implements Collection<Coord> {
                     t |= data[x * ySections + s];
                 }
                 if(t != 0L)
-                    return s << 6 | 63 - Long.numberOfLeadingZeros(t);
+                    return s << 6 | 63 - BitConversion.countLeadingZeros(t);
             }
             return -1;
         }

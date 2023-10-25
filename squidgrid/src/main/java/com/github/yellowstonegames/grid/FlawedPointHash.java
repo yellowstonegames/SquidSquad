@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.IFlawed;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -149,7 +150,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public void setSize(int size) {
-            this.size = 32 - Integer.numberOfLeadingZeros(max(1, size));
+            this.size = 32 - BitConversion.countLeadingZeros(max(1, size));
             mask = (1L << this.size) - 1L;
         }
 
@@ -278,7 +279,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public void setSize(int size) {
-            this.size = 32 - Integer.numberOfLeadingZeros(max(1, size));
+            this.size = 32 - BitConversion.countLeadingZeros(max(1, size));
             mask = (1L << this.size) - 1L;
         }
 
@@ -435,7 +436,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
         }
 
         public void setSize(int size) {
-            this.size = 32 - Integer.numberOfLeadingZeros(max(1, size));
+            this.size = 32 - BitConversion.countLeadingZeros(max(1, size));
             mask = (1L << this.size) - 1L;
         }
 

@@ -141,8 +141,8 @@ because they can change without warning and don't tell you what commit you are a
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.4.0
+  - `digitalVersion`=0.4.1
   - `funderbyVersion`=0.1.1
-  - `jdkgdxdsVersion`=1.4.1
-  - `juniperVersion`=0.3.8
+  - `jdkgdxdsVersion`=1.4.2
+  - `juniperVersion`=0.4.0
   - `regExodusVersion`=0.1.15
