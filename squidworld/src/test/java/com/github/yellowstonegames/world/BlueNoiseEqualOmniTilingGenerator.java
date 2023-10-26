@@ -23,6 +23,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.PouchRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
@@ -81,7 +82,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = false;
+    private static final boolean isTriangular = true;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
@@ -99,6 +100,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int sector = size >>> sectorShift;
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
+    private static final int sectorExponent = Integer.numberOfTrailingZeros(~sectorMask);
 //    private static final int wrapMask = sector >>> 3;
 //    private static final int wrapMask = sector * 5 >>> 5;
 //    private static final int wrapMask = sector * 13 >>> 5;
@@ -196,17 +198,18 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 
     public static int vdc(final int base, int index)
     {
-        if(base <= 2) {
-            return (Integer.reverse(index) >>> 32 - shift + sectorShift);
-        }
-        double denominator = base, res = 0.0;
-        while (index > 0)
-        {
-            res += (index % base) / denominator;
-            index /= base;
-            denominator *= base;
-        }
-        return (int) (res * sector);
+        return (int)(MathTools.GOLDEN_LONGS[base & 1023] * index >>> -sectorExponent);
+//        if(base <= 2) {
+//            return (Integer.reverse(index) >>> 32 - shift + sectorShift);
+//        }
+//        double denominator = base, res = 0.0;
+//        while (index > 0)
+//        {
+//            res += (index % base) / denominator;
+//            index /= base;
+//            denominator *= base;
+//        }
+//        return (int) (res * sector);
     }
 
     public void generate()
@@ -300,7 +303,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 
         String name = path + "BlueNoise" + (isTriangular ? "TriOmni" : "Omni") + "Tiling";
         try {
-            writer.write(Gdx.files.local(name + sectors + "x" + sectors + ".png"), pm);
+            writer.write(Gdx.files.local(name + size + "x" + size + ".png"), pm);
             for (int y = 0; y < sectors; y++) {
                 for (int x = 0; x < sectors; x++) {
                     pmSection.drawPixmap(pm, x * sector, y * sector, sector, sector, 0, 0, sector, sector);

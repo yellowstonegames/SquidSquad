@@ -185,7 +185,9 @@ public class FFTVisualizer extends ApplicationAdapter {
         noise.setPointHash(pointHashes[hashIndex]);
 //        Pixmap pm = new Pixmap(Gdx.files.internal("special/BlueNoise512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("special/BlueNoiseTri256x256.png"));
-        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling4x4.png"));
+//        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling8x8.png"));
+//        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling128x128.png"));
+        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling128x128.png"));
 //        pm = new Pixmap(Gdx.files.local("out/blueNoise/BlueNoiseOmniTiling8x8.png"));
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
