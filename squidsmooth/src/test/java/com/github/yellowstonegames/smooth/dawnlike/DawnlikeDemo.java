@@ -127,13 +127,21 @@ public class DawnlikeDemo extends ApplicationAdapter {
      */
     private Region seen;
     /**
-     * All cells we just became able to see on this turn or short period of time.
+     * All cells we just became able to see on this turn or short period of time. These cells will be fading in
+     * from either the {@link #seen} color, if they had been previously seen, or fully-transparent, if a cell is
+     * also in {@link #newlyVisible}.
      */
     private Region justSeen;
     /**
-     * All cells we were able to see, but just became hidden on this turn or short period of time.
+     * All cells we were able to see, but just became hidden on this turn or short period of time. These cells will
+     * be fading out to the color used for {@link #seen} cells.
      */
     private Region justHidden;
+    /**
+     * All cells that became visible for the first time on this turn or short period of time. These cells
+     * will be fading in from fully-transparent, rather than from a previously-seen gray color.
+     */
+    private Region newlyVisible;
     /**
      * Contains only the cells that have a value greater than 0 in {@link #lightLevels}.
      */
@@ -333,6 +341,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         inView = inView == null ? seen.copy() : inView.remake(seen);
         justSeen = justSeen == null ? seen.copy() : justSeen.remake(seen);
         justHidden = justHidden == null ? new Region(dungeonWidth, dungeonHeight) : justHidden.resizeAndEmpty(dungeonWidth, dungeonHeight);
+        newlyVisible = newlyVisible == null ? seen.copy() : newlyVisible.remake(seen);
         // Here is one of those methods on a Region; fringe8way takes a Region (here, the set of cells
         // that are visible to the player), and modifies it to contain only cells that were not in the last step, but
         // were adjacent to a cell that was present in the last step. This can be visualized as taking the area just
@@ -577,17 +586,19 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lightLevels, 0f);
-                // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
-                justSeen.remake(seen);
+                // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
+                justSeen.remake(justHidden);
                 // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
                 inView.remake(blockage.not());
+                // stores cells that are currently visible but had never been seen at all (transparent) in earlier frames.
+                newlyVisible.remake(inView).andNot(seen);
                 // then, seen has all of those cells that have been visible (ever) included in with its cells.
                 seen.or(inView);
-                // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
-                justSeen.notAnd(seen);
-                // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+                // this is roughly `justSeen = inView - justSeen;`, if subtraction worked on Regions.
+                justSeen.notAnd(inView);
+                // this is roughly `justHidden = justHidden - inView;`, where justHidden had included all previously visible
                 // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
-                justHidden.andNot(blockage);
+                justHidden.andNot(inView);
                 // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
                 // adjacent to those cells.
                 blockage.fringe8way();
@@ -604,17 +615,19 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 FOV.reuseFOV(resistance, lightLevels, newX, newY, fovRange, Radius.CIRCLE);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lightLevels, 0f);
-                // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
-                justSeen.remake(seen);
+                // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
+                justSeen.remake(justHidden);
                 // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
                 inView.remake(blockage.not());
+                // stores cells that are currently visible but had never been seen at all (transparent) in earlier frames.
+                newlyVisible.remake(inView).andNot(seen);
                 // then, seen has all of those cells that have been visible (ever) included in with its cells.
                 seen.or(inView);
-                // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
-                justSeen.notAnd(seen);
-                // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+                // this is roughly `justSeen = inView - justSeen;`, if subtraction worked on Regions.
+                justSeen.notAnd(inView);
+                // this is roughly `justHidden = justHidden - inView;`, where justHidden had included all previously visible
                 // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
-                justHidden.andNot(blockage);
+                justHidden.andNot(inView);
                 // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
                 // adjacent to those cells.
                 blockage.fringe8way();
@@ -714,15 +727,18 @@ public class DawnlikeDemo extends ApplicationAdapter {
         for (int i = 0; i < dungeonWidth; i++) {
             for (int j = 0; j < dungeonHeight; j++) {
                 if(lightLevels[i][j] > 0.01) {
-                    if(justSeen.contains(i, j)){
+                    if(newlyVisible.contains(i, j)){
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.fade(
                                         toCursor.contains(Coord.get(i, j))
                                                 ? rainbow
                                                 : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
-                    }
-                    else {
+                    } else if(justSeen.contains(i, j)){
+                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
+                                DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)),
+                                        DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), 1f - change)));
+                    } else {
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(toCursor.contains(Coord.get(i, j))
                                 ? rainbow
                                 : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
@@ -751,11 +767,12 @@ public class DawnlikeDemo extends ApplicationAdapter {
         AnimatedGlidingSprite monster;
         for (int i = 0; i < dungeonWidth; i++) {
             for (int j = 0; j < dungeonHeight; j++) {
-                if (lightLevels[i][j] > 0.0) {
+                if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         // like with scenery, monsters fade in when just seen in the last frame.
-                        if(justSeen.contains(i, j))
+                        if(justSeen.contains(i, j)) {
                             monster.animate(time).draw(batch, change);
+                        }
                         else monster.animate(time).draw(batch);
                     }
                 }
