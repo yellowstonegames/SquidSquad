@@ -23,6 +23,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.github.tommyettinger.random.PouchRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -30,6 +31,7 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
+import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.io.IOException;
@@ -99,32 +101,34 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int sectorMask = sector - 1;
 //    private static final int wrapMask = sector >>> 3;
 //    private static final int wrapMask = sector * 5 >>> 5;
-    private static final int wrapMask = sector * 13 >>> 5;
+//    private static final int wrapMask = sector * 13 >>> 5;
+    private static final int wrapMask = sector >>> 1;
     private static final float fraction = 1f / (totalSectors * 2f);
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
-    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(sizeSq, 0.5f)
-    { // OK, we're making an anonymous subclass of ObjectFloatOrderedMap so its hashing function is faster.
-      // It may also make it collide less, but the computation is much simpler here than the default.
-      // This makes a roughly 3x difference in runtime. (!)
-        @Override
-        protected int place(@NonNull Object item) {
-            final int x = ((Coord)item).x, y = ((Coord)item).y;
-            // Cantor pairing function
-            return y + ((x + y) * (x + y + 1) >> 1) & mask;
-        }
-
-        @Override
-        protected boolean equate(@NonNull Object left, @Nullable Object right) {
-            return left == right;
-        }
-    };
+    private final CoordFloatOrderedMap energy = new CoordFloatOrderedMap(sizeSq, 0.5f);
+//    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(sizeSq, 0.5f)
+//    { // OK, we're making an anonymous subclass of ObjectFloatOrderedMap so its hashing function is faster.
+//      // It may also make it collide less, but the computation is much simpler here than the default.
+//      // This makes a roughly 3x difference in runtime. (!)
+//        @Override
+//        protected int place(@NonNull Object item) {
+//            final int x = ((Coord)item).x, y = ((Coord)item).y;
+//            // Cantor pairing function
+//            return y + ((x + y) * (x + y + 1) >> 1) & mask;
+//        }
+//
+//        @Override
+//        protected boolean equate(@NonNull Object left, @Nullable Object right) {
+//            return left == right;
+//        }
+//    };
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
-    private Pixmap pm;
-    private WhiskerRandom rng;
+    private Pixmap pm, pmSection;
+    private PouchRandom rng;
     private PixmapIO.PNG writer;
     private String path;
     private final int[] lightCounts = new int[sectors * sectors];
@@ -132,18 +136,20 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     @Override
     public void create() {
         Coord.expandPoolTo(size, size);
-        String date = DateFormat.getDateInstance().format(new Date());
+        String date = DateFormat.getDateInstance().format(new Date()) + "_" + System.currentTimeMillis();
         path = "out/blueNoise/" + date + "/tiling/";
         
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
         pm = new Pixmap(size, size, Pixmap.Format.RGBA8888);
         pm.setBlending(Pixmap.Blending.None);
+        pmSection = new Pixmap(sector, sector, Pixmap.Format.RGBA8888);
+        pm.setBlending(Pixmap.Blending.None);
 
         writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new WhiskerRandom(Hasher.hash64(1L, date));
+        rng = new PouchRandom(Hasher.hash64(1L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];
@@ -278,7 +284,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //                    r = (r - Math.signum(orig)) * 127.5f + 127.5f;
                     // new tri map
                     r = ((r > 0.5f) ? 1f - (float)Math.sqrt(2f - 2f * r) : (float)Math.sqrt(2f * r) - 1f) * 127.5f + 127.5f;
-                    buffer.putInt(((int)(r + 0.5f) & 0xFF) * 0x01010100 | 0xFF);
+                    buffer.putInt(((int)(r) & 0xFF) * 0x01010100 | 0xFF);
                 }
             }
         }
@@ -292,11 +298,17 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
         buffer.flip();
 
-        String name = path + "BlueNoise" + (isTriangular ? "TriOmni" : "Omni") + "Tiling" + sectors + "x" + sectors + ".png";
+        String name = path + "BlueNoise" + (isTriangular ? "TriOmni" : "Omni") + "Tiling";
         try {
-            writer.write(Gdx.files.local(name), pm); // , false);
+            writer.write(Gdx.files.local(name + sectors + "x" + sectors + ".png"), pm);
+            for (int y = 0; y < sectors; y++) {
+                for (int x = 0; x < sectors; x++) {
+                    pmSection.drawPixmap(pm, x * sector, y * sector, sector, sector, 0, 0, sector, sector);
+                    writer.write(Gdx.files.local(name + "_" + x + "x" + y + ".png"), pmSection);
+                }
+            }
         } catch (IOException ex) {
-            throw new GdxRuntimeException("Error writing PNG: " + name, ex);
+            throw new GdxRuntimeException("Error writing PNG: " + (name + sectors + "x" + sectors + ".png"), ex);
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");
@@ -308,6 +320,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     @Override
     public void dispose() {
         super.dispose();
+        pm.dispose();
+        pmSection.dispose();
         writer.dispose();
     }
 
