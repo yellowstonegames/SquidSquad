@@ -42,6 +42,7 @@ import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.ChopRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.FullPalette;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
@@ -87,11 +88,11 @@ public class VisionDawnDemo extends ApplicationAdapter {
      */
     private float[][] resistance;
     /**
-     * The fraction of how lit a cell is currently, with 1.0 fully lit and 0.0 pitch-black.
+     * Handles all light sources, with varying colors, strengths, and flicker/strobe patterns.
      */
-    private float[][] lightLevels;
+    private LightingManager lighting;
     /**
-     * The value that {@link #lightLevels} held in the previous turn or short period of time.
+     * The value that {@link LightingManager#fovResult} held in the previous turn or short period of time.
      */
     private float[][] previousLightLevels;
     /**
@@ -143,7 +144,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
      */
     private Region newlyVisible;
     /**
-     * Contains only the cells that have a value greater than 0 in {@link #lightLevels}.
+     * Contains only the cells that have a value greater than 0 in {@link LightingManager#fovResult}.
      */
     public Region inView;
 
@@ -287,8 +288,6 @@ public class VisionDawnDemo extends ApplicationAdapter {
         bareDungeon = dungeonGen.getBarePlaceGrid();
 
         resistance = FOV.generateSimpleResistances(lineDungeon);
-        lightLevels = new float[dungeonWidth][dungeonHeight];
-        previousLightLevels = new float[dungeonWidth][dungeonHeight];
 
         prunedDungeon = ArrayTools.copy(lineDungeon);
         // here, we need to get a random floor cell to place the player upon, without the possibility of putting him
@@ -324,20 +323,16 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 atlas.findRegions(rng.randomElement(Data.possibleCharacters)), Animation.PlayMode.LOOP), player);
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
-        // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
-        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        // Make a LightingManager that uses our map's resistance and has a large FOV range for the player.
+        lighting = new LightingManager(resistance, INT_GRAY, Radius.CIRCLE, fovRange * 0.5f);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
-        ArrayTools.set(lightLevels, previousLightLevels);
-        // 0.0 is the upper bound (inclusive), so any Coord in visible that is more well-lit than 0.0 will _not_ be in
-        // the blockage Collection, but anything 0.0 or less will be in it. This lets us use blockage to prevent access
-        // to cells we can't see from the start of the move.
-        blockage = blockage == null ? new Region(lightLevels, 0f) : blockage.refill(lightLevels, 0f);
-        // Here we mark the initially seen cells as anything that wasn't included in the unseen "blocked" region.
-        // We invert the copy's contents to prepare for a later step, which makes blockage contain only the cells that
-        // are above 0.0, then copy it to save this step as the seen cells. We will modify seen later independently of
-        // the blocked cells, so a copy is correct here. Most methods on Region objects will modify the
-        // Region they are called on, which can greatly help efficiency on long chains of operations.
-        seen = seen == null ? blockage.not().copy() : seen.remake(blockage.not());
+        previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
+
+        lighting.addLight(player, new Radiance(fovRange, FullPalette.COSMIC_LATTE, 0.3f, 0f));
+        lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
+        inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
+        seen = seen == null ? inView.copy() : seen.remake(inView);
+        blockage = blockage == null ? new Region(seen).not() : blockage.remake(seen).not();
         inView = inView == null ? seen.copy() : inView.remake(seen);
         justSeen = justSeen == null ? seen.copy() : justSeen.remake(seen);
         justHidden = justHidden == null ? new Region(dungeonWidth, dungeonHeight) : justHidden.resizeAndEmpty(dungeonWidth, dungeonHeight);
@@ -579,13 +574,13 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
                 // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
                 // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
-                ArrayTools.set(lightLevels, previousLightLevels);
+                ArrayTools.set(lighting.fovResult, previousLightLevels);
                 // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
                 // recalculate FOV, store it in lightLevels for the render to use.
-                FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+                lighting.calculateFOV(next.x, next.y, next.x - 10, next.y - 10, next.x + 11, next.y + 11);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
-                blockage.refill(lightLevels, 0f);
+                blockage.refill(lighting.fovResult, 0f);
                 // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
                 justSeen.remake(justHidden);
                 // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
@@ -606,15 +601,16 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
                 LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
             } else {
+                lighting.moveLight(player, next);
                 // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
                 // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
-                ArrayTools.set(lightLevels, previousLightLevels);
+                ArrayTools.set(lighting.fovResult, previousLightLevels);
                 // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
                 // recalculate FOV, store it in lightLevels for the render to use.
-                FOV.reuseFOV(resistance, lightLevels, newX, newY, fovRange, Radius.CIRCLE);
+                lighting.calculateFOV(next.x, next.y, next.x - 10, next.y - 10, next.x + 11, next.y + 11);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
-                blockage.refill(lightLevels, 0f);
+                blockage.refill(lighting.fovResult, 0f);
                 // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
                 justSeen.remake(justHidden);
                 // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
@@ -664,6 +660,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
         playerArray[0] = player;
         int monCount = monsters.size();
         // handle monster turns
+        float[][] lightLevels = lighting.fovResult;
         for(int ci = 0; ci < monCount; ci++) {
             Coord pos = monsters.keyAt(ci);
             AnimatedGlidingSprite mon = monsters.getAt(ci);
@@ -724,6 +721,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
         int rainbow = DescriptiveColor.maximizeSaturation(160,
                 (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
+
+        float[][] lightLevels = lighting.fovResult;
+
         for (int i = 0; i < dungeonWidth; i++) {
             for (int j = 0; j < dungeonHeight; j++) {
                 if(lightLevels[i][j] > 0.01) {
@@ -769,7 +769,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
             for (int j = 0; j < dungeonHeight; j++) {
                 if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
-                        // like with scenery, monsters fade in when first seen in the last frame.
+                        // like with scenery, monsters fade in when just seen in the last frame.
                         if(justSeen.contains(i, j)) {
                             monster.animate(time).draw(batch, change);
                         }
@@ -925,7 +925,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 if(player.x == x && player.y == y)
                     System.out.print('@');
                 else
-                    System.out.print(lightLevels[x][y] > 0f ? '+' : '_');
+                    System.out.print(lighting.fovResult[x][y] > 0f ? '+' : '_');
             }
             System.out.println();
         }
@@ -941,7 +941,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
         configuration.useVsync(true);
         //// this matches the maximum foreground FPS to the refresh rate of the active monitor.
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);
-        configuration.setTitle("SquidSquad Dawnlike Demo");
+        configuration.setTitle("SquidSquad Vision Demo");
         //// useful to know if something's wrong in a shader.
         //// you should remove the next line for a release.
 //        configuration.enableGLDebugOutput(true, System.out);
