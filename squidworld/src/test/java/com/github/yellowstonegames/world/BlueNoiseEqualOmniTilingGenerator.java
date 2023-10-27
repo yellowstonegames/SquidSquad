@@ -87,7 +87,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 9;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
