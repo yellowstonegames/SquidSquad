@@ -91,7 +91,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int size = 1 << shift;
     private static final int sizeSq = size * size;
