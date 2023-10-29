@@ -19,6 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import java.util.Arrays;
@@ -78,6 +79,10 @@ public class LightingManager {
      * methods and used in {@link #mixColoredLighting(float)} and {@link #draw(int[][])}.
      */
     public float[][] lightingStrength;
+    /**
+     * A temporary work-area variable used to add up or combine multiple float[][] variables.
+     */
+    private float[][] floatCombining;
     /**
      * A 2D array that stores the color of light in each cell, as a packed Oklab int color. This 2D array is the size of
      * the map, as defined by {@link #resistances} initially and later available in {@link #width} and {@link #height}.
@@ -179,6 +184,7 @@ public class LightingManager {
         losResult = new float[width][height];
         colorLighting = ArrayTools.fill(DescriptiveColor.WHITE, width, height);
         lightingStrength = new float[width][height];
+        floatCombining = new float[width][height];
         fovLightColors = new int[width][height];
         Coord.expandPoolTo(width, height);
         lights = new CoordObjectOrderedMap<>(32);
@@ -658,6 +664,73 @@ public class LightingManager {
                 maxRange = range;
         }
         FOV.reuseLOS(resistances, losResult, viewerX, viewerY, minX, minY, maxX, maxY);
+        noticeable.refill(losResult, 0.0001f, Float.POSITIVE_INFINITY).expand8way((int) Math.ceil(maxRange));
+        for (int i = 0; i < sz; i++) {
+            pos = lights.keyAt(i);
+            if(!noticeable.contains(pos))
+                continue;
+            radiance = lights.getAt(i);
+            if(radiance == null) continue;
+            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            mixColoredLighting(radiance.flare, radiance.color);
+        }
+        for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
+            for (int y = Math.max(0, minY); y < maxY && y < height; y++) {
+                if (losResult[x][y] > 0.0f) {
+                    fovResult[x][y] = Math.min(Math.max(fovResult[x][y] + lightingStrength[x][y], 0), 1);
+                }
+            }
+        }
+        return fovResult;
+    }
+
+    /**
+     * Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.
+     * Runs part of the calculations to draw lighting as if all radii are at their widest, but does no actual drawing.
+     * This should be called any time the viewer moves to a different cell, and it is critical that this is called (at
+     * least) once after a move but before {@link #update()} gets called to change lighting at the new cell. This sets
+     * important information on what lights might need to be calculated during each update(Coord) call; it does not need
+     * to be called before {@link #updateAll()} (with no arguments) because that doesn't need a viewer. This overload
+     * allows the area this processes to be restricted to a rectangle between {@code minX} and {@code maxX} and between
+     * {@code minY} and {@code maxY}, ignoring any lights outside that area (typically because they are a long way out
+     * from the map's shown area). Sets {@link #fovResult}, {@link #losResult}, and {@link #noticeable} based on the
+     * given viewer position and any lights in {@link #lights}.
+     * @param viewers an ObjectFloatMap with Coord keys representing viewer positions and float values for their vision ranges; often a {@link CoordFloatOrderedMap}
+     * @param minX inclusive lower bound on x to calculate
+     * @param minY inclusive lower bound on y to calculate
+     * @param maxX exclusive upper bound on x to calculate
+     * @param maxY exclusive upper bound on y to calculate
+     * @return the calculated FOV 2D array, which is also stored in {@link #fovResult}
+     */
+    public float[][] calculateFOV(ObjectFloatMap<Coord> viewers, int minX, int minY, int maxX, int maxY)
+    {
+        Radiance radiance;
+        minX = Math.min(Math.max(minX, 0), width);
+        maxX = Math.min(Math.max(maxX, 0), width);
+        minY = Math.min(Math.max(minY, 0), height);
+        maxY = Math.min(Math.max(maxY, 0), height);
+        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
+            FOV.reuseFOVSymmetrical(resistances, floatCombining, e.key.x, e.key.y, e.value, radiusStrategy);
+            FOV.addFOVsInto(fovResult, floatCombining);
+        }
+        ArrayTools.fill(lightingStrength, 0f);
+        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
+        final int sz = lights.size();
+        float maxRange = 0, range;
+        Coord pos;
+        for (int i = 0; i < sz; i++) {
+            pos = lights.keyAt(i);
+            radiance = lights.getAt(i);
+            if(radiance == null) continue;
+            range = radiance.range;
+            if(range > maxRange &&
+                    pos.x + range >= minX && pos.x - range < maxX && pos.y + range >= minY && pos.y - range < maxY)
+                maxRange = range;
+        }
+        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
+            FOV.reuseLOS(resistances, floatCombining, e.key.x, e.key.y, minX, minY, maxX, maxY);
+            FOV.addFOVsInto(losResult, floatCombining);
+        }
         noticeable.refill(losResult, 0.0001f, Float.POSITIVE_INFINITY).expand8way((int) Math.ceil(maxRange));
         for (int i = 0; i < sz; i++) {
             pos = lights.keyAt(i);
