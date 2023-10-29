@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.INoise;
@@ -72,13 +73,15 @@ public class ToothNoise implements INoise {
     public float getNoise(float x, float y) {
         int xf = MathTools.fastFloor(x);
         int yf = MathTools.fastFloor(y);
-        float xl = MathTools.lerp(hash(xf, yf+0.5f), hash(xf+1, yf+0.5f), x - xf);
-        float yl = MathTools.lerp(hash(xf+0.5f, yf), hash(xf+0.5f, yf+1), y - yf);
-        return (xl + yl) * 0.5f;
+        x -= xf;
+        y -= yf;
+        x = x * x * (3 - 2 * x);
+        y = y * y * (3 - 2 * y);
+        return MathTools.lerp(MathTools.lerp(hash(xf, yf), hash(xf+1, yf), x), MathTools.lerp(hash(xf, yf+1f), hash(xf+1, yf+1f), x), y);
     }
 
     public float hash(float x, float y) {
-        return (int)(state ^ BitConversion.floatToIntBits(x) * GOLDEN_LONGS[1][0] ^ BitConversion.floatToIntBits(y) * GOLDEN_LONGS[1][1]) * 0x1p-31f;
+        return Hasher.randomize1(state + BitConversion.floatToIntBits(x) * GOLDEN_LONGS[1][0] ^ BitConversion.floatToIntBits(y) * GOLDEN_LONGS[1][1]) * 0x1p-63f;
     }
 
     @Override
