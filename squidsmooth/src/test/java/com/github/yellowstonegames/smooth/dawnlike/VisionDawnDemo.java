@@ -54,6 +54,7 @@ import com.github.yellowstonegames.text.Language;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
+import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
 
 public class VisionDawnDemo extends ApplicationAdapter {
     private static final float DURATION = 0.375f;
@@ -324,7 +325,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         // Make a LightingManager that uses our map's resistance and has a large FOV range for the player.
-        lighting = new LightingManager(resistance, INT_GRAY, Radius.CIRCLE, fovRange * 0.5f);
+        lighting = new LightingManager(resistance, INT_GRAY, Radius.CIRCLE, fovRange);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
 
@@ -337,14 +338,6 @@ public class VisionDawnDemo extends ApplicationAdapter {
         justSeen = justSeen == null ? seen.copy() : justSeen.remake(seen);
         justHidden = justHidden == null ? new Region(dungeonWidth, dungeonHeight) : justHidden.resizeAndEmpty(dungeonWidth, dungeonHeight);
         newlyVisible = newlyVisible == null ? seen.copy() : newlyVisible.remake(seen);
-        // Here is one of those methods on a Region; fringe8way takes a Region (here, the set of cells
-        // that are visible to the player), and modifies it to contain only cells that were not in the last step, but
-        // were adjacent to a cell that was present in the last step. This can be visualized as taking the area just
-        // beyond the border of a region, using 8-way adjacency here because we specified fringe8way instead of fringe.
-        // We do this because it means pathfinding will only have to work with a small number of cells (the area just
-        // out of sight, and no further) instead of all invisible cells when figuring out if something is currently
-        // impossible to enter.
-        blockage.fringe8way();
         LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
         floors.remove(player);
         int numMonsters = 100;
@@ -721,6 +714,13 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
         int rainbow = DescriptiveColor.maximizeSaturation(160,
                 (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
+        lighting.drawOklab(backgroundColors);
+
+        for (int i = 0; i < toCursor.size(); i++) {
+            Coord curr = toCursor.get(i);
+            if(inView.contains(curr))
+                backgroundColors[curr.x][curr.y] = rainbow;
+        }
 
         float[][] lightLevels = lighting.fovResult;
 
@@ -731,17 +731,16 @@ public class VisionDawnDemo extends ApplicationAdapter {
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.fade(
-                                        toCursor.contains(Coord.get(i, j))
-                                                ? rainbow
-                                                : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
+                                        DescriptiveColor.addColors(backgroundColors[i][j],
+                                                DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
                     } else if(justSeen.contains(i, j)){
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)),
                                         DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), 1f - change)));
                     } else {
-                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(toCursor.contains(Coord.get(i, j))
-                                ? rainbow
-                                : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
+                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
+                                DescriptiveColor.addColors(backgroundColors[i][j],
+                                        DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
                     }
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
