@@ -406,9 +406,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
         font.setUseIntegerPositions(false);
         font.getData().setScale(2f/cellWidth, 2f/cellHeight);
         font.getData().markupEnabled = true;
-        // 0xFF848350 is fully opaque, slightly-yellow-brown, and about 30% lightness.
-        // It affects the default color each cell has, and changes when there is a blood stain.
-        backgroundColors = ArrayTools.fill(0xFF828150, dungeonWidth, dungeonHeight);
+        // 0xFF848350 is fully opaque, slightly-yellow-brown, and about 12% lightness.
+        // It affects the default color each cell has.
+        backgroundColors = ArrayTools.fill(0xFF828120, dungeonWidth, dungeonHeight);
 
         Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
         Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
@@ -442,6 +442,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
         charMapping.put('┐', atlas.findRegion("lit brick wall left down"            ));
 
         charMapping.put(' ', atlas.findRegion("lit brick wall up down"            ));
+        charMapping.put('1', atlas.findRegion("red liquid drizzle"));
+        charMapping.put('2', atlas.findRegion("red liquid spatter"));
 
         //Coord is the type we use as a general 2D point, usually in a dungeon.
         //Because we know dungeons won't be incredibly huge, Coord performs best for x and y values less than 256, but
@@ -636,8 +638,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
                     monsters.remove(player);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
-                            if(rng.nextBoolean())
-                                backgroundColors[newX+x][newY+y] = INT_BLOOD;
+                            if(prunedDungeon[newX+x][newY+y] == '.' && rng.nextBoolean())
+                                prunedDungeon[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
                         }
                     }
                 }
@@ -726,6 +728,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
         for (int i = 0; i < dungeonWidth; i++) {
             for (int j = 0; j < dungeonHeight; j++) {
+                char glyph = prunedDungeon[i][j];
                 if(lightLevels[i][j] > 0.01) {
                     if(newlyVisible.contains(i, j)){
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
@@ -742,7 +745,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                                 DescriptiveColor.addColors(backgroundColors[i][j],
                                         DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
                     }
-                    if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
+                    if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(justHidden.contains(i, j)) {
@@ -750,13 +753,13 @@ public class VisionDawnDemo extends ApplicationAdapter {
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                             DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, previousLightLevels[i][j] * 0.7f + 0.15f)),
                                     DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), change)));
-                    if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
+                    if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f)));
-                    if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
+                    if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
                 }
