@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.smooth.dawnlike;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.*;
@@ -58,7 +57,6 @@ public class VisionFramework {
      * In most roguelikes, there would only need to be one of these variables at a time.
      */
     public float[][] previousLightLevels;
-    private float[][] workingLightLevels;
     /**
      * The background color tints as packed Oklab int colors, which avoid the overhead of creating new Color objects.
      * Use {@link DescriptiveColor} to get, describe, or create Oklab int colors.
@@ -143,13 +141,8 @@ public class VisionFramework {
         prunedPlaceMap = ArrayTools.copy(linePlaceMap);
         lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedOklabColor, Radius.CIRCLE, fovRange);
         previousLightLevels = new float[placeWidth][placeHeight];
-        workingLightLevels = new float[placeWidth][placeHeight];
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
-        // TODO: this needs to work with potentially multiple viewers and LightingManager.
-        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
-            FOV.reuseFOV(lighting.resistances, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
-            FOV.addFOVsInto(lighting.fovResult, workingLightLevels);
-        }
+        lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
         inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
@@ -181,11 +174,11 @@ public class VisionFramework {
         // assigns to justHidden all cells that were visible in lighting in the last turn.
         justHidden.refill(previousLightLevels, 0f).not();
         // recalculate all FOV fields for viewers, combine them, store it in lighting for the render to use.
-        // TODO: this needs to work with potentially multiple viewers and LightingManager.
-        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
-            FOV.reuseFOV(lighting.resistances, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
-            FOV.addFOVsInto(lighting.fovResult, workingLightLevels);
-        }
+//        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
+//            FOV.reuseFOV(lighting.resistances, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
+//            FOV.addFOVsInto(lighting.fovResult, workingLightLevels);
+//        }
+        lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
         // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
         blockage.refill(lighting.fovResult, 0f);
         // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
@@ -217,11 +210,7 @@ public class VisionFramework {
         // assigns to justHidden all cells that were visible in lightLevels in the last turn.
         justHidden.refill(previousLightLevels, 0f).not();
         // recalculate all FOV fields for viewers, combine them, store it in lightLevels for the render to use.
-        // TODO: this needs to work with potentially multiple viewers and LightingManager.
-        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
-            FOV.reuseFOV(lighting.resistances, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
-            FOV.addFOVsInto(lighting.fovResult, workingLightLevels);
-        }
+        lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
         // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
         blockage.refill(lighting.fovResult, 0f);
         // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
