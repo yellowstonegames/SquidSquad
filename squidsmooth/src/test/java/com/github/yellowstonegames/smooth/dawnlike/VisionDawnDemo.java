@@ -54,7 +54,6 @@ import com.github.yellowstonegames.text.Language;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
-import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
 
 public class VisionDawnDemo extends ApplicationAdapter {
     private static final float DURATION = 0.375f;
@@ -74,16 +73,16 @@ public class VisionDawnDemo extends ApplicationAdapter {
     /**
      * The dungeon map using only {@code '#'} for walls and {@code '.'} for floors.
      */
-    private char[][] bareDungeon;
+    private char[][] barePlaceMap;
     /**
      * The dungeon map using box-drawing characters or {@code '#'} for walls, and any other chars for other terrain.
      */
-    private char[][] lineDungeon;
+    private char[][] linePlaceMap;
     /**
-     * The same as {@link #lineDungeon}, but with any branches of walls that can't be seen trimmed off to only show what
+     * The same as {@link #linePlaceMap}, but with any branches of walls that can't be seen trimmed off to only show what
      * is actually visible given the current field of view and the cells seen earlier.
      */
-    private char[][] prunedDungeon;
+    private char[][] prunedPlaceMap;
     /**
      * A resistance map, as produced by {@link FOV#generateSimpleResistances(char[][])} from the current dungeon map.
      */
@@ -152,7 +151,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
     /**
      * How far the player can see without other light sources.
      */
-    private final int fovRange = 8;
+    private final float fovRange = 8;
 
     /**
      * The 2D position of the player (the moving character who the FOV centers upon).
@@ -169,9 +168,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
     public static final int shownHeight = 24;
 
     /** In number of cells */
-    public static final int dungeonWidth = shownWidth * 2;
+    public static final int placeWidth = shownWidth * 2;
     /** In number of cells */
-    public static final int dungeonHeight = shownHeight * 2;
+    public static final int placeHeight = shownHeight * 2;
 
     /** The pixel width of a cell */
     public static final int cellWidth = 32;
@@ -180,7 +179,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
     private boolean onGrid(int screenX, int screenY)
     {
-        return screenX >= 0 && screenX < dungeonWidth && screenY >= 0 && screenY < dungeonHeight;
+        return screenX >= 0 && screenX < placeWidth && screenY >= 0 && screenY < placeHeight;
     }
 
     private Color bgColor;
@@ -237,7 +236,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
         //TilesetType.ROUND_ROOMS_DIAGONAL_CORRIDORS or TilesetType.CAVES_LIMIT_CONNECTIVITY to change the sections that
         //this will use, or just pass in a full 2D char array produced from some other generator, such as
         //SerpentMapGenerator, OrganicMapGenerator, or DenseRoomMapGenerator.
-        DungeonProcessor dungeonGen = new DungeonProcessor(dungeonWidth, dungeonHeight, rng);
+        DungeonProcessor dungeonGen = new DungeonProcessor(placeWidth, placeHeight, rng);
         //this next line randomly adds water to the dungeon in pools.
         dungeonGen.addWater(DungeonProcessor.ALL, 12);
         //this next line makes 10% of valid door positions into complete doors.
@@ -282,15 +281,13 @@ public class VisionDawnDemo extends ApplicationAdapter {
         // └───────┘      └──┘    └──┘    └──┘     └───────┘ └──┘  └──┘
         //this is also good to compare against if the map looks incorrect, and you need an example of a correct map when
         //no parameters are given to generate().
-        lineDungeon = LineTools.hashesToLines(dungeonGen.generate(), true);
+        linePlaceMap = LineTools.hashesToLines(dungeonGen.generate(), true);
         //decoDungeon is given the dungeon with any decorations we specified. (Here, we didn't, unless you chose to add
         //water to the dungeon. In that case, decoDungeon will have different contents than bareDungeon, next.)
         //getBareDungeon provides the simplest representation of the generated dungeon -- '#' for walls, '.' for floors.
-        bareDungeon = dungeonGen.getBarePlaceGrid();
+        barePlaceMap = dungeonGen.getBarePlaceGrid();
 
-        resistance = FOV.generateSimpleResistances(lineDungeon);
-
-        prunedDungeon = ArrayTools.copy(lineDungeon);
+        prunedPlaceMap = ArrayTools.copy(linePlaceMap);
         // here, we need to get a random floor cell to place the player upon, without the possibility of putting him
         // inside a wall. There are a few ways to do this in SquidSquad. The most straightforward way is to randomly
         // choose x and y positions until a floor is found, but particularly on dungeons with few floor cells, this can
@@ -313,7 +310,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
         // store all floors that the player can walk on, a small rim of cells just beyond the player's vision that
         // blocks pathfinding to areas we can't see a path to, and we also store all cells that we have seen in the past
         // in a Region (in most roguelikes, there would be one of these per dungeon floor).
-        floors = floors == null ? new Region(bareDungeon, '.') : floors.refill(bareDungeon, '.');
+        floors = floors == null ? new Region(barePlaceMap, '.') : floors.refill(barePlaceMap, '.');
         //player is, here, just a Coord that stores his position. In a real game, you would probably have a class for
         //creatures, and possibly a subclass for the player. The singleRandom() method on Region finds one Coord
         //in that region that is "on," or -1,-1 if there are no such cells. It takes an RNG object as a parameter, and
@@ -325,7 +322,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         // Make a LightingManager that uses our map's resistance and has a large FOV range for the player.
-        lighting = new LightingManager(resistance, INT_GRAY, Radius.CIRCLE, fovRange);
+        lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), INT_GRAY, Radius.CIRCLE, fovRange);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
 
@@ -336,9 +333,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
         blockage = blockage == null ? new Region(seen).not() : blockage.remake(seen).not();
         inView = inView == null ? seen.copy() : inView.remake(seen);
         justSeen = justSeen == null ? seen.copy() : justSeen.remake(seen);
-        justHidden = justHidden == null ? new Region(dungeonWidth, dungeonHeight) : justHidden.resizeAndEmpty(dungeonWidth, dungeonHeight);
+        justHidden = justHidden == null ? new Region(placeWidth, placeHeight) : justHidden.resizeAndEmpty(placeWidth, placeHeight);
         newlyVisible = newlyVisible == null ? seen.copy() : newlyVisible.remake(seen);
-        LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
+        LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
         floors.remove(player);
         int numMonsters = 100;
         monsters = new CoordObjectOrderedMap<>(numMonsters);
@@ -364,8 +361,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
         //Measurement used is EUCLIDEAN, which allows 8 directions, but will prefer orthogonal moves unless diagonal
         //ones are clearly closer "as the crow flies." Alternatives are MANHATTAN, which means 4-way movement only, no
         //diagonals possible, and CHEBYSHEV, which allows 8 directions of movement at the same cost for all directions.
-        playerToCursor = new DijkstraMap(bareDungeon, Measurement.EUCLIDEAN);
-        getToPlayer = new DijkstraMap(bareDungeon, Measurement.EUCLIDEAN);
+        playerToCursor = new DijkstraMap(barePlaceMap, Measurement.EUCLIDEAN);
+        getToPlayer = new DijkstraMap(barePlaceMap, Measurement.EUCLIDEAN);
         //These next two lines mark the player as something we want paths to go to or from, and get the distances to the
         // player from somewhat-nearby walkable cells in the dungeon.
         playerToCursor.setGoal(player);
@@ -409,7 +406,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
         font.getData().markupEnabled = true;
         // 0xFF848350 is fully opaque, slightly-yellow-brown, and about 12% lightness.
         // It affects the default color each cell has.
-        backgroundColors = ArrayTools.fill(0xFF828120, dungeonWidth, dungeonHeight);
+        backgroundColors = ArrayTools.fill(0xFF828120, placeWidth, placeHeight);
 
         Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
         Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
@@ -559,14 +556,14 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
         int newX = next.x, newY = next.y;
         playerSprite.setPackedColor(Color.WHITE_FLOAT_BITS);
-        if (newX >= 0 && newY >= 0 && newX < dungeonWidth && newY < dungeonHeight
-                && bareDungeon[newX][newY] != '#') {
+        if (newX >= 0 && newY >= 0 && newX < placeWidth && newY < placeHeight
+                && barePlaceMap[newX][newY] != '#') {
             // '+' is a door.
-            if (prunedDungeon[newX][newY] == '+') {
-                prunedDungeon[newX][newY] = '/';
-                lineDungeon[newX][newY] = '/';
+            if (prunedPlaceMap[newX][newY] == '+') {
+                prunedPlaceMap[newX][newY] = '/';
+                linePlaceMap[newX][newY] = '/';
                 // changes to the map mean the changed cell may have a different light resistance.
-                resistance[newX][newY] = FOV.simpleResistance(prunedDungeon[newX][newY]);
+                lighting.resistances[newX][newY] = FOV.simpleResistance(prunedPlaceMap[newX][newY]);
 
                 // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
                 // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
@@ -595,7 +592,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 blockage.fringe8way();
                 // takes box-drawing characters (walls) in lineDungeon that would have segments that aren't visible in
                 // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
-                LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
+                LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
             } else {
                 // if a monster was at the position we moved into, and so was successfully removed...
                 if(monsters.containsKey(next))
@@ -605,8 +602,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
                     lighting.removeLight(next);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
-                            if(prunedDungeon[newX+x][newY+y] == '.' && rng.nextBoolean())
-                                prunedDungeon[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
+                            if(prunedPlaceMap[newX+x][newY+y] == '.' && rng.nextBoolean())
+                                prunedPlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
                         }
                     }
                 }
@@ -639,7 +636,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 blockage.fringe8way();
                 // takes box-drawing characters (walls) in lineDungeon that would have segments that aren't visible in
                 // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
-                LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
+                LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
 
 
                 playerSprite.location.setStart(player);
@@ -731,9 +728,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
         float[][] lightLevels = lighting.fovResult;
 
-        for (int i = 0; i < dungeonWidth; i++) {
-            for (int j = 0; j < dungeonHeight; j++) {
-                char glyph = prunedDungeon[i][j];
+        for (int i = 0; i < placeWidth; i++) {
+            for (int j = 0; j < placeHeight; j++) {
+                char glyph = prunedPlaceMap[i][j];
                 if(lightLevels[i][j] > 0.01) {
                     if(newlyVisible.contains(i, j)){
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
@@ -752,7 +749,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                     }
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[i][j], solid), i, j, 1f, 1f);
                 } else if(justHidden.contains(i, j)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
@@ -760,20 +757,20 @@ public class VisionDawnDemo extends ApplicationAdapter {
                                     DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), change)));
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[i][j], solid), i, j, 1f, 1f);
                 } else if(seen.contains(i, j)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f)));
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(prunedDungeon[i][j], solid), i, j, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[i][j], solid), i, j, 1f, 1f);
                 }
             }
         }
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         AnimatedGlidingSprite monster;
-        for (int i = 0; i < dungeonWidth; i++) {
-            for (int j = 0; j < dungeonHeight; j++) {
+        for (int i = 0; i < placeWidth; i++) {
+            for (int j = 0; j < placeHeight; j++) {
                 if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         // like with scenery, monsters fade in when just seen in the last frame.
@@ -923,12 +920,12 @@ public class VisionDawnDemo extends ApplicationAdapter {
     }
 
     private void debugPrintVisible(){
-        for (int y = lineDungeon[0].length - 1; y >= 0; y--) {
-            for (int x = 0; x < lineDungeon.length; x++) {
-                System.out.print(lineDungeon[x][y]);
+        for (int y = linePlaceMap[0].length - 1; y >= 0; y--) {
+            for (int x = 0; x < linePlaceMap.length; x++) {
+                System.out.print(linePlaceMap[x][y]);
             }
             System.out.print(' ');
-            for (int x = 0; x < lineDungeon.length; x++) {
+            for (int x = 0; x < linePlaceMap.length; x++) {
                 if(player.x == x && player.y == y)
                     System.out.print('@');
                 else

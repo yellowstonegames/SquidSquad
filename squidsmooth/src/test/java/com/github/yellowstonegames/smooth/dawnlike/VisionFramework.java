@@ -17,35 +17,38 @@
 package com.github.yellowstonegames.smooth.dawnlike;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.*;
 
 /**
  * Encapsulates currently-visible and previously-seen cell data, and allows updating and modifying light levels/colors.
  */
+@Beta
 public class VisionFramework {
 
     /**
      * The x-size of all 2D arrays here (the first index).
      */
-    public int dungeonWidth;
+    public int placeWidth;
     /**
      * The y-size of all 2D arrays here (the second index).
      */
-    public int dungeonHeight;
+    public int placeHeight;
     /**
-     * The dungeon map using box-drawing characters or {@code '#'} for walls, and any other chars for other terrain.
+     * The place map using box-drawing characters or {@code '#'} for walls, and any other chars for other terrain.
      * In most roguelikes, there would be one of these per dungeon floor.
      */
-    public char[][] lineDungeon;
+    public char[][] linePlaceMap;
     /**
-     * The same as {@link #lineDungeon}, but with any branches of walls that can't be seen trimmed off to only show what
-     * is actually visible given the current field of view and the cells seen earlier.
+     * The same as {@link #linePlaceMap}, but with any branches of walls that can't be seen trimmed off to only show
+     * what is actually visible given the current field of view and the cells seen earlier.
      * In most roguelikes, there would be one of these per dungeon floor.
      */
-    public char[][] prunedDungeon;
+    public char[][] prunedPlaceMap;
     /**
-     * A resistance map, as produced by {@link FOV#generateSimpleResistances(char[][])} from the current dungeon map.
+     * A resistance map, as produced by {@link FOV#generateSimpleResistances(char[][])} from the current place map.
      * In most roguelikes, there would be one of these per dungeon floor.
      */
     public float[][] resistance;
@@ -59,6 +62,7 @@ public class VisionFramework {
      * In most roguelikes, there would only need to be one of these variables at a time.
      */
     public float[][] previousLightLevels;
+    private float[][] workingLightLevels;
     /**
      * The background color tints as packed Oklab int colors, which avoid the overhead of creating new Color objects.
      * Use {@link DescriptiveColor} to get, describe, or create Oklab int colors.
@@ -85,7 +89,7 @@ public class VisionFramework {
      */
     public Region blockage;
     /**
-     * All cells that we have seen in the past, on this dungeon map.
+     * All cells that we have seen in the past, on this place map.
      * In most roguelikes, there would be one of these per dungeon floor, and it would persist.
      */
     public Region seen;
@@ -100,38 +104,42 @@ public class VisionFramework {
      */
     public Region justHidden;
     /**
-     * Contains only the cells that have a value greater than 0 in {@link #lightLevels}.
+     * Contains only the cells that have a value greater than 0 in {@link #lightLevels}, meaning
+     * they are visible right now.
      */
     public Region inView;
-
-    // TODO: Change player and fovRange to a CoordFloatOrderedMap or something similar.
-    /**
-     * How far the player can see without other light sources.
-     */
-    public int fovRange = 8;
 
     /**
      * The 2D position of the player (the moving character who the FOV centers upon).
      */
     public Coord player;
 
+    public CoordFloatOrderedMap viewers = new CoordFloatOrderedMap(4);
+
+    public int rememberedOklabColor = DescriptiveColor.GRAY;
+    
     public VisionFramework() {
 
     }
 
-    public void restart(char[][] dungeon, Coord playerPosition) {
+    public void restart(char[][] dungeon, Coord playerPosition, float fovRange) {
         if (dungeon == null || dungeon.length == 0 || dungeon[0] == null || dungeon[0].length == 0)
             return;
-        dungeonWidth = dungeon.length;
-        dungeonHeight = dungeon[0].length;
+        placeWidth = dungeon.length;
+        placeHeight = dungeon[0].length;
         player = playerPosition;
-        lineDungeon = LineTools.hashesToLines(dungeon, true);
-        prunedDungeon = ArrayTools.copy(lineDungeon);
-        resistance = FOV.generateSimpleResistances(lineDungeon);
-        lightLevels = new float[dungeonWidth][dungeonHeight];
-        previousLightLevels = new float[dungeonWidth][dungeonHeight];
+        viewers.put(playerPosition, fovRange);
+        linePlaceMap = LineTools.hashesToLines(dungeon, true);
+        prunedPlaceMap = ArrayTools.copy(linePlaceMap);
+        resistance = FOV.generateSimpleResistances(linePlaceMap);
+        lightLevels = new float[placeWidth][placeHeight];
+        previousLightLevels = new float[placeWidth][placeHeight];
+        workingLightLevels = new float[placeWidth][placeHeight];
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
-        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
+            FOV.reuseFOV(resistance, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
+            FOV.addFOVsInto(lightLevels, workingLightLevels);
+        }
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         ArrayTools.set(lightLevels, previousLightLevels);
         // 0.0 is the upper bound (inclusive), so any Coord in visible that is more well-lit than 0.0 will _not_ be in
@@ -145,19 +153,11 @@ public class VisionFramework {
         // Region they are called on, which can greatly help efficiency on long chains of operations.
         seen = seen == null ? blockage.not().copy() : seen.remake(blockage.not());
         justSeen = justSeen == null ? seen.copy() : justSeen.remake(seen);
-        justHidden = justHidden == null ? new Region(dungeonWidth, dungeonHeight) : justHidden.resizeAndEmpty(dungeonWidth, dungeonHeight);
-        // Here is one of those methods on a Region; fringe8way takes a Region (here, the set of cells
-        // that are visible to the player), and modifies it to contain only cells that were not in the last step, but
-        // were adjacent to a cell that was present in the last step. This can be visualized as taking the area just
-        // beyond the border of a region, using 8-way adjacency here because we specified fringe8way instead of fringe.
-        // We do this because it means pathfinding will only have to work with a small number of cells (the area just
-        // out of sight, and no further) instead of all invisible cells when figuring out if something is currently
-        // impossible to enter.
-        blockage.fringe8way();
-        LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
+        justHidden = justHidden == null ? new Region(placeWidth, placeHeight) : justHidden.resizeAndEmpty(placeWidth, placeHeight);
+        LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
         // 0xFF7F7F50 is fully opaque, pure gray, and about 30% lightness.
         // It affects the default color each cell has, and could change when there is (for instance) a stain or a mark.
-        backgroundColors = ArrayTools.fill(0xFF7F7F50, dungeonWidth, dungeonHeight);
+        backgroundColors = ArrayTools.fill(0xFF7F7F50, placeWidth, placeHeight);
     }
 
     public void edit(int newX, int newY, char newCell) {
@@ -165,8 +165,8 @@ public class VisionFramework {
     }
 
     public void edit(Coord changedPosition, char newCell) {
-        lineDungeon[changedPosition.x][changedPosition.y] = newCell;
-        prunedDungeon[changedPosition.x][changedPosition.y] = newCell;
+        linePlaceMap[changedPosition.x][changedPosition.y] = newCell;
+        prunedPlaceMap[changedPosition.x][changedPosition.y] = newCell;
         resistance[changedPosition.x][changedPosition.y] = FOV.simpleResistance(newCell);
 
         // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
@@ -174,8 +174,11 @@ public class VisionFramework {
         ArrayTools.set(lightLevels, previousLightLevels);
         // assigns to justHidden all cells that were visible in lightLevels in the last turn.
         justHidden.refill(previousLightLevels, 0f).not();
-        // recalculate FOV, store it in lightLevels for the render to use.
-        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        // recalculate all FOV fields for viewers, combine them, store it in lightLevels for the render to use.
+        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
+            FOV.reuseFOV(resistance, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
+            FOV.addFOVsInto(lightLevels, workingLightLevels);
+        }
         // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
         blockage.refill(lightLevels, 0f);
         // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
@@ -193,19 +196,24 @@ public class VisionFramework {
         blockage.fringe8way();
     }
 
-    public void move(int newX, int newY) {
-        move(Coord.get(newX, newY));
+    public void move(int oldX, int oldY, int newX, int newY) {
+        move(Coord.get(oldX, oldY), Coord.get(newX, newY));
     }
 
-    public void move(Coord nextPosition) {
-        player = nextPosition;
+    public void move(Coord previousPosition, Coord nextPosition) {
+        if(!viewers.containsKey(previousPosition)) return;
+
+        viewers.alter(previousPosition, nextPosition);
         // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
         // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
         ArrayTools.set(lightLevels, previousLightLevels);
         // assigns to justHidden all cells that were visible in lightLevels in the last turn.
         justHidden.refill(previousLightLevels, 0f).not();
-        // recalculate FOV, store it in lightLevels for the render to use.
-        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
+        // recalculate all FOV fields for viewers, combine them, store it in lightLevels for the render to use.
+        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
+            FOV.reuseFOV(resistance, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
+            FOV.addFOVsInto(lightLevels, workingLightLevels);
+        }
         // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
         blockage.refill(lightLevels, 0f);
         // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
@@ -228,12 +236,12 @@ public class VisionFramework {
     public int getMovingCreatureColor(int x, int y, float timeSpent) {
         if (lightLevels[x][y] > 0.0) {
                 if(justSeen.contains(x, y))
-                    return DescriptiveColor.fade(DescriptiveColor.GRAY, 1f - timeSpent);
+                    return DescriptiveColor.fade(rememberedOklabColor, 1f - timeSpent);
                 else
-                    return DescriptiveColor.GRAY;
+                    return rememberedOklabColor;
         }
         else if(justHidden.contains(x, y)) {
-            return DescriptiveColor.fade(DescriptiveColor.GRAY, timeSpent);
+            return DescriptiveColor.fade(rememberedOklabColor, timeSpent);
         }
         return DescriptiveColor.TRANSPARENT;
     }
