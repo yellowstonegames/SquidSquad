@@ -350,8 +350,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
                     new AnimatedGlidingSprite(new Animation<>(DURATION,
                             atlas.findRegions(enemy), Animation.PlayMode.LOOP), monPos);
             monster.setSize(1f, 1f);
-//            monster.setPackedColor(ColorTools.floatGetHSV(rng.nextFloat(), 0.75f, 0.8f, 0f));
             monsters.put(monPos, monster);
+            lighting.addLight(monPos, new Radiance(rng.nextFloat(3f) + 2f,
+                    FullPalette.COLOR_WHEEL_PALETTE_LIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_LIGHT.length)], 0.5f, 0f));
         }
 //        monsterDirector = new Director<>((e) -> e.getValue().getLocation(), monsters, 125);
         monsterDirector = new Director<>(c -> monsters.get(c).getLocation(), monsters.order(), 150);
@@ -573,7 +574,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
                 // recalculate FOV, store it in lightLevels for the render to use.
-                lighting.calculateFOV(next.x, next.y, next.x - 10, next.y - 10, next.x + 11, next.y + 11);
+                lighting.calculateFOV(newX, newY, newX - 10, newY - 10, newX + 11, newY + 11);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lighting.fovResult, 0f);
                 // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
@@ -596,6 +597,20 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
                 LineTools.pruneLines(lineDungeon, seen, prunedDungeon);
             } else {
+                // if a monster was at the position we moved into, and so was successfully removed...
+                if(monsters.containsKey(next))
+                {
+                    monsters.remove(next);
+                    // remove the light present at the now-dead enemy's location
+                    lighting.removeLight(next);
+                    for (int x = -1; x <= 1; x++) {
+                        for (int y = -1; y <= 1; y++) {
+                            if(prunedDungeon[newX+x][newY+y] == '.' && rng.nextBoolean())
+                                prunedDungeon[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
+                        }
+                    }
+                }
+                // we can move the player's light now that we know there is no light for an enemy at next.
                 lighting.moveLight(player, next);
                 // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
                 // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
@@ -603,7 +618,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
                 // recalculate FOV, store it in lightLevels for the render to use.
-                lighting.calculateFOV(next.x, next.y, next.x - 10, next.y - 10, next.x + 11, next.y + 11);
+                lighting.calculateFOV(newX, newY, newX - 10, newY - 10, newX + 11, newY + 11);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lighting.fovResult, 0f);
                 // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
@@ -631,18 +646,6 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 playerSprite.location.setEnd(player = next);
                 phase = Phase.PLAYER_ANIM;
                 playerDirector.play();
-
-                // if a monster was at the position we moved into, and so was successfully removed...
-                if(monsters.containsKey(player))
-                {
-                    monsters.remove(player);
-                    for (int x = -1; x <= 1; x++) {
-                        for (int y = -1; y <= 1; y++) {
-                            if(prunedDungeon[newX+x][newY+y] == '.' && rng.nextBoolean())
-                                prunedDungeon[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
-                        }
-                    }
-                }
             }
             phase = Phase.PLAYER_ANIM;
         }
@@ -697,6 +700,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                         mon.location.setEnd(tmp);
                         // this changes the key from pos to tmp without affecting its value.
                         monsters.alter(pos, tmp);
+                        lighting.moveLight(pos, tmp);
                     }
                 }
             }
@@ -710,6 +714,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
      */
     public void putMap()
     {
+        lighting.update();
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
 
         final float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 0.004f, 0f), 1f);
