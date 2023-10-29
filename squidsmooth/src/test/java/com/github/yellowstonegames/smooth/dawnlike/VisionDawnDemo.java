@@ -84,10 +84,6 @@ public class VisionDawnDemo extends ApplicationAdapter {
      */
     private char[][] prunedPlaceMap;
     /**
-     * A resistance map, as produced by {@link FOV#generateSimpleResistances(char[][])} from the current dungeon map.
-     */
-    private float[][] resistance;
-    /**
      * Handles all light sources, with varying colors, strengths, and flicker/strobe patterns.
      */
     private LightingManager lighting;
@@ -405,8 +401,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
         font.getData().setScale(2f/cellWidth, 2f/cellHeight);
         font.getData().markupEnabled = true;
         // 0xFF848350 is fully opaque, slightly-yellow-brown, and about 12% lightness.
-        // It affects the default color each cell has.
-        backgroundColors = ArrayTools.fill(0xFF828120, placeWidth, placeHeight);
+        // It affects the default color each cell has before lighting affects it.
+        backgroundColors = ArrayTools.fill(0xFF848350, placeWidth, placeHeight);
 
         Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
         Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
