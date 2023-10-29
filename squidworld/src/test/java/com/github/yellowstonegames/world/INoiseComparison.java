@@ -72,6 +72,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new SorbetNoise(1L, 1),
             new SorbetNoise(1L, 3),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
+            new ToothNoise(),
     };
     private int index0 = 0;
     private int index1 = 4;

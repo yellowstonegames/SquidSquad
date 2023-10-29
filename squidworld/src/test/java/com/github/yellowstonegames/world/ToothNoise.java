@@ -16,19 +16,26 @@
 
 package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.INoise;
 
 import static com.github.tommyettinger.digital.TrigTools.sin;
 import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_FLOATS;
+import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_LONGS;
 
 /**
  * Not very good right now! Use only experimentally.
  */
 @Beta
 public class ToothNoise implements INoise {
+    public long state;
     public ToothNoise() {
-        // no state!
+        this(MathTools.GOLDEN_LONGS[100]);
+    }
+    public ToothNoise(long seed) {
+        state = seed;
     }
 
     @Override
@@ -43,16 +50,17 @@ public class ToothNoise implements INoise {
 
     @Override
     public boolean canUseSeed() {
-        return false;
+        return true;
     }
 
     @Override
     public void setSeed(long seed) {
+        state = seed;
     }
 
     @Override
     public long getSeed() {
-        return 0;
+        return state;
     }
 
     @Override
@@ -62,13 +70,15 @@ public class ToothNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y) {
-        return noise(x, y);
+        int xf = MathTools.fastFloor(x);
+        int yf = MathTools.fastFloor(y);
+        float xl = MathTools.lerp(hash(xf, yf+0.5f), hash(xf+1, yf+0.5f), x - xf);
+        float yl = MathTools.lerp(hash(xf+0.5f, yf), hash(xf+0.5f, yf+1), y - yf);
+        return (xl + yl) * 0.5f;
     }
-    public static float noise(float x, float y) {
-        float sx = sin(1+x*GOLDEN_FLOATS[0][0] + sin(2+x*GOLDEN_FLOATS[2][0] + sin(3+x*GOLDEN_FLOATS[4][0] + y)));
-        float sy = sin(4+y*GOLDEN_FLOATS[1][1] + sin(5+y*GOLDEN_FLOATS[3][1] + sin(6+y*GOLDEN_FLOATS[5][1] + x)));
-        float q = (sx + sy) * (12f/2f);
-        return sin(7+q*GOLDEN_FLOATS[6][0] + sin(8+q*GOLDEN_FLOATS[6][1] + sin(9+q*GOLDEN_FLOATS[6][2])));
+
+    public float hash(float x, float y) {
+        return (int)(state ^ BitConversion.floatToIntBits(x) * GOLDEN_LONGS[1][0] ^ BitConversion.floatToIntBits(y) * GOLDEN_LONGS[1][1]) * 0x1p-31f;
     }
 
     @Override
