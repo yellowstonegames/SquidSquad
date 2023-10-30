@@ -651,7 +651,7 @@ public final class LineTools {
      * @return a copy of the map passed as an argument with box-drawing characters replacing '#' walls
      */
     public static char[][] hashesToLines(char[][] map) {
-        return hashesToLines(map, false);
+        return hashesToLinesInto(null, map, false);
     }
 
     /**
@@ -677,10 +677,39 @@ public final class LineTools {
      * @return a copy of the map passed as an argument with box-drawing characters replacing '#' walls
      */
     public static char[][] hashesToLines(char[][] map, boolean keepSingleHashes) {
-        int width = map.length;
-        int height = map[0].length;
+        return hashesToLinesInto(null, map, keepSingleHashes);
+    }
+    /**
+     * Takes a char[][] place {@code map} that uses '#' to represent walls, and fills a different char[][] {@code into}
+     * with Unicode box drawing characters to draw straight, continuous lines for walls, filling regions between walls
+     * (that were
+     * filled with more walls before) with space characters, ' '. If keepSingleHashes is true, then '#' will be used if
+     * a wall has no orthogonal wall neighbors; if it is false, then a horizontal line will be used for stand-alone
+     * wall cells. If the lines "point the wrong way," such as having multiple horizontally adjacent vertical lines
+     * where there should be horizontal lines, call {@link #transposeLines(char[][])} on the returned map, which will
+     * keep the dimensions of the map the same and only change the line chars. You will also need to call transposeLines
+     * if you call hashesToLinesInto() on a map that already has "correct" line-drawing characters, which means
+     * hashesToLinesInto()
+     * should only be called on maps that use '#' for walls. If you have a jumbled map that contains two or more of the
+     * following: "correct" line-drawing characters, "incorrect" line-drawing characters, and '#' characters for walls,
+     * you can reset by calling linesToHashes() and then potentially calling hashesToLinesInto() again.
+     * <br>
+     * This also treats any '+' and '/' chars that are next to a cell this is changing as if they were walls, even
+     * though neither '+' nor '/' will be changed itself. This is because '+' and '/' are typically used as door glyphs,
+     * and since walls connect to doors, the box-drawing characters for adjacent walls should connect to the door as if
+     * it is or is embedded in a wall.
+     *
+     * @param into             a 2D char array that will be entirely modified in-place; if null, a new array will be made
+     * @param map              a 2D char array indexed with x,y that uses '#' for walls
+     * @param keepSingleHashes true if walls that are not orthogonally adjacent to other walls should stay as '#'
+     * @return into, with box-drawing characters replacing '#' walls
+     */
+    public static char[][] hashesToLinesInto(char[][] into, char[][] map, boolean keepSingleHashes) {
+        if(into == null) into = new char[map.length][map[0].length];
 
-        char[][] into = new char[width][height];
+        int width = Math.min(map.length, into.length);
+        int height = Math.min(map[0].length, into[0].length);
+
         for (int i = 0; i < width; i++) {
             System.arraycopy(map[i], 0, into[i], 0, height);
         }
@@ -709,7 +738,8 @@ public final class LineTools {
     }
 
     /**
-     * Reverses most of the effects of hashesToLines(). The only things that will not be reversed are the placement of
+     * Reverses most of the effects of hashesToLines() that may have been applied to {@code map} and returns the result
+     * in a new char[][]. The only things that will not be reversed are the placement of
      * space characters in unreachable wall-cells-behind-wall-cells, which remain as spaces. This is useful if you
      * have a modified map that contains wall characters of conflicting varieties, as described in hashesToLines().
      *
@@ -717,10 +747,24 @@ public final class LineTools {
      * @return a copy of the map passed as an argument with '#' replacing box-drawing characters for walls
      */
     public static char[][] linesToHashes(char[][] map) {
+        return linesToHashesInto(null, map);
+    }
+    /**
+     * Reverses most of the effects of hashesToLinesInto() that may have been applied to {@code map} and stores the
+     * result in {@code into}. The only things that will not be reversed are the placement of
+     * space characters in unreachable wall-cells-behind-wall-cells, which remain as spaces. This is useful if you
+     * have a modified map that contains wall characters of conflicting varieties, as described in hashesToLinesInto().
+     *
+     * @param into a 2D char array that will be entirely modified in-place; if null, a new array will be made
+     * @param map a 2D char array indexed with x,y that uses box-drawing characters for walls
+     * @return into, with '#' replacing box-drawing characters for walls
+     */
+    public static char[][] linesToHashesInto(char[][] into, char[][] map) {
+        if(into == null) into = new char[map.length][map[0].length];
 
-        int width = map.length;
-        int height = map[0].length;
-        char[][] dungeon = new char[width][height];
+        int width = Math.min(map.length, into.length);
+        int height = Math.min(map[0].length, into[0].length);
+
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
@@ -735,14 +779,14 @@ public final class LineTools {
                     case '│':
                     case '─':
                     case '┼':
-                        dungeon[i][j] = '#';
+                        into[i][j] = '#';
                         break;
                     default:
-                        dungeon[i][j] = map[i][j];
+                        into[i][j] = map[i][j];
                 }
             }
         }
-        return dungeon;
+        return into;
     }
 
     /**
