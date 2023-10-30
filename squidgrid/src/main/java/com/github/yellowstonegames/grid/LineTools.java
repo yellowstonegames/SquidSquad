@@ -16,6 +16,8 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.ArrayTools;
+
 /**
  * Tools for constructing patterns using box-drawing characters in grids.
  * This can be useful in both text-based games and graphical ones, where graphical games would use a single box-drawing
@@ -795,47 +797,60 @@ public final class LineTools {
      * altering the dimensions in any way. This returns a new char[][], instead of modifying the parameter in place.
      * transposeLines is also needed if the lines in a map have become transposed when they were already correct;
      * calling this method on an incorrectly transposed map will change the directions on all of its lines.
+     * <br>
+     * This method simply calls {@link #transposeLinesInPlace(char[][])} on a copy of {@code map} made with
+     * {@link ArrayTools#copy(char[][])}. You may want to just use transposeLinesInPlace() if map is incorrect.
      *
      * @param map a 2D char array indexed with y,x that uses box-drawing characters for walls
      * @return a copy of map that uses box-drawing characters for walls that will be correct when indexed with x,y
      */
     public static char[][] transposeLines(char[][] map) {
-
-        int width = map[0].length;
-        int height = map.length;
-        char[][] portion = new char[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                switch (map[i][j]) {
+        return transposeLinesInPlace(ArrayTools.copy(map));
+    }
+    /**
+     * If you call hashesToLines() on a map that uses [y][x] conventions instead of [x][y], it will have the lines not
+     * connect as you expect. Use this function to change the directions of the box-drawing characters only, without
+     * altering the dimensions in any way. This modifies the parameter {@code into} in-place. Calling
+     * transposeLines() is also needed if the lines in a map have become transposed when they were already correct;
+     * calling this method on an incorrectly transposed map will change the directions on all of its lines.
+     *
+     * @param into a 2D char array that will be modified in-place to use different box-drawing characters
+     * @return into, modified in-place to use x,y instead of y,x box-drawing characters
+     */
+    public static char[][] transposeLinesInPlace(char[][] into) {
+        int width = into.length;
+        int height = into[0].length;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                switch (into[i][j]) {
                     case '├':
-                        portion[i][j] = '┬';
+                        into[i][j] = '┬';
                         break;
                     case '┤':
-                        portion[i][j] = '┴';
+                        into[i][j] = '┴';
                         break;
                     case '┴':
-                        portion[i][j] = '┤';
+                        into[i][j] = '┤';
                         break;
                     case '┬':
-                        portion[i][j] = '├';
+                        into[i][j] = '├';
                         break;
                     case '┐':
-                        portion[i][j] = '└';
+                        into[i][j] = '└';
                         break;
                     case '└':
-                        portion[i][j] = '┐';
+                        into[i][j] = '┐';
                         break;
                     case '│':
-                        portion[i][j] = '─';
+                        into[i][j] = '─';
                         break;
                     case '─':
-                        portion[i][j] = '│';
+                        into[i][j] = '│';
                         break;
-                    default: //applies to ┼┌┘ and any non-box-drawing
-                        portion[i][j] = map[i][j];
+                    //for ┼┌┘ and any non-box-drawing, do nothing
                 }
             }
         }
-        return portion;
+        return into;
     }
 }
