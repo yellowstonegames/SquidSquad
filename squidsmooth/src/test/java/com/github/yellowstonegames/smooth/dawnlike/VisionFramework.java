@@ -64,19 +64,6 @@ public class VisionFramework {
      */
     public int[][] backgroundColors;
 
-    // Region is a hard-to-explain class, but it's an incredibly useful one for map generation and many other
-    // tasks; it stores a region of "on" cells where everything not in that region is considered "off," and can be used
-    // as a Collection of Coord points. However, it's more than that! Because of how it is implemented, it can perform
-    // bulk operations on as many as 64 points at a time, and can efficiently do things like expanding the "on" area to
-    // cover adjacent cells that were "off", retracting the "on" area away from "off" cells to shrink it, getting the
-    // surface ("on" cells that are adjacent to "off" cells) or fringe ("off" cells that are adjacent to "on" cells),
-    // and generally useful things like picking a random point from all "on" cells.
-    // Here, we use a Region to store:
-    // a small rim of cells just beyond the player's vision that blocks pathfinding to areas we can't see a path to,
-    // all cells that we have seen in the past,
-    // all cells we just became able to see on this turn or short period of time,
-    // and all cells we were able to see, but just became hidden on this turn or short period of time.
-    // In most roguelikes, there would be one "seen" per dungeon floor, but just one of the rest total.
     /**
      * A small rim of cells just beyond the player's vision that blocks pathfinding to areas we can't see a path to.
      * In most roguelikes, this would be temporary and only one would need to exist in total.
@@ -122,27 +109,30 @@ public class VisionFramework {
 
     /**
      * The Oklab int color used to tint cells that could have been seen previously, but aren't currently visible.
-     * This defaults to {@link DescriptiveColor#GRAY}; you can get Oklab int colors using {@link DescriptiveColor}.
+     * This defaults to {@code 0xFF7F7F20}, which is fully opaque, pure gray, and has about 30% lightness.
+     * You can get Oklab int colors using {@link DescriptiveColor}.
      */
-    public int rememberedOklabColor = DescriptiveColor.GRAY;
+    public int rememberedOklabColor = 0xFF7F7F50;
     
     public VisionFramework() {
 
     }
 
     public void restart(char[][] dungeon, Coord playerPosition, float fovRange) {
+        restart(dungeon, CoordFloatOrderedMap.with(playerPosition, fovRange), rememberedOklabColor);
+    }
+    public void restart(char[][] dungeon, CoordFloatOrderedMap viewers, int baseColor) {
         if (dungeon == null || dungeon.length == 0 || dungeon[0] == null || dungeon[0].length == 0)
             return;
         placeWidth = dungeon.length;
         placeHeight = dungeon[0].length;
-        player = playerPosition;
-        viewers.put(playerPosition, fovRange);
+        this.viewers = viewers;
         linePlaceMap = LineTools.hashesToLines(dungeon, true);
         prunedPlaceMap = ArrayTools.copy(linePlaceMap);
-        lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedOklabColor, Radius.CIRCLE, fovRange);
-        previousLightLevels = new float[placeWidth][placeHeight];
+        lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedOklabColor, Radius.CIRCLE, 4f);
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
-        lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
+        // This gets the FOV with no light on this call, to make sure all data is non-null.
+        lighting.calculateFOV(this.viewers, 0, 0, placeWidth, placeHeight);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
         inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
@@ -153,10 +143,9 @@ public class VisionFramework {
         justHidden = justHidden == null ? new Region(placeWidth, placeHeight) : justHidden.resizeAndEmpty(placeWidth, placeHeight);
         newlyVisible = newlyVisible == null ? seen.copy() : newlyVisible.remake(seen);
         LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
-        LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
-        // 0xFF7F7F20 is fully opaque, pure gray, and about 12% lightness.
-        // It affects the default color each cell has, and could change when there is (for instance) a stain or a mark.
-        backgroundColors = ArrayTools.fill(0xFF7F7F20, placeWidth, placeHeight);
+        rememberedOklabColor = baseColor;
+        if(backgroundColors == null) backgroundColors = ArrayTools.fill(rememberedOklabColor, placeWidth, placeHeight);
+        else ArrayTools.fill(backgroundColors, rememberedOklabColor);
     }
 
     public void edit(int newX, int newY, char newCell) {

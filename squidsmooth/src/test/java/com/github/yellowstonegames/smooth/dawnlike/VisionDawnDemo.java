@@ -319,11 +319,10 @@ public class VisionDawnDemo extends ApplicationAdapter {
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         // Make a LightingManager that uses our map's resistance and has a large FOV range for the player.
         lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), INT_GRAY, Radius.CIRCLE, fovRange);
-        // Stores the current light level as the previous light level, to avoid fade-in artifacts.
-        previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
-
         lighting.addLight(player, new Radiance(fovRange, FullPalette.COSMIC_LATTE, 0.3f, 0f));
         lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
+        // Stores the current light level as the previous light level, to avoid fade-in artifacts.
+        previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
         inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
         seen = seen == null ? inView.copy() : seen.remake(inView);
         blockage = blockage == null ? new Region(seen).not() : blockage.remake(seen).not();
