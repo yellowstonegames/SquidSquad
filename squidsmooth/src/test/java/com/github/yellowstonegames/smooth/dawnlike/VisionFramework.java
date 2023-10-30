@@ -183,6 +183,9 @@ public class VisionFramework {
         // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
         // adjacent to those cells.
         blockage.fringe8way();
+        // takes box-drawing characters (walls) in linePlaceMap that would have segments that aren't visible in
+        // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
+        LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
     }
 
     public void move(int oldX, int oldY, int newX, int newY) {
@@ -217,6 +220,9 @@ public class VisionFramework {
         // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
         // adjacent to those cells.
         blockage.fringe8way();
+        // takes box-drawing characters (walls) in linePlaceMap that would have segments that aren't visible in
+        // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
+        LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
     }
 
     public int getMovingCreatureColor(int x, int y, float timeSpent) {

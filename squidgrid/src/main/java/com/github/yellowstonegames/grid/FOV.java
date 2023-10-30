@@ -1506,7 +1506,7 @@ public final class FOV {
      * Given a single char, returns what {@link #generateResistances(char[][])} or
      * {@link #fillResistancesInto(char[][], float[][])} would consider as its light resistance value.
      * This means that for a wall char ({@code '#'} or a box drawing character) or an impossible-to-see character
-     * ({@code ' '} or {@code ((char)1)}), this returns a resistance of 1f, for an open door ({@code '/'}) this returns
+     * ({@code ' '}), this returns a resistance of 1f, for an open door ({@code '/'}) this returns
      * 0.15f, for a closed door ({@code '+'}) this returns 0.95f, and for any other char, this returns 0f.
      * @param cell a single char that uses the place-map conventions the rest of this class uses
      * @return the light resistance value for a cell represented by {@code cell}
@@ -1514,7 +1514,6 @@ public final class FOV {
     public static float resistance(char cell) {
         switch (cell) {
             case ' ':
-            case '\1':
             case '├':
             case '┤':
             case '┴':
@@ -1540,7 +1539,7 @@ public final class FOV {
      * Given a single char, returns what {@link #generateSimpleResistances(char[][])} or
      * {@link #fillSimpleResistancesInto(char[][], float[][])} would consider as its light resistance value.
      * This means that for a wall char ({@code '#'} or a box drawing character), a closed door ({@code '+'}), or an
-     * impossible-to-see character ({@code ' '} or {@code ((char)1)}), this returns a resistance of 1f, and for any
+     * impossible-to-see character ({@code ' '}), this returns a resistance of 1f, and for any
      * other char, this returns 0f.
      * @param cell a single char that uses the place-map conventions the rest of this class uses
      * @return the light resistance value for a cell represented by {@code cell}
@@ -1548,7 +1547,6 @@ public final class FOV {
     public static float simpleResistance(char cell) {
         switch (cell) {
             case ' ':
-            case '\1':
             case '├':
             case '┤':
             case '┴':
@@ -1587,7 +1585,6 @@ public final class FOV {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
                     case ' ':
-                    case '\1':
                     case '├':
                     case '┤':
                     case '┴':
@@ -1635,7 +1632,6 @@ public final class FOV {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
                     case ' ':
-                    case '\1':
                     case '├':
                     case '┤':
                     case '┴':
@@ -1683,7 +1679,6 @@ public final class FOV {
         for (int i = 0, x = 0; i < width; i++, x+=3) {
             for (int j = 0, y = 0; j < height; j++, y+=3) {
                 switch (map[i][j]) {
-                    case '\1':
                     case '#':
                         portion[x][y] = portion[x+1][y] = portion[x+2][y] =
                                 portion[x][y+1] = portion[x+1][y+1] = portion[x+2][y+1] =
@@ -1792,7 +1787,6 @@ public final class FOV {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
                     case ' ':
-                    case '\1':
                     case '├':
                     case '┤':
                     case '┴':
@@ -1836,7 +1830,6 @@ public final class FOV {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
                     case ' ':
-                    case '\1':
                     case '├':
                     case '┤':
                     case '┴':
@@ -1878,7 +1871,6 @@ public final class FOV {
         for (int i = 0, x = 0; i < width; i++, x+=3) {
             for (int j = 0, y = 0; j < height; j++, y+=3) {
                 switch (map[i][j]) {
-                    case '\1':
                     case '#':
                     case '+':
                         portion[x][y] = portion[x+1][y] = portion[x+2][y] =
@@ -1976,8 +1968,7 @@ public final class FOV {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
-                    case ' ':
-                    case '\1':
+                    case ' ': 
                         portion[i][j] = 1.0f;
                         break;
                     case '├':

@@ -135,7 +135,6 @@ public class DungeonTools {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
-                    case '\1':
                     case '├':
                     case '┤':
                     case '┴':

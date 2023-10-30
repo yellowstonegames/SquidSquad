@@ -278,9 +278,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
         //this is also good to compare against if the map looks incorrect, and you need an example of a correct map when
         //no parameters are given to generate().
         linePlaceMap = LineTools.hashesToLines(dungeonGen.generate(), true);
-        //decoDungeon is given the dungeon with any decorations we specified. (Here, we didn't, unless you chose to add
-        //water to the dungeon. In that case, decoDungeon will have different contents than bareDungeon, next.)
-        //getBareDungeon provides the simplest representation of the generated dungeon -- '#' for walls, '.' for floors.
+        //linePlaceMap is given the dungeon with any decorations we specified. (Here, we didn't, unless you chose to add
+        //water to the dungeon. In that case, linePlaceMap will have different contents than barePlaceMap, next.)
+        //getBarePlaceGrid() provides the simplest view of the generated dungeon -- '#' for walls, '.' for floors.
         barePlaceMap = dungeonGen.getBarePlaceGrid();
 
         prunedPlaceMap = ArrayTools.copy(linePlaceMap);
@@ -585,8 +585,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
                 // adjacent to those cells.
                 blockage.fringe8way();
-                // takes box-drawing characters (walls) in lineDungeon that would have segments that aren't visible in
-                // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
+                // takes box-drawing characters (walls) in linePlaceMap that would have segments that aren't visible in
+                // seen, then removes the segments that shouldn't be visible and stores the result in prunedPlaceMap.
                 LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
             } else {
                 // if a monster was at the position we moved into, and so was successfully removed...
@@ -629,8 +629,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
                 // adjacent to those cells.
                 blockage.fringe8way();
-                // takes box-drawing characters (walls) in lineDungeon that would have segments that aren't visible in
-                // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
+                // takes box-drawing characters (walls) in linePlaceMap that would have segments that aren't visible in
+                // seen, then removes the segments that shouldn't be visible and stores the result in prunedPlaceMap.
                 LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
 
 

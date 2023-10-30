@@ -49,7 +49,6 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				switch (map[i][j]) {
-					case '\1':
 					case '├':
 					case '┤':
 					case '┴':
@@ -113,7 +112,6 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 					portion[i][j] = costs.get(current);
 				} else {
 					switch (current) {
-						case '\1':
 						case '├':
 						case '┤':
 						case '┴':
