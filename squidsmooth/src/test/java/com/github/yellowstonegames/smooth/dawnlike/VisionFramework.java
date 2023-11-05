@@ -291,12 +291,12 @@ public class VisionFramework {
     public int getMovingCreatureColor(int x, int y, float timeSpent) {
         if (lighting.fovResult[x][y] > 0.0) {
                 if(justSeen.contains(x, y))
-                    return DescriptiveColor.fade(rememberedOklabColor, 1f - timeSpent);
+                    return DescriptiveColor.oklab(0.5f, 0.5f, 0.5f, timeSpent);
                 else
-                    return rememberedOklabColor;
+                    return DescriptiveColor.GRAY;
         }
         else if(justHidden.contains(x, y)) {
-            return DescriptiveColor.fade(rememberedOklabColor, timeSpent);
+            return DescriptiveColor.oklab(0.5f, 0.5f, 0.5f, 1f - timeSpent);
         }
         return DescriptiveColor.TRANSPARENT;
     }

@@ -544,44 +544,34 @@ public class LightingManager {
      */
     public void draw(int[][] backgrounds)
     {
-        int current;
+        int backgroundRGBA = DescriptiveColor.fromRGBA8888(backgroundColor);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (losResult[x][y] > 0.0f && fovResult[x][y] > 0.0f) {
-                    current = backgrounds[x][y]; // here current is RGBA
-                    if(current == 0)
-                        current = backgroundColor;
-                    else
-                        current = DescriptiveColor.fromRGBA8888(current); // now current is Oklab
-                    backgrounds[x][y] = DescriptiveColor.toRGBA8888(DescriptiveColor.lerpColorsBlended(current,
-                            colorLighting[x][y], lightingStrength[x][y] * 0.4f));
+                    backgrounds[x][y] = DescriptiveColor.toRGBA8888(DescriptiveColor.lerpColorsBlended(backgroundRGBA,
+                            colorLighting[x][y], lightingStrength[x][y]));
                 }
             }
         }
     }
 
     /**
-     * Given a 2D array that should hold Oklab int colors, fills the 2D array with different Oklab colors based on what
+     * Given a 2D array that will hold Oklab int colors, fills the 2D array with different Oklab colors based on what
      * lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
-     * sources can do. You should usually call {@link #update()} before each call to draw(), but you may want to make
-     * custom changes to the lighting in between those two calls (that is the only place those changes will be noticed).
-     * A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
-     * <br>
-     * A special case here is that a value of {@code 0} in {@code backgrounds} will be treated as
-     * {@link #backgroundColor}, not as the (invalid) Oklab color that is represented by 0 .
-     * @param backgrounds a 2D int array, which will be modified in-place
+     * sources can do. You should usually call {@link #update()} before each call to drawOklab(), but you may want to
+     * make custom changes to the lighting in between those two calls (that is the only place those changes will be
+     * noticed). A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
+     * This always mixes the calculated lights in {@link #colorLighting} with the {@link #backgroundColor}, using
+     * {@link #lightingStrength} to determine how much the lights should affect the background color.
+     * @param backgrounds a 2D int array, which will be written to in-place to hold Oklab int colors
      */
     public void drawOklab(int[][] backgrounds)
     {
-        int current;
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (losResult[x][y] > 0.0f && fovResult[x][y] > 0.0f) {
-                        current = backgrounds[x][y]; // here current is Oklab
-                        if(current == 0)
-                            current = backgroundColor;
-                        backgrounds[x][y] = DescriptiveColor.lerpColorsBlended(current,
-                                colorLighting[x][y], lightingStrength[x][y] * 0.4f);
+                        backgrounds[x][y] = DescriptiveColor.lerpColorsBlended(backgroundColor,
+                                colorLighting[x][y], lightingStrength[x][y]);
                 }
             }
         }
