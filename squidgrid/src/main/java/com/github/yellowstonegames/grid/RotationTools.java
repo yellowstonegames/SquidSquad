@@ -440,9 +440,9 @@ public final class RotationTools {
      * @return a newly-allocated 4-element float array, meant as effectively a 2D rotation matrix
      */
     public static float[] randomRotation2D(EnhancedRandom random) {
-        final int index = random.next(TrigTools.SIN_BITS);
+        final int index = random.next(TrigTools.TABLE_BITS);
         final float s = TrigTools.SIN_TABLE[index];
-        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        final float c = TrigTools.COS_TABLE[index];
         return new float[]{c, s, -s, c};
     }
 
@@ -908,9 +908,9 @@ public final class RotationTools {
      * @return a newly-allocated 4-element double array, meant as effectively a 2D rotation matrix
      */
     public static double[] randomDoubleRotation2D(EnhancedRandom random) {
-        final int index = random.next(TrigTools.SIN_BITS);
+        final int index = random.next(TrigTools.TABLE_BITS);
         final double s = TrigTools.SIN_TABLE_D[index];
-        final double c = TrigTools.SIN_TABLE_D[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        final double c = TrigTools.COS_TABLE_D[index];
         return new double[]{c, s, -s, c};
     }
 
@@ -1043,10 +1043,9 @@ public final class RotationTools {
         }
 
         public void randomize() {
-//            String store = random.stringSerialize();
-            final int index = random.next(TrigTools.SIN_BITS);
+            final int index = random.next(TrigTools.TABLE_BITS);
             rotation[2] = -(rotation[1] = TrigTools.SIN_TABLE[index]);
-            rotation[0] = rotation[3] = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+            rotation[0] = rotation[3] = TrigTools.COS_TABLE[index];
 
             for (int targetSize = 3; targetSize <= dimension; targetSize++) {
                 final int smallSize = targetSize - 1;
@@ -1089,14 +1088,7 @@ public final class RotationTools {
                 }
                 Arrays.fill(rotation, 0);
                 matrixMultiply(house, large, rotation, targetSize);
-//                if(Float.isNaN(rotation[1])) {
-//                    break;
-//                }
             }
-//            if(Float.isNaN(rotation[1])) {
-//                System.out.println("TRASH! " + store);
-//                System.exit(0);
-//            }
         }
 
         /**
