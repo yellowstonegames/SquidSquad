@@ -168,6 +168,19 @@ public class VisionFramework {
     }
 
     /**
+     * Fully replaces the contents of {@link #linePlaceMap} with those of {@code newPlaceMap},
+     * and changes the light resistances for the whole place map in {@link #lighting}.
+     * The existing place map should really be the same size as the new place map.You must call
+     * {@link #finishChanges()} when you are done changing the place map, in order to update
+     * the lighting with the latest changes.
+     * @param newPlaceMap
+     */
+    public void editAll(char[][] newPlaceMap) {
+        ArrayTools.set(newPlaceMap, linePlaceMap);
+        FOV.fillSimpleResistancesInto(linePlaceMap, lighting.resistances);
+    }
+
+    /**
      * If a viewer is present at {@code oldX,oldY} in {@link #viewers} and no view is present
      * at {@code newX,newY}, this moves the viewer to {@code newX,newY} and returns true.
      * Otherwise, this does nothing and returns false. You must call {@link #finishChanges()}
@@ -205,8 +218,39 @@ public class VisionFramework {
         return viewers.alter(previousPosition, nextPosition);
     }
 
+    /**
+     * If a viewer is present at {@code x,y} in {@link #viewers}, this removes that
+     * viewer and returns true. Otherwise, this does nothing and returns false. You must call
+     * {@link #finishChanges()} when you are done changing the place map or viewers, in order to
+     * update the lighting with the latest changes.
+     * <br>
+     * If a viewer represents a character with a light source, you should probably have the light
+     * source known via {@link #lighting}, and removing the light source should use {@link LightingManager#removeLight}.
+     * @param x the x-position of the viewer to remove, if one is present
+     * @param y the y-position of the viewer to remove, if one is present
+     * @return true if a viewer was removed, or false otherwise
+     */
+    public boolean removeViewer(int x, int y) {
+        return removeViewer(Coord.get(x, y));
     }
 
+    /**
+     * If a viewer is present at {@code position} in {@link #viewers}, this removes that
+     * viewer and returns true. Otherwise, this does nothing and returns false. You must call
+     * {@link #finishChanges()} when you are done changing the place map or viewers, in order to
+     * update the lighting with the latest changes.
+     * <br>
+     * If a viewer represents a character with a light source, you should probably have the light
+     * source known via {@link #lighting}, and removing the light source should use {@link LightingManager#removeLight}.
+     * @param position the position of the viewer to remove, if one is present
+     * @return true if a viewer was removed, or false otherwise
+     */
+    public boolean removeViewer(Coord position) {
+        if(!viewers.containsKey(position)) return false;
+
+        viewers.remove(position);
+        return true;
+    }
 
     /**
      * This completes the changes started by {@link #moveViewer}, {@link #editSingle}, or {@link #editAll(char[][])}
