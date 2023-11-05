@@ -96,11 +96,6 @@ public class VisionFramework {
     public Region inView;
 
     /**
-     * The 2D position of the player (the moving character who the FOV centers upon).
-     */
-    public Coord player;
-
-    /**
      * Maps the positions of "things that can view the map for the player" to how far each of those things can see.
      * In a traditional roguelike, there is probably just one viewer here unless the game includes remote viewing in
      * some form. In a party-based game, each member of the exploration party is probably a viewer.
@@ -148,54 +143,78 @@ public class VisionFramework {
         else ArrayTools.fill(backgroundColors, rememberedOklabColor);
     }
 
-    public void edit(int newX, int newY, char newCell) {
-        edit(Coord.get(newX, newY), newCell);
+    /**
+     * Changes the char at {@code newX,newY} to be {@code newCell} and adjusts the light resistance
+     * for that cell only in {@link #lighting}. You must call {@link #finishChanges()} when you are
+     * done changing the place map, in order to update the lighting with the latest changes.
+     * @param newX the x-position to change, as an int
+     * @param newY the y-position to change, as an int
+     * @param newCell the char value to use at the given position (in {@link #linePlaceMap})
+     */
+    public void editSingle(int newX, int newY, char newCell) {
+        editSingle(Coord.get(newX, newY), newCell);
     }
 
-    public void edit(Coord changedPosition, char newCell) {
-        linePlaceMap[changedPosition.x][changedPosition.y] = newCell;
-        prunedPlaceMap[changedPosition.x][changedPosition.y] = newCell;
-        lighting.resistances[changedPosition.x][changedPosition.y] = FOV.simpleResistance(newCell);
-
-        // store our current light levels value into previousLightLevels, since we will calculate new light levels.
-        // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
-        ArrayTools.set(lighting.fovResult, previousLightLevels);
-        // assigns to justHidden all cells that were visible in lighting in the last turn.
-        justHidden.refill(previousLightLevels, 0f).not();
-        // recalculate all FOV fields for viewers, combine them, store it in lighting for the render to use.
-//        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
-//            FOV.reuseFOV(lighting.resistances, workingLightLevels, e.key.x, e.key.y, e.value, Radius.CIRCLE);
-//            FOV.addFOVsInto(lighting.fovResult, workingLightLevels);
-//        }
-        lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
-        // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
-        blockage.refill(lighting.fovResult, 0f);
-        // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
-        justSeen.remake(seen);
-        // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
-        // then, seen has all of those cells that have been visible (ever) included in with its cells.
-        seen.or(blockage.not());
-        // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
-        justSeen.notAnd(seen);
-        // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
-        // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
-        justHidden.andNot(blockage);
-        // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
-        // adjacent to those cells.
-        blockage.fringe8way();
-        // takes box-drawing characters (walls) in linePlaceMap that would have segments that aren't visible in
-        // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
-        LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
+    /**
+     * Changes the char at {@code position} to be {@code newCell} and adjusts the light resistance
+     * for that cell only in {@link #lighting}. You must call {@link #finishChanges()} when you are
+     * done changing the place map, in order to update the lighting with the latest changes.
+     * @param position the position to change, as a non-null Coord
+     * @param newCell the char value to use at the given position (in {@link #linePlaceMap})
+     */
+    public void editSingle(Coord position, char newCell) {
+        linePlaceMap[position.x][position.y] = newCell;
+        lighting.resistances[position.x][position.y] = FOV.simpleResistance(newCell);
     }
 
-    public void move(int oldX, int oldY, int newX, int newY) {
-        move(Coord.get(oldX, oldY), Coord.get(newX, newY));
+    /**
+     * If a viewer is present at {@code oldX,oldY} in {@link #viewers} and no view is present
+     * at {@code newX,newY}, this moves the viewer to {@code newX,newY} and returns true.
+     * Otherwise, this does nothing and returns false. You must call {@link #finishChanges()}
+     * when you are done changing the place map or viewers, in order to update the lighting
+     * with the latest changes.
+     * <br>
+     * If a viewer represents a character with a light source, you should probably have the light
+     * source known via {@link #lighting}, and moving the light source should use {@link LightingManager#moveLight}.
+     * @param oldX the x-position of the viewer to move, if one is present
+     * @param oldY the y-position of the viewer to move, if one is present
+     * @param newX the x-position to move the viewer to, if possible
+     * @param newY the y-position to move the viewer to, if possible
+     * @return true if the viewer moved, or false otherwise
+     */
+    public boolean moveViewer(int oldX, int oldY, int newX, int newY) {
+        return moveViewer(Coord.get(oldX, oldY), Coord.get(newX, newY));
     }
 
-    public void move(Coord previousPosition, Coord nextPosition) {
-        if(!viewers.containsKey(previousPosition)) return;
+    /**
+     * If a viewer is present at {@code previousPosition} in {@link #viewers} and no view is present
+     * at {@code nextPosition}, this moves the viewer to {@code nextPosition} and returns true.
+     * Otherwise, this does nothing and returns false. You must call {@link #finishChanges()} when
+     * you are done changing the place map or viewers, in order to update the lighting with the
+     * latest changes.
+     * <br>
+     * If a viewer represents a character with a light source, you should probably have the light
+     * source known via {@link #lighting}, and moving the light source should use {@link LightingManager#moveLight}.
+     * @param previousPosition the position of the viewer to move, if one is present
+     * @param nextPosition the position to move the viewer to, if possible
+     * @return true if the viewer moved, or false otherwise
+     */
+    public boolean moveViewer(Coord previousPosition, Coord nextPosition) {
+        if(!viewers.containsKey(previousPosition) || viewers.containsKey(nextPosition)) return false;
 
-        viewers.alter(previousPosition, nextPosition);
+        return viewers.alter(previousPosition, nextPosition);
+    }
+
+    }
+
+
+    /**
+     * This completes the changes started by {@link #moveViewer}, {@link #editSingle}, or {@link #editAll(char[][])}
+     * and updates the lighting according to those changes. This affects almost all variables present in
+     * this object. It should be noted that the methods that change a place map only {@link #linePlaceMap};
+     * that is because the end of this method uses the currently seen cells to update {@link #prunedPlaceMap}.
+     */
+    public void finishChanges() {
         // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
         // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
         ArrayTools.set(lighting.fovResult, previousLightLevels);
