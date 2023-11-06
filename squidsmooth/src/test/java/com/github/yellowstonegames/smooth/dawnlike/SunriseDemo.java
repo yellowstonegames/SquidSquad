@@ -592,7 +592,6 @@ public class SunriseDemo extends ApplicationAdapter {
                 }
             }
         }
-        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         AnimatedGlidingSprite monster;
 
         for (int i = 0; i < placeWidth; i++) {
@@ -600,15 +599,16 @@ public class SunriseDemo extends ApplicationAdapter {
                 if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
-                        monster.animate(time).draw(batch, change);
+                        monster.animate(time).draw(batch);
                     }
                 }
                 else if(vision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
-                    monster.animate(time).draw(batch, change);
+                    monster.animate(time).draw(batch);
                 }
             }
         }
+        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         playerSprite.animate(time).draw(batch);
 //        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }

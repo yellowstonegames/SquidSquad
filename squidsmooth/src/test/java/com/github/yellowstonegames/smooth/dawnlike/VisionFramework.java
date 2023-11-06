@@ -338,11 +338,10 @@ public class VisionFramework {
     }
 
     public int getMovingCreatureColor(int x, int y, float timeSpent) {
-        if (lighting.fovResult[x][y] > 0.0) {
+        if (lighting.fovResult[x][y] > 0.01) {
                 if(justSeen.contains(x, y))
                     return DescriptiveColor.oklab(0.5f, 0.5f, 0.5f, timeSpent);
-                else
-                    return DescriptiveColor.GRAY;
+                return DescriptiveColor.GRAY;
         }
         else if(justHidden.contains(x, y)) {
             return DescriptiveColor.oklab(0.5f, 0.5f, 0.5f, 1f - timeSpent);
