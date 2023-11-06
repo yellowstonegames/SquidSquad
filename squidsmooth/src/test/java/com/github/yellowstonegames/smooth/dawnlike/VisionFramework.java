@@ -50,7 +50,7 @@ public class VisionFramework {
     /**
      * Handles all light sources, with varying colors, strengths, and flicker/strobe patterns.
      */
-    private LightingManager lighting;
+    public LightingManager lighting;
 
     /**
      * The value that {@code lighting.fovResult} held in the previous turn or short period of time.
