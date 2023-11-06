@@ -266,6 +266,39 @@ public class VisionFramework {
     }
 
     /**
+     * Adds a viewer to {@link #viewers} with the given viewing distance, if there is no viewer already
+     * present at {@code x,y}. If a viewer is present at {@code x,y} in {@link #viewers}, then
+     * this edits its viewing distance. You must call
+     * {@link #finishChanges()} when you are done changing the place map or viewers, in order to
+     * update the lighting with the latest changes.
+     * <br>
+     * If a viewer represents a character with a light source, you should probably have the light
+     * source known via {@link #lighting}, and adding a light source should use {@link LightingManager#addLight(int, int, Radiance)}.
+     * @param x the x-position of the viewer to place or edit
+     * @param y the y-position of the viewer to place or edit
+     * @param viewRange the viewing distance to use for the placed or edited viewer
+     */
+    public void putViewer(int x, int y, float viewRange) {
+        viewers.put(Coord.get(x, y), viewRange);
+    }
+
+    /**
+     * Adds a viewer to {@link #viewers} with the given viewing distance, if there is no viewer already
+     * present at {@code position}. If a viewer is present at {@code position} in {@link #viewers}, then
+     * this edits its viewing distance. You must call
+     * {@link #finishChanges()} when you are done changing the place map or viewers, in order to
+     * update the lighting with the latest changes.
+     * <br>
+     * If a viewer represents a character with a light source, you should probably have the light
+     * source known via {@link #lighting}, and adding a light source should use {@link LightingManager#addLight(Coord, Radiance)}.
+     * @param position the position of the viewer to place or edit
+     * @param viewRange the viewing distance to use for the placed or edited viewer
+     */
+    public void putViewer(Coord position, float viewRange) {
+        viewers.put(position, viewRange);
+    }
+
+    /**
      * This completes the changes started by {@link #moveViewer}, {@link #editSingle}, or {@link #editAll(char[][])}
      * and updates the lighting according to those changes. This affects almost all variables present in
      * this object. It should be noted that the methods that change a place map only {@link #linePlaceMap};
