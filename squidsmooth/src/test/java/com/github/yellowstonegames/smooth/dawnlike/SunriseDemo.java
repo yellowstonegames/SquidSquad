@@ -355,6 +355,7 @@ public class SunriseDemo extends ApplicationAdapter {
         charMapping.put(' ', atlas.findRegion("lit brick wall up down"            ));
         charMapping.put('1', atlas.findRegion("red liquid drizzle"));
         charMapping.put('2', atlas.findRegion("red liquid spatter"));
+        charMapping.put('s', atlas.findRegion("little shine", 1));
 
         //Coord is the type we use as a general 2D point, usually in a dungeon.
         //Because we know dungeons won't be incredibly huge, Coord performs best for x and y values less than 256, but
@@ -481,7 +482,7 @@ public class SunriseDemo extends ApplicationAdapter {
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
                             if(vision.prunedPlaceMap[newX+x][newY+y] == '.' && rng.nextBoolean())
-                                vision.linePlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
+                                vision.prunedPlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
                         }
                     }
                 }
@@ -586,6 +587,8 @@ public class SunriseDemo extends ApplicationAdapter {
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(glyph, solid), x, y, 1f, 1f);
+                    // visual debugging; show all cells w
+//                    if(vision.justHidden.contains(x, y)) batch.draw(charMapping.getOrDefault('s', solid), x, y, 1f, 1f);
                 }
             }
         }

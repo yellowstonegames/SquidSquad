@@ -99,7 +99,7 @@ public class VisionFramework {
      * All cells that became visible for the first time on this turn or short period of time. These cells
      * will be fading in from fully-transparent, rather than from a previously-seen gray color.
      */
-    private Region newlyVisible;
+    public Region newlyVisible;
     /**
      * Contains only the cells that have a value greater than 0 in {@code lighting.fovResult}, meaning
      * they are visible right now.
@@ -316,23 +316,24 @@ public class VisionFramework {
         lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
         // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
         blockage.refill(lighting.fovResult, 0f);
-        // store current previously-seen cells as justSeen, so they can be used to ease those cells into being seen.
-        justSeen.remake(seen);
+        // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
+        justSeen.remake(justHidden);
         // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
-        // that gets stored in inView.
         inView.remake(blockage.not());
+        // stores cells that are currently visible but had never been seen at all (transparent) in earlier frames.
+        newlyVisible.remake(inView).andNot(seen);
         // then, seen has all of those cells that have been visible (ever) included in with its cells.
         seen.or(inView);
-        // this is roughly `justSeen = seen - justSeen;`, if subtraction worked on Regions.
-        justSeen.notAnd(seen);
-        // this is roughly `justHidden = justHidden - blockage;`, where justHidden had included all previously visible
+        // this is roughly `justSeen = inView - justSeen;`, if subtraction worked on Regions.
+        justSeen.notAnd(inView);
+        // this is roughly `justHidden = justHidden - inView;`, where justHidden had included all previously visible
         // cells, and now will have all currently visible cells removed from it. This leaves the just-hidden cells.
-        justHidden.andNot(blockage);
+        justHidden.andNot(inView);
         // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
         // adjacent to those cells.
         blockage.fringe8way();
         // takes box-drawing characters (walls) in linePlaceMap that would have segments that aren't visible in
-        // seen, then removes the segments that shouldn't be visible and stores the result in prunedDungeon.
+        // seen, then removes the segments that shouldn't be visible and stores the result in prunedPlaceMap.
         LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
     }
 
