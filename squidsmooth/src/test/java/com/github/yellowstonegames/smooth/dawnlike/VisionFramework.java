@@ -165,7 +165,9 @@ public class VisionFramework {
      * @param newCell the char value to use at the given position (in {@link #linePlaceMap})
      */
     public void editSingle(int newX, int newY, char newCell) {
-        editSingle(Coord.get(newX, newY), newCell);
+        linePlaceMap[newX][newY] = newCell;
+        prunedPlaceMap[newX][newY] = newCell;
+        lighting.resistances[newX][newY] = FOV.simpleResistance(newCell);
     }
 
     /**
@@ -176,8 +178,7 @@ public class VisionFramework {
      * @param newCell the char value to use at the given position (in {@link #linePlaceMap})
      */
     public void editSingle(Coord position, char newCell) {
-        linePlaceMap[position.x][position.y] = newCell;
-        lighting.resistances[position.x][position.y] = FOV.simpleResistance(newCell);
+        editSingle(position.x, position.y, newCell);
     }
 
     /**
@@ -190,6 +191,7 @@ public class VisionFramework {
      */
     public void editAll(char[][] newPlaceMap) {
         ArrayTools.set(newPlaceMap, linePlaceMap);
+        ArrayTools.set(newPlaceMap, prunedPlaceMap);
         FOV.fillSimpleResistancesInto(linePlaceMap, lighting.resistances);
     }
 
