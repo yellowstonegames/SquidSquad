@@ -723,42 +723,42 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
         float[][] lightLevels = lighting.fovResult;
 
-        for (int i = 0; i < placeWidth; i++) {
-            for (int j = 0; j < placeHeight; j++) {
-                char glyph = prunedPlaceMap[i][j];
-                if(lightLevels[i][j] > 0.01) {
-                    if(newlyVisible.contains(i, j)){
+        for (int x = 0; x < placeWidth; x++) {
+            for (int y = 0; y < placeHeight; y++) {
+                char glyph = prunedPlaceMap[x][y];
+                if(lightLevels[x][y] > 0.01) {
+                    if(newlyVisible.contains(x, y)){
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.fade(
-                                        DescriptiveColor.addColors(backgroundColors[i][j],
-                                                DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
-                    } else if(justSeen.contains(i, j)){
+                                        DescriptiveColor.addColors(backgroundColors[x][y],
+                                                DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[x][y] * 0.7f + 0.15f)), 1f - change)));
+                    } else if(justSeen.contains(x, y)){
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
-                                DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)),
-                                        DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), 1f - change)));
+                                DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[x][y], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[x][y] * 0.7f + 0.15f)),
+                                        DescriptiveColor.lerpColors(backgroundColors[x][y], INT_GRAY, 0.6f), 1f - change)));
                     } else {
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
-                                DescriptiveColor.addColors(backgroundColors[i][j],
-                                        DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
+                                DescriptiveColor.addColors(backgroundColors[x][y],
+                                        DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[x][y] * 0.7f + 0.15f))));
                     }
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
-                        batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[i][j], solid), i, j, 1f, 1f);
-                } else if(justHidden.contains(i, j)) {
+                        batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[x][y], solid), x, y, 1f, 1f);
+                } else if(justHidden.contains(x, y)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
                     batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
-                            DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, previousLightLevels[i][j] * 0.7f + 0.15f)),
-                                    DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), change)));
+                            DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[x][y], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, previousLightLevels[x][y] * 0.7f + 0.15f)),
+                                    DescriptiveColor.lerpColors(backgroundColors[x][y], INT_GRAY, 0.6f), change)));
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
-                        batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[i][j], solid), i, j, 1f, 1f);
-                } else if(seen.contains(i, j)) {
+                        batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[x][y], solid), x, y, 1f, 1f);
+                } else if(seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
-                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f)));
+                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(DescriptiveColor.lerpColors(backgroundColors[x][y], INT_GRAY, 0.6f)));
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
-                        batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[i][j], solid), i, j, 1f, 1f);
+                        batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(prunedPlaceMap[x][y], solid), x, y, 1f, 1f);
                 }
             }
         }
