@@ -699,6 +699,8 @@ public class LightingManager {
         maxX = Math.min(Math.max(maxX, 0), width);
         minY = Math.min(Math.max(minY, 0), height);
         maxY = Math.min(Math.max(maxY, 0), height);
+        ArrayTools.fill(fovResult, 0f);
+        ArrayTools.fill(losResult, 0f);
         for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
             FOV.reuseFOVSymmetrical(resistances, floatCombining, e.key.x, e.key.y, e.value, radiusStrategy);
             FOV.addFOVsInto(fovResult, floatCombining);
