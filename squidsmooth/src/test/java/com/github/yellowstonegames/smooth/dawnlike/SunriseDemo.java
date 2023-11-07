@@ -35,7 +35,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.ObjectDeque;
@@ -80,7 +79,10 @@ public class SunriseDemo extends ApplicationAdapter {
      */
     private Region floors;
 
-    private VisionFramework vision = new VisionFramework();
+    /**
+     * Handles field of view calculations as they change when the player moves around; also, lighting with colors.
+     */
+    private final VisionFramework vision = new VisionFramework();
     /**
      * The 2D position of the player (the moving character who the FOV centers upon).
      */
@@ -249,6 +251,7 @@ public class SunriseDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         vision.restart(linePlaceMap, player, 8);
+        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.3f, 0f));
         floors.remove(player);
         int numMonsters = 100;
         monsters = new CoordObjectOrderedMap<>(numMonsters);
@@ -598,13 +601,15 @@ public class SunriseDemo extends ApplicationAdapter {
             for (int j = 0; j < placeHeight; j++) {
                 if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
-                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
-                        monster.animate(time).draw(batch);
+                        monster = monster.animate(time);
+                        monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
+                        monster.draw(batch);
                     }
                 }
                 else if(vision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
-                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
-                    monster.animate(time).draw(batch);
+                    monster = monster.animate(time);
+                    monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
+                    monster.draw(batch);
                 }
             }
         }
