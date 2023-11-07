@@ -156,6 +156,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
     private final Coord[] playerArray = new Coord[1];
 
+    private final CoordFloatOrderedMap viewers = new CoordFloatOrderedMap(1);
     private final Vector2 pos = new Vector2();
 
     /** In number of cells */
@@ -320,7 +321,10 @@ public class VisionDawnDemo extends ApplicationAdapter {
         // Make a LightingManager that uses our map's resistance and has a large FOV range for the player.
         lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), INT_GRAY, Radius.CIRCLE, fovRange);
         lighting.addLight(player, new Radiance(fovRange, FullPalette.COSMIC_LATTE, 0.3f, 0f));
-        lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
+//        lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
+        viewers.clear();
+        viewers.put(player, fovRange);
+        lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         previousLightLevels = previousLightLevels == null ? ArrayTools.copy(lighting.fovResult) : ArrayTools.set(lighting.fovResult, previousLightLevels);
         inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
@@ -566,7 +570,8 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
                 // recalculate FOV, store it in lightLevels for the render to use.
-                lighting.calculateFOV(newX, newY, newX - 10, newY - 10, newX + 11, newY + 11);
+//                lighting.calculateFOV(newX, newY, newX - 10, newY - 10, newX + 11, newY + 11);
+                lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lighting.fovResult, 0f);
                 // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
@@ -610,7 +615,9 @@ public class VisionDawnDemo extends ApplicationAdapter {
                 // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
                 // recalculate FOV, store it in lightLevels for the render to use.
-                lighting.calculateFOV(newX, newY, newX - 10, newY - 10, newX + 11, newY + 11);
+//                lighting.calculateFOV(newX, newY, newX - 10, newY - 10, newX + 11, newY + 11);
+                viewers.alterAt(0, next);
+                lighting.calculateFOV(viewers, 0, 0, placeWidth, placeHeight);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lighting.fovResult, 0f);
                 // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
