@@ -137,25 +137,88 @@ public class VisionFramework {
     public VisionFramework() {
     }
 
-    public void restart(char[][] dungeon, Coord playerPosition, float fovRange) {
-        restart(dungeon, CoordFloatOrderedMap.with(playerPosition, fovRange), rememberedOklabColor);
+    /**
+     * Some form of restart() must be called when the map is first created and whenever the whole local map changes.
+     * <br>
+     * This overload simplifies the viewers to just the common case of one viewer, the player character. You can specify
+     * an {@code fovRange} for how much the player can see without a light source, and you can also choose to add a
+     * light at the player's position with {@link #lighting} and its {@link LightingManager#addLight(Coord, Radiance)}
+     * method. Remember to move the player with {@link #moveViewer(Coord, Coord)} and any light they carry with
+     * {@link LightingManager#moveLight(Coord, Coord)}. If the player's FOV range changes, you can update it with
+     * {@link #putViewer(Coord, float)} using the player's current position.
+     * @param place a 2D char array representing a local map; {@code '#'} or box drawing characters represent walls
+     * @param playerPosition where the one viewer will be put in the place; must be in-bounds for place
+     * @param fovRange how far, in grid cells, the player can see without needing a light source
+     */
+    public void restart(char[][] place, Coord playerPosition, float fovRange) {
+        restart(place, CoordFloatOrderedMap.with(playerPosition, fovRange), rememberedOklabColor);
     }
 
-    public void restart(char[][] dungeon, Coord playerPosition, float fovRange, int baseColor) {
-        restart(dungeon, CoordFloatOrderedMap.with(playerPosition, fovRange), baseColor);
+    /**
+     * Some form of restart() must be called when the map is first created and whenever the whole local map changes.
+     * <br>
+     * This overload simplifies the viewers to just the common case of one viewer, the player character. You can specify
+     * an {@code fovRange} for how much the player can see without a light source, and you can also choose to add a
+     * light at the player's position with {@link #lighting} and its {@link LightingManager#addLight(Coord, Radiance)}
+     * method. Remember to move the player with {@link #moveViewer(Coord, Coord)} and any light they carry with
+     * {@link LightingManager#moveLight(Coord, Coord)}. If the player's FOV range changes, you can update it with
+     * {@link #putViewer(Coord, float)} using the player's current position.
+     * <br>
+     * This overload allows specifying a {@code baseColor} that will be used cells that were seen previously but can't
+     * be seen now; typically this is dark gray or very close to that, and it is an Oklab int color as produced by
+     * {@link DescriptiveColor}. The default, if not specified, is {@link #rememberedOklabColor}.
+     * @param place a 2D char array representing a local map; {@code '#'} or box drawing characters represent walls
+     * @param playerPosition where the one viewer will be put in the place; must be in-bounds for place
+     * @param fovRange how far, in grid cells, the player can see without needing a light source
+     * @param baseColor the packed Oklab color used for previously-seen, but not in-view, cells
+     */
+
+    public void restart(char[][] place, Coord playerPosition, float fovRange, int baseColor) {
+        restart(place, CoordFloatOrderedMap.with(playerPosition, fovRange), baseColor);
     }
 
-    public void restart(char[][] dungeon, CoordFloatOrderedMap viewers) {
-        restart(dungeon, viewers, rememberedOklabColor);
+    /**
+     * Some form of restart() must be called when the map is first created and whenever the whole local map changes.
+     * <br>
+     * This overload allows having one or more viewer positions at the start, with all viewers sharing seen information
+     * with each other (enemy characters are not generally viewers here). Each Coord position for a viewer is associated
+     * with how much that viewer can see without a light source; you can also choose to add a
+     * light at a viewer's position with {@link #lighting} and its {@link LightingManager#addLight(Coord, Radiance)}
+     * method. Remember to move any viewer with {@link #moveViewer(Coord, Coord)} and any light they carry with
+     * {@link LightingManager#moveLight(Coord, Coord)}. If a viewer's FOV range changes, you can update it with
+     * {@link #putViewer(Coord, float)} using that viewer's current position. You can also add new viewers that way.
+     * @param place a 2D char array representing a local map; {@code '#'} or box drawing characters represent walls
+     * @param viewers a CoordFloatOrderedMap of the positions of viewers to their viewing ranges; directly referenced
+     */
+    public void restart(char[][] place, CoordFloatOrderedMap viewers) {
+        restart(place, viewers, rememberedOklabColor);
     }
 
-    public void restart(char[][] dungeon, CoordFloatOrderedMap viewers, int baseColor) {
-        if (dungeon == null || dungeon.length == 0 || dungeon[0] == null || dungeon[0].length == 0)
+    /**
+     * Some form of restart() must be called when the map is first created and whenever the whole local map changes.
+     * <br>
+     * This overload allows having one or more viewer positions at the start, with all viewers sharing seen information
+     * with each other (enemy characters are not generally viewers here). Each Coord position for a viewer is associated
+     * with how much that viewer can see without a light source; you can also choose to add a
+     * light at a viewer's position with {@link #lighting} and its {@link LightingManager#addLight(Coord, Radiance)}
+     * method. Remember to move any viewer with {@link #moveViewer(Coord, Coord)} and any light they carry with
+     * {@link LightingManager#moveLight(Coord, Coord)}. If a viewer's FOV range changes, you can update it with
+     * {@link #putViewer(Coord, float)} using that viewer's current position. You can also add new viewers that way.
+     * <br>
+     * This overload allows specifying a {@code baseColor} that will be used cells that were seen previously but can't
+     * be seen now; typically this is dark gray or very close to that, and it is an Oklab int color as produced by
+     * {@link DescriptiveColor}. The default, if not specified, is {@link #rememberedOklabColor}.
+     * @param place a 2D char array representing a local map; {@code '#'} or box drawing characters represent walls
+     * @param viewers a CoordFloatOrderedMap of the positions of viewers to their viewing ranges; directly referenced
+     * @param baseColor the packed Oklab color used for previously-seen, but not in-view, cells
+     */
+    public void restart(char[][] place, CoordFloatOrderedMap viewers, int baseColor) {
+        if (place == null || place.length == 0 || place[0] == null || place[0].length == 0)
             return;
-        placeWidth = dungeon.length;
-        placeHeight = dungeon[0].length;
+        placeWidth = place.length;
+        placeHeight = place[0].length;
         this.viewers = viewers;
-        linePlaceMap = LineTools.hashesToLines(dungeon, true);
+        linePlaceMap = LineTools.hashesToLines(place, true);
         prunedPlaceMap = ArrayTools.copy(linePlaceMap);
         lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedOklabColor, Radius.CIRCLE, 4f);
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
