@@ -59,18 +59,15 @@ public class VisionFramework {
     public float[][] previousLightLevels;
 
     /**
-     * The 2D int array of temporary Oklab colors produced by {@link LightingManager#drawOklab(int[][])}.
-     * This will be overwritten every time {@link #update(float)} is called.
-     */
-    public int[][] drawingColors;
-
-    /**
      * The background color tints; these are the finished colors produced by {@link #update(float)}.
+     * These colors are overwritten every time update() is called.
+     * <br>
      * This uses packed Oklab int colors, which avoid the overhead of creating new Color objects.
      * Use {@link DescriptiveColor} to get, describe, or create Oklab int colors.
      * You can convert to RGBA8888 (which libGDX uses) with {@link DescriptiveColor#oklabIntToFloat(int)}
      * if you want a "packed float color" that can be given to libGDX directly, or to a Color using
      * {@code Color.rgba8888ToColor(changingColor, DescriptiveColor.toRGBA8888(oklabColor))}.
+     * <br>
      * In most roguelikes, there would be one of these per dungeon floor.
      */
     public int[][] backgroundColors;
@@ -150,9 +147,7 @@ public class VisionFramework {
         newlyVisible = newlyVisible == null ? seen.copy() : newlyVisible.remake(seen);
         LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
         rememberedOklabColor = baseColor;
-        if(drawingColors == null) drawingColors = ArrayTools.fill(rememberedOklabColor, placeWidth, placeHeight);
-        else ArrayTools.fill(drawingColors, rememberedOklabColor);
-        if(backgroundColors == null) backgroundColors = ArrayTools.copy(drawingColors);
+        if(backgroundColors == null) backgroundColors = ArrayTools.fill(rememberedOklabColor, placeWidth, placeHeight);
         else ArrayTools.fill(backgroundColors, rememberedOklabColor);
     }
 
@@ -352,29 +347,28 @@ public class VisionFramework {
     public void update(float timeSinceLastMove) {
         lighting.update();
         final float change = Math.min(Math.max(timeSinceLastMove, 0f), 1f);
-        lighting.drawOklab(drawingColors);
+        lighting.drawOklab(backgroundColors);
 
         for (int x = 0; x < placeWidth; x++) {
             for (int y = 0; y < placeHeight; y++) {
                 if(lighting.fovResult[x][y] > 0.01) {
                     if(newlyVisible.contains(x, y)){
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
-                        backgroundColors[x][y] = DescriptiveColor.fade(drawingColors[x][y], 1f - change);
+                        backgroundColors[x][y] = DescriptiveColor.fade(backgroundColors[x][y], 1f - change);
                     } else if(justSeen.contains(x, y)){
-                        backgroundColors[x][y] = DescriptiveColor.lerpColors(drawingColors[x][y],
+                        backgroundColors[x][y] = DescriptiveColor.lerpColors(backgroundColors[x][y],
                                 rememberedOklabColor, 1f - change);
-                    } else {
-                        backgroundColors[x][y] = drawingColors[x][y];
                     }
                 } else if(justHidden.contains(x, y)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
-                    backgroundColors[x][y] = DescriptiveColor.lerpColors(drawingColors[x][y],
+                    backgroundColors[x][y] = DescriptiveColor.lerpColors(backgroundColors[x][y],
                             rememberedOklabColor, change);
                 } else if(seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
                     backgroundColors[x][y] = rememberedOklabColor;
                 }
                 else {
+                    // cells we have never seen are just not drawn (transparent).
                     backgroundColors[x][y] = 0;
                 }
             }
