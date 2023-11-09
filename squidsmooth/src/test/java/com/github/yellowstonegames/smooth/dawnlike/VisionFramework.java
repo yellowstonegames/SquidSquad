@@ -23,6 +23,18 @@ import com.github.yellowstonegames.grid.*;
 
 /**
  * Encapsulates currently-visible and previously-seen cell data, and allows updating and modifying light levels/colors.
+ * <br>
+ * After creating a VisionFramework, You can call {@link #restart(char[][], CoordFloatOrderedMap, int)} when you have a
+ * 2D char array to use as the map and one or more viewer positions. After that, add light sources to {@link #lighting}.
+ * Then you can render the map "background" colors by calling {@link #update(float)} (every frame) and getting the
+ * colors/opacities for anything that can move around (monsters, some traps or effects) using
+ * {@link #getMovingCreatureColor(int, int, float)} (also every frame, once per creature/effect). The update() and
+ * getMovingCreatureColor() methods take a float, millisSinceLastMove, which is measured in milliseconds since the last
+ * action the player took; this allows cells to fade into or out of view over a short period of time. The background
+ * colors are available at {@link #backgroundColors} once update() has been called. When the player character or
+ * characters move (or any special vision they have moves, like a remote camera), call
+ * {@link #moveViewer(Coord, Coord)}. When a small part of the world changes, call {@link #editSingle(Coord, char)}
+ * (such as for a door opening), or {@link #editAll(char[][])} if a large part of the world changes at once.
  */
 @Beta
 public class VisionFramework {
@@ -116,14 +128,27 @@ public class VisionFramework {
      * You can get Oklab int colors using {@link DescriptiveColor}.
      */
     public int rememberedOklabColor = 0xFF7F7F50;
-    
-    public VisionFramework() {
 
+    /**
+     * The empty constructor. You can call {@link #restart(char[][], CoordFloatOrderedMap, int)} when you have a 2D char
+     * array to use as the map and one or more viewer positions. See the {@link VisionFramework class docs} for more
+     * usage information.
+     */
+    public VisionFramework() {
     }
 
     public void restart(char[][] dungeon, Coord playerPosition, float fovRange) {
         restart(dungeon, CoordFloatOrderedMap.with(playerPosition, fovRange), rememberedOklabColor);
     }
+
+    public void restart(char[][] dungeon, Coord playerPosition, float fovRange, int baseColor) {
+        restart(dungeon, CoordFloatOrderedMap.with(playerPosition, fovRange), baseColor);
+    }
+
+    public void restart(char[][] dungeon, CoordFloatOrderedMap viewers) {
+        restart(dungeon, viewers, rememberedOklabColor);
+    }
+
     public void restart(char[][] dungeon, CoordFloatOrderedMap viewers, int baseColor) {
         if (dungeon == null || dungeon.length == 0 || dungeon[0] == null || dungeon[0].length == 0)
             return;
@@ -332,21 +357,21 @@ public class VisionFramework {
         LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
     }
 
-    public int getMovingCreatureColor(int x, int y, float timeSpent) {
+    public int getMovingCreatureColor(int x, int y, float millisSinceLastMove) {
         if (lighting.fovResult[x][y] > 0.01) {
                 if(justSeen.contains(x, y))
-                    return DescriptiveColor.oklab(1f, 0.5f, 0.5f, timeSpent);
+                    return DescriptiveColor.oklab(1f, 0.5f, 0.5f, millisSinceLastMove * 0.001f);
                 return DescriptiveColor.WHITE;
         }
         else if(justHidden.contains(x, y)) {
-            return DescriptiveColor.oklab(1f, 0.5f, 0.5f, 1f - timeSpent);
+            return DescriptiveColor.oklab(1f, 0.5f, 0.5f, 1f - millisSinceLastMove * 0.001f);
         }
         return DescriptiveColor.TRANSPARENT;
     }
 
-    public void update(float timeSinceLastMove) {
+    public void update(float millisSinceLastMove) {
         lighting.update();
-        final float change = Math.min(Math.max(timeSinceLastMove, 0f), 1f);
+        final float change = Math.min(Math.max(millisSinceLastMove * 0.001f, 0f), 1f);
         lighting.drawOklab(backgroundColors);
 
         for (int x = 0; x < placeWidth; x++) {

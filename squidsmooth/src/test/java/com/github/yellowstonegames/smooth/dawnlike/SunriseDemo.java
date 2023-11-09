@@ -566,7 +566,7 @@ public class SunriseDemo extends ApplicationAdapter {
      */
     public void putMap()
     {
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 0.004f, 0f), 1f);
+        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
         vision.update(change);
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
 
