@@ -28,8 +28,8 @@ import com.github.yellowstonegames.grid.*;
  * 2D char array to use as the map and one or more viewer positions. After that, add light sources to {@link #lighting}.
  * Then you can render the map "background" colors by calling {@link #update(float)} (every frame) and getting the
  * colors/opacities for anything that can move around (monsters, some traps or effects) using
- * {@link #getMovingCreatureColor(int, int, float)} (also every frame, once per creature/effect). The update() and
- * getMovingCreatureColor() methods take a float, millisSinceLastMove, which is measured in milliseconds since the last
+ * {@link #getForegroundColor(int, int, float)} (also every frame, once per creature/effect). The update() and
+ * getForegroundColor() methods take a float, millisSinceLastMove, which is measured in milliseconds since the last
  * action the player took; this allows cells to fade into or out of view over a short period of time. The background
  * colors are available at {@link #backgroundColors} once update() has been called. When the player character or
  * characters move (or any special vision they have moves, like a remote camera), call
@@ -420,7 +420,44 @@ public class VisionFramework {
         LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
     }
 
-    public int getMovingCreatureColor(int x, int y, float millisSinceLastMove) {
+    /**
+     * For a "foreground" creature or effect that can move between cells, call this every frame to get the color to draw
+     * that thing with. The color is a packed Oklab int, as {@link DescriptiveColor} produces. This can return 0 if a
+     * creature or thing cannot be seen and is not fading in or out of view. Otherwise, the int color this returns will
+     * be white with some level of transparency -- if the creature is in view now and was in view previously, then it
+     * will be opaque white, otherwise it will have some transparency between 0 and 1.
+     * This takes a float argument, {@code millisSinceLastMove}, that is the number of milliseconds since the player
+     * last entered an input that changed the map or its inhabitants. This is used to handle fading creatures into view
+     * when the player's input suddenly revealed those creatures, or fading them out of view if they become hidden. You
+     * don't need to give milliseconds precisely; while the input is effectively clamped between 0 and 1000, you can
+     * multiply the actual milliseconds that have passed by (for example) 4 to reduce the time a fade effect takes to
+     * complete (to a quarter-second). Multiplying by a large number will make fades instantaneous.
+     * @param pos the position to get the "foreground" color for; does not actually have to have a creature in it
+     * @param millisSinceLastMove how many milliseconds have elapsed since the human player last entered an input, for fading
+     * @return the packed Oklab int color to tint any foreground creature or object with at {@code pos}
+     */
+    public int getForegroundColor(Coord pos, float millisSinceLastMove) {
+        return getForegroundColor(pos.x, pos.y, millisSinceLastMove);
+    }
+
+    /**
+     * For a "foreground" creature or effect that can move between cells, call this every frame to get the color to draw
+     * that thing with. The color is a packed Oklab int, as {@link DescriptiveColor} produces. This can return 0 if a
+     * creature or thing cannot be seen and is not fading in or out of view. Otherwise, the int color this returns will
+     * be white with some level of transparency -- if the creature is in view now and was in view previously, then it
+     * will be opaque white, otherwise it will have some transparency between 0 and 1.
+     * This takes a float argument, {@code millisSinceLastMove}, that is the number of milliseconds since the player
+     * last entered an input that changed the map or its inhabitants. This is used to handle fading creatures into view
+     * when the player's input suddenly revealed those creatures, or fading them out of view if they become hidden. You
+     * don't need to give milliseconds precisely; while the input is effectively clamped between 0 and 1000, you can
+     * multiply the actual milliseconds that have passed by (for example) 4 to reduce the time a fade effect takes to
+     * complete (to a quarter-second). Multiplying by a large number will make fades instantaneous.
+     * @param x the x-position to get the "foreground" color for; does not actually have to have a creature in it
+     * @param y the y-position to get the "foreground" color for; does not actually have to have a creature in it
+     * @param millisSinceLastMove how many milliseconds have elapsed since the human player last entered an input, for fading
+     * @return the packed Oklab int color to tint any foreground creature or object with at {@code x,y}
+     */
+    public int getForegroundColor(int x, int y, float millisSinceLastMove) {
         if (lighting.fovResult[x][y] > 0.01) {
                 if(justSeen.contains(x, y))
                     return DescriptiveColor.oklab(1f, 0.5f, 0.5f, millisSinceLastMove * 0.001f);
@@ -432,6 +469,18 @@ public class VisionFramework {
         return DescriptiveColor.TRANSPARENT;
     }
 
+    /**
+     * Updates the lighting effects and writes to {@link #backgroundColors} so the current tint color is stored in every
+     * cell of backgroundColors, for every cell in the place map. Call this every frame while lights are updating (for
+     * flicker and strobe effects); this does not need to be called if the game has rendering paused for any reason.
+     * This takes a float argument, {@code millisSinceLastMove}, that is the number of milliseconds since the player
+     * last entered an input that changed the map or its inhabitants. This is used to handle fading creatures into view
+     * when the player's input suddenly revealed those creatures, or fading them out of view if they become hidden. You
+     * don't need to give milliseconds precisely; while the input is effectively clamped between 0 and 1000, you can
+     * multiply the actual milliseconds that have passed by (for example) 4 to reduce the time a fade effect takes to
+     * complete (to a quarter-second). Multiplying by a large number will make fades instantaneous.
+     * @param millisSinceLastMove how many milliseconds have elapsed since the human player last entered an input, for fading
+     */
     public void update(float millisSinceLastMove) {
         lighting.update();
         final float change = Math.min(Math.max(millisSinceLastMove * 0.001f, 0f), 1f);

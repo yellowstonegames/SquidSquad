@@ -569,6 +569,10 @@ public class SunriseDemo extends ApplicationAdapter {
         float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
         vision.update(change);
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
+//        final float sun = 1f - ((time * 0.1f) - (int)(time * 0.1f)),
+//                blueYellow = TrigTools.sinTurns(sun),
+//                greenRed = TrigTools.cosTurns(sun);
+//        vision.rememberedOklabColor = DescriptiveColor.oklab(0.45f + blueYellow * 0.15f, blueYellow * 0.02f + 0.5f, greenRed * 0.03f + 0.51f, 1f);
 
         int rainbow = DescriptiveColor.maximizeSaturation(160,
                 (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
@@ -602,13 +606,13 @@ public class SunriseDemo extends ApplicationAdapter {
                 if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         monster = monster.animate(time);
-                        monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
+                        monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getForegroundColor(i, j, change)));
                         monster.draw(batch);
                     }
                 }
                 else if(vision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
                     monster = monster.animate(time);
-                    monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getMovingCreatureColor(i, j, change)));
+                    monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getForegroundColor(i, j, change)));
                     monster.draw(batch);
                 }
             }
