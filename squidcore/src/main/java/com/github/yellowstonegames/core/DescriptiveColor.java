@@ -2472,8 +2472,8 @@ public final class DescriptiveColor {
         public static final IntList LIST = new IntList(50);
 
         /**
-         * A fully-transparent color that is out-of-range for valid colors in Oklab, to be used as a placeholder for colors
-         * that aren't valid in some way.
+         * A fully-transparent color that is not exactly transparent black (rather, transparent very dark blue), to be
+         * used as a placeholder for colors that aren't valid in some way.
          */
         public static final int PLACEHOLDER = 0x00000100;
 
@@ -3089,5 +3089,4 @@ public final class DescriptiveColor {
             NAMED.putAll(ALIASES);
         }
     }
-
 }
