@@ -72,6 +72,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
+    private static final float SPEED = 0.35f;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
@@ -267,7 +268,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        fn.setInterpolation(Noise.HERMITE); // the default
 
-        INoise fn = new CyclicNoise(seed, 3, 2f);
+        INoise fn = new CyclicNoise(seed, 3, 2.3f);
         iNoise = new Noise3DFrom5D(fn);
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
@@ -281,7 +282,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 
-        world = new GlobeMap(seed, width, height, iNoise, 1.25f);
+        world = new GlobeMap(seed, width, height, iNoise, 1f);
 
 
         wmv = new BlendedWorldMapView(world);
@@ -339,8 +340,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        try {
         for (int i = 0; i < FRAMES; i++) {
             float angle = i / (float) FRAMES;
-            iNoise.s = TrigTools.sinTurns(angle) * 0.5f;// 0.4f;// 0.3125f;
-            iNoise.c = TrigTools.cosTurns(angle) * 0.5f;// 0.4f;// 0.3125f;
+            iNoise.s = TrigTools.sinTurns(angle) * SPEED;// 0.4f;// 0.3125f;
+            iNoise.c = TrigTools.cosTurns(angle) * SPEED;// 0.4f;// 0.3125f;
 
             world.setCenterLongitude(angle * TrigTools.PI2);
             generate(hash);

@@ -16,13 +16,13 @@
 
 package com.github.yellowstonegames.text;
 
+import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.ds.IntIntOrderedMap;
+import com.github.tommyettinger.ds.IntIntMap;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.StringTools;
 import regexodus.Category;
 import regexodus.Matcher;
@@ -51,11 +51,11 @@ public class MarkovText {
     /**
      * Map of all pairs of words encountered to the position in the order they were encountered. Pairs are stored using
      * their 16-bit {@link #words} indices placed into the most-significant bits for the first word and the
-     * least-significant bits for the second word. The size of this IntIntOrderedMap is likely to be larger than the
+     * least-significant bits for the second word. The size of this IntIntMap is likely to be larger than the
      * String array {@link #words}, but should be equal to {@code processed.length}. Will be null if
      * {@link #analyze(CharSequence)} was never called.
      */
-    public IntIntOrderedMap pairs;
+    public IntIntMap pairs;
     /**
      * Complicated data that mixes probabilities of words using their indices in {@link #words} and the indices of word
      * pairs in {@link #pairs}, generated during the latest call to {@link #analyze(CharSequence)}. This is a jagged 2D
@@ -87,7 +87,7 @@ public class MarkovText {
     public void analyze(CharSequence corpus)
     {
         NumberedSet<String> body = new NumberedSet<>((corpus.length() >> 4) + 5);
-        pairs = new IntIntOrderedMap(corpus.length() / 5 + 5);
+        pairs = new IntIntMap(corpus.length() / 5 + 5);
         ObjectList<IntList> working = new ObjectList<>(corpus.length() / 5 + 5);
         body.add(INITIAL);
         working.add(new IntList(128));
@@ -102,7 +102,13 @@ public class MarkovText {
         int current, pair = 0, pre = 0, post;
         while (matcher.find())
         {
-            current = body.addOrIndex(matcher.group());
+            String group = matcher.group();
+//            body.addOrIndex(group); // TODO: this is buggy in jdkgdxds; it currently only does map.putIfAbsent();
+            current = body.indexOfOrDefault(group, -1);
+            if(current == -1) {
+                current = body.size();
+                body.add(group);
+            }
             pair = pair << 16 | (current & 0xFFFF);
             post = pairs.putIfAbsent(pair, pairs.size());
             if(working.size() != pairs.size())
@@ -268,7 +274,7 @@ public class MarkovText {
             }
             later = (pair != 0);
             rf = processed[pairs.get(pair)];
-            // This is SplitMix64 to generate a random long given sequential states
+            // This is MX3 to generate a random long given sequential states
             state = Hasher.randomize3(++seed);
             // get a random int (using half the bits of our previously-calculated state) that is less than size
             int column = (int) ((rf.length * (state & 0xFFFFFFFFL)) / 0x300000000L) * 3; // divide by 2^32, round down to multiple of 3
@@ -334,7 +340,7 @@ public class MarkovText {
         MarkovText markov = new MarkovText();
         markov.words = StringTools.split(data.substring(0, split), " ");
         int[] arr = Base.BASE16.intSplit(data, ",", split+1, split = data.indexOf('\t', split + 1));
-        markov.pairs = new IntIntOrderedMap(arr, ArrayTools.range(arr.length));
+        markov.pairs = new IntIntMap(arr, ArrayTools.range(arr.length));
         markov.processed = Base.BASE16.intSplit2D(data, ";", ",", split + 1, data.length());
         return markov;
     }
