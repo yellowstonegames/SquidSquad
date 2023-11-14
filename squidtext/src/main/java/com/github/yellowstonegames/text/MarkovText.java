@@ -19,10 +19,7 @@ package com.github.yellowstonegames.text;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.ds.IntIntMap;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.NumberedSet;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.*;
 import com.github.yellowstonegames.core.StringTools;
 import regexodus.Category;
 import regexodus.Matcher;
@@ -110,7 +107,9 @@ public class MarkovText {
                 body.add(group);
             }
             pair = pair << 16 | (current & 0xFFFF);
-            post = pairs.putIfAbsent(pair, pairs.size());
+            pairs.putIfAbsent(pair, pairs.size());
+            post = pairs.get(pair);
+
             if(working.size() != pairs.size())
             {
                 working.add(new IntList(16));
