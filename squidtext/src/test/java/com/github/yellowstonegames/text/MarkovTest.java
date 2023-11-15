@@ -68,7 +68,7 @@ public class MarkovTest {
     /**
      * I should give credit where it is due; goetia.txt is from
      * <a href="https://en.wikisource.org/wiki/The_Lesser_Key_of_Solomon#Shemhamphorash">The Lesser Key of Solomon</a>,
-     * in the  public domain.
+     * in the public domain.
      * @throws IOException if "src/test/resources/goetia.txt" cannot be read
      */
     @Test
@@ -82,33 +82,31 @@ public class MarkovTest {
             System.out.println(markovText.chain(++seed, 120));
         }
 
-        CaseInsensitiveSet names = new CaseInsensitiveSet(ArrayTools.stringSpan(48, 72)){
+        CaseInsensitiveSet names = new CaseInsensitiveSet(64){
+
             @Override
             protected int place(Object item) {
-                long hash = hashMultiplier;
+                long hash = 0x9E3779B97F4A7C15L; // golden ratio
                 CharSequence cs = (CharSequence) item;
                 for (int i = 0, len = cs.length(); i < len; i++) {
                     char c = cs.charAt(i);
                     if(Category.L.contains(c)){
-                        hash = Hasher.randomize3(hash + Character.toUpperCase(c));
+                        hash = (hash + Character.toUpperCase(c)) * hashMultiplier;
                     }
                 }
-                return (int)hash & mask;
+                return (int)(hash >>> shift);
             }
 
             @Override
             protected boolean equate(Object left, @Nullable Object right) {
-                CharSequence a = (CharSequence) left;
-                CharSequence b = (CharSequence) right;
-                if (a == b)
+                if (left == right)
                     return true;
-                if(b == null) return false;
+                if(right == null) return false;
                 CharSequence l = (CharSequence)left, r = (CharSequence)right;
                 int llen = l.length(), rlen = r.length();
                 int cl = -1, cr = -1;
                 int i = 0, j = 0;
-//                int lettersL = 0, lettersR = 0;
-                for (; i < llen || j < rlen;) {
+                while (i < llen || j < rlen) {
                     if(i == llen) cl = -1;
                     else {
                         while (i < llen && !Category.L.contains((char) (cl = l.charAt(i++)))) {
@@ -127,6 +125,8 @@ public class MarkovTest {
                 return true;
             }
         };
+
+        names.addAll(ArrayTools.stringSpan(48, 72));
 
         MarkovText copy = markovText.copy();
 
