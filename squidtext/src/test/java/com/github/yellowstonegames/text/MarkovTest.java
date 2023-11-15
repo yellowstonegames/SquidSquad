@@ -16,11 +16,21 @@
 
 package com.github.yellowstonegames.text;
 
+import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.ds.CaseInsensitiveSet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Test;
+import regexodus.Category;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class MarkovTest {
     @Test
-    public void testMarkovText() {
+    public void testBasicMarkov() {
         if(!"true".equals(System.getenv("printing"))) return;
         long seed = 10040L;
         String oz = "Dorothy lived in the midst of the great Kansas prairies, with Uncle Henry, who was a " +
@@ -52,6 +62,104 @@ public class MarkovTest {
         markovText.changeNames(cipher);
         for (int i = 0; i < 40; i++) {
             System.out.println(markovText.chain(++seed, 100 + (i * 2)));
+        }
+    }
+
+    /**
+     * I should give credit where it is due; goetia.txt is from
+     * <a href="https://en.wikisource.org/wiki/The_Lesser_Key_of_Solomon#Shemhamphorash">The Lesser Key of Solomon</a>,
+     * in the  public domain.
+     * @throws IOException if "src/test/resources/goetia.txt" cannot be read
+     */
+    @Test
+    public void testGoetiaMarkov() throws IOException {
+        if(!"true".equals(System.getenv("printing"))) return;
+        long seed = 10040L;
+        String goetia = new String(Files.readAllBytes(Paths.get("src/test/resources/goetia.txt")), StandardCharsets.UTF_8);
+        MarkovText markovText = new MarkovText();
+        markovText.analyze(goetia);
+        for (int i = 0; i < 20; i++) {
+            System.out.println(markovText.chain(++seed, 120));
+        }
+
+        CaseInsensitiveSet names = new CaseInsensitiveSet(ArrayTools.stringSpan(48, 72)){
+            @Override
+            protected int place(Object item) {
+                long hash = hashMultiplier;
+                CharSequence cs = (CharSequence) item;
+                for (int i = 0, len = cs.length(); i < len; i++) {
+                    char c = cs.charAt(i);
+                    if(Category.L.contains(c)){
+                        hash = Hasher.randomize3(hash + Character.toUpperCase(c));
+                    }
+                }
+                return (int)hash & mask;
+            }
+
+            @Override
+            protected boolean equate(Object left, @Nullable Object right) {
+                CharSequence a = (CharSequence) left;
+                CharSequence b = (CharSequence) right;
+                if (a == b)
+                    return true;
+                if(b == null) return false;
+                CharSequence l = (CharSequence)left, r = (CharSequence)right;
+                int llen = l.length(), rlen = r.length();
+                int cl = -1, cr = -1;
+                int i = 0, j = 0;
+//                int lettersL = 0, lettersR = 0;
+                for (; i < llen || j < rlen;) {
+                    if(i == llen) cl = -1;
+                    else {
+                        while (i < llen && !Category.L.contains((char) (cl = l.charAt(i++)))) {
+                            cl = -1;
+                        }
+                    }
+                    if(j == rlen) cr = -1;
+                    else {
+                        while (j < rlen && !Category.L.contains((char) (cr = r.charAt(j++)))) {
+                            cr = -1;
+                        }
+                    }
+                    if(cl != cr && Character.toUpperCase(cl) != Character.toUpperCase(cr))
+                        return false;
+                }
+                return true;
+            }
+        };
+
+        MarkovText copy = markovText.copy();
+
+        seed = 10040L;
+        System.out.println();
+        Translator cipher = new Translator(Language.LOVECRAFT);
+        copy.changeNames(cipher, names);
+        for (int i = 0; i < 20; i++) {
+            System.out.println(copy.chain(++seed, 120));
+        }
+        seed = 10040L;
+        System.out.println();
+        cipher = new Translator(Language.INFERNAL);
+        copy = markovText.copy();
+        copy.changeNames(cipher, names);
+        for (int i = 0; i < 20; i++) {
+            System.out.println(copy.chain(++seed, 120));
+        }
+        seed = 10040L;
+        System.out.println();
+        cipher = new Translator(Language.DEMONIC);
+        copy = markovText.copy();
+        copy.changeNames(cipher, names);
+        for (int i = 0; i < 20; i++) {
+            System.out.println(copy.chain(++seed, 120));
+        }
+        seed = 10040L;
+        System.out.println();
+        cipher = new Translator(Language.ANCIENT_EGYPTIAN);
+        copy = markovText.copy();
+        copy.changeNames(cipher, names);
+        for (int i = 0; i < 20; i++) {
+            System.out.println(copy.chain(++seed, 120));
         }
     }
 
