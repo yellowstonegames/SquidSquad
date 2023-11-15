@@ -25,6 +25,8 @@ import regexodus.Category;
 import regexodus.Matcher;
 import regexodus.Pattern;
 
+import java.util.Collection;
+
 /**
  * A simple Markov chain text generator; call {@link #analyze(CharSequence)} once on a large sample text, then you can
  * call {@link #chain(long)} many times to get odd-sounding "remixes" of the sample text. This is an order-2 Markov
@@ -215,10 +217,10 @@ public class MarkovText {
      * After calling {@link #analyze(CharSequence)}, you can optionally call this to alter any words in this MarkovText that
      * were used as a proper noun (determined by whether they were capitalized in the middle of a sentence), changing
      * them to a ciphered version using the given {@link Translator}. Normally you would initialize a
-     * NaturalLanguageCipher with a {@link Language} that matches the style you want for all names in this text,
+     * Translator with a {@link Language} that matches the style you want for all names in this text,
      * then pass that to this method during pre-processing (not necessarily at runtime, since this method isn't
      * especially fast if the corpus was large). This method modifies this MarkovText in-place.
-     * @param translator a NaturalLanguageCipher that will be used to translate proper nouns in this MarkovText's word array
+     * @param translator a Translator that will be used to translate proper nouns in this MarkovText's word array
      */
     public void changeNames(Translator translator)
     {
@@ -239,6 +241,32 @@ public class MarkovText {
             }
         }
     }
+
+    /**
+     * After calling {@link #analyze(CharSequence)}, you can optionally call this to alter any words in this MarkovText
+     * that are present in the given Collection, changing them to a ciphered version using the given {@link Translator}.
+     * Normally you would initialize a Translator with a {@link Language} that matches the style you want for all names
+     * in this text, then pass that to this method during pre-processing (not necessarily at runtime, since this method
+     * isn't especially fast if the corpus was large). This method modifies this MarkovText in-place.
+     * <br>
+     * A good way to use this when you have some group of names, but might encounter them in different cases (such as
+     * ALL CAPS in a header, or Capitalized Like A Name), is to use a {@link CaseInsensitiveSet} as the Collection. It
+     * won't handle punctuation next to a word, though; a somewhat different approach is needed for that.
+     *
+     * @param translator a Translator that will be used to translate proper nouns in this MarkovText's word array
+     * @param names a Collection of names that, if a word from the word array is also in names, will be translated
+     */
+    public void changeNames(Translator translator, Collection<? extends CharSequence> names)
+    {
+        String name;
+        for (int i = 5; i < words.length; i++) {
+            if(names.contains((name = words[i])))
+            {
+                words[i] = translator.cipher(name);
+            }
+        }
+    }
+
     /**
      * Generate a roughly-sentence-sized piece of text based on the previously analyzed corpus text (using
      * {@link #analyze(CharSequence)}) that terminates when stop punctuation is used (".", "!", "?", or "..."), or once
@@ -356,6 +384,7 @@ public class MarkovText {
         MarkovText other = new MarkovText();
         other.words = new String[words.length];
         System.arraycopy(words, 0, other.words, 0, words.length);
+        other.pairs = new IntIntMap(pairs);
         other.processed = new int[processed.length][];
         int len;
         for (int i = 0; i < processed.length; i++) {
