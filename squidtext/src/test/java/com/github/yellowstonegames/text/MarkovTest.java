@@ -32,7 +32,7 @@ public class MarkovTest {
     @Test
     public void testBasicMarkov() {
         if(!"true".equals(System.getenv("printing"))) return;
-        long seed = 10040L;
+        long seed = 123456789L;
         String oz = "Dorothy lived in the midst of the great Kansas prairies, with Uncle Henry, who was a " +
                 "farmer, and Aunt Em, who was the farmer's wife. Their house was small, for the " +
                 "lumber to build it had to be carried by wagon many miles. There were four walls, " +
@@ -56,7 +56,7 @@ public class MarkovTest {
         for (int i = 0; i < 40; i++) {
             System.out.println(markovText.chain(++seed, 100 + (i * 2)));
         }
-        seed = 10040L;
+        seed = 123456789L;
         System.out.println();
         Translator cipher = new Translator(Language.JAPANESE_ROMANIZED);
         markovText.changeNames(cipher);
@@ -74,93 +74,94 @@ public class MarkovTest {
     @Test
     public void testGoetiaMarkov() throws IOException {
         if(!"true".equals(System.getenv("printing"))) return;
-        long seed = 10040L;
+        long seed = 123456789L;
         String goetia = new String(Files.readAllBytes(Paths.get("src/test/resources/goetia.txt")), StandardCharsets.UTF_8);
         MarkovText markovText = new MarkovText();
         markovText.analyze(goetia);
         for (int i = 0; i < 20; i++) {
-            System.out.println(markovText.chain(++seed, 120));
+            System.out.print("..."+markovText.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
-
-        CaseInsensitiveSet names = new CaseInsensitiveSet(64){
-
-            @Override
-            protected int place(Object item) {
-                long hash = 0x9E3779B97F4A7C15L; // golden ratio
-                CharSequence cs = (CharSequence) item;
-                for (int i = 0, len = cs.length(); i < len; i++) {
-                    char c = cs.charAt(i);
-                    if(Category.L.contains(c)){
-                        hash = (hash + Character.toUpperCase(c)) * hashMultiplier;
-                    }
-                }
-                return (int)(hash >>> shift);
-            }
-
-            @Override
-            protected boolean equate(Object left, @Nullable Object right) {
-                if (left == right)
-                    return true;
-                if(right == null) return false;
-                CharSequence l = (CharSequence)left, r = (CharSequence)right;
-                int llen = l.length(), rlen = r.length();
-                int cl = -1, cr = -1;
-                int i = 0, j = 0;
-                while (i < llen || j < rlen) {
-                    if(i == llen) cl = -1;
-                    else {
-                        while (i < llen && !Category.L.contains((char) (cl = l.charAt(i++)))) {
-                            cl = -1;
-                        }
-                    }
-                    if(j == rlen) cr = -1;
-                    else {
-                        while (j < rlen && !Category.L.contains((char) (cr = r.charAt(j++)))) {
-                            cr = -1;
-                        }
-                    }
-                    if(cl != cr && Character.toUpperCase(cl) != Character.toUpperCase(cr))
-                        return false;
-                }
-                return true;
-            }
-        };
-
-        names.addAll(ArrayTools.stringSpan(48, 72));
+        
+        FilteredStringSet names = FilteredStringSet.with(Category.L::contains, Character::toUpperCase, ArrayTools.stringSpan(48, 72));
 
         MarkovText copy = markovText.copy();
 
-        seed = 10040L;
+        seed = 123456789L;
         System.out.println();
         Translator cipher = new Translator(Language.LOVECRAFT);
         copy.changeNames(cipher, names);
         for (int i = 0; i < 20; i++) {
-            System.out.println(copy.chain(++seed, 120));
+            System.out.print("..."+copy.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
-        seed = 10040L;
+        seed = 123456789L;
         System.out.println();
         cipher = new Translator(Language.INFERNAL);
         copy = markovText.copy();
         copy.changeNames(cipher, names);
         for (int i = 0; i < 20; i++) {
-            System.out.println(copy.chain(++seed, 120));
+            System.out.print("..."+copy.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
-        seed = 10040L;
+        seed = 123456789L;
         System.out.println();
         cipher = new Translator(Language.DEMONIC);
         copy = markovText.copy();
         copy.changeNames(cipher, names);
         for (int i = 0; i < 20; i++) {
-            System.out.println(copy.chain(++seed, 120));
+            System.out.print("..."+copy.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
-        seed = 10040L;
+        seed = 123456789L;
         System.out.println();
         cipher = new Translator(Language.ANCIENT_EGYPTIAN);
         copy = markovText.copy();
         copy.changeNames(cipher, names);
         for (int i = 0; i < 20; i++) {
-            System.out.println(copy.chain(++seed, 120));
+            System.out.print("..."+copy.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
     }
 
 }
+
+//        CaseInsensitiveSet names = new CaseInsensitiveSet(64){
+//
+//            @Override
+//            protected int place(Object item) {
+//                long hash = 0x9E3779B97F4A7C15L; // golden ratio
+//                CharSequence cs = (CharSequence) item;
+//                for (int i = 0, len = cs.length(); i < len; i++) {
+//                    char c = cs.charAt(i);
+//                    if(Category.L.contains(c)){
+//                        hash = (hash + Character.toUpperCase(c)) * hashMultiplier;
+//                    }
+//                }
+//                return (int)(hash >>> shift);
+//            }
+//
+//            @Override
+//            protected boolean equate(Object left, @Nullable Object right) {
+//                if (left == right)
+//                    return true;
+//                if(right == null) return false;
+//                CharSequence l = (CharSequence)left, r = (CharSequence)right;
+//                int llen = l.length(), rlen = r.length();
+//                int cl = -1, cr = -1;
+//                int i = 0, j = 0;
+//                while (i < llen || j < rlen) {
+//                    if(i == llen) cl = -1;
+//                    else {
+//                        while (i < llen && !Category.L.contains((char) (cl = l.charAt(i++)))) {
+//                            cl = -1;
+//                        }
+//                    }
+//                    if(j == rlen) cr = -1;
+//                    else {
+//                        while (j < rlen && !Category.L.contains((char) (cr = r.charAt(j++)))) {
+//                            cr = -1;
+//                        }
+//                    }
+//                    if(cl != cr && Character.toUpperCase(cl) != Character.toUpperCase(cr))
+//                        return false;
+//                }
+//                return true;
+//            }
+//        };
+//        names.addAll(ArrayTools.stringSpan(48, 72));
