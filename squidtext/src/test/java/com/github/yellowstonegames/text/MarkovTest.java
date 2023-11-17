@@ -17,9 +17,6 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.ds.CaseInsensitiveSet;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Test;
 import regexodus.Category;
 
