@@ -24,6 +24,7 @@ import static com.github.yellowstonegames.grid.ValueNoise.valueNoise;
 
 /**
  * An INoise implementation that combines and accentuates {@link SimplexNoise} and {@link ValueNoise}.
+ * This allows its {@link #sharpness} to be adjusted if you want more or less distinct high/low areas.
  */
 public class HoneyNoise implements INoise {
 
@@ -31,7 +32,13 @@ public class HoneyNoise implements INoise {
 
     public long seed = 0xD1CEDBEEF0FFAL;
 
-    public float sharpness = 0.4f;
+    /**
+     * Affects how distinct high and low areas should be from each other.
+     * Should be between 0.0f and 1.0f, both exclusive. The default is 0.6f.
+     * If this is assigned 1.0 or greater, calls to any noise methods can sometimes
+     * result in division by 0 and an infinite result.
+     */
+    public float sharpness = 0.6f;
 
     public HoneyNoise() {
     }
@@ -40,6 +47,11 @@ public class HoneyNoise implements INoise {
         this.seed = seed;
     }
 
+    /**
+     *
+     * @param seed any int or long; if you pass a long, make sure different seeds will still be different when cast to int
+     * @param sharpness a float between 0.0 and 1.0, both exclusive; higher values result in more distinct high and low areas
+     */
     public HoneyNoise(long seed, float sharpness) {
         this.seed = seed;
         this.sharpness = sharpness;
@@ -153,6 +165,14 @@ public class HoneyNoise implements INoise {
     @Override
     public long getSeed() {
         return seed;
+    }
+
+    public float getSharpness() {
+        return sharpness;
+    }
+
+    public void setSharpness(float sharpness) {
+        this.sharpness = sharpness;
     }
 
     @Override
