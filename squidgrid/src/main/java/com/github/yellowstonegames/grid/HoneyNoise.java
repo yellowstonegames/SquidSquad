@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 
 import static com.github.yellowstonegames.grid.SimplexNoise.noise;
@@ -30,11 +31,18 @@ public class HoneyNoise implements INoise {
 
     public long seed = 0xD1CEDBEEF0FFAL;
 
+    public float sharpness = 0.4f;
+
     public HoneyNoise() {
     }
 
     public HoneyNoise(long seed) {
         this.seed = seed;
+    }
+
+    public HoneyNoise(long seed, float sharpness) {
+        this.seed = seed;
+        this.sharpness = sharpness;
     }
 
     @Override
@@ -43,27 +51,30 @@ public class HoneyNoise implements INoise {
     }
 
     public String stringSerialize() {
-        return "`" + seed + '`';
+        return "`" + seed + '~' + BitConversion.floatToReversedIntBits(sharpness) + '`';
     }
 
     public HoneyNoise stringDeserialize(String data) {
         if (data == null || data.length() < 3)
             return this;
-        this.seed = DigitTools.longFromDec(data, 1, data.indexOf('`', 2));
+        int idx;
+        this.seed = DigitTools.longFromDec(data, 1, idx = data.indexOf('~', 2));
+        this.sharpness = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, idx+1, data.indexOf('`', idx+1)));
         return this;
     }
 
     public static HoneyNoise recreateFromString(String data) {
         if (data == null || data.length() < 3)
             return null;
-        long seed = DigitTools.longFromDec(data, 1, data.indexOf('`', 2));
-
-        return new HoneyNoise(seed);
+        int idx;
+        long seed = DigitTools.longFromDec(data, 1, idx = data.indexOf('~', 2));
+        float sharpness = BitConversion.reversedIntBitsToFloat(DigitTools.intFromDec(data, idx+1, data.indexOf('`', idx+1)));
+        return new HoneyNoise(seed, sharpness);
     }
 
     @Override
     public HoneyNoise copy() {
-        return new HoneyNoise(seed);
+        return new HoneyNoise(seed, sharpness);
     }
 
     @Override
@@ -73,29 +84,30 @@ public class HoneyNoise implements INoise {
 
         HoneyNoise that = (HoneyNoise) o;
 
-        return seed == that.seed;
+        return seed == that.seed && BitConversion.floatToIntBits(sharpness) == BitConversion.floatToIntBits(that.sharpness);
     }
 
     @Override
     public int hashCode() {
-        return (int) (seed ^ seed >>> 32);
+        return BitConversion.floatToIntBits(sharpness) ^ (int) (seed ^ seed >>> 32);
     }
 
     @Override
     public String toString() {
         return "ValueNoise{" +
                 "seed=" + seed +
+                ", sharpness=" + sharpness +
                 '}';
     }
 
     @Override
     public int getMinDimension() {
-        return 1;
+        return 2;
     }
 
     @Override
     public int getMaxDimension() {
-        return 7;
+        return 6;
     }
 
     @Override
@@ -106,31 +118,31 @@ public class HoneyNoise implements INoise {
     @Override
     public float getNoise(float x, float y) {
         float n = (valueNoise(x, y, (int) seed) + noise(x, y, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
         float n = (valueNoise(x, y, z, (int) seed) + noise(x, y, z, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
         float n = (valueNoise(x, y, z, w, (int) seed) + noise(x, y, z, w, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
         float n = (valueNoise(x, y, z, w, u, (int) seed) + noise(x, y, z, w, u, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
         float n = (valueNoise(x, y, z, w, u, v, (int) seed) + noise(x, y, z, w, u, v, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
@@ -146,30 +158,30 @@ public class HoneyNoise implements INoise {
     @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
         float n = (valueNoise(x, y, (int) seed) + noise(x, y, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, long seed) {
         float n = (valueNoise(x, y, z, (int) seed) + noise(x, y, z, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
         float n = (valueNoise(x, y, z, w, (int) seed) + noise(x, y, z, w, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
         float n = (valueNoise(x, y, z, w, u, (int) seed) + noise(x, y, z, w, u, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
         float n = (valueNoise(x, y, z, w, u, v, (int) seed) + noise(x, y, z, w, u, v, seed)) * 0.5f;
-        return n / (0.4f * Math.abs(n) + 0.6f);
+        return n / (sharpness * Math.abs(n) + (1f - sharpness));
     }
 }
