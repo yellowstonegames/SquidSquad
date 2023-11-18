@@ -77,7 +77,8 @@ public class FoamplexNoise implements INoise {
         yin = p1;
         final float c = SimplexNoise.noise(xin + b * 0.25f, yin, seed + 0x3504F333F9DE6486L);
         final float result = (a + b + c) * 0.3333333333333333f;
-        return result / (-0.35f * (1f - Math.abs(result)) + 1f);// gain function for [-1, 1] domain and range
+        return result / (0.35f * Math.abs(result) + (1f - 0.35f));
+// return result / (0.35f * Math.abs(result) + (1f - 0.35f));// gain function for [-1, 1] domain and range
     }
 
     // 3D SECTION
@@ -126,7 +127,8 @@ public class FoamplexNoise implements INoise {
         zin = p2;
         final float d = SimplexNoise.noise(xin + c * 0.25f, yin, zin, seed + 0xCF876CCDF6CD96C9L);
         final float result = (a + b + c + d) * 0.25f;
-        return result / (-0.45f * (1f - Math.abs(result)) + 1f);// gain function for [-1, 1] domain and range
+        return result / (0.45f * Math.abs(result) + (1f - 0.45f));
+// return result / (0.45f * Math.abs(result) + (1f - 0.45f));// gain function for [-1, 1] domain and range
     }
 
     // 4D SECTION
@@ -187,7 +189,8 @@ public class FoamplexNoise implements INoise {
         final float e = SimplexNoise.noise(xin + d * 0.25f, yin, zin, win, seed + 0x6A09E667F3BCC90CL);
 
         final float result = (a + b + c + d + e) * 0.2f;
-        return result / (-0.55f * (1f - Math.abs(result)) + 1f);// gain function for [-1, 1] domain and range
+        return result / (0.55f * Math.abs(result) + (1f - 0.55f));
+// return result / (0.55f * Math.abs(result) + (1f - 0.55f));// gain function for [-1, 1] domain and range
     }
 
     // 5D SECTION
@@ -265,7 +268,8 @@ public class FoamplexNoise implements INoise {
         final float f = SimplexNoise.noise(xin + e * 0.25f, yin, zin, win, uin, seed + 0x48C6001F0ABFB4FL);
 
         final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
-        return result / (-0.65f * (1f - Math.abs(result)) + 1f);// gain function for [-1, 1] domain and range
+        return result / (0.65f * Math.abs(result) + (1f - 0.65f));
+// return result / (0.65f * Math.abs(result) + (1f - 0.65f));// gain function for [-1, 1] domain and range
     }
 
     // 6D SECTION
@@ -357,7 +361,8 @@ public class FoamplexNoise implements INoise {
         vin = p0;
         final float g = SimplexNoise.noise(xin + f * 0.25f, yin, zin, win, uin, vin, seed + 0x9F0ED99BED9B2D92L);
         final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
-        return result / (-0.75f * (1f - Math.abs(result)) + 1f);// gain function for [-1, 1] domain and range
+        return result / (0.75f * Math.abs(result) + (1f - 0.75f));
+// return result / (0.75f * Math.abs(result) + (1f - 0.75f));// gain function for [-1, 1] domain and range
     }
 
     // OTHER

@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.NumberUtils;
  * levels of detail.
  * <br>
  * This is a drop-in replacement for the SimplexNoise.java file written by Stefan Gustavson in 2012.
- * Unlike that code, this allows a seed to be specified per-call because this uses hashing rather than a perm table.
+ * Unlike that code, this allows a seed to be specified per-call, because this uses hashing rather than a perm table.
  */
 public class SimplexNoiseStandalone {
 
@@ -595,7 +595,8 @@ public class SimplexNoiseStandalone {
         else n4 = 0;
 
         t = (n0 + n1 + n2 + n3 + n4) * 14.7279f;
-        return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+        return t / (0.3f * Math.abs(t) + 0.7f);
+//        return t / (0.3f * Math.abs(t) + (1f - 0.3f));// gain function for [-1, 1] domain and range
     }
 
     /**

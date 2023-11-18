@@ -90,7 +90,7 @@ public class ValueNoise implements INoise {
                 '}';
     }
 
-    public static float valueNoise(int seed, float x) {
+    public static float valueNoise(float x, int seed) {
         final int STEPX = 0x9E377;
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
@@ -113,7 +113,7 @@ public class ValueNoise implements INoise {
         return (s >>> 3 ^ s >>> 10) & 0x3FF;
     }
 
-    public static float valueNoise(int seed, float x, float y)
+    public static float valueNoise(float x, float y, int seed)
     {
         final int STEPX = 0xD1B55;
         final int STEPY = 0xABC99;
@@ -143,7 +143,7 @@ public class ValueNoise implements INoise {
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 22;
     }
 
-    public static float valueNoise(int seed, float x, float y, float z)
+    public static float valueNoise(float x, float y, float z, int seed)
     {
         final int STEPX = 0xDB4F1;
         final int STEPY = 0xBBE05;
@@ -183,7 +183,7 @@ public class ValueNoise implements INoise {
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 22;
     }
 
-    public static float valueNoise(int seed, float x, float y, float z, float w)
+    public static float valueNoise(float x, float y, float z, float w, int seed)
     {
         final int STEPX = 0xE19B1;
         final int STEPY = 0xC6D1D;
@@ -237,7 +237,7 @@ public class ValueNoise implements INoise {
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 22;
     }
 
-    public static float valueNoise(int seed, float x, float y, float z, float w, float u)
+    public static float valueNoise(float x, float y, float z, float w, float u, int seed)
     {
         final int STEPX = 0xE60E3;
         final int STEPY = 0xCEBD7;
@@ -315,7 +315,7 @@ public class ValueNoise implements INoise {
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 22;
     }
 
-    public static float valueNoise(int seed, float x, float y, float z, float w, float u, float v)
+    public static float valueNoise(float x, float y, float z, float w, float u, float v, int seed)
     {
         final int STEPX = 0xE95E1;
         final int STEPY = 0xD4BC7;
@@ -433,7 +433,7 @@ public class ValueNoise implements INoise {
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 22;
     }
 
-    public static float valueNoise(int seed, float x, float y, float z, float w, float u, float v, float m)
+    public static float valueNoise(float x, float y, float z, float w, float u, float v, float m, int seed)
     {
         final int STEPX = 0xEBEDF;
         final int STEPY = 0xD96EB;
@@ -643,27 +643,27 @@ public class ValueNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y) {
-        return valueNoise(seed, x, y);
+        return valueNoise(x, y, seed);
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        return valueNoise(seed, x, y, z);
+        return valueNoise(x, y, z, seed);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        return valueNoise(seed, x, y, z, w);
+        return valueNoise(x, y, z, w, seed);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        return valueNoise(seed, x, y, z, w, u);
+        return valueNoise(x, y, z, w, u, seed);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        return valueNoise(seed, x, y, z, w, u, v);
+        return valueNoise(x, y, z, w, u, v, seed);
     }
 
     @Override
@@ -678,26 +678,26 @@ public class ValueNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
-        return valueNoise((int) seed, x, y);
+        return valueNoise(x, y, (int) seed);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, long seed) {
-        return valueNoise((int) seed, x, y, z);
+        return valueNoise(x, y, z, (int) seed);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-        return valueNoise((int) seed, x, y, z, w);
+        return valueNoise(x, y, z, w, (int) seed);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        return valueNoise((int) seed, x, y, z, w, u);
+        return valueNoise(x, y, z, w, u, (int) seed);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        return valueNoise((int) seed, x, y, z, w, u, v);
+        return valueNoise(x, y, z, w, u, v, (int) seed);
     }
 }

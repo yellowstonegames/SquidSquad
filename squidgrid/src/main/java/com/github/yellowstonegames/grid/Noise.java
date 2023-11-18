@@ -7507,7 +7507,8 @@ public class Noise implements INoise {
 //        float n = (t0 + t1 + t2 + t3 + t4) * 141.000f;
 //        return n / (0.750f + Math.abs(n));
         float t = (t0 + t1 + t2 + t3 + t4) * 37.20266f;
-        return t / (-0.3f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+        return t / (0.3f * Math.abs(t) + 0.7f);
+//        return t / (0.3f * Math.abs(t) + (1f - 0.3f));// gain function for [-1, 1] domain and range
     }
     
     // 5D Simplex
@@ -7788,7 +7789,8 @@ public class Noise implements INoise {
 //        float n = (n0 + n1 + n2 + n3 + n4 + n5) * 32.000f;
 //        return n / (0.700f + Math.abs(n));
         t = (n0 + n1 + n2 + n3 + n4 + n5) * 20.0f;
-        return t / (-0.5f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+        return t / (0.5f * Math.abs(t) + 0.5f);
+//        return t / (0.5f * Math.abs(t) + (1f - 0.5f));// gain function for [-1, 1] domain and range
     }
 
     // 6D Simplex
@@ -8118,7 +8120,8 @@ public class Noise implements INoise {
 //        float n = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 64.000f;
 //        return n / (0.500f + Math.abs(n));
         t = (n0 + n1 + n2 + n3 + n4 + n5 + n6) * 7.499f;
-        return t / (-0.7f * (1f - Math.abs(t)) + 1f);// gain function for [-1, 1] domain and range
+        return t / (0.7f * Math.abs(t) + 0.3f);
+//        return t / (0.7f * Math.abs(t) + (1f - 0.7f));// gain function for [-1, 1] domain and range
     }
 
     // Cubic Noise
