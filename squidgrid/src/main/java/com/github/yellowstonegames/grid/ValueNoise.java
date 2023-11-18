@@ -668,7 +668,7 @@ public class ValueNoise implements INoise {
 
     @Override
     public void setSeed(long seed) {
-        seed = (int)seed;
+        this.seed = (int)seed;
     }
 
     @Override
