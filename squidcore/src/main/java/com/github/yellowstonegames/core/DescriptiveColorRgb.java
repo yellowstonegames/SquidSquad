@@ -1054,6 +1054,117 @@ public final class DescriptiveColorRgb {
     }
 
     /**
+     * Gets the hue of the given RGBA8888 color, as a float from 0f (inclusive, red and approaching orange
+     * if increased) to 1f (exclusive, red and approaching purple if decreased).
+     * @param rgba a color as an RGBA8888 int
+     * @return The hue of the color from 0.0 (red, inclusive) towards orange, then yellow, and
+     * eventually to purple before looping back to almost the same red (1.0, exclusive)
+     */
+    public static float hue(final int rgba) {
+        final float r = (rgba >>> 24 & 0xff) / 255f;
+        final float g = (rgba >>> 16 & 0xff) / 255f;
+        final float b = (rgba >>> 8  & 0xff) / 255f;
+        float x, y, z, w;
+        if(g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        }
+        else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if(r < x) {
+            z = w;
+            w = r;
+        }
+        else {
+            w = x;
+            x = r;
+        }
+        float d = x - Math.min(w, y);
+        return Math.abs(z + (w - y) / (6f * d + 1e-10f));
+    }
+
+    /**
+     * Gets the saturation of the given RGBA8888 color, as a float ranging from 0.0f to 1.0f, inclusive.
+     * @param rgba a color as an RGBA8888 int
+     * @return the saturation of the color from 0.0 (a grayscale color; inclusive) to 1.0 (a bright color, inclusive)
+     */
+    public static float saturation(final int rgba) {
+        final float r = (rgba >>> 24 & 0xff) / 255f;
+        final float g = (rgba >>> 16 & 0xff) / 255f;
+        final float b = (rgba >>> 8  & 0xff) / 255f;
+        float x, y, w;
+        if(g < b) {
+            x = b;
+            y = g;
+        }
+        else {
+            x = g;
+            y = b;
+        }
+        if(r < x) {
+            w = r;
+        }
+        else {
+            w = x;
+            x = r;
+        }
+        return x - Math.min(w, y);
+    }
+
+    /**
+     * Gets the lightness of the given RGBA8888 color, as a float ranging from 0.0f to 1.0f, inclusive.
+     * This uses the same measurement as {@link #rgb2hsl(float, float, float, float)}.
+     * @param rgba a color as an RGBA8888 int
+     * @return the lightness of the color from 0.0 (black; inclusive) to 1.0 (white; inclusive)
+     */
+    public static float lightness(final int rgba) {
+        final float r = (rgba >>> 24 & 0xff) / 255f;
+        final float g = (rgba >>> 16 & 0xff) / 255f;
+        final float b = (rgba >>> 8  & 0xff) / 255f;
+        float x, y, w;
+        if(g < b) {
+            x = b;
+            y = g;
+        }
+        else {
+            x = g;
+            y = b;
+        }
+        if(r < x) {
+            w = r;
+        }
+        else {
+            w = x;
+            x = r;
+        }
+        float d = x - Math.min(w, y);
+        return x * (1f - 0.5f * d / (x + 1e-10f));
+    }
+
+    /**
+     * Gets the brightness of the given RGBA8888 color, as a float ranging from 0.0f to 1.0f, inclusive.
+     * This uses the same measurement as {@link #rgb2hsb(float, float, float, float)}. Note that while
+     * {@link #lightness(int)} returns 1.0 only if given white as its input, this returns 1.0 for white,
+     * all colors that are as colorful as possible (the ones with the highest chroma), and all colors in
+     * between white and one of those high-chroma colors. Most usage that compares colors for perceptual
+     * lightness will want {@link #lightness(int)}, not this method.
+     * @param rgba a color as an RGBA8888 int
+     * @return the brightness of the color from 0.0 (black; inclusive) to 1.0 (any bright color and/or white; inclusive)
+     */
+    public static float brightness(final int rgba) {
+        final int r = (rgba >>> 24 & 0xff);
+        final int g = (rgba >>> 16 & 0xff);
+        final int b = (rgba >>> 8  & 0xff);
+        return Math.max(Math.max(r, g), b) / 255f;
+    }
+
+    /**
      * Interpolates from the RGBA8888 int color start towards end by change. Both start and end should be RGBA8888
      * ints, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
      * of temporary Colors.
