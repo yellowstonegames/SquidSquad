@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
@@ -856,7 +857,7 @@ public final class DescriptiveColorRgb {
                 Math.min(Math.max((int)(r * 255.999f), 0), 255) << 24
                         | Math.min(Math.max((int)(g * 255.999f), 0), 255) << 16
                         | Math.min(Math.max((int)(b * 255.999f), 0), 255) << 8
-                        | ((int)(a * 255f));
+                        | Math.min(Math.max((int)(a * 255.999f), 0), 255);
     }
     /**
      * Converts a packed float color in the format libGDX uses (ABGR7888) to an RGBA8888 int as this class uses.
@@ -907,6 +908,136 @@ public final class DescriptiveColorRgb {
 
     public static float alpha(int rgba) {
         return (rgba & 254) * (1f/254f);
+    }
+
+    /**
+     * Given a packed int color and a channel value from 0 to 3, gets the value of that channel as a float from 0.0f
+     * to 1.0f . Channel 0 refers to R in RGBA8888 and H in {@link #rgb2hsl(float, float, float, float) HSLA} ints,
+     * channel 1 refers to G or S, 2 refers to B or L, and 3 always refers to A.
+     *
+     * @param color   a packed int color in any 32-bit, 4-channel format
+     * @param channel which channel to access, as an index from 0 to 3 inclusive
+     * @return the non-packed float value of the requested channel, from 0.0f to 1.0f inclusive
+     */
+    public static float channel(int color, int channel) {
+        return (color >>> 24 - ((channel & 3) << 3) & 255) / 255f;
+    }
+
+    /**
+     * Given a packed int color and a channel value from 0 to 3, gets the value of that channel as an int from 0 to
+     * 255 . Channel 0 refers to R in RGBA8888 and H in {@link #rgb2hsl(float, float, float, float) HSLA} ints,
+     * channel 1 refers to G or S, 2 refers to B or L, and 3 always refers to A.
+     *
+     * @param color   a packed int color in any 32-bit, 4-channel format
+     * @param channel which channel to access, as an index from 0 to 3 inclusive
+     * @return the int value of the requested channel, from 0 to 255 inclusive
+     */
+    public static int channelInt(int color, int channel) {
+        return color >>> 24 - ((channel & 3) << 3) & 255;
+    }
+
+    /**
+     * Interpolates from the RGBA8888 int color start towards end by change. Both start and end should be RGBA8888
+     * ints, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
+     * of temporary Colors.
+     *
+     * @param s      the starting color as a packed int
+     * @param e      the end/target color as a packed int
+     * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
+     * @return an RGBA8888 int that represents a color between start and end
+     */
+    public static int lerpColors(final int s, final int e, final float change) {
+        final int
+                sA = s & 0xFE, sB = s >>> 8 & 0xFF, sG = s >>> 16 & 0xFF, sR = s >>> 24 & 0xFF,
+                eA = e & 0xFE, eB = e >>> 8 & 0xFF, eG = e >>> 16 & 0xFF, eR = e >>> 24 & 0xFF;
+        return ((int) (sR + change * (eR - sR)) & 0xFF) << 24
+                | ((int) (sG + change * (eG - sG)) & 0xFF) << 16
+                | ((int) (sB + change * (eB - sB)) & 0xFF) << 8
+                | (int) (sA + change * (eA - sA)) & 0xFE;
+    }
+
+
+    /**
+     * Given several colors, this gets an even mix of all colors in equal measure.
+     * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER}.
+     * This is mostly useful in conjunction with {@link IntList}, using its {@code items}
+     * for colors, typically 0 for offset, and its {@code size} for size.
+     * @param colors an array of RGBA8888 int colors; all should use the same color space
+     * @param offset the index of the first item in {@code colors} to use
+     * @param size how many items from {@code colors} to use
+     * @return an even mix of all colors given, as an RGBA8888 int color
+     */
+    public static int mix(int[] colors, int offset, int size) {
+        int end = offset + size;
+        if(colors == null || colors.length < end || offset < 0 || size <= 0)
+            return PLACEHOLDER; // transparent super-dark-blue, used to indicate "not found"
+        int result = PLACEHOLDER;
+        while(colors[offset] == PLACEHOLDER)
+        {
+            offset++;
+        }
+        if(offset < end)
+            result = colors[offset];
+        for (int i = offset + 1, o = end, denom = 2; i < o; i++, denom++) {
+            if(colors[i] != PLACEHOLDER)
+                result = lerpColors(result, colors[i], 1f / denom);
+            else --denom;
+        }
+        return result;
+    }
+
+    /**
+     * Mixes any number of colors with arbitrary weights per-color. Takes an array of varargs of alternating ints
+     * representing colors and weights, as with {@code color, weight, color, weight...}.
+     * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER}. Each color
+     * should be an RGBA8888 int, and each weight should be greater than 0.
+     * @param colors an array or varargs that should contain alternating {@code color, weight, color, weight...} ints
+     * @return the mixed color, as an RGBA8888 int
+     */
+    public static int unevenMix(int... colors) {
+        if(colors == null || colors.length == 0) return PLACEHOLDER;
+        if(colors.length <= 2) return colors[0];
+        return unevenMix(colors, 0, colors.length);
+    }
+
+    /**
+     * Mixes any number of colors with arbitrary weights per-color. Takes an array of alternating ints representing
+     * colors and weights, as with {@code color, weight, color, weight...}, starting at {@code offset} in the array and
+     * continuing for {@code size} indices in the array. The {@code size} should be an even number 2 or greater,
+     * otherwise it will be reduced by 1. The weights can be any non-negative int values; this method handles
+     * normalizing them internally. Each color should an RGBA8888 int, and each weight should be greater than 0.
+     * If {@code colors} is null or has no items, or if size &lt;= 0, this returns {@link #PLACEHOLDER}.
+     *
+     * @param colors starting at {@code offset}, this should contain alternating {@code color, weight, color, weight...} ints
+     * @param offset where to start reading from in {@code colors}
+     * @param size how many indices to read from {@code colors}; must be an even number
+     * @return the mixed color, as an RGBA8888 int
+     */
+    public static int unevenMix(int[] colors, int offset, int size) {
+        size &= -2;
+        final int end = offset + size;
+        if(colors == null || colors.length < end || offset < 0 || size <= 0)
+            return PLACEHOLDER;
+        while(colors[offset] == PLACEHOLDER)
+        {
+            if((offset += 2) >= end) return PLACEHOLDER;
+        }
+        int result = colors[offset];
+        float current = colors[offset + 1], total = current;
+        for (int i = offset+3; i < end; i += 2) {
+            if(colors[i-1] != PLACEHOLDER)
+                total += colors[i];
+        }
+        total = 1f / total;
+        current *= total;
+        for (int i = offset+3; i < end; i += 2) {
+            int mixColor = colors[i-1];
+            if(mixColor == PLACEHOLDER)
+                continue;
+            float weight = colors[i] * total;
+            result = lerpColors(result, mixColor, weight / (current += weight));
+        }
+        return result;
     }
 
     static {
