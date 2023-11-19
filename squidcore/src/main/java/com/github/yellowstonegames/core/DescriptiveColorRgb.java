@@ -937,6 +937,123 @@ public final class DescriptiveColorRgb {
     }
 
     /**
+     * Converts the four HSLA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
+     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
+     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
+     * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
+     * fractional part of h is used. The other parameters must be between 0.0 and 1.0 (inclusive) to make sense.
+     *
+     * @param h hue, usually from 0.0 to 1.0, but only the fractional part is used
+     * @param s saturation, from 0.0 to 1.0
+     * @param l lightness, from 0.0 to 1.0
+     * @param a alpha, from 0.0 to 1.0
+     * @return an RGBA8888-format int
+     */
+    public static int hsl2rgb(final float h, final float s, final float l, final float a) {
+        float hue = h - MathTools.fastFloor(h);
+        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        float y = hue + 2f / 3f;
+        float z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = l + s * Math.min(l, 1f - l);
+        float d = 2f * (1f - l / (v + 1e-10f));
+        v *= 255.999f;
+        return (int)(v*MathTools.lerp(1f, x, d)) << 24 | (int)(v*MathTools.lerp(1f, y, d)) << 16 | (int)(v*MathTools.lerp(1f, z, d)) << 8 | (int)(a * 255.999f);
+    }
+
+    /**
+     * Converts the four RGBA components, each in the 0.0 to 1.0 range, to an int in HSLA format (hue,
+     * saturation, lightness, alpha). This format is exactly like RGBA8888 but treats what would normally be red as hue,
+     * green as saturation, and blue as lightness; alpha is the same.
+     *
+     * @param r red, from 0.0 to 1.0
+     * @param g green, from 0.0 to 1.0
+     * @param b blue, from 0.0 to 1.0
+     * @param a alpha, from 0.0 to 1.0
+     * @return an "HSLA-format" int
+     */
+    public static int rgb2hsl(final float r, final float g, final float b, final float a) {
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        } else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if (r < x) {
+            z = w;
+            w = r;
+        } else {
+            w = x;
+            x = r;
+        }
+        float d = x - Math.min(w, y);
+        float l = x * (1f - 0.5f * d / (x + 1e-10f));
+        return (int)(Math.abs(z + (w - y) / (6f * d + 1e-10f)) * 255.999f) << 24 | (int)((x - l) / (Math.min(l, 1f - l) + 1e-10f) * 255.999f) << 16 | (int)(l * 255.999f) << 8 | (int)(a * 255.999f);
+    }
+
+    /**
+     * Converts the four HSBA/HSVA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
+     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
+     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
+     * HSV and HSB are synonyms; it makes a little more sense to call the third channel brightness.
+     * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
+     * fractional part of h is used. The other parameters must be between 0.0 and 1.0 (inclusive) to make sense.
+     *
+     * @param h hue, from 0.0 to 1.0
+     * @param s saturation, from 0.0 to 1.0
+     * @param b brightness, from 0.0 to 1.0
+     * @param a alpha, from 0.0 to 1.0
+     * @return an RGBA8888-format int
+     */
+    public static int hsb2rgb(final float h, final float s, final float b, final float a) {
+        float hue = h - MathTools.fastFloor(h);
+        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        float y = hue + 2f / 3f;
+        float z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = b * 255.999f;
+//        return ((int)(r * 255.999f) << 24) | ((int)(g * 255.999f) << 16) | ((int)(b * 255.999f) << 8) | (int)(a * 255.999f);
+        return (int) (v * MathTools.lerp(1f, x, s)) << 24 | (int) (v * MathTools.lerp(1f, y, s)) << 16 | (int) (v * MathTools.lerp(1f, z, s)) << 8 | (int)(a * 255.999f);
+    }
+
+    /**
+     * Converts the four RGBA components, each in the 0.0 to 1.0 range, to an int in HSBA/HSVA format (hue,
+     * saturation, brightness/value, alpha). This format is exactly like RGBA8888 but treats what would normally be red
+     * as hue, green as saturation, and blue as brightness/value; alpha is the same. HSV and HSB are synonyms; it makes
+     * a little more sense to call the third channel brightness.
+     *
+     * @param r red, from 0.0 to 1.0
+     * @param g green, from 0.0 to 1.0
+     * @param b blue, from 0.0 to 1.0
+     * @param a alpha, from 0.0 to 1.0
+     * @return an "HSBA/HSVA-format" int
+     */
+    public static int rgb2hsb(final float r, final float g, final float b, final float a) {
+        float v = Math.max(Math.max(r, g), b);
+        float n = Math.min(Math.min(r, g), b);
+        float c = v - n;
+        float h;
+        if (c == 0) h = 0f;
+        else if (v == r) h = (g - b) / c / 6f;
+        else if (v == g) h = ((b - r) / c + 2f) / 6f;
+        else h = ((r - g) / c + 4f) / 6f;
+        return (int)(h * 255.999f) << 24 | (int)((v == 0 ? 0f : c / v) * 255.999f) << 16 | (int)(v * 255.999f) << 8 | (int)(a * 255.999f);
+//        return ((int)(r * 255.999f) << 24) | ((int)(g * 255.999f) << 16) | ((int)(b * 255.999f) << 8) | (int)(a * 255.999f);
+    }
+
+    /**
      * Interpolates from the RGBA8888 int color start towards end by change. Both start and end should be RGBA8888
      * ints, and change can be between 0f (keep start) and 1f (only use end). This is a good way to reduce allocations
      * of temporary Colors.
