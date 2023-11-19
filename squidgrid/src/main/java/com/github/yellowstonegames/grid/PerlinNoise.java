@@ -59,7 +59,10 @@ public class PerlinNoise implements INoise {
      * @return a float closer to 0 than x
      */
     public static float towardsZero(float x) {
-        return BitConversion.intBitsToFloat(BitConversion.floatToIntBits(x) - 2);
+        int bits = BitConversion.floatToIntBits(x), sign = bits & 0x80000000;
+        bits ^= sign;
+        if(bits >>> 1 == 0) return 0;
+        return BitConversion.intBitsToFloat(bits - 2 | sign);
     }
 
     /**
@@ -79,23 +82,6 @@ public class PerlinNoise implements INoise {
     public static float emphasizeSigned(float a) {
         a = a * 0.49999997f + 0.49999997f;
         return a * a * a * (20f + a * ((a - 2.5f) * 12f)) - 1.0000014f;
-    }
-
-    /**
-     * Emphasizes or de-emphasizes extreme values using Schlick's bias function when {@code x} is between 0 and 1
-     * (inclusive), or effectively {@code -bias(-x)} when x is between -1 and 0. The bias parameter is handled a little
-     * differently from how Schlick implemented it; here, {@code bias=1} produces a straight line (no bias), bias
-     * between 0 and 1 is shaped like the {@link com.github.tommyettinger.digital.MathTools#cbrt(float)} function, and
-     * bias greater than 1 is shaped like {@link com.github.tommyettinger.digital.MathTools#cube(float)}.
-     * <br>
-     * This static method is likely to be moved to {@link com.github.tommyettinger.digital.MathTools} at some point.
-     * @param x between -1 and 1, inclusive
-     * @param bias any float greater than 0 (exclusive)
-     * @return a biased float between -1 and 1, inclusive
-     */
-    public static float signedBias(float x, float bias) {
-        final float a = Math.abs(x);
-        return Math.copySign(a / (((bias - 1f) * (1f - a)) + 1f), x);
     }
 
     public static final float SCALE2 = towardsZero(1f/ (float) Math.sqrt(2f / 4f));
