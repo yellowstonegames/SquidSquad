@@ -78,9 +78,10 @@ public class INoiseComparison extends ApplicationAdapter {
             new HoneyNoise(1L, 0.5f),
             new HoneyNoise(1L, 0.6f),
             new HoneyNoise(1L, 0.7f),
+            new AngleNoise(1L),
     };
     private int index0 = noises.length - 5;
-    private int index1 = noises.length - 4;
+    private int index1 = noises.length - 1;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
