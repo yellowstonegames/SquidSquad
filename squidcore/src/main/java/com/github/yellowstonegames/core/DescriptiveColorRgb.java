@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
@@ -840,6 +841,73 @@ public final class DescriptiveColorRgb {
      * corresponding packed int color by looking up a name in {@link #NAMED}. This does not include aliases.
      */
     public static final ObjectList<String> NAMES_BY_LIGHTNESS = new ObjectList<>(NAMES);
+
+    /**
+     * Gets an RGBA int color given a float per channel.
+     * This method maps each channel from the 0 to 1 float range here, to the 0 to 255 int range in the result.
+     * @param r red channel; will be clamped between 0 and 1 if it isn't already
+     * @param g green channel; will be clamped between 0 and 1 if it isn't already
+     * @param b blue channel; will be clamped between 0 and 1 if it isn't already
+     * @param a alpha channel; will be clamped between 0 and 1 if it isn't already
+     * @return the RGBA color matching the given channels, as an RGBA8888 int
+     */
+    public static int rgba(float r, float g, float b, float a) {
+        return
+                Math.min(Math.max((int)(r * 255.999f), 0), 255) << 24
+                        | Math.min(Math.max((int)(g * 255.999f), 0), 255) << 16
+                        | Math.min(Math.max((int)(b * 255.999f), 0), 255) << 8
+                        | ((int)(a * 255f));
+    }
+    /**
+     * Converts a packed float color in the format libGDX uses (ABGR7888) to an RGBA8888 int as this class uses.
+     * @param packed a packed float color in ABGR7888 format
+     * @return an RGBA8888 int color
+     */
+    public static int fromFloat(final float packed) {
+        final int rev = BitConversion.floatToReversedIntBits(packed);
+        return rev | (rev >>> 7 & 1);
+    }
+
+    /**
+     * Takes a color encoded as an RGBA8888 int and converts to a packed float in the ABGR7888 format libGDX uses.
+     * @param rgba an int with the channels (in order) red, green, blue, alpha; should have 8 bits per channel
+     * @return a packed float as ABGR7888
+     */
+    public static float fromRGBA8888(final int rgba) {
+        return BitConversion.reversedIntBitsToFloat(rgba & 0xFFFFFFFE);
+    }
+
+    public static int redInt(int rgba) {
+        return rgba >>> 24;
+    }
+    
+    public static float red(int rgba) {
+        return (rgba >>> 24) * (1f/255f);
+    }
+    
+    public static int greenInt(int rgba) {
+        return rgba >>> 16 & 255;
+    }
+    
+    public static float green(int rgba) {
+        return (rgba >>> 16 & 255) * (1f/255f);
+    }
+
+    public static int blueInt(int rgba) {
+        return rgba >>> 8 & 255;
+    }
+
+    public static float blue(int rgba) {
+        return (rgba >>> 8 & 255) * (1f/255f);
+    }
+
+    public static int alphaInt(int rgba) {
+        return rgba & 255;
+    }
+
+    public static float alpha(int rgba) {
+        return (rgba & 254) * (1f/254f);
+    }
 
     static {
         NAMES_BY_HUE.sort((o1, o2) -> {
