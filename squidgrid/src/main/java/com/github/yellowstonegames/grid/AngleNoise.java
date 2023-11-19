@@ -100,6 +100,7 @@ public class AngleNoise implements INoise {
      * @return the interpolated angle in the range [0, 1)
      */
     public static float angle(float fromTurns, float toTurns, float progress){
+//        return MathTools.lerpAngleTurns(fromTurns, toTurns, progress);
         float d = toTurns - fromTurns;
         d = fromTurns + progress * (d - ((int) (d + 16384.5) - 16384));
         return d - ((int) (d + 16384.0) - 16384);
