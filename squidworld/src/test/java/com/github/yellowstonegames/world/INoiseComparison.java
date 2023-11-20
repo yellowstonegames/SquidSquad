@@ -28,11 +28,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.Arrays;
@@ -80,7 +78,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new HoneyNoise(1L, 0.5f),
             new HoneyNoise(1L, 0.6f),
             new HoneyNoise(1L, 0.7f),
-            new AngleNoise(1L),
+            new ColorNoise(1L),
     };
     private int index0 = noises.length - 5;
     private int index1 = noises.length - 1;
@@ -109,18 +107,18 @@ public class INoiseComparison extends ApplicationAdapter {
         if(hue){
             n = (n + 1) - (int)(n + 1);
         } else {
-            n = n * 0.5f + 0.5f;
+            n = TrigTools.sinTurns(n) * 0.5f + 0.5f;
+//            n = n * 0.5f + 0.5f;
         }
         freq0[Math.min(Math.max((int)(n * 256), 0), freq0.length-1)]++;
         return n;
     }
     public float prepare1(float n) {
-        if(hue){
-            n = (n + 1) - (int)(n + 1);
-        } else {
-            n = n * 0.5f + 0.5f;
+        if(!hue){
+            n = TrigTools.sinTurns(n) * 0.5f + 0.5f;
+//            n = n * 0.5f + 0.5f;
+            freq1[Math.min(Math.max((int)(n * 256), 0), freq1.length-1)]++;
         }
-        freq1[Math.min(Math.max((int)(n * 256), 0), freq1.length-1)]++;
         return n;
     }
 
@@ -433,7 +431,7 @@ public class INoiseComparison extends ApplicationAdapter {
     
     private void colorize(float v){
         if(hue)
-            renderer.color(BitConversion.reversedIntBitsToFloat(DescriptiveColorRgb.hsb2rgb(v, 1f, 1f, 1f)));
+            renderer.color(v);
         else
             renderer.color(v, v, v, 1f);
     }

@@ -17,26 +17,29 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.MathTools;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
- * A different type of noise that produces angles in turns (from 0 to 1) rather than linear values (from -1 to 1).
- * Because this works with angles, this can produce areas with discontinuities if you aren't treating the output
- * as some form of angle; that is, this can produce 0 immediately next to 0.999, and that isn't a bug.
+ * A different type of noise that produces packed float colors rather than standard scalar noise values.
+ * This handles lerping between colors (in Oklab color space), and outputs a ready to use ABGR7888 float,
+ * which Batch can take as a "packed color," and various parts of libGDX can as well.
  */
-public class AngleNoise implements INoise {
+@Beta
+public class ColorNoise implements INoise {
 
-    public static final AngleNoise instance = new AngleNoise();
+    public static final ColorNoise instance = new ColorNoise();
 
     public int seed = 0xD1CEBEEF;
-    public AngleNoise() {
+    public ColorNoise() {
     }
 
-    public AngleNoise(int seed) {
+    public ColorNoise(int seed) {
         this.seed = seed;
     }
 
-    public AngleNoise(long seed) {
+    public ColorNoise(long seed) {
         this.seed = (int) (seed ^ seed >>> 32);
     }
 
@@ -49,24 +52,24 @@ public class AngleNoise implements INoise {
         return "`" + seed + '`';
     }
 
-    public AngleNoise stringDeserialize(String data) {
+    public ColorNoise stringDeserialize(String data) {
         if(data == null || data.length() < 3)
             return this;
         this.seed = DigitTools.intFromDec(data, 1, data.indexOf('`', 2));
         return this;
     }
 
-    public static AngleNoise recreateFromString(String data) {
+    public static ColorNoise recreateFromString(String data) {
         if(data == null || data.length() < 3)
             return null;
         int seed =   DigitTools.intFromDec(data, 1, data.indexOf('`', 2));
 
-        return new AngleNoise(seed);
+        return new ColorNoise(seed);
     }
 
     @Override
-    public AngleNoise copy() {
-        return new AngleNoise(seed);
+    public ColorNoise copy() {
+        return new ColorNoise(seed);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class AngleNoise implements INoise {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AngleNoise that = (AngleNoise) o;
+        ColorNoise that = (ColorNoise) o;
 
         return seed == that.seed;
     }
@@ -99,11 +102,22 @@ public class AngleNoise implements INoise {
      * @param progress  interpolation value in the range [0, 1]
      * @return the interpolated angle in the range [0, 1)
      */
-    public static float angle(float fromTurns, float toTurns, float progress){
+    public static int angle(int fromTurns, int toTurns, float progress){
+//        float delta = ((toTurns - fromTurns) % 1.0f + 1.0f + 0.5f) % 1.0f - 0.5f;
+//        return ((fromTurns + delta * progress) % 1.0f + 1.0f) % 1.0f;
+
 //        return MathTools.lerpAngleTurns(fromTurns, toTurns, progress);
-        float d = toTurns - fromTurns;
-        d = fromTurns + progress * (d - ((int) (d + 16384.5) - 16384));
-        return d - ((int) (d + 16384.0) - 16384);
+
+//        if(fromTurns < toTurns)
+//            return MathTools.lerp(fromTurns, toTurns, progress);
+//        return MathTools.lerp(fromTurns, toTurns + 1f, progress) % 1f;
+
+        return DescriptiveColor.lerpColors(fromTurns, toTurns, progress);
+//        return MathTools.lerp(fromTurns, toTurns, progress);
+
+//        float d = toTurns - fromTurns;
+//        d = fromTurns + progress * (d - ((int) (d + 16384.5) - 16384));
+//        return d - ((int) (d + 16384.0) - 16384);
     }
 
     public static float valueNoise(float x, float y, int seed)
@@ -118,11 +132,12 @@ public class AngleNoise implements INoise {
         y *= y * (3 - 2 * y);
         xFloor *= STEPX;
         yFloor *= STEPY;
-        return angle(
+        return DescriptiveColor.oklabIntToFloat(
+                angle(
                 angle(hashPart1024(xFloor, yFloor, seed), hashPart1024(xFloor + STEPX, yFloor, seed), x),
                 angle(hashPart1024(xFloor, yFloor + STEPY, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, seed), x),
                 y)
-                ;
+        );
     }
 
     /**
@@ -133,9 +148,9 @@ public class AngleNoise implements INoise {
      * @param s state, any int
      * @return a mediocre 10-bit hash
      */
-    private static float hashPart1024(final int x, final int y, int s) {
+    private static int hashPart1024(final int x, final int y, int s) {
         s += x ^ y;
-        return ((s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 22) * 0x1p-10f;
+        return DescriptiveColor.LIST.get((int)(49 * ((s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 & 0xFFFFFFFFL) >>> 32));
     }
 
     public static float valueNoise(float x, float y, float z, int seed)
@@ -155,12 +170,14 @@ public class AngleNoise implements INoise {
         xFloor *= STEPX;
         yFloor *= STEPY;
         zFloor *= STEPZ;
-        return angle(
+        return DescriptiveColor.oklabIntToFloat(
+                angle(
                 angle(angle(hashPart1024(xFloor, yFloor, zFloor, seed), hashPart1024(xFloor + STEPX, yFloor, zFloor, seed), x)
                         , angle(hashPart1024(xFloor, yFloor + STEPY, zFloor, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, zFloor, seed), x), y)
                 , angle(angle(hashPart1024(xFloor, yFloor, zFloor + STEPZ, seed), hashPart1024(xFloor + STEPX, yFloor, zFloor + STEPZ, seed), x)
                         , angle(hashPart1024(xFloor, yFloor + STEPY, zFloor + STEPZ, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, seed), x), y)
-                , z);
+                , z)
+        );
     }
 
     /**
@@ -172,9 +189,9 @@ public class AngleNoise implements INoise {
      * @param s state, any int
      * @return a mediocre 10-bit hash
      */
-    private static float hashPart1024(final int x, final int y, final int z, int s) {
+    private static int hashPart1024(final int x, final int y, final int z, int s) {
         s += x ^ y ^ z;
-        return ((s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 22) * 0x1p-10f;
+        return DescriptiveColor.LIST.get((int)(49 * ((s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 & 0xFFFFFFFFL) >>> 32));
     }
 
     public static float valueNoise(float x, float y, float z, float w, int seed)
