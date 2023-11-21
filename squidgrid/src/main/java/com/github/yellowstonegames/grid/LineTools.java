@@ -21,7 +21,19 @@ import com.github.tommyettinger.digital.ArrayTools;
 /**
  * Tools for constructing patterns using box-drawing characters in grids.
  * This can be useful in both text-based games and graphical ones, where graphical games would use a single box-drawing
- * character, like any of {@code "╴╵┘╶─└┴╷┐│┤┌┬├┼"} to determine which wall graphic to draw at a position.
+ * character, like any of {@code "╴╵┘╶─└┴╷┐│┤┌┬├┼"} to determine which wall graphic to draw at a position. The methods
+ * {@link #hashesToLines(char[][])} and {@link #pruneLines(char[][], Region, char[][])} are especially commonly-used.
+ * The first creates a map that uses box-drawing characters from a "bare" map that represents walls with {@code '#'};
+ * there is a variant that fills an existing 2D char array with the box-drawing character map (instead of creating a new
+ * 2D array). The second is meant to be used in tandem with {@link FOV} to limit the set of small lines in each
+ * box-drawing character to those matching walls a viewer can see. It may be better to use {@link VisionFramework} for
+ * handling vision and lighting, because it calls pruneLines() automatically and keeps its parameters up-to-date.
+ * <br>
+ * The rest of this class is some sort of mad science experiment, meant for procedurally generating decorations in some
+ * area (like a circle, square, diamond, shield-shape...). Methods like {@link #encode4x4(char[][])},
+ * {@link #decode4x4(long)}, {@link #rotateClockwise(long)}, {@link #flipHorizontal4x4(long)}, and so on are probably
+ * not widely useful, but if you find a good use for them (or have a feature request to make them better), an issue on
+ * the SquidSquad repo would be a good place to mention it.
  */
 public final class LineTools {
     /**
@@ -653,7 +665,7 @@ public final class LineTools {
      * @return a copy of the map passed as an argument with box-drawing characters replacing '#' walls
      */
     public static char[][] hashesToLines(char[][] map) {
-        return hashesToLinesInto(null, map, false);
+        return hashesToLinesInto(map, null, false);
     }
 
     /**
@@ -679,10 +691,10 @@ public final class LineTools {
      * @return a copy of the map passed as an argument with box-drawing characters replacing '#' walls
      */
     public static char[][] hashesToLines(char[][] map, boolean keepSingleHashes) {
-        return hashesToLinesInto(null, map, keepSingleHashes);
+        return hashesToLinesInto(map, null, keepSingleHashes);
     }
     /**
-     * Takes a char[][] place {@code map} that uses '#' to represent walls, and fills a different char[][] {@code into}
+     * Takes a char[][] place {@code source} that uses '#' to represent walls, and fills a different char[][] {@code target}
      * with Unicode box drawing characters to draw straight, continuous lines for walls, filling regions between walls
      * (that were
      * filled with more walls before) with space characters, ' '. If keepSingleHashes is true, then '#' will be used if
@@ -701,42 +713,42 @@ public final class LineTools {
      * and since walls connect to doors, the box-drawing characters for adjacent walls should connect to the door as if
      * it is or is embedded in a wall.
      *
-     * @param into             a 2D char array that will be entirely modified in-place; if null, a new array will be made
-     * @param map              a 2D char array indexed with x,y that uses '#' for walls
+     * @param source           a 2D char array indexed with x,y that uses '#' for walls
+     * @param target           a 2D char array that will be entirely modified in-place; if null, a new array will be made
      * @param keepSingleHashes true if walls that are not orthogonally adjacent to other walls should stay as '#'
      * @return into, with box-drawing characters replacing '#' walls
      */
-    public static char[][] hashesToLinesInto(char[][] into, char[][] map, boolean keepSingleHashes) {
-        if(into == null) into = new char[map.length][map[0].length];
+    public static char[][] hashesToLinesInto(char[][] source, char[][] target, boolean keepSingleHashes) {
+        if(target == null) target = new char[source.length][source[0].length];
 
-        int width = Math.min(map.length, into.length);
-        int height = Math.min(map[0].length, into[0].length);
+        int width = Math.min(source.length, target.length);
+        int height = Math.min(source[0].length, target[0].length);
 
         for (int i = 0; i < width; i++) {
-            System.arraycopy(map[i], 0, into[i], 0, height);
+            System.arraycopy(source[i], 0, target[i], 0, height);
         }
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (map[x][y] == '#') {
+                if (source[x][y] == '#') {
                     int q = 0;
-                    if(y >= height - 1 || map[x][y+1] == '#' || map[x][y+1] == '+' || map[x][y+1] == '/') q |= 1;
-                    if(x >= width - 1 || map[x+1][y] == '#' || map[x+1][y] == '+' || map[x+1][y] == '/') q |= 2;
-                    if(y == 0 || map[x][y-1] == '#' || map[x][y-1] == '+' || map[x][y-1] == '/') q |= 4;
-                    if(x == 0 || map[x-1][y] == '#' || map[x-1][y] == '+' || map[x-1][y] == '/') q |= 8;
+                    if(y >= height - 1 || source[x][y+1] == '#' || source[x][y+1] == '+' || source[x][y+1] == '/') q |= 1;
+                    if(x >= width - 1 || source[x+1][y] == '#' || source[x+1][y] == '+' || source[x+1][y] == '/') q |= 2;
+                    if(y == 0 || source[x][y-1] == '#' || source[x][y-1] == '+' || source[x][y-1] == '/') q |= 4;
+                    if(x == 0 || source[x-1][y] == '#' || source[x-1][y] == '+' || source[x-1][y] == '/') q |= 8;
 
-                    if(y >= height - 1 || x >= width - 1 || map[x+1][y+1] == '#' || map[x+1][y+1] == '+' || map[x+1][y+1] == '/') q |= 16;
-                    if(y == 0 || x >= width - 1 || map[x+1][y-1] == '#' || map[x+1][y-1] == '+' || map[x+1][y-1] == '/') q |= 32;
-                    if(y == 0 || x == 0 || map[x-1][y-1] == '#' || map[x-1][y-1] == '+' || map[x-1][y-1] == '/') q |= 64;
-                    if(y >= height - 1 || x == 0 || map[x-1][y+1] == '#' || map[x-1][y+1] == '+' || map[x-1][y+1] == '/') q |= 128;
+                    if(y >= height - 1 || x >= width - 1 || source[x+1][y+1] == '#' || source[x+1][y+1] == '+' || source[x+1][y+1] == '/') q |= 16;
+                    if(y == 0 || x >= width - 1 || source[x+1][y-1] == '#' || source[x+1][y-1] == '+' || source[x+1][y-1] == '/') q |= 32;
+                    if(y == 0 || x == 0 || source[x-1][y-1] == '#' || source[x-1][y-1] == '+' || source[x-1][y-1] == '/') q |= 64;
+                    if(y >= height - 1 || x == 0 || source[x-1][y+1] == '#' || source[x-1][y+1] == '+' || source[x-1][y+1] == '/') q |= 128;
                     if (!keepSingleHashes && wallLookup[q] == '#') {
-                        into[x][y] = '─';
+                        target[x][y] = '─';
                     } else {
-                        into[x][y] = wallLookup[q];
+                        target[x][y] = wallLookup[q];
                     }
                 }
             }
         }
-        return into;
+        return target;
     }
 
     /**
@@ -749,27 +761,27 @@ public final class LineTools {
      * @return a copy of the map passed as an argument with '#' replacing box-drawing characters for walls
      */
     public static char[][] linesToHashes(char[][] map) {
-        return linesToHashesInto(null, map);
+        return linesToHashesInto(map, null);
     }
     /**
-     * Reverses most of the effects of hashesToLinesInto() that may have been applied to {@code map} and stores the
-     * result in {@code into}. The only things that will not be reversed are the placement of
+     * Reverses most of the effects of hashesToLinesInto() that may have been applied to {@code source} and stores the
+     * result in {@code target}. The only things that will not be reversed are the placement of
      * space characters in unreachable wall-cells-behind-wall-cells, which remain as spaces. This is useful if you
      * have a modified map that contains wall characters of conflicting varieties, as described in hashesToLinesInto().
      *
-     * @param into a 2D char array that will be entirely modified in-place; if null, a new array will be made
-     * @param map a 2D char array indexed with x,y that uses box-drawing characters for walls
+     * @param source a 2D char array indexed with x,y that uses box-drawing characters for walls
+     * @param target a 2D char array that will be entirely modified in-place; if null, a new array will be made
      * @return into, with '#' replacing box-drawing characters for walls
      */
-    public static char[][] linesToHashesInto(char[][] into, char[][] map) {
-        if(into == null) into = new char[map.length][map[0].length];
+    public static char[][] linesToHashesInto(char[][] source, char[][] target) {
+        if(target == null) target = new char[source.length][source[0].length];
 
-        int width = Math.min(map.length, into.length);
-        int height = Math.min(map[0].length, into[0].length);
+        int width = Math.min(source.length, target.length);
+        int height = Math.min(source[0].length, target[0].length);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                switch (map[i][j]) {
+                switch (source[i][j]) {
                     case '├':
                     case '┤':
                     case '┴':
@@ -781,14 +793,14 @@ public final class LineTools {
                     case '│':
                     case '─':
                     case '┼':
-                        into[i][j] = '#';
+                        target[i][j] = '#';
                         break;
                     default:
-                        into[i][j] = map[i][j];
+                        target[i][j] = source[i][j];
                 }
             }
         }
-        return into;
+        return target;
     }
 
     /**
@@ -810,47 +822,47 @@ public final class LineTools {
     /**
      * If you call hashesToLines() on a map that uses [y][x] conventions instead of [x][y], it will have the lines not
      * connect as you expect. Use this function to change the directions of the box-drawing characters only, without
-     * altering the dimensions in any way. This modifies the parameter {@code into} in-place. Calling
+     * altering the dimensions in any way. This modifies the parameter {@code changing} in-place. Calling
      * transposeLines() is also needed if the lines in a map have become transposed when they were already correct;
      * calling this method on an incorrectly transposed map will change the directions on all of its lines.
      *
-     * @param into a 2D char array that will be modified in-place to use different box-drawing characters
-     * @return into, modified in-place to use x,y instead of y,x box-drawing characters
+     * @param changing a 2D char array that will be modified in-place to use different box-drawing characters
+     * @return changing, modified in-place to use x,y instead of y,x box-drawing characters
      */
-    public static char[][] transposeLinesInPlace(char[][] into) {
-        int width = into.length;
-        int height = into[0].length;
+    public static char[][] transposeLinesInPlace(char[][] changing) {
+        int width = changing.length;
+        int height = changing[0].length;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                switch (into[i][j]) {
+                switch (changing[i][j]) {
                     case '├':
-                        into[i][j] = '┬';
+                        changing[i][j] = '┬';
                         break;
                     case '┤':
-                        into[i][j] = '┴';
+                        changing[i][j] = '┴';
                         break;
                     case '┴':
-                        into[i][j] = '┤';
+                        changing[i][j] = '┤';
                         break;
                     case '┬':
-                        into[i][j] = '├';
+                        changing[i][j] = '├';
                         break;
                     case '┐':
-                        into[i][j] = '└';
+                        changing[i][j] = '└';
                         break;
                     case '└':
-                        into[i][j] = '┐';
+                        changing[i][j] = '┐';
                         break;
                     case '│':
-                        into[i][j] = '─';
+                        changing[i][j] = '─';
                         break;
                     case '─':
-                        into[i][j] = '│';
+                        changing[i][j] = '│';
                         break;
                     //for ┼┌┘ and any non-box-drawing, do nothing
                 }
             }
         }
-        return into;
+        return changing;
     }
 }

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.smooth.dawnlike;
+package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.annotations.Beta;
-import com.github.yellowstonegames.grid.*;
 
 /**
  * Encapsulates currently-visible and previously-seen cell data, and allows updating and modifying light levels/colors.
@@ -37,7 +36,9 @@ import com.github.yellowstonegames.grid.*;
  * calling moveViewer(), so the new position shows the changed lighting right away; moving lights uses
  * {@link LightingManager#moveLight(Coord, Coord)}. When a small part of the world changes, call
  * {@link #editSingle(Coord, char)} (such as for a door opening), or {@link #editAll(char[][])} if a large
- * part of the world changes at once.
+ * part of the world changes at once. After any viewer, light source, or map feature changes (or several if they all
+ * changed at once), you should call {@link #finishChanges()}, which updates {@link #prunedPlaceMap} with the actually
+ * visible map cells, handles lighting changes, and so on.
  */
 @Beta
 public class VisionFramework {
@@ -222,7 +223,7 @@ public class VisionFramework {
         placeHeight = place[0].length;
         this.viewers = viewers;
         linePlaceMap = linePlaceMap == null || linePlaceMap.length != placeWidth || linePlaceMap[0].length != placeHeight
-                ? LineTools.hashesToLines(place, true) : LineTools.hashesToLinesInto(linePlaceMap, place, true);
+                ? LineTools.hashesToLines(place, true) : LineTools.hashesToLinesInto(place, linePlaceMap, true);
         prunedPlaceMap = prunedPlaceMap == null || prunedPlaceMap.length != placeWidth || prunedPlaceMap[0].length != placeHeight
                 ? ArrayTools.copy(linePlaceMap) : ArrayTools.set(linePlaceMap, prunedPlaceMap);
         if(lighting == null || lighting.width != placeWidth || lighting.height != placeHeight)
