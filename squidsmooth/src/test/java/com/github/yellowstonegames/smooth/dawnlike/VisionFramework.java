@@ -32,9 +32,12 @@ import com.github.yellowstonegames.grid.*;
  * getForegroundColor() methods take a float, millisSinceLastMove, which is measured in milliseconds since the last
  * action the player took; this allows cells to fade into or out of view over a short period of time. The background
  * colors are available at {@link #backgroundColors} once update() has been called. When the player character or
- * characters move (or any special vision they have moves, like a remote camera), call
- * {@link #moveViewer(Coord, Coord)}. When a small part of the world changes, call {@link #editSingle(Coord, char)}
- * (such as for a door opening), or {@link #editAll(char[][])} if a large part of the world changes at once.
+ * characters change position (or any special vision the player has moves, like a remote camera), call
+ * {@link #moveViewer(Coord, Coord)}. You probably want to move any light source a character carries immediately before
+ * calling moveViewer(), so the new position shows the changed lighting right away; moving lights uses
+ * {@link LightingManager#moveLight(Coord, Coord)}. When a small part of the world changes, call
+ * {@link #editSingle(Coord, char)} (such as for a door opening), or {@link #editAll(char[][])} if a large
+ * part of the world changes at once.
  */
 @Beta
 public class VisionFramework {
@@ -218,9 +221,19 @@ public class VisionFramework {
         placeWidth = place.length;
         placeHeight = place[0].length;
         this.viewers = viewers;
-        linePlaceMap = LineTools.hashesToLines(place, true);
-        prunedPlaceMap = ArrayTools.copy(linePlaceMap);
-        lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedOklabColor, Radius.CIRCLE, 4f);
+        linePlaceMap = linePlaceMap == null || linePlaceMap.length != placeWidth || linePlaceMap[0].length != placeHeight
+                ? LineTools.hashesToLines(place, true) : LineTools.hashesToLinesInto(linePlaceMap, place, true);
+        prunedPlaceMap = prunedPlaceMap == null || prunedPlaceMap.length != placeWidth || prunedPlaceMap[0].length != placeHeight
+                ? ArrayTools.copy(linePlaceMap) : ArrayTools.set(linePlaceMap, prunedPlaceMap);
+        if(lighting == null || lighting.width != placeWidth || lighting.height != placeHeight)
+            lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedOklabColor, Radius.CIRCLE, 4f);
+        else{
+            FOV.fillSimpleResistancesInto(linePlaceMap, lighting.resistances);
+            lighting.backgroundColor = rememberedOklabColor;
+            lighting.radiusStrategy = Radius.CIRCLE;
+            lighting.viewerRange = 4f;
+            lighting.lights.clear();
+        }
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
         // This gets the FOV with no light on this call, to make sure all data is non-null.
         lighting.calculateFOV(this.viewers, 0, 0, placeWidth, placeHeight);
@@ -386,8 +399,9 @@ public class VisionFramework {
     /**
      * This completes the changes started by {@link #moveViewer}, {@link #editSingle}, or {@link #editAll(char[][])}
      * and updates the lighting according to those changes. This affects almost all variables present in
-     * this object. It should be noted that the methods that change a place map only {@link #linePlaceMap};
-     * that is because the end of this method uses the currently seen cells to update {@link #prunedPlaceMap}.
+     * this object. It should be noted that the methods that change a place map only change {@link #linePlaceMap};
+     * that is because the end of this method uses linePlaceMap and the currently seen cells to update
+     * {@link #prunedPlaceMap}. Rendering should typically determine what to draw by using prunedPlaceMap.
      */
     public void finishChanges() {
         // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.

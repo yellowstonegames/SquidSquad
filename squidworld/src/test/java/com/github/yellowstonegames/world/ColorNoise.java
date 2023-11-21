@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.grid;
+package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.grid.INoise;
 
 /**
  * A different type of noise that produces packed float colors rather than standard scalar noise values.
@@ -45,7 +46,7 @@ public class ColorNoise implements INoise {
 
     @Override
     public String getTag() {
-        return "AngN";
+        return "ClrN";
     }
 
     public String stringSerialize() {
