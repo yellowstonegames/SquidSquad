@@ -5440,7 +5440,8 @@ public class Region implements Collection<Coord> {
      * least significant bit and every other bit after it are filled with the bits of x, while the
      * second-least-significant bit and every other bit after that are filled with the bits of y. Essentially, this
      * takes two numbers with bits labeled like {@code a b c} for x and {@code R S T} for y and makes a number with
-     * those bits arranged like {@code R a S b T c}.
+     * those bits arranged like {@code R a S b T c}. Numbers made by interleaving other numbers like this are sometimes
+     * called Morton codes, and the sequence of Morton codes forms a pattern called the Z-order curve.
      * @param x an int between 0 and 65535, inclusive
      * @param y an int between 0 and 65535, inclusive
      * @return an int that interleaves x and y, with x in the least significant bit position
@@ -5458,7 +5459,8 @@ public class Region implements Collection<Coord> {
      * Narrow-purpose; takes an int that represents a distance down the Z-order curve and moves its bits around so that
      * its x component is stored in the bottom 16 bits (use {@code (n & 0xffff)} to obtain) and its y component is
      * stored in the upper 16 bits (use {@code (n >>> 16)} to obtain). This may be useful for ordering traversals of all
-     * points in a Region less predictably.
+     * points in a Region less predictably. Numbers made by interleaving other numbers, like {@code n}, are sometimes
+     * called Morton codes, and the sequence of Morton codes forms a pattern called the Z-order curve.
      * @param n an int that has already been interleaved, though this can really be any int
      * @return an int with x in its lower bits ({@code x = n & 0xffff;}) and y in its upper bits ({@code y = n >>> 16;})
      */

@@ -20,7 +20,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
- * A mix of {@link CyclicNoise} with value noise; much less periodic than CyclicNoise alone. Largely based upon
+ * A mix of {@link CyclicNoise} with Simplex noise; much less periodic than CyclicNoise alone. Largely based upon
  * <a href="https://www.shadertoy.com/view/3tcyD7">this ShaderToy by jeyko</a>, which in turn is based on
  * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>. This uses cyclic noise with a
  * dimension one higher than requested, and uses a call to {@link SimplexNoise#noise} to fill that parameter.
