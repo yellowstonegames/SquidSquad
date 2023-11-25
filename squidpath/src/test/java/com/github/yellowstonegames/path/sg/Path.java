@@ -24,10 +24,7 @@ SOFTWARE.
 
 package com.github.yellowstonegames.path.sg;
 
-import com.github.yellowstonegames.path.sg.Array;
-
 import java.util.Collection;
-import java.util.function.Predicate;
 
 public class Path<V> extends Array<V> {
 
@@ -109,12 +106,6 @@ public class Path<V> extends Array<V> {
     public boolean retainAll(Collection<?> c) {
         checkFixed();
         return super.retainAll(c);
-    }
-
-    @Override
-    public boolean removeIf(Predicate<? super V> filter) {
-        checkFixed();
-        return super.removeIf(filter);
     }
 
     public V getFirst() {

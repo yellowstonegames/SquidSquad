@@ -30,19 +30,10 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import com.github.yellowstonegames.path.sg.Connection;
-import com.github.yellowstonegames.path.sg.Edge;
-import com.github.yellowstonegames.path.sg.Errors;
-import com.github.yellowstonegames.path.sg.Internals;
-import com.github.yellowstonegames.path.sg.Node;
-import com.github.yellowstonegames.path.sg.NodeMap;
+import com.github.tommyettinger.function.ObjPredicate;
 import com.github.yellowstonegames.path.sg.algorithms.Algorithms;
 import com.github.yellowstonegames.path.sg.utils.WeightFunction;
-
 
 public abstract class Graph<V> {
 
@@ -81,7 +72,9 @@ public abstract class Graph<V> {
 
     Graph(Graph<V> graph) {
         this(graph.getVertices());
-        graph.getEdges().forEach(this::addEdge);
+        for (Edge<V> vEdge : graph.getEdges()) {
+            addEdge(vEdge);
+        }
     }
 
     //================================================================================
@@ -172,8 +165,11 @@ public abstract class Graph<V> {
         }
     }
 
-    public void removeVertexIf(Predicate<V> predicate) {
-        removeVertices(getVertices().stream().filter(predicate).collect(Collectors.toList()));
+    public void removeVertexIf(ObjPredicate<V> predicate) {
+        for (V v : getVertices()) {
+            if(predicate.test(v))
+                removeVertex(v);
+        }
     }
 
     /**
@@ -251,11 +247,16 @@ public abstract class Graph<V> {
     }
 
     public void removeEdges(Collection<Edge<V>> edges) {
-        edges.forEach(e -> removeConnection(e.getInternalNodeA(), e.getInternalNodeB()));
+        for (Edge<V> e : edges) {
+            removeConnection(e.getInternalNodeA(), e.getInternalNodeB());
+        }
     }
 
-    public void removeEdgeIf(Predicate<Edge<V>> predicate) {
-        removeEdges(getEdges().stream().filter(predicate).collect(Collectors.toList()));
+    public void removeEdgeIf(ObjPredicate<Edge<V>> predicate) {
+        for (Edge<V> e : getEdges()) {
+            if(predicate.test(e))
+                removeConnection(e.getInternalNodeA(), e.getInternalNodeB());
+        }
     }
 
     /**
@@ -486,12 +487,12 @@ public abstract class Graph<V> {
     }
 
     public int numberOfComponents() {
-        AtomicInteger visited = new AtomicInteger(1), components = new AtomicInteger();
-        while (visited.get() < size()) {
-            components.incrementAndGet();
-            algorithms().depthFirstSearch(getVertices().iterator().next(), v -> visited.incrementAndGet());
+        int[] visited = new int[]{1}, components = new int[1];
+        while (visited[0] < size()) {
+            ++components[0];
+            algorithms().depthFirstSearch(getVertices().iterator().next(), v -> ++visited[0]);
         }
-        return components.get();
+        return components[0];
     }
 
     //--------------------

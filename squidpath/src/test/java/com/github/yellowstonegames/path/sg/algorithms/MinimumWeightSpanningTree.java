@@ -1,8 +1,6 @@
 package com.github.yellowstonegames.path.sg.algorithms;
 
-import java.util.ArrayDeque;
-import java.util.Comparator;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.github.yellowstonegames.path.sg.Connection;
@@ -26,9 +24,16 @@ public class MinimumWeightSpanningTree<V> extends Algorithm<V> {
 
         spanningTree.addVertices(graph.getVertices());
 
-        edgeQueue = graph.internals().getConnections().stream()
-                .sorted(minSpanningTree ? Comparator.comparing(Edge<V>::getWeight) : Comparator.comparing(Edge<V>::getWeight).reversed())
-                .collect(Collectors.toCollection(ArrayDeque::new));
+        List<Connection<V>> toSort = new ArrayList<>();
+        for (Connection<V> vConnection : graph.internals().getConnections()) {
+            toSort.add(vConnection);
+        }
+        toSort.sort(minSpanningTree ? Comparator.comparing(Edge<V>::getWeight) : Comparator.comparing(Edge<V>::getWeight).reversed());
+        ArrayDeque<Connection<V>> connections = new ArrayDeque<>();
+        for (Connection<V> vConnection : toSort) {
+            connections.add(vConnection);
+        }
+        edgeQueue = connections;
 
         finishAt = graph.isConnected() ? graph.size() - 1 : -1;
     }

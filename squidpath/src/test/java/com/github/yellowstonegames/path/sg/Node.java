@@ -136,7 +136,7 @@ public class Node<V> extends com.github.tommyettinger.ds.BinaryHeap.Node {
     private int lastRunID = -1;
 
     public boolean resetAlgorithmAttribs(int runID) {
-        if (runID == this.getLastRunID()) return false;
+        if (runID == lastRunID) return false;
         setProcessed(false);
         setPrev(null);
         setConnection(null);
@@ -144,7 +144,7 @@ public class Node<V> extends com.github.tommyettinger.ds.BinaryHeap.Node {
         setEstimate(0);
         setIndex(0);
         setSeen(false);
-        this.setLastRunID(runID);
+        lastRunID = runID;
         return true;
     }
 
@@ -216,12 +216,7 @@ public class Node<V> extends com.github.tommyettinger.ds.BinaryHeap.Node {
     // Misc
     //================================================================================
 
-
-    @Override
-    public boolean equals(Object o) {
-        return o == this;
-    }
-
+    // equals() compares by reference equality
 
     @Override
     public int hashCode() {
