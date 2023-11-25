@@ -123,7 +123,7 @@ public class Array<T> extends AbstractCollection<T> {
     }
 
 
-    void resize(int newSize) {
+    protected void resize(int newSize) {
         if (newSize > items.length) {
             strictResize(Math.max(2*items.length, newSize));
         }
