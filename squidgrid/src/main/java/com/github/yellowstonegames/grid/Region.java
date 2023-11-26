@@ -1680,10 +1680,10 @@ public class Region implements Collection<Coord> {
         if(other == null || other.ySections <= 0 || other.width <= 0)
             return this;
 
-        int start = Math.max(0, x), len = Math.min(width, Math.min(other.width, other.width + x) - start),
+        int start = Math.max(0, x), len = Math.min(width, other.width + start) - start,
         oys = other.ySections, jump = (y == 0) ? 0 : (y < 0) ? -(-y >>> 6) : (y >>> 6), lily = (y < 0) ? -(-y & 63) : (y & 63),
         originalJump = Math.max(0, -jump), alterJump = Math.max(0, jump);
-        long[] data2 = new long[other.width * ySections];
+        long[] data2 = new long[width * ySections];
 
         long prev, tmp;
         if(oys == ySections) {
@@ -2353,6 +2353,7 @@ public class Region implements Collection<Coord> {
         }
         return chars;
     }
+
     /**
      * Returns this Region's data as a 2D char array,  [width][height] in size, with "on" cells filled with '.'
      * and "off" cells with '#'.
@@ -2502,6 +2503,25 @@ public class Region implements Collection<Coord> {
         }
         return map;
     }
+
+    /**
+     * Returns this Region's data as a 2D int array,  [width][height] in size, with "on" cells filled with the
+     * int parameter on and "off" cells with the parameter off.
+     * @param on the int to use for "on" cells
+     * @param off the int to use for "off" cells
+     * @return a 2D int array that represents this Region's data
+     */
+    public int[][] toInts(int on, int off)
+    {
+        int[][] ints = new int[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                ints[x][y] = (data[x * ySections + (y >> 6)] & (1L << (y & 63))) != 0 ? on : off;
+            }
+        }
+        return ints;
+    }
+
     /**
      * Returns a copy of map where if a cell is "off" in this Region, this keeps
      * the value in map intact, and where a cell is "on", it instead writes the float toWrite.
