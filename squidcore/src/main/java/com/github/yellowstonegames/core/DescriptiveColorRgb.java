@@ -874,7 +874,7 @@ public final class DescriptiveColorRgb {
      * @param rgba an int with the channels (in order) red, green, blue, alpha; should have 8 bits per channel
      * @return a packed float as ABGR7888
      */
-    public static float fromRGBA8888(final int rgba) {
+    public static float toFloat(final int rgba) {
         return BitConversion.reversedIntBitsToFloat(rgba & 0xFFFFFFFE);
     }
 
@@ -1162,6 +1162,104 @@ public final class DescriptiveColorRgb {
         final int g = (rgba >>> 16 & 0xff);
         final int b = (rgba >>> 8  & 0xff);
         return Math.max(Math.max(r, g), b) / 255f;
+    }
+    /**
+     * Interpolates from the RGBA8888 color start towards white by change. While change should be between 0f (return
+     * start as-is) and 1f (return white), start should be an RGBA8888 int color, as from
+     * {@link #rgba(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors, and
+     * is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp towards
+     * white. Unlike {@link #lerpColors(int, int, float)}, this keeps the alpha of start as-is.
+     * @see #darken(int, float) the counterpart method that darkens a float color
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward white, as a float between 0 and 1; higher means closer to white
+     * @return an RGBA8888 int that represents a color between start and white
+     */
+    public static int lighten(final int start, final float change) {
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        return (a |
+                ((int) (b + (0xFF - b) * change) & 0xFF) << 8 |
+                        ((int) (g + (0xFF - g) * change) & 0xFF) << 16 |
+                        ((int) (r + (0xFF - r) * change) & 0xFF) << 24
+        );
+    }
+
+    /**
+     * Interpolates from the RGBA8888 color start towards black by change. While change should be between 0f (return
+     * start as-is) and 1f (return black), start should be an RGBA8888 int color, as from
+     * {@link #rgba(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors, and
+     * is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp towards
+     * black. Unlike {@link #lerpColors(int, int, float)}, this keeps the alpha of start as-is.
+     * @see #lighten(int, float) the counterpart method that darkens a float color
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward black, as a float between 0 and 1; higher means closer to black
+     * @return an RGBA8888 int that represents a color between start and black
+     */
+    public static int darken(final int start, final float change) {
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        return (
+                ((int) (r * (1f - change)) & 0xFF) << 24 |
+                        ((int) (g * (1f - change)) & 0xFF) << 16 |
+                        ((int) (b * (1f - change)) & 0xFF) << 8 |
+                        a);
+    }
+
+    /**
+     * Interpolates from the RGBA8888 int color rgba towards either white or black, depending on change. The value
+     * for change should be between -1f and 1f; negative values interpolate toward black, while positive ones
+     * interpolate toward white. The value for rgba should be n RGBA8888 int, as from a constant here.
+     *
+     * @param rgba      the starting color as an RGBA8888 int
+     * @param change how much to go away from rgba, as a float between -1 and 1; negative to black, positive to white
+     * @return an RGBA8888 int that represents a color between start and black or white
+     * @see #darken(int, float) the counterpart method that darkens a float color
+     * @see #lighten(int, float) the counterpart method that lightens a float color
+     */
+    public static int adjustLightness(final int rgba, final float change) {
+        if(change < 0.0f) return darken(rgba, -change);
+        return lighten(rgba, change);
+    }
+
+    /**
+     * Brings the chromatic components of {@code start} closer to grayscale by {@code change} (desaturating them). While
+     * change should be between 0f (return start as-is) and 1f (return fully gray), start should be an RGBA8888 int color, as
+     * from {@link #rgba(float, float, float, float)}. This leaves alpha alone.
+     * <br>
+     * <a href="http://www.graficaobscura.com/matrix/index.html">The algorithm used is from here</a>.
+     * @see #enrich(int, float) the counterpart method that makes a float color more saturated
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to change start to a desaturated color, as a float between 0 and 1; higher means a less saturated result
+     * @return an RGBA8888 int that represents a color between start and a desaturated color
+     */
+    public static int dullen(final int start, final float change) {
+        final float rc = 0.32627f, gc = 0.3678f, bc = 0.30593001f;
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        final float ch = 1f - change, rw = change * rc, gw = change * gc, bw = change * bc;
+        return (
+                (int) Math.min(Math.max(r * (rw+ch) + g * rw + b * rw, 0), 255) << 24 |
+                        (int) Math.min(Math.max(r * gw + g * (gw+ch) + b * gw, 0), 255) << 16 |
+                        (int) Math.min(Math.max(r * bw + g * bw + b * (bw+ch), 0), 255) << 8 |
+                        a);
+    }
+
+    /**
+     * Pushes the chromatic components of {@code start} away from grayscale by change (saturating them). While change
+     * should be between 0f (return start as-is) and 1f (return maximally saturated), start should be an RGBA8888 int
+     * color, as from {@link #rgba(float, float, float, float)}.
+     * <br>
+     * <a href="http://www.graficaobscura.com/matrix/index.html">The algorithm used is from here</a>.
+     * @see #dullen(int, float) the counterpart method that makes a float color less saturated
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to change start to a saturated color, as a float between 0 and 1; higher means a more saturated result
+     * @return an RGBA8888 int that represents a color between start and a saturated color
+     */
+    public static int enrich(final int start, final float change) {
+        final float rc = 0.32627f, gc = 0.3678f, bc = 0.30593001f;
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;        final float ch = 1f + change, rw = (-change) * rc, gw = (-change) * gc, bw = (-change) * bc;
+        return (
+                (int) Math.min(Math.max(r * (rw+ch) + g * rw + b * rw, 0), 255) << 24 |
+                        (int) Math.min(Math.max(r * gw + g * (gw+ch) + b * gw, 0), 255) << 16 |
+                        (int) Math.min(Math.max(r * bw + g * bw + b * (bw+ch), 0), 255) << 8 |
+                        a);
     }
 
     /**
