@@ -169,13 +169,13 @@ public class ColorChecks {
 //        final double b = -0.0041119885 * l - 0.7034763098 * m + 1.7068625689 * s;
 //        return (b >= -0x1p-8 && b <= 0x101p-8);
 
-        double dr = Math.sqrt((+4.0767245293 * l - 3.3072168827 * m + 0.2307590544 * s)*255.999f);
+        double dr = Math.sqrt((+4.0767245293 * l - 3.3072168827 * m + 0.2307590544 * s))*255;
         final int r = (int)dr;
         if(Double.isNaN(dr) || r < 0 || r > 255) return false;
-        double dg = Math.sqrt((-1.2681437731 * l + 2.6093323231 * m - 0.3411344290 * s)*255.999f);
+        double dg = Math.sqrt((-1.2681437731 * l + 2.6093323231 * m - 0.3411344290 * s))*255;
         final int g = (int)dg;
         if(Double.isNaN(dg) || g < 0 || g > 255) return false;
-        double db = Math.sqrt((-0.0041119885 * l - 0.7034763098 * m + 1.7068625689 * s)*255.999f);
+        double db = Math.sqrt((-0.0041119885 * l - 0.7034763098 * m + 1.7068625689 * s))*255;
         final int b = (int)db;
         return (!Double.isNaN(db) && b >= 0 && b <= 255);
     }

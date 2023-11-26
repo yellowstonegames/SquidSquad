@@ -23,13 +23,7 @@ SOFTWARE.
  */
 package com.github.yellowstonegames.path.sg;
 
-import com.github.yellowstonegames.path.sg.Errors;
-
-import java.util.AbstractCollection;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Array<T> extends AbstractCollection<T> {
 

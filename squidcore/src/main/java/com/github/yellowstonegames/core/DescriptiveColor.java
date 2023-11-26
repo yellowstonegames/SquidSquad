@@ -1158,7 +1158,7 @@ public final class DescriptiveColor {
         final float hue = TrigTools.atan2Turns(B, A);
         final int idx = (packed & 0xff) << 8 | (int) (256f * hue);
         final float dist = GAMUT_DATA[idx] + 1.5f;
-        return dist == 3.5f ? 0f : (A * A + B * B) * 4f / (dist * dist);
+        return dist <= 3.5f ? 0f : (A * A + B * B) * 4f / (dist * dist);
     }
 
     /**

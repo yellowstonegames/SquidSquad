@@ -24,13 +24,6 @@ SOFTWARE.
 
 package com.github.yellowstonegames.path.sg;
 
-import com.github.yellowstonegames.path.sg.Array;
-import com.github.yellowstonegames.path.sg.Connection;
-import com.github.yellowstonegames.path.sg.Graph;
-import com.github.yellowstonegames.path.sg.Node;
-import com.github.yellowstonegames.path.sg.NodeCollection;
-import com.github.yellowstonegames.path.sg.VertexCollection;
-
 import java.util.Comparator;
 import java.util.Iterator;
 
