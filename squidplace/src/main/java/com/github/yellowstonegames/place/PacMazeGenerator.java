@@ -121,8 +121,6 @@ public class PacMazeGenerator implements PlaceGenerator {
                     write(map, x, y, xOff, yOff + 1);
             }
         }
-        int upperY = height - 1;
-        int upperX = width - 1;
         map.removeEdges();
         return map;
     }

@@ -35,14 +35,17 @@ public class PlaceGeneratorSampler {
                 new PacMazeGenerator(42, 42, random),
                 new SerpentMapGenerator(42, 42, random),
                 new SymmetryDungeonGenerator(42, 42, random),
+                new SlashMazeGenerator(42, 42, random),
         };
 
         for(PlaceGenerator gen : generators){
             random.setSeed(0xB0BAFE77BA77L);
             System.out.println(gen);
-            DungeonTools.debugPrint(proc.generate(gen.generate(), gen.getEnvironment()));
+            DungeonTools.debugPrint(gen.generate());
+//            DungeonTools.debugPrint(proc.generate(gen.generate(), gen.getEnvironment()));
             System.out.println();
-            DungeonTools.debugPrint(LineTools.hashesToLines(proc.dungeon));
+//            DungeonTools.debugPrint(LineTools.hashesToLines(proc.dungeon));
+            DungeonTools.debugPrint(LineTools.hashesToLines(gen.getPlaceGrid()));
         }
     }
 }
