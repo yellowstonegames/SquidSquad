@@ -35,7 +35,7 @@ public class PlaceGeneratorSampler {
                 new PacMazeGenerator(42, 42, random),
                 new SerpentMapGenerator(42, 42, random),
                 new SymmetryDungeonGenerator(42, 42, random),
-                new SlashMazeGenerator(42, 42, random),
+                new SlashMazeGenerator(42, 42, random).setThin(true),
         };
 
         for(PlaceGenerator gen : generators){

@@ -31,6 +31,7 @@ import com.github.yellowstonegames.grid.Region;
 public class SlashMazeGenerator implements PlaceGenerator {
     public EnhancedRandom rng;
     public int width, height;
+    public boolean thin = false;
     private Region map;
     private int[][] env;
     private char[][] maze;
@@ -66,6 +67,8 @@ public class SlashMazeGenerator implements PlaceGenerator {
                 map.insert(x, y, rng.nextBoolean() ? slash : backslash);
             }
         }
+        if(thin)
+            map.or(map.copy().neighborDown());
         map.removeEdges();
         return map;
     }
@@ -92,8 +95,9 @@ public class SlashMazeGenerator implements PlaceGenerator {
      * @return a {@link Region} with the same width and height as this; true is passable and false is not.
      */
     public Region getRegion() {
-        if (map == null)
-            return create();
+        if (map == null) {
+            generate();
+        }
         return map;
     }
 
@@ -104,9 +108,51 @@ public class SlashMazeGenerator implements PlaceGenerator {
      */
     @Override
     public char[][] getPlaceGrid() {
-        if (maze == null)
+        if (maze == null) {
             return generate();
+        }
         return maze;
+    }
+
+    public EnhancedRandom getRng() {
+        return rng;
+    }
+
+    public void setRng(EnhancedRandom rng) {
+        if(rng == null)
+            this.rng = new AceRandom();
+        else
+            this.rng = rng;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public boolean isThin() {
+        return thin;
+    }
+
+    public SlashMazeGenerator setThin(boolean thin) {
+        this.thin = thin;
+        return this;
     }
 
     @Override
@@ -114,6 +160,7 @@ public class SlashMazeGenerator implements PlaceGenerator {
         return "SlashMazeGenerator{" +
                 "width=" + width +
                 ", height=" + height +
+                ", thin=" + thin +
                 '}';
     }
 }
