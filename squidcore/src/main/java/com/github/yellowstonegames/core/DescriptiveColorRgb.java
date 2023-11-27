@@ -1169,7 +1169,7 @@ public final class DescriptiveColorRgb {
      * {@link #rgba(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors, and
      * is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp towards
      * white. Unlike {@link #lerpColors(int, int, float)}, this keeps the alpha of start as-is.
-     * @see #darken(int, float) the counterpart method that darkens a float color
+     * @see #darken(int, float) the counterpart method that darkens a color
      * @param start the starting color as an RGBA8888 int
      * @param change how much to go from start toward white, as a float between 0 and 1; higher means closer to white
      * @return an RGBA8888 int that represents a color between start and white
@@ -1189,7 +1189,7 @@ public final class DescriptiveColorRgb {
      * {@link #rgba(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors, and
      * is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp towards
      * black. Unlike {@link #lerpColors(int, int, float)}, this keeps the alpha of start as-is.
-     * @see #lighten(int, float) the counterpart method that darkens a float color
+     * @see #lighten(int, float) the counterpart method that lightens a color
      * @param start the starting color as an RGBA8888 int
      * @param change how much to go from start toward black, as a float between 0 and 1; higher means closer to black
      * @return an RGBA8888 int that represents a color between start and black
@@ -1206,17 +1206,19 @@ public final class DescriptiveColorRgb {
     /**
      * Interpolates from the RGBA8888 int color rgba towards either white or black, depending on change. The value
      * for change should be between -1f and 1f; negative values interpolate toward black, while positive ones
-     * interpolate toward white. The value for rgba should be n RGBA8888 int, as from a constant here.
+     * interpolate toward white. The value for rgba should be an RGBA8888 int, as from a constant here.
      *
      * @param rgba      the starting color as an RGBA8888 int
      * @param change how much to go away from rgba, as a float between -1 and 1; negative to black, positive to white
      * @return an RGBA8888 int that represents a color between start and black or white
-     * @see #darken(int, float) the counterpart method that darkens a float color
-     * @see #lighten(int, float) the counterpart method that lightens a float color
+     * @see #darken(int, float) the counterpart method that darkens a color
+     * @see #lighten(int, float) the counterpart method that lightens a color
+     * @see #adjustAll(int, float, float) a method that adjusts both chroma and lightness
      */
     public static int adjustLightness(final int rgba, final float change) {
         if(change < 0.0f) return darken(rgba, -change);
-        return lighten(rgba, change);
+        if(change > 0.0f) return lighten(rgba, change);
+        return rgba;
     }
 
     /**
@@ -1225,7 +1227,7 @@ public final class DescriptiveColorRgb {
      * from {@link #rgba(float, float, float, float)}. This leaves alpha alone.
      * <br>
      * <a href="http://www.graficaobscura.com/matrix/index.html">The algorithm used is from here</a>.
-     * @see #enrich(int, float) the counterpart method that makes a float color more saturated
+     * @see #enrich(int, float) the counterpart method that makes a color more saturated
      * @param start the starting color as an RGBA8888 int
      * @param change how much to change start to a desaturated color, as a float between 0 and 1; higher means a less saturated result
      * @return an RGBA8888 int that represents a color between start and a desaturated color
@@ -1247,19 +1249,59 @@ public final class DescriptiveColorRgb {
      * color, as from {@link #rgba(float, float, float, float)}.
      * <br>
      * <a href="http://www.graficaobscura.com/matrix/index.html">The algorithm used is from here</a>.
-     * @see #dullen(int, float) the counterpart method that makes a float color less saturated
+     * @see #dullen(int, float) the counterpart method that makes a color less saturated
      * @param start the starting color as an RGBA8888 int
      * @param change how much to change start to a saturated color, as a float between 0 and 1; higher means a more saturated result
      * @return an RGBA8888 int that represents a color between start and a saturated color
      */
     public static int enrich(final int start, final float change) {
         final float rc = 0.32627f, gc = 0.3678f, bc = 0.30593001f;
-        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;        final float ch = 1f + change, rw = (-change) * rc, gw = (-change) * gc, bw = (-change) * bc;
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        final float ch = 1f + change, rw = (-change) * rc, gw = (-change) * gc, bw = (-change) * bc;
         return (
                 (int) Math.min(Math.max(r * (rw+ch) + g * rw + b * rw, 0), 255) << 24 |
                         (int) Math.min(Math.max(r * gw + g * (gw+ch) + b * gw, 0), 255) << 16 |
                         (int) Math.min(Math.max(r * bw + g * bw + b * (bw+ch), 0), 255) << 8 |
                         a);
+    }
+
+    /**
+     * Brings the chromatic components of the RGBA8888 int color rgba either towards or away from grayscale, depending
+     * on change. The value for change should be between -1f and 1f; negative values interpolate toward grayscale, while
+     * positive ones interpolate away from grayscale. The value for rgba should be an RGBA8888 int, as from a constant
+     * here or {@link #rgba(float, float, float, float)}.
+     *
+     * @param rgba      the starting color as an RGBA8888 int
+     * @param change how much to go away from grayscale, as a float between -1 and 1; negative to gray, positive away
+     * @return an RGBA8888 int that represents a color between start but moved towards or away from grayscale
+     * @see #dullen(int, float) the counterpart method that makes a color closer to gray
+     * @see #enrich(int, float) the counterpart method that makes a color further from gray
+     * @see #adjustAll(int, float, float) a method that adjusts both chroma and lightness
+     */
+    public static int adjustChroma(final int rgba, final float change) {
+        if(change < 0.0f) return dullen(rgba, -change);
+        if(change > 0.0f) return enrich(rgba, change);
+        return rgba;
+    }
+
+    /**
+     * Effectively the same as calling {@link #adjustLightness(int, float)} and then {@link #adjustChroma(int, float)}
+     * on {@code rgba} and returning the result.
+     *
+     * @param rgba      the starting color as an RGBA8888 int
+     * @param lightness  how much to go away from rgba, as a float between -1 and 1; negative to black, positive to white
+     * @return an int that represents an RGBA8888 color between rgba and black or white
+     * @see #adjustLightness(int, float) the first step this performs
+     * @see #adjustChroma(int, float) the second step this performs
+     */
+    public static int adjustAll(int rgba, final float lightness, final float chroma) {
+        if(lightness > 0) rgba = lighten(rgba, lightness);
+        else if(lightness < 0) rgba = darken(rgba, -lightness);
+
+        if(chroma > 0) rgba = enrich(rgba, chroma);
+        else if(chroma < 0) rgba = dullen(rgba, -chroma);
+
+        return rgba;
     }
 
     /**
@@ -1281,7 +1323,6 @@ public final class DescriptiveColorRgb {
                 | ((int) (sB + change * (eB - sB)) & 0xFF) << 8
                 | (int) (sA + change * (eA - sA)) & 0xFE;
     }
-
 
     /**
      * Given several colors, this gets an even mix of all colors in equal measure.

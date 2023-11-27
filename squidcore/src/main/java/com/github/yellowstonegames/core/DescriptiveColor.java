@@ -1217,15 +1217,60 @@ public final class DescriptiveColor {
      * component-editing methods, you may want to call {@link #limitToGamut(int)} to make sure the color can be rendered
      * correctly.
      *
-     * @param oklab      the starting color as a packed float
+     * @param oklab      the starting color as an Oklab int
      * @param change how much to go away from oklab, as a float between -1 and 1; negative to black, positive to white
-     * @return a packed float that represents a color between start and black or white
+     * @return an int that represents an Oklab color between start and black or white
      * @see #darken(int, float) the counterpart method that darkens a float color
      * @see #lighten(int, float) the counterpart method that lightens a float color
+     * @see #adjustAll(int, float, float) a method that adjusts both chroma and lightness
      */
     public static int adjustLightness(final int oklab, final float change) {
         if(change < 0.0f) return darken(oklab, -change);
-        return lighten(oklab, change);
+        if(change > 0.0f) return lighten(oklab, change);
+        return oklab;
+    }
+
+    /**
+     * Brings the chromatic components of the Oklab int color oklab either towards or away from grayscale, depending
+     * on change. The value for change should be between -1f and 1f; negative values interpolate toward grayscale, while
+     * positive ones interpolate away from grayscale. The value for oklab should be an Oklab int, as from a constant
+     * here. This method does not necessarily keep the resulting color in-gamut; after performing some changes with this
+     * or other component-editing methods, you may want to call {@link #limitToGamut(int)} to make sure the color can be
+     * rendered correctly.
+     *
+     * @param oklab      the starting color as an Oklab int
+     * @param change how much to go away from grayscale, as a float between -1 and 1; negative to gray, positive away
+     * @return an RGBA8888 int that represents a color between start but moved towards or away from grayscale
+     * @see #dullen(int, float) the counterpart method that makes a color closer to gray
+     * @see #enrich(int, float) the counterpart method that makes a color further from gray
+     * @see #adjustAll(int, float, float) a method that adjusts both chroma and lightness
+     */
+    public static int adjustChroma(final int oklab, final float change) {
+        if(change < 0.0f) return dullen(oklab, -change);
+        if(change > 0.0f) return enrich(oklab, change);
+        return oklab;
+    }
+
+    /**
+     * Effectively the same as calling {@link #adjustLightness(int, float)} and then {@link #adjustChroma(int, float)}
+     * on {@code oklab} and returning the result. This method does not necessarily keep the resulting color in-gamut;
+     * after performing some changes with this or other component-editing methods, you may want to call
+     * {@link #limitToGamut(int)} to make sure the color can be rendered correctly.
+     *
+     * @param oklab      the starting color as an Oklab int
+     * @param lightness  how much to go away from oklab, as a float between -1 and 1; negative to black, positive to white
+     * @return an int that represents an Oklab color between oklab and black or white
+     * @see #adjustLightness(int, float) the first step this performs
+     * @see #adjustChroma(int, float) the second step this performs
+     */
+    public static int adjustAll(int oklab, final float lightness, final float chroma) {
+        if(lightness > 0) oklab = lighten(oklab, lightness);
+        else if(lightness < 0) oklab = darken(oklab, -lightness);
+
+        if(chroma > 0) oklab = enrich(oklab, chroma);
+        else if(chroma < 0) oklab = dullen(oklab, -chroma);
+
+        return oklab;
     }
 
     /**
@@ -2251,19 +2296,16 @@ public final class DescriptiveColor {
             }
         }
         if(mixing.size() < 2) return PLACEHOLDER;
-
         int result = unevenMix(mixing.items, 0, mixing.size());
         if(result == PLACEHOLDER) return result;
 
-        if(saturation != 0f) {
-            saturation = Math.min(Math.max(saturation + 1, 0), 1000);
-            result = edit(result, 0f, 0f, 0f, 0f, 1f, saturation, saturation, 1f);
-        }
-        if(lightness == 0f)
-            return result;
-        if (lightness > 0f)
-            return lerpColorsBlended(result, WHITE, lightness);
-        return lerpColorsBlended(result, BLACK, -lightness);
+        if(lightness > 0) result = lighten(result, lightness);
+        else if(lightness < 0) result = darken(result, -lightness);
+
+        if(saturation > 0) result = enrich(result, saturation);
+        else if(saturation < 0) result = dullen(result, -saturation);
+
+        return result;
     }
 
 
