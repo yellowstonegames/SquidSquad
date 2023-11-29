@@ -155,7 +155,7 @@ public class Radiance {
      * range and return to normal. Usually one of flicker or strobe is 0; if both are non-0, the radius will be smaller
      * than normal.
      * @param range possibly-non-integer radius to light, in cells
-     * @param color a String that describes a color as per {@link DescriptiveColor#describeOklab(CharSequence)}
+     * @param color a String that describes a color as per {@link DescriptiveColor#describeOklab(String)}
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      */

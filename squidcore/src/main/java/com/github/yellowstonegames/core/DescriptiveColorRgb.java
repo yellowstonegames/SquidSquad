@@ -35,7 +35,7 @@ public final class DescriptiveColorRgb {
     }
 
     /**
-     * You can look up colors by name here; the names are lower-case, and the colors are packed ints in Oklab format.
+     * You can look up colors by name here; the names are lower-case, and the colors are packed ints in RGBA8888 format.
      */
     public static final ObjectIntOrderedMap<String> NAMED = new ObjectIntOrderedMap<>(51);
     /**
@@ -834,7 +834,7 @@ public final class DescriptiveColorRgb {
      */
     public static final ObjectList<String> NAMES_BY_HUE = new ObjectList<>(NAMES);
     /**
-     * The packed Oklab int colors that correspond to items in {@link #NAMES_BY_HUE}, with the same order.
+     * The packed RGBA8888 int colors that correspond to items in {@link #NAMES_BY_HUE}, with the same order.
      */
     public static final IntList COLORS_BY_HUE = new IntList(NAMES_BY_HUE.size());
     /**
@@ -1515,6 +1515,344 @@ public final class DescriptiveColorRgb {
         }
         return result;
     }
+
+    private static final IntList mixing = new IntList(8);
+
+    /**
+     * Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.
+     * Color descriptions consist of one or more alphabetical words, separated by non-alphanumeric characters (typically
+     * spaces and/or hyphens, though the underscore is treated as a letter). Any word that is the name of a color in
+     * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
+     * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
+     * word, then the corresponding color will be used. A number can be present after a color name (separated by any
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the space
+     * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
+     * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
+     * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
+     * weight, as in "red red blue".
+     * <br>
+     * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
+     * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
+     * or "-est" appended to make their effect twice or three times as strong. Technically, the chars appended to an
+     * adjective don't matter, only their count, so "lightaa" is the same as "lighter" and "richcat" is the same as
+     * "richest". There's an unofficial fourth level as well, used when any 4 characters are appended to an adjective
+     * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
+     * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
+     * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked. The case of adjectives doesn't
+     * matter here; they can be all-caps, all lower-case, or mixed-case without issues. The names of colors, however,
+     * are case-sensitive, because you can combine other named color palettes with the one here, and at least in one
+     * common situation (merging libGDX Colors with the palette here), the other palette uses all-caps names only.
+     * <br>
+     * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
+     * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
+     * placeholder for other code).
+     * <br>
+     * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
+     * "red:3 orange", and "dark deep (blue 7) (cyan 3)".
+     * <br>
+     * This method will check the first character of description and may change how it parses depending on that char.
+     * If the first char is {@code #}, and there are 6 characters remaining, this parses those 6 characters as a hex
+     * color in RGB888 format (treating it as opaque). If the first char is {@code #} and there are 8 or more characters
+     * remaining, it parses 8 of those characters as an RGBA8888 hex color. If the first char is {@code |}, that char is
+     * ignored and the rest of the CharSequence is treated as a color description (this is to ease parsing markup for
+     * {@link DescriptiveColor#processColorMarkup(CharSequence)}). Otherwise, the whole CharSequence is parsed as a
+     * color description, and the result is converted to an RGBA int.
+     *
+     * @param description a color description, as a String matching the above format, or a {@code #}-prefixed hex color
+     * @return a packed RGBA int color as described
+     */
+    public static int describe(final String description) {
+        if(description == null || description.isEmpty()) return 0;
+        final char initial = description.charAt(0);
+        if(initial == '#') {
+            if (description.length() >= 7 && description.length() < 9)
+                return DigitTools.intFromHex(description, 1, 7) << 8 | 0xFF;
+            else if(description.length() >= 9)
+                return DigitTools.intFromHex(description, 1, 9);
+            return 0;
+        }
+        return describeRgb(description, initial == '|' ? 1 : 0, description.length());
+    }
+
+    /**
+     * Parses a color description and returns the approximate color it describes, as a packed RGBA8888 int color.
+     * Color descriptions consist of one or more alphabetical words, separated by non-alphanumeric characters (typically
+     * spaces and/or hyphens, though the underscore is treated as a letter). Any word that is the name of a color in
+     * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
+     * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
+     * word, then the corresponding color will be used. A number can be present after a color name (separated by any
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the space
+     * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
+     * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
+     * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
+     * weight, as in "red red blue".
+     * <br>
+     * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
+     * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
+     * or "-est" appended to make their effect twice or three times as strong. Technically, the chars appended to an
+     * adjective don't matter, only their count, so "lightaa" is the same as "lighter" and "richcat" is the same as
+     * "richest". There's an unofficial fourth level as well, used when any 4 characters are appended to an adjective
+     * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
+     * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
+     * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked. The case of adjectives doesn't
+     * matter here; they can be all-caps, all lower-case, or mixed-case without issues. The names of colors, however,
+     * are case-sensitive, because you can combine other named color palettes with the one here, and at least in one
+     * common situation (merging libGDX Colors with the palette here), the other palette uses all-caps names only.
+     * <br>
+     * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
+     * invalid, this returns the invalid "color" {@link #PLACEHOLDER} (also used by TextraTypist, and suggested as a
+     * placeholder for other code).
+     * <br>
+     * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
+     * "red:3 orange", and "dark deep (blue 7) (cyan 3)".
+     * <br>
+     * This overload always considers its input a color description, and won't parse hex colors. It only handles the
+     * simplest case, where the full provided {@code description} is only a color description.
+     *
+     * @param description a color description, as a String matching the above format
+     * @return a packed RGBA8888 int color as described
+     */
+    public static int describeRgb(final String description) {
+        return describeRgb(description, 0, description.length());
+    }
+
+    /**
+     * Parses a color description and returns the approximate color it describes, as an RGBA8888 int color.
+     * Color descriptions consist of one or more alphabetical words, separated by non-alphanumeric characters (typically
+     * spaces and/or hyphens, though the underscore is treated as a letter). Any word that is the name of a color in
+     * {@link DescriptiveColorRgb} will be looked up in {@link DescriptiveColor#NAMED} and tracked; if there is more than one of these color
+     * names, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name,
+     * then the corresponding color will be used. A number can be present after a color name (separated by any
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the space
+     * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
+     * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
+     * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
+     * weight, as in "red red blue".
+     * <br>
+     * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
+     * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
+     * or "-est" appended to make their effect twice or three times as strong. Technically, the chars appended to an
+     * adjective don't matter, only their count, so "lightaa" is the same as "lighter" and "richcat" is the same as
+     * "richest". There's an unofficial fourth level as well, used when any 4 characters are appended to an adjective
+     * (as in "darkmost"); it has four times the effect of the original adjective. There are also the adjectives
+     * "bright" (equivalent to "light rich"), "pale" ("light dull"), "deep" ("dark rich"), and "weak" ("dark dull").
+     * These can be amplified like the other four, except that "pale" goes to "paler", "palest", and then to
+     * "palemax" or (its equivalent) "palemost", where only the word length is checked.
+     * <br>
+     * Note that while adjectives are case-insensitive, color names are not. Because the colors defined in libGDX
+     * 'Colors' use ALL_CAPS, and the colors additionally defined by {@link DescriptiveColorRgb} use lower case and are always
+     * one word, there are a few places where two different colors are defined by names that only differ in case.
+     * Examples include orange vs. ORANGE, and salmon vs. SALMON.
+     * <br>
+     * If part of a color name or adjective is invalid, it is not considered; if the description is empty or fully
+     * invalid, this returns the RGBA8888 int value {@code 256} ({@link #PLACEHOLDER}).
+     * <br>
+     * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
+     * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
+     * "red:3 orange", and "dark deep (blue 7) (cyan 3)".
+     *
+     * @param description a color description, as a String matching the above format
+     * @param start the first character index of the description to read from
+     * @param length how much of description to attempt to parse; if negative, this parses until the end
+     * @return an RGBA8888 int color as described
+     */
+    public static int describeRgb(final String description, int start, int length) {
+        float lightness = 0f, saturation = 0f;
+        final String[] terms = description.substring(start,
+                length < 0 ? description.length() - start : Math.min(description.length(), start + length)).split("[^a-zA-Z0-9_]+");
+        mixing.clear();
+        for(String term : terms) {
+            if (term == null || term.isEmpty()) continue;
+            final int len = term.length();
+            switch (term.charAt(0)) {
+                case 'L':
+                case 'l':
+                    if (len > 2 && (term.charAt(2) == 'g' || term.charAt(2) == 'G')) { // light
+                        switch (len) {
+                            case 9:
+                                lightness += 0.20f;
+                            case 8:
+                                lightness += 0.20f;
+                            case 7:
+                                lightness += 0.20f;
+                            case 5:
+                                lightness += 0.20f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, PLACEHOLDER), 1);
+                    }
+                    break;
+                case 'B':
+                case 'b':
+                    if (len > 3 && (term.charAt(3) == 'g' || term.charAt(3) == 'G')) { // bright
+                        switch (len) {
+                            case 10:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                            case 9:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                            case 8:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                            case 6:
+                                lightness += 0.20f;
+                                saturation += 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, PLACEHOLDER), 1);
+                    }
+                    break;
+                case 'P':
+                case 'p':
+                    if (len > 2 && (term.charAt(2) == 'l' || term.charAt(2) == 'L')) { // pale
+                        switch (len) {
+                            case 8: // palemost
+                            case 7: // palerer
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                            case 6: // palest
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                            case 5: // paler
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                            case 4: // pale
+                                lightness += 0.20f;
+                                saturation -= 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, PLACEHOLDER), 1);
+                    }
+                    break;
+                case 'W':
+                case 'w':
+                    if (len > 3 && (term.charAt(3) == 'k' || term.charAt(3) == 'K')) { // weak
+                        switch (len) {
+                            case 8:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                            case 7:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                            case 6:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                            case 4:
+                                lightness -= 0.20f;
+                                saturation -= 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, PLACEHOLDER), 1);
+                    }
+                    break;
+                case 'R':
+                case 'r':
+                    if (len > 1 && (term.charAt(1) == 'i' || term.charAt(1) == 'I')) { // rich
+                        switch (len) {
+                            case 8:
+                                saturation += 0.200f;
+                            case 7:
+                                saturation += 0.200f;
+                            case 6:
+                                saturation += 0.200f;
+                            case 4:
+                                saturation += 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, PLACEHOLDER), 1);
+                    }
+                    break;
+                case 'D':
+                case 'd':
+                    if (len > 1 && (term.charAt(1) == 'a' || term.charAt(1) == 'A')) { // dark
+                        switch (len) {
+                            case 8:
+                                lightness -= 0.20f;
+                            case 7:
+                                lightness -= 0.20f;
+                            case 6:
+                                lightness -= 0.20f;
+                            case 4:
+                                lightness -= 0.20f;
+                                break;
+                        }
+                    } else if (len > 1 && (term.charAt(1) == 'u' || term.charAt(1) == 'U')) { // dull
+                        switch (len) {
+                            case 8:
+                                saturation -= 0.200f;
+                            case 7:
+                                saturation -= 0.200f;
+                            case 6:
+                                saturation -= 0.200f;
+                            case 4:
+                                saturation -= 0.200f;
+                                break;
+                        }
+                    } else if (len > 3 && (term.charAt(3) == 'p' || term.charAt(3) == 'P')) { // deep
+                        switch (len) {
+                            case 8:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
+                            case 7:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
+                            case 6:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
+                            case 4:
+                                lightness -= 0.20f;
+                                saturation += 0.200f;
+                                break;
+                        }
+                    } else {
+                        mixing.add(NAMED.getOrDefault(term, PLACEHOLDER), 1);
+                    }
+                    break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    if(mixing.size() >= 2)
+                        mixing.set((mixing.size() & -2) - 1, DigitTools.intFromDec(term, 0, term.length()));
+                    break;
+                default:
+                    mixing.add(NAMED.getOrDefault(term, PLACEHOLDER), 1);
+                    break;
+            }
+        }
+
+        if(mixing.size() < 2) return 256;
+        int result = unevenMix(mixing.items, 0, mixing.size());
+        if(result == 256) return result;
+
+        if(lightness > 0) result = lighten(result, lightness);
+        else if(lightness < 0) result = darken(result, -lightness);
+
+        if(saturation > 0) result = enrich(result, saturation);
+        else if(saturation < 0) result = dullen(result, -saturation);
+
+        return result;
+    }
+
 
     static {
         NAMES_BY_HUE.sort((o1, o2) -> {

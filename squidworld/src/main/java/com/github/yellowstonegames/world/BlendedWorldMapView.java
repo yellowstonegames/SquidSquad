@@ -126,7 +126,7 @@ public class BlendedWorldMapView implements WorldMapView {
      * Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.
      * There should be at least one packed int Oklab color given in similarColors, but there can be many of them. This
      * type of color can be any of the color constants from {@link DescriptiveColor}, may be produced by
-     * {@link DescriptiveColor#describeOklab(CharSequence)}, or might be made manually, in advanced cases, with
+     * {@link DescriptiveColor#describeOklab(String)}, or might be made manually, in advanced cases, with
      * {@link DescriptiveColor#limitToGamut(int, int, int)} and specifying the L, A, and B channels.
      * @param similarColors an array or vararg of packed int Oklab colors with at least one element
      */
@@ -139,7 +139,7 @@ public class BlendedWorldMapView implements WorldMapView {
      * Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.
      * There should be at least one packed int Oklab color given in similarColors, but there can be many of them. This
      * type of color can be any of the color constants from {@link DescriptiveColor}, may be produced by
-     * {@link DescriptiveColor#describeOklab(CharSequence)}, or might be made manually, in advanced cases, with
+     * {@link DescriptiveColor#describeOklab(String)}, or might be made manually, in advanced cases, with
      * {@link DescriptiveColor#limitToGamut(int, int, int)} and specifying the L, A, and B channels.
      * @param seed any long; used to determine how colors are matched to biomes
      * @param similarColors an array or vararg of packed int Oklab colors with at least one element

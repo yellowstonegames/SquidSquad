@@ -38,11 +38,11 @@ import static com.github.yellowstonegames.core.Gamut.GAMUT_DATA;
  * color as an int (typically used with {@link DigitTools#hex(int)} to get a value like
  * FF7F00FF, which in RGBA8888 format is orange). The Oklab color space is used here because allows mixing two or more
  * colors very smoothly, without introducing erroneous hues or having dips or ridges in lightness. Oklab is a whole
- * complex color space, but most usage is probably going to only need {@link #describe(CharSequence)}, which sidesteps
+ * complex color space, but most usage is probably going to only need {@link #describe(String)}, which sidesteps
  * Oklab entirely and returns an RGBA8888 int, or maybe some operations on entries in the palette. The aforementioned
  * describe() is used by {@link #processColorMarkup(CharSequence)}, which also takes a color description and translates
  * it to a libGDX-compatible color markup tag. The syntax for color descriptions is in
- * {@link #describe(CharSequence)}; it looks like "lighter rich pink orange", to give an idea of it.
+ * {@link #describe(String)}; it looks like "lighter rich pink orange", to give an idea of it.
  * <br>
  * For the palette, you can access colors by their constant name, such as {@code cactus}, by the {@link #NAMED} map
  * using {@code NAMED.get("cactus")}, by getting a color by its name's position in alphabetical order with
@@ -1989,10 +1989,12 @@ public final class DescriptiveColor {
      * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
      * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
      * word, then the corresponding color will be used. A number can be present after a color name (separated by any
-     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color name
-     * when mixed with other named colors. The recommended separator between a color name and its weight is the char
-     * {@code '^'}, but other punctuation like {@code ':'} is equally valid. You can also repeat a color name to
-     * increase its weight.
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the space
+     * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
+     * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
+     * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
+     * weight, as in "red red blue".
      * <br>
      * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
      * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
@@ -2026,8 +2028,8 @@ public final class DescriptiveColor {
      * @param description a color description, as a String or other CharSequence matching the above format, or a {@code #}-prefixed hex color
      * @return a packed RGBA int color as described
      */
-    public static int describe(final CharSequence description) {
-        if(description == null || description.length() == 0) return 0;
+    public static int describe(final String description) {
+        if(description == null || description.isEmpty()) return 0;
         final char initial = description.charAt(0);
         if(initial == '#') {
             if (description.length() >= 7 && description.length() < 9)
@@ -2046,10 +2048,12 @@ public final class DescriptiveColor {
      * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
      * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
      * word, then the corresponding color will be used. A number can be present after a color name (separated by any
-     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color name
-     * when mixed with other named colors. The recommended separator between a color name and its weight is the char
-     * {@code '^'}, but other punctuation like {@code ':'} is equally valid. You can also repeat a color name to
-     * increase its weight.
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the space
+     * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
+     * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
+     * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
+     * weight, as in "red red blue".
      * <br>
      * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
      * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
@@ -2078,7 +2082,7 @@ public final class DescriptiveColor {
      * @param description a color description, as a String or other CharSequence matching the above format
      * @return a packed Oklab int color as described
      */
-    public static int describeOklab(final CharSequence description) {
+    public static int describeOklab(final String description) {
         return describeOklab(description, 0, description.length());
     }
     /**
@@ -2088,10 +2092,12 @@ public final class DescriptiveColor {
      * this palette will be looked up in {@link #NAMED} and tracked; if there is more than one of these color name
      * words, the colors will be mixed using {@link #unevenMix(int[], int, int)}, or if there is just one color name
      * word, then the corresponding color will be used. A number can be present after a color name (separated by any
-     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color name
-     * when mixed with other named colors. The recommended separator between a color name and its weight is the char
-     * {@code '^'}, but other punctuation like {@code ':'} is equally valid. You can also repeat a color name to
-     * increase its weight.
+     * non-alphanumeric character(s) other than the underscore); if so, it acts as a positive weight for that color
+     * when mixed with other named colors. The recommended separator between a color name and its weight is the space
+     * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
+     * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
+     * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
+     * weight, as in "red red blue".
      * <br>
      * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
      * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
@@ -2123,9 +2129,9 @@ public final class DescriptiveColor {
      * @param length how much of description to attempt to parse; if negative, this parses until the end
      * @return a packed Oklab int color as described
      */
-    public static int describeOklab(final CharSequence description, int start, int length) {
+    public static int describeOklab(final String description, int start, int length) {
         float lightness = 0f, saturation = 0f;
-        final String[] terms = description.toString().substring(start,
+        final String[] terms = description.substring(start,
                 length < 0 ? description.length() - start : Math.min(description.length(), start + length))
                 .split("[^a-zA-Z0-9_]+");
         mixing.clear();
@@ -2331,11 +2337,11 @@ public final class DescriptiveColor {
      * Given a color as a packed Oklab int, this finds the closest description it can to match the given color while
      * using at most {@code mixCount} colors to mix in. You should only use small numbers for mixCount, like 1 to 3;
      * this can take quite a while to run otherwise. This returns a String description that can be passed to
-     * {@link #describe(CharSequence)}. It is likely that this will use very contrasting colors if mixCount is 2 or
+     * {@link #describe(String)}. It is likely that this will use very contrasting colors if mixCount is 2 or
      * greater and the color to match is desaturated or brownish.
      * @param oklab a packed Oklab int color to attempt to match
      * @param mixCount how many color names this will use in the returned description
-     * @return a description that can be fed to {@link #describe(CharSequence)} to get a similar color
+     * @return a description that can be fed to {@link #describe(String)} to get a similar color
      */
     @NonNull
     public static String bestMatch(final int oklab, int mixCount) {
@@ -2384,14 +2390,14 @@ public final class DescriptiveColor {
         matchResult.getGroup(1, builder);
         textBuffer.append('[');
         textBuffer.append('#');
-        textBuffer.append(DigitTools.hex(describe(builder)));
+        textBuffer.append(DigitTools.hex(describe(builder.toString())));
         textBuffer.append(']');
     };
     private static final Replacer rep = new Replacer(Pattern.compile("(?<!\\[)\\[(\\|[^\\]]*)(?:\\]|$)"), sub);
 
     /**
      * Processes color markup of the form {@code [|description]}, where {@code description} is in the format that
-     * {@link #describe(CharSequence)} understands (such as "light dullest green cyan"), and changes the markup
+     * {@link #describe(String)} understands (such as "light dullest green cyan"), and changes the markup
      * to a format libGDX can use, {@code [#FF7F00FF]}. The only addition this makes to libGDX markup is the {@code [|}
      * starting character combination, which here marks a color description rather than a named color from libGDX's
      * Colors class (which are all upper-case, so they wouldn't conflict anyway).
@@ -2430,7 +2436,7 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Given an RGBA8888 int such as one returned by {@link #describe(CharSequence)}, this returns a packed float color
+     * Given an RGBA8888 int such as one returned by {@link #describe(String)}, this returns a packed float color
      * that can be given in some places to libGDX. This does not involve Oklab at all.
      * @param rgba an RGBA8888 int
      * @return an ABGR packed float color

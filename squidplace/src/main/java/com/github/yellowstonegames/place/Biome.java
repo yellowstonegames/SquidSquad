@@ -25,7 +25,7 @@ import static com.github.yellowstonegames.place.Biome.Moisture.*;
  * A data class that represents a particular kind of ecosystem that appears at a given combination of average moisture,
  * average temperature, and elevation. This stores a name for each biome (always as one word in the constants this
  * provides), a char to represent the biome (typically in char arrays, and not necessarily displayed), and a String
- * color description to be used by {@link com.github.yellowstonegames.core.DescriptiveColor#describe(CharSequence)} or
+ * color description to be used by {@link com.github.yellowstonegames.core.DescriptiveColor#describe(String)} or
  * describeOklab(), which is probably preferable. Using the Oklab color allows randomly or gradually changing the color
  * as one biome approaches another, which looks more natural in many cases.
  * <br>
