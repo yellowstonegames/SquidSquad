@@ -1163,6 +1163,115 @@ public final class DescriptiveColorRgb {
         final int b = (rgba >>> 8  & 0xff);
         return Math.max(Math.max(r, g), b) / 255f;
     }
+
+    /**
+     * Brings the red channel closer to its maximum, by change. The change should be between 0f (no change) and 1f
+     * (increase red to 1.0, or 255 as an int).
+     * @see #lowerRed(int, float) the counterpart method that lowers the red channel
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward max red, as a float between 0 and 1; higher means more red
+     * @return an RGBA8888 int that represents a color based on start
+     */
+    public static int raiseRed(final int start, final float change) {
+        final int p = start >>> 24 & 0xFF, other = start & 0x00FFFFFF;
+        return (((int) (p + (0xFF - p) * change) << 24 & 0xFF000000) | other);
+    }
+
+    /**
+     * Brings the red channel closer to its minimum, by change. The change should be between 0f (no change) and 1f
+     * (reduce red to 0).
+     * @see #raiseRed(int, float) the counterpart method that raises the red channel
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward max red, as a float between 0 and 1; higher means more red
+     * @return an RGBA8888 int that represents a color based on start
+     */
+    public static int lowerRed(final int start, final float change) {
+        final int p = start >>> 24 & 0xFF, other = start & 0x00FFFFFF;
+        return (((int) (p * (1f - change)) & 0xFF) << 24 | other);
+    }
+
+    /**
+     * Brings the green channel closer to its maximum, by change. The change should be between 0f (no change) and 1f
+     * (increase green to 1.0, or 255 as an int).
+     * @see #lowerGreen(int, float) the counterpart method that lowers the green channel
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward max green, as a float between 0 and 1; higher means more green
+     * @return an RGBA8888 int that represents a color based on start
+     */
+    public static int raiseGreen(final int start, final float change) {
+        final int p = start >>> 16 & 0xFF, other = start & 0xFF00FFFF;
+        return (((int) (p + (0xFF - p) * change) << 16 & 0xFF0000) | other);
+    }
+
+    /**
+     * Brings the green channel closer to its minimum, by change. The change should be between 0f (no change) and 1f
+     * (reduce green to 0).
+     * @see #raiseGreen(int, float) the counterpart method that raises the green channel
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward max green, as a float between 0 and 1; higher means more green
+     * @return an RGBA8888 int that represents a color based on start
+     */
+    public static int lowerGreen(final int start, final float change) {
+        final int p = start >>> 16 & 0xFF, other = start & 0xFF00FFFF;
+        return (((int) (p * (1f - change)) & 0xFF) << 16 | other);
+    }
+
+    /**
+     * Brings the blue channel closer to its maximum, by change. The change should be between 0f (no change) and 1f
+     * (increase blue to 1.0, or 255 as an int).
+     * @see #lowerBlue(int, float) the counterpart method that lowers the blue channel
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward max blue, as a float between 0 and 1; higher means more blue
+     * @return an RGBA8888 int that represents a color based on start
+     */
+    public static int raiseBlue(final int start, final float change) {
+        final int p = start >>> 8 & 0xFF, other = start & 0xFFFF00FF;
+        return (((int) (p + (0xFF - p) * change) << 8 & 0xFF00) | other);
+    }
+
+    /**
+     * Brings the blue channel closer to its minimum, by change. The change should be between 0f (no change) and 1f
+     * (reduce blue to 0).
+     * @see #raiseBlue(int, float) the counterpart method that raises the blue channel
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward max blue, as a float between 0 and 1; higher means more blue
+     * @return an RGBA8888 int that represents a color based on start
+     */
+    public static int lowerBlue(final int start, final float change) {
+        final int p = start >>> 8 & 0xFF, other = start & 0xFFFF00FF;
+        return (((int) (p * (1f - change)) & 0xFF) << 8 | other);
+    }
+
+    /**
+     * Interpolates from the RGBA8888 int color start towards that color made opaque by change. While change should be
+     * between 0f (return start as-is) and 1f (return start with full alpha), start should be an RGBA8888 int, as from
+     * {@link #rgba(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
+     * This won't change the R, G, or B of the color.
+     * @see #fade(int, float) the counterpart method that makes an RGBA color more translucent
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward opaque, as a float between 0 and 1; higher means closer to opaque
+     * @return an RGBA8888 int that represents a color between start and its opaque version
+     */
+    public static int blot(final int start, final float change) {
+        final int opacity = start & 0xFF, other = start & 0xFFFFFF00;
+        return (((int) (opacity + (0xFF - opacity) * change) & 0xFF) | other);
+    }
+
+    /**
+     * Interpolates from the RGBA8888 int color start towards transparent by change. While change should be
+     * between 0f (return start as-is) and 1f (return start with 0 alpha), start should be an RGBA8888 int, as from
+     * {@link #rgba(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
+     * This won't change the R, G, or B of the color.
+     * @see #blot(int, float) the counterpart method that makes an RGBA color more opaque
+     * @param start the starting color as an RGBA8888 int
+     * @param change how much to go from start toward transparent, as a float between 0 and 1; higher means closer to transparent
+     * @return an RGBA8888 int that represents a color between start and transparent
+     */
+    public static int fade(final int start, final float change) {
+        final int opacity = start & 0xFF, other = start & 0xFFFFFF00;
+        return (((int) (opacity * (1f - change)) & 0xFF) | other);
+    }
+
     /**
      * Interpolates from the RGBA8888 color start towards white by change. While change should be between 0f (return
      * start as-is) and 1f (return white), start should be an RGBA8888 int color, as from
