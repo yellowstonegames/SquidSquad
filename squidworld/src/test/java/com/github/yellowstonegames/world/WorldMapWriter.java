@@ -29,6 +29,8 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
+import com.github.yellowstonegames.grid.CyclicNoise;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
@@ -43,9 +45,9 @@ import java.util.Date;
 public class WorldMapWriter extends ApplicationAdapter {
     private static final int AA = 1;
 
-//    private static final int width = 1920, height = 1080;
+    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
-    private static final int width = 400, height = 400;
+//    private static final int width = 400, height = 400;
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 128, height = 128; // space view, MimicLocal
@@ -83,7 +85,7 @@ public class WorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
 
     private String date, path;
-    private Noise noise;
+    private INoise noise;
     private FastPNG png;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
     @Override
@@ -107,19 +109,22 @@ public class WorldMapWriter extends ApplicationAdapter {
 
 //        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
+        Noise fn = new Noise((int) seed, 1.35f, Noise.VALUE_FRACTAL, 3);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
-//        fn.setFractalType(Noise.DOMAIN_WARP);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
-        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 0.9f, Noise.HONEY_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 2);
+//        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 5, 1.6f, 0.625f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 0.5f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 1f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 1f, 1f);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
-        noise = fn;
+        fn.setFractalSpiral(true);
+//        noise = fn;
 
+        noise = new CyclicNoise(seed, 3, 2.25f);
 //        noise.setInterpolation(Noise.QUINTIC);
 
 //        if(FLOWING_LAND)
@@ -132,12 +137,11 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherRidgedNoise, 2f, 1f, 2.5f);
-        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
+//        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
@@ -178,7 +182,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        path = "out/worlds/" + date + "/GlobePerlinNormal/";
 
         path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
-                    + Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown") + "_"
+                    + (noise == fn ? (Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown")) : noise.getTag()) + "_"
                     + wmv.getClass().getSimpleName() + "/";
 
 //        path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
@@ -217,7 +221,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        if(ALIEN_COLORS) {
 //            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
 //        }
-        wmv.generate(0.9f, 1.3f);
+        wmv.generate(1f, 1.35f);
         ttg = System.currentTimeMillis() - startTime;
     }
 
