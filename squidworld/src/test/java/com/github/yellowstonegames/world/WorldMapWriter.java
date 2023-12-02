@@ -124,7 +124,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         fn.setFractalSpiral(true);
 //        noise = fn;
 
-        noise = new CyclicNoise(seed, 3, 2.25f);
+        noise = new CyclicNoise(seed, 4, 2.4f);
 //        noise.setInterpolation(Noise.QUINTIC);
 
 //        if(FLOWING_LAND)

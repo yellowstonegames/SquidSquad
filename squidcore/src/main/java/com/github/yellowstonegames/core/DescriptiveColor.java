@@ -1372,6 +1372,18 @@ public final class DescriptiveColor {
     }
 
     /**
+     * Changes the alpha of the Oklab int color start to match newAlpha. The start should be a packed color, as from
+     * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
+     * This won't change the L, A, or B of the color.
+     * @param start the starting color as a packed float
+     * @param newAlpha the alpha value to use, from 0.0f to 1.0f as a float
+     * @return a packed float that represents a color like start, but with potentially a different alpha
+     */
+    public static int setAlpha(final int start, final float newAlpha) {
+        return (((int) (0xFF * newAlpha) & 0xFF) << 24 | (start & 0x00FFFFFF));
+    }
+
+    /**
      * Brings the chromatic components of {@code oklab} closer to grayscale by {@code change} (desaturating them). While
      * change should be between 0f (return oklab as-is) and 1f (return fully gray), oklab should be a packed Oklab int
      * color, as from a constant in this class.

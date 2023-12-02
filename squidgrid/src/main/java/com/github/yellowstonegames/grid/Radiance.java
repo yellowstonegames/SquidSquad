@@ -23,6 +23,8 @@ import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
+import static com.github.tommyettinger.digital.MathTools.PHI;
+
 /**
  * Grouping of qualities related to glow and light emission. When a Radiance variable in some object is null, it
  * means that object doesn't emit light; if a Radiance variable is non-null, it will probably emit light unless the
@@ -228,10 +230,13 @@ public class Radiance {
      */
     public float currentRange()
     {
-        final float time = (System.currentTimeMillis() & 0x3ffffL) * 0x1.9p-9f;
+        final float time = (System.currentTimeMillis() & 0x3ffffL) * 0x3.4p-9f;
         float current = range;
         if(flicker != 0f) 
-            current *= LineWobble.bicubicWobble(seed, time * flicker + delay) * 0.375f + 0.625f;
+            current *=
+                    LineWobble.bicubicWobble(seed, time * flicker + delay) * 0.25f +
+                    LineWobble.bicubicWobble(seed ^ 0x9E3779B9, PHI * (time * flicker + delay + PHI)) * 0.125f +
+                            0.5f;
         if(strobe != 0f)
             current *= MathTools.swayTight(time * strobe + delay) * 0.5f + 0.5f;
         return Math.max(current, range * flare);

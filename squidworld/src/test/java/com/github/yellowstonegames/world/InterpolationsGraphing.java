@@ -36,7 +36,11 @@ import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.tommyettinger.textra.Layout;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.StringTools;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+
+import static com.github.tommyettinger.digital.TrigTools.*;
+import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
     static final boolean WRITE = true;
@@ -90,6 +94,18 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         final float t = (k3 * L - k1);
         return (t + (float) Math.sqrt(t * t + 0.1405044f * L)) * 0.5f;
     }
+//    /**
+//     * Moves like a sine wave does; starts slowly, rises quickly, then ends slowly.
+//     */
+//    public static final Interpolator sine = new Interpolator("sine_", a -> (a = SIN_TABLE[(int) (a * 4096f) & TABLE_MASK]) * a);
+//    /**
+//     * Moves like a sine wave does; starts slowly and rises quickly.
+//     */
+//    public static final Interpolator sineIn = new Interpolator("sineIn_", a -> (1f - COS_TABLE[(int) (a * 4096f) & TABLE_MASK]));
+//    /**
+//     * Moves like a sine wave does; starts quickly and slows down.
+//     */
+//    public static final Interpolator sineOut = new Interpolator("sineOut_", a -> SIN_TABLE[(int) (a * 4096f) & TABLE_MASK]);
 
     @Override
     public void create() {
@@ -99,20 +115,28 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         sd = new ShapeDrawer(batch, font.mapping.get(font.solidBlock));
 
 //        Interpolator adjusted = new Interpolations.Interpolator("adjustedHue", a -> MathTools.barronSpline(a, 1.7f, 0.9f));
-        Interpolator kAdaptive = new Interpolations.Interpolator("kAdaptive", x -> (float) Math.pow(1.0 - Math.pow(1.0 - x, 1.0/k[1]), 1.0/k[0]));
-        Interpolator reverseLight = new Interpolator("reverseLight", DescriptiveColor::reverseLight);
-        Interpolator forwardLight = new Interpolator("forwardLight", DescriptiveColor::forwardLight);
-        Interpolator reverseLightO = new Interpolator("reverseLightO", InterpolationsGraphing::reverseLightOttosson);
-        Interpolator forwardLightO = new Interpolator("forwardLightO", InterpolationsGraphing::forwardLightOttosson);
-        Interpolator forwardReverseLight = new Interpolator("forwardReverseLight", f -> DescriptiveColor.reverseLight(DescriptiveColor.forwardLight(f)));
-        Interpolator forwardReverseLightO = new Interpolator("forwardReverseLightO", f -> reverseLightOttosson(forwardLightOttosson(f)));
-        Interpolator pow0_625In = new Interpolator("pow0_625In", Interpolations.powInFunction(0.625f));
-        Interpolator pow1_6In = new Interpolator("pow1_6In", Interpolations.powInFunction(1.6f));
-        Interpolator pow0_6In = new Interpolator("pow0_6In", Interpolations.powInFunction(0.6f));
-        Interpolator pow1_666In = new Interpolator("pow1_666In", Interpolations.powInFunction(1.666f));
-        Interpolator pow0_666In = new Interpolator("pow0_666In", Interpolations.powInFunction(0.666f));
-        Interpolator pow1_5In = new Interpolator("pow1_5In", Interpolations.powInFunction(1.5f));
+//        Interpolator kAdaptive = new Interpolations.Interpolator("kAdaptive", x -> (float) Math.pow(1.0 - Math.pow(1.0 - x, 1.0/k[1]), 1.0/k[0]));
+//        Interpolator reverseLight = new Interpolator("reverseLight", DescriptiveColor::reverseLight);
+//        Interpolator forwardLight = new Interpolator("forwardLight", DescriptiveColor::forwardLight);
+//        Interpolator reverseLightO = new Interpolator("reverseLightO", InterpolationsGraphing::reverseLightOttosson);
+//        Interpolator forwardLightO = new Interpolator("forwardLightO", InterpolationsGraphing::forwardLightOttosson);
+//        Interpolator forwardReverseLight = new Interpolator("forwardReverseLight", f -> DescriptiveColor.reverseLight(DescriptiveColor.forwardLight(f)));
+//        Interpolator forwardReverseLightO = new Interpolator("forwardReverseLightO", f -> reverseLightOttosson(forwardLightOttosson(f)));
+//        Interpolator pow0_625In = new Interpolator("pow0_625In", Interpolations.powInFunction(0.625f));
+//        Interpolator pow1_6In = new Interpolator("pow1_6In", Interpolations.powInFunction(1.6f));
+//        Interpolator pow0_6In = new Interpolator("pow0_6In", Interpolations.powInFunction(0.6f));
+//        Interpolator pow1_666In = new Interpolator("pow1_666In", Interpolations.powInFunction(1.666f));
+//        Interpolator pow0_666In = new Interpolator("pow0_666In", Interpolations.powInFunction(0.666f));
+//        Interpolator pow1_5In = new Interpolator("pow1_5In", Interpolations.powInFunction(1.5f));
         interpolators = Interpolations.getInterpolatorArray();
+//        for (int i = 0; i < interpolators.length; i++) {
+//            System.out.println(i + " " + interpolators[i].tag);
+//        }
+
+//        interpolators[54] = sine;
+//        interpolators[55] = sineIn;
+//        interpolators[56] = sineOut;
+
         index = interpolators.length - 1;
         current = interpolators[index];
         name = font.markup("[BLACK]"+ current.tag, name = new Layout(font));
