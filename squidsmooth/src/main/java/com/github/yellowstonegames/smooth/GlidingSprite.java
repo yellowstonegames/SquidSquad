@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * {@code setSize(1, 1);} in its constructor; this avoids the need to convert between Coord units in the CoordGlider and
  * some other unit in the world.
  */
-public class GlidingSprite extends Sprite {
+public class GlidingSprite extends ParentSprite {
     @NonNull
     public CoordGlider location;
     @NonNull

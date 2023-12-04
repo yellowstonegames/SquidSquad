@@ -37,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * your Animation, and {@link #setSize(float, float)} on this to {@code 1, 1}; this avoids the need to convert between
  * Coord units in the CoordGlider and some other unit in the world.
  */
-public class AnimatedGlidingSprite extends Sprite {
+public class AnimatedGlidingSprite extends ParentSprite {
     public Animation<? extends TextureRegion> animation;
     @NonNull
     public CoordGlider location;
