@@ -230,12 +230,12 @@ public class Radiance {
      */
     public float currentRange()
     {
-        final float time = (System.currentTimeMillis() & 0x3ffffL) * 0x3.4p-9f;
+        final float time = (System.currentTimeMillis() & 0x3ffffL) * 0x3.1p-9f;
         float current = range;
         if(flicker != 0f) 
             current *=
-                    LineWobble.bicubicWobble(seed, time * flicker + delay) * 0.25f +
-                    LineWobble.bicubicWobble(seed ^ 0x9E3779B9, PHI * (time * flicker + delay + PHI)) * 0.125f +
+                    LineWobble.splobble(seed, time * flicker + delay) * 0.25f +
+                    LineWobble.splobble(seed ^ 0x9E3779B9, PHI * (time * flicker + delay + PHI)) * 0.125f +
                             0.5f;
         if(strobe != 0f)
             current *= MathTools.swayTight(time * strobe + delay) * 0.5f + 0.5f;
