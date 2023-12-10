@@ -1,6 +1,8 @@
 # SquidSquad
 From all corners of the maybe-seven procedurally-generated seas, arise, O Mighty SQUAD Of SQUID, and hark unto me!
 
+![A Squad of Squid](docs/SquidSquad.png)
+
 # What?
 SquidSquad is the successor to [SquidLib](https://github.com/yellowstonegames/SquidLib), and can be considered an
 overhaul but not a total rewrite. Like SquidLib, it provides tools for all sorts of procedural generation, and is
@@ -10,12 +12,28 @@ depend on the modules you need. All the modules depend on `squidcore`, which alw
 [checker-qual](https://github.com/typetools/checker-framework) annotations library,
 [digital](https://github.com/tommyettinger/digital) for various number and digit stuff,
 [juniper](https://github.com/tommyettinger/juniper) for random number generation, and
-[regexodus](https://github.com/tommyettinger/RegExodus) for cross-platform regular expressions with an expanded API.
+[regexodus](https://github.com/tommyettinger/RegExodus) for cross-platform regular expressions with an expanded API. This is already quite a few dependencies,
+but checker-qual is rarely needed by user code, and the rest mostly have roles that were moved out of squidlib-util in
+earlier versions.
+
 Some modules (`squidglyph`, `squidsmooth`, `squidpress`, and all the `squidstore` modules) depend on
 [libGDX](https://libgdx.com/), which is recommended for use with SquidSquad but not always required. That means if you
 don't use `squidglyph`, `squidsmooth`, `squidpress`, or `squidstore`, you can use SquidSquad in purely-server-side code,
 in tests, or otherwise outside the application lifecycle libGDX expects. The `squidfreeze` modules all depend on
 [Kryo](https://github.com/EsotericSoftware/kryo) and [kryo-more](https://github.com/tommyettinger/kryo-more).
+
+The various dependencies are updated independently of SquidSquad. Some are going to be very familiar if you used
+SquidLib before. `digital` is essentially an expansion on the NumberUtils, ArrayTools, and CrossHash classes from
+squidlib-util, with some extra features. `jdkgdxds` acts like some of the frequently-used data structures in SquidLib,
+such as `OrderedSet` and `IntIntOrderedMap`; these have direct parallels in `jdkgdxds`, but there's also `IntIntMap`,
+`LongIntMap`, `LongIntOrderedMap`, `LongFloatOrderedMap`, and so on. Most of these implement the few interfaces they
+can, but anything with primitive keys or values doesn't have many options for existing interfaces. `juniper` acts like
+a substitute for `RNG` and related classes in squidlib-util; it doesn't have all the same random number generators, but
+you can get most of the important/widely-used ones in `squidold`, which should be fairly backwards-compatible. You might
+not want to, though; the generators in juniper tend to have passed really large amounts of testing (tens of terabytes of
+a suite of tests, and sometimes over 10 petabytes of a single test), and are often extremely fast. Plus, they have more
+features out-of-the-box, like easy serialization of potentially much-larger states to Strings; squidlib-util could only
+handle 64-bit states for that. `regexodus` is also a dependency of `squidlib-util`; it hasn't changed.
 
 # Which?
 There are currently quite a few modules here; they depend on each other when necessary, so pulling in one module as a
@@ -29,10 +47,11 @@ dependency will usually pull in a few others. The full list is:
    - Needed by many of the other modules, this provides tools for handling 2D positions on grids, such as the vital
      `Coord` and `Region` classes, but also `FOV` (Field of Vision), `BresenhamLine` and `OrthoLine` (for line of
      sight), `Radiance` and `LightingManager` (for light sources), and `LineTools` (for getting box drawing characters
-     to represent walls, which can be useful in graphical games as well as text-based ones). It also provides the
-     `Noise` class, which is a large and highly-configurable way of producing continuous noise, such as Perlin noise.
-     On top of this, there are `Coord`-based collections, such as `CoordObjectMap`, based on the `jdkgdxds` collections
-     but specialized for Coord keys.
+     to represent walls, which can be useful in graphical games as well as text-based ones). These are all grouped into
+     one place in `VisionFramework`, which does a lot of the work that would otherwise be repeated in different
+     codebases. `squidgrid` also provides the `Noise` class, which is a large and highly-configurable way of producing
+     continuous noise, such as Perlin noise. On top of this, there are `Coord`-based collections, such as
+     `CoordObjectMap`, based on the `jdkgdxds` collections but specialized for Coord keys.
  - squidtext
    - This only uses `squidcore`, and has various tools for procedurally-generating text. This text could be readable, as
     `Thesaurus` produces, or could be complete gibberish, as `Language` produces. `Translator` offers a middle ground,
@@ -141,8 +160,30 @@ because they can change without warning and don't tell you what commit you are a
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.4.3
+  - `digitalVersion`=0.4.5
   - `funderbyVersion`=0.1.1
-  - `jdkgdxdsVersion`=1.4.4
-  - `juniperVersion`=0.4.2
+  - `jdkgdxdsVersion`=1.4.6
+  - `juniperVersion`=0.5.0
   - `regExodusVersion`=0.1.15
+
+# License
+
+[The Apache License 2.0](LICENSE).
+
+# Thanks!
+
+Most of the code here was by Tommy Ettinger, but not all of it! Various places copy (also Apache-licensed) code from
+libGDX, and sometimes other Apache-licensed libraries. Some places use MIT-licensed code, and I've tried to keep the MIT
+license header close to where the MIT-licensed code is. The `A*` pathfinding code uses code from 
+[simple-graphs](https://github.com/earlygrey/simple-graphs), mostly because I haven't found any better `A*` code for
+what we use it for. Some of the world map code uses an MIT-licensed `ProjectionTools` class. There are probably other
+examples throughout here... Where public domain code was copied into here, I really have no obligation to even credit
+the original author, but I try to anyway.
+
+The SquidSquad.png image was AI-generated by Daniele Conti. Thanks!
+
+The various fonts in `assets/` all have their license next to the font files. The Dawnlike files, in `assets/dawnlike`,
+require attribution to DawnBringer and DragonDePlatino. The credits for `assets/Game-Icons.png` are more complex; since
+the file is from TextraTypist, you should consult [its list of contributors](https://github.com/tommyettinger/textratypist/blob/10f9ce48315e34289054bf03d50453c7650775d7/README.md#thanks)
+and include the whole list (since the PNG includes the work of all those contributors) if you use Game-Icons. In
+general, consulting TextraTypist's credits guide is a good idea if you use the assets here.

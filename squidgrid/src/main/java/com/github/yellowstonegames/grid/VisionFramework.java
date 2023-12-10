@@ -460,7 +460,10 @@ public class VisionFramework {
      * that thing with. The color is a packed Oklab int, as {@link DescriptiveColor} produces. This can return 0 if a
      * creature or thing cannot be seen and is not fading in or out of view. Otherwise, the int color this returns will
      * be white with some level of transparency -- if the creature is in view now and was in view previously, then it
-     * will be opaque white, otherwise it will have some transparency between 0 and 1.
+     * will be opaque white, otherwise it will have some transparency between 0 and 1. Note that because white is the
+     * lightest color that can be represented, and it is the "neutral color" for a tint like this, there is no way for
+     * this tint to be used to lighten a sprite or other visual object.
+     * <br>
      * This takes a float argument, {@code millisSinceLastMove}, that is the number of milliseconds since the player
      * last entered an input that changed the map or its inhabitants. This is used to handle fading creatures into view
      * when the player's input suddenly revealed those creatures, or fading them out of view if they become hidden. You
