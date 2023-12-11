@@ -1025,17 +1025,13 @@ public final class DescriptiveColorRgb {
             hue = ((r - g) / chr + 4) / 6;
         }
         float doubleLightness = min + max;
-        if (doubleLightness == 0f || doubleLightness > 2f * 254f / 255f) {
+        if (doubleLightness <= 0f || doubleLightness >= 2f) {
             sat = 0f;
         } else {
             sat = chr / (1f - Math.abs(doubleLightness - 1f));
         }
         lit = 0.5f * doubleLightness;
-        return
-                (int)(hue * 255.999f) << 24
-              | (int)(sat * 255.999f) << 16
-              | (int)(lit * 255.999f) << 8
-              | (int)(a   * 255.999f);
+        return rgba(hue, sat, lit, a);
     }
 
     /**
@@ -1062,11 +1058,7 @@ public final class DescriptiveColorRgb {
             hue = ((r - g) / chr + 4) / 6;
         }
         lit = 0.5f * (min + max);
-        return
-                (int)(hue * 255.999f) << 24
-              | (int)(chr * 255.999f) << 16
-              | (int)(lit * 255.999f) << 8
-              | (int)(a   * 255.999f);
+        return rgba(hue, chr, lit, a);
     }
 
     /**

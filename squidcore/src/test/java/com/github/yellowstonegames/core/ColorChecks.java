@@ -190,7 +190,7 @@ public class ColorChecks {
 
     /**
      * min hue difference: 0, max hue difference: 0
-     * min sat difference: 0, max sat difference: 255
+     * min sat difference: 0, max sat difference: 0
      * min lit difference: 0, max lit difference: 0
      */
     @Test
@@ -213,6 +213,10 @@ public class ColorChecks {
                     minDiffH = Math.min(minDiffH, hueO - hueA);
                     minDiffS = Math.min(minDiffS, satO - satA);
                     minDiffL = Math.min(minDiffL, litO - litA);
+
+                    if(satO != satA) {
+                        System.out.printf("SATURATION DIFFERENCE: O=%d, A=%d, color is 0x%02X%02X%02XFF\n", satO, satA, r, g, b);
+                    }
                 }
             }
         }
