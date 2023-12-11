@@ -756,12 +756,12 @@ public final class DescriptiveColor {
     private static float cbrtPositive(float x) {
         int ix = BitConversion.floatToRawIntBits(x);
         final float x0 = x;
-        ix = (ix>>>2) + (ix>>>4);
+        ix  = (ix>>>2) + (ix>>>4);
         ix += (ix>>>4);
         ix += (ix>>>8) + 0x2A5137A0;
-        x  = BitConversion.intBitsToFloat(ix);
-        x  = 0.33333334f*(2f * x + x0/(x*x));
-        x  = 0.33333334f*(2f * x + x0/(x*x));
+        x   = BitConversion.intBitsToFloat(ix);
+        x   = 0.33333334f * (2f * x + x0 / (x * x));
+        x   = 0.33333334f * (1.9999999f * x + x0 / (x * x));
         return x;
     }
 
@@ -771,7 +771,7 @@ public final class DescriptiveColor {
      * @param component any non-linear channel of a color, to be made linear
      * @return a linear version of component
      */
-    private static float forwardGamma(final float component) {
+    public static float forwardGamma(final float component) {
         return component * component;
     }
 
@@ -781,7 +781,7 @@ public final class DescriptiveColor {
      * @param component a linear channel of a color, to be made non-linear
      * @return a non-linear version of component
      */
-    private static float reverseGamma(final float component) {
+    public static float reverseGamma(final float component) {
         return (float)Math.sqrt(component);
     }
 
@@ -2460,22 +2460,22 @@ public final class DescriptiveColor {
     /**
      * Gets the squared Euclidean distance between two colors as packed Oklab ints. This is a very approximate measure
      * of how different two colors are from each other, but in Oklab this measurement is relatively more accurate than
-     * if you used plain RGB as the color space, or even IPT_HQ. The result should typically be rather small; lightness
+     * if you used plain RGB as the color space. The result should typically be rather small; lightness
      * can only be 1 unit of distance apart at most (from black to white), and the A and B channels are usually just a
      * tiny bit away from the vertical lightness axis. A result of 1 may be the largest this can produce, but it is very
      * possible that somewhat larger results can happen. Note that this is squared, so it isn't an admissible metric for
      * some usage, like summing up distances.
-     * @param colorA a packed Oklab int color
-     * @param colorB a packed Oklab int color
-     * @return the squared Euclidean distance between encodedA and encodedB; usually less than 1.0f
+     * @param oklab0 a packed Oklab int color
+     * @param oklab1 a packed Oklab int color
+     * @return the squared Euclidean distance between encodedA and encodedB in Oklab space; usually less than 1.0f
      */
-    public static float distanceSquared(final int colorA, final int colorB) {
-        final float LA = reverseLight((colorA & 0xff) / 255f);
-        final float AA = ((colorA >>> 8 & 0xff) - 127f) / 127f;
-        final float BA = ((colorA >>> 16 & 255) - 127f) / 127f;
-        final float LDiff = reverseLight((colorB & 0xff) / 255f) - LA;
-        final float ADiff = ((colorB >>> 8 & 0xff) - 127f) / 127f - AA;
-        final float BDiff = ((colorB >>> 16 & 255) - 127f) / 127f - BA;
+    public static float distanceSquared(final int oklab0, final int oklab1) {
+        final float L0 = reverseLight((oklab0 & 0xff) / 255f);
+        final float A0 = ((oklab0 >>> 8 & 0xff) - 127f) / 127f;
+        final float B0 = ((oklab0 >>> 16 & 255) - 127f) / 127f;
+        final float LDiff = reverseLight((oklab1 & 0xff) / 255f) - L0;
+        final float ADiff = ((oklab1 >>> 8 & 0xff) - 127f) / 127f - A0;
+        final float BDiff = ((oklab1 >>> 16 & 255) - 127f) / 127f - B0;
         return LDiff * LDiff + ADiff * ADiff + BDiff * BDiff;
     }
 
@@ -2486,12 +2486,12 @@ public final class DescriptiveColor {
      * unit of distance apart at most (from black to white), and the A and B channels are usually just a tiny bit away
      * from the vertical lightness axis. A result of 1 may be the largest this can produce, but it is very possible that
      * somewhat larger results can happen.
-     * @param encodedA a packed Oklab int color
-     * @param encodedB a packed Oklab int color
-     * @return the Euclidean distance between encodedA and encodedB; usually less than 1.0f
+     * @param oklab0 a packed Oklab int color
+     * @param oklab1 a packed Oklab int color
+     * @return the Euclidean distance between oklab0 and oklab1; usually less than 1.0f
      */
-    public static float distance(final int encodedA, final int encodedB) {
-        return (float) Math.sqrt(distanceSquared(encodedA, encodedB));
+    public static float distance(final int oklab0, final int oklab1) {
+        return (float) Math.sqrt(distanceSquared(oklab0, oklab1));
     }
 
 }
