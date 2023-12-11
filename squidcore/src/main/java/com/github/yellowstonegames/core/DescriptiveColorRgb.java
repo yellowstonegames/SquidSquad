@@ -1070,6 +1070,125 @@ public final class DescriptiveColorRgb {
     }
 
     /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L318-L366">cyphercove's gdx-tween library</a>.
+     * @param hue
+     * @param sat
+     * @param lit
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int hsl2rgbAlt(float hue, float sat, float lit, float a) {
+        float doubleLightness = lit + lit;
+        float chroma = (1 - Math.abs(doubleLightness - 1f)) * sat;
+        float v = lit + chroma * 0.5f;
+        float s = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
+        float x = hue * 6;
+        int i = Math.min(Math.max((int) x, 0), 5);
+        float f = x - i;
+        float p = v * (1 - s);
+        float q = v * (1 - s * f);
+        float t = v * (1 - s * (1 - f));
+        switch (i) {
+            case 0:
+                return rgba(
+                        v,
+                        t,
+                        p,
+                        a);
+            case 1:
+                return rgba(
+                        q,
+                        v,
+                        p,
+                        a);
+            case 2:
+                return rgba(
+                        p,
+                        v,
+                        t,
+                        a);
+            case 3:
+                return rgba(
+                        p,
+                        q,
+                        v,
+                        a);
+            case 4:
+                return rgba(
+                        t,
+                        p,
+                        v,
+                        a);
+            default:
+                return rgba(
+                        v,
+                        p,
+                        q,
+                        a);
+        }
+    }
+
+    /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L318-L366">cyphercove's gdx-tween library</a>.
+     * @param hue
+     * @param chr
+     * @param lit
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int hcl2rgbAlt(float hue, float chr, float lit, float a) {
+        float v = lit + chr * 0.5f;
+        float s = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
+        float x = hue * 6;
+        int i = Math.min(Math.max((int) x, 0), 5);
+        float f = x - i;
+        float p = v * (1 - s);
+        float q = v * (1 - s * f);
+        float t = v * (1 - s * (1 - f));
+        switch (i) {
+            case 0:
+                return rgba(
+                        v,
+                        t,
+                        p,
+                        a);
+            case 1:
+                return rgba(
+                        q,
+                        v,
+                        p,
+                        a);
+            case 2:
+                return rgba(
+                        p,
+                        v,
+                        t,
+                        a);
+            case 3:
+                return rgba(
+                        p,
+                        q,
+                        v,
+                        a);
+            case 4:
+                return rgba(
+                        t,
+                        p,
+                        v,
+                        a);
+            default:
+                return rgba(
+                        v,
+                        p,
+                        q,
+                        a);
+        }
+    }
+
+
+    /**
      * Converts the four HSBA/HSVA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
      * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
      * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
@@ -1933,6 +2052,21 @@ public final class DescriptiveColorRgb {
 
         return result;
     }
+
+//    /**
+//     * Given a packed int Oklab color {@code mainColor} and another Oklab color that it should be made to contrast with,
+//     * gets a packed int Oklab color with L that should be quite different from {@code contrastingColor}'s L, but the
+//     * same chromatic channels and opacity (A and B are likely to be clamped if the result gets close to white or
+//     * black). This allows most of the colors this method produces to contrast well as a foreground when displayed on a
+//     * background of {@code contrastingColor}, or vice versa.
+//     * @param mainColor a packed Oklab int color; this is the color that will be adjusted
+//     * @param contrastingColor a packed Oklab int color; the adjusted mainColor will contrast with the L of this
+//     * @return a different packed Oklab int color, based on mainColor but typically with different lightness
+//     */
+//    public static int differentiateLightness(final int mainColor, final int contrastingColor)
+//    {
+//
+//    }
 
     /**
      * Gets the squared difference between two colors, each RGBA8888 ints, calculating the difference by the squared
