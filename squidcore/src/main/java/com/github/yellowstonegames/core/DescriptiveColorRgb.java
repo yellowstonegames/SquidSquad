@@ -962,7 +962,7 @@ public final class DescriptiveColorRgb {
         float v = l + s * Math.min(l, 1f - l);
         float d = 2f * (1f - l / (v + 1e-10f));
         v *= 255.999f;
-        return (int)(v*MathTools.lerp(1f, x, d)) << 24 | (int)(v*MathTools.lerp(1f, y, d)) << 16 | (int)(v*MathTools.lerp(1f, z, d)) << 8 | (int)(a * 255.999f);
+        return (int)(v*(1f+(x-1f)*d)) << 24 | (int)(v*(1f+(y-1f)*d)) << 16 | (int)(v*(1f+(z-1f)*d)) << 8 | (int)(a * 255.999f);
     }
 
     /**
@@ -997,188 +997,50 @@ public final class DescriptiveColorRgb {
             x = r;
         }
         float d = x - Math.min(w, y);
-        float l = x * (1f - 0.5f * d / (x + 1e-10f));
-        return (int)(Math.abs(z + (w - y) / (6f * d + 1e-10f)) * 255.999f) << 24 | (int)((x - l) / (Math.min(l, 1f - l) + 1e-10f) * 255.999f) << 16 | (int)(l * 255.999f) << 8 | (int)(a * 255.999f);
+        final float lit = x * (1f - 0.5f * d / (x + 1e-10f));
+        final float hue = Math.abs(z + (w - y) / (6f * d + 1e-10f));
+        final float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
+        return (int)(hue * 255.999f) << 24 | (int)(sat * 255.999f) << 16 | (int)(lit * 255.999f) << 8 | (int)(a * 255.999f);
     }
 
+
     /**
-     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L248-L272">cyphercove's gdx-tween library</a>.
-     * @param r
-     * @param g
-     * @param b
-     * @param a
-     * @return
+     * Converts the four RGBA components, each in the 0.0 to 1.0 range, to an int in HCLA format (hue,
+     * chroma, lightness, alpha). This format is exactly like RGBA8888 but treats what would normally be red as hue,
+     * green as saturation, and blue as lightness; alpha is the same.
+     *
+     * @param r red, from 0.0 to 1.0
+     * @param g green, from 0.0 to 1.0
+     * @param b blue, from 0.0 to 1.0
+     * @param a alpha, from 0.0 to 1.0
+     * @return an "HCLA-format" int
      */
     @Beta
-    public static int rgb2hslAlt(final float r, final float g, final float b, final float a) {
-        float max = Math.max(Math.max(r, g), b);
-        float min = Math.min(Math.min(r, g), b);
-        float chr = max - min;
-        float hue, sat, lit;
-        if (chr == 0) {
-            hue = 0;
-        } else if (max == r) {
-            hue = MathTools.fract((g - b) / chr / 6);
-        } else if (max == g) {
-            hue = ((b - r) / chr + 2) / 6;
+    public static int rgb2hcl(final float r, final float g, final float b, final float a) {
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
         } else {
-            hue = ((r - g) / chr + 4) / 6;
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
         }
-        float doubleLightness = min + max;
-        if (doubleLightness <= 0f || doubleLightness >= 2f) {
-            sat = 0f;
+        if (r < x) {
+            z = w;
+            w = r;
         } else {
-            sat = chr / (1f - Math.abs(doubleLightness - 1f));
+            w = x;
+            x = r;
         }
-        lit = 0.5f * doubleLightness;
-        return rgba(hue, sat, lit, a);
+        final float chr = x - Math.min(w, y);
+        final float lit = x * (1f - 0.5f * chr / (x + 1e-10f));
+        final float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
+        return (int)(hue * 255.999f) << 24 | (int)(chr * 255.999f) << 16 | (int)(lit * 255.999f) << 8 | (int)(a * 255.999f);
     }
-
-    /**
-     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L248-L272">cyphercove's gdx-tween library</a>.
-     * @param r
-     * @param g
-     * @param b
-     * @param a
-     * @return
-     */
-    @Beta
-    public static int rgb2hclAlt(final float r, final float g, final float b, final float a) {
-        float max = Math.max(Math.max(r, g), b);
-        float min = Math.min(Math.min(r, g), b);
-        float chr = max - min;
-        float hue, lit;
-        if (chr == 0) {
-            hue = 0;
-        } else if (max == r) {
-            hue = MathTools.fract((g - b) / chr / 6);
-        } else if (max == g) {
-            hue = ((b - r) / chr + 2) / 6;
-        } else {
-            hue = ((r - g) / chr + 4) / 6;
-        }
-        lit = 0.5f * (min + max);
-        return rgba(hue, chr, lit, a);
-    }
-
-    /**
-     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L318-L366">cyphercove's gdx-tween library</a>.
-     * @param hue
-     * @param sat
-     * @param lit
-     * @param a
-     * @return
-     */
-    @Beta
-    public static int hsl2rgbAlt(float hue, float sat, float lit, float a) {
-        float doubleLightness = lit + lit;
-        float chroma = (1 - Math.abs(doubleLightness - 1f)) * sat;
-        float v = lit + chroma * 0.5f;
-        float s = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
-        float x = hue * 6;
-        int i = Math.min(Math.max((int) x, 0), 5);
-        float f = x - i;
-        float p = v * (1 - s);
-        float q = v * (1 - s * f);
-        float t = v * (1 - s * (1 - f));
-        switch (i) {
-            case 0:
-                return rgba(
-                        v,
-                        t,
-                        p,
-                        a);
-            case 1:
-                return rgba(
-                        q,
-                        v,
-                        p,
-                        a);
-            case 2:
-                return rgba(
-                        p,
-                        v,
-                        t,
-                        a);
-            case 3:
-                return rgba(
-                        p,
-                        q,
-                        v,
-                        a);
-            case 4:
-                return rgba(
-                        t,
-                        p,
-                        v,
-                        a);
-            default:
-                return rgba(
-                        v,
-                        p,
-                        q,
-                        a);
-        }
-    }
-
-    /**
-     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L318-L366">cyphercove's gdx-tween library</a>.
-     * @param hue
-     * @param chr
-     * @param lit
-     * @param a
-     * @return
-     */
-    @Beta
-    public static int hcl2rgbAlt(float hue, float chr, float lit, float a) {
-        float v = lit + chr * 0.5f;
-        float s = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
-        float x = hue * 6;
-        int i = Math.min(Math.max((int) x, 0), 5);
-        float f = x - i;
-        float p = v * (1 - s);
-        float q = v * (1 - s * f);
-        float t = v * (1 - s * (1 - f));
-        switch (i) {
-            case 0:
-                return rgba(
-                        v,
-                        t,
-                        p,
-                        a);
-            case 1:
-                return rgba(
-                        q,
-                        v,
-                        p,
-                        a);
-            case 2:
-                return rgba(
-                        p,
-                        v,
-                        t,
-                        a);
-            case 3:
-                return rgba(
-                        p,
-                        q,
-                        v,
-                        a);
-            case 4:
-                return rgba(
-                        t,
-                        p,
-                        v,
-                        a);
-            default:
-                return rgba(
-                        v,
-                        p,
-                        q,
-                        a);
-        }
-    }
-
 
     /**
      * Converts the four HSBA/HSVA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
@@ -1205,7 +1067,7 @@ public final class DescriptiveColorRgb {
         z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
         float v = b * 255.999f;
 //        return ((int)(r * 255.999f) << 24) | ((int)(g * 255.999f) << 16) | ((int)(b * 255.999f) << 8) | (int)(a * 255.999f);
-        return (int) (v * MathTools.lerp(1f, x, s)) << 24 | (int) (v * MathTools.lerp(1f, y, s)) << 16 | (int) (v * MathTools.lerp(1f, z, s)) << 8 | (int)(a * 255.999f);
+        return (int) (v * (1f+(x-1f)*s)) << 24 | (int) (v * (1f+(y-1f)*s)) << 16 | (int) (v * (1f+(z-1f)*s)) << 8 | (int)(a * 255.999f);
     }
 
     /**

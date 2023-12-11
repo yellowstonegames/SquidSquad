@@ -17,11 +17,14 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.ObjectIntMap;
+import com.github.yellowstonegames.core.annotations.Beta;
 import org.junit.Assert;
 import org.junit.Test;
 
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
+import static com.github.yellowstonegames.core.DescriptiveColorRgb.rgba;
 
 public class ColorChecks {
 //    public static float limitToGamut(float L, float A, float B, float alpha) {
@@ -204,7 +207,7 @@ public class ColorChecks {
                 for (int b = 0; b < 256; b++) {
                     float B = b / 255f;
                     int original  = DescriptiveColorRgb.rgb2hsl(R, G, B, 1f);
-                    int alt    = DescriptiveColorRgb.rgb2hslAlt(R, G, B, 1f);
+                    int alt    = rgb2hslAlt(R, G, B, 1f);
                     int hueO = original >>> 24, satO = original >>> 16 & 255, litO = original >>> 8 & 255;
                     int hueA = alt >>> 24, satA = alt >>> 16 & 255, litA = alt >>> 8 & 255;
                     maxDiffH = Math.max(maxDiffH, hueO - hueA);
@@ -231,7 +234,7 @@ public class ColorChecks {
             float G = (rgba >>> 16 & 255) / 255f;
             float B = (rgba >>> 8  & 255) / 255f;
             int original  = DescriptiveColorRgb.rgb2hsl(R, G, B, 1f);
-            int alt    = DescriptiveColorRgb.rgb2hslAlt(R, G, B, 1f);
+            int alt    = rgb2hslAlt(R, G, B, 1f);
             int hueO = original >>> 24, satO = original >>> 16 & 255, litO = original >>> 8 & 255;
             System.out.println(name);
             System.out.printf("O: H %d, S %d L %d\n", hueO, satO, litO);
@@ -241,4 +244,231 @@ public class ColorChecks {
 
         }
     }
+    @Test
+    public void testCompareHcl() {
+        int maxDiffH = 0, maxDiffC = 0, maxDiffL = 0;
+        int minDiffH = 1000, minDiffC = 1000, minDiffL = 1000;
+        for (int r = 0; r < 256; r++) {
+            float R = r / 255f;
+            for (int g = 0; g < 256; g++) {
+                float G = g / 255f;
+                for (int b = 0; b < 256; b++) {
+                    float B = b / 255f;
+                    int original  = DescriptiveColorRgb.rgb2hcl(R, G, B, 1f);
+                    int alt    = rgb2hclAlt(R, G, B, 1f);
+                    int hueO = original >>> 24, chrO = original >>> 16 & 255, litO = original >>> 8 & 255;
+                    int hueA = alt >>> 24, chrA = alt >>> 16 & 255, litA = alt >>> 8 & 255;
+                    maxDiffH = Math.max(maxDiffH, hueO - hueA);
+                    maxDiffC = Math.max(maxDiffC, chrO - chrA);
+                    maxDiffL = Math.max(maxDiffL, litO - litA);
+                    minDiffH = Math.min(minDiffH, hueO - hueA);
+                    minDiffC = Math.min(minDiffC, chrO - chrA);
+                    minDiffL = Math.min(minDiffL, litO - litA);
+
+                    if(chrO != chrA) {
+                        System.out.printf("CHROMA DIFFERENCE: O=%d, A=%d, color is 0x%02X%02X%02XFF\n", chrO, chrA, r, g, b);
+                    }
+                }
+            }
+        }
+        System.out.printf("min hue difference: %d, max hue difference: %d\n", minDiffH, maxDiffH);
+        System.out.printf("min chr difference: %d, max chr difference: %d\n", minDiffC, maxDiffC);
+        System.out.printf("min lit difference: %d, max lit difference: %d\n", minDiffL, maxDiffL);
+
+        for(ObjectIntMap.Entry<String> ent : DescriptiveColorRgb.NAMED.entrySet()){
+            String name = ent.key;
+            int rgba = ent.value;
+            float R = (rgba >>> 24) / 255f;
+            float G = (rgba >>> 16 & 255) / 255f;
+            float B = (rgba >>> 8  & 255) / 255f;
+            int original  = DescriptiveColorRgb.rgb2hcl(R, G, B, 1f);
+            int alt    = rgb2hclAlt(R, G, B, 1f);
+            int hueO = original >>> 24, chrO = original >>> 16 & 255, litO = original >>> 8 & 255;
+            System.out.println(name);
+            System.out.printf("O: H %d, C %d L %d\n", hueO, chrO, litO);
+            int hueA = alt >>> 24, chrA = alt >>> 16 & 255, litA = alt >>> 8 & 255;
+            System.out.printf("A: H %d, C %d L %d\n", hueA, chrA, litA);
+            System.out.printf("Diff: %d %s\n",chrO - chrA, StringTools.padRightStrict("", '!', chrO - chrA));
+
+        }
+    }
+
+    /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L248-L272">cyphercove's gdx-tween library</a>.
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int rgb2hslAlt(final float r, final float g, final float b, final float a) {
+        float max = Math.max(Math.max(r, g), b);
+        float min = Math.min(Math.min(r, g), b);
+        float chr = max - min;
+        float hue, sat, lit;
+        if (chr == 0) {
+            hue = 0;
+        } else if (max == r) {
+            hue = MathTools.fract((g - b) / chr / 6);
+        } else if (max == g) {
+            hue = ((b - r) / chr + 2) / 6;
+        } else {
+            hue = ((r - g) / chr + 4) / 6;
+        }
+        float doubleLightness = min + max;
+        if (doubleLightness <= 0f || doubleLightness >= 2f) {
+            sat = 0f;
+        } else {
+            sat = chr / (1f - Math.abs(doubleLightness - 1f));
+        }
+        lit = 0.5f * doubleLightness;
+        return rgba(hue, sat, lit, a);
+    }
+
+    /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L248-L272">cyphercove's gdx-tween library</a>.
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int rgb2hclAlt(final float r, final float g, final float b, final float a) {
+        float max = Math.max(Math.max(r, g), b);
+        float min = Math.min(Math.min(r, g), b);
+        float chr = max - min;
+        float hue, lit;
+        if (chr == 0) {
+            hue = 0;
+        } else if (max == r) {
+            hue = MathTools.fract((g - b) / chr / 6);
+        } else if (max == g) {
+            hue = ((b - r) / chr + 2) / 6;
+        } else {
+            hue = ((r - g) / chr + 4) / 6;
+        }
+        lit = 0.5f * (min + max);
+        return rgba(hue, chr, lit, a);
+    }
+
+    /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L318-L366">cyphercove's gdx-tween library</a>.
+     * @param hue
+     * @param sat
+     * @param lit
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int hsl2rgbAlt(float hue, float sat, float lit, float a) {
+        float doubleLightness = lit + lit;
+        float chroma = (1 - Math.abs(doubleLightness - 1f)) * sat;
+        float v = lit + chroma * 0.5f;
+        float s = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
+        float x = hue * 6;
+        int i = Math.min(Math.max((int) x, 0), 5);
+        float f = x - i;
+        float p = v * (1 - s);
+        float q = v * (1 - s * f);
+        float t = v * (1 - s * (1 - f));
+        switch (i) {
+            case 0:
+                return rgba(
+                        v,
+                        t,
+                        p,
+                        a);
+            case 1:
+                return rgba(
+                        q,
+                        v,
+                        p,
+                        a);
+            case 2:
+                return rgba(
+                        p,
+                        v,
+                        t,
+                        a);
+            case 3:
+                return rgba(
+                        p,
+                        q,
+                        v,
+                        a);
+            case 4:
+                return rgba(
+                        t,
+                        p,
+                        v,
+                        a);
+            default:
+                return rgba(
+                        v,
+                        p,
+                        q,
+                        a);
+        }
+    }
+
+    /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L318-L366">cyphercove's gdx-tween library</a>.
+     * @param hue
+     * @param chr
+     * @param lit
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int hcl2rgbAlt(float hue, float chr, float lit, float a) {
+        float v = lit + chr * 0.5f;
+        float s = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
+        float x = hue * 6;
+        int i = Math.min(Math.max((int) x, 0), 5);
+        float f = x - i;
+        float p = v * (1 - s);
+        float q = v * (1 - s * f);
+        float t = v * (1 - s * (1 - f));
+        switch (i) {
+            case 0:
+                return rgba(
+                        v,
+                        t,
+                        p,
+                        a);
+            case 1:
+                return rgba(
+                        q,
+                        v,
+                        p,
+                        a);
+            case 2:
+                return rgba(
+                        p,
+                        v,
+                        t,
+                        a);
+            case 3:
+                return rgba(
+                        p,
+                        q,
+                        v,
+                        a);
+            case 4:
+                return rgba(
+                        t,
+                        p,
+                        v,
+                        a);
+            default:
+                return rgba(
+                        v,
+                        p,
+                        q,
+                        a);
+        }
+    }
+
 }
