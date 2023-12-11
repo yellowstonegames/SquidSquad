@@ -2431,8 +2431,7 @@ public final class DescriptiveColor {
      * @param contrastingColor a packed Oklab int color; the adjusted mainColor will contrast with the L of this
      * @return a different packed Oklab int color, based on mainColor but typically with different lightness
      */
-    public static int differentiateLightness(final int mainColor, final int contrastingColor)
-    {
+    public static int differentiateLightness(final int mainColor, final int contrastingColor) {
         return limitToGamut((mainColor & 0xFFFFFF00) | (contrastingColor + 128 & 0xFF) + (mainColor & 0xFF) >>> 1);
     }
 

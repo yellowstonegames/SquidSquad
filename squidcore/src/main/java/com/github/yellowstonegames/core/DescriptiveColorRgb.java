@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * A palette, the same as the one in {@link DescriptiveColor}, just using RGBA8888 ints instead of Oklab ints for
@@ -1001,6 +1002,74 @@ public final class DescriptiveColorRgb {
     }
 
     /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L248-L272">cyphercove's gdx-tween library</a>.
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int rgb2hslAlt(final float r, final float g, final float b, final float a) {
+        float max = Math.max(Math.max(r, g), b);
+        float min = Math.min(Math.min(r, g), b);
+        float chr = max - min;
+        float hue, sat, lit;
+        if (chr == 0) {
+            hue = 0;
+        } else if (max == r) {
+            hue = MathTools.fract((g - b) / chr / 6);
+        } else if (max == g) {
+            hue = ((b - r) / chr + 2) / 6;
+        } else {
+            hue = ((r - g) / chr + 4) / 6;
+        }
+        float doubleLightness = min + max;
+        if (doubleLightness == 0f || doubleLightness > 2f * 254f / 255f) {
+            sat = 0f;
+        } else {
+            sat = chr / (1f - Math.abs(doubleLightness - 1f));
+        }
+        lit = 0.5f * doubleLightness;
+        return
+                (int)(hue * 255.999f) << 24
+              | (int)(sat * 255.999f) << 16
+              | (int)(lit * 255.999f) << 8
+              | (int)(a   * 255.999f);
+    }
+
+    /**
+     * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L248-L272">cyphercove's gdx-tween library</a>.
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     * @return
+     */
+    @Beta
+    public static int rgb2hclAlt(final float r, final float g, final float b, final float a) {
+        float max = Math.max(Math.max(r, g), b);
+        float min = Math.min(Math.min(r, g), b);
+        float chr = max - min;
+        float hue, lit;
+        if (chr == 0) {
+            hue = 0;
+        } else if (max == r) {
+            hue = MathTools.fract((g - b) / chr / 6);
+        } else if (max == g) {
+            hue = ((b - r) / chr + 2) / 6;
+        } else {
+            hue = ((r - g) / chr + 4) / 6;
+        }
+        lit = 0.5f * (min + max);
+        return
+                (int)(hue * 255.999f) << 24
+              | (int)(chr * 255.999f) << 16
+              | (int)(lit * 255.999f) << 8
+              | (int)(a   * 255.999f);
+    }
+
+    /**
      * Converts the four HSBA/HSVA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
      * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
      * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
@@ -1015,7 +1084,7 @@ public final class DescriptiveColorRgb {
      * @return an RGBA8888-format int
      */
     public static int hsb2rgb(final float h, final float s, final float b, final float a) {
-        float hue = h - MathTools.fastFloor(h);
+        float hue = MathTools.fract(h);
         float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
         float y = hue + 2f / 3f;
         float z = hue + 1f / 3f;
