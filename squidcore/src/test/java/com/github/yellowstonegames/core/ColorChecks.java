@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.ds.ObjectIntMap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -218,5 +219,22 @@ public class ColorChecks {
         System.out.printf("min hue difference: %d, max hue difference: %d\n", minDiffH, maxDiffH);
         System.out.printf("min sat difference: %d, max sat difference: %d\n", minDiffS, maxDiffS);
         System.out.printf("min lit difference: %d, max lit difference: %d\n", minDiffL, maxDiffL);
+
+        for(ObjectIntMap.Entry<String> ent : DescriptiveColorRgb.NAMED.entrySet()){
+            String name = ent.key;
+            int rgba = ent.value;
+            float R = (rgba >>> 24) / 255f;
+            float G = (rgba >>> 16 & 255) / 255f;
+            float B = (rgba >>> 8  & 255) / 255f;
+            int original  = DescriptiveColorRgb.rgb2hsl(R, G, B, 1f);
+            int alt    = DescriptiveColorRgb.rgb2hslAlt(R, G, B, 1f);
+            int hueO = original >>> 24, satO = original >>> 16 & 255, litO = original >>> 8 & 255;
+            System.out.println(name);
+            System.out.printf("O: H %d, S %d L %d\n", hueO, satO, litO);
+            int hueA = alt >>> 24, satA = alt >>> 16 & 255, litA = alt >>> 8 & 255;
+            System.out.printf("A: H %d, S %d L %d\n", hueA, satA, litA);
+            System.out.printf("Diff: %d %s\n",satO - satA, StringTools.padRightStrict("", '!', satO - satA));
+
+        }
     }
 }
