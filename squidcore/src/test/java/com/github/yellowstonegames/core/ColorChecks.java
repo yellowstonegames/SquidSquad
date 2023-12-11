@@ -187,4 +187,36 @@ public class ColorChecks {
         }
     }
 
+    /**
+     * min hue difference: 0, max hue difference: 0
+     * min sat difference: 0, max sat difference: 255
+     * min lit difference: 0, max lit difference: 0
+     */
+    @Test
+    public void testCompareHsl() {
+        int maxDiffH = 0, maxDiffS = 0, maxDiffL = 0;
+        int minDiffH = 1000, minDiffS = 1000, minDiffL = 1000;
+        for (int r = 0; r < 256; r++) {
+            float R = r / 255f;
+            for (int g = 0; g < 256; g++) {
+                float G = g / 255f;
+                for (int b = 0; b < 256; b++) {
+                    float B = b / 255f;
+                    int original  = DescriptiveColorRgb.rgb2hsl(R, G, B, 1f);
+                    int alt    = DescriptiveColorRgb.rgb2hslAlt(R, G, B, 1f);
+                    int hueO = original >>> 24, satO = original >>> 16 & 255, litO = original >>> 8 & 255;
+                    int hueA = alt >>> 24, satA = alt >>> 16 & 255, litA = alt >>> 8 & 255;
+                    maxDiffH = Math.max(maxDiffH, hueO - hueA);
+                    maxDiffS = Math.max(maxDiffS, satO - satA);
+                    maxDiffL = Math.max(maxDiffL, litO - litA);
+                    minDiffH = Math.min(minDiffH, hueO - hueA);
+                    minDiffS = Math.min(minDiffS, satO - satA);
+                    minDiffL = Math.min(minDiffL, litO - litA);
+                }
+            }
+        }
+        System.out.printf("min hue difference: %d, max hue difference: %d\n", minDiffH, maxDiffH);
+        System.out.printf("min sat difference: %d, max sat difference: %d\n", minDiffS, maxDiffS);
+        System.out.printf("min lit difference: %d, max lit difference: %d\n", minDiffL, maxDiffL);
+    }
 }
