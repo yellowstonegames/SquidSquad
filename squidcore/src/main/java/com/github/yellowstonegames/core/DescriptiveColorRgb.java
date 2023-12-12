@@ -1307,7 +1307,7 @@ public final class DescriptiveColorRgb {
      * @return an "HSBA/HSVA-format" int
      */
     public static int rgb2hsb(final int rgba) {
-        final float r = rgba >>> 24, g = rgba >>> 16 & 255, b = rgba >>> 8 & 255;
+        final float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float v = Math.max(Math.max(r, g), b);
         float n = Math.min(Math.min(r, g), b);
         float c = v - n;
@@ -1316,7 +1316,7 @@ public final class DescriptiveColorRgb {
         else if (v == r) h = (g - b) / c / 6f;
         else if (v == g) h = ((b - r) / c + 2f) / 6f;
         else h = ((r - g) / c + 4f) / 6f;
-        return (int)(h) << 24 | (int)(v == 0 ? 0f : c / v) << 16 | (int)(v) << 8 | (rgba & 0xFF);
+        return (int)(h * 255.999f) << 24 | (int)(v == 0 ? 0f : c / v * 255.999f) << 16 | (int)(v * 255.999f) << 8 | (rgba & 0xFF);
     }
 
     /**

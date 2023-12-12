@@ -297,6 +297,32 @@ public class ColorChecks {
         }
     }
 
+    @Test
+    public void testRgb2Any() {
+        int arg1, arg4;
+        for (int r = 0; r < 256; r++) {
+            float R = r / 255f;
+            for (int g = 0; g < 256; g++) {
+                float G = g / 255f;
+                for (int b = 0; b < 256; b++) {
+                    float B = b / 255f;
+                    int rgba = rgba(R, G, B, 1f);
+                    arg1 = DescriptiveColorRgb.rgb2hsl(rgba);
+                    arg4 = DescriptiveColorRgb.rgb2hsl(R, G, B, 1f);
+                    if(arg1 != arg4) System.out.printf("HSL: 1-arg 0x%08X != 4-arg 0x%08X !\n", arg1, arg4);
+                    Assert.assertEquals("HSL values not equal", arg1, arg4);
+                    arg1 = DescriptiveColorRgb.rgb2hcl(rgba);
+                    arg4 = DescriptiveColorRgb.rgb2hcl(R, G, B, 1f);
+                    if(arg1 != arg4) System.out.printf("HCL: 1-arg 0x%08X != 4-arg 0x%08X !\n", arg1, arg4);
+                    Assert.assertEquals("HCL values not equal", arg1, arg4);
+                    arg1 = DescriptiveColorRgb.rgb2hsb(rgba);
+                    arg4 = DescriptiveColorRgb.rgb2hsb(R, G, B, 1f);
+                    if(arg1 != arg4) System.out.printf("HSB: 1-arg 0x%08X != 4-arg 0x%08X with actual R=%f G=%f B=%f!\n", arg1, arg4, R, G, B);
+                    Assert.assertEquals("HSB values not equal", arg1, arg4);
+                }
+            }
+        }
+    }
     /**
      * Credit for this conversion goes to <a href="https://github.com/CypherCove/gdx-tween/blob/8b83629a29173a89a510464e2cc49a0360727476/gdxtween/src/main/java/com/cyphercove/gdxtween/graphics/GtColor.java#L248-L272">cyphercove's gdx-tween library</a>.
      * @param r
