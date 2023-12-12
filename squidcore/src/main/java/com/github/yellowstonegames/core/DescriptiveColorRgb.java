@@ -2268,7 +2268,65 @@ public final class DescriptiveColorRgb {
                 | Math.min(Math.max((int) g, 0), 255) << 16
                 | Math.min(Math.max((int) b, 0), 255) << 8
                 | (rgba & 255);
+    }
 
+    /**
+     * Given an RGBA8888 int color, this converts it to HSL(A) color space and adds the remaining 3 parameters to hue,
+     * saturation, and lightness, respectively, before converting back to RGBA8888 and returning that. This can be
+     * useful for things like fading a color to grayscale (if addS is -1 or less, the result will be grayscale), hue
+     * rotations (by repeatedly adding to hue over time using addH), or combinations of similar effects with lightness
+     * changes.
+     *
+     * @param rgba an RGBA8888 int color
+     * @param addH will be added to hue, wrapping around if hue exceeds 1.0 or goes below 0.0
+     * @param addS will be added to saturation; can't produce saturation below 0.0
+     * @param addL will be added to lightness; can't produce lightness below 0.0
+     * @return a different RGBA8888 int color, potentially with various qualities changed
+     */
+    public static int editHsl(final int rgba, float addH, float addS, float addL) {
+        float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        } else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if (r < x) {
+            z = w;
+            w = r;
+        } else {
+            w = x;
+            x = r;
+        }
+
+        float chr = x - Math.min(w, y);
+        float lit = Math.max(0f, x * (1f - 0.5f * chr / (x + 1e-10f)) + addL);
+        float sat = Math.max(0f, (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f) + addS);
+        float hue = MathTools.fract(Math.abs(z + (w - y) / (6f * chr + 1e-10f)) + addH);
+
+        x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        y = hue + 2f / 3f;
+        z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = lit + sat * Math.min(lit, 1f - lit);
+        float d = 2f * (1f - lit / (v + 1e-10f));
+        v *= 255.999f;
+        r = v*(1f+(x-1f)*d);
+        g = v*(1f+(y-1f)*d);
+        b = v*(1f+(z-1f)*d);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (rgba & 255);
     }
 
     /**
