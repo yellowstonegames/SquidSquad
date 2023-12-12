@@ -21,7 +21,9 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.yellowstonegames.core.annotations.Beta;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A palette, the same as the one in {@link DescriptiveColor}, just using RGBA8888 ints instead of Oklab ints for
@@ -2145,6 +2147,189 @@ public final class DescriptiveColorRgb {
 //    {
 //
 //    }
+
+    /**
+     * Converts {@code rgba} to the HSL (hue, saturation, lightness) color space temporarily, runs zero to three functions
+     * on any or all of its hue, saturation, and lightness, then converts back to an RGBA8888 int color and returns that.
+     * The functions should expect a float argument in the {@code [0, 1]} range, and generally should return a float
+     * in the same range representing the same channel (hue, saturation, or lightness). Some validation is performed;
+     * all channels have a minimum of 0, and hue will wrap to be in the {@code [0, 1[} range for any finite input.
+     * 
+     * @param rgba an RGBA8888 int color
+     * @param hueTransform        a function that, if non-null, will be used to change the hue of the modified color
+     * @param saturationTransform a function that, if non-null, will be used to change the saturation of the modified color
+     * @param lightnessTransform  a function that, if non-null, will be used to change the lightness of the modified color
+     * @return a potentially-modified version of {@code rgba}, still as an RGBA8888 int
+     */
+    @Beta
+    public static int evaluateHsl(final int rgba,
+                                  @Nullable FloatToFloatFunction hueTransform,
+                                  @Nullable FloatToFloatFunction saturationTransform,
+                                  @Nullable FloatToFloatFunction lightnessTransform) {
+        float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        } else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if (r < x) {
+            z = w;
+            w = r;
+        } else {
+            w = x;
+            x = r;
+        }
+
+        float chr = x - Math.min(w, y);
+        float lit = x * (1f - 0.5f * chr / (x + 1e-10f));
+        if(lightnessTransform != null) lit = Math.max(0f, lightnessTransform.applyAsFloat(lit));
+        float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
+        if(saturationTransform != null) sat = Math.max(0f, saturationTransform.applyAsFloat(sat));
+        float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
+        if(hueTransform != null) hue = MathTools.fract(hueTransform.applyAsFloat(hue));
+
+        x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        y = hue + 2f / 3f;
+        z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = lit + sat * Math.min(lit, 1f - lit);
+        float d = 2f * (1f - lit / (v + 1e-10f));
+        v *= 255.999f;
+        r = v*(1f+(x-1f)*d);
+        g = v*(1f+(y-1f)*d);
+        b = v*(1f+(z-1f)*d);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (rgba & 255);
+    }
+
+    /**
+     * Converts {@code rgba} to the HCL (hue, chroma, lightness) color space temporarily, runs zero to three functions
+     * on any or all of its hue, chroma, and lightness, then converts back to an RGBA8888 int color and returns that.
+     * The functions should expect a float argument in the {@code [0, 1]} range, and generally should return a float
+     * in the same range representing the same channel (hue, chroma, or lightness). Some validation is performed;
+     * all channels have a minimum of 0, and hue will wrap to be in the {@code [0, 1[} range for any finite input.
+     *
+     * @param rgba an RGBA8888 int color
+     * @param hueTransform       a function that, if non-null, will be used to change the hue of the modified color
+     * @param chromaTransform    a function that, if non-null, will be used to change the chroma of the modified color
+     * @param lightnessTransform a function that, if non-null, will be used to change the lightness of the modified color
+     * @return a potentially-modified version of {@code rgba}, still as an RGBA8888 int
+     */
+    @Beta
+    public static int evaluateHcl(final int rgba,
+                                  @Nullable FloatToFloatFunction hueTransform,
+                                  @Nullable FloatToFloatFunction chromaTransform,
+                                  @Nullable FloatToFloatFunction lightnessTransform) {
+        float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        } else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if (r < x) {
+            z = w;
+            w = r;
+        } else {
+            w = x;
+            x = r;
+        }
+
+        float chr = x - Math.min(w, y);
+        if(chromaTransform != null) chr = Math.max(0f, chromaTransform.applyAsFloat(chr));
+        float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
+        if(hueTransform != null) hue = MathTools.fract(hueTransform.applyAsFloat(hue));
+        float lit = x * (1f - 0.5f * chr / (x + 1e-10f));
+        if(lightnessTransform != null) lit = Math.max(0f, lightnessTransform.applyAsFloat(lit));
+
+        x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        y = hue + 2f / 3f;
+        z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = lit + chr * 0.5f;
+        float d = lit == 0f || lit > 254.1f / 255f ? 0f : 2 * (1f - lit / v);
+        v *= 255.999f;
+        r = v*(1f+(x-1f)*d);
+        g = v*(1f+(y-1f)*d);
+        b = v*(1f+(z-1f)*d);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (rgba & 255);
+    }
+
+    /**
+     * Converts {@code rgba} to the HSB (hue, saturation, brightness) color space temporarily, runs zero to three functions
+     * on any or all of its hue, saturation, and brightness, then converts back to an RGBA8888 int color and returns that.
+     * The functions should expect a float argument in the {@code [0, 1]} range, and generally should return a float
+     * in the same range representing the same channel (hue, saturation, or brightness). Some validation is performed;
+     * all channels have a minimum of 0, and hue will wrap to be in the {@code [0, 1[} range for any finite input.
+     *
+     * @param rgba an RGBA8888 int color
+     * @param hueTransform        a function that, if non-null, will be used to change the hue of the modified color
+     * @param saturationTransform a function that, if non-null, will be used to change the saturation of the modified color
+     * @param brightnessTransform a function that, if non-null, will be used to change the brightness of the modified color
+     * @return a potentially-modified version of {@code rgba}, still as an RGBA8888 int
+     */
+    @Beta
+    public static int evaluateHsb(final int rgba,
+                                  @Nullable FloatToFloatFunction hueTransform,
+                                  @Nullable FloatToFloatFunction saturationTransform,
+                                  @Nullable FloatToFloatFunction brightnessTransform) {
+        float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
+        float v = Math.max(Math.max(r, g), b);
+        float n = Math.min(Math.min(r, g), b);
+        float c = v - n;
+        float h;
+        if (c == 0) h = 0f;
+        else if (v == r) h = (g - b) / c / 6f;
+        else if (v == g) h = ((b - r) / c + 2f) / 6f;
+        else h = ((r - g) / c + 4f) / 6f;
+
+        float bri = v;
+        if(brightnessTransform != null) bri = Math.max(0f, brightnessTransform.applyAsFloat(bri));
+        float sat = v == 0 ? 0f : c / v;
+        if(saturationTransform != null) sat = Math.max(0f, saturationTransform.applyAsFloat(sat));
+        float hue = h;
+        if(hueTransform != null) hue = MathTools.fract(hueTransform.applyAsFloat(hue));
+
+        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        float y = hue + 2f / 3f;
+        float z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        bri *= 255.999f;
+        r = bri*(1f+(x-1f)*sat);
+        g = bri*(1f+(y-1f)*sat);
+        b = bri*(1f+(z-1f)*sat);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (rgba & 255);
+    }
 
     /**
      * Gets the squared difference between two colors, each RGBA8888 ints, calculating the difference by the squared
