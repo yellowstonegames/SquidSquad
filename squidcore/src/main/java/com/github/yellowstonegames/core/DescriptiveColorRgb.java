@@ -878,7 +878,7 @@ public final class DescriptiveColorRgb {
      * @return a packed float as ABGR7888
      */
     public static float toFloat(final int rgba) {
-        return BitConversion.reversedIntBitsToFloat(rgba & 0xFFFFFFFE);
+        return BitConversion.reversedIntBitsToFloat(rgba & -2);
     }
 
     public static int redInt(int rgba) {
@@ -937,6 +937,15 @@ public final class DescriptiveColorRgb {
      */
     public static int channelInt(int color, int channel) {
         return color >>> 24 - ((channel & 3) << 3) & 255;
+    }
+
+    public static int editRgba(int rgba, float addR, float addG, float addB, float addA) {
+        return rgba((rgba >>> 24) / 255f + addR, (rgba >>> 16 & 255) / 255f + addG, (rgba >>> 8 & 255) / 255f + addB, (rgba & 255) / 255f + addA);
+    }
+
+    public static int editRgba(int rgba, float addR, float addG, float addB, float addA, float mulR, float mulG, float mulB, float mulA) {
+        final float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f, a = (rgba & 255) / 255f;
+        return rgba(r * mulR + addR, g + mulG + addG, b * mulB + addB, a * mulA + addA);
     }
 
     /**
