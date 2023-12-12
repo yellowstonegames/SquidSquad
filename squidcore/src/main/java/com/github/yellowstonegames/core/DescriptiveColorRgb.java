@@ -951,7 +951,7 @@ public final class DescriptiveColorRgb {
      * @return an RGBA8888-format int
      */
     public static int hsl2rgb(final float h, final float s, final float l, final float a) {
-        float hue = h - MathTools.fastFloor(h);
+        float hue = MathTools.fract(h);
         float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
         float y = hue + 2f / 3f;
         float z = hue + 1f / 3f;
@@ -1047,7 +1047,7 @@ public final class DescriptiveColorRgb {
      */
     @Beta
     public static int rgb2hsl(final int rgba) {
-        final float r = rgba >>> 24, g = rgba >>> 16 & 255, b = rgba >>> 8 & 255;
+        final float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float x, y, z, w;
         if (g < b) {
             x = b;
@@ -1141,7 +1141,9 @@ public final class DescriptiveColorRgb {
     }
 
     /**
-     * Converts the given "HCLA-format" int color to an int color in the RGBA8888 format.
+     * Converts the given "HCLA-format" int color to an int color in the RGBA8888 format. This format is mostly produced
+     * by {@link #rgb2hcl(int)}.
+     * <br>
      * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
      * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
      * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
@@ -1184,7 +1186,7 @@ public final class DescriptiveColorRgb {
      */
     @Beta
     public static int rgb2hcl(final int rgba) {
-        final float r = rgba >>> 24, g = rgba >>> 16 & 255, b = rgba >>> 8 & 255;
+        final float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float x, y, z, w;
         if (g < b) {
             x = b;
@@ -1234,7 +1236,6 @@ public final class DescriptiveColorRgb {
         y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
         z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
         float v = b * 255.999f;
-//        return ((int)(r * 255.999f) << 24) | ((int)(g * 255.999f) << 16) | ((int)(b * 255.999f) << 8) | (int)(a * 255.999f);
         return (int) (v * (1f+(x-1f)*s)) << 24 | (int) (v * (1f+(y-1f)*s)) << 16 | (int) (v * (1f+(z-1f)*s)) << 8 | (int)(a * 255.999f);
     }
 
@@ -1260,7 +1261,62 @@ public final class DescriptiveColorRgb {
         else if (v == g) h = ((b - r) / c + 2f) / 6f;
         else h = ((r - g) / c + 4f) / 6f;
         return (int)(h * 255.999f) << 24 | (int)((v == 0 ? 0f : c / v) * 255.999f) << 16 | (int)(v * 255.999f) << 8 | (int)(a * 255.999f);
-//        return ((int)(r * 255.999f) << 24) | ((int)(g * 255.999f) << 16) | ((int)(b * 255.999f) << 8) | (int)(a * 255.999f);
+    }
+
+    /**
+     * Converts the given "HSBA-format" int color to an int color in the RGBA8888 format. This format is mostly produced
+     * by {@link #rgb2hsb(int)}.
+     * <br>
+     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
+     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
+     * HSV and HSB are synonyms; it makes a little more sense to call the third channel brightness.
+     * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
+     * fractional part of h is used. The other parameters must be between 0.0 and 1.0 (inclusive) to make sense.
+     *
+     * @param hsba an "HSBA-format" int, as produced by {@link #rgb2hsb(int)}
+     * @return an RGBA8888-format int
+     */
+    public static int hsb2rgb(final int hsba) {
+        final float hue = (hsba >>> 24) * 0x1p-8f;
+        final float sat = (hsba >>> 16 & 255) / 255f;
+        final float bri = (hsba >>> 8 & 255) / 255f;
+        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        float y = hue + 2f / 3f;
+        float z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = bri * 255.999f;
+        final float r = v*(1f+(x-1f)*sat);
+        final float g = v*(1f+(y-1f)*sat);
+        final float b = v*(1f+(z-1f)*sat);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (hsba & 255);
+    }
+
+    /**
+     * Converts the given RGBA8888 int color to an int in HSBA/HSVA format (hue, brightness, lightness, alpha).
+     * This format is exactly like RGBA8888 but treats what would normally be red as hue, green as saturation,
+     * and blue as brightness (also called value); alpha is the same. HSV and HSB are synonyms; it makes
+     * a little more sense to call the third channel brightness.
+     *
+     * @param rgba an RGBA8888 int color
+     * @return an "HSBA/HSVA-format" int
+     */
+    public static int rgb2hsb(final int rgba) {
+        final float r = rgba >>> 24, g = rgba >>> 16 & 255, b = rgba >>> 8 & 255;
+        float v = Math.max(Math.max(r, g), b);
+        float n = Math.min(Math.min(r, g), b);
+        float c = v - n;
+        float h;
+        if (c == 0) h = 0f;
+        else if (v == r) h = (g - b) / c / 6f;
+        else if (v == g) h = ((b - r) / c + 2f) / 6f;
+        else h = ((r - g) / c + 4f) / 6f;
+        return (int)(h) << 24 | (int)(v == 0 ? 0f : c / v) << 16 | (int)(v) << 8 | (rgba & 0xFF);
     }
 
     /**
