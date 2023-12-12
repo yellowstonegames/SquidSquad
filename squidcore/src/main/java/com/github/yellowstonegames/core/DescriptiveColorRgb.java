@@ -2133,20 +2133,76 @@ public final class DescriptiveColorRgb {
         return result;
     }
 
-//    /**
-//     * Given a packed int Oklab color {@code mainColor} and another Oklab color that it should be made to contrast with,
-//     * gets a packed int Oklab color with L that should be quite different from {@code contrastingColor}'s L, but the
-//     * same chromatic channels and opacity (A and B are likely to be clamped if the result gets close to white or
-//     * black). This allows most of the colors this method produces to contrast well as a foreground when displayed on a
-//     * background of {@code contrastingColor}, or vice versa.
-//     * @param mainColor a packed Oklab int color; this is the color that will be adjusted
-//     * @param contrastingColor a packed Oklab int color; the adjusted mainColor will contrast with the L of this
-//     * @return a different packed Oklab int color, based on mainColor but typically with different lightness
-//     */
-//    public static int differentiateLightness(final int mainColor, final int contrastingColor)
-//    {
-//
-//    }
+    /**
+     * Given an RGBA8888 int color {@code mainColor} and another RGBA8888 int color that it should be made to contrast
+     * with, gets an RGBA8888 int color with lightness that should be quite different from {@code contrastingColor}'s,
+     * but similar hue/chroma and opacity. This allows most of the colors this method produces to contrast well as a
+     * foreground when displayed on a background of {@code contrastingColor}, or vice versa.
+     * @param mainColor an RGBA8888 int color; this is the color that will be adjusted
+     * @param contrastingColor an RGBA8888 int color; the adjusted mainColor will contrast with the lightness of this
+     * @return a different RGBA8888 int color, based on mainColor but typically with different lightness
+     */
+    public static int differentiateLightness(final int mainColor, final int contrastingColor) {
+        return differentiateLightness(mainColor, lightness(contrastingColor));
+    }
+
+    /**
+     * Given an RGBA8888 int color {@code mainColor} and a lightness value that it should be made to contrast
+     * with, gets an RGBA8888 int color with lightness that should be quite different from {@code contrastingLightness},
+     * but similar hue/chroma and opacity. This allows most of the colors this method produces to contrast well as a
+     * foreground when displayed on a background of {@code contrastingColor}, or vice versa. The contrasting lightness
+     * is often obtained from another color, such as with {@link #lightness(int)}, and can be adjusted as long as it
+     * stays in the 0 to 1 range (inclusive).
+     * @param mainColor an RGBA8888 int color; this is the color that will be adjusted
+     * @param contrastingLightness a float in the 0 to 1 range (inclusive) that the result should contrast with
+     * @return a different RGBA8888 int color, based on mainColor but typically with different lightness
+     */
+    public static int differentiateLightness(final int mainColor, final float contrastingLightness)
+    {
+        float r = (mainColor >>> 24) / 255f, g = (mainColor >>> 16 & 255) / 255f, b = (mainColor >>> 8 & 255) / 255f;
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        } else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if (r < x) {
+            z = w;
+            w = r;
+        } else {
+            w = x;
+            x = r;
+        }
+
+        float chr = x - Math.min(w, y);
+        float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
+        float lit = ((x * (1f - 0.5f * chr / (x + 1e-10f))) + MathTools.fract(contrastingLightness + 0.5f)) * 0.5f;
+
+        x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        y = hue + 2f / 3f;
+        z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = lit + chr * 0.5f;
+        float d = lit == 0f || lit > 254.1f / 255f ? 0f : 2 * (1f - lit / v);
+        v *= 255.999f;
+        r = v*(1f+(x-1f)*d);
+        g = v*(1f+(y-1f)*d);
+        b = v*(1f+(z-1f)*d);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (mainColor & 255);
+
+    }
 
     /**
      * Converts {@code rgba} to the HSL (hue, saturation, lightness) color space temporarily, runs zero to three functions
