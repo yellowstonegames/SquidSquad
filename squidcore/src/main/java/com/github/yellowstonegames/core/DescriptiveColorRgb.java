@@ -1002,8 +1002,78 @@ public final class DescriptiveColorRgb {
         final float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
         return (int)(hue * 255.999f) << 24 | (int)(sat * 255.999f) << 16 | (int)(lit * 255.999f) << 8 | (int)(a * 255.999f);
     }
+    
+    /**
+     * Converts the given "HSLA-format" int color to an int color in the RGBA8888 format.
+     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
+     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
+     * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
+     * fractional part of h is used. The other parameters must be between 0.0 and 1.0 (inclusive) to make sense.
+     *
+     * @param hsla an "HSLA-format" int, as produced by {@link #rgb2hsl(int)}
+     * @return an RGBA8888-format int
+     */
+    @Beta
+    public static int hsl2rgb(final int hsla) {
+        final float hue = (hsla >>> 24) * 0x1p-8f;
+        final float sat = (hsla >>> 16 & 255) / 255f;
+        final float lit = (hsla >>> 8 & 255) / 255f;
+        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        float y = hue + 2f / 3f;
+        float z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = lit + sat * Math.min(lit, 1f - lit);
+        float d = 2f * (1f - lit / (v + 1e-10f));
+        v *= 255.999f;
+        final float r = v*(1f+(x-1f)*d);
+        final float g = v*(1f+(y-1f)*d);
+        final float b = v*(1f+(z-1f)*d);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (hsla & 255);
+    }
 
-
+    /**
+     * Converts the given RGBA8888 int color to an int in HSLA format (hue, saturation, lightness, alpha).
+     * This format is exactly like RGBA8888 but treats what would normally be red as hue,
+     * green as saturation, and blue as lightness; alpha is the same.
+     *
+     * @param rgba an RGBA8888 int color
+     * @return an "HSLA-format" int
+     */
+    @Beta
+    public static int rgb2hsl(final int rgba) {
+        final float r = rgba >>> 24, g = rgba >>> 16 & 255, b = rgba >>> 8 & 255;
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        } else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if (r < x) {
+            z = w;
+            w = r;
+        } else {
+            w = x;
+            x = r;
+        }
+        final float chr = x - Math.min(w, y);
+        final float lit = x * (1f - 0.5f * chr / (x + 1e-10f));
+        final float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
+        final float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
+        return (int)(hue * 255.999f) << 24 | (int)(sat * 255.999f) << 16 | (int)(lit * 255.999f) << 8 | (rgba & 0xFF);
+    }
+    
     /**
      * Converts the four HCLA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
      * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
@@ -1017,6 +1087,7 @@ public final class DescriptiveColorRgb {
      * @param a alpha, from 0.0 to 1.0
      * @return an RGBA8888-format int
      */
+    @Beta
     public static int hcl2rgb(final float h, final float c, final float l, final float a) {
         float hue = MathTools.fract(h);
         float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
@@ -1029,38 +1100,6 @@ public final class DescriptiveColorRgb {
         float v = l + c * 0.5f;
         float d = l == 0f || l > 254.1f / 255f ? 0f : 2 * (1f - l / v);
         return rgba(v*(1f+(x-1f)*d), v*(1f+(y-1f)*d), v*(1f+(z-1f)*d), a);
-    }
-
-    /**
-     * Converts the given "HCLA-format" int color to an int color in the RGBA8888 format.
-     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
-     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
-     * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
-     * fractional part of h is used. The other parameters must be between 0.0 and 1.0 (inclusive) to make sense.
-     *
-     * @param hcla an "HCLA-format" int, as produced by {@link #rgb2hcl(int)}
-     * @return an RGBA8888-format int
-     */
-    public static int hcl2rgb(final int hcla) {
-        final float hue = (hcla >>> 24) * 0x1p-8f;
-        final float chr = (hcla >>> 16 & 255) / 255f;
-        final float lit = (hcla >>> 8 & 255) / 255f;
-        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
-        float y = hue + 2f / 3f;
-        float z = hue + 1f / 3f;
-        y -= (int) y;
-        z -= (int) z;
-        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
-        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
-        float v = lit + chr * 0.5f;
-        float d = lit == 0f || lit > 254.1f / 255f ? 0f : 2 * (1f - lit / v);
-        final float r = v*(1f+(x-1f)*d);
-        final float g = v*(1f+(y-1f)*d);
-        final float b = v*(1f+(z-1f)*d);
-        return    Math.min(Math.max((int)(r * 255.999f), 0), 255) << 24
-                | Math.min(Math.max((int)(g * 255.999f), 0), 255) << 16
-                | Math.min(Math.max((int)(b * 255.999f), 0), 255) << 8
-                | (hcla & 255);
     }
 
     /**
@@ -1099,6 +1138,40 @@ public final class DescriptiveColorRgb {
         final float lit = x * (1f - 0.5f * chr / (x + 1e-10f));
         final float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
         return (int)(hue * 255.999f) << 24 | (int)(chr * 255.999f) << 16 | (int)(lit * 255.999f) << 8 | (int)(a * 255.999f);
+    }
+
+    /**
+     * Converts the given "HCLA-format" int color to an int color in the RGBA8888 format.
+     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
+     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
+     * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
+     * fractional part of h is used. The other parameters must be between 0.0 and 1.0 (inclusive) to make sense.
+     *
+     * @param hcla an "HCLA-format" int, as produced by {@link #rgb2hcl(int)}
+     * @return an RGBA8888-format int
+     */
+    @Beta
+    public static int hcl2rgb(final int hcla) {
+        final float hue = (hcla >>> 24) * 0x1p-8f;
+        final float chr = (hcla >>> 16 & 255) / 255f;
+        final float lit = (hcla >>> 8 & 255) / 255f;
+        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        float y = hue + 2f / 3f;
+        float z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = lit + chr * 0.5f;
+        float d = lit == 0f || lit > 254.1f / 255f ? 0f : 2 * (1f - lit / v);
+        v *= 255.999f;
+        final float r = v*(1f+(x-1f)*d);
+        final float g = v*(1f+(y-1f)*d);
+        final float b = v*(1f+(z-1f)*d);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
+                | (hcla & 255);
     }
 
     /**
