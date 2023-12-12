@@ -290,6 +290,10 @@ public class ColorChecks {
             System.out.printf("A: H %d, C %d L %d\n", hueA, chrA, litA);
             System.out.printf("Diff: %d %s\n",chrO - chrA, StringTools.padRightStrict("", '!', chrO - chrA));
 
+            System.out.printf("0x%08X vs. 0x%08X\n",
+                    DescriptiveColorRgb.hcl2rgb(hueO / 255f, chrO / 255f, litO / 255f, 1f),
+                    hcl2rgbAlt(hueO / 255f, chrO / 255f, litO / 255f, 1f)
+            );
         }
     }
 
@@ -424,13 +428,13 @@ public class ColorChecks {
     @Beta
     public static int hcl2rgbAlt(float hue, float chr, float lit, float a) {
         float v = lit + chr * 0.5f;
-        float s = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
+        float d = lit == 0f || lit > 254f / 255f ? 0f : 2 * (1f - lit / v);
         float x = hue * 6;
         int i = Math.min(Math.max((int) x, 0), 5);
         float f = x - i;
-        float p = v * (1 - s);
-        float q = v * (1 - s * f);
-        float t = v * (1 - s * (1 - f));
+        float p = v * (1 - d);
+        float q = v * (1 - d * f);
+        float t = v * (1 - d * (1 - f));
         switch (i) {
             case 0:
                 return rgba(

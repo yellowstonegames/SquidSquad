@@ -1005,6 +1005,33 @@ public final class DescriptiveColorRgb {
 
 
     /**
+     * Converts the four HCLA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
+     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
+     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
+     * The {@code h} parameter for hue can be lower than 0.0 or higher than 1.0 because the hue "wraps around;" only the
+     * fractional part of h is used. The other parameters must be between 0.0 and 1.0 (inclusive) to make sense.
+     *
+     * @param h hue, usually from 0.0 to 1.0, but only the fractional part is used
+     * @param c chroma, from 0.0 to 1.0; higher chroma values may be out-of-gamut
+     * @param l lightness, from 0.0 to 1.0
+     * @param a alpha, from 0.0 to 1.0
+     * @return an RGBA8888-format int
+     */
+    public static int hcl2rgb(final float h, final float c, final float l, final float a) {
+        float hue = MathTools.fract(h);
+        float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        float y = hue + 2f / 3f;
+        float z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = l + c * 0.5f;
+        float d = l == 0f || l > 254.1f / 255f ? 0f : 2 * (1f - l / v);
+        return rgba(v*(1f+(x-1f)*d), v*(1f+(y-1f)*d), v*(1f+(z-1f)*d), a);
+    }
+
+    /**
      * Converts the four RGBA components, each in the 0.0 to 1.0 range, to an int in HCLA format (hue,
      * chroma, lightness, alpha). This format is exactly like RGBA8888 but treats what would normally be red as hue,
      * green as saturation, and blue as lightness; alpha is the same.
