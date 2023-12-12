@@ -2150,9 +2150,10 @@ public final class DescriptiveColorRgb {
      * Given an RGBA8888 int color {@code mainColor} and a lightness value that it should be made to contrast
      * with, gets an RGBA8888 int color with lightness that should be quite different from {@code contrastingLightness},
      * but similar hue/chroma and opacity. This allows most of the colors this method produces to contrast well as a
-     * foreground when displayed on a background of {@code contrastingColor}, or vice versa. The contrasting lightness
-     * is often obtained from another color, such as with {@link #lightness(int)}, and can be adjusted as long as it
-     * stays in the 0 to 1 range (inclusive).
+     * foreground when displayed on a background with {@code contrastingLightness} for its lightness, or vice versa. The
+     * contrasting lightness is often obtained from another color, such as with {@link #lightness(int)}, and can be
+     * adjusted as long as it stays in the 0 to 1 range (inclusive).
+     *
      * @param mainColor an RGBA8888 int color; this is the color that will be adjusted
      * @param contrastingLightness a float in the 0 to 1 range (inclusive) that the result should contrast with
      * @return a different RGBA8888 int color, based on mainColor but typically with different lightness
@@ -2201,6 +2202,63 @@ public final class DescriptiveColorRgb {
                 | Math.min(Math.max((int)g, 0), 255) << 16
                 | Math.min(Math.max((int)b, 0), 255) << 8
                 | (mainColor & 255);
+    }
+
+    /**
+     * Adds 0.5 to the given color's {@link #lightness(int)} and wraps it around if it would go above 1.0, then averages
+     * that with the original lightness. This means light colors become darker, and dark colors become lighter,
+     * with almost all results in the middle-range of possible lightness. This is not at all as simple internally as
+     * {@link DescriptiveColor#offsetLightness(int) the method that does the same thing on Oklab colors}, and this might
+     * be best not to call on many things every frame. It might not be a bottleneck for any given application, though.
+     *
+     * @param rgba an RGBA8888 int color
+     * @return a different RGBA8888 int color, with its lightness changed
+     */
+    public static int offsetLightness(final int rgba) {
+        float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
+        float x, y, z, w;
+        if (g < b) {
+            x = b;
+            y = g;
+            z = -1f;
+            w = 2f / 3f;
+        } else {
+            x = g;
+            y = b;
+            z = 0f;
+            w = -1f / 3f;
+        }
+        if (r < x) {
+            z = w;
+            w = r;
+        } else {
+            w = x;
+            x = r;
+        }
+
+        float chr = x - Math.min(w, y);
+        float lit = x * (1f - 0.5f * chr / (x + 1e-10f));
+        lit = (MathTools.fract(lit + 0.5f) + lit) * 0.5f;
+        float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
+        float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
+
+        x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
+        y = hue + 2f / 3f;
+        z = hue + 1f / 3f;
+        y -= (int) y;
+        z -= (int) z;
+        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
+        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
+        float v = lit + sat * Math.min(lit, 1f - lit);
+        float d = 2f * (1f - lit / (v + 1e-10f));
+        v *= 255.999f;
+        r = v * (1f + (x - 1f) * d);
+        g = v * (1f + (y - 1f) * d);
+        b = v * (1f + (z - 1f) * d);
+        return Math.min(Math.max((int) r, 0), 255) << 24
+                | Math.min(Math.max((int) g, 0), 255) << 16
+                | Math.min(Math.max((int) b, 0), 255) << 8
+                | (rgba & 255);
 
     }
 

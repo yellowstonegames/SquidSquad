@@ -2436,6 +2436,20 @@ public final class DescriptiveColor {
     }
 
     /**
+     * Given a packed int Oklab color {@code mainColor} and lightness value that it should be made to contrast with,
+     * gets a packed int Oklab color with L that should be quite different from {@code contrastingLightness}, but the
+     * same chromatic channels and opacity (A and B are likely to be clamped if the result gets close to white or
+     * black). This allows most of the colors this method produces to contrast well as a foreground when displayed on a
+     * background with {@code contrastingLightness} for its lightness, or vice versa.
+     * @param mainColor a packed Oklab int color; this is the color that will be adjusted
+     * @param contrastingLightness a lightness value from 0 to 1 inclusive; the adjusted mainColor will contrast with this
+     * @return a different packed Oklab int color, based on mainColor but typically with different lightness
+     */
+    public static int differentiateLightness(final int mainColor, final float contrastingLightness) {
+        return limitToGamut((mainColor & 0xFFFFFF00) | ((int)(contrastingLightness * 255.999f + 128) & 0xFF) + (mainColor & 0xFF) >>> 1);
+    }
+
+    /**
      * Pretty simple; adds 128 (or 0.5) to the given color's L and wraps it around if it would go above 255 (or 1.0),
      * then averages that with the original L. This means light colors become darker, and dark colors become lighter,
      * with almost all results in the middle-range of possible lightness.
