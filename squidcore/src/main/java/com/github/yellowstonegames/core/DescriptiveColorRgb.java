@@ -1720,14 +1720,37 @@ public final class DescriptiveColorRgb {
      */
     public static int lerpColors(final int s, final int e, final float change) {
         final int
-                sA = s & 0xFE, sB = s >>> 8 & 0xFF, sG = s >>> 16 & 0xFF, sR = s >>> 24 & 0xFF,
-                eA = e & 0xFE, eB = e >>> 8 & 0xFF, eG = e >>> 16 & 0xFF, eR = e >>> 24 & 0xFF;
+                sA = s & 0xFF, sB = s >>> 8 & 0xFF, sG = s >>> 16 & 0xFF, sR = s >>> 24 & 0xFF,
+                eA = e & 0xFF, eB = e >>> 8 & 0xFF, eG = e >>> 16 & 0xFF, eR = e >>> 24 & 0xFF;
         return ((int) (sR + change * (eR - sR)) & 0xFF) << 24
                 | ((int) (sG + change * (eG - sG)) & 0xFF) << 16
                 | ((int) (sB + change * (eB - sB)) & 0xFF) << 8
-                | (int) (sA + change * (eA - sA)) & 0xFE;
+                | (int) (sA + change * (eA - sA)) & 0xFF;
     }
 
+    /**
+     * Interpolates from the RGBA8888 int color start towards the RGBA8888 int color end by change, but keeps the alpha
+     * of start and uses the alpha of end as an extra factor that can affect how much to change. The colors (start and
+     * end) must be RGBA8888 ints, and change can be between 0f (keep start) and 1f (only use end). This is a good
+     * way to reduce allocations of temporary Colors.
+     *
+     * @see #mix(int[], int, int)
+     * @param s the starting color as an RGBA8888 int; alpha will be preserved
+     * @param e the target color as an RGBA8888 int; alpha will not be used directly, and will instead be multiplied with change
+     * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
+     * @return an RGBA8888 int that represents a color between start and end
+     */
+    public static int lerpColorsBlended(final int s, final int e, float change) {
+        final int
+                sB = s >>> 8 & 0xFF, sG = s >>> 16 & 0xFF, sR = s >>> 24 & 0xFF, sA = s & 0xFF,
+                eB = e >>> 8 & 0xFF, eG = e >>> 16 & 0xFF, eR = e >>> 24 & 0xFF, eA = e & 0xFF;
+        change *= eA * (1f / 255f);
+        return ((int) (sR + change * (eR - sR)) & 0xFF) << 24
+                | ((int) (sG + change * (eG - sG)) & 0xFF) << 16
+                | ((int) (sB + change * (eB - sB)) & 0xFF) << 8
+                | sA;
+    }
+    
     /**
      * Given several colors, this gets an even mix of all colors in equal measure.
      * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER}.
