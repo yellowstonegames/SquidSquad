@@ -1024,7 +1024,6 @@ public final class DescriptiveColorRgb {
      * @param hsla an "HSLA-format" int, as produced by {@link #rgb2hsl(int)}
      * @return an RGBA8888-format int
      */
-    @Beta
     public static int hsl2rgb(final int hsla) {
         final float hue = (hsla >>> 24) * 0x1p-8f;
         final float sat = (hsla >>> 16 & 255) / 255f;
@@ -1056,7 +1055,6 @@ public final class DescriptiveColorRgb {
      * @param rgba an RGBA8888 int color
      * @return an "HSLA-format" int
      */
-    @Beta
     public static int rgb2hsl(final int rgba) {
         final float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float x, y, z, w;
@@ -1098,7 +1096,6 @@ public final class DescriptiveColorRgb {
      * @param a alpha, from 0.0 to 1.0
      * @return an RGBA8888-format int
      */
-    @Beta
     public static int hcl2rgb(final float h, final float c, final float l, final float a) {
         float hue = MathTools.fract(h);
         float x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
@@ -1124,7 +1121,6 @@ public final class DescriptiveColorRgb {
      * @param a alpha, from 0.0 to 1.0
      * @return an "HCLA-format" int
      */
-    @Beta
     public static int rgb2hcl(final float r, final float g, final float b, final float a) {
         float x, y, z, w;
         if (g < b) {
@@ -1163,7 +1159,6 @@ public final class DescriptiveColorRgb {
      * @param hcla an "HCLA-format" int, as produced by {@link #rgb2hcl(int)}
      * @return an RGBA8888-format int
      */
-    @Beta
     public static int hcl2rgb(final int hcla) {
         final float hue = (hcla >>> 24) * 0x1p-8f;
         final float chr = (hcla >>> 16 & 255) / 255f;
@@ -1195,7 +1190,6 @@ public final class DescriptiveColorRgb {
      * @param rgba an RGBA8888 int color
      * @return an "HCLA-format" int
      */
-    @Beta
     public static int rgb2hcl(final int rgba) {
         final float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float x, y, z, w;
@@ -1550,12 +1544,24 @@ public final class DescriptiveColorRgb {
     }
 
     /**
+     * Multiplies the alpha of the RGBA int color start by multiplier. The start should be a packed color, as from
+     * {@link #rgba(float, float, float, float)}. The resulting alpha will be clamped between 0.0 and 1.0.
+     * This won't change the R, G, or B of the color.
+     * @param start the starting color as a packed RGBA8888 int
+     * @param multiplier will be multiplied with the alpha of start
+     * @return a packed RGBA8888 int that represents a color like start, but with potentially a different alpha
+     */
+    public static int multiplyAlpha(final int start, final float multiplier) {
+        return ((int) Math.min(Math.max((start & 0xFF) * multiplier, 0), 255) | (start & 0xFFFFFF00));
+    }
+
+    /**
      * Changes the alpha of the RGBA int color start to match newAlpha. The start should be a packed color, as from
      * {@link #rgba(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
      * This won't change the R, G, or B of the color.
      * @param start the starting color as a packed RGBA8888 int
      * @param newAlpha the alpha value to use, from 0.0f to 1.0f as a float
-     * @return a packed float that represents a color like start, but with potentially a different alpha
+     * @return a packed RGBA8888 int that represents a color like start, but with potentially a different alpha
      */
     public static int setAlpha(final int start, final float newAlpha) {
         return (((int) (0xFF * newAlpha) & 0xFF) | (start & 0xFFFFFF00));

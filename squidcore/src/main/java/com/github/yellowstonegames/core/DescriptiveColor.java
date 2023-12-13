@@ -1374,12 +1374,24 @@ public final class DescriptiveColor {
     }
 
     /**
+     * Multiplies the alpha of the packed Oklab int color start by multiplier. The start should be a packed Oklab int
+     * color, as from {@link #oklab(float, float, float, float)}. The resulting alpha will be clamped between 0.0 and
+     * 1.0. This won't change the L, A, or B of the color.
+     * @param start the starting color as a packed Oklab int
+     * @param multiplier will be multiplied with the alpha of start
+     * @return a packed Oklab int that represents a color like start, but with potentially a different alpha
+     */
+    public static int multiplyAlpha(final int start, final float multiplier) {
+        return ((int) Math.min(Math.max((start >>> 24) * multiplier, 0), 255) << 24 | (start & 0x00FFFFFF));
+    }
+
+    /**
      * Changes the alpha of the Oklab int color start to match newAlpha. The start should be a packed color, as from
      * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
      * This won't change the L, A, or B of the color.
      * @param start the starting color as a packed float
      * @param newAlpha the alpha value to use, from 0.0f to 1.0f as a float
-     * @return a packed float that represents a color like start, but with potentially a different alpha
+     * @return a packed Oklab int that represents a color like start, but with potentially a different alpha
      */
     public static int setAlpha(final int start, final float newAlpha) {
         return (((int) (0xFF * newAlpha) & 0xFF) << 24 | (start & 0x00FFFFFF));
