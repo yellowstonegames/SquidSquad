@@ -875,7 +875,7 @@ public final class DescriptiveColorRgb {
     /**
      * Takes a color encoded as an RGBA8888 int and converts to a packed float in the ABGR7888 format libGDX uses.
      * @param rgba an int with the channels (in order) red, green, blue, alpha; should have 8 bits per channel
-     * @return a packed float as ABGR7888
+     * @return a packed float color as ABGR7888
      */
     public static float toFloat(final int rgba) {
         return BitConversion.reversedIntBitsToFloat(rgba & -2);
@@ -920,7 +920,7 @@ public final class DescriptiveColorRgb {
      *
      * @param color   a packed int color in any 32-bit, 4-channel format
      * @param channel which channel to access, as an index from 0 to 3 inclusive
-     * @return the non-packed float value of the requested channel, from 0.0f to 1.0f inclusive
+     * @return the value of the requested channel, from 0.0f to 1.0f inclusive
      */
     public static float channel(int color, int channel) {
         return (color >>> 24 - ((channel & 3) << 3) & 255) / 255f;

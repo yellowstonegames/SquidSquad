@@ -840,6 +840,7 @@ public final class DescriptiveColor {
     public static int oklab(float L, float A, float B, float alpha) {
         return limitToGamut((int)(L * 255.999f), (int)(A * 255.999f), (int)(B * 255.999f), (int)(alpha * 255.999f));
     }
+
     /**
      * Converts a packed Oklab int color in the format used by constants in this class to an RGBA8888 int.
      * This format of int can be used with Pixmap and in some other places in libGDX.
@@ -882,7 +883,7 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Takes a color encoded as an RGBA8888 int and converts to a packed float in the Oklab format this uses.
+     * Takes a color encoded as an RGBA8888 int and converts to a packed Oklab int.
      * @param rgba an int with the channels (in order) red, green, blue, alpha; should have 8 bits per channel
      * @return a packed int as Oklab, which this class can use
      */
@@ -903,7 +904,7 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Takes a color encoded as an RGBA8888 packed float and converts to a packed int in the Oklab format this uses.
+     * Takes a color encoded as an RGBA8888 packed float and converts to a packed Oklab int.
      * @param packed a packed float in RGBA8888 format, with A in the MSB and R in the LSB
      * @return a packed int as Oklab, which this class can use
      */
@@ -1006,7 +1007,7 @@ public final class DescriptiveColor {
 
     /**
      * Gets the red channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
-     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @param encoded a color as a packed Oklab int that can be obtained by {@link #oklab(float, float, float, float)}
      * @return a float from 0.0f to 1.0f, inclusive, representing the red channel value of the given encoded color
      */
     public static float red(final int encoded)
@@ -1022,7 +1023,7 @@ public final class DescriptiveColor {
 
     /**
      * Gets the green channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
-     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @param encoded a color as a packed Oklab int that can be obtained by {@link #oklab(float, float, float, float)}
      * @return a float from 0.0f to 1.0f, inclusive, representing the green channel value of the given encoded color
      */
     public static float green(final int encoded)
@@ -1038,7 +1039,7 @@ public final class DescriptiveColor {
 
     /**
      * Gets the blue channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
-     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @param encoded a color as a packed Oklab int that can be obtained by {@link #oklab(float, float, float, float)}
      * @return a float from 0.0f to 1.0f, inclusive, representing the blue channel value of the given encoded color
      */
     public static float blue(final int encoded)
@@ -1054,7 +1055,7 @@ public final class DescriptiveColor {
 
     /**
      * Gets the alpha channel value of the given encoded color, as a float from 0.0f to 1.0f, inclusive.
-     * @param encoded a color as a packed float that can be obtained by {@link #oklab(float, float, float, float)}
+     * @param encoded a color as a packed Oklab int that can be obtained by {@link #oklab(float, float, float, float)}
      * @return a float from 0.0f to 1.0f, inclusive, representing the alpha channel value of the given encoded color
      */
     public static float alpha(final int encoded)
@@ -1201,9 +1202,9 @@ public final class DescriptiveColor {
      * component-editing methods, you may want to call {@link #limitToGamut(int)} to make sure the color can be rendered
      * correctly.
      *
-     * @param oklab      the starting color as a packed float
+     * @param oklab      the starting color as a packed Oklab int
      * @param change how much to go from oklab toward black, as a float between 0 and 1; higher means closer to black
-     * @return a packed float that represents a color between start and black
+     * @return a packed Oklab int that represents a color between start and black
      * @see #lighten(int, float) the counterpart method that lightens a float color
      */
     public static int darken(final int oklab, final float change) {
@@ -1276,16 +1277,16 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed float color start towards a warmer color (orange to magenta) by change. While change
+     * Interpolates from the packed Oklab int color start towards a warmer color (orange to magenta) by change. While change
      * should be between 0f (return start as-is) and 1f (return fully warmed), start should be a packed color, as from
      * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors,
      * and is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to
      * lerp towards a warmer color. Unlike {@link #lerpColors(int, int, float)}, this keeps the
      * alpha and L of start as-is.
      * @see #lowerA(int, float) the counterpart method that cools a float color
-     * @param start the starting color as a packed float
+     * @param start the starting color as a packed Oklab int
      * @param change how much to warm start, as a float between 0 and 1; higher means a warmer result
-     * @return a packed float that represents a color between start and a warmer color
+     * @return a packed Oklab int that represents a color between start and a warmer color
      */
     public static int raiseA(final int start, final float change) {
         final int p = start >>> 8 & 0xFF, other = start & 0xFFFF00FF;
@@ -1293,16 +1294,16 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed float color start towards a cooler color (green to blue) by change. While change
+     * Interpolates from the packed Oklab int color start towards a cooler color (green to blue) by change. While change
      * should be between 0f (return start as-is) and 1f (return fully cooled), start should be a packed color, as from
      * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors, and
      * is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp
      * towards a cooler color. Unlike {@link #lerpColors(int, int, float)}, this keeps the alpha and
      * L of start as-is.
      * @see #raiseA(int, float) the counterpart method that warms a float color
-     * @param start the starting color as a packed float
+     * @param start the starting color as a packed Oklab int
      * @param change how much to cool start, as a float between 0 and 1; higher means a cooler result
-     * @return a packed float that represents a color between start and a cooler color
+     * @return a packed Oklab int that represents a color between start and a cooler color
      */
     public static int lowerA(final int start, final float change) {
         final int p = start >>> 8 & 0xFF, other = start & 0xFFFF00FF;
@@ -1310,16 +1311,16 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed float color start towards a "natural" color (between green and orange) by change.
+     * Interpolates from the packed Oklab int color start towards a "natural" color (between green and orange) by change.
      * While change should be between 0f (return start as-is) and 1f (return fully natural), start should be a packed color, as
      * from {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary
      * Colors, and is a little more efficient and clear than using
      * {@link #lerpColors(int, int, float)} to lerp towards a more natural color. Unlike
      * {@link #lerpColors(int, int, float)}, this keeps the alpha and L of start as-is.
      * @see #lowerB(int, float) the counterpart method that makes a float color less natural
-     * @param start the starting color as a packed float
+     * @param start the starting color as a packed Oklab int
      * @param change how much to change start to a natural color, as a float between 0 and 1; higher means a more natural result
-     * @return a packed float that represents a color between start and a more natural color
+     * @return a packed Oklab int that represents a color between start and a more natural color
      */
     public static int raiseB(final int start, final float change) {
         final int t = start >>> 16 & 0xFF, other = start & 0xFF00FFFF;
@@ -1327,14 +1328,14 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed float color start towards an "artificial" color (between blue and purple) by change.
+     * Interpolates from the packed Oklab int color start towards an "artificial" color (between blue and purple) by change.
      * While change should be between 0f (return start as-is) and 1f (return fully artificial), start should be a packed color, as
      * from {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary
      * Colors, and is a little more efficient and clear than using {@link #lerpColors(int, int, float)} to lerp
      * towards a more artificial color. Unlike {@link #lerpColors(int, int, float)}, this keeps the
      * alpha and L of start as-is.
      * @see #raiseB(int, float) the counterpart method that makes a float color less artificial
-     * @param start the starting color as a packed float
+     * @param start the starting color as a packed Oklab int
      * @param change how much to change start to a bolder color, as a float between 0 and 1; higher means a more artificial result
      * @return a packed int that represents a color between start and a more artificial color
      */
@@ -1344,14 +1345,14 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed float color start towards that color made opaque by change. While change should be
+     * Interpolates from the packed Oklab int color start towards that color made opaque by change. While change should be
      * between 0f (return start as-is) and 1f (return start with full alpha), start should be a packed color, as from
      * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
      * This won't change the L, A, or B of the color.
      * @see #fade(int, float) the counterpart method that makes a float color more translucent
-     * @param start the starting color as a packed float
+     * @param start the starting color as a packed Oklab int
      * @param change how much to go from start toward opaque, as a float between 0 and 1; higher means closer to opaque
-     * @return a packed float that represents a color between start and its opaque version
+     * @return a packed Oklab int that represents a color between start and its opaque version
      */
     public static int blot(final int start, final float change) {
         final int opacity = start >>> 24, other = start & 0x00FFFFFF;
@@ -1359,14 +1360,14 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Interpolates from the packed float color start towards transparent by change. While change should be between 0
+     * Interpolates from the packed Oklab int color start towards transparent by change. While change should be between 0
      * (return start as-is) and 1f (return the color with 0 alpha), start should be a packed color, as from
      * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
      * This won't change the L, A, or B of the color.
      * @see #blot(int, float) the counterpart method that makes a float color more opaque
-     * @param start the starting color as a packed float
+     * @param start the starting color as a packed Oklab int
      * @param change how much to go from start toward transparent, as a float between 0 and 1; higher means closer to transparent
-     * @return a packed float that represents a color between start and transparent
+     * @return a packed Oklab int that represents a color between start and transparent
      */
     public static int fade(final int start, final float change) {
         final int opacity = start >>> 24, other = start & 0x00FFFFFF;
@@ -1389,7 +1390,7 @@ public final class DescriptiveColor {
      * Changes the alpha of the Oklab int color start to match newAlpha. The start should be a packed color, as from
      * {@link #oklab(float, float, float, float)}. This is a good way to reduce allocations of temporary Colors.
      * This won't change the L, A, or B of the color.
-     * @param start the starting color as a packed float
+     * @param start the starting color as a packed Oklab int
      * @param newAlpha the alpha value to use, from 0.0f to 1.0f as a float
      * @return a packed Oklab int that represents a color like start, but with potentially a different alpha
      */
@@ -1404,7 +1405,7 @@ public final class DescriptiveColor {
      *
      * @param oklab      the starting color as a packed Oklab int
      * @param change how much to change oklab to a desaturated color, as a float between 0 and 1; higher means a less saturated result
-     * @return a packed float that represents a color between start and a desaturated color
+     * @return a packed Oklab int that represents a color between start and a desaturated color
      * @see #enrich(int, float) the counterpart method that makes an Oklab int color more saturated
      */
     public static int dullen(final int oklab, final float change) {
@@ -1421,9 +1422,9 @@ public final class DescriptiveColor {
      * force the color out of the gamut, which this corrects using {@link #limitToGamut(int)} (and that can change L
      * somewhat). If the color stays in-gamut, then L won't change; alpha never changes.
      *
-     * @param oklab      the starting color as a packed float
+     * @param oklab      the starting color as a packed Oklab int
      * @param change how much to change oklab to a saturated color, as a float between 0 and 1; higher means a more saturated result
-     * @return a packed float that represents a color between start and a saturated color
+     * @return a packed Oklab int that represents a color between start and a saturated color
      * @see #dullen(int, float) the counterpart method that makes a float color less saturated
      */
     public static int enrich(final int oklab, final float change) {
@@ -1802,7 +1803,7 @@ public final class DescriptiveColor {
      * @param start the starting color as a packed Oklab int; alpha will be preserved
      * @param end the target color as a packed Oklab int; alpha will not be used directly, and will instead be multiplied with change
      * @param change how much to go from start toward end, as a float between 0 and 1; higher means closer to end
-     * @return a packed float that represents a color between start and end
+     * @return a packed Oklab int that represents a color between start and end
      */
     public static int lerpColorsBlended(final int start, final int end, float change) {
         final int
@@ -2484,6 +2485,20 @@ public final class DescriptiveColor {
         return BitConversion.reversedIntBitsToFloat(rgba & -2);
     }
 
+    /**
+     * Runs zero to three functions on any or all of {@code oklab}'s L, A, and B channels, then converts back to a
+     * packed Oklab int color and returns that.
+     * <br>
+     * The functions should expect a float argument in the {@code [0, 1]} range, and generally should return a float
+     * in the same range representing the same channel (L,  A, or B). No validation is performed except for the
+     * equivalent of {@link #limitToGamut(int, int, int)} as the last step.
+     *
+     * @param oklab a packed Oklab int color
+     * @param lTransform a function that, if non-null, will be used to change the L channel of the modified color
+     * @param aTransform a function that, if non-null, will be used to change the A channel of the modified color
+     * @param bTransform a function that, if non-null, will be used to change the B channel of the modified color
+     * @return a potentially-modified version of the input color, also as a packed Oklab int
+     */
     public static int evaluate(final int oklab,
                                @Nullable FloatToFloatFunction lTransform,
                                @Nullable FloatToFloatFunction aTransform,
