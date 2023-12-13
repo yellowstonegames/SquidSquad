@@ -176,16 +176,14 @@ public final class FOV {
      * of the origin cell. Radius determinations are determined by the provided
      * RadiusStrategy.
      * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
-     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param light the grid of cells to assign to, which will be cleared; 0f means "unlit" and 1f means "fully lit"
      * @param startX the horizontal component of the starting location
      * @param startY the vertical component of the starting location
      * @param radius the distance the light will extend to
-     * @param radiusTechnique provides a means to calculate the radius as desired
-     * @return the computed light grid, which is the same 2D array as the value assigned to {@code light}
+     * @param radiusTechnique a Radius enum constant, such as {@link Radius#CIRCLE}, that provides the shape of the FOV
+     * @return the computed light grid, which is the same 2D array as {@code light}
      */
-    public static float[][] reuseFOV(float[][] resistanceMap, float[][] light,
-                                      int startX, int startY, float radius,
-                                      Radius radiusTechnique)
+    public static float[][] reuseFOV(float[][] resistanceMap, float[][] light, int startX, int startY, float radius, Radius radiusTechnique)
     {
         float decay = 1f / radius;
         ArrayTools.fill(light, 0);
@@ -217,12 +215,12 @@ public final class FOV {
      * of the origin cell. Radius determinations are determined by the provided
      * RadiusStrategy.
      * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
-     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param light the grid of cells to assign to, which will be cleared; 0f means "unlit" and 1f means "fully lit"
      * @param startX the horizontal component of the starting location
      * @param startY the vertical component of the starting location
      * @param radius the distance the light will extend to
-     * @param radiusTechnique provides a means to calculate the radius as desired
-     * @return the computed light grid, which is the same 2D array as the value assigned to {@code light}
+     * @param radiusTechnique a Radius enum constant, such as {@link Radius#CIRCLE}, that provides the shape of the FOV
+     * @return the computed light grid, which is the same 2D array as {@code light}
      */
     public static float[][] reuseFOVSymmetrical(float[][] resistanceMap, float[][] light, int startX, int startY, float radius, Radius radiusTechnique)
     {

@@ -322,7 +322,7 @@ public class SunriseDemo extends ApplicationAdapter {
         font.getData().markupEnabled = true;
         // 0xFF848350 is fully opaque, slightly-yellow-brown, and about 30% lightness.
         // It affects the default color each cell has before lighting affects it.
-        vision.rememberedOklabColor = 0xFF848350;
+        vision.rememberedColor = 0xFF848350;
 
         Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
         Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));

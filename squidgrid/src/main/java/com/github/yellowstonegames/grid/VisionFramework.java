@@ -131,7 +131,7 @@ public class VisionFramework {
      * This defaults to {@code 0xFF7F7F20}, which is fully opaque, pure gray, and has about 30% lightness.
      * You can get Oklab int colors using {@link DescriptiveColor}.
      */
-    public int rememberedOklabColor = 0xFF7F7F50;
+    public int rememberedColor = 0xFF7F7F50;
 
     /**
      * The empty constructor. You can call {@link #restart(char[][], CoordFloatOrderedMap, int)} when you have a 2D char
@@ -155,7 +155,7 @@ public class VisionFramework {
      * @param fovRange how far, in grid cells, the player can see without needing a light source
      */
     public void restart(char[][] place, Coord playerPosition, float fovRange) {
-        restart(place, CoordFloatOrderedMap.with(playerPosition, fovRange), rememberedOklabColor);
+        restart(place, CoordFloatOrderedMap.with(playerPosition, fovRange), rememberedColor);
     }
 
     /**
@@ -170,7 +170,7 @@ public class VisionFramework {
      * <br>
      * This overload allows specifying a {@code baseColor} that will be used cells that were seen previously but can't
      * be seen now; typically this is dark gray or very close to that, and it is an Oklab int color as produced by
-     * {@link DescriptiveColor}. The default, if not specified, is {@link #rememberedOklabColor}.
+     * {@link DescriptiveColor}. The default, if not specified, is {@link #rememberedColor}.
      * @param place a 2D char array representing a local map; {@code '#'} or box drawing characters represent walls
      * @param playerPosition where the one viewer will be put in the place; must be in-bounds for place
      * @param fovRange how far, in grid cells, the player can see without needing a light source
@@ -195,7 +195,7 @@ public class VisionFramework {
      * @param viewers a CoordFloatOrderedMap of the positions of viewers to their viewing ranges; directly referenced
      */
     public void restart(char[][] place, CoordFloatOrderedMap viewers) {
-        restart(place, viewers, rememberedOklabColor);
+        restart(place, viewers, rememberedColor);
     }
 
     /**
@@ -211,7 +211,7 @@ public class VisionFramework {
      * <br>
      * This overload allows specifying a {@code baseColor} that will be used cells that were seen previously but can't
      * be seen now; typically this is dark gray or very close to that, and it is an Oklab int color as produced by
-     * {@link DescriptiveColor}. The default, if not specified, is {@link #rememberedOklabColor}.
+     * {@link DescriptiveColor}. The default, if not specified, is {@link #rememberedColor}.
      * @param place a 2D char array representing a local map; {@code '#'} or box drawing characters represent walls
      * @param viewers a CoordFloatOrderedMap of the positions of viewers to their viewing ranges; directly referenced
      * @param baseColor the packed Oklab color used for previously-seen, but not in-view, cells
@@ -227,10 +227,10 @@ public class VisionFramework {
         prunedPlaceMap = prunedPlaceMap == null || prunedPlaceMap.length != placeWidth || prunedPlaceMap[0].length != placeHeight
                 ? ArrayTools.copy(linePlaceMap) : ArrayTools.set(linePlaceMap, prunedPlaceMap);
         if(lighting == null || lighting.width != placeWidth || lighting.height != placeHeight)
-            lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedOklabColor, Radius.CIRCLE, 4f);
+            lighting = new LightingManager(FOV.generateSimpleResistances(linePlaceMap), rememberedColor, Radius.CIRCLE, 4f);
         else{
             FOV.fillSimpleResistancesInto(linePlaceMap, lighting.resistances);
-            lighting.backgroundColor = rememberedOklabColor;
+            lighting.backgroundColor = rememberedColor;
             lighting.radiusStrategy = Radius.CIRCLE;
             lighting.viewerRange = 4f;
             lighting.lights.clear();
@@ -248,9 +248,9 @@ public class VisionFramework {
         justHidden = justHidden == null ? new Region(placeWidth, placeHeight) : justHidden.resizeAndEmpty(placeWidth, placeHeight);
         newlyVisible = newlyVisible == null ? seen.copy() : newlyVisible.remake(seen);
         LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);
-        rememberedOklabColor = baseColor;
-        if(backgroundColors == null) backgroundColors = ArrayTools.fill(rememberedOklabColor, placeWidth, placeHeight);
-        else ArrayTools.fill(backgroundColors, rememberedOklabColor);
+        rememberedColor = baseColor;
+        if(backgroundColors == null) backgroundColors = ArrayTools.fill(rememberedColor, placeWidth, placeHeight);
+        else ArrayTools.fill(backgroundColors, rememberedColor);
     }
 
     /**
@@ -512,15 +512,15 @@ public class VisionFramework {
                         backgroundColors[x][y] = DescriptiveColor.fade(backgroundColors[x][y], 1f - change);
                     } else if(justSeen.contains(x, y)){
                         backgroundColors[x][y] = DescriptiveColor.lerpColors(backgroundColors[x][y],
-                                rememberedOklabColor, 1f - change);
+                                rememberedColor, 1f - change);
                     }
                 } else if(justHidden.contains(x, y)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
                     backgroundColors[x][y] = DescriptiveColor.lerpColors(backgroundColors[x][y],
-                            rememberedOklabColor, change);
+                            rememberedColor, change);
                 } else if(seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
-                    backgroundColors[x][y] = rememberedOklabColor;
+                    backgroundColors[x][y] = rememberedColor;
                 }
                 else {
                     // cells we have never seen are just not drawn (transparent).

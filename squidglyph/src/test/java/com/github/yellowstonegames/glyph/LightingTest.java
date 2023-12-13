@@ -37,6 +37,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.FullPalette;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
@@ -229,7 +230,7 @@ public class LightingTest extends ApplicationAdapter {
         Coord player = floors.singleRandom(rng);
         playerGlyph.setPosition(player.x, player.y);
 
-        lighting = new LightingManager(res, "dark gray black", Radius.CIRCLE, 9f);
+        lighting = new LightingManager(res, DescriptiveColor.describeOklab("dark gray black"), Radius.CIRCLE, 9f, LightingManager.SymmetryMode.SYMMETRICAL);
         Coord[] lightPositions = floors.separatedBlue(0.075f);
         for (int i = 0; i < lightPositions.length; i++) {
             lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,

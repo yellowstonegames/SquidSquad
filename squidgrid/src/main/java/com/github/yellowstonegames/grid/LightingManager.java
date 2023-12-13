@@ -47,6 +47,36 @@ import java.util.Objects;
 public class LightingManager {
 
     /**
+     * A functional interface that is really only meant to be one of two functions:
+     * {@link FOV#reuseFOV(float[][], float[][], int, int, float, Radius)} or
+     * {@link FOV#reuseFOVSymmetrical(float[][], float[][], int, int, float, Radius)}.
+     * This can be used to, potentially, select symmetrical mode as a slower, more precise option, or use the
+     * non-symmetrical mode as a faster option.
+     */
+    protected interface FovFunction {
+        float[][] getFov(float[][] resistanceMap, float[][] light, int startX, int startY, float radius, Radius radiusTechnique);
+    }
+
+    /**
+     * Used to choose whether FOV calculations should be done as quickly as possible (without symmetry guarantees) or
+     * more precisely (and more slowly, but with a symmetry guarantee). If this is SYMMETRICAL, then if cell A lights up
+     * cell B, you could move the light from A to B without changing that both are lit up. That guarantee is not present
+     * if this is set to FAST.
+     */
+    public enum SymmetryMode {
+        FAST(FOV::reuseFOV), SYMMETRICAL(FOV::reuseFOVSymmetrical);
+
+        private final FovFunction fun;
+
+        SymmetryMode(FovFunction fun) {
+            this.fun = fun;
+        }
+
+        public float[][] getFov(float[][] resistanceMap, float[][] light, int startX, int startY, float radius, Radius radiusTechnique) {
+            return fun.getFov(resistanceMap, light, startX, startY, radius, radiusTechnique);
+        }
+    }
+    /**
      * How light should spread; usually {@link Radius#CIRCLE} unless gameplay reasons need it to be SQUARE or DIAMOND.
      */
     public Radius radiusStrategy;
@@ -126,6 +156,7 @@ public class LightingManager {
      */
     public Region noticeable;
 
+    public SymmetryMode symmetry;
     /**
      * Unlikely to be used except during serialization; makes a LightingManager for a 20x20 fully visible level.
      * The viewer vision range will be 4.0f, and lights will use a circular shape.
@@ -171,9 +202,23 @@ public class LightingManager {
      *                       of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
      * @param viewerVisionRange how far the player can see without light, in cells
      */
-    public LightingManager(float[][] resistance, int backgroundColor, Radius radiusStrategy, float viewerVisionRange)
+    public LightingManager(float[][] resistance, int backgroundColor, Radius radiusStrategy, float viewerVisionRange) {
+        this(resistance, backgroundColor, radiusStrategy, viewerVisionRange, SymmetryMode.SYMMETRICAL);
+    }
+    /**
+     * Given a resistance array as produced by {@link FOV#generateResistances(char[][])}
+     * or {@link FOV#generateSimpleResistances(char[][])}, makes a
+     * LightingManager that can have {@link Radiance} objects added to it in various locations.
+     * @param resistance a resistance array as produced by DungeonUtility
+     * @param backgroundColor the background color to use, as a packed Oklab int
+     * @param radiusStrategy the shape lights should take, typically {@link Radius#CIRCLE} for "realistic" lights or one
+     *                       of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
+     * @param viewerVisionRange how far the player can see without light, in cells
+     */
+    public LightingManager(float[][] resistance, int backgroundColor, Radius radiusStrategy, float viewerVisionRange, SymmetryMode symmetry)
     {
         this.radiusStrategy = radiusStrategy;
+        this.symmetry = symmetry;
         viewerRange = viewerVisionRange;
         this.backgroundColor = backgroundColor;
         resistances = resistance;
@@ -189,6 +234,14 @@ public class LightingManager {
         Coord.expandPoolTo(width, height);
         lights = new CoordObjectOrderedMap<>(32);
         noticeable = new Region(width, height);
+    }
+
+    public SymmetryMode getSymmetry() {
+        return symmetry;
+    }
+
+    public void setSymmetry(SymmetryMode symmetry) {
+        this.symmetry = symmetry;
     }
 
     /**
@@ -456,7 +509,7 @@ public class LightingManager {
                 continue;
             Radiance radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
     }
@@ -490,7 +543,7 @@ public class LightingManager {
             Coord pos = lights.keyAt(i);
             Radiance radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = 0; x < width; x++) {
@@ -527,7 +580,7 @@ public class LightingManager {
      */
     public void updateUI(int lightX, int lightY, Radiance radiance)
     {
-        FOV.reuseFOVSymmetrical(resistances, lightFromFOV, lightX, lightY, radiance.currentRange(), radiusStrategy);
+        symmetry.getFov(resistances, lightFromFOV, lightX, lightY, radiance.currentRange(), radiusStrategy);
         mixColoredLighting(radiance.flare, radiance.color);
     }
 
@@ -537,18 +590,16 @@ public class LightingManager {
      * sources can do. You should usually call {@link #update()} before each call to draw(), but you may want to make
      * custom changes to the lighting in between those two calls (that is the only place those changes will be noticed).
      * A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
-     * <br>
-     * A special case here is that a value of {@code 0} in {@code backgrounds} will be treated as
-     * {@link #backgroundColor}, not necessarily as fully transparent.
-     * @param backgrounds a 2D int array, which will be modified in-place
+     * This always mixes the calculated lights in {@link #colorLighting} with the {@link #backgroundColor}, using
+     * {@link #lightingStrength} to determine how much the lights should affect the background color.
+     * @param backgrounds a 2D int array, which will be modified in-place; visible cells will receive RGBA8888 colors
      */
     public void draw(int[][] backgrounds)
     {
-        int backgroundRGBA = DescriptiveColor.fromRGBA8888(backgroundColor);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (losResult[x][y] > 0.0f && fovResult[x][y] > 0.0f) {
-                    backgrounds[x][y] = DescriptiveColor.toRGBA8888(DescriptiveColor.lerpColorsBlended(backgroundRGBA,
+                    backgrounds[x][y] = DescriptiveColor.toRGBA8888(DescriptiveColor.lerpColorsBlended(backgroundColor,
                             colorLighting[x][y], lightingStrength[x][y]));
                 }
             }
@@ -563,7 +614,7 @@ public class LightingManager {
      * noticed). A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
      * This always mixes the calculated lights in {@link #colorLighting} with the {@link #backgroundColor}, using
      * {@link #lightingStrength} to determine how much the lights should affect the background color.
-     * @param backgrounds a 2D int array, which will be written to in-place to hold Oklab int colors
+     * @param backgrounds a 2D int array, which will be modified in-place; visible cells will receive Oklab colors
      */
     public void drawOklab(int[][] backgrounds)
     {
@@ -638,7 +689,7 @@ public class LightingManager {
         maxX = Math.min(Math.max(maxX, 0), width);
         minY = Math.min(Math.max(minY, 0), height);
         maxY = Math.min(Math.max(maxY, 0), height);
-        FOV.reuseFOVSymmetrical(resistances, fovResult, viewerX, viewerY, viewerRange, radiusStrategy);
+        symmetry.getFov(resistances, fovResult, viewerX, viewerY, viewerRange, radiusStrategy);
         ArrayTools.fill(lightingStrength, 0f);
         ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
         final int sz = lights.size();
@@ -661,7 +712,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
@@ -702,7 +753,7 @@ public class LightingManager {
         ArrayTools.fill(fovResult, 0f);
         ArrayTools.fill(losResult, 0f);
         for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
-            FOV.reuseFOVSymmetrical(resistances, floatCombining, e.key.x, e.key.y, e.value, radiusStrategy);
+            symmetry.getFov(resistances, floatCombining, e.key.x, e.key.y, e.value, radiusStrategy);
             FOV.addFOVsInto(fovResult, floatCombining);
         }
         ArrayTools.fill(lightingStrength, 0f);
@@ -730,7 +781,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            FOV.reuseFOVSymmetrical(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
