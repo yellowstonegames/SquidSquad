@@ -1750,7 +1750,35 @@ public final class DescriptiveColorRgb {
                 | ((int) (sB + change * (eB - sB)) & 0xFF) << 8
                 | sA;
     }
-    
+
+    /**
+     * Mixes the int color start and the in color end additively. The colors (start and end) should be packed RGBA8888
+     * ints. This is a good way to reduce allocations of temporary Colors. This clamps each component to the valid range
+     * for an RGBA8888 int.
+     * <br>
+     * The additive mixing this does will amplify any difference from {@link #GRAY}, which is the neutral color here.
+     * If you mix several int colors that are each, approximately, grayish-green, then with enough colors the result
+     * will be a vivid, saturated green.
+     * <br>
+     * This is probably faster than {@link #lerpColors(int, int, float)} because it uses
+     * entirely int math, though the clamping it does might not help speed.
+     *
+     * @see #additiveMix(int[], int, int)
+     * @param s    the starting color as an RGBA8888 int
+     * @param e    the end/target color as an RGBA8888 int
+     * @return an RGBA8888 int that represents a color between start and end
+     */
+    public static int addColors(final int s, final int e) {
+        final int
+                sR = (s & 0xFF), sG = (s >>> 8 & 0xFF), sB = (s >>> 16 & 0xFF), sA = s >>> 24 & 0xFF,
+                eR = (e & 0xFF), eG = (e >>> 8 & 0xFF), eB = (e >>> 16 & 0xFF), eA = e >>> 24 & 0xFF;
+        return (Math.min(Math.max(sR + eR - 0x7F, 0), 255)
+                | (Math.min(Math.max(sG + eG - 0x7F, 0), 255) << 8)
+                | (Math.min(Math.max(sB + eB - 0x7F, 0), 255) << 16)
+                | (Math.min(Math.max(sA + eA - 0x7F, 0), 255) << 24));
+    }
+
+
     /**
      * Given several colors, this gets an even mix of all colors in equal measure.
      * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER}.
@@ -1832,6 +1860,60 @@ public final class DescriptiveColorRgb {
             result = lerpColors(result, mixColor, weight / (current += weight));
         }
         return result;
+    }
+
+    /**
+     * Given several colors, this gets an even mix of all colors in equal measure, mixing them additively and clamping.
+     * If {@code colors} is null or has no items, this returns {@link #PLACEHOLDER} (a transparent placeholder used to
+     * mean "no color found").
+     * This is mostly useful in conjunction with {@link IntList}, using its {@code items}
+     * for colors, typically 0 for offset, and its {@code size} for size.
+     * The additive mixing this does will amplify any difference from {@link #GRAY}, which is the neutral color here.
+     * If you mix several int colors that are each, approximately, grayish-green, then with enough colors the result
+     * will be a vivid, saturated green.
+     * <br>
+     * This is probably faster than {@link #mix(int[], int, int)} because this uses only int math, and should also be
+     * faster than individually mixing colors with {@link #addColors(int, int)} because it only clamps once. This does
+     * produce different results than either of those.
+     *
+     * @see #addColors(int, int)
+     * @param colors an array of RGBA8888 int colors
+     * @param offset the index of the first item in {@code colors} to use
+     * @param size how many items from {@code colors} to use
+     * @return an even mix of all colors given, as an RGBA8888 int color
+     */
+    public static int additiveMix(int[] colors, int offset, int size) {
+        int end = offset + size;
+        if(colors == null || colors.length < end || offset < 0 || size <= 0)
+            return PLACEHOLDER; // transparent super-dark-blue, used to indicate "not found"
+        int R = 0x7F, G = 0x7F, B = 0x7F, A = 0x7F;
+        while(colors[offset] == PLACEHOLDER) {
+            offset++;
+        }
+        if(offset < end) {
+            int t = colors[offset];
+            R += (t >>> 24      ) - 0x7F;
+            G += (t >>> 16 & 255) - 0x7F;
+            B += (t >>> 8  & 255) - 0x7F;
+            A += (t        & 255) - 0x7F;
+        }
+        else
+            return PLACEHOLDER;
+        for (int i = offset + 1, denom = 2; i < end; i++, denom++) {
+            if(colors[i] != PLACEHOLDER){
+                int t = colors[i];
+                R += (t >>> 24      ) - 0x7F;
+                G += (t >>> 16 & 255) - 0x7F;
+                B += (t >>> 8  & 255) - 0x7F;
+                A += (t        & 255) - 0x7F;
+            }
+            else --denom;
+        }
+        return Math.min(Math.max(R, 0), 255)
+                | Math.min(Math.max(G, 0), 255) << 8
+                | Math.min(Math.max(B, 0), 255) << 16
+                | Math.min(Math.max(A, 0), 255) << 24
+                ;
     }
 
     private static final IntList mixing = new IntList(8);

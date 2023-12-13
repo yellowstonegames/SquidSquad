@@ -1817,7 +1817,7 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Mixes the packed int color start and the packed in color end additively. The colors (start and end)
+     * Mixes the packed int color start and the packed int color end additively. The colors (start and end)
      * should be packed Oklab ints. This is a good way to reduce allocations of temporary Colors. This
      * clamps each component to the valid range for a packed Oklab int, but not to the Oklab gamut. You will
      * probably want to convert the color for rendering with {@link #toRGBA8888(int)}.
@@ -1945,10 +1945,10 @@ public final class DescriptiveColor {
      * produce different results than either of those.
      *
      * @see #addColors(int, int)
-     * @param colors an array of packed int colors; all should use the same color space
+     * @param colors an array of packed Oklab int colors
      * @param offset the index of the first item in {@code colors} to use
      * @param size how many items from {@code colors} to use
-     * @return an even mix of all colors given, as a packed int color with the same color space as the input(s)
+     * @return an even mix of all colors given, as a packed Oklab int color
      */
     public static int additiveMix(int[] colors, int offset, int size) {
         int end = offset + size;
