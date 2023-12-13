@@ -1613,17 +1613,17 @@ public final class DescriptiveColor {
     }
 
     /**
-     * Gets the color with the same L as the Oklab color stored in the given packed float, but the furthest A
+     * Gets the color with the same L as given in four Oklab channels, but the furthest A
      * B from gray possible for that lightness while keeping the same hue as the given color. This is very
      * similar to calling {@link #enrich(int, float)} with a very large {@code change} value.
      * @param L lightness component; will be clamped between 0 and 1 if it isn't already
      * @param A green-to-red chromatic component; will be clamped between 0 and 1 if it isn't already
      * @param B blue-to-yellow chromatic component; will be clamped between 0 and 1 if it isn't already
      * @param alpha alpha component; will be clamped between 0 and 1 if it isn't already
-     * @return the color that is as far from grayscale as this can get while keeping the L and hue of packed
+     * @return the color that is as far from grayscale as this can get while keeping the given L and the hue of A and B
      * @see #oklab(float, float, float, float) You can use oklab() if you only want max saturation for out-of-gamut colors.
      */
-    public static float maximizeSaturation(float L, float A, float B, float alpha) {
+    public static int maximizeSaturation(float L, float A, float B, float alpha) {
         L = Math.min(Math.max(L, 0f), 1f);
         A = Math.min(Math.max(A, 0f), 1f);
         B = Math.min(Math.max(B, 0f), 1f);
@@ -1633,7 +1633,7 @@ public final class DescriptiveColor {
         final float hue = TrigTools.atan2Turns(B2, A2);
         final int idx = (int) (L * 255.999f) << 8 | (int) (256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
-        return BitConversion.intBitsToFloat(
+        return (
                 (int) (alpha * 255.999f) << 24 |
                         (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
                         (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
