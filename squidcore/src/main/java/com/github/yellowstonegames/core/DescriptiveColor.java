@@ -22,7 +22,9 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.function.FloatToFloatFunction;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import regexodus.MatchResult;
 import regexodus.Pattern;
 import regexodus.Replacer;
@@ -2470,6 +2472,31 @@ public final class DescriptiveColor {
         return BitConversion.reversedIntBitsToFloat(rgba & -2);
     }
 
+    public static int evaluate(final int oklab,
+                               @Nullable FloatToFloatFunction lTransform,
+                               @Nullable FloatToFloatFunction aTransform,
+                               @Nullable FloatToFloatFunction bTransform) {
+        float L = (oklab & 0xff) / 255f, A = (oklab >>> 8 & 0xff) / 255f, B = (oklab >>> 16 & 0xff) / 255f;
+        if(lTransform != null) L = lTransform.applyAsFloat(L);
+        if(aTransform != null) A = aTransform.applyAsFloat(A);
+        if(bTransform != null) B = bTransform.applyAsFloat(B);
+        L = Math.min(Math.max(L, 0f), 1f);
+        A = Math.min(Math.max(A, 0f), 1f);
+        B = Math.min(Math.max(B, 0f), 1f);
+        final float A2 = (A - 0.5f);
+        final float B2 = (B - 0.5f);
+        final float hue = TrigTools.atan2Turns(B2, A2);
+        final int idx = (int)(L * 255.999f) << 8 | (int)(256f * hue);
+        final float dist = GAMUT_DATA[idx] * 0.5f;
+        if(dist * dist * 0x1p-16f + 0x1p-14f >= (A2 * A2 + B2 * B2))
+            return (int)(L * 255.999f) | (int)(A * 255.999f) << 8 | (int)(B * 255.999f) << 16 | (oklab & 0xFE000000);
+        return (
+                (oklab & 0xFE000000) |
+                        (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
+                        (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
+                        (int)(L * 255.999f));
+
+    }
     /**
      * Gets the squared Euclidean distance between two colors as packed Oklab ints. This is a very approximate measure
      * of how different two colors are from each other, but in Oklab this measurement is relatively more accurate than
