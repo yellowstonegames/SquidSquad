@@ -167,18 +167,18 @@ public class LightingManagerRgb extends LightingManager {
                         os = otherStrength[x][y];
                         o = other[x][y];
                     }
-                    if (os <= 0f || (o & 0xFE000000) == 0f)
+                    if (os <= 0f || (o & 0xFE) == 0)
                         continue;
                     bs = basisStrength[x][y];
                     b = basis[x][y];
-                    if ((b & 0xFF) == 0xFF) {
+                    if ((b & 0xFFFFFF00) == 0xFFFFFF00) {
                         basis[x][y] = o;
                         basisStrength[x][y] = Math.min(1.0f, bs + os * flare);
                     } else {
-                        if ((o & 0xFF) != 0xFF) {
+                        if ((o & 0xFFFFFF00) != 0xFFFFFF00) {
                             final int
-                                    sR = (b >>> 24 & 0xFF), sG = (b >>> 16) & 0xFF, sB = (b >>> 8) & 0xFF, sAlpha = b & 0xFE,
-                                    eR = (o >>> 24 & 0xFF), eG = (o >>> 16) & 0xFF, eB = (o >>> 8) & 0xFF, eAlpha = o & 0xFE;
+                                    sR = (b >>> 24), sG = (b >>> 16) & 0xFF, sB = (b >>> 8) & 0xFF, sAlpha = b & 0xFE,
+                                    eR = (o >>> 24), eG = (o >>> 16) & 0xFF, eB = (o >>> 8) & 0xFF, eAlpha = o & 0xFE;
                             final float change = ((os - bs) * 0.5f + 0.5f) * eAlpha * (1f/254f);
                             basis[x][y] = (((int) (sR + change * (eR - sR)) & 0xFF) << 24
                                     | ((int) (sG + change * (eG - sG)) & 0xFF) << 16
@@ -248,14 +248,14 @@ public class LightingManagerRgb extends LightingManager {
                     }
                     bs = basisStrength[x][y];
                     b = basis[x][y];
-                    if ((b & 0xFF) == 0xFF) {
+                    if ((b & 0xFFFFFF00) == 0xFFFFFF00) {
                         basis[x][y] = o;
                         basisStrength[x][y] = Math.min(1.0f, bs + os * flare);
                     } else {
-                        if ((o & 0xFF) != 0xFF) {
+                        if ((o & 0xFFFFFF00) != 0xFFFFFF00) {
                             final int
-                                    sR = (b >>> 24 & 0xFF), sG = (b >>> 16) & 0xFF, sB = (b >>> 8) & 0xFF, sAlpha = b & 0xFE,
-                                    eR = (o >>> 24 & 0xFF), eG = (o >>> 16) & 0xFF, eB = (o >>> 8) & 0xFF, eAlpha = o & 0xFE;
+                                    sR = (b >>> 24), sG = (b >>> 16) & 0xFF, sB = (b >>> 8) & 0xFF, sAlpha = b & 0xFE,
+                                    eR = (o >>> 24), eG = (o >>> 16) & 0xFF, eB = (o >>> 8) & 0xFF, eAlpha = o & 0xFE;
                             final float change = ((os - bs) * 0.5f + 0.5f) * eAlpha * (1f/254f);
                             basis[x][y] = (((int) (sR + change * (eR - sR)) & 0xFF) << 24
                                     | ((int) (sG + change * (eG - sG)) & 0xFF) << 16
