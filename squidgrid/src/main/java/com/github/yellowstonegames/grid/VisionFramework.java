@@ -39,6 +39,8 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * part of the world changes at once. After any viewer, light source, or map feature changes (or several if they all
  * changed at once), you should call {@link #finishChanges()}, which updates {@link #prunedPlaceMap} with the actually
  * visible map cells, handles lighting changes, and so on.
+ * <br>
+ * This class uses the Oklab color space throughout. Use {@link VisionFrameworkRgb} if you prefer RGBA colors.
  */
 @Beta
 public class VisionFramework {
@@ -127,9 +129,11 @@ public class VisionFramework {
     public CoordFloatOrderedMap viewers = new CoordFloatOrderedMap(4);
 
     /**
-     * The Oklab int color used to tint cells that could have been seen previously, but aren't currently visible.
-     * This defaults to {@code 0xFF7F7F20}, which is fully opaque, pure gray, and has about 30% lightness.
-     * You can get Oklab int colors using {@link DescriptiveColor}.
+     * The int color used to tint cells that could have been seen previously, but aren't currently visible.
+     * In VisionFramework, this defaults to the Oklab int color {@code 0xFF7F7F50}, which is fully opaque, pure gray,
+     * and has about 30% lightness. You can get Oklab int colors using {@link DescriptiveColor}. In VisionFrameworkRgb,
+     * this defaults to the RGBA8888 color 0x505050FF, which is also fully opaque, pure gray, and has about 30%
+     * lightness. You can get RGBA8888 int colors using {@link com.github.yellowstonegames.core.DescriptiveColorRgb}.
      */
     public int rememberedColor = 0xFF7F7F50;
 
@@ -497,6 +501,8 @@ public class VisionFramework {
      * don't need to give milliseconds precisely; while the input is effectively clamped between 0 and 1000, you can
      * multiply the actual milliseconds that have passed by (for example) 4 to reduce the time a fade effect takes to
      * complete (to a quarter-second). Multiplying by a large number will make fades instantaneous.
+     * <br>
+     * This sets {@link #backgroundColors} to hold visible Oklab int colors where a cell is visible.
      * @param millisSinceLastMove how many milliseconds have elapsed since the human player last entered an input, for fading
      */
     public void update(float millisSinceLastMove) {
