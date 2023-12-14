@@ -117,6 +117,161 @@ public class LightingManagerRgb extends LightingManager {
     }
 
     /**
+     * Edits {@link #colorLighting} by adding in and mixing the colors in {@link #fovLightColors}, with the strength
+     * of light in fovLightColors boosted by flare (which can be any finite float greater than -1f, but is usually
+     * from 0f to 1f when increasing strength). The strengths of each colored light is determined by
+     * {@link #lightFromFOV} and the colors of lights are determined by {@link #fovLightColors}. If a color of light is
+     * fully transparent, this skips that light.
+     * <br>
+     * This is very limited-use; the related method {@link #mixColoredLighting(float, int)} is used as part of
+     * {@link #update()}, but this method is meant for when multiple colors of FOV light need to be mixed at once.
+     * @param flare boosts the effective strength of lighting in {@link #fovLightColors}; usually from 0 to 1
+     */
+    public void mixColoredLighting(float flare)
+    {
+        int[][] basis = colorLighting, other = fovLightColors;
+        float[][] basisStrength = lightingStrength, otherStrength = lightFromFOV;
+        flare += 1f;
+        float bs;
+        int b;
+        float os;
+        int o;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (losResult[x][y] > 0) {
+                    if (resistances[x][y] >= 1) {
+                        os = 0f;
+                        if (y > 0) {
+                            if ((losResult[x][y - 1] > 0 && otherStrength[x][y - 1] > 0 && resistances[x][y - 1] < 1)
+                                    || (x > 0 && losResult[x - 1][y - 1] > 0 && otherStrength[x - 1][y - 1] > 0 && resistances[x - 1][y - 1] < 1)
+                                    || (x < width - 1 && losResult[x + 1][y - 1] > 0 && otherStrength[x + 1][y - 1] > 0 && resistances[x + 1][y - 1] < 1)) {
+                                os = otherStrength[x][y];
+                            }
+                        }
+                        if (y < height - 1) {
+                            if ((losResult[x][y + 1] > 0 && otherStrength[x][y + 1] > 0 && resistances[x][y + 1] < 1)
+                                    || (x > 0 && losResult[x - 1][y + 1] > 0 && otherStrength[x - 1][y + 1] > 0 && resistances[x - 1][y + 1] < 1)
+                                    || (x < width - 1 && losResult[x + 1][y + 1] > 0 && otherStrength[x + 1][y + 1] > 0 && resistances[x + 1][y + 1] < 1)) {
+                                os = otherStrength[x][y];
+                            }
+                        }
+                        if (x > 0 && losResult[x - 1][y] > 0 && otherStrength[x - 1][y] > 0 && resistances[x - 1][y] < 1) {
+                            os = otherStrength[x][y];
+                        }
+                        if (x < width - 1 && losResult[x + 1][y] > 0 && otherStrength[x + 1][y] > 0 && resistances[x + 1][y] < 1) {
+                            os = otherStrength[x][y];
+                        }
+                        if(os > 0f) o = other[x][y];
+                        else continue;
+                    } else {
+                        os = otherStrength[x][y];
+                        o = other[x][y];
+                    }
+                    if (os <= 0f || (o & 0xFE000000) == 0f)
+                        continue;
+                    bs = basisStrength[x][y];
+                    b = basis[x][y];
+                    if ((b & 0xFF) == 0xFF) {
+                        basis[x][y] = o;
+                        basisStrength[x][y] = Math.min(1.0f, bs + os * flare);
+                    } else {
+                        if ((o & 0xFF) != 0xFF) {
+                            final int
+                                    sR = (b >>> 24 & 0xFF), sG = (b >>> 16) & 0xFF, sB = (b >>> 8) & 0xFF, sAlpha = b & 0xFE,
+                                    eR = (o >>> 24 & 0xFF), eG = (o >>> 16) & 0xFF, eB = (o >>> 8) & 0xFF, eAlpha = o & 0xFE;
+                            final float change = ((os - bs) * 0.5f + 0.5f) * eAlpha * (1f/254f);
+                            basis[x][y] = (((int) (sR + change * (eR - sR)) & 0xFF) << 24
+                                    | ((int) (sG + change * (eG - sG)) & 0xFF) << 16
+                                    | ((int) (sB + change * (eB - sB)) & 0xFF) << 8
+                                    | sAlpha);
+                            basisStrength[x][y] = Math.min(1.0f, bs + os * change * flare);
+                        } else {
+                            basisStrength[x][y] = Math.min(1.0f, bs + os * flare);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Edits {@link #colorLighting} by adding in and mixing the given color where the light strength in
+     * {@link #lightFromFOV} is greater than 0, with that strength boosted by flare (which can be any finite float
+     * greater than -1f, but is usually from 0f to 1f when increasing strength). This draws its existing lighting
+     * strength from {@link #lightingStrength} and its existing light colors from {@link #colorLighting}; it modifies
+     * both of these.
+     * <br>
+     * This has limited use outside this class, unless you are reimplementing part of {@link #update()} or something
+     * like it.
+     * @param flare boosts the effective strength of lighting in {@link #lightFromFOV}; usually from 0 to 1
+     * @param color the RGBA8888 int color to mix in where the light strength in {@link #lightFromFOV} is greater than 0
+     */
+    @Override
+    public void mixColoredLighting(float flare, int color)
+    {
+        final int[][] basis = colorLighting;
+        final float[][] basisStrength = lightingStrength;
+        final float[][] otherStrength = lightFromFOV;
+        flare += 1f;
+        float bs, os;
+        int b, o;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (losResult[x][y] > 0) {
+                    if (resistances[x][y] >= 1) {
+                        os = 0f;
+                        if (y > 0) {
+                            if ((losResult[x][y - 1] > 0 && otherStrength[x][y - 1] > 0 && resistances[x][y - 1] < 1)
+                                    || (x > 0 && losResult[x - 1][y - 1] > 0 && otherStrength[x - 1][y - 1] > 0 && resistances[x - 1][y - 1] < 1)
+                                    || (x < width - 1 && losResult[x + 1][y - 1] > 0 && otherStrength[x + 1][y - 1] > 0 && resistances[x + 1][y - 1] < 1)) {
+                                os = otherStrength[x][y];
+                            }
+                        }
+                        if (y < height - 1) {
+                            if ((losResult[x][y + 1] > 0 && otherStrength[x][y + 1] > 0 && resistances[x][y + 1] < 1)
+                                    || (x > 0 && losResult[x - 1][y + 1] > 0 && otherStrength[x - 1][y + 1] > 0 && resistances[x - 1][y + 1] < 1)
+                                    || (x < width - 1 && losResult[x + 1][y + 1] > 0 && otherStrength[x + 1][y + 1] > 0 && resistances[x + 1][y + 1] < 1)) {
+                                os = otherStrength[x][y];
+                            }
+                        }
+                        if (x > 0 && losResult[x - 1][y] > 0 && otherStrength[x - 1][y] > 0 && resistances[x - 1][y] < 1) {
+                            os = otherStrength[x][y];
+                        }
+                        if (x < width - 1 && losResult[x + 1][y] > 0 && otherStrength[x + 1][y] > 0 && resistances[x + 1][y] < 1) {
+                            os = otherStrength[x][y];
+                        }
+                        if(os > 0f) o = color;
+                        else continue;
+                    } else {
+                        if((os = otherStrength[x][y]) != 0) o = color;
+                        else continue;
+                    }
+                    bs = basisStrength[x][y];
+                    b = basis[x][y];
+                    if ((b & 0xFF) == 0xFF) {
+                        basis[x][y] = o;
+                        basisStrength[x][y] = Math.min(1.0f, bs + os * flare);
+                    } else {
+                        if ((o & 0xFF) != 0xFF) {
+                            final int
+                                    sR = (b >>> 24 & 0xFF), sG = (b >>> 16) & 0xFF, sB = (b >>> 8) & 0xFF, sAlpha = b & 0xFE,
+                                    eR = (o >>> 24 & 0xFF), eG = (o >>> 16) & 0xFF, eB = (o >>> 8) & 0xFF, eAlpha = o & 0xFE;
+                            final float change = ((os - bs) * 0.5f + 0.5f) * eAlpha * (1f/254f);
+                            basis[x][y] = (((int) (sR + change * (eR - sR)) & 0xFF) << 24
+                                    | ((int) (sG + change * (eG - sG)) & 0xFF) << 16
+                                    | ((int) (sB + change * (eB - sB)) & 0xFF) << 8
+                                    | sAlpha);
+                            basisStrength[x][y] = Math.min(1.0f, bs + os * change * flare);
+                        } else {
+                            basisStrength[x][y] = Math.min(1.0f, bs + os * flare);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Given a 2D array that should hold RGBA int colors, fills the 2D array with different RGBA colors based on what
      * lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
      * sources can do. You should usually call {@link #update()} before each call to draw(), but you may want to make
