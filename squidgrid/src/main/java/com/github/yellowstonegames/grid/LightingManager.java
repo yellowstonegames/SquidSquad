@@ -40,9 +40,14 @@ import java.util.Objects;
  * GlyphMap). To place user-interface lighting effects that don't affect the in-game-world lights, you can use
  * {@link #updateUI(Coord, Radiance)}, which is called after {@link #update()} but before {@link #draw(int[][])}.
  * <br>
+ * This class uses the same Oklab color space that {@link DescriptiveColor} uses for almost every place it deals with
+ * color. The exception here is {@link #draw(int[][])}, which uses Oklab internally but converts the colors to RGBA8888
+ * when it outputs them.
+ * <br>
  * Honestly, this class is quite complex, and you should really take a look at a demo that uses it to see how the
  * different parts fit together. If you have the SquidSquad test sources, LightingTest in squidglyph provides a
- * relatively simple example using many colors of light.
+ * relatively simple example using many colors of light. {@link VisionFramework} also can be used to handle much of the
+ * boilerplate associated with vision and lighting.
  */
 public class LightingManager {
 
@@ -134,7 +139,8 @@ public class LightingManager {
     public int height;
     /**
      * The packed Oklab int color to mix background cells with when a cell has lighting and is within line-of-sight, but
-     * has no background color to start with. Its color defaults to {@link DescriptiveColor#TRANSPARENT}.
+     * has no background color to start with. Its color defaults to the (RGBA or Oklab int) {@code 0}, which is always
+     * transparent.
      */
     public int backgroundColor;
     /**
@@ -163,7 +169,7 @@ public class LightingManager {
      */
     public LightingManager()
     {
-        this(new float[20][20], DescriptiveColor.TRANSPARENT, Radius.CIRCLE, 4.0f);
+        this(new float[20][20], 0, Radius.CIRCLE, 4.0f);
     }
 
     /**
@@ -176,7 +182,7 @@ public class LightingManager {
      */
     public LightingManager(float[][] resistance)
     {
-        this(resistance, DescriptiveColor.TRANSPARENT, Radius.CIRCLE, 4.0f);
+        this(resistance, 0, Radius.CIRCLE, 4.0f);
     }
     /**
      * Given a resistance array as produced by {@link FOV#generateResistances(char[][])}
@@ -227,7 +233,7 @@ public class LightingManager {
         fovResult = new float[width][height];
         lightFromFOV = new float[width][height];
         losResult = new float[width][height];
-        colorLighting = ArrayTools.fill(DescriptiveColor.WHITE, width, height);
+        colorLighting = ArrayTools.fill(getNeutralColor(), width, height);
         lightingStrength = new float[width][height];
         floatCombining = new float[width][height];
         fovLightColors = new int[width][height];
@@ -244,6 +250,14 @@ public class LightingManager {
         this.symmetry = symmetry;
     }
 
+    /**
+     * An extension point for subclasses that don't use the Oklab color space; this defaults to returning
+     * {@link DescriptiveColor#WHITE}. There is no setter or field for the neutral color.
+     * @return if not overridden, {@link DescriptiveColor#WHITE}
+     */
+    public int getNeutralColor() {
+        return DescriptiveColor.WHITE;
+    }
     /**
      * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
      * @param x the x-position to add the Radiance at
@@ -500,7 +514,7 @@ public class LightingManager {
     public void update()
     {
         ArrayTools.fill(lightingStrength, 0f);
-        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
+        ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
         Coord pos;
         for (int i = 0; i < sz; i++) {
@@ -537,7 +551,7 @@ public class LightingManager {
             }
         }
         ArrayTools.fill(lightingStrength, 0f);
-        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
+        ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
         for (int i = 0; i < sz; i++) {
             Coord pos = lights.keyAt(i);
@@ -561,7 +575,7 @@ public class LightingManager {
      * {@link #update()} and before each call to {@link #draw(int[][])}, but other code may be between the calls
      * and may affect the lighting in customized ways.
      * @param pos the position of the light effect
-     * @param radiance the Radiance to update standalone, which does not need to be already added to this 
+     * @param radiance the Radiance to update standalone, which does not need to be already added to this
      */
     public void updateUI(Coord pos, Radiance radiance)
     {
@@ -576,7 +590,7 @@ public class LightingManager {
      * and may affect the lighting in customized ways.
      * @param lightX the x-position of the light effect
      * @param lightY the y-position of the light effect
-     * @param radiance the Radiance to update standalone, which does not need to be already added to this 
+     * @param radiance the Radiance to update standalone, which does not need to be already added to this
      */
     public void updateUI(int lightX, int lightY, Radiance radiance)
     {
@@ -592,6 +606,8 @@ public class LightingManager {
      * A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
      * This always mixes the calculated lights in {@link #colorLighting} with the {@link #backgroundColor}, using
      * {@link #lightingStrength} to determine how much the lights should affect the background color.
+     * <br>
+     * If this class is extended, this method should be considered as one to override.
      * @param backgrounds a 2D int array, which will be modified in-place; visible cells will receive RGBA8888 colors
      */
     public void draw(int[][] backgrounds)
@@ -614,6 +630,8 @@ public class LightingManager {
      * noticed). A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
      * This always mixes the calculated lights in {@link #colorLighting} with the {@link #backgroundColor}, using
      * {@link #lightingStrength} to determine how much the lights should affect the background color.
+     * <br>
+     * If this class is extended, this method should be considered as one to override.
      * @param backgrounds a 2D int array, which will be modified in-place; visible cells will receive Oklab colors
      */
     public void drawOklab(int[][] backgrounds)
@@ -691,7 +709,7 @@ public class LightingManager {
         maxY = Math.min(Math.max(maxY, 0), height);
         symmetry.getFov(resistances, fovResult, viewerX, viewerY, viewerRange, radiusStrategy);
         ArrayTools.fill(lightingStrength, 0f);
-        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
+        ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
         float maxRange = 0, range;
         Coord pos;
@@ -701,7 +719,7 @@ public class LightingManager {
             if(radiance == null) continue;
             range = radiance.range;
             if(range > maxRange &&
-                    pos.x + range >= minX && pos.x - range < maxX && pos.y + range >= minY && pos.y - range < maxY) 
+                    pos.x + range >= minX && pos.x - range < maxX && pos.y + range >= minY && pos.y - range < maxY)
                 maxRange = range;
         }
         FOV.reuseLOS(resistances, losResult, viewerX, viewerY, minX, minY, maxX, maxY);
@@ -757,7 +775,7 @@ public class LightingManager {
             FOV.addFOVsInto(fovResult, floatCombining);
         }
         ArrayTools.fill(lightingStrength, 0f);
-        ArrayTools.fill(colorLighting, DescriptiveColor.WHITE);
+        ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
         float maxRange = 0, range;
         Coord pos;
@@ -832,5 +850,9 @@ public class LightingManager {
         result = 31 * result + (lights != null ? lights.hashCode() : 0);
         result = 31 * result + (noticeable != null ? noticeable.hashCode() : 0);
         return result;
+    }
+
+    public String toString() {
+        return "LightingManager{size:" + width + "x" + height + "}";
     }
 }
