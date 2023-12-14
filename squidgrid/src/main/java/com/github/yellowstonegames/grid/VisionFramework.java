@@ -40,6 +40,21 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * changed at once), you should call {@link #finishChanges()}, which updates {@link #prunedPlaceMap} with the actually
  * visible map cells, handles lighting changes, and so on.
  * <br>
+ * To recap, the methods here get called in this order:
+ * <ol>
+ *     <li>Call {@link #restart} when an area map is loaded, giving it the viewer(s) and their vision range(s).</li>
+ *     <li>Call {@link LightingManager#addLight(Coord, Radiance)} on {@link #lighting} for every light source.</li>
+ *     <li>Every "turn" (when an input is entered), call {@link LightingManager#moveLight(Coord, Coord)} if a light source moved.</li>
+ *     <li>Every "turn" (when an input is entered), call {@link #removeViewer(Coord)} if a viewer was removed.</li>
+ *     <li>Every "turn" (when an input is entered), call {@link #moveViewer(Coord, Coord)} if a viewer moved.</li>
+ *     <li>Every "turn" (when an input is entered), call {@link #editSingle(Coord, char)} if a map cell was altered (such as a door opening).</li>
+ *     <li>Every "turn" (when an input is entered), call {@link #editAll(char[][])} if the whole current map was altered (such as going down stairs to a new area).</li>
+ *     <li>Every "turn" (when an input is entered), if any of the previous every-turn methods was called, call {@link #finishChanges()} to complete the change.</li>
+ *     <li>Every frame, call {@link #update(float)}, passing it the number of milliseconds since the last turn was handled (this number can be altered).</li>
+ *     <li>Every frame, call {@link #getForegroundColor(Coord, float)} for every position with a moving creature or object in it, passing it a position to query and the number of milliseconds since the last turn was handled (this number can be altered).</li>
+ *     <li>You can get the current colors every frame from {@link #backgroundColors}, which update() changes.</li>
+ * </ol>
+ * <br>
  * This class uses the Oklab color space throughout. Use {@link VisionFrameworkRgb} if you prefer RGBA colors.
  */
 @Beta
