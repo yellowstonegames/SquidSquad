@@ -31,42 +31,54 @@ public class PairedDemo extends ApplicationAdapter {
         SunriseDemo sunriseOklab;
         SunriseRgbDemo sunriseRgb;
         Lwjgl3Window oklab = ((Lwjgl3Application) Gdx.app).newWindow(sunriseOklab = new SunriseDemo(), getDefaultConfiguration("Oklab"));
+        sunriseOklab.create();
         InputProcessor oklabProcessor = Gdx.input.getInputProcessor();
         Lwjgl3Window rgb   = ((Lwjgl3Application) Gdx.app).newWindow(sunriseRgb = new SunriseRgbDemo(), getDefaultConfiguration("RGB"));
+        sunriseRgb.create();
         InputProcessor rgbProcessor = Gdx.input.getInputProcessor();
+        Lwjgl3Window parent = ((Lwjgl3Graphics)Gdx.graphics).getWindow();
         Gdx.input.setInputProcessor(new InputAdapter(){
             @Override
             public boolean keyUp(int keycode) {
-                oklab.focusWindow();
+                if(!oklab.isFocused()) oklab.focusWindow();
                 oklabProcessor.keyUp(keycode);
-                rgb.focusWindow();
-                return rgbProcessor.keyUp(keycode);
+                if(!rgb.isFocused()) rgb.focusWindow();
+                boolean r = rgbProcessor.keyUp(keycode);
+                parent.focusWindow();
+                return r;
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                oklab.focusWindow();
+                if(!oklab.isFocused()) oklab.focusWindow();
                 oklabProcessor.touchUp(screenX, screenY, pointer, button);
-                rgb.focusWindow();
-                return rgbProcessor.touchUp(screenX, screenY, pointer, button);
+                if(!rgb.isFocused()) rgb.focusWindow();
+                boolean r = rgbProcessor.touchUp(screenX, screenY, pointer, button);
+                parent.focusWindow();
+                return r;
             }
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                oklab.focusWindow();
+                if(!oklab.isFocused()) oklab.focusWindow();
                 oklabProcessor.touchDragged(screenX, screenY, pointer);
-                rgb.focusWindow();
-                return rgbProcessor.touchDragged(screenX, screenY, pointer);
+                if(!rgb.isFocused()) rgb.focusWindow();
+                boolean r = rgbProcessor.touchDragged(screenX, screenY, pointer);
+                parent.focusWindow();
+                return r;
             }
 
             @Override
             public boolean mouseMoved(int screenX, int screenY) {
-                oklab.focusWindow();
+                if(!oklab.isFocused()) oklab.focusWindow();
                 oklabProcessor.mouseMoved(screenX, screenY);
-                rgb.focusWindow();
-                return rgbProcessor.mouseMoved(screenX, screenY);
+                if(!rgb.isFocused()) rgb.focusWindow();
+                boolean r = rgbProcessor.mouseMoved(screenX, screenY);
+                parent.focusWindow();
+                return r;
             }
         });
+        System.out.println("Oklab " + oklabProcessor + " vs. RGB " + rgbProcessor + " vs. Parent " + Gdx.input.getInputProcessor());
     }
 
     public static void main(String[] args) {

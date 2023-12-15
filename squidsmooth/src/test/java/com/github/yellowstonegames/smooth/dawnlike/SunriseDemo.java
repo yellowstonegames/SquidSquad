@@ -324,14 +324,14 @@ public class SunriseDemo extends ApplicationAdapter {
         // It affects the default color each cell has before lighting affects it.
         vision.rememberedColor = 0xFF848350;
 
-        Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
-        Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
-        String[] cursorNames = {"broadsword", "dwarvish spear", "javelin", "vulgar polearm", "pole cleaver", "quarterstaff"};
-        TextureAtlas.AtlasRegion pointer = atlas.findRegion(cursorNames[(int) (TimeUtils.millis() & 0xFFFFF) % cursorNames.length]);
-        pCursor.drawPixmap(pAtlas, pointer.getRegionX(), pointer.getRegionY(), 16, 16, 0, 0, cellWidth, cellHeight);
-        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pCursor, 1, 1));
-        pAtlas.dispose();
-        pCursor.dispose();
+//        Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
+//        Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
+//        String[] cursorNames = {"broadsword", "dwarvish spear", "javelin", "vulgar polearm", "pole cleaver", "quarterstaff"};
+//        TextureAtlas.AtlasRegion pointer = atlas.findRegion(cursorNames[(int) (TimeUtils.millis() & 0xFFFFF) % cursorNames.length]);
+//        pCursor.drawPixmap(pAtlas, pointer.getRegionX(), pointer.getRegionY(), 16, 16, 0, 0, cellWidth, cellHeight);
+//        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pCursor, 1, 1));
+//        pAtlas.dispose();
+//        pCursor.dispose();
 
         solid = atlas.findRegion("pixel");
         charMapping = new IntObjectMap<>(64);
