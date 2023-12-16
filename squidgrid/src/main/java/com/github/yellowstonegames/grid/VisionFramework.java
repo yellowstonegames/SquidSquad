@@ -17,8 +17,12 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.annotations.Beta;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Encapsulates currently-visible and previously-seen cell data, and allows updating and modifying light levels/colors.
@@ -549,6 +553,60 @@ public class VisionFramework {
                 }
             }
         }
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        VisionFramework that = (VisionFramework) o;
+
+        if (placeWidth != that.placeWidth) return false;
+        if (placeHeight != that.placeHeight) return false;
+        if (rememberedColor != that.rememberedColor) return false;
+        if (!Arrays.deepEquals(linePlaceMap, that.linePlaceMap)) return false;
+        if (!Arrays.deepEquals(prunedPlaceMap, that.prunedPlaceMap)) return false;
+        if (!Objects.equals(lighting, that.lighting)) return false;
+        if (!Arrays.deepEquals(previousLightLevels, that.previousLightLevels)) return false;
+        if (!Arrays.deepEquals(backgroundColors, that.backgroundColors)) return false;
+        if (!Objects.equals(blockage, that.blockage)) return false;
+        if (!Objects.equals(seen, that.seen)) return false;
+        if (!Objects.equals(justSeen, that.justSeen)) return false;
+        if (!Objects.equals(justHidden, that.justHidden)) return false;
+        if (!Objects.equals(newlyVisible, that.newlyVisible)) return false;
+        if (!Objects.equals(inView, that.inView)) return false;
+        return Objects.equals(viewers, that.viewers);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = placeWidth;
+        result = 31 * result + placeHeight;
+        result = 31 * result + Hasher.hash(123454321L, linePlaceMap);
+        result = 31 * result + Hasher.hash(123454321L, prunedPlaceMap);
+        result = 31 * result + (lighting != null ? lighting.hashCode() : 0);
+        result = 31 * result + Hasher.hash(123454321L, previousLightLevels);
+        result = 31 * result + Hasher.hash(123454321L, backgroundColors);
+        result = 31 * result + (blockage != null ? blockage.hashCode() : 0);
+        result = 31 * result + (seen != null ? seen.hashCode() : 0);
+        result = 31 * result + (justSeen != null ? justSeen.hashCode() : 0);
+        result = 31 * result + (justHidden != null ? justHidden.hashCode() : 0);
+        result = 31 * result + (newlyVisible != null ? newlyVisible.hashCode() : 0);
+        result = 31 * result + (inView != null ? inView.hashCode() : 0);
+        result = 31 * result + (viewers != null ? viewers.hashCode() : 0);
+        result = 31 * result + rememberedColor;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "VisionFramework{" +
+                "placeWidth=" + placeWidth +
+                ", placeHeight=" + placeHeight +
+                ", rememberedColor=" + rememberedColor +
+                ", light count=" + lighting.lights.size() +
+                ", viewers count=" + viewers.size() +
+                '}';
     }
 }
