@@ -501,5 +501,20 @@ public class JsonGridTest {
         Assert.assertEquals(lm, lm2);
     }
 
+    @Test
+    public void testLightingManagerRgb() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerLightingManagerRgb(json);
+        LightingManagerRgb lm = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
+        lm.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
+        String data = json.toJson(lm);
+        System.out.println(data);
+        LightingManagerRgb lm2 = json.fromJson(LightingManagerRgb.class, data);
+        System.out.println();
+        System.out.println(lm.lights);
+        System.out.println(lm2.lights);
+        Assert.assertEquals(lm, lm2);
+    }
+
 
 }

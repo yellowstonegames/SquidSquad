@@ -1144,4 +1144,20 @@ public final class JsonGrid {
         JsonCore.registerFloat2D(json);
         JsonCore.registerInt2D(json);
     }
+
+    /**
+     * Registers LightingManager with the given Json object, so LightingManager can be written to and read from JSON.
+     * This does not register a custom serializer for LightingManager, but instead allows Json to handle it and
+     * registers all types of field in a LightingManager in one go.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLightingManagerRgb(@NonNull Json json) {
+        json.addClassTag("LiMR", LightingManagerRgb.class);
+        registerRegion(json);
+        registerRadiance(json);
+        registerCoordObjectOrderedMap(json);
+        JsonCore.registerFloat2D(json);
+        JsonCore.registerInt2D(json);
+    }
 }
