@@ -18,10 +18,9 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.LineWobble;
-import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.random.PouchRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import static com.github.tommyettinger.digital.MathTools.PHI;
@@ -53,7 +52,7 @@ public class Radiance {
     /**
      * Randomly-seeded and only used for things that should be visually random, but won't matter for equality.
      */
-    private static final WhiskerRandom random = new WhiskerRandom();
+    private static final PouchRandom random = new PouchRandom();
 
     /**
      * How far the radiated light extends; 0f is "just this cell", anything higher can go into neighboring cells.
@@ -67,7 +66,7 @@ public class Radiance {
     public int color;
     /**
      * The rate of random continuous change to radiance range, like the light from a campfire. The random component of
-     * the change is determined by a unique seed produced by an internal {@link WhiskerRandom}, which will
+     * the change is determined by a unique seed produced by an internal {@link PouchRandom}, which will
      * probably make all flicker effects different when flicker is non-0.
      */
     public float flicker;
@@ -91,9 +90,12 @@ public class Radiance {
      */
     public float flare;
     /**
-     * Assigned during construction by an internal {@link WhiskerRandom}, this is used for flickering effects, but does
+     * Assigned during construction by an internal {@link PouchRandom}, this is used for flickering effects, but does
      * not affect {@link #equals(Object)} or {@link #hashCode()}. You can synchronize the flickering effect of two
-     * different Radiance objects by setting their seed to the same int.
+     * different Radiance objects by setting their seed to the same int. Seeds do not have to be globally unique.
+     * <br>
+     * In earlier versions, this was private and transient, but that preventing synchronizing flicker effects. Now, it
+     * is public and generally should be serialized.
      */
     public int seed;
 
@@ -350,7 +352,8 @@ public class Radiance {
         Base.SIMPLE64.appendSigned(sb, flicker).append('~');
         Base.SIMPLE64.appendSigned(sb, strobe).append('~');
         Base.SIMPLE64.appendSigned(sb, delay).append('~');
-        Base.SIMPLE64.appendSigned(sb, flare).append('`');
+        Base.SIMPLE64.appendSigned(sb, flare).append('~');
+        Base.SIMPLE64.appendSigned(sb, color).append('`');
         return sb.toString();
     }
     
@@ -363,6 +366,7 @@ public class Radiance {
         Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
         Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
         Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
-        Base.SIMPLE64.readFloatExact(data, idx + 1, data.indexOf('`', idx + 1)));
+        Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1)),
+        Base.SIMPLE64.readInt(data, idx + 1, data.indexOf('`', idx + 1)));
     }
 }

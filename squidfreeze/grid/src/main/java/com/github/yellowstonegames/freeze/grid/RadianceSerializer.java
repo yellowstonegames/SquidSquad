@@ -39,12 +39,13 @@ public class RadianceSerializer extends Serializer<Radiance> {
         output.writeFloat(data.strobe);
         output.writeFloat(data.delay);
         output.writeFloat(data.flare);
+        output.writeInt(data.seed, false);
     }
 
     @Override
     public Radiance read(final Kryo kryo, final Input input, final Class<? extends Radiance> dataClass) {
         return new Radiance(input.readFloat(), input.readInt(false),
-                input.readFloat(), input.readFloat(), input.readFloat(), input.readFloat());
+                input.readFloat(), input.readFloat(), input.readFloat(), input.readFloat(), input.readInt(false));
     }
 
     @Override

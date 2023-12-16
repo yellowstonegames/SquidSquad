@@ -248,7 +248,7 @@ public class GridTest {
         Kryo kryo = new Kryo();
         kryo.register(Radiance.class, new RadianceSerializer());
 
-        Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f);
+        Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
         Output output = new Output(baos);
