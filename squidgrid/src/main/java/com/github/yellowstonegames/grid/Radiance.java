@@ -19,6 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
@@ -60,7 +61,8 @@ public class Radiance {
      */
     public float range;
     /**
-     * The color of light as an Oklab int; typically opaque and lighter than the glowing object's symbol.
+     * The color of light as an int; will be interpreted as Oklab by {@link LightingManager}, but as RGBA by
+     * {@link LightingManagerRgb}. Typically opaque and lighter than the glowing object's symbol.
      */
     public int color;
     /**
@@ -90,14 +92,16 @@ public class Radiance {
     public float flare;
     /**
      * Assigned during construction by an internal {@link WhiskerRandom}, this is used for flickering effects, but does
-     * not affect {@link #equals(Object)} or {@link #hashCode()}.
+     * not affect {@link #equals(Object)} or {@link #hashCode()}. You can synchronize the flickering effect of two
+     * different Radiance objects by setting their seed to the same int.
      */
-    private transient final int seed;
+    public int seed;
 
     /**
      * All-default constructor; makes a single-cell unchanging white light. This assumes the color is being treated as
      * Oklab; if you treat this as RGBA8888 without first converting with {@link DescriptiveColor#toRGBA8888(int)}, this
-     * will look like light red.
+     * will look like light red. Because this defaults to using Oklab, it is meant for use with {@link LightingManager},
+     * not {@link LightingManagerRgb}.
      */
     public Radiance()
     {
@@ -107,7 +111,8 @@ public class Radiance {
     /**
      * Makes an unchanging white light with the specified range in cells. This assumes the color is being treated as
      * Oklab; if you treat this as RGBA8888 without first converting with {@link DescriptiveColor#toRGBA8888(int)}, this
-     * will look like light red.
+     * will look like light red. Because this defaults to using Oklab, it is meant for use with {@link LightingManager},
+     * not {@link LightingManagerRgb}.
      * @param range possibly-non-integer radius to light, in cells
      */
     public Radiance(float range)
@@ -117,8 +122,10 @@ public class Radiance {
 
     /**
      * Makes an unchanging light with the given color (as an Oklab int) and the specified range in cells.
+     * You can give this an Oklab color (to use with {@link LightingManager}) or an RGBA8888 color (to use with
+     * {@link LightingManagerRgb}).
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an Oklab int color
+     * @param color an Oklab or RGBA8888 int color
      */
     public Radiance(float range, int color)
     {
@@ -128,8 +135,10 @@ public class Radiance {
     /**
      * Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
      * parameter affects the rate at which this will randomly reduce its range and return to normal.
+     * You can give this an Oklab color (to use with {@link LightingManager}) or an RGBA8888 color (to use with
+     * {@link LightingManagerRgb}).
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an Oklab int color
+     * @param color an Oklab or RGBA8888 int color
      * @param flicker the rate at which to flicker, as a non-negative float
      */
     public Radiance(float range, int color, float flicker)
@@ -141,8 +150,10 @@ public class Radiance {
      * parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
      * parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
      * flicker or strobe is 0; if both are non-0, the radius will be smaller than normal.
+     * You can give this an Oklab color (to use with {@link LightingManager}) or an RGBA8888 color (to use with
+     * {@link LightingManagerRgb}).
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an Oklab int color
+     * @param color an Oklab or RGBA8888 int color
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      */
@@ -155,7 +166,8 @@ public class Radiance {
      * and the specified range in cells; the flicker parameter affects the rate at which this will randomly reduce its
      * range and return to normal, and the strobe parameter affects the rate at which this will steadily reduce its
      * range and return to normal. Usually one of flicker or strobe is 0; if both are non-0, the radius will be smaller
-     * than normal.
+     * than normal. You can only give this a description that will be translated to Oklab, so this is meant to be used
+     * only with {@link LightingManager}, not {@link LightingManagerRgb}.
      * @param range possibly-non-integer radius to light, in cells
      * @param color a String that describes a color as per {@link DescriptiveColor#describeOklab(String)}
      * @param flicker the rate at which to flicker, as a non-negative float
@@ -173,8 +185,10 @@ public class Radiance {
      * flicker or strobe is 0; if both are non-0, the radius will be smaller than normal. The delay parameter is usually
      * from 0f to 1f, and is almost always 0f unless this is part of a group of related Radiance objects; it affects
      * when strobe and flicker hit "high points" and "low points", and should usually be used with strobe.
+     * You can give this an Oklab color (to use with {@link LightingManager}) or an RGBA8888 color (to use with
+     * {@link LightingManagerRgb}).
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an Oklab int color
+     * @param color an Oklab or RGBA8888 int color
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      * @param delay a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f
@@ -193,8 +207,10 @@ public class Radiance {
      * setting flare, where flare is used to create a sudden increase in the minimum radius for the Radiance, but flare
      * makes the most sense to set when an event should brighten a Radiance, not in the constructor. Valid values for
      * flare are usually between 0f and 1f.
+     * You can give this an Oklab color (to use with {@link LightingManager}) or an RGBA8888 color (to use with
+     * {@link LightingManagerRgb}).
      * @param range possibly-non-integer radius to light, in cells
-     * @param color an Oklab int color
+     * @param color an Oklab or RGBA8888 int color
      * @param flicker the rate at which to flicker, as a non-negative float
      * @param strobe the rate at which to strobe or pulse, as a non-negative float
      * @param delay a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f
@@ -202,13 +218,37 @@ public class Radiance {
      */
     public Radiance(float range, int color, float flicker, float strobe, float delay, float flare)
     {
+        this(range, color, flicker, strobe, delay, flare, random.nextInt());
+    }
+    /**
+     * Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
+     * parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
+     * parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
+     * flicker or strobe is 0; if both are non-0, the radius will be smaller than normal. The delay parameter is usually
+     * from 0f to 1f, and is almost always 0f unless this is part of a group of related Radiance objects; it affects
+     * when strobe and flicker hit "high points" and "low points", and should usually be used with strobe. This allows
+     * setting flare, where flare is used to create a sudden increase in the minimum radius for the Radiance, but flare
+     * makes the most sense to set when an event should brighten a Radiance, not in the constructor. Valid values for
+     * flare are usually between 0f and 1f.
+     * You can give this an Oklab color (to use with {@link LightingManager}) or an RGBA8888 color (to use with
+     * {@link LightingManagerRgb}).
+     * @param range possibly-non-integer radius to light, in cells
+     * @param color an Oklab or RGBA8888 int color
+     * @param flicker the rate at which to flicker, as a non-negative float
+     * @param strobe the rate at which to strobe or pulse, as a non-negative float
+     * @param delay a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f
+     * @param flare affects the minimum radius for the Radiance, from 0f to 1f with a default of 0f
+     * @param seed a forced seed that can be used to synchronize flicker effects between Radiance objects
+     */
+    public Radiance(float range, int color, float flicker, float strobe, float delay, float flare, int seed)
+    {
         this.range = range;
         this.color = color;
         this.flicker = flicker;
         this.strobe = strobe;
         this.delay = delay;
         this.flare = flare;
-        this.seed = random.nextInt();
+        this.seed = seed;
     }
 
     /**
@@ -238,7 +278,7 @@ public class Radiance {
                     LineWobble.splobble(seed ^ 0x9E3779B9, PHI * (time * flicker + delay + PHI)) * 0.125f +
                             0.5f;
         if(strobe != 0f)
-            current *= MathTools.swayTight(time * strobe + delay) * 0.5f + 0.5f;
+            current *= TrigTools.sinTurns(time * strobe + delay) * 0.25f + 0.75f;
         return Math.max(current, range * flare);
     }
 
@@ -247,7 +287,7 @@ public class Radiance {
      * This chain is an array of Radiance where the order matters.
      * @param length how many Radiance objects should be in the returned array
      * @param range in cells, how far each Radiance should expand from its start at its greatest radius
-     * @param color as an Oklab int color
+     * @param color as an Oklab or RGBA8888 int color
      * @param strobe the rate at which the chain will pulse; should be greater than 0
      * @return an array of Radiance objects that will pulse in sequence.
      */
