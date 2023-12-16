@@ -38,7 +38,9 @@ import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.ChopRandom;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
+import com.github.yellowstonegames.core.FullPalette;
 import com.github.yellowstonegames.core.FullPaletteRgb;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
@@ -81,7 +83,8 @@ public class PairedDemo extends ApplicationAdapter {
     /**
      * Handles field of view calculations as they change when the player moves around; also, lighting with colors.
      */
-    private final VisionFrameworkRgb vision = new VisionFrameworkRgb();
+    private final VisionFrameworkRgb rgbVision = new VisionFrameworkRgb();
+    private final VisionFramework oklabVision = new VisionFramework();
     /**
      * The 2D position of the player (the moving character who the FOV centers upon).
      */
@@ -131,8 +134,8 @@ public class PairedDemo extends ApplicationAdapter {
     private TextureAtlas.AtlasRegion solid;
     private int health = 9;
 
-    private static final float
-            FLOAT_BLOOD = DescriptiveColorRgb.toFloat(DescriptiveColorRgb.describe("deepest red"));
+    private static final float RGB_BLOOD = DescriptiveColorRgb.toFloat(DescriptiveColorRgb.describe("deepest red"));
+    private static final float OKLAB_BLOOD = DescriptiveColor.oklabIntToFloat(DescriptiveColor.describe("deepest red"));
 
 
     /**
@@ -249,8 +252,10 @@ public class PairedDemo extends ApplicationAdapter {
                 atlas.findRegions(rng.randomElement(Data.possibleCharacters)), Animation.PlayMode.LOOP), player);
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
-        vision.restart(linePlaceMap, player, 8);
-        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0.3f, 0f));
+        rgbVision.restart(linePlaceMap, player, 8);
+        rgbVision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0.3f, 0f));
+        oklabVision.restart(linePlaceMap, player, 8);
+        oklabVision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.3f, 0f));
         floors.remove(player);
         int numMonsters = 100;
         monsters = new CoordObjectOrderedMap<>(numMonsters);
@@ -263,8 +268,12 @@ public class PairedDemo extends ApplicationAdapter {
                             atlas.findRegions(enemy), Animation.PlayMode.LOOP), monPos);
             monster.setSize(1f, 1f);
             monsters.put(monPos, monster);
-            vision.lighting.addLight(monPos, new Radiance(rng.nextFloat(3f) + 2f,
-                    FullPaletteRgb.COLOR_WHEEL_PALETTE_LIGHT[rng.nextInt(FullPaletteRgb.COLOR_WHEEL_PALETTE_LIGHT.length)], 0.5f, 0f));
+            float range = rng.nextFloat(3f) + 2f;
+            int colorIndex = rng.nextInt(FullPaletteRgb.COLOR_WHEEL_PALETTE_LIGHT.length);
+            rgbVision.lighting.addLight(monPos, new Radiance(range,
+                    FullPaletteRgb.COLOR_WHEEL_PALETTE_LIGHT[colorIndex], 0.5f, 0f));
+            oklabVision.lighting.addLight(monPos, new Radiance(range,
+                    FullPalette.COLOR_WHEEL_PALETTE_LIGHT[colorIndex], 0.5f, 0f));
         }
 //        monsterDirector = new Director<>((e) -> e.getValue().getLocation(), monsters, 125);
         monsterDirector = new Director<>(c -> monsters.get(c).getLocation(), monsters.order(), 150);
@@ -284,7 +293,7 @@ public class PairedDemo extends ApplicationAdapter {
         // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
         // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
         // Region that contains the cells just past the edge of the player's FOV area.
-        playerToCursor.partialScan(13, vision.blockage);
+        playerToCursor.partialScan(13, rgbVision.blockage);
 
         lang = '"' + Language.DEMONIC.sentence(rng, 4, 7,
                 new String[]{",", ",", ",", " -"}, new String[]{"...\"", ", heh...\"", ", nyehehe...\"",  "!\"", "!\"", "!\"", "!\" *PTOOEY!*",}, 0.2);
@@ -331,7 +340,8 @@ public class PairedDemo extends ApplicationAdapter {
         font.getData().markupEnabled = true;
         // 0xFF848350 is fully opaque yellowish-brownish-gray, with about 30% lightness.
         // It affects the default color each cell has before lighting affects it.
-        vision.rememberedColor = 0x654235FF;
+//        rgbVision.rememberedColor = 0x654235FF;
+//        oklabVision.rememberedColor = 0xFF7F7F50;
 
 //        Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
 //        Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
@@ -484,32 +494,39 @@ public class PairedDemo extends ApplicationAdapter {
         if (newX >= 0 && newY >= 0 && newX < placeWidth && newY < placeHeight
                 && barePlaceMap[newX][newY] != '#') {
             // '+' is a door.
-            if (vision.prunedPlaceMap[newX][newY] == '+') {
-                vision.editSingle(next, '/');
+            if (rgbVision.prunedPlaceMap[newX][newY] == '+') {
+                rgbVision.editSingle(next, '/');
+                oklabVision.editSingle(next, '/');
             } else {
                 // if a monster was at the position we moved into, and so was successfully removed...
                 if(monsters.containsKey(next))
                 {
                     monsters.remove(next);
                     // remove any light present at the now-dead enemy's location
-                    vision.lighting.removeLight(next);
+                    rgbVision.lighting.removeLight(next);
+                    oklabVision.lighting.removeLight(next);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
-                            if(vision.prunedPlaceMap[newX+x][newY+y] == '.' && rng.nextBoolean())
-                                vision.prunedPlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
+                            if(rgbVision.prunedPlaceMap[newX+x][newY+y] == '.' && rng.nextBoolean()) {
+                                rgbVision.prunedPlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
+                                oklabVision.prunedPlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
+                            }
                         }
                     }
                 }
-                vision.moveViewer(player, next);
+                rgbVision.moveViewer(player, next);
+                oklabVision.moveViewer(player, next);
                 // we can move the player's light now that we know there is no light for an enemy at next.
-                vision.lighting.moveLight(player, next);
+                rgbVision.lighting.moveLight(player, next);
+                oklabVision.lighting.moveLight(player, next);
 
                 playerSprite.location.setStart(player);
                 playerSprite.location.setEnd(player = next);
                 phase = Phase.PLAYER_ANIM;
                 playerDirector.play();
             }
-            vision.finishChanges();
+            rgbVision.finishChanges();
+            oklabVision.finishChanges();
             phase = Phase.PLAYER_ANIM;
         }
     }
@@ -521,7 +538,7 @@ public class PairedDemo extends ApplicationAdapter {
         playerArray[0] = player;
         int monCount = monsters.size();
         // handle monster turns
-        float[][] lightLevels = vision.lighting.fovResult;
+        float[][] lightLevels = rgbVision.lighting.fovResult;
         for(int ci = 0; ci < monCount; ci++) {
             Coord pos = monsters.keyAt(ci);
             AnimatedGlidingSprite mon = monsters.getAt(ci);
@@ -546,7 +563,7 @@ public class PairedDemo extends ApplicationAdapter {
                     if(tmp == null) continue;
                     // if we would move into the player, instead damage the player and animate a bump motion.
                     if (tmp.x == player.x && tmp.y == player.y) {
-                        playerSprite.setPackedColor(FLOAT_BLOOD);
+                        playerSprite.setPackedColor(RGB_BLOOD);
                         health--;
                         VectorSequenceGlider small = VectorSequenceGlider.BUMPS.getOrDefault(pos.toGoTo(player), null);
                         if(small != null) {
@@ -563,7 +580,8 @@ public class PairedDemo extends ApplicationAdapter {
                         mon.location.setEnd(tmp);
                         // this changes the key from pos to tmp without affecting its value.
                         monsters.alter(pos, tmp);
-                        vision.lighting.moveLight(pos, tmp);
+                        rgbVision.lighting.moveLight(pos, tmp);
+                        oklabVision.lighting.moveLight(pos, tmp);
                     }
                 }
             }
@@ -575,27 +593,27 @@ public class PairedDemo extends ApplicationAdapter {
     /**
      * Draws the map, applies any highlighting for the path to the cursor, and then draws the player.
      */
-    public void putMap()
+    public void putMapRgb()
     {
         float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
-        vision.update(change);
+        rgbVision.update(change);
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
         int rainbow = hsl2rgb((time * 0.25f), 1f, 0.55f, 1f);
 
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
-            if(vision.inView.contains(curr))
-                vision.backgroundColors[curr.x][curr.y] = rainbow;
+            if(rgbVision.inView.contains(curr))
+                rgbVision.backgroundColors[curr.x][curr.y] = rainbow;
         }
 
-        float[][] lightLevels = vision.lighting.fovResult;
+        float[][] lightLevels = rgbVision.lighting.fovResult;
 
         for (int x = 0; x < placeWidth; x++) {
             for (int y = 0; y < placeHeight; y++) {
-                char glyph = vision.prunedPlaceMap[x][y];
-                if(vision.seen.contains(x, y)) {
+                char glyph = rgbVision.prunedPlaceMap[x][y];
+                if(rgbVision.seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
-                    batch.setPackedColor(DescriptiveColorRgb.toFloat(vision.backgroundColors[x][y]));
+                    batch.setPackedColor(DescriptiveColorRgb.toFloat(rgbVision.backgroundColors[x][y]));
                     if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(glyph, solid), x, y, 1f, 1f);
@@ -611,13 +629,68 @@ public class PairedDemo extends ApplicationAdapter {
                 if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         monster = monster.animate(time);
-                        monster.setPackedColor(DescriptiveColorRgb.toFloat(vision.getForegroundColor(i, j, change)));
+                        monster.setPackedColor(DescriptiveColorRgb.toFloat(rgbVision.getForegroundColor(i, j, change)));
                         monster.draw(batch);
                     }
                 }
-                else if(vision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
+                else if(rgbVision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
                     monster = monster.animate(time);
-                    monster.setPackedColor(DescriptiveColorRgb.toFloat(vision.getForegroundColor(i, j, change)));
+                    monster.setPackedColor(DescriptiveColorRgb.toFloat(rgbVision.getForegroundColor(i, j, change)));
+                    monster.draw(batch);
+                }
+            }
+        }
+        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
+        playerSprite.animate(time).draw(batch);
+//        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
+    }
+
+    /**
+     * Draws the map, applies any highlighting for the path to the cursor, and then draws the player.
+     */
+    public void putMapOklab()
+    {
+        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
+        oklabVision.update(change);
+        final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
+        int rainbow = DescriptiveColor.oklabByHSL((time * 0.25f), 1f, 0.45f, 1f);
+
+        for (int i = 0; i < toCursor.size(); i++) {
+            Coord curr = toCursor.get(i);
+            if(oklabVision.inView.contains(curr))
+                oklabVision.backgroundColors[curr.x][curr.y] = rainbow;
+        }
+
+        float[][] lightLevels = oklabVision.lighting.fovResult;
+
+        for (int x = 0; x < placeWidth; x++) {
+            for (int y = 0; y < placeHeight; y++) {
+                char glyph = oklabVision.prunedPlaceMap[x][y];
+                if(oklabVision.seen.contains(x, y)) {
+                    // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
+                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(oklabVision.backgroundColors[x][y]));
+                    if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
+                        batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
+                    batch.draw(charMapping.getOrDefault(glyph, solid), x, y, 1f, 1f);
+                    // visual debugging; show all cells w
+//                    if(vision.justHidden.contains(x, y)) batch.draw(charMapping.getOrDefault('s', solid), x, y, 1f, 1f);
+                }
+            }
+        }
+        AnimatedGlidingSprite monster;
+
+        for (int i = 0; i < placeWidth; i++) {
+            for (int j = 0; j < placeHeight; j++) {
+                if (lightLevels[i][j] > 0.01) {
+                    if ((monster = monsters.get(Coord.get(i, j))) != null) {
+                        monster = monster.animate(time);
+                        monster.setPackedColor(DescriptiveColor.oklabIntToFloat(oklabVision.getForegroundColor(i, j, change)));
+                        monster.draw(batch);
+                    }
+                }
+                else if(oklabVision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
+                    monster = monster.animate(time);
+                    monster.setPackedColor(DescriptiveColor.oklabIntToFloat(oklabVision.getForegroundColor(i, j, change)));
                     monster.draw(batch);
                 }
             }
@@ -682,7 +755,7 @@ public class PairedDemo extends ApplicationAdapter {
         if (health <= 0) {
             // still need to display the map, then write over it with a message.
             batch.begin();
-            putMap();
+            putMapRgb();
             float wide = rgbViewport.getWorldWidth(),
                     x = playerSprite.getX() - rgbViewport.getWorldWidth() * 0.5f,
                     y = playerSprite.getY();
@@ -739,7 +812,7 @@ public class PairedDemo extends ApplicationAdapter {
                     // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
                     // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
                     // Region that contains the cells just past the edge of the player's FOV area.
-                    playerToCursor.partialScan(13, vision.blockage);
+                    playerToCursor.partialScan(13, rgbVision.blockage);
                 }
             }
         }
@@ -747,7 +820,7 @@ public class PairedDemo extends ApplicationAdapter {
             handleHeldKeys();
         }
         batch.begin();
-        putMap();
+        putMapRgb();
         pos.set(10, Gdx.graphics.getHeight() - cellHeight - cellHeight);
         rgbViewport.unproject(pos);
         font.draw(batch, "[GRAY]Current Health: [RED]" + health + "[WHITE] at "
@@ -757,7 +830,7 @@ public class PairedDemo extends ApplicationAdapter {
         oklabViewport.apply(false);
         batch.setProjectionMatrix(oklabCamera.combined);
         batch.begin();
-        putMap();
+        putMapOklab();
         batch.end();
     }
     @Override
