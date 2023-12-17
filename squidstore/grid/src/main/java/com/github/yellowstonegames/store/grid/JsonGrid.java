@@ -270,28 +270,15 @@ public final class JsonGrid {
             @Override
             public void write(Json json, CoordFloatOrderedMap object, Class knownType) {
                 Writer writer = json.getWriter();
-                try {
-                    writer.write('{');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectStart();
                 Iterator<ObjectFloatMap.Entry<Coord>> es = new CoordFloatOrderedMap.OrderedMapEntries<>(object).iterator();
                 while (es.hasNext()) {
                     ObjectFloatMap.Entry<Coord> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey());
-                        json.setWriter(writer);
-                        json.writeValue(k);
-                        writer.write(':');
-                        json.writeValue(e.getValue(), Float.TYPE);
-                        if (es.hasNext())
-                            writer.write(',');
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), Float.TYPE);
                 }
-                try {
-                    writer.write('}');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
@@ -1137,7 +1124,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLightingManager(@NonNull Json json) {
-        json.addClassTag("LiMa", LightingManager.class);
+        json.addClassTag("LiMo", LightingManager.class);
         registerRegion(json);
         registerRadiance(json);
         registerCoordObjectOrderedMap(json);
@@ -1153,11 +1140,39 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLightingManagerRgb(@NonNull Json json) {
-        json.addClassTag("LiMR", LightingManagerRgb.class);
+        json.addClassTag("LiMr", LightingManagerRgb.class);
         registerRegion(json);
         registerRadiance(json);
         registerCoordObjectOrderedMap(json);
         JsonCore.registerFloat2D(json);
         JsonCore.registerInt2D(json);
+    }
+
+    /**
+     * Registers VisionFramework with the given Json object, so VisionFramework can be written to and read from JSON.
+     * This does not register a custom serializer for VisionFramework, but instead allows Json to handle it and
+     * registers all types of field in a VisionFramework in one go.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerVisionFramework(@NonNull Json json) {
+        json.addClassTag("ViFo", VisionFramework.class);
+        registerLightingManager(json);
+        JsonCore.registerChar2D(json);
+        JsonGrid.registerCoordFloatOrderedMap(json);
+    }
+
+    /**
+     * Registers VisionFrameworkRgb with the given Json object, so VisionFrameworkRgb can be written to and read from JSON.
+     * This does not register a custom serializer for VisionFrameworkRgb, but instead allows Json to handle it and
+     * registers all types of field in a VisionFrameworkRgb in one go.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerVisionFrameworkRgb(@NonNull Json json) {
+        json.addClassTag("ViFr", VisionFrameworkRgb.class);
+        registerLightingManagerRgb(json);
+        JsonCore.registerChar2D(json);
+        JsonGrid.registerCoordFloatOrderedMap(json);
     }
 }

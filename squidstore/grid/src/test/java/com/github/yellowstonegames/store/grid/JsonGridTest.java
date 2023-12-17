@@ -18,8 +18,11 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.digital.Interpolations;
+import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -514,6 +517,38 @@ public class JsonGridTest {
         System.out.println(lm.lights);
         System.out.println(lm2.lights);
         Assert.assertEquals(lm, lm2);
+    }
+
+    @Test
+    public void testVisionFramework() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerVisionFramework(json);
+        VisionFramework vf = new VisionFramework();
+        vf.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColor.describeOklab("darker gray 9 yellow"));
+        vf.lighting.addLight(3, 3, new Radiance(3f, 0xFF9966AA, 0.2f, 0f, 0f, 0f));
+        String data = json.toJson(vf);
+        System.out.println(data);
+        VisionFramework vf2 = json.fromJson(VisionFramework.class, data);
+        System.out.println();
+        System.out.println(vf);
+        System.out.println(vf2);
+        Assert.assertEquals(vf, vf2);
+    }
+    
+    @Test
+    public void testVisionFrameworkRgb() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerVisionFrameworkRgb(json);
+        VisionFrameworkRgb vf = new VisionFrameworkRgb();
+        vf.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
+        vf.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
+        String data = json.toJson(vf);
+        System.out.println(data);
+        VisionFrameworkRgb vf2 = json.fromJson(VisionFrameworkRgb.class, data);
+        System.out.println();
+        System.out.println(vf);
+        System.out.println(vf2);
+        Assert.assertEquals(vf, vf2);
     }
 
 
