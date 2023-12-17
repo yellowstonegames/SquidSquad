@@ -24,6 +24,7 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -341,6 +342,38 @@ public class GridTest {
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
             VisionFramework data2 = kryo.readObject(input, VisionFramework.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+
+    @Test
+    public void testVisionFrameworkRgb() {
+        Kryo kryo = new Kryo();
+        kryo.register(int[].class);
+        kryo.register(int[][].class);
+        kryo.register(float[].class);
+        kryo.register(float[][].class);
+        kryo.register(char[].class);
+        kryo.register(char[][].class);
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(Radiance.class, new RadianceSerializer());
+        kryo.register(Region.class, new RegionSerializer());
+        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        kryo.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
+        kryo.register(LightingManagerRgb.class, new LightingManagerRgbSerializer());
+        kryo.register(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer());
+
+        VisionFrameworkRgb data = new VisionFrameworkRgb();
+        data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
+        data.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            VisionFrameworkRgb data2 = kryo.readObject(input, VisionFrameworkRgb.class);
             Assert.assertEquals(data, data2);
         }
     }
