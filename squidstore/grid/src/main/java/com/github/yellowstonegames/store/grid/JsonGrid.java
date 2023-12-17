@@ -221,28 +221,15 @@ public final class JsonGrid {
             @Override
             public void write(Json json, CoordFloatMap object, Class knownType) {
                 Writer writer = json.getWriter();
-                try {
-                    writer.write('{');
-                } catch (IOException ignored) {
-                }
-                Iterator<ObjectFloatMap.Entry<Coord>> es = new ObjectFloatMap.Entries<>(object).iterator();
+                json.writeObjectStart();
+                Iterator<ObjectFloatMap.Entry<Coord>> es = new CoordFloatMap.Entries<>(object).iterator();
                 while (es.hasNext()) {
                     ObjectFloatMap.Entry<Coord> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey());
-                        json.setWriter(writer);
-                        json.writeValue(k);
-                        writer.write(':');
-                        json.writeValue(e.getValue(), Float.TYPE);
-                        if (es.hasNext())
-                            writer.write(',');
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), Float.TYPE);
                 }
-                try {
-                    writer.write('}');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
@@ -306,28 +293,15 @@ public final class JsonGrid {
             @Override
             public void write(Json json, CoordLongMap object, Class knownType) {
                 Writer writer = json.getWriter();
-                try {
-                    writer.write('{');
-                } catch (IOException ignored) {
-                }
-                Iterator<ObjectLongMap.Entry<Coord>> es = new ObjectLongMap.Entries<>(object).iterator();
+                json.writeObjectStart();
+                Iterator<ObjectLongMap.Entry<Coord>> es = new CoordLongMap.Entries<>(object).iterator();
                 while (es.hasNext()) {
                     ObjectLongMap.Entry<Coord> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey());
-                        json.setWriter(writer);
-                        json.writeValue(k);
-                        writer.write(':');
-                        json.writeValue(e.getValue(), Long.TYPE);
-                        if (es.hasNext())
-                            writer.write(',');
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), Long.TYPE);
                 }
-                try {
-                    writer.write('}');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
@@ -355,28 +329,15 @@ public final class JsonGrid {
             @Override
             public void write(Json json, CoordLongOrderedMap object, Class knownType) {
                 Writer writer = json.getWriter();
-                try {
-                    writer.write('{');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectStart();
                 Iterator<ObjectLongMap.Entry<Coord>> es = new CoordLongOrderedMap.OrderedMapEntries<>(object).iterator();
                 while (es.hasNext()) {
                     ObjectLongMap.Entry<Coord> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey());
-                        json.setWriter(writer);
-                        json.writeValue(k);
-                        writer.write(':');
-                        json.writeValue(e.getValue(), Long.TYPE);
-                        if (es.hasNext())
-                            writer.write(',');
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), Long.TYPE);
                 }
-                try {
-                    writer.write('}');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
