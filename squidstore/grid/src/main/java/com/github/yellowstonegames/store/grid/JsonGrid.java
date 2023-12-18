@@ -19,9 +19,7 @@ package com.github.yellowstonegames.store.grid;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.github.tommyettinger.ds.ObjectFloatMap;
-import com.github.tommyettinger.ds.ObjectIntMap;
-import com.github.tommyettinger.ds.ObjectLongMap;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.store.core.JsonCore;
@@ -136,11 +134,8 @@ public final class JsonGrid {
         json.setSerializer(CoordObjectMap.class, new Json.Serializer<CoordObjectMap>() {
             @Override
             public void write(Json json, CoordObjectMap object, Class knownType) {
-                JsonWriter writer = json.getWriter();
-                try {
-                    writer.object();
-                } catch (IOException ignored) {
-                }
+                Writer writer = json.getWriter();
+                json.writeObjectStart();
                 Iterator<Map.Entry<Coord, ?>> es = new CoordObjectMap.Entries<>(object).iterator();
                 while (es.hasNext()) {
                     Map.Entry<Coord, ?> e = es.next();
@@ -148,10 +143,7 @@ public final class JsonGrid {
                     json.setWriter(writer);
                     json.writeValue(k, e.getValue(), null);
                 }
-                try {
-                    writer.pop();
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
@@ -178,22 +170,16 @@ public final class JsonGrid {
         json.setSerializer(CoordObjectOrderedMap.class, new Json.Serializer<CoordObjectOrderedMap>() {
             @Override
             public void write(Json json, CoordObjectOrderedMap object, Class knownType) {
-                JsonWriter writer = json.getWriter();
-                try {
-                    writer.object();
-                } catch (IOException ignored) {
-                }
-                Iterator<Map.Entry<Coord, ?>> es = new CoordObjectOrderedMap.OrderedMapEntries<>(object).iterator();
+                Writer writer = json.getWriter();
+                json.writeObjectStart();
+                Iterator<Map.Entry<Coord, ?>> es = new ObjectObjectOrderedMap.OrderedMapEntries<>(object).iterator();
                 while (es.hasNext()) {
                     Map.Entry<Coord, ?> e = es.next();
                     String k = json.toJson(e.getKey());
                     json.setWriter(writer);
                     json.writeValue(k, e.getValue(), null);
                 }
-                try {
-                    writer.pop();
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
@@ -366,28 +352,15 @@ public final class JsonGrid {
             @Override
             public void write(Json json, CoordIntMap object, Class knownType) {
                 Writer writer = json.getWriter();
-                try {
-                    writer.write('{');
-                } catch (IOException ignored) {
-                }
-                Iterator<ObjectIntMap.Entry<Coord>> es = new ObjectIntMap.Entries<>(object).iterator();
+                json.writeObjectStart();
+                Iterator<ObjectIntMap.Entry<Coord>> es = new CoordIntMap.Entries<>(object).iterator();
                 while (es.hasNext()) {
                     ObjectIntMap.Entry<Coord> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey());
-                        json.setWriter(writer);
-                        json.writeValue(k);
-                        writer.write(':');
-                        json.writeValue(e.getValue(), Integer.TYPE);
-                        if (es.hasNext())
-                            writer.write(',');
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), Integer.TYPE);
                 }
-                try {
-                    writer.write('}');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
@@ -415,28 +388,15 @@ public final class JsonGrid {
             @Override
             public void write(Json json, CoordIntOrderedMap object, Class knownType) {
                 Writer writer = json.getWriter();
-                try {
-                    writer.write('{');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectStart();
                 Iterator<ObjectIntMap.Entry<Coord>> es = new CoordIntOrderedMap.OrderedMapEntries<>(object).iterator();
                 while (es.hasNext()) {
                     ObjectIntMap.Entry<Coord> e = es.next();
-                    try {
-                        String k = json.toJson(e.getKey());
-                        json.setWriter(writer);
-                        json.writeValue(k);
-                        writer.write(':');
-                        json.writeValue(e.getValue(), Integer.TYPE);
-                        if (es.hasNext())
-                            writer.write(',');
-                    } catch (IOException ignored) {
-                    }
+                    String k = json.toJson(e.getKey());
+                    json.setWriter(writer);
+                    json.writeValue(k, e.getValue(), Integer.TYPE);
                 }
-                try {
-                    writer.write('}');
-                } catch (IOException ignored) {
-                }
+                json.writeObjectEnd();
             }
 
             @Override
