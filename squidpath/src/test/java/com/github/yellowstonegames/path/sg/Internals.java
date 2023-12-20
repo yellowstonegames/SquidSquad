@@ -25,10 +25,8 @@ SOFTWARE.
 package com.github.yellowstonegames.path.sg;
 
 import java.util.Collection;
+import java.util.Set;
 
-import com.github.yellowstonegames.path.sg.Connection;
-import com.github.yellowstonegames.path.sg.Graph;
-import com.github.yellowstonegames.path.sg.Node;
 import com.github.yellowstonegames.path.sg.utils.WeightFunction;
 
 public class Internals<V> {
@@ -47,8 +45,8 @@ public class Internals<V> {
         return graph.nodeMap.nodeCollection;
     }
 
-    public Collection<Connection<V>> getConnections() {
-        return graph.edgeMap.values();
+    public Set<Connection<V>> getConnections() {
+        return graph.edges;
     }
 
     public void addConnection(Node<V> a, Node<V> b, WeightFunction<V> weightFunction) {

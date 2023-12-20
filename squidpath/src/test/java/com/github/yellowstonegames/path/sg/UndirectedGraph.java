@@ -25,10 +25,7 @@ package com.github.yellowstonegames.path.sg;
 
 import java.util.Collection;
 
-import com.github.yellowstonegames.path.sg.Connection;
 import com.github.yellowstonegames.path.sg.Connection.UndirectedConnection;
-import com.github.yellowstonegames.path.sg.Graph;
-import com.github.yellowstonegames.path.sg.Node;
 import com.github.yellowstonegames.path.sg.algorithms.UndirectedGraphAlgorithms;
 import com.github.yellowstonegames.path.sg.utils.WeightFunction;
 
@@ -74,7 +71,7 @@ public class UndirectedGraph<V> extends Graph<V> {
             e2.set(b, a, weight);
             a.addEdge(e1);
             b.addEdge(e2);
-            edgeMap.put(e1, e1);
+            edges.add(e1);
             e = e1;
         } else {
             e.setWeight(weight);
@@ -85,7 +82,7 @@ public class UndirectedGraph<V> extends Graph<V> {
     @Override
     Connection<V> addConnection(Node<V> a, Node<V> b) {
         Connection<V> e = a.getEdge(b);
-        return e != null ? edgeMap.get(e) : addConnection(a, b, getDefaultEdgeWeightFunction());
+        return e != null ? edges.get(e) : addConnection(a, b, getDefaultEdgeWeightFunction());
     }
 
     @Override
@@ -93,14 +90,14 @@ public class UndirectedGraph<V> extends Graph<V> {
         Connection<V> e = a.removeEdge(b);
         if (e == null) return false;
         b.removeEdge(a);
-        edgeMap.remove(e);
+        edges.remove(e);
         return true;
     }
 
     @Override
     Connection<V> getEdge(Node<V> a, Node<V> b) {
         Connection<V> edge = a.getEdge(b);
-        return edge == null ? null : edgeMap.get(edge); // get from map to ensure consistent instance is returned
+        return edge == null ? null : edges.get(edge); // get from map to ensure consistent instance is returned
     }
 
 

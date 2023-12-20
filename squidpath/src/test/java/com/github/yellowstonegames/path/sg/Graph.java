@@ -23,15 +23,10 @@ SOFTWARE.
  */
 package com.github.yellowstonegames.path.sg;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
+import java.util.*;
 
 import com.github.tommyettinger.ds.ObjectBag;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.yellowstonegames.path.sg.algorithms.Algorithms;
 import com.github.yellowstonegames.path.sg.utils.WeightFunction;
@@ -48,7 +43,7 @@ public abstract class Graph<V> {
      * This is a map so that for undirected graphs, a consistent edge instance can be obtained from
      * either (u, v) or (v, u)
      */
-    final LinkedHashMap<Connection<V>, Connection<V>> edgeMap;
+    final ObjectOrderedSet<Connection<V>> edges;
 
     final Internals<V> internals = new Internals<>(this);
 
@@ -61,7 +56,7 @@ public abstract class Graph<V> {
 
     protected Graph() {
         nodeMap = new NodeMap<>(this);
-        edgeMap = new LinkedHashMap<>();
+        edges = new ObjectOrderedSet<>();
     }
 
     protected Graph(Collection<V> vertices) {
@@ -267,14 +262,14 @@ public abstract class Graph<V> {
         for (Node<V> v : getNodes()) {
             v.disconnect();
         }
-        edgeMap.clear();
+        edges.clear();
     }
 
     /**
      * Removes all vertices and edges from the graph.
      */
     public void removeAllVertices() {
-        edgeMap.clear();
+        edges.clear();
         nodeMap.clear();
     }
 
@@ -295,12 +290,7 @@ public abstract class Graph<V> {
      * @param comparator a comparator for comparing edges
      */
     public void sortEdges(final Comparator<Connection<V>> comparator) {
-        List<Entry<Connection<V>, Connection<V>>> entryList = new ArrayList<>(edgeMap.entrySet());
-        Collections.sort(entryList, Entry.comparingByKey(comparator));
-        edgeMap.clear();
-        for (Entry<Connection<V>, Connection<V>> entry : entryList) {
-            edgeMap.put(entry.getKey(), entry.getValue());
-        }
+        edges.sort(comparator);
     }
 
     //--------------------
@@ -318,7 +308,7 @@ public abstract class Graph<V> {
             e = obtainEdge();
             e.set(a, b, weight);
             a.addEdge(e);
-            edgeMap.put(e, e);
+            edges.add(e);
         } else {
             e.setWeight(weight);
         }
@@ -332,7 +322,7 @@ public abstract class Graph<V> {
     boolean removeConnection(Node<V> a, Node<V> b, boolean removeFromMap) {
         Connection<V> e = a.removeEdge(b);
         if (e == null) return false;
-        if (removeFromMap) edgeMap.remove(e);
+        if (removeFromMap) edges.remove(e);
         return true;
     }
 
@@ -405,8 +395,8 @@ public abstract class Graph<V> {
      *
      * @return an unmodifiable collection of all the edges in the graph
      */
-    public Collection<Edge<V>> getEdges() {
-        return Collections.unmodifiableCollection(edgeMap.values());
+    public Set<Edge<V>> getEdges() {
+        return Collections.unmodifiableSet(edges);
     }
 
     /**
@@ -443,7 +433,7 @@ public abstract class Graph<V> {
      * @return the number of edges
      */
     public int getEdgeCount() {
-        return edgeMap.size();
+        return edges.size();
     }
 
 
