@@ -23,181 +23,40 @@ SOFTWARE.
  */
 package com.github.yellowstonegames.path.sg;
 
-import java.util.*;
+import com.github.tommyettinger.ds.ObjectDeque;
 
-public class Array<T> extends AbstractCollection<T> {
+import java.util.Collection;
 
-    public Object[] items;
-    public int size;
-
+public class Array<T> extends ObjectDeque<T> {
     public Array() {
-        this(8);
+        super();
     }
 
-    public Array(int capacity) {
-        this(capacity, false);
+    public Array(int initialSize) {
+        super(initialSize);
     }
+
 
     public Array(int capacity, boolean resize) {
-        items = new Object[capacity];
+        super(capacity);
         if (resize) this.size = capacity;
     }
 
-    @Override
-    public boolean add(T item) {
-        resize(size + 1);
-        items[size++] = item;
-        return true;
+    public Array(Collection<? extends T> coll) {
+        super(coll);
     }
 
-    @SuppressWarnings("unchecked")
-    public T set(int index, T item) {
-        Object oldVal = items[index];
-        items[index] = item;
-        return (T) oldVal;
+    public Array(ObjectDeque<? extends T> deque) {
+        super(deque);
     }
 
-    @Override
-    public boolean remove(Object item) {
-        return item != null && remove(indexOf(item)) != null;
+    public Array(T[] a) {
+        super(a);
+    }
+
+    public Array(T[] a, int offset, int count) {
+        super(a, offset, count);
     }
 
 
-    @Override
-    public boolean containsAll(Collection<?> collection) {
-        for (Object e : collection) if (!contains(e)) return false;
-        return true;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends T> collection) {
-        int numNew = collection.size();
-        if (numNew == 0) {
-            return false;
-        } else {
-            resize(size + numNew);
-            Object[] collectionArray = collection.toArray();
-            System.arraycopy(collectionArray, 0, items, size, numNew);
-            size += numNew;
-            return true;
-        }
-    }
-
-    /**
-     * Gets the index of the first occurrence of {@code item} in this Array, or -1 if the argument is not present.
-     * Because {@code null} is used to indicate empty space, you cannot search for a "null item" with this -- it will
-     * throw an {@link IllegalArgumentException} if you do.
-     * @param item a non-null Object that could be in this Array (typically a T)
-     * @return the index of the first occurrence of {@code item} in this Array, or -1 if not present
-     */
-    public int indexOf(Object item) {
-        if(item == null) {
-            Errors.throwNullItemException();
-        } else {
-            for (int i = size - 1; i >= 0; i--) {
-                if (item.equals(items[i])) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T item = (T) items[index];
-            size--;
-            for (int i = index; i < size; i++) {
-                items[i] = items[i+1];
-            }
-            return item;
-        } else {
-            throw new IndexOutOfBoundsException();
-        }
-    }
-
-
-    protected void resize(int newSize) {
-        if (newSize > items.length) {
-            strictResize(Math.max(2*items.length, newSize));
-        }
-    }
-
-    protected void strictResize(int newSize) {
-        items = Arrays.copyOf(items, newSize);
-    }
-
-    @Override
-    public void clear() {
-        Arrays.fill(items, null);
-        size = 0;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T get(int i) {
-        return (T) items[i];
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return o != null && indexOf(o) >= 0;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new ArrayIterator();
-    }
-
-    @Override
-    public Object[] toArray() {
-        return Arrays.copyOf(this.items, this.size);
-    }
-
-    @Override
-    public <U> U[] toArray(U[] var1) {
-        if (var1.length < this.size) {
-            var1 = Arrays.copyOf(var1, this.size);
-            System.arraycopy(this.items, 0, var1, 0, this.size);
-        } else {
-            System.arraycopy(this.items, 0, var1, 0, this.size);
-            if (var1.length > this.size) {
-                var1[this.size] = null;
-            }
-        }
-        return var1;
-    }
-
-
-
-    class ArrayIterator implements Iterator<T> {
-
-        int cursor = 0;
-
-        public boolean hasNext() {
-            return cursor < size;
-        }
-
-        public T next() {
-            if (cursor >= size) {
-                throw new NoSuchElementException();
-            } else {
-                return (T) items[cursor++];
-            }
-        }
-
-        public void remove() {
-            Errors.throwModificationException();
-        }
-
-    }
 }

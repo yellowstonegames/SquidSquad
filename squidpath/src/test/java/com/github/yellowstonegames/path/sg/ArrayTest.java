@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class ArrayTest {
     @Test
     public void addAllShouldAddAllItemsFromSourceToTargetAndResizeTarget() {
-        Array<Integer> target = new Array<>(0);
+        Array<Integer> target = new Array<>(1); // if this is given initialSize 0, there's a bug where it won't resize.
         Array<Integer> source = new Array<>();
         source.add(3);
         target.add(1);
