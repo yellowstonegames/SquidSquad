@@ -19,9 +19,20 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.FloatBag;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.random.PouchRandom;
 import com.github.tommyettinger.digital.TrigTools;
 
+/**
+ * An implementation of the Poisson Disk sampling algorithm on a discrete grid. The sampleCircle() and sampleRectangle()
+ * methods here all return CoordObjectOrderedMap results with ObjectList-of-Coord values, where the key represents a
+ * sampled (and chosen) point and the value represents "children" of the key point. The value is often an empty list;
+ * if it isn't, it holds some amount of Coord nodes (always other keys in the result) that radiate away from the center.
+ * You may want just the sampled points; get the {@link CoordObjectOrderedMap#order()} ObjectList for a convenient
+ * source of those. The sampleMap() methods work a little differently, and return a CoordOrderedSet holding sampled
+ * points as items (without anything holding children). Lastly, the separatedPoisson() method is very different; it is
+ * mostly used internally by {@link Region}, and takes a Region that it modifies in-place so "on" cells in that Region
+ * must satisfy a minimum distance from other "on" cells, otherwise they are set to "off."
+ */
 public final class PoissonDisk {
     private static final float inverseRootTwo = (float)Math.sqrt(0.5f);
 
@@ -32,8 +43,8 @@ public final class PoissonDisk {
     }
 
     /**
-     * Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
-     * Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.
+     * Get a group of Coords, each randomly positioned around the given center out to the given radius (measured with
+     * Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
@@ -42,17 +53,18 @@ public final class PoissonDisk {
      * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
      * @param maxX one more than the highest x that can be assigned; typically an array length
      * @param maxY one more than the highest y that can be assigned; typically an array length
-     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return a CoordObjectOrderedMap with ObjectList of Coord values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
                                                  int maxX, int maxY)
     {
-        return sampleCircle(center, radius, minimumDistance, maxX, maxY, 10, new WhiskerRandom());
+        return sampleCircle(center, radius, minimumDistance, maxX, maxY, 10, new PouchRandom());
     }
 
     /**
-     * Get a list of Coords, each randomly positioned around the given center out to the given radius (measured with
-     * Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the list.
+     * Get a group of Coords, each randomly positioned around the given center out to the given radius (measured with
+     * Euclidean distance, so a true circle), but with the given minimum distance from any other Coord in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
@@ -63,7 +75,8 @@ public final class PoissonDisk {
      * @param maxY one more than the highest y that can be assigned; typically an array length
      * @param pointsPerIteration with small radii, this can be around 5; with larger ones, 30 is reasonable
      * @param rng an IRNG to use for all random sampling.
-     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return a CoordObjectOrderedMap with ObjectList of Coord values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleCircle(Coord center, float radius, float minimumDistance,
                                                  int maxX, int maxY, int pointsPerIteration, EnhancedRandom rng)
@@ -73,24 +86,25 @@ public final class PoissonDisk {
     }
 
     /**
-     * Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
-     * maxPosition, but with the given minimum distance from any other Coord in the list.
+     * Get a group of Coords, each randomly positioned within the rectangle between the given minPosition and
+     * maxPosition, but with the given minimum distance from any other Coord in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
      * @param minPosition the Coord with the lowest x and lowest y to be used as a corner for the bounding box
      * @param maxPosition the Coord with the highest x and highest y to be used as a corner for the bounding box
      * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
-     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return a CoordObjectOrderedMap with ObjectList of Coord values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance)
     {
-        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new WhiskerRandom());
+        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new PouchRandom());
     }
 
     /**
-     * Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
-     * maxPosition, but with the given minimum distance from any other Coord in the list.
+     * Get a group of Coords, each randomly positioned within the rectangle between the given minPosition and
+     * maxPosition, but with the given minimum distance from any other Coord in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
@@ -99,7 +113,8 @@ public final class PoissonDisk {
      * @param minimumDistance the minimum distance between Coords, in Euclidean distance as a float.
      * @param pointsPerIteration with small areas, this can be around 5; with larger ones, 30 is reasonable
      * @param rng an IRNG to use for all random sampling.
-     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return a CoordObjectOrderedMap with ObjectList of Coord values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(
             Coord minPosition, Coord maxPosition, float minimumDistance, int pointsPerIteration, EnhancedRandom rng)
@@ -108,8 +123,8 @@ public final class PoissonDisk {
     }
 
     /**
-     * Get a list of Coords, each randomly positioned within the rectangle between the given minPosition and
-     * maxPosition, but with the given minimum distance from any other Coord in the list.
+     * Get a group of Coords, each randomly positioned within the rectangle between the given minPosition and
+     * maxPosition, but with the given minimum distance from any other Coord in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
@@ -120,7 +135,8 @@ public final class PoissonDisk {
      * @param maxY one more than the highest y that can be assigned; typically an array length
      * @param pointsPerIteration with small areas, this can be around 5; with larger ones, 30 is reasonable
      * @param rng an IRNG to use for all random sampling.
-     * @return an ObjectList of Coord that satisfy the minimum distance; the length of the array can vary
+     * @return a CoordObjectOrderedMap with ObjectList of Coord values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance,
                                                     int maxX, int maxY, int pointsPerIteration, EnhancedRandom rng)
@@ -129,6 +145,16 @@ public final class PoissonDisk {
     }
 
 
+    /**
+     * Calls {@link #sampleMap(Region, float, EnhancedRandom)} by constructing a Region from map and blocking (using
+     * {@link Region#Region(char[][], char[])} and calling {@link Region#not()} on it).
+     * @see #sampleMap(Region, float, EnhancedRandom)
+     * @param map a 2D char array to use as a local map
+     * @param minimumDistance the minimum distance to permit between Coords this chooses
+     * @param rng an EnhancedRandom
+     * @param blocking an array or varargs of char values that this cannot sample in map.
+     * @return a CoordOrderedSet where items will satisfy the minimum distance to other items
+     */
     public static CoordOrderedSet sampleMap(char[][] map,
                                                     float minimumDistance, EnhancedRandom rng, char... blocking)
     {
@@ -136,6 +162,18 @@ public final class PoissonDisk {
                 map, minimumDistance, rng, blocking);
     }
 
+    /**
+     * Calls {@link #sampleMap(Coord, Coord, Region, float, EnhancedRandom)} by constructing a Region from map and
+     * blocking (using {@link Region#Region(char[][], char[])} and calling {@link Region#not()} on it).
+     * @see #sampleMap(Coord, Coord, Region, float, EnhancedRandom)
+     * @param minPosition the inclusive minimum-x, minimum-y cell bounding the area this will sample
+     * @param maxPosition the inclusive maximum-x, maximum-y cell bounding the area this will sample
+     * @param map a 2D char array to use as a local map
+     * @param minimumDistance the minimum distance to permit between Coords this chooses
+     * @param rng an EnhancedRandom
+     * @param blocking an array or varargs of char values that this cannot sample in map.
+     * @return a CoordOrderedSet where items will satisfy the minimum distance to other items
+     */
     public static CoordOrderedSet sampleMap(Coord minPosition, Coord maxPosition, char[][] map,
                                                     float minimumDistance, EnhancedRandom rng, char... blocking) {
         return sampleMap(minPosition, maxPosition, new Region(map, blocking).not(), minimumDistance, rng);
@@ -148,7 +186,7 @@ public final class PoissonDisk {
      * @param map a Region that must have at least one "on" cell
      * @param minimumDistance the minimum distance to permit between Coords this chooses
      * @param rng an EnhancedRandom
-     * @return a CoordOrderedSet where each Coord corresponds to an "on" cell in map and has at least minimumDistance to any other Coord
+     * @return a CoordOrderedSet where items will satisfy the minimum distance to other items
      */
     public static CoordOrderedSet sampleMap(Region map, float minimumDistance, EnhancedRandom rng) {
         return sampleMap(Coord.get(1, 1), Coord.get(map.width - 2, map.height- 2), map, minimumDistance, rng);
@@ -162,7 +200,7 @@ public final class PoissonDisk {
      * @param map a Region that must have at least one "on" cell
      * @param minimumDistance the minimum distance to permit between Coords this chooses
      * @param rng an EnhancedRandom
-     * @return a CoordOrderedSet where each Coord corresponds to an "on" cell in map and has at least minimumDistance to any other Coord
+     * @return a CoordOrderedSet where items will satisfy the minimum distance to other items
      */
     public static CoordOrderedSet sampleMap(Coord minPosition, Coord maxPosition, Region map,
                                                     float minimumDistance, EnhancedRandom rng) {
@@ -193,7 +231,7 @@ public final class PoissonDisk {
 
         //end add first point
 
-        while (activePoints.size() != 0) {
+        while (!activePoints.isEmpty()) {
             int listIndex = rng.nextInt(activePoints.size());
 
             Coord point = activePoints.get(listIndex);
@@ -290,7 +328,7 @@ public final class PoissonDisk {
 
         //end add first point
 
-        while (activePoints.size() != 0) {
+        while (!activePoints.isEmpty()) {
             int listIndex = rng.nextInt(activePoints.size());
 
             Coord point = activePoints.get(listIndex);

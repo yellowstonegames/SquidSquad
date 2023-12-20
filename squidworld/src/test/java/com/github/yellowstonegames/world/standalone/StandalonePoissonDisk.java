@@ -18,13 +18,19 @@ package com.github.yellowstonegames.world.standalone;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.OrderedMap;
 
 import java.util.Random;
 
+/**
+ * An implementation of the Poisson Disk sampling algorithm on a discrete grid. The sampleXYZ methods here all return
+ * OrderedMap results with GridPoint keys and Array-of-GridPoint2 values, where the key represents a sampled (and
+ * chosen) point and the value represents "children" of the key point. The value is often an empty array; if it isn't,
+ * it holds some amount of GridPoint2 nodes (always other keys in the result) that radiate away from the center. You
+ * may want just the sampled points; get the {@link OrderedMap#orderedKeys()} Array for a convenient source of those.
+ */
 public final class StandalonePoissonDisk {
     private static final float inverseRootTwo = (float)Math.sqrt(0.5f);
 
@@ -35,27 +41,33 @@ public final class StandalonePoissonDisk {
     }
 
     /**
-     * Get a list of GridPoint2s, each randomly positioned around the given center out to the given radius (measured with
-     * Euclidean distance, so a true circle), but with the given minimum distance from any other GridPoint2 in the list.
-     * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
-     * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
-     * negative x or y.
+     * Get a group of GridPoint2s, each randomly positioned around the given center out to the given radius (measured
+     * with Euclidean distance, so a true circle), but with the given minimum distance from any other GridPoint2 in the
+     * group. The parameters maxX and maxY should typically correspond to the width and height of the map; no points
+     * will have positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will
+     * have negative x or y.
+     * <br>
+     * This is the same as calling {@link #sampleCircle(GridPoint2, float, float, int, int, int, Random)} with 10 points
+     * per iteration and {@link MathUtils#random} as its Random instance. You can set the seed or state of
+     * {@link MathUtils#random} to ensure deterministic results, or pass any instance of {@link Random} to one of the
+     * overloads that takes one.
      * @param center the center of the circle to spray GridPoint2s into
      * @param radius the radius of the circle to spray GridPoint2s into
      * @param minimumDistance the minimum distance between GridPoint2s, in Euclidean distance as a float.
      * @param maxX one more than the highest x that can be assigned; typically an array length
      * @param maxY one more than the highest y that can be assigned; typically an array length
-     * @return an Array of GridPoint2 that satisfy the minimum distance; the length of the array can vary
+     * @return an OrderedMap of GridPoint2 keys to Array of GridPoint2 values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static OrderedMap<GridPoint2, Array<GridPoint2>> sampleCircle(GridPoint2 center, float radius, float minimumDistance,
                                                                    int maxX, int maxY)
     {
-        return sampleCircle(center, radius, minimumDistance, maxX, maxY, 10, new RandomXS128());
+        return sampleCircle(center, radius, minimumDistance, maxX, maxY, 10, MathUtils.random);
     }
 
     /**
-     * Get a list of GridPoint2s, each randomly positioned around the given center out to the given radius (measured with
-     * Euclidean distance, so a true circle), but with the given minimum distance from any other GridPoint2 in the list.
+     * Get a group of GridPoint2s, each randomly positioned around the given center out to the given radius (measured with
+     * Euclidean distance, so a true circle), but with the given minimum distance from any other GridPoint2 in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
@@ -65,8 +77,9 @@ public final class StandalonePoissonDisk {
      * @param maxX one more than the highest x that can be assigned; typically an array length
      * @param maxY one more than the highest y that can be assigned; typically an array length
      * @param pointsPerIteration with small radii, this can be around 5; with larger ones, 30 is reasonable
-     * @param rng an IRNG to use for all random sampling.
-     * @return an Array of GridPoint2 that satisfy the minimum distance; the length of the array can vary
+     * @param rng a Random to use for all random sampling.
+     * @return an OrderedMap of GridPoint2 keys to Array of GridPoint2 values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static OrderedMap<GridPoint2, Array<GridPoint2>> sampleCircle(GridPoint2 center, float radius, float minimumDistance,
                                                  int maxX, int maxY, int pointsPerIteration, Random rng)
@@ -76,24 +89,30 @@ public final class StandalonePoissonDisk {
     }
 
     /**
-     * Get a list of GridPoint2s, each randomly positioned within the rectangle between the given minPosition and
-     * maxPosition, but with the given minimum distance from any other GridPoint2 in the list.
+     * Get a group of GridPoint2s, each randomly positioned within the rectangle between the given minPosition and
+     * maxPosition, but with the given minimum distance from any other GridPoint2 in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
+     * <br>
+     * This is the same as calling {@link #sampleRectangle(GridPoint2, GridPoint2, float, int, Random)} with 10 points
+     * per iteration and {@link MathUtils#random} as its Random instance. You can set the seed or state of
+     * {@link MathUtils#random} to ensure deterministic results, or pass any instance of {@link Random} to one of the
+     * overloads that takes one.
      * @param minPosition the GridPoint2 with the lowest x and lowest y to be used as a corner for the bounding box
      * @param maxPosition the GridPoint2 with the highest x and highest y to be used as a corner for the bounding box
      * @param minimumDistance the minimum distance between GridPoint2s, in Euclidean distance as a float.
-     * @return an Array of GridPoint2 that satisfy the minimum distance; the length of the array can vary
+     * @return an OrderedMap of GridPoint2 keys to Array of GridPoint2 values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static OrderedMap<GridPoint2, Array<GridPoint2>> sampleRectangle(GridPoint2 minPosition, GridPoint2 maxPosition, float minimumDistance)
     {
-        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new RandomXS128());
+        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, MathUtils.random);
     }
 
     /**
-     * Get a list of GridPoint2s, each randomly positioned within the rectangle between the given minPosition and
-     * maxPosition, but with the given minimum distance from any other GridPoint2 in the list.
+     * Get a group of GridPoint2s, each randomly positioned within the rectangle between the given minPosition and
+     * maxPosition, but with the given minimum distance from any other GridPoint2 in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
@@ -101,8 +120,9 @@ public final class StandalonePoissonDisk {
      * @param maxPosition the GridPoint2 with the highest x and highest y to be used as a corner for the bounding box
      * @param minimumDistance the minimum distance between GridPoint2s, in Euclidean distance as a float.
      * @param pointsPerIteration with small areas, this can be around 5; with larger ones, 30 is reasonable
-     * @param rng an IRNG to use for all random sampling.
-     * @return an Array of GridPoint2 that satisfy the minimum distance; the length of the array can vary
+     * @param rng a Random to use for all random sampling.
+     * @return an OrderedMap of GridPoint2 keys to Array of GridPoint2 values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static OrderedMap<GridPoint2, Array<GridPoint2>> sampleRectangle(
             GridPoint2 minPosition, GridPoint2 maxPosition, float minimumDistance, int pointsPerIteration, Random rng)
@@ -111,8 +131,8 @@ public final class StandalonePoissonDisk {
     }
 
     /**
-     * Get a list of GridPoint2s, each randomly positioned within the rectangle between the given minPosition and
-     * maxPosition, but with the given minimum distance from any other GridPoint2 in the list.
+     * Get a group of GridPoint2s, each randomly positioned within the rectangle between the given minPosition and
+     * maxPosition, but with the given minimum distance from any other GridPoint2 in the group.
      * The parameters maxX and maxY should typically correspond to the width and height of the map; no points will have
      * positions with x equal to or greater than maxX and the same for y and maxY; similarly, no points will have
      * negative x or y.
@@ -122,8 +142,9 @@ public final class StandalonePoissonDisk {
      * @param maxX one more than the highest x that can be assigned; typically an array length
      * @param maxY one more than the highest y that can be assigned; typically an array length
      * @param pointsPerIteration with small areas, this can be around 5; with larger ones, 30 is reasonable
-     * @param rng an IRNG to use for all random sampling.
-     * @return an Array of GridPoint2 that satisfy the minimum distance; the length of the array can vary
+     * @param rng a Random to use for all random sampling.
+     * @return an OrderedMap of GridPoint2 keys to Array of GridPoint2 values (representing points the key connects to);
+     *         keys will satisfy the minimum distance to other keys
      */
     public static OrderedMap<GridPoint2, Array<GridPoint2>> sampleRectangle(GridPoint2 minPosition, GridPoint2 maxPosition, float minimumDistance,
                                                     int maxX, int maxY, int pointsPerIteration, Random rng)
