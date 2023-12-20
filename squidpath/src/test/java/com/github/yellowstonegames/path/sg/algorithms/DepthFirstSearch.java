@@ -2,11 +2,9 @@ package com.github.yellowstonegames.path.sg.algorithms;
 
 import java.util.ArrayDeque;
 
-import com.github.yellowstonegames.path.sg.Array;
+import com.github.yellowstonegames.path.sg.Deque;
 import com.github.yellowstonegames.path.sg.Connection;
 import com.github.yellowstonegames.path.sg.Node;
-import com.github.yellowstonegames.path.sg.algorithms.Algorithm;
-import com.github.yellowstonegames.path.sg.algorithms.SearchStep;
 import com.github.yellowstonegames.path.sg.utils.SearchProcessor;
 
 public class DepthFirstSearch<V> extends Algorithm<V> {
@@ -40,7 +38,7 @@ public class DepthFirstSearch<V> extends Algorithm<V> {
             }
             if (step.ignore) return isFinished();
         }
-        Array<Connection<V>> outEdges = v.getOutEdges();
+        Deque<Connection<V>> outEdges = v.getOutEdges();
         for (Connection<V> e : outEdges) {
             Node<V> w = e.getNodeB();
             w.resetAlgorithmAttribs(id);

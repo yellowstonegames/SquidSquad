@@ -141,7 +141,7 @@ class VertexCollection<V> extends AbstractCollection<V> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(nodeMap);
+        return nodeMap.hashCode();
     }
 
     static class VertexIterator<V> implements Iterator<V> {

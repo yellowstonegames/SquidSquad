@@ -421,7 +421,7 @@ class NodeMap<V> {
 
         v.setSeen(true);
 
-        Array<Connection<V>> outEdges = v.getOutEdges();
+        Deque<Connection<V>> outEdges = v.getOutEdges();
         for (Connection<V> e : outEdges) {
             if (!recursiveTopologicalSort(e.getNodeB(), runID)) return false;
         }

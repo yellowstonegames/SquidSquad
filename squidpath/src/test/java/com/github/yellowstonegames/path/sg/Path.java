@@ -24,7 +24,7 @@ SOFTWARE.
 
 package com.github.yellowstonegames.path.sg;
 
-public class Path<V> extends Array<V> {
+public class Path<V> extends Deque<V> {
 
     public static final Path EMPTY_PATH = new Path(0, false);
 
@@ -48,15 +48,4 @@ public class Path<V> extends Array<V> {
     protected void setLength(float length) {
         this.length = length;
     }
-
-    public V getFirst() {
-        if (isEmpty()) throw new IllegalStateException("Path has no vertices.");
-        return get(0);
-    }
-
-    public V getLast() {
-        if (isEmpty()) throw new IllegalStateException("Path has no vertices.");
-        return get(size-1);
-    }
-
 }

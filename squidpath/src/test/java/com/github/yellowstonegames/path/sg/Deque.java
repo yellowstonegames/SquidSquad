@@ -27,34 +27,34 @@ import com.github.tommyettinger.ds.ObjectDeque;
 
 import java.util.Collection;
 
-public class Array<T> extends ObjectDeque<T> {
-    public Array() {
+public class Deque<T> extends ObjectDeque<T> {
+    public Deque() {
         super();
     }
 
-    public Array(int initialSize) {
+    public Deque(int initialSize) {
         super(initialSize);
     }
 
 
-    public Array(int capacity, boolean resize) {
+    public Deque(int capacity, boolean resize) {
         super(capacity);
         if (resize) this.size = capacity;
     }
 
-    public Array(Collection<? extends T> coll) {
+    public Deque(Collection<? extends T> coll) {
         super(coll);
     }
 
-    public Array(ObjectDeque<? extends T> deque) {
+    public Deque(ObjectDeque<? extends T> deque) {
         super(deque);
     }
 
-    public Array(T[] a) {
+    public Deque(T[] a) {
         super(a);
     }
 
-    public Array(T[] a, int offset, int count) {
+    public Deque(T[] a, int offset, int count) {
         super(a, offset, count);
     }
 

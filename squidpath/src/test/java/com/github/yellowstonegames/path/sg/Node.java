@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package com.github.yellowstonegames.path.sg;
 
-import com.github.yellowstonegames.path.sg.Array;
-import com.github.yellowstonegames.path.sg.Connection;
-
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,8 +37,8 @@ public class Node<V> extends com.github.tommyettinger.ds.BinaryHeap.Node {
     final V object;
 
     Map<Node<V>, Connection<V>> neighbours = new LinkedHashMap<>();
-    private Array<Connection<V>> outEdges = new Array<>();
-    private Array<Connection<V>> inEdges;
+    private Deque<Connection<V>> outEdges = new Deque<>();
+    private Deque<Connection<V>> inEdges;
 
     //================================================================================
     // Node map fields
@@ -61,7 +58,7 @@ public class Node<V> extends com.github.tommyettinger.ds.BinaryHeap.Node {
         this.object = v;
         this.objectHash = objectHash;
         idHash = System.identityHashCode(this);
-        if (trackInEdges) setInEdges(new Array<>());
+        if (trackInEdges) setInEdges(new Deque<>());
     }
 
     Node(V v, boolean trackInEdges, int objectHash, float heapValue) {
@@ -69,7 +66,7 @@ public class Node<V> extends com.github.tommyettinger.ds.BinaryHeap.Node {
         this.object = v;
         this.objectHash = objectHash;
         idHash = System.identityHashCode(this);
-        if (trackInEdges) setInEdges(new Array<>());
+        if (trackInEdges) setInEdges(new Deque<>());
     }
 
     //================================================================================
@@ -228,19 +225,19 @@ public class Node<V> extends com.github.tommyettinger.ds.BinaryHeap.Node {
         return "["+object+"]";
     }
 
-    public Array<Connection<V>> getOutEdges() {
+    public Deque<Connection<V>> getOutEdges() {
         return outEdges;
     }
 
-    public void setOutEdges(Array<Connection<V>> outEdges) {
+    public void setOutEdges(Deque<Connection<V>> outEdges) {
         this.outEdges = outEdges;
     }
 
-    public Array<Connection<V>> getInEdges() {
+    public Deque<Connection<V>> getInEdges() {
         return inEdges;
     }
 
-    public void setInEdges(Array<Connection<V>> inEdges) {
+    public void setInEdges(Deque<Connection<V>> inEdges) {
         this.inEdges = inEdges;
     }
 }

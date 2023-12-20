@@ -1,13 +1,10 @@
 package com.github.yellowstonegames.path.sg.algorithms;
 
 import com.github.tommyettinger.ds.BinaryHeap;
-import com.github.yellowstonegames.path.sg.Array;
+import com.github.yellowstonegames.path.sg.Deque;
 import com.github.yellowstonegames.path.sg.Connection;
 import com.github.yellowstonegames.path.sg.Node;
 import com.github.yellowstonegames.path.sg.Path;
-import com.github.yellowstonegames.path.sg.algorithms.Algorithm;
-import com.github.yellowstonegames.path.sg.algorithms.AlgorithmPath;
-import com.github.yellowstonegames.path.sg.algorithms.SearchStep;
 import com.github.yellowstonegames.path.sg.utils.Heuristic;
 import com.github.yellowstonegames.path.sg.utils.SearchProcessor;
 
@@ -58,7 +55,7 @@ public class AStarSearch<V> extends Algorithm<V> {
                 return true;
             }
 
-            Array<Connection<V>> outEdges = u.getOutEdges();
+            Deque<Connection<V>> outEdges = u.getOutEdges();
             for (Connection<V> e : outEdges) {
                 Node<V> v = e.getNodeB();
                 v.resetAlgorithmAttribs(id);
@@ -135,7 +132,7 @@ public class AStarSearch<V> extends Algorithm<V> {
                     if (step.ignore) continue;
                 }
                 u.setProcessed(true);
-                Array<Connection<V>> outEdges = u.getOutEdges();
+                Deque<Connection<V>> outEdges = u.getOutEdges();
                 for (Connection<V> e : outEdges) {
                     Node<V> v = e.getNodeB();
                     v.resetAlgorithmAttribs(id);
