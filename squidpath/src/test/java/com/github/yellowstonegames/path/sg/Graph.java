@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.github.tommyettinger.ds.ObjectBag;
 import com.github.tommyettinger.function.ObjPredicate;
 import com.github.yellowstonegames.path.sg.algorithms.Algorithms;
 import com.github.yellowstonegames.path.sg.utils.WeightFunction;
@@ -166,7 +167,7 @@ public abstract class Graph<V> {
     }
 
     public void removeVertexIf(ObjPredicate<V> predicate) {
-        for (V v : getVertices()) {
+        for (V v : new ObjectBag<>(getVertices())) {
             if(predicate.test(v))
                 removeVertex(v);
         }
@@ -247,13 +248,13 @@ public abstract class Graph<V> {
     }
 
     public void removeEdges(Collection<Edge<V>> edges) {
-        for (Edge<V> e : edges) {
+        for (Edge<V> e : new ObjectBag<>(getEdges())) {
             removeConnection(e.getInternalNodeA(), e.getInternalNodeB());
         }
     }
 
     public void removeEdgeIf(ObjPredicate<Edge<V>> predicate) {
-        for (Edge<V> e : getEdges()) {
+        for (Edge<V> e : new ObjectBag<>(getEdges())) {
             if(predicate.test(e))
                 removeConnection(e.getInternalNodeA(), e.getInternalNodeB());
         }

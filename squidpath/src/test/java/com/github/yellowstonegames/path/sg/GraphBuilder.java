@@ -24,10 +24,6 @@ SOFTWARE.
 package com.github.yellowstonegames.path.sg;
 
 
-import com.github.yellowstonegames.path.sg.Connection;
-import com.github.yellowstonegames.path.sg.Graph;
-import com.github.yellowstonegames.path.sg.Node;
-
 public class GraphBuilder{
 
     private GraphBuilder() {

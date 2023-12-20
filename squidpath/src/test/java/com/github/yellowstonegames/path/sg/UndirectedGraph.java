@@ -70,8 +70,6 @@ public class UndirectedGraph<V> extends Graph<V> {
         Connection<V> e = a.getEdge(b);
         if (e == null) {
             UndirectedConnection<V> e1 = obtainEdge(), e2 = obtainEdge();
-            e1.link(e2);
-            e2.link(e1);
             e1.set(a, b, weight);
             e2.set(b, a, weight);
             a.addEdge(e1);

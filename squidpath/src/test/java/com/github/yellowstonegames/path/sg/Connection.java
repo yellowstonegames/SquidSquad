@@ -130,7 +130,7 @@ public abstract class Connection<V> extends Edge<V> {
 
         @Override
         public int hashCode() {
-            return (int) (a.hashCode() * 0xC13FA9A902A6328FL +(b.hashCode() * 0x91E10DA5C79E7B1DL) >>> 32);
+            return (int) (a.hashCode() * 0xC13FA9A902A6328FL + b.hashCode() * 0x91E10DA5C79E7B1DL >>> 32);
         }
 
         @Override
@@ -141,8 +141,6 @@ public abstract class Connection<V> extends Edge<V> {
     }
 
     static class UndirectedConnection<V> extends Connection<V> {
-
-        private UndirectedConnection<V> linked;
 
         @Override
         public boolean hasEndpoints(V u, V v) {
@@ -157,19 +155,9 @@ public abstract class Connection<V> extends Edge<V> {
             return (a.equals(edge.a) && b.equals(edge.b)) || (a.equals(edge.b) && b.equals(edge.a));
         }
 
-        void link(UndirectedConnection<V> linked){
-            this.linked = linked;
-        }
-
-        @Override
-        public void setWeight(WeightFunction<V> weight) {
-            this.weight = weight;
-            linked.weight = this.weight;
-        }
-
         @Override
         public int hashCode() {
-            return a.hashCode() ^ (b.hashCode() >>> 32);
+            return a.hashCode() ^ b.hashCode();
         }
 
         @Override

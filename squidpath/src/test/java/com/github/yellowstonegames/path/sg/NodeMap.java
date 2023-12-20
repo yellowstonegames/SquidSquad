@@ -33,10 +33,9 @@ import java.util.Iterator;
  * All the Node<V> objects additionally form a separate doubly linked list to allow a consistent iteration order.
  *
  */
-
 class NodeMap<V> {
 
-    final Graph<V> graph;
+    final transient Graph<V> graph;
 
     // array of "buckets"
     Node<V>[] table;
@@ -51,8 +50,8 @@ class NodeMap<V> {
     int threshold = (int) (RESIZE_THRESHOLD * MIN_TABLE_LENGTH);
 
     // collections for returning to the user
-    VertexCollection<V> vertexCollection;
-    NodeCollection<V> nodeCollection;
+    transient VertexCollection<V> vertexCollection;
+    transient NodeCollection<V> nodeCollection;
 
     @SuppressWarnings("unchecked")
     public NodeMap(Graph<V> graph) {
@@ -91,7 +90,7 @@ class NodeMap<V> {
     Node<V> put(V v) {
         // checking the size before adding might resize even if v is already in the map,
         // but it will only be off by one
-        checkLength(1);
+        checkLength();
 
         int hash = hash(v);
         int i = getIndex(hash);
@@ -219,8 +218,8 @@ class NodeMap<V> {
      */
 
     @SuppressWarnings("unchecked")
-    boolean checkLength(int sizeChange) {
-        if (size + sizeChange > threshold) {
+    boolean checkLength() {
+        if (size >= threshold) {
             occupiedBuckets = 0;
             int newLength = 2 * table.length;
             Node<V>[] oldTable = table, newTable = (Node<V>[]) new Node[newLength];
@@ -228,7 +227,7 @@ class NodeMap<V> {
                 if (oldTable[i] != null) {
                     Node<V> tail1 = null, tail2 = null, current = oldTable[i];
                     while (current != null) {
-                        int newIndex = getIndex(current.mapHash, newLength);
+                        int newIndex = current.mapHash & newLength - 1;
                         if (newIndex == i) {
                             if (tail1 == null) {
                                 newTable[newIndex] = current;
@@ -275,11 +274,7 @@ class NodeMap<V> {
      * Get the table index of the Node<V> which has the given hash.
      */
     int getIndex(int hash) {
-        return getIndex(hash, table.length);
-    }
-
-    static int getIndex(int hash,  int length) {
-        return hash & (length - 1);
+        return hash & table.length - 1;
     }
 
     /**
@@ -287,8 +282,8 @@ class NodeMap<V> {
      * v would be held.
      */
     static int hash(Object v) {
-        int hashcode = v.hashCode();
-        return hashcode ^ (hashcode >>> 16);
+        final int h = v.hashCode();
+        return h ^ h >>> 16;
     }
 
     /**
@@ -360,8 +355,7 @@ class NodeMap<V> {
         Node<V> left = mergeSort(h, comparator);
         Node<V> right = mergeSort(middleNext, comparator);
 
-        Node<V> newHead = sortedMerge(left, right, comparator);
-        return newHead;
+        return sortedMerge(left, right, comparator);
     }
 
     Node<V> sortedMerge(Node<V> a, Node<V> b, Comparator<V> comparator) {
@@ -475,5 +469,43 @@ class NodeMap<V> {
         return sb.append("--------------").toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        NodeMap<?> nodeMap = (NodeMap<?>) o;
+
+        if (size != nodeMap.size) return false;
+        if (occupiedBuckets != nodeMap.occupiedBuckets) return false;
+        // head and tail use reference equality, like Node usually does
+        if (head != nodeMap.head) return false;
+        if (tail != nodeMap.tail) return false;
+        for (int i = 0; i < table.length; i++) {
+            Node<V> node = table[i];
+            while (node != null) {
+                if(!nodeMap.contains(node)) return false;
+                node = node.nextInBucket;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 421;
+        for (int i = 0; i < table.length; i++) {
+            Node<V> node = table[i];
+            while (node != null) {
+                result += hash(node);
+                node = node.nextInBucket;
+            }
+        }
+        result = 107 * result + (head != null ? head.hashCode() : 0);
+        result = 107 * result + (tail != null ? tail.hashCode() : 0);
+        result = 107 * result + size;
+        result = 107 * result + occupiedBuckets;
+        return result;
+    }
 }
