@@ -21,7 +21,6 @@ import regexodus.Matcher;
 import regexodus.Pattern;
 import regexodus.Replacer;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,17 +45,6 @@ public final class StringTools {
         sb.append(elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter).append(elements[i]);
-        }
-        return sb.toString();
-    }
-
-    public static String join(CharSequence delimiter, Collection<? extends CharSequence> elements) {
-        if (elements == null || elements.isEmpty()) return "";
-        StringBuilder sb = new StringBuilder(64);
-        Iterator<? extends CharSequence> it = elements.iterator();
-        sb.append(it.next());
-        while(it.hasNext()) {
-            sb.append(delimiter).append(it.next());
         }
         return sb.toString();
     }
@@ -150,7 +138,7 @@ public final class StringTools {
      * @param elements
      * @return
      */
-    public static String joinAlt(CharSequence delimiter, long... elements) {
+    public static String joinReadably(CharSequence delimiter, long... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 2);
         sb.append(elements[0]).append('L');
@@ -160,21 +148,28 @@ public final class StringTools {
         return sb.toString();
     }
 
+    /**
+     * Like {@link #appendJoined(StringBuilder, CharSequence, long...)}, but this appends an 'L' to each number so they
+     * can be read in by Java.
+     * @param sb
+     * @param delimiter
+     * @param elements
+     * @return
+     */
+    public static StringBuilder appendJoinedReadably(StringBuilder sb, CharSequence delimiter, long... elements) {
+        if (sb == null || elements == null || elements.length == 0) return sb;
+        sb.append(elements[0]).append('L');
+        for (int i = 1; i < elements.length; i++) {
+            sb.append(delimiter).append(elements[i]).append('L');
+        }
+        return sb;
+    }
+
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, CharSequence... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
         for (int i = 1; i < elements.length; i++) {
             sb.append(delimiter).append(elements[i]);
-        }
-        return sb;
-    }
-
-    public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Collection<? extends CharSequence> elements) {
-        if (sb == null || elements == null || elements.isEmpty()) return sb;
-        Iterator<? extends CharSequence> it = elements.iterator();
-        sb.append(it.next());
-        while(it.hasNext()) {
-            sb.append(delimiter).append(it.next());
         }
         return sb;
     }
@@ -259,8 +254,8 @@ public final class StringTools {
      * @param elements an array or vararg of booleans
      * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
      */
-    public static String joinAlt(boolean... elements) {
-        return joinAlt('1', '0', elements);
+    public static String joinDense(boolean... elements) {
+        return joinDense('1', '0', elements);
     }
     /**
      * Joins the boolean array {@code elements} without delimiters into a String, using the char {@code t} for
@@ -271,7 +266,7 @@ public final class StringTools {
      * @param elements an array or vararg of booleans
      * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
      */
-    public static String joinAlt(char t, char f, boolean... elements) {
+    public static String joinDense(char t, char f, boolean... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
         for (int i = 0; i < elements.length; i++) {
@@ -287,8 +282,8 @@ public final class StringTools {
      * @param elements an array or vararg of booleans
      * @return sb after modifications (if elements was non-null)
      */
-    public static StringBuilder appendJoinedAlt(StringBuilder sb, boolean... elements) {
-        return appendJoinedAlt(sb, '1', '0', elements);
+    public static StringBuilder appendJoinedDense(StringBuilder sb, boolean... elements) {
+        return appendJoinedDense(sb, '1', '0', elements);
     }
 
     /**
@@ -301,7 +296,7 @@ public final class StringTools {
      * @param elements an array or vararg of booleans
      * @return sb after modifications (if elements was non-null)
      */
-    public static StringBuilder appendJoinedAlt(StringBuilder sb, char t, char f, boolean... elements) {
+    public static StringBuilder appendJoinedDense(StringBuilder sb, char t, char f, boolean... elements) {
         if (sb == null || elements == null) return sb;
         if(elements.length == 0) return sb;
         for (int i = 0; i < elements.length; i++) {
@@ -481,7 +476,7 @@ public final class StringTools {
      * match, up to {@code prefix.length() + search.length + suffix.length()}, or 0 if no part of the looked-for
      * sequence could be found.
      * <br>
-     * This is almost certainly too specific to be useful outside of a handful of cases.
+     * This is almost certainly too specific to be useful outside a handful of cases.
      * @param text a CharSequence to search in
      * @param search a char array to look for, surrounded by prefix and suffix
      * @param prefix a mandatory prefix before search, separated for some weird optimization reason

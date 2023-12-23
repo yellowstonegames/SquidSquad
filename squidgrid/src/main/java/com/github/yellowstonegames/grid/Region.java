@@ -6076,7 +6076,7 @@ public class Region implements Collection<Coord> {
     {
         return width +
                 "," + height +
-                "," + StringTools.joinAlt(",",data);
+                "," + StringTools.joinReadably(",",data);
     }
     public static Region stringDeserialize(String s)
     {
