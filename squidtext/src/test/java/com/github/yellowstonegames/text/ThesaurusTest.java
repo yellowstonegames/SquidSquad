@@ -4,6 +4,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.AceRandom;
+import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
 
 /**
@@ -11,6 +12,7 @@ import com.github.yellowstonegames.core.StringTools;
  */
 public class ThesaurusTest {
     public static void main(String[] args) {
+        if(!TextInternals.PRINTING) return;
         Thesaurus thesaurus  = new Thesaurus(new AceRandom(System.currentTimeMillis() >>> 25)); // changes seed roughly once/9 hours
         thesaurus.addFakeWords();
 //        TreeSet<String> synonyms = new TreeSet<>();
@@ -115,7 +117,5 @@ public class ThesaurusTest {
         {
             System.out.println(s);
         }
-
-        System.out.println("\n" + Base.BASE16.unsigned(MathTools.modularMultiplicativeInverse(0xBEA225F9EB34556DL)));
     }
 }

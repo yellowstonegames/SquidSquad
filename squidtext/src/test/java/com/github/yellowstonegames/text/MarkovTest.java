@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.yellowstonegames.TextInternals;
 import org.junit.Test;
 import regexodus.Category;
 
@@ -28,7 +29,7 @@ import java.nio.file.Paths;
 public class MarkovTest {
     @Test
     public void testBasicMarkov() {
-        if(!"true".equals(System.getenv("printing"))) return;
+        if(!TextInternals.PRINTING) return;
         long seed = 123456789L;
         String oz = "Dorothy lived in the midst of the great Kansas prairies, with Uncle Henry, who was a " +
                 "farmer, and Aunt Em, who was the farmer's wife. Their house was small, for the " +
@@ -70,7 +71,7 @@ public class MarkovTest {
      */
     @Test
     public void testGoetiaMarkov() throws IOException {
-        if(!"true".equals(System.getenv("printing"))) return;
+        if(!TextInternals.PRINTING) return;
         long seed = 123456789L;
         String goetia = new String(Files.readAllBytes(Paths.get("src/test/resources/goetia.txt")), StandardCharsets.UTF_8);
         MarkovText markovText = new MarkovText();

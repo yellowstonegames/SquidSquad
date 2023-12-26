@@ -19,13 +19,14 @@ package com.github.yellowstonegames.text;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
 import org.junit.Test;
 
 public class LanguageTest {
     @Test
     public void testOutput() {
-        if(!"true".equals(System.getenv("printing"))) return;
+        if(!TextInternals.PRINTING) return;
 
         System.out.println("Known languages:");
         for (int langi = 0; langi < Language.registered.length; langi++) {
@@ -149,7 +150,7 @@ public class LanguageTest {
     @Test
     public void testSentences()
     {
-        if(!"true".equals(System.getenv("printing"))) return;
+        if(!TextInternals.PRINTING) return;
 
         LaserRandom rng = new LaserRandom(0xf00df00L);
         Language flg;
@@ -273,7 +274,7 @@ public class LanguageTest {
     @Test
     public void testTranslator()
     {
-        if(!"true".equals(System.getenv("printing"))) return;
+        if(!TextInternals.PRINTING) return;
 
         Language[] languages = new Language[]{
 
@@ -595,7 +596,7 @@ public class LanguageTest {
     @Test
     public void testRandomLanguage()
     {
-        if(!"true".equals(System.getenv("printing"))) return;
+        if(!TextInternals.PRINTING) return;
 
         Language lang1 = Language.randomLanguage(0xABCDEF1234567890L).mix(0.375, Language.ELF, 0.25);
         Language lang2 = Language.randomLanguage(0xABCDEF1234567890L).mix(0.375, Language.ELF, 0.25);
