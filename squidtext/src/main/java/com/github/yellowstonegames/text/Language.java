@@ -16,8 +16,7 @@
 
 package com.github.yellowstonegames.text;
 
-import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
@@ -26,9 +25,6 @@ import com.github.tommyettinger.random.Deserializer;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.yellowstonegames.core.StringTools;
 import regexodus.MatchResult;
 import regexodus.Matcher;
 import regexodus.Pattern;
@@ -4598,7 +4594,7 @@ public class Language {
         otherInfluence = Math.max(0.0, Math.min(otherInfluence, 1.0));
         double myInfluence = 1.0 - otherInfluence;
 
-        LaserRandom rng = new LaserRandom(hash64() << 1, other.hash64() << 1 ^ BitConversion.doubleToRawLongBits(otherInfluence));
+        LaserRandom rng = new LaserRandom(hash64() << 1, other.hash64() << 1 ^ BitConversion.doubleToLongBits(otherInfluence));
 
         String[] ov = merge1000(rng, openingVowels, other.openingVowels, otherInfluence),
                 mv = merge1000(rng, midVowels, other.midVowels, otherInfluence),
@@ -4761,8 +4757,8 @@ public class Language {
         vowelInfluence = Math.max(0.0, Math.min(vowelInfluence, 1.0));
         consonantInfluence = Math.max(0.0, Math.min(consonantInfluence, 1.0));
         LaserRandom rng = new LaserRandom(hash64(),
-                BitConversion.doubleToRawLongBits(vowelInfluence)
-                        ^ BitConversion.doubleToRawLongBits(consonantInfluence));
+                BitConversion.doubleToLongBits(vowelInfluence)
+                        ^ BitConversion.doubleToLongBits(consonantInfluence));
         String[] ov = accentVowels(rng, openingVowels, vowelInfluence),
                 mv = accentVowels(rng, midVowels, vowelInfluence),
                 oc = accentConsonants(rng, openingConsonants, consonantInfluence),
@@ -4895,7 +4891,7 @@ public class Language {
         Language next = copy();
         next.modifiers.clear();
         if(next.summary != null){
-            next.summarize(StringTools.safeSubstring(next.summary, 0, next.summary.indexOf('℗')));
+            next.summarize(TextTools.safeSubstring(next.summary, 0, next.summary.indexOf('℗')));
         }
         return next;
     }
@@ -4993,11 +4989,11 @@ public class Language {
         result = 31L * result + h.hash64(closingSyllables);
         result = 31L * result + h.hash64(syllableFrequencies);
         result = 31L * result + (clean ? 1L : 0L);
-        result = 31L * result + BitConversion.doubleToRawLongBits(totalSyllableFrequency);
-        result = 31L * result + BitConversion.doubleToRawLongBits(vowelStartFrequency);
-        result = 31L * result + BitConversion.doubleToRawLongBits(vowelEndFrequency);
-        result = 31L * result + BitConversion.doubleToRawLongBits(vowelSplitFrequency);
-        result = 31L * result + BitConversion.doubleToRawLongBits(syllableEndFrequency);
+        result = 31L * result + BitConversion.doubleToLongBits(totalSyllableFrequency);
+        result = 31L * result + BitConversion.doubleToLongBits(vowelStartFrequency);
+        result = 31L * result + BitConversion.doubleToLongBits(vowelEndFrequency);
+        result = 31L * result + BitConversion.doubleToLongBits(vowelSplitFrequency);
+        result = 31L * result + BitConversion.doubleToLongBits(syllableEndFrequency);
         result = 31L * result + (sanityChecks != null ? sanityChecks.length + 1L : 0L);
         result *= 31L;
         if(modifiers != null) {
@@ -5500,7 +5496,7 @@ public class Language {
         public int hashCode() {
             long result;
             result = Hasher.shax.hash64(replacer.getPattern().serializeToString());
-            result = 31L * result + BitConversion.doubleToRawLongBits(chance);
+            result = 31L * result + BitConversion.doubleToLongBits(chance);
             result ^= result >>> 32;
             return (int) (0xFFFFFFFFL & result);
         }
@@ -5645,9 +5641,9 @@ public class Language {
                     rng.stringSerialize(Base.BASE16) + '℘' +
                     minWords + '℘' +
                     maxWords + '℘' +
-                    StringTools.join("ℙ", midPunctuation) + '℘' +
-                    StringTools.join("ℙ", endPunctuation) + '℘' +
-                    BitConversion.doubleToRawLongBits(midPunctuationFrequency) + '℘' +
+                    TextTools.join("ℙ", midPunctuation) + '℘' +
+                    TextTools.join("ℙ", endPunctuation) + '℘' +
+                    BitConversion.doubleToLongBits(midPunctuationFrequency) + '℘' +
                     maxChars;
         }
         public static SentenceForm stringDeserialize(String ser)
@@ -5658,9 +5654,9 @@ public class Language {
             int minWords = Base.BASE10.readInt(ser, gap + 1, gap = ser.indexOf('℘', gap + 1));
             int maxWords = Base.BASE10.readInt(ser, gap + 1, gap = ser.indexOf('℘', gap + 1));
             String[] midPunctuation =
-                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
+                    TextTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
             String[] endPunctuation =
-                    StringTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
+                    TextTools.split(ser.substring(gap + 1, gap = ser.indexOf('℘', gap + 1)), "ℙ");
             double midFreq = BitConversion.longBitsToDouble(Base.BASE10.readLong(ser, gap + 1, gap = ser.indexOf('℘', gap + 1)));
             int maxChars = Base.BASE10.readInt(ser, gap + 1, ser.length());
             return new SentenceForm(lang, rng, minWords, maxWords, midPunctuation, endPunctuation, midFreq, maxChars);

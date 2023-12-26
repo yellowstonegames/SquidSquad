@@ -18,6 +18,7 @@ package com.github.yellowstonegames.store.core;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
@@ -113,7 +114,7 @@ public final class JsonCore {
                 int sz = object.length;
                 json.writeArrayStart();
                 for (int i = 0; i < sz; i++) {
-                    json.writeValue(StringTools.join("&", object[i]));
+                    json.writeValue(Base.BASE10.join("&", object[i]));
                 }
                 json.writeArrayEnd();
             }
@@ -126,7 +127,7 @@ public final class JsonCore {
                 int[][] data = new int[sz][];
                 JsonValue c = jsonData.child();
                 for (int i = 0; i < sz && c != null; i++, c = c.next()) {
-                    data[i] = DigitTools.splitIntFromDec(c.asString(), "&");
+                    data[i] = Base.BASE10.intSplit(c.asString(), "&");
                 }
                 return data;
             }
@@ -189,7 +190,7 @@ public final class JsonCore {
                 int sz = object.length;
                 json.writeArrayStart();
                 for (int i = 0; i < sz; i++) {
-                    json.writeValue(StringTools.join("&", object[i]));
+                    json.writeValue(Base.SIMPLE64.join("&", object[i]));
                 }
                 json.writeArrayEnd();
             }
@@ -202,7 +203,7 @@ public final class JsonCore {
                 long[][] data = new long[sz][];
                 JsonValue c = jsonData.child();
                 for (int i = 0; i < sz && c != null; i++, c = c.next()) {
-                    data[i] = DigitTools.splitLongFromDec(c.asString(), "&");
+                    data[i] = Base.SIMPLE64.longSplit(c.asString(), "&");
                 }
                 return data;
             }

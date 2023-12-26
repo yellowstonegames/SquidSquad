@@ -3,6 +3,7 @@ package com.github.yellowstonegames.text;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
@@ -46,7 +47,7 @@ public class ThesaurusTest {
                 "was reached by a trap door in the middle of the floor, from which a ladder led ",
                 "down into the small, dark hole.",
         };
-        String oz = StringTools.join("", ozzes);
+        String oz = TextTools.join("", ozzes);
         System.out.println(Thesaurus.ORK.process(oz));
         System.out.println();
         System.out.println(Thesaurus.ZOMBIE.process(oz));

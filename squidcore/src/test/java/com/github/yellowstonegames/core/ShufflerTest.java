@@ -124,7 +124,7 @@ public class ShufflerTest {
                     System.out.println("Seed: " + seed);
                     System.out.println("Max: " + mx);
                     System.out.println("Min: " + mn);
-                    System.out.println(StringTools.join(", ", buckets));
+                    System.out.println(Base.BASE10.join(", ", buckets));
                 }
                 Assert.assertTrue((mx - mn) * bound < 85000);
             }

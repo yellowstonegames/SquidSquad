@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.ObjectList;
 import regexodus.Matcher;
 import regexodus.Pattern;
@@ -39,6 +40,14 @@ public final class StringTools {
      */
     private StringTools() {
     }
+
+    /**
+     * Use {@link com.github.tommyettinger.digital.TextTools#join(CharSequence, Object[])} instead.
+     * @param delimiter
+     * @param elements
+     * @return
+     */
+    @Deprecated
     public static String join(CharSequence delimiter, CharSequence... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -133,7 +142,11 @@ public final class StringTools {
     }
 
     /**
-     * Like {@link #join(CharSequence, long...)}, but this appends an 'L' to each number so they can be read in by Java.
+     * Like {@link com.github.tommyettinger.digital.Base#join(String, long[])}, but this appends an 'L' to each number,
+     * so they can be read in by Java.
+     * Replaced by {@link com.github.tommyettinger.digital.Base#joinReadable(String, long[])} in most circumstances (the
+     * replacement needs a String delimiter, while this takes a CharSequence).
+     *
      * @param delimiter
      * @param elements
      * @return
@@ -149,8 +162,10 @@ public final class StringTools {
     }
 
     /**
-     * Like {@link #appendJoined(StringBuilder, CharSequence, long...)}, but this appends an 'L' to each number so they
+     * Like {@link com.github.tommyettinger.digital.Base#appendJoined(StringBuilder, String, long[])}, but this appends an 'L' to each number so they
      * can be read in by Java.
+     * Replaced by {@link com.github.tommyettinger.digital.Base#appendJoinedReadable(StringBuilder, String, long[])} in
+     * most circumstances (the replacement needs a String delimiter, while this takes a CharSequence).
      * @param sb
      * @param delimiter
      * @param elements
@@ -251,9 +266,13 @@ public final class StringTools {
     /**
      * Joins the boolean array {@code elements} without delimiters into a String, using "1" for true and "0" for false.
      * This is "dense" because it doesn't have any delimiters between elements.
+     * Using {@link TextTools#joinDense(boolean...)} is recommended instead.
+     *
      * @param elements an array or vararg of booleans
      * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
+     * @deprecated
      */
+    @Deprecated
     public static String joinDense(boolean... elements) {
         return joinDense('1', '0', elements);
     }
@@ -261,11 +280,14 @@ public final class StringTools {
      * Joins the boolean array {@code elements} without delimiters into a String, using the char {@code t} for
      * true and the char {@code f} for false. This is "dense" because it doesn't have any delimiters between
      * elements.
+     * Using {@link TextTools#joinDense(char, char, boolean...)} is recommended instead.
      * @param t the char to write for true values
      * @param f the char to write for false values
      * @param elements an array or vararg of booleans
      * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
+     * @deprecated
      */
+    @Deprecated
     public static String joinDense(char t, char f, boolean... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -278,10 +300,13 @@ public final class StringTools {
     /**
      * Joins the boolean array {@code elements} without delimiters into a StringBuilder, using "1" for true and "0" for
      * false. This is "dense" because it doesn't have any delimiters between elements.
+     * Using {@link TextTools#appendJoinedDense(StringBuilder, boolean...)} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param elements an array or vararg of booleans
      * @return sb after modifications (if elements was non-null)
+     * @deprecated
      */
+    @Deprecated
     public static StringBuilder appendJoinedDense(StringBuilder sb, boolean... elements) {
         return appendJoinedDense(sb, '1', '0', elements);
     }
@@ -290,12 +315,15 @@ public final class StringTools {
      * Joins the boolean array {@code elements} without delimiters into a StringBuilder, using the char {@code t} for
      * true and the char {@code f} for false. This is "dense" because it doesn't have any delimiters between
      * elements.
+     * Using {@link TextTools#appendJoinedDense(StringBuilder, char, char, boolean...)} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param t the char to write for true values
      * @param f the char to write for false values
      * @param elements an array or vararg of booleans
      * @return sb after modifications (if elements was non-null)
+     * @deprecated
      */
+    @Deprecated
     public static StringBuilder appendJoinedDense(StringBuilder sb, char t, char f, boolean... elements) {
         if (sb == null || elements == null) return sb;
         if(elements.length == 0) return sb;
@@ -310,11 +338,14 @@ public final class StringTools {
      * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
      * not take a vararg of Object items, since that would cause confusion with the overloads that take one object, such
      * as {@link #join(CharSequence, Iterable)}; it takes a non-vararg Object array instead.
+     * Using {@link TextTools#join(CharSequence, Object[])} is recommended instead.
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return the String representations of the items in elements, separated by delimiter and put in one String
+     * @deprecated
      */
+    @Deprecated
     public static String join(CharSequence delimiter, Object[] elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(elements.length << 2);

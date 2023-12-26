@@ -191,21 +191,21 @@ public class WeightedTable {
 
     public String stringSerialize()
     {
-        return StringTools.join(",", mixed);
+        return Base.SIMPLE64.join(",", mixed);
     }
     public static WeightedTable stringDeserialize(String data)
     {
         if(data == null || data.isEmpty())
             return null;
-        int pos = -1;
-        int count = StringTools.count(data, ',') + 1;
-        int[] mixed = new int[count];
-        for (int i = 0; i < count; i++) {
-            int next = data.indexOf(',', pos+1);
-            if(next == -1) next = data.length();
-            mixed[i] = Base.BASE10.readInt(data, pos+1, pos = next);
-        }
-        return new WeightedTable(mixed, true);
+//        int pos = -1;
+//        int count = StringTools.count(data, ',') + 1;
+//        int[] mixed = new int[count];
+//        for (int i = 0; i < count; i++) {
+//            int next = data.indexOf(',', pos+1);
+//            if(next == -1) next = data.length();
+//            mixed[i] = Base.BASE10.readInt(data, pos+1, pos = next);
+//        }
+        return new WeightedTable(Base.SIMPLE64.intSplit(data, ","), true);
     }
 
     @Override
