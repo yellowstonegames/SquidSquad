@@ -30,7 +30,7 @@ import java.util.Collection;
 
 /**
  * A simple Markov chain text generator; call {@link #analyze(CharSequence)} once on a large sample text, then you can
- * call {@link #chain(long)} many times to get odd-sounding "remixes" of the sample text, one word at a time. This is
+ * call {@link #chain(long)} many times to get odd-sounding "remixes" of the sample text, one char at a time. This is
  * meant to allow easy serialization of the necessary data to call chain(); if you can store the {@link #chars} and
  * {@link #processed} arrays in some serialized form, then you can reassign them to the same fields to avoid calling
  * analyze(). One way to do this conveniently is to use {@link #stringSerialize()} after calling analyze() once and to
@@ -49,14 +49,14 @@ public class MarkovChar {
 
     /**
      * Map of all pairs of chars encountered to the position in the order they were encountered. Pairs are stored using
-     * their 16-bit {@link #chars} indices placed into the most-significant bits for the first word and the
-     * least-significant bits for the second word. The size of this IntIntOrderedMap is likely to be larger than the
+     * their 16-bit {@link #chars} indices placed into the most-significant bits for the first char and the
+     * least-significant bits for the second char. The size of this IntIntOrderedMap is likely to be larger than the
      * char array {@link #chars}, but should be equal to {@code processed.length}. Will be null if
      * {@link #analyze(CharSequence)} was never called.
      */
     public IntIntMap pairs;
     /**
-     * Complicated data that mixes probabilities of chars using their indices in {@link #chars} and the indices of word
+     * Complicated data that mixes probabilities of chars using their indices in {@link #chars} and the indices of char
      * pairs in {@link #pairs}, generated during the latest call to {@link #analyze(CharSequence)}. This is a jagged 2D
      * array. Will be null if {@link #analyze(CharSequence)} was never called.
      */
@@ -76,8 +76,8 @@ public class MarkovChar {
      * This is the main necessary step before using a MarkovChar; you must call this method at some point before you can
      * call any other methods. You can serialize this MarkovChar after calling to avoid needing to call this again on later
      * runs, or even include serialized MarkovChar objects with a game to only need to call this during pre-processing.
-     * This method analyzes the pairings of words in a (typically large) corpus text, including some punctuation as part
-     * of words and some kinds as their own "words." It only uses one preceding word to determine the subsequent word.
+     * This method analyzes the pairings of chars in a (typically large) corpus text. It only uses two preceding chars
+     * to determine the subsequent char.
      * When it finishes processing, it stores the results in {@link #chars} and {@link #processed}, which allows other
      * methods to be called (they will throw a {@link NullPointerException} if analyze() hasn't been called).
      * @param corpus a typically-large sample text in the style that should be mimicked
@@ -277,17 +277,18 @@ public class MarkovChar {
      * Returns a representation of this MarkovChar as a String; use {@link #stringDeserialize(String)} to get a
      * MarkovChar back from this String. The {@link #chars} and {@link #processed} fields must have been given values by
      * either direct assignment, calling {@link #analyze(CharSequence)}, or building this MarkovTest with the
-     * aforementioned destringSerialize method. Uses spaces to separate words and a tab to separate the fields.
-     * @return a String that can be used to store the analyzed words and frequencies in this MarkovChar
+     * aforementioned destringSerialize method. Separates items using commas and semicolons. Uses tabs to separate
+     * fields.
+     * @return a String that can be used to store the analyzed chars and frequencies in this MarkovChar
      */
     public String stringSerialize()
     {
         StringBuilder sb = new StringBuilder();
         sb.append(chars);
         sb.append('\t');
-        StringTools.appendJoined(sb, ",", pairs.keySet().toArray());
+        Base.SIMPLE64.appendJoined(sb, ",", pairs.keySet().toArray());
         sb.append('\t');
-        return Base.BASE16.appendJoined2D(sb, ",", ",", processed).toString();
+        return Base.SIMPLE64.appendJoined2D(sb, ";", ",", processed).toString();
     }
 
     /**
@@ -300,9 +301,9 @@ public class MarkovChar {
         int split = data.indexOf('\t');
         MarkovChar markov = new MarkovChar();
         markov.chars = data.substring(0, split).toCharArray();
-        int[] arr = Base.BASE16.intSplit(data, ",", split+1, split = data.indexOf('\t', split + 1));
+        int[] arr = Base.SIMPLE64.intSplit(data, ",", split+1, split = data.indexOf('\t', split + 1));
         markov.pairs = new IntIntMap(arr, ArrayTools.range(arr.length));
-        markov.processed = Base.BASE16.intSplit2D(data, ";", ",", split + 1, data.length());
+        markov.processed = Base.SIMPLE64.intSplit2D(data, ";", ",", split + 1, data.length());
         return markov;
     }
 

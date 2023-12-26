@@ -9,7 +9,7 @@ java.withSourcesJar()
 
 dependencies {
 //    api "com.github.tommyettinger:funderby:$funderbyVersion"
-//    api "com.github.tommyettinger:digital:$digitalVersion"
+    api "com.github.tommyettinger:digital:$digitalVersion"
     api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
     api "com.github.tommyettinger:regexodus:$regexodusVersion"
     api "com.github.tommyettinger:juniper:$juniperVersion"

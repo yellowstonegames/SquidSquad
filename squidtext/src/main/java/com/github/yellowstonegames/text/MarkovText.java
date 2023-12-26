@@ -19,8 +19,8 @@ package com.github.yellowstonegames.text;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.*;
-import com.github.yellowstonegames.core.StringTools;
 import regexodus.Category;
 import regexodus.Matcher;
 import regexodus.Pattern;
@@ -349,11 +349,11 @@ public class MarkovText {
     public String stringSerialize()
     {
         StringBuilder sb = new StringBuilder();
-        StringTools.appendJoined(sb, " ", words);
+        TextTools.appendJoined(sb, " ", words);
         sb.append('\t');
-        StringTools.appendJoined(sb, ",", pairs.keySet().toArray());
+        Base.SIMPLE64.appendJoined(sb, ",", pairs.keySet().toArray());
         sb.append('\t');
-        return Base.BASE16.appendJoined2D(sb, ",", ",", processed).toString();
+        return Base.SIMPLE64.appendJoined2D(sb, ",", ",", processed).toString();
     }
 
     /**
@@ -365,10 +365,10 @@ public class MarkovText {
     {
         int split = data.indexOf('\t');
         MarkovText markov = new MarkovText();
-        markov.words = StringTools.split(data.substring(0, split), " ");
-        int[] arr = Base.BASE16.intSplit(data, ",", split+1, split = data.indexOf('\t', split + 1));
+        markov.words = TextTools.split(data.substring(0, split), " ");
+        int[] arr = Base.SIMPLE64.intSplit(data, ",", split+1, split = data.indexOf('\t', split + 1));
         markov.pairs = new IntIntMap(arr, ArrayTools.range(arr.length));
-        markov.processed = Base.BASE16.intSplit2D(data, ";", ",", split + 1, data.length());
+        markov.processed = Base.SIMPLE64.intSplit2D(data, ";", ",", split + 1, data.length());
         return markov;
     }
 

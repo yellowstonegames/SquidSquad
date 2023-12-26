@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.digital.BitConversion;
@@ -6076,7 +6077,7 @@ public class Region implements Collection<Coord> {
     {
         return width +
                 "," + height +
-                "," + StringTools.joinReadably(",",data);
+                "," + Base.SIMPLE64.join(",", data);
     }
     public static Region stringDeserialize(String s)
     {
@@ -6084,11 +6085,12 @@ public class Region implements Collection<Coord> {
             return null;
         int gap = s.indexOf(','), w = Integer.parseInt(s.substring(0, gap)),
                 gap2 = s.indexOf(',', gap+1), h = Integer.parseInt(s.substring(gap+1, gap2));
-        String[] splits = StringTools.split(s.substring(gap2+1), ",");
-        long[] data = new long[splits.length];
-        for (int i = 0; i < splits.length; i++) {
-            data[i] = DigitTools.longFromDec(splits[i]);
-        }
+        long[] data = Base.SIMPLE64.longSplit(s, ",", gap2 + 1, s.length());
+//        String[] splits = StringTools.split(s.substring(gap2+1), ",");
+//        long[] data = new long[splits.length];
+//        for (int i = 0; i < splits.length; i++) {
+//            data[i] = DigitTools.longFromDec(splits[i]);
+//        }
         return new Region(data, w, h);
     }
 

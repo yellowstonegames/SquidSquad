@@ -160,7 +160,7 @@ because they can change without warning and don't tell you what commit you are a
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.4.5
+  - `digitalVersion`=0.4.6
   - `funderbyVersion`=0.1.1
   - `jdkgdxdsVersion`=1.4.6
   - `juniperVersion`=0.5.0
