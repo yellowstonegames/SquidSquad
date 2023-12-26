@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.text;
 
+import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.random.LaserRandom;
 import com.github.tommyettinger.digital.Hasher;
@@ -378,7 +379,7 @@ public class LanguageTest {
                 "down into the small, dark hole.",
         oz2;
         System.out.println("ORIGINAL:");         
-        System.out.println(StringTools.join("\n", StringTools.wrap(oz, 80)));
+        System.out.println(TextTools.join("\n", StringTools.wrap(oz, 80)));
         System.out.println("\n\nGENERATED:\n");
         LaserRandom sr = new LaserRandom(2252637788195L);
         for(Language lang : languages) {
@@ -387,16 +388,16 @@ public class LanguageTest {
 //            System.out.println("princess   : " + cipher.lookup("princess"));
 //            System.out.println("princesses : " + cipher.lookup("princesses"));
             int ctr = 0;
-            System.out.println(StringTools.join("\n", StringTools.wrap(cipher.cipherMarkup(marked), 80)));
+            System.out.println(TextTools.join("\n", StringTools.wrap(cipher.cipherMarkup(marked), 80)));
             oz2 = cipher.cipher(oz);
-            System.out.println(StringTools.join("\n", StringTools.wrap(oz2, 80)));
+            System.out.println(TextTools.join("\n", StringTools.wrap(oz2, 80)));
             
             ObjectObjectMap<String, String> vocabulary = new ObjectObjectMap<>(16);
             cipher.learnTranslations(vocabulary, "Dorothy", "farmer", "the", "room", "one", "uncle", "aunt");
 
-            System.out.println(StringTools.join("\n", StringTools.wrap(cipher.decipher(oz2, vocabulary), 80)));
+            System.out.println(TextTools.join("\n", StringTools.wrap(cipher.decipher(oz2, vocabulary), 80)));
             System.out.println();
-            System.out.println(StringTools.join("\n", StringTools.wrap(cipher.decipher(oz2, cipher.reverse), 80)));
+            System.out.println(TextTools.join("\n", StringTools.wrap(cipher.decipher(oz2, cipher.reverse), 80)));
             System.out.println();
 
             /*

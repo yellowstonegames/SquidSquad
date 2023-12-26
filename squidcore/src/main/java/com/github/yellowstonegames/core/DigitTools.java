@@ -19,6 +19,7 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.TextTools;
 
 /**
  * Utility class for converting to and from numbers and their String representations; this is mostly wrappers around
@@ -557,24 +558,7 @@ public final class DigitTools {
      * @return a long array containing the numbers found in {@code source}
      */
     public static long[] splitLongFromDec(String source, String delimiter) {
-        if(source == null || source.length() == 0) return new long[0];
-        if(delimiter == null || delimiter.length() == 0) delimiter = " ";
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new long[]{longFromDec(source)};
-        long[] splat = new long[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
-        for (int i = 0; i < amount; i++) {
-            splat[i] = longFromDec(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
-        }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
-        {
-            splat[amount] = longFromDec(source, idx+dl, source.length());
-        }
-        else
-        {
-            splat[amount] = longFromDec(source, idx+dl, idx2);
-        }
-        return splat;
+        return Base.BASE10.longSplit(source, delimiter);
     }
     /**
      * Given a String containing decimal numbers separated by {@code delimiter} (which is permitted to be present at the
@@ -585,24 +569,7 @@ public final class DigitTools {
      * @return an int array containing the numbers found in {@code source}
      */
     public static int[] splitIntFromDec(String source, String delimiter) {
-        if(source == null || source.length() == 0) return new int[0];
-        if(delimiter == null || delimiter.length() == 0) delimiter = " ";
-        int amount = StringTools.count(source, delimiter);
-        if (amount <= 0) return new int[]{intFromDec(source)};
-        int[] splat = new int[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
-        for (int i = 0; i < amount; i++) {
-            splat[i] = intFromDec(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
-        }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
-        {
-            splat[amount] = intFromDec(source, idx+dl, source.length());
-        }
-        else
-        {
-            splat[amount] = intFromDec(source, idx+dl, idx2);
-        }
-        return splat;
+        return Base.BASE10.intSplit(source, delimiter);
     }
 
     /**
@@ -643,7 +610,7 @@ public final class DigitTools {
     public static float[] splitFloatFromBits(String source, String delimiter) {
         if(source == null || source.length() == 0) return new float[0];
         if(delimiter == null || delimiter.length() == 0) delimiter = " ";
-        int amount = StringTools.count(source, delimiter);
+        int amount = TextTools.count(source, delimiter);
         if (amount <= 0) return new float[]{BitConversion.reversedIntBitsToFloat(intFromDec(source))};
         float[] splat = new float[amount+1];
         int dl = delimiter.length(), idx = -dl, idx2;

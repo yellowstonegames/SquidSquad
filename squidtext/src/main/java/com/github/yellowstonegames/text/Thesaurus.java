@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.text;
 
+import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
@@ -209,7 +210,7 @@ public class Thesaurus {
             if(!categories.keyAt(i).toString().contains("`term`")) {
                 synonyms.clear();
                 synonyms.addAll(categories.getAt(i));
-                System.out.println(start + categories.keyAt(i) + " : " + StringTools.join(", ", synonyms) + end);
+                System.out.println(start + categories.keyAt(i) + " : " + TextTools.join(", ", synonyms) + end);
             }
         }
         System.out.println();
@@ -217,7 +218,7 @@ public class Thesaurus {
             if(categories.keyAt(i).toString().contains("`term`")) {
                 synonyms.clear();
                 synonyms.addAll(categories.getAt(i));
-                System.out.println(start + categories.keyAt(i) + " : " + StringTools.join(", ", synonyms) + end);
+                System.out.println(start + categories.keyAt(i) + " : " + TextTools.join(", ", synonyms) + end);
             }
         }
     }
@@ -483,7 +484,7 @@ public class Thesaurus {
             for (int i = 0; i < 100; i++) {
                 words.add(kv.getValue().word(rng, false, rng.nextInt(2, 4)));
             }
-            String catName = StringTools.replace(kv.getKey(), "`gen", "`pre");
+            String catName = TextTools.replace(kv.getKey(), "`gen", "`pre");
 //            System.out.print('"' + catName + "\", ");
             addCategory(catName, words);
         }
@@ -561,9 +562,9 @@ public class Thesaurus {
         m.getGroup(MatchResult.TARGET, dest);
 
         if(alterations.isEmpty())
-            return StringTools.replace(StringTools.correctABeforeVowel(dest.sb), "\t", "");
+            return TextTools.replace(StringTools.correctABeforeVowel(dest.sb), "\t", "");
         else
-            return StringTools.replace(modify(StringTools.correctABeforeVowel(dest.sb)), "\t", "");
+            return TextTools.replace(modify(StringTools.correctABeforeVowel(dest.sb)), "\t", "");
     }
 
     public String lookup(String word) {
@@ -1828,7 +1829,7 @@ public class Thesaurus {
     public static String archiveCategoriesAlternate(){
         StringBuilder sb = new StringBuilder(8192);
         for (int i = 0, n = categories.size(); i < n; i++) {
-            sb.append(categories.keyAt(i)).append('\u00A0').append(StringTools.join("\u00A0", categories.getAt(i))).append('\n');
+            sb.append(categories.keyAt(i)).append('\u00A0').append(TextTools.join("\u00A0", categories.getAt(i))).append('\n');
         }
         return sb.toString();
     }

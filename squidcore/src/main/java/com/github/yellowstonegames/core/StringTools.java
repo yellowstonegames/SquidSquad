@@ -308,7 +308,7 @@ public final class StringTools {
      */
     @Deprecated
     public static StringBuilder appendJoinedDense(StringBuilder sb, boolean... elements) {
-        return appendJoinedDense(sb, '1', '0', elements);
+        return TextTools.appendJoinedDense(sb, '1', '0', elements);
     }
 
     /**
@@ -336,8 +336,8 @@ public final class StringTools {
     /**
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
-     * not take a vararg of Object items, since that would cause confusion with the overloads that take one object, such
-     * as {@link #join(CharSequence, Iterable)}; it takes a non-vararg Object array instead.
+     * not take a vararg of Object items, since that would cause confusion with the overloads that take one object; it
+     * takes a non-vararg Object array instead.
      * Using {@link TextTools#join(CharSequence, Object[])} is recommended instead.
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
@@ -360,11 +360,15 @@ public final class StringTools {
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
      * elements parameter.
+     * Using {@link TextTools#join(CharSequence, Iterable)} is recommended instead.
+     *
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return the String representations of the items in elements, separated by delimiter and put in one String
+     * @deprecated
      */
+    @Deprecated
     public static String join(CharSequence delimiter, Iterable<?> elements) {
         if (elements == null) return "";
         Iterator<?> it = elements.iterator();
@@ -381,14 +385,17 @@ public final class StringTools {
     /**
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
-     * not take a vararg of Object items, since that would cause confusion with the overloads that take one object, such
-     * as {@link #join(CharSequence, Iterable)}; it takes a non-vararg Object array instead.
+     * not take a vararg of Object items, since that would cause confusion with the overloads that take one object; it
+     * takes a non-vararg Object array instead.
+     * Using {@link TextTools#appendJoined(StringBuilder, CharSequence, Object[])} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return sb after modifications (if elements was non-null)
+     * @deprecated
      */
+    @Deprecated
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Object[] elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -403,12 +410,15 @@ public final class StringTools {
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
      * {@code elements} parameter.
+     * Using {@link TextTools#appendJoined(StringBuilder, CharSequence, Iterable)} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return sb after modifications (if elements was non-null)
+     * @deprecated
      */
+    @Deprecated
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Iterable<?> elements) {
         if (sb == null || elements == null) return sb;
         Iterator<?> it = elements.iterator();
@@ -423,10 +433,13 @@ public final class StringTools {
 
     /**
      * Searches text for the exact contents of the char array search; returns true if text contains search.
+     * Use {@link TextTools#contains(CharSequence, CharSequence)} instead.
      * @param text a CharSequence, such as a String or StringBuilder, that might contain search
      * @param search a char array to try to find in text
      * @return true if search was found
+     * @deprecated
      */
+    @Deprecated
     public static boolean contains(CharSequence text, CharSequence search) {
         return !(text == null || text.length() == 0 || search == null || search.length() == 0)
                 && containsPart(text, search) == search.length();
@@ -436,10 +449,14 @@ public final class StringTools {
      * Tries to find as much of the char array {@code search} in the CharSequence {@code text}, always starting from the
      * beginning of search (if the beginning isn't found, then it finds nothing), and returns the length of the found
      * part of search (0 if not found).
+     * Use {@link TextTools#containsPart(CharSequence, CharSequence)} instead.
+     *
      * @param text a CharSequence to search in
      * @param search a char array to look for
      * @return the length of the searched-for char array that was found
+     * @deprecated
      */
+    @Deprecated
     public static int containsPart(CharSequence text, CharSequence search)
     {
         if(text == null || text.length() == 0 || search == null || (search.length() == 0))
@@ -463,10 +480,13 @@ public final class StringTools {
 
     /**
      * Searches text for the exact contents of the char array search; returns true if text contains search.
+     * Use {@link TextTools#contains(CharSequence, char[])} instead.
      * @param text a CharSequence, such as a String or StringBuilder, that might contain search
      * @param search a char array to try to find in text
      * @return true if search was found
+     * @deprecated
      */
+    @Deprecated
     public static boolean contains(CharSequence text, char[] search) {
         return !(text == null || text.length() == 0 || search == null || search.length == 0)
                 && containsPart(text, search) == search.length;
@@ -476,10 +496,13 @@ public final class StringTools {
      * Tries to find as much of the char array {@code search} in the CharSequence {@code text}, always starting from the
      * beginning of search (if the beginning isn't found, then it finds nothing), and returns the length of the found
      * part of search (0 if not found).
+     * Use {@link TextTools#containsPart(CharSequence, char[])} instead.
      * @param text a CharSequence to search in
      * @param search a char array to look for
      * @return the length of the searched-for char array that was found
+     * @deprecated
      */
+    @Deprecated
     public static int containsPart(CharSequence text, char[] search)
     {
         if(text == null || text.length() == 0 || search == null || (search.length == 0))
@@ -507,7 +530,8 @@ public final class StringTools {
      * match, up to {@code prefix.length() + search.length + suffix.length()}, or 0 if no part of the looked-for
      * sequence could be found.
      * <br>
-     * This is almost certainly too specific to be useful outside a handful of cases.
+     * This is almost certainly too specific to be useful outside a handful of cases, but it isn't marked as deprecated
+     * because it was removed from TextTools. If you for whatever reason need this, it is here.
      * @param text a CharSequence to search in
      * @param search a char array to look for, surrounded by prefix and suffix
      * @param prefix a mandatory prefix before search, separated for some weird optimization reason
@@ -556,6 +580,15 @@ public final class StringTools {
         return f;
     }
 
+    /**
+     * Use {@link TextTools#replace(CharSequence, CharSequence, CharSequence)} instead.
+     * @param text
+     * @param before
+     * @param after
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public static String replace(CharSequence text, CharSequence before, CharSequence after) {
         if(text instanceof String)
         {
@@ -647,6 +680,7 @@ public final class StringTools {
 
     /**
      * Like {@link String#substring(int, int)} but returns "" instead of throwing any sort of Exception.
+     * This delegates to {@link TextTools#safeSubstring(String, int, int)}.
      * @param source the String to get a substring from
      * @param beginIndex the first index, inclusive; will be treated as 0 if negative
      * @param endIndex the index after the last character (exclusive); if negative this will be source.length()
@@ -654,11 +688,7 @@ public final class StringTools {
      */
     public static String safeSubstring(String source, int beginIndex, int endIndex)
     {
-        if(source == null || source.isEmpty()) return "";
-        if(beginIndex < 0) beginIndex = 0;
-        if(endIndex < 0 || endIndex > source.length()) endIndex = source.length();
-        if(beginIndex >= endIndex) return "";
-        return source.substring(beginIndex, endIndex);
+        return TextTools.safeSubstring(source, beginIndex, endIndex);
     }
 
     /**
@@ -668,22 +698,7 @@ public final class StringTools {
      * @return a String array consisting of at least one String (the entirety of Source if nothing was split)
      */
     public static String[] split(String source, String delimiter) {
-        int amount = count(source, delimiter);
-        if (amount <= 0) return new String[]{source};
-        String[] splat = new String[amount+1];
-        int dl = delimiter.length(), idx = -dl, idx2;
-        for (int i = 0; i < amount; i++) {
-            splat[i] = safeSubstring(source, idx+dl, idx = source.indexOf(delimiter, idx+dl));
-        }
-        if((idx2 = source.indexOf(delimiter, idx+dl)) < 0)
-        {
-            splat[amount] = safeSubstring(source, idx+dl, source.length());
-        }
-        else
-        {
-            splat[amount] = safeSubstring(source, idx+dl, idx2);
-        }
-        return splat;
+        return TextTools.split(source, delimiter);
     }
 
     /**
