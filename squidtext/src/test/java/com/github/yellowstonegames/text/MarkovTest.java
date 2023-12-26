@@ -17,7 +17,9 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.TextTools;
 import com.github.yellowstonegames.TextInternals;
+import com.github.yellowstonegames.core.StringTools;
 import org.junit.Test;
 import regexodus.Category;
 
@@ -117,6 +119,22 @@ public class MarkovTest {
         }
     }
 
+    @Test
+    public void testMarkovChar() {
+        if (!TextInternals.PRINTING) return;
+        String[] names = ArrayTools.stringSpan(120, 72);
+        for (int i = 0; i < names.length; i++) {
+            names[i] = StringTools.capitalize(names[i]) + ' ' + Language.LOVECRAFT.word(~i, true).replace('-', '\'');
+        }
+        String merged = TextTools.join(" ", names);
+        MarkovChar markov = new MarkovChar();
+        markov.analyze(merged);
+        System.out.print(markov.chain(1234567890L, 30));
+        for (int i = 1; i < 20; i++) {
+            System.out.print(", " + markov.chain(i + 12345678L, 30));
+        }
+        System.out.println();
+    }
 }
 
 //        CaseInsensitiveSet names = new CaseInsensitiveSet(64){
