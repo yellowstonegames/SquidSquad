@@ -18,14 +18,13 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.store.core.JsonCore;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import java.io.IOException;
+
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
@@ -86,8 +85,8 @@ public final class JsonGrid {
             @Override
             public void write(Json json, Coord object, Class knownType) {
                 json.writeArrayStart();
-                json.writeValue(object.x);
-                json.writeValue(object.y);
+                json.writeValue(object.x());
+                json.writeValue(object.y());
                 json.writeArrayEnd();
             }
 

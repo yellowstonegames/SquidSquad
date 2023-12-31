@@ -64,7 +64,7 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
     {
         @Override
         protected int place(@NonNull Object item) {
-            final int x = ((Coord)item).x, y = ((Coord)item).y;
+            final int x = ((Coord) item).x(), y = ((Coord) item).y();
             // Cantor pairing function
             return y + ((x + y) * (x + y + 1) >> 1) & mask;
         }
@@ -116,48 +116,48 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
     }
 
     private void energize(Coord point) {
-        final int secX = point.x >>> shift - 2, secY = point.y >>> shift - 2,
-                outerX = point.x & ~sectorMask, outerY = point.y & ~sectorMask;
+        final int secX = point.x() >>> shift - 2, secY = point.y() >>> shift - 2,
+                outerX = point.x() & ~sectorMask, outerY = point.y() & ~sectorMask;
         for (int x = 0; x < sector; x++) {
             for (int y = 0; y < sector; y++) {
-                if((point.x & sectorMask) <= x + wrapMask && (point.x & sectorMask) + wrapMask >= x &&
-                        (point.y & sectorMask) <= y + wrapMask && (point.y & sectorMask) + wrapMask >= y)
+                if((point.x() & sectorMask) <= x + wrapMask && (point.x() & sectorMask) + wrapMask >= x &&
+                        (point.y() & sectorMask) <= y + wrapMask && (point.y() & sectorMask) + wrapMask >= y)
                 {
                     energy.getAndIncrement(Coord.get(outerX + x, outerY + y),
-                            0f, lut[x - point.x & sectorMask][y - point.y & sectorMask]);
+                            0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask]);
                     continue;
                 }
                 float adj = 0x1p-3f;// (x|y) == 0 ? 0x1p-3f - lut[sectorMask][sectorMask] * 0x1p-5f : 0x1p-3f - lut[x][y] * 0x1p-5f;
 
-                if((point.x & sectorMask) + wrapMask < x) {
+                if((point.x() & sectorMask) + wrapMask < x) {
                     for (int ex = -1 + (secX & 2); ex < 1 + (secX & 2); ex++) {
                         for (int ey = 0; ey < 4; ey++) {
                             energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                                    0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask] * adj);
                         }
                     }
                 }
-                else if((point.x & sectorMask) > x + wrapMask) {
+                else if((point.x() & sectorMask) > x + wrapMask) {
                     for (int ex = (secX & 2); ex < 2 + (secX & 2); ex++) {
                         for (int ey = 0; ey < 4; ey++) {
                             energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                                    0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask] * adj);
                         }
                     }
                 }
-                else if((point.y & sectorMask) + wrapMask < y) {
+                else if((point.y() & sectorMask) + wrapMask < y) {
                     for (int ex = 0; ex < 4; ex++) {
                         for (int ey = -1 + (secY & 2); ey < 1 + (secY & 2); ey++) {
                             energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                                    0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask] * adj);
                         }
                     }
                 }
-                else if((point.y & sectorMask) > y + wrapMask) {
+                else if((point.y() & sectorMask) > y + wrapMask) {
                     for (int ex = 0; ex < 4; ex++) {
                         for (int ey = (secY & 2); ey < 2 + (secY & 2); ey++) {
                             energy.getAndIncrement(Coord.get(((ex & 3) << shift - 2) + x, ((ey & 3) << shift - 2) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * adj);
+                                    0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask] * adj);
                         }
                     }
                 }
@@ -185,7 +185,7 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
         int ctr = 0;
         for(Coord c : initial) {
             energize(c);
-            done[c.x][c.y] = ctr++;
+            done[c.x()][c.y()] = ctr++;
         }
 
         for (int n = size * size; ctr < n; ctr++) {
@@ -193,7 +193,7 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
                     (o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)),
                     1);
             energize(low);
-            done[low.x][low.y] = ctr;
+            done[low.x()][low.y()] = ctr;
         }
         final int toByteShift = Math.max(0, shift + shift - 8);
 

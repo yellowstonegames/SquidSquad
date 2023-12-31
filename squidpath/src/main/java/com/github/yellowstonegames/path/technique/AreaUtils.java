@@ -152,10 +152,10 @@ public class AreaUtils {
     {
         if (limit != null && origin != null && end != null) {
             if(limit == AimLimit.FREE) return true;
-            if(Math.abs(end.x - origin.x) == Math.abs(end.y - origin.y)){
+            if(Math.abs(end.x() - origin.x()) == Math.abs(end.y() - origin.y())){
                 if(limit == AimLimit.EIGHT_WAY || limit == AimLimit.DIAGONAL) return true;
             }
-            if(end.x == origin.x || end.y == origin.y) {
+            if(end.x() == origin.x() || end.y() == origin.y()) {
                 if(limit == AimLimit.EIGHT_WAY || limit == AimLimit.ORTHOGONAL) return true;
             }
             return false; // limits are valid and their requirements are not met
@@ -183,11 +183,11 @@ public class AreaUtils {
         if(limit == null) limit = AimLimit.FREE;
         if (origin != null && end != null) {
             if(limit == AimLimit.FREE
-                    || (Math.abs(end.x - origin.x) == Math.abs(end.y - origin.y)
+                    || (Math.abs(end.x() - origin.x()) == Math.abs(end.y() - origin.y())
                     && (limit == AimLimit.EIGHT_WAY || limit == AimLimit.DIAGONAL))
-                    || ((end.x == origin.x || end.y == origin.y)
+                    || ((end.x() == origin.x() || end.y() == origin.y())
                     && (limit == AimLimit.EIGHT_WAY || limit == AimLimit.ORTHOGONAL)))
-                return reach.metric.inRange(origin.x, origin.y, end.x, end.y,
+                return reach.metric.inRange(origin.x(), origin.y(), end.x(), end.y(),
                         reach.minDistance, reach.maxDistance);
             return false; // limits are valid and their requirements are not met
         }

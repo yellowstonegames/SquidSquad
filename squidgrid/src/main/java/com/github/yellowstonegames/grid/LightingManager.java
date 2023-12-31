@@ -523,7 +523,7 @@ public class LightingManager {
                 continue;
             Radiance radiance = lights.getAt(i);
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x(), pos.y(), radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
     }
@@ -557,7 +557,7 @@ public class LightingManager {
             Coord pos = lights.keyAt(i);
             Radiance radiance = lights.getAt(i);
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x(), pos.y(), radiance.currentRange(), radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = 0; x < width; x++) {
@@ -579,7 +579,7 @@ public class LightingManager {
      */
     public void updateUI(Coord pos, Radiance radiance)
     {
-        updateUI(pos.x, pos.y, radiance);
+        updateUI(pos.x(), pos.y(), radiance);
     }
 
     /**
@@ -660,7 +660,7 @@ public class LightingManager {
      */
     public float[][] calculateFOV(Coord viewer)
     {
-        return calculateFOV(viewer.x, viewer.y);
+        return calculateFOV(viewer.x(), viewer.y());
     }
 
     /**
@@ -719,7 +719,7 @@ public class LightingManager {
             if(radiance == null) continue;
             range = radiance.range;
             if(range > maxRange &&
-                    pos.x + range >= minX && pos.x - range < maxX && pos.y + range >= minY && pos.y - range < maxY)
+                    pos.x() + range >= minX && pos.x() - range < maxX && pos.y() + range >= minY && pos.y() - range < maxY)
                 maxRange = range;
         }
         FOV.reuseLOS(resistances, losResult, viewerX, viewerY, minX, minY, maxX, maxY);
@@ -730,7 +730,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x(), pos.y(), radiance.range, radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
@@ -771,7 +771,7 @@ public class LightingManager {
         ArrayTools.fill(fovResult, 0f);
         ArrayTools.fill(losResult, 0f);
         for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
-            symmetry.getFov(resistances, floatCombining, e.key.x, e.key.y, e.value, radiusStrategy);
+            symmetry.getFov(resistances, floatCombining, e.key.x(), e.key.y(), e.value, radiusStrategy);
             FOV.addFOVsInto(fovResult, floatCombining);
         }
         ArrayTools.fill(lightingStrength, 0f);
@@ -785,11 +785,11 @@ public class LightingManager {
             if(radiance == null) continue;
             range = radiance.range;
             if(range > maxRange &&
-                    pos.x + range >= minX && pos.x - range < maxX && pos.y + range >= minY && pos.y - range < maxY)
+                    pos.x() + range >= minX && pos.x() - range < maxX && pos.y() + range >= minY && pos.y() - range < maxY)
                 maxRange = range;
         }
         for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
-            FOV.reuseLOS(resistances, floatCombining, e.key.x, e.key.y, minX, minY, maxX, maxY);
+            FOV.reuseLOS(resistances, floatCombining, e.key.x(), e.key.y(), minX, minY, maxX, maxY);
             FOV.addFOVsInto(losResult, floatCombining);
         }
         noticeable.refill(losResult, 0.0001f, Float.POSITIVE_INFINITY).expand8way((int) Math.ceil(maxRange));
@@ -799,7 +799,7 @@ public class LightingManager {
                 continue;
             radiance = lights.getAt(i);
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            symmetry.getFov(resistances, lightFromFOV, pos.x(), pos.y(), radiance.range, radiusStrategy);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {

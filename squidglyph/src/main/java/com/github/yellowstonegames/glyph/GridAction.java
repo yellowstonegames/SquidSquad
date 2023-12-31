@@ -126,8 +126,8 @@ public abstract class GridAction extends TemporalAction {
             this.radius = radius;
             float[][] resMap = new float[valid.width][valid.height];
             lightMap = new float[valid.width][valid.height];
-            FOV.reuseFOV(resMap, lightMap, center.x, center.y, radius + 0.5f);
-            affected = Radius.inCircle(center.x, center.y, radius, false, valid.width, valid.height);
+            FOV.reuseFOV(resMap, lightMap, center.x(), center.y(), radius + 0.5f);
+            affected = Radius.inCircle(center.x(), center.y(), radius, false, valid.width, valid.height);
         }
         /**
          * Constructs an ExplosionAction with explicit settings for most fields.
@@ -146,10 +146,10 @@ public abstract class GridAction extends TemporalAction {
             float[][] resMap = ArrayTools.fill(1f, valid.width, valid.height);
             valid.writeFloatsInto(resMap, 0f);
             lightMap = new float[valid.width][valid.height];
-            FOV.reuseFOV(resMap, lightMap, center.x, center.y, radius + 0.5f);
+            FOV.reuseFOV(resMap, lightMap, center.x(), center.y(), radius + 0.5f);
             valid.not().writeFloatsInto(lightMap, 0f);
             valid.not();
-            affected = Radius.inCircle(center.x, center.y, radius, false, valid.width, valid.height);
+            affected = Radius.inCircle(center.x(), center.y(), radius, false, valid.width, valid.height);
         }
 
         /**
@@ -211,10 +211,10 @@ public abstract class GridAction extends TemporalAction {
             float[][] resMap = ArrayTools.fill(1f, valid.width, valid.height);
             valid.writeFloatsInto(resMap, 0f);
             lightMap = new float[valid.width][valid.height];
-            FOV.reuseFOV(resMap, lightMap, center.x, center.y, radius + 0.5f, Radius.CIRCLE, angle, span);
+            FOV.reuseFOV(resMap, lightMap, center.x(), center.y(), radius + 0.5f, Radius.CIRCLE, angle, span);
             valid.not().writeFloatsInto(lightMap, 0f);
             valid.not();
-            affected = Radius.inCircle(center.x, center.y, radius, false, valid.width, valid.height);
+            affected = Radius.inCircle(center.x(), center.y(), radius, false, valid.width, valid.height);
         }
 
         /**
@@ -278,18 +278,18 @@ public abstract class GridAction extends TemporalAction {
             int idx;
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
-                if((light = lightMap[c.x][c.y]) <= 0.0f)
+                if((light = lightMap[c.x()][c.y()]) <= 0.0f)
                     continue;
-                f = Noise.instance.singleSimplex(seed, c.x * 1.5f, c.y * 1.5f, percent * 5f)
+                f = Noise.instance.singleSimplex(seed, c.x() * 1.5f, c.y() * 1.5f, percent * 5f)
                         * 0.17f + percent * 1.2f;
                 if(f < 0f || 0.5 * light + f < 0.4)
                     continue;
                 idx = (int) (f * colors.length);
                 if(idx >= colors.length - 1)
-                    color = DescriptiveColor.lerpColors(colors[colors.length-1], grid.backgrounds[c.x][c.y], (Math.min(0.99f, f) * colors.length) % 1f);
+                    color = DescriptiveColor.lerpColors(colors[colors.length-1], grid.backgrounds[c.x()][c.y()], (Math.min(0.99f, f) * colors.length) % 1f);
                 else
                     color = DescriptiveColor.lerpColors(colors[idx], colors[idx+1], (f * colors.length) % 1f);
-                grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y], color, DescriptiveColor.alpha(color) * light * 0.25f + 0.75f);
+                grid.backgrounds[c.x()][c.y()] = DescriptiveColor.lerpColors(grid.backgrounds[c.x()][c.y()], color, DescriptiveColor.alpha(color) * light * 0.25f + 0.75f);
             }
         }
         /**
@@ -613,18 +613,18 @@ public abstract class GridAction extends TemporalAction {
             final long tick = Hasher.randomize1(BitConversion.doubleToLongBits(percent) + seed);
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
-                if(lightMap[c.x][c.y] <= 0.0)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
+                if(lightMap[c.x()][c.y()] <= 0.0)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
                     continue;
-                f = Noise.instance.singleSimplex(seed, c.x * 1.5f, c.y * 1.5f, percent * 5)
+                f = Noise.instance.singleSimplex(seed, c.x() * 1.5f, c.y() * 1.5f, percent * 5)
                         * 0.17f + percent * 1.2f;
-                if(f < 0f || 0.5 * lightMap[c.x][c.y] + f < 0.4)
+                if(f < 0f || 0.5 * lightMap[c.x()][c.y()] + f < 0.4)
                     continue;
                 idx = (int) (f * colors.length);
                 if(idx >= colors.length - 1)
                     color = DescriptiveColor.lerpColors(colors[colors.length-1], (colors[colors.length-1] & 0xFFFFFF00), (Math.min(0.99f, f) * colors.length) % 1f);
                 else
                     color = DescriptiveColor.lerpColors(colors[idx], colors[idx+1], (f * colors.length) % 1f);
-                grid.put(c.x, c.y, choices[Hasher.randomize1Bounded(tick + i, clen)], color);
+                grid.put(c.x(), c.y(), choices[Hasher.randomize1Bounded(tick + i, clen)], color);
             }
         }
     }
@@ -668,11 +668,11 @@ public abstract class GridAction extends TemporalAction {
             float f, light;
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
-                if((light = lightMap[c.x][c.y]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
+                if((light = lightMap[c.x()][c.y()]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
                     continue;
-                f = Noise.instance.singleSimplex(seed, c.x * 0.3f, c.y * 0.3f, percent * 1.3f)
+                f = Noise.instance.singleSimplex(seed, c.x() * 0.3f, c.y() * 0.3f, percent * 1.3f)
                         * 0.498f + 0.4999f;
-                grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y],
+                grid.backgrounds[c.x()][c.y()] = DescriptiveColor.lerpColors(grid.backgrounds[c.x()][c.y()],
                         DescriptiveColor.lerpColors(colors[(int) (f * colors.length)],
                                 colors[((int) (f * colors.length) + 1) % colors.length],
                                 (f * colors.length) % 1f), MathTools.swayTight(percent * 2f) * light);
@@ -719,10 +719,10 @@ public abstract class GridAction extends TemporalAction {
             float f, light;
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
-                if((light = lightMap[c.x][c.y]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
+                if((light = lightMap[c.x()][c.y()]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
                     continue;
                 f = Math.min(0.999f, Math.max(0f, TrigTools.sinTurns((c.distance(center) - percent * 4f) * 0.25f)));
-                grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y],
+                grid.backgrounds[c.x()][c.y()] = DescriptiveColor.lerpColors(grid.backgrounds[c.x()][c.y()],
                         DescriptiveColor.lerpColors(colors[(int) (f * colors.length)],
                                 colors[((int) (f * colors.length) + 1) % colors.length],
                                 (f * colors.length) % 1f), MathTools.swayTight(percent * 2f) * light);

@@ -516,7 +516,7 @@ public class DijkstraMap {
      */
     public int encode(final Coord point)
     {
-        return width * point.y + point.x;
+        return width * point.y() + point.x();
     }
     /**
      * Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
@@ -628,12 +628,12 @@ public class DijkstraMap {
      */
     public void setGoal(Coord pt) {
         if (!initialized || !pt.isWithin(width, height)) return;
-        if (physicalMap[pt.x][pt.y] > FLOOR) {
+        if (physicalMap[pt.x()][pt.y()] > FLOOR) {
             return;
         }
 
         goals.add(encode(pt));
-        gradientMap[pt.x][pt.y] = 0f;
+        gradientMap[pt.x()][pt.y()] = 0f;
 
     }
     /**
@@ -647,9 +647,9 @@ public class DijkstraMap {
         if (!initialized || pts.width > width || pts.height > height) return;
         for(Coord c : pts)
         {
-            if(physicalMap[c.x][c.y] <= FLOOR) {
+            if(physicalMap[c.x()][c.y()] <= FLOOR) {
                 goals.add(encode(c));
-                gradientMap[c.x][c.y] = 0f;
+                gradientMap[c.x()][c.y()] = 0f;
             }
         }
     }
@@ -689,13 +689,13 @@ public class DijkstraMap {
      */
     public void setCost(Coord pt, float cost) {
         if (!initialized || !pt.isWithin(width, height)) return;
-        if (physicalMap[pt.x][pt.y] > FLOOR) {
-            costMap[pt.x][pt.y] = 1f;
+        if (physicalMap[pt.x()][pt.y()] > FLOOR) {
+            costMap[pt.x()][pt.y()] = 1f;
             return;
         }
         if(cost != 1f)
             standardCosts = false;
-        costMap[pt.x][pt.y] = cost;
+        costMap[pt.x()][pt.y()] = cost;
     }
 
     /**
@@ -746,7 +746,7 @@ public class DijkstraMap {
      */
     public void resetCell(Coord pt) {
         if (!initialized || !pt.isWithin(width, height)) return;
-        gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
+        gradientMap[pt.x()][pt.y()] = physicalMap[pt.x()][pt.y()];
     }
 
     /**
@@ -769,9 +769,9 @@ public class DijkstraMap {
     }
 
     private void setFresh(final Coord pt, float counter) {
-        if (!pt.isWithin(width, height) || gradientMap[pt.x][pt.y] < counter)
+        if (!pt.isWithin(width, height) || gradientMap[pt.x()][pt.y()] < counter)
             return;
-        gradientMap[pt.x][pt.y] = counter;
+        gradientMap[pt.x()][pt.y()] = counter;
         fresh.add(encode(pt));
     }
 
@@ -876,7 +876,7 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height))
-                    gradientMap[pt.x][pt.y] = WALL;
+                    gradientMap[pt.x()][pt.y()] = WALL;
             }
         }
         int dec, adjX, adjY, cen, cenX, cenY;
@@ -937,12 +937,12 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
+                        if(start != null && start.x() == adjX && start.y() == adjY && standardCosts)
                         {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
                                     if(pt != null && pt.isWithin(width, height))
-                                        gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
+                                        gradientMap[pt.x()][pt.y()] = physicalMap[pt.x()][pt.y()];
                                 }
                             }
                             return;
@@ -954,7 +954,7 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height))
-                    gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
+                    gradientMap[pt.x()][pt.y()] = physicalMap[pt.x()][pt.y()];
             }
         }
     }
@@ -1064,7 +1064,7 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height))
-                    gradientMap[pt.x][pt.y] = WALL;
+                    gradientMap[pt.x()][pt.y()] = WALL;
             }
         }
         int dec, adjX, adjY, cen, cenX, cenY;
@@ -1092,8 +1092,8 @@ public class DijkstraMap {
                     }
                 }
             } else {
-                final int x0 = Math.max(0, start.x - limit), x1 = Math.min(start.x + limit + 1, width),
-                        y0 = Math.max(0, start.y - limit), y1 = Math.min(start.y + limit + 1, height);
+                final int x0 = Math.max(0, start.x() - limit), x1 = Math.min(start.x() + limit + 1, width),
+                        y0 = Math.max(0, start.y() - limit), y1 = Math.min(start.y() + limit + 1, height);
                 for (int x = x0; x < x1; x++) {
                     for (int y = y0; y < y1; y++) {
                         if (gradientMap[x][y] <= FLOOR) {
@@ -1144,12 +1144,12 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
+                        if(start != null && start.x() == adjX && start.y() == adjY && standardCosts)
                         {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
                                     if(pt != null && pt.isWithin(width, height))
-                                        gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
+                                        gradientMap[pt.x()][pt.y()] = physicalMap[pt.x()][pt.y()];
                                 }
                             }
                             return;
@@ -1161,7 +1161,7 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height))
-                    gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
+                    gradientMap[pt.x()][pt.y()] = physicalMap[pt.x()][pt.y()];
             }
         }
     }
@@ -1185,11 +1185,11 @@ public class DijkstraMap {
         int xShift = width / 6, yShift = height / 6;
         rng.setState(start.hashCode(), (long) targets.size() << 1);
         int frustration = 0;
-        while (physicalMap[start2.x][start2.y] >= WALL && frustration++ < 50) {
-            start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
-                    Math.min(Math.max(1, start.y + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
+        while (physicalMap[start2.x()][start2.y()] >= WALL && frustration++ < 50) {
+            start2 = Coord.get(Math.min(Math.max(1, start.x() + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
+                    Math.min(Math.max(1, start.y() + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
         }
-        gradientMap[start2.x][start2.y] = 0f;
+        gradientMap[start2.x()][start2.y()] = 0f;
         int adjX, adjY, cen, cenX, cenY;
         float cs, dist;
         Coord adj;
@@ -1271,38 +1271,38 @@ public class DijkstraMap {
         Coord currentPos = findNearest(start, targets);
         rng.setState(start.hashCode(), (long) targets.length << 1);
         while (true) {
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                int adjX = currentPos.x + dirs[d].deltaX;
-                int adjY = currentPos.y + dirs[d].deltaY;
+                int adjX = currentPos.x() + dirs[d].deltaX;
+                int adjY = currentPos.y() + dirs[d].deltaY;
                 if (adjX < 0 || adjY < 0 || adjX >= width || adjY >= height)
                     /* Outside the map */
                     continue;
                 if (dirs[d].isDiagonal() && blockingRequirement > 0) // diagonal
                 {
-                    if ((gradientMap[adjX][currentPos.y] > FLOOR ? 1 : 0)
-                            + (gradientMap[currentPos.x][adjY] > FLOOR ? 1 : 0)
+                    if ((gradientMap[adjX][currentPos.y()] > FLOOR ? 1 : 0)
+                            + (gradientMap[currentPos.x()][adjY] > FLOOR ? 1 : 0)
                             >= blockingRequirement)
                         continue;
                 }
                 Coord pt = Coord.get(adjX, adjY);
-                if (gradientMap[pt.x][pt.y] < best) {
+                if (gradientMap[pt.x()][pt.y()] < best) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
 
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 return new ObjectDeque<>(path);
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
-            if (gradientMap[currentPos.x][currentPos.y] == 0)
+            if (gradientMap[currentPos.x()][currentPos.y()] == 0)
                 break;
             path.add(currentPos);
         }
@@ -1332,11 +1332,11 @@ public class DijkstraMap {
         Coord start2 = start;
         int xShift = width / 6, yShift = height / 6;
         rng.setState(start.hashCode(), (long) targets.size() << 1);
-        while (physicalMap[start2.x][start2.y] >= WALL && frustration < 50) {
-            start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
-                    Math.min(Math.max(1, start.y + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
+        while (physicalMap[start2.x()][start2.y()] >= WALL && frustration < 50) {
+            start2 = Coord.get(Math.min(Math.max(1, start.x() + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
+                    Math.min(Math.max(1, start.y() + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
         }
-        gradientMap[start2.x][start2.y] = 0f;
+        gradientMap[start2.x()][start2.y()] = 0f;
         int adjX, adjY, cen, cenX, cenY;
         float cs, dist;
         Coord adj;
@@ -1460,7 +1460,7 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height))
-                    gradientMap[pt.x][pt.y] = WALL;
+                    gradientMap[pt.x()][pt.y()] = WALL;
             }
         }
         for (int xx = size; xx < width; xx++) {
@@ -1536,13 +1536,13 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
+                        if(start != null && start.x() == adjX && start.y() == adjY && standardCosts)
                         {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
                                     if(pt != null && pt.isWithin(width, height)) {
-                                        for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
-                                            for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
+                                        for (int xs = pt.x(), xi = 0; xi < size && xs >= 0; xs--, xi++) {
+                                            for (int ys = pt.y(), yi = 0; yi < size && ys >= 0; ys--, yi++) {
                                                 gradientClone[xs][ys] = physicalMap[xs][ys];
                                             }
                                         }
@@ -1559,8 +1559,8 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height)) {
-                    for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
-                        for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
+                    for (int xs = pt.x(), xi = 0; xi < size && xs >= 0; xs--, xi++) {
+                        for (int ys = pt.y(), yi = 0; yi < size && ys >= 0; ys--, yi++) {
                             gradientClone[xs][ys] = physicalMap[xs][ys];
                         }
                     }
@@ -1641,7 +1641,7 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height))
-                    gradientMap[pt.x][pt.y] = WALL;
+                    gradientMap[pt.x()][pt.y()] = WALL;
             }
         }
         for (int xx = size; xx < width; xx++) {
@@ -1718,13 +1718,13 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
+                        if(start != null && start.x() == adjX && start.y() == adjY && standardCosts)
                         {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
                                     if(pt != null && pt.isWithin(width, height)) {
-                                        for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
-                                            for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
+                                        for (int xs = pt.x(), xi = 0; xi < size && xs >= 0; xs--, xi++) {
+                                            for (int ys = pt.y(), yi = 0; yi < size && ys >= 0; ys--, yi++) {
                                                 gradientClone[xs][ys] = physicalMap[xs][ys];
                                             }
                                         }
@@ -1741,8 +1741,8 @@ public class DijkstraMap {
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
                 if(pt != null && pt.isWithin(width, height)) {
-                    for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
-                        for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
+                    for (int xs = pt.x(), xi = 0; xi < size && xs >= 0; xs--, xi++) {
+                        for (int ys = pt.y(), yi = 0; yi < size && ys >= 0; ys--, yi++) {
                             gradientClone[xs][ys] = physicalMap[xs][ys];
                         }
                     }
@@ -1882,33 +1882,33 @@ public class DijkstraMap {
                 path.clear();
                 break;
             }
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                int adjX = currentPos.x + dirs[d].deltaX;
-                int adjY = currentPos.y + dirs[d].deltaY;
+                int adjX = currentPos.x() + dirs[d].deltaX;
+                int adjY = currentPos.y() + dirs[d].deltaY;
                 if (adjX < 0 || adjY < 0 || adjX >= width || adjY >= height)
                     /* Outside the map */
                     continue;
                 if (dirs[d].isDiagonal() && blockingRequirement > 0) // diagonal
                 {
-                    if ((gradientMap[adjX][currentPos.y] > FLOOR ? 1 : 0)
-                            + (gradientMap[currentPos.x][adjY] > FLOOR ? 1 : 0)
+                    if ((gradientMap[adjX][currentPos.y()] > FLOOR ? 1 : 0)
+                            + (gradientMap[currentPos.x()][adjY] > FLOOR ? 1 : 0)
                             >= blockingRequirement)
                         continue;
                 }
                 Coord pt = Coord.get(adjX, adjY);
-                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
 
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
@@ -1921,7 +1921,7 @@ public class DijkstraMap {
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             path.add(currentPos);
-            paidLength += costMap[currentPos.x][currentPos.y];
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
@@ -1932,7 +1932,7 @@ public class DijkstraMap {
                 }
                 break;
             }
-            if (gradientMap[currentPos.x][currentPos.y] == 0)
+            if (gradientMap[currentPos.x()][currentPos.y()] == 0)
                 break;
         }
         cutShort = false;
@@ -2074,7 +2074,7 @@ public class DijkstraMap {
 
         resetMap();
         for (Coord goal : targets) {
-            setGoal(goal.x, goal.y);
+            setGoal(goal.x(), goal.y());
         }
         if (goals.isEmpty())
         {
@@ -2109,7 +2109,7 @@ public class DijkstraMap {
                 if (gradientMap[x][y] >= minPreferredRange && gradientMap[x][y] <= maxPreferredRange) {
 
                     for (Coord goal : targets) {
-                        if (los == null || los.isReachable(x, y, goal.x, goal.y, resMap)) {
+                        if (los == null || los.isReachable(x, y, goal.x(), goal.y(), resMap)) {
                             setGoal(x, y);
                             gradientMap[x][y] = 0;
                             continue CELL;
@@ -2129,7 +2129,7 @@ public class DijkstraMap {
                 }
             }
         }
-        if(gradientMap[start.x][start.y] <= 0f)
+        if(gradientMap[start.x()][start.y()] <= 0f)
         {
             cutShort = false;
             frustration = 0;
@@ -2151,33 +2151,33 @@ public class DijkstraMap {
                 path.clear();
                 break;
             }
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                int adjX = currentPos.x + dirs[d].deltaX;
-                int adjY = currentPos.y + dirs[d].deltaY;
+                int adjX = currentPos.x() + dirs[d].deltaX;
+                int adjY = currentPos.y() + dirs[d].deltaY;
                 if (adjX < 0 || adjY < 0 || adjX >= width || adjY >= height)
                     /* Outside the map */
                     continue;
                 if (dirs[d].isDiagonal() && blockingRequirement > 0) // diagonal
                 {
-                    if ((gradientMap[adjX][currentPos.y] > FLOOR ? 1 : 0)
-                            + (gradientMap[currentPos.x][adjY] > FLOOR ? 1 : 0)
+                    if ((gradientMap[adjX][currentPos.y()] > FLOOR ? 1 : 0)
+                            + (gradientMap[currentPos.x()][adjY] > FLOOR ? 1 : 0)
                             >= blockingRequirement)
                         continue;
                 }
                 Coord pt = Coord.get(adjX, adjY);
-                if (gradientMap[pt.x][pt.y] < best  && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best  && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
 
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
@@ -2189,8 +2189,8 @@ public class DijkstraMap {
                 }
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
-            path.add(Coord.get(currentPos.x, currentPos.y));
-            paidLength += costMap[currentPos.x][currentPos.y];
+            path.add(Coord.get(currentPos.x(), currentPos.y()));
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             if (paidLength > moveLength - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
@@ -2202,7 +2202,7 @@ public class DijkstraMap {
                 }
                 break;
             }
-            if (gradientMap[currentPos.x][currentPos.y] == 0)
+            if (gradientMap[currentPos.x()][currentPos.y()] == 0)
                 break;
         }
         cutShort = false;
@@ -2360,7 +2360,7 @@ public class DijkstraMap {
         clearGoals();
         resetMap();
         for (Coord goal : targets) {
-            setGoal(goal.x, goal.y);
+            setGoal(goal.x(), goal.y());
         }
         if (goals.isEmpty())
         {
@@ -2397,7 +2397,7 @@ public class DijkstraMap {
                     continue;
                 if (gradientMap[x][y] >= tech.aoe.getMinRange() && gradientMap[x][y] <= tech.aoe.getMaxRange()) {
                     for (Coord tgt : targets) {
-                        if (los == null || los.isReachable(x, y, tgt.x, tgt.y, dungeon)) {
+                        if (los == null || los.isReachable(x, y, tgt.x(), tgt.y(), dungeon)) {
                             ideal = tech.idealLocations(tempPt, targets, allies);
                             if (!ideal.isEmpty()) {
                                 targetMap[x][y] = ideal.keyAt(0);
@@ -2414,14 +2414,14 @@ public class DijkstraMap {
         }
         scan(null,impassable2);
 
-        float currentDistance = gradientMap[start.x][start.y];
+        float currentDistance = gradientMap[start.x()][start.y()];
         if (currentDistance <= moveLength) {
             int[] g_arr = goals.toArray();
 
             goals.clear();
             setGoal(start);
             scan(null, impassable2, false);
-            gradientMap[start.x][start.y] = moveLength;
+            gradientMap[start.x()][start.y()] = moveLength;
             int decX, decY;
             float bestWorth = 0f;
             for (int g, ig = 0; ig < g_arr.length; ig++) {
@@ -2445,28 +2445,28 @@ public class DijkstraMap {
 
         measurement = mess;
 
-        Coord currentPos = Coord.get(start.x, start.y);
+        Coord currentPos = Coord.get(start.x(), start.y());
         while (true) {
             if (frustration > 500) {
                 path.clear();
                 break;
             }
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
+                Coord pt = Coord.get(currentPos.x() + dirs[d].deltaX, currentPos.y() + dirs[d].deltaY);
                 if(!pt.isWithin(width, height))
                     continue;
-                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
-            if (best >= gradientMap[currentPos.x][currentPos.y]) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()]) {
                 if (friends.contains(currentPos)) {
                     tempSet.clear();
                     tempSet.addAll(impassable2);
@@ -2476,7 +2476,7 @@ public class DijkstraMap {
                 }
                 break;
             }
-            if (best > gradientMap[start.x][start.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best > gradientMap[start.x()][start.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
@@ -2489,7 +2489,7 @@ public class DijkstraMap {
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             path.add(currentPos);
-            paidLength += costMap[currentPos.x][currentPos.y];
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             frustration++;
             if (paidLength > moveLength - 1f) {
                 if (friends.contains(currentPos)) {
@@ -2714,32 +2714,32 @@ public class DijkstraMap {
                 path.clear();
                 break;
             }
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                int adjX = currentPos.x + dirs[d].deltaX;
-                int adjY = currentPos.y + dirs[d].deltaY;
+                int adjX = currentPos.x() + dirs[d].deltaX;
+                int adjY = currentPos.y() + dirs[d].deltaY;
                 if (adjX < 0 || adjY < 0 || adjX >= width || adjY >= height)
                     /* Outside the map */
                     continue;
                 if (dirs[d].isDiagonal() && blockingRequirement > 0) // diagonal
                 {
-                    if ((gradientMap[adjX][currentPos.y] > FLOOR ? 1 : 0)
-                            + (gradientMap[currentPos.x][adjY] > FLOOR ? 1 : 0)
+                    if ((gradientMap[adjX][currentPos.y()] > FLOOR ? 1 : 0)
+                            + (gradientMap[currentPos.x()][adjY] > FLOOR ? 1 : 0)
                             >= blockingRequirement)
                         continue;
                 }
                 Coord pt = Coord.get(adjX, adjY);
-                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
-            if (best >= gradientMap[start.x][start.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[start.x()][start.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 if(buffer == null)
@@ -2753,11 +2753,11 @@ public class DijkstraMap {
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             if (path.size() > 0) {
                 Coord last = path.peekLast();
-                if (gradientMap[last.x][last.y] <= gradientMap[currentPos.x][currentPos.y])
+                if (gradientMap[last.x()][last.y()] <= gradientMap[currentPos.x()][currentPos.y()])
                     break;
             }
             path.add(currentPos);
-            paidLength += costMap[currentPos.x][currentPos.y];
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
@@ -2828,7 +2828,7 @@ public class DijkstraMap {
 
         resetMap();
         for (Coord goal : targets) {
-            setGoal(goal.x, goal.y);
+            setGoal(goal.x(), goal.y());
         }
         if (goals.isEmpty())
         {
@@ -2851,23 +2851,23 @@ public class DijkstraMap {
                 path.clear();
                 break;
             }
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
+                Coord pt = Coord.get(currentPos.x() + dirs[d].deltaX, currentPos.y() + dirs[d].deltaY);
                 if(!pt.isWithin(width, height))
                     continue;
-                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
 
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 return new ObjectDeque<>(path);
@@ -2875,7 +2875,7 @@ public class DijkstraMap {
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
 
             path.add(currentPos);
-            paidLength += costMap[currentPos.x][currentPos.y];
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
@@ -2886,7 +2886,7 @@ public class DijkstraMap {
                 }
                 break;
             }
-            if (gradientMap[currentPos.x][currentPos.y] == 0)
+            if (gradientMap[currentPos.x()][currentPos.y()] == 0)
                 break;
         }
         cutShort = false;
@@ -2949,7 +2949,7 @@ public class DijkstraMap {
 
         resetMap();
         for (Coord goal : targets) {
-            setGoal(goal.x, goal.y);
+            setGoal(goal.x(), goal.y());
         }
         if (goals.isEmpty())
         {
@@ -2972,10 +2972,10 @@ public class DijkstraMap {
                 if (x + 2 < width && y + 2 < height && gradientMap[x][y] == preferredRange) {
                     for (Coord goal : targets) {
                         if (los == null
-                                || los.isReachable(x, y, goal.x, goal.y, resMap)
-                                || los.isReachable(x + 1, y, goal.x, goal.y, resMap)
-                                || los.isReachable(x, y + 1, goal.x, goal.y, resMap)
-                                || los.isReachable(x + 1, y + 1, goal.x, goal.y, resMap)){
+                                || los.isReachable(x, y, goal.x(), goal.y(), resMap)
+                                || los.isReachable(x + 1, y, goal.x(), goal.y(), resMap)
+                                || los.isReachable(x, y + 1, goal.x(), goal.y(), resMap)
+                                || los.isReachable(x + 1, y + 1, goal.x(), goal.y(), resMap)){
                             setGoal(x, y);
                             gradientMap[x][y] = 0;
                             continue CELL;
@@ -2997,30 +2997,30 @@ public class DijkstraMap {
                 path.clear();
                 break;
             }
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
+                Coord pt = Coord.get(currentPos.x() + dirs[d].deltaX, currentPos.y() + dirs[d].deltaY);
                 if(!pt.isWithin(width, height))
                     continue;
-                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
 
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 return new ObjectDeque<>(path);
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             path.add(currentPos);
-            paidLength += costMap[currentPos.x][currentPos.y];
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             if (paidLength > moveLength - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
@@ -3031,7 +3031,7 @@ public class DijkstraMap {
                 }
                 break;
             }
-            if (gradientMap[currentPos.x][currentPos.y] == 0)
+            if (gradientMap[currentPos.x()][currentPos.y()] == 0)
                 break;
         }
         cutShort = false;
@@ -3119,10 +3119,10 @@ public class DijkstraMap {
                 if (x + 2 < width && y + 2 < height && gradientMap[x][y] >= minPreferredRange && gradientMap[x][y] <= maxPreferredRange) {
                     for (Coord goal : targets) {
                         if (los == null
-                                || los.isReachable(x, y, goal.x, goal.y, resMap)
-                                || los.isReachable(x + 1, y, goal.x, goal.y, resMap)
-                                || los.isReachable(x, y + 1, goal.x, goal.y, resMap)
-                                || los.isReachable(x + 1, y + 1, goal.x, goal.y, resMap)) {
+                                || los.isReachable(x, y, goal.x(), goal.y(), resMap)
+                                || los.isReachable(x + 1, y, goal.x(), goal.y(), resMap)
+                                || los.isReachable(x, y + 1, goal.x(), goal.y(), resMap)
+                                || los.isReachable(x + 1, y + 1, goal.x(), goal.y(), resMap)) {
                             setGoal(x, y);
                             gradientMap[x][y] = 0;
                             continue CELL;
@@ -3145,22 +3145,22 @@ public class DijkstraMap {
                 break;
             }
 
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
+                Coord pt = Coord.get(currentPos.x() + dirs[d].deltaX, currentPos.y() + dirs[d].deltaY);
                 if(!pt.isWithin(width, height))
                     continue;
-                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 return new ObjectDeque<>(path);
@@ -3168,7 +3168,7 @@ public class DijkstraMap {
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
 
             path.add(currentPos);
-            paidLength += costMap[currentPos.x][currentPos.y];
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             if (paidLength > moveLength - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
@@ -3180,7 +3180,7 @@ public class DijkstraMap {
                 }
                 break;
             }
-            if (gradientMap[currentPos.x][currentPos.y] == 0)
+            if (gradientMap[currentPos.x()][currentPos.y()] == 0)
                 break;
         }
         cutShort = false;
@@ -3271,22 +3271,22 @@ public class DijkstraMap {
                 break;
             }
 
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
+                Coord pt = Coord.get(currentPos.x() + dirs[d].deltaX, currentPos.y() + dirs[d].deltaY);
                 if(!pt.isWithin(width, height))
                     continue;
-                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x()][pt.y()] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
                 return new ObjectDeque<>(path);
@@ -3295,11 +3295,11 @@ public class DijkstraMap {
 
             if (path.size() > 0) {
                 Coord last = path.peekLast();
-                if (gradientMap[last.x][last.y] <= gradientMap[currentPos.x][currentPos.y])
+                if (gradientMap[last.x()][last.y()] <= gradientMap[currentPos.x()][currentPos.y()])
                     break;
             }
             path.add(currentPos);
-            paidLength += costMap[currentPos.x][currentPos.y];
+            paidLength += costMap[currentPos.x()][currentPos.y()];
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
@@ -3360,7 +3360,7 @@ public class DijkstraMap {
             }
         }
         Coord currentPos = target;
-        if(gradientMap[currentPos.x][currentPos.y] <= FLOOR)
+        if(gradientMap[currentPos.x()][currentPos.y()] <= FLOOR)
             path.add(currentPos);
         else
         {
@@ -3373,33 +3373,33 @@ public class DijkstraMap {
         }
         rng.setState(target.hashCode(), 0x9E3779B97F4A7C15L);
         do {
-            float best = gradientMap[currentPos.x][currentPos.y];
+            float best = gradientMap[currentPos.x()][currentPos.y()];
             appendDirToShuffle(rng);
             int choice = 0;
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
-                int adjX = currentPos.x + dirs[d].deltaX;
-                int adjY = currentPos.y + dirs[d].deltaY;
+                int adjX = currentPos.x() + dirs[d].deltaX;
+                int adjY = currentPos.y() + dirs[d].deltaY;
                 if (adjX < 0 || adjY < 0 || adjX >= width || adjY >= height)
                     /* Outside the map */
                     continue;
                 if (dirs[d].isDiagonal() && blockingRequirement > 0) // diagonal
                 {
-                    if ((gradientMap[adjX][currentPos.y] > FLOOR ? 1 : 0)
-                            + (gradientMap[currentPos.x][adjY] > FLOOR ? 1 : 0)
+                    if ((gradientMap[adjX][currentPos.y()] > FLOOR ? 1 : 0)
+                            + (gradientMap[currentPos.x()][adjY] > FLOOR ? 1 : 0)
                             >= blockingRequirement)
                         continue;
                 }
                 Coord pt = Coord.get(adjX, adjY);
-                if (gradientMap[pt.x][pt.y] < best) {
+                if (gradientMap[pt.x()][pt.y()] < best) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
-                        best = gradientMap[pt.x][pt.y];
+                        best = gradientMap[pt.x()][pt.y()];
                         choice = d;
                     }
                 }
             }
 
-            if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
+            if (best >= gradientMap[currentPos.x()][currentPos.y()] || physicalMap[currentPos.x() + dirs[choice].deltaX][currentPos.y() + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 if (buffer == null)
                     return new ObjectDeque<>(path);
@@ -3411,7 +3411,7 @@ public class DijkstraMap {
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
             path.addFirst(currentPos);
 
-        } while (gradientMap[currentPos.x][currentPos.y] != 0);
+        } while (gradientMap[currentPos.x()][currentPos.y()] != 0);
         cutShort = false;
         if(buffer == null)
             return new ObjectDeque<>(path);
@@ -3438,7 +3438,7 @@ public class DijkstraMap {
 
         resetMap();
         for (Coord goal : starts) {
-            setGoal(goal.x, goal.y);
+            setGoal(goal.x(), goal.y());
         }
         if (goals.isEmpty())
             return fill;

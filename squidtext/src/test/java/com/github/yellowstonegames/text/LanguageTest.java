@@ -381,7 +381,7 @@ public class LanguageTest {
         System.out.println("ORIGINAL:");         
         System.out.println(TextTools.join("\n", StringTools.wrap(oz, 80)));
         System.out.println("\n\nGENERATED:\n");
-        LaserRandom sr = new LaserRandom(2252637788195L);
+
         for(Language lang : languages) {
             System.out.println("\n" + lang.getName() + ":\n");
             Translator cipher = new Translator(lang, 41041041L);

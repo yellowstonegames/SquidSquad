@@ -453,7 +453,7 @@ public class PairedDemo extends ApplicationAdapter {
                 pos.x %= shownWidth;
                 if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
                     // we also need to check if screenX or screenY is the same cell.
-                    if (cursor.x == screenX && cursor.y == screenY) {
+                    if (cursor.x() == screenX && cursor.y() == screenY) {
                         return false;
                     }
                     cursor = Coord.get(screenX, screenY);
@@ -490,7 +490,7 @@ public class PairedDemo extends ApplicationAdapter {
         // this prevents movements from restarting while a slide is already in progress.
         if(cg.getChange() != 0f && cg.getChange() != 1f) return;
 
-        int newX = next.x, newY = next.y;
+        int newX = next.x(), newY = next.y();
         playerSprite.setPackedColor(Color.WHITE_FLOAT_BITS);
         if (newX >= 0 && newY >= 0 && newX < placeWidth && newY < placeHeight
                 && barePlaceMap[newX][newY] != '#') {
@@ -545,7 +545,7 @@ public class PairedDemo extends ApplicationAdapter {
             AnimatedGlidingSprite mon = monsters.getAt(ci);
             if(mon == null) continue;
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
-            if (lightLevels[pos.x][pos.y] > 0.01) {
+            if (lightLevels[pos.x()][pos.y()] > 0.01) {
                 // the player's position is set as a goal by findPath(), later.
                 getToPlayer.clearGoals();
                 // clear the buffer, we fill it next
@@ -563,7 +563,7 @@ public class PairedDemo extends ApplicationAdapter {
                     Coord tmp = nextMovePositions.get(0);
                     if(tmp == null) continue;
                     // if we would move into the player, instead damage the player and animate a bump motion.
-                    if (tmp.x == player.x && tmp.y == player.y) {
+                    if (tmp.x() == player.x() && tmp.y() == player.y()) {
                         playerSprite.setPackedColor(RGB_BLOOD);
                         health--;
                         VectorSequenceGlider small = VectorSequenceGlider.BUMPS.getOrDefault(pos.toGoTo(player), null);
@@ -604,7 +604,7 @@ public class PairedDemo extends ApplicationAdapter {
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(rgbVision.inView.contains(curr))
-                rgbVision.backgroundColors[curr.x][curr.y] = rainbow;
+                rgbVision.backgroundColors[curr.x()][curr.y()] = rainbow;
         }
 
         float[][] lightLevels = rgbVision.lighting.fovResult;
@@ -659,7 +659,7 @@ public class PairedDemo extends ApplicationAdapter {
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(oklabVision.inView.contains(curr))
-                oklabVision.backgroundColors[curr.x][curr.y] = rainbow;
+                oklabVision.backgroundColors[curr.x()][curr.y()] = rainbow;
         }
 
         float[][] lightLevels = oklabVision.lighting.fovResult;

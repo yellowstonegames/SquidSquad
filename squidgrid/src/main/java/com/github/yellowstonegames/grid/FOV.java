@@ -21,7 +21,6 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.sort.FloatComparator;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -745,13 +744,13 @@ public final class FOV {
         dq.addLast(Coord.get(x, y));
         while (!dq.isEmpty()) {
             Coord p = dq.removeFirst();
-            if (lightMap[p.x][p.y] <= 0 || FOV.lightWorkspace.contains(p)) {
+            if (lightMap[p.x()][p.y()] <= 0 || FOV.lightWorkspace.contains(p)) {
                 continue;//no light to spread
             }
 
             for (Direction dir : Direction.OUTWARDS) {
-                int x2 = p.x + dir.deltaX;
-                int y2 = p.y + dir.deltaY;
+                int x2 = p.x() + dir.deltaX;
+                int y2 = p.y() + dir.deltaY;
                 if (x2 < 0 || x2 >= width || y2 < 0 || y2 >= height //out of bounds
                         || radiusStrategy.radius(x, y, x2, y2) >= radius + 1) {//+1 to cover starting tile
                     continue;
@@ -778,13 +777,13 @@ public final class FOV {
         dq.addLast(Coord.get(x, y));
         while (!dq.isEmpty()) {
             Coord p = dq.removeFirst();
-            if (lightMap[p.x][p.y] <= 0 || FOV.lightWorkspace.contains(p)) {
+            if (lightMap[p.x()][p.y()] <= 0 || FOV.lightWorkspace.contains(p)) {
                 continue;//no light to spread
             }
 
             for (Direction dir : ccw_full) {
-                int x2 = p.x + dir.deltaX;
-                int y2 = p.y + dir.deltaY;
+                int x2 = p.x() + dir.deltaX;
+                int y2 = p.y() + dir.deltaY;
                 if (x2 < 0 || x2 >= width || y2 < 0 || y2 >= height //out of bounds
                         || radiusStrategy.radius(x, y, x2, y2) >= radius + 1) {//+1 to cover starting tile
                     continue;
@@ -823,7 +822,7 @@ public final class FOV {
                 for(int i = 0; i < neighbors.size() && i <= rippleNeighbors; i++)
                 {
                     c = neighbors.get(i);
-                    testDistance = radiusStrategy.radius(startx, starty, c.x, c.y);
+                    testDistance = radiusStrategy.radius(startx, starty, c.x(), c.y());
                     if(tmpDistance < testDistance) {
                         break;
                     }
@@ -841,13 +840,13 @@ public final class FOV {
         int lit = 0, indirects = 0;
         for (int i = 0; i < max; i++) {
             Coord p = neighbors.get(i);
-            if (lightMap[p.x][p.y] > 0) {
+            if (lightMap[p.x()][p.y()] > 0) {
                 lit++;
                 if (FOV.lightWorkspace.contains(p)) {
                     indirects++;
                 }
-                float dist = radiusStrategy.radius(x, y, p.x, p.y);
-                light = Math.max(light, lightMap[p.x][p.y] - dist * decay - map[p.x][p.y]);
+                float dist = radiusStrategy.radius(x, y, p.x(), p.y());
+                light = Math.max(light, lightMap[p.x()][p.y()] - dist * decay - map[p.x()][p.y()]);
             }
         }
 

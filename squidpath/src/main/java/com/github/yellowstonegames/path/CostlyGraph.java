@@ -261,9 +261,9 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 			for (int j = 0; j < outer.length; j++) {
 				dir = outer[j];
 				off = center.translate(dir);
-				if(off.isWithin(width, height) && map[center.x + dir.deltaX][center.y + dir.deltaY] >= 0.0)
+				if(off.isWithin(width, height) && map[center.x() + dir.deltaX][center.y() + dir.deltaY] >= 0.0)
 				{
-					addEdge(off, center, map[center.x][center.y]);
+					addEdge(off, center, map[center.x()][center.y()]);
 				}
 			}
 		}
@@ -415,7 +415,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 			Node<Coord> nc = vertexMap.getAt(i);
 			if(nc == null || !nc.seen || nc.lastRunID != rid || nc.distance >= 9999.5)
 				continue;
-			int d = (int) (nc.distance + 0.5), x = nc.object.x * 5, y = nc.object.y;
+			int d = (int) (nc.distance + 0.5), x = nc.object.x() * 5, y = nc.object.y();
 			cs[y * w5 + x    ] = (d >= 1000) ? (char) ('0' + d / 1000) : ' ';
 			cs[y * w5 + x + 1] = (d >= 100)  ? (char) ('0' + d / 100 % 10) : ' ';
 			cs[y * w5 + x + 2] = (d >= 10)   ? (char) ('0' + d / 10 % 10) : ' ';

@@ -195,10 +195,10 @@ public class AStarSearch {
 	public String toString() {
         final int w5 = width * 5;
         final char[] cs = graph.show();
-        cs[start.y * w5 + start.x * 5] = cs[start.y * w5 + start.x * 5 + 1] =
-                cs[start.y * w5 + start.x * 5 + 2] = cs[start.y * w5 + start.x * 5 + 3] = '@';
-        cs[target.y * w5 + target.x * 5] = cs[target.y * w5 + target.x * 5 + 1] =
-                cs[target.y * w5 + target.x * 5 + 2] = cs[target.y * w5 + target.x * 5 + 3] = '!';
+        cs[start.y() * w5 + start.x() * 5] = cs[start.y() * w5 + start.x() * 5 + 1] =
+                cs[start.y() * w5 + start.x() * 5 + 2] = cs[start.y() * w5 + start.x() * 5 + 3] = '@';
+        cs[target.y() * w5 + target.x() * 5] = cs[target.y() * w5 + target.x() * 5 + 1] =
+                cs[target.y() * w5 + target.x() * 5 + 2] = cs[target.y() * w5 + target.x() * 5 + 3] = '!';
         return String.valueOf(cs);
     }
 }

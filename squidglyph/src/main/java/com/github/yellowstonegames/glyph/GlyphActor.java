@@ -135,6 +135,6 @@ public class GlyphActor extends Actor {
     }
 
     public void setLocation(Coord location) {
-        setPosition(location.x, location.y);
+        setPosition(location.x(), location.y());
     }
 }

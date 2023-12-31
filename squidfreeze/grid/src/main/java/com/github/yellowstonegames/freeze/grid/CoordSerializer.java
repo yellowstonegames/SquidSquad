@@ -33,8 +33,8 @@ public class CoordSerializer extends Serializer<Coord> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final Coord data) {
-        output.writeVarInt(data.x, true);
-        output.writeVarInt(data.y, true);
+        output.writeVarInt(data.x(), true);
+        output.writeVarInt(data.y(), true);
     }
 
     @Override

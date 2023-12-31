@@ -185,7 +185,7 @@ public class DungeonGridTest extends ApplicationAdapter {
                 gg.viewport.unproject(pos);
                 if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
                     // we also need to check if screenX or screenY is the same cell.
-                    if (cursor.x == screenX && cursor.y == screenY || gg.areChildrenActing()) {
+                    if (cursor.x() == screenX && cursor.y() == screenY || gg.areChildrenActing()) {
                         return false;
                     }
                     cursor = Coord.get(screenX, screenY);
@@ -218,8 +218,8 @@ public class DungeonGridTest extends ApplicationAdapter {
         if(playerGlyph.hasActions()) return;
 
         final Coord next = Coord.get(Math.round(playerGlyph.getX() + way.deltaX), Math.round(playerGlyph.getY() + way.deltaY));
-        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
-            playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.2f, post));
+        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x()][next.y()] == '.') {
+            playerGlyph.addAction(MoreActions.slideTo(next.x(), next.y(), 0.2f, post));
         }
         else{
 //            if(MathUtils.randomBoolean())
@@ -246,8 +246,8 @@ public class DungeonGridTest extends ApplicationAdapter {
         ArrayTools.insert(dungeon, prunedDungeon, 0, 0);
         res = FOV.generateSimpleResistances(bare);
         Coord player = new Region(bare, '.').singleRandom(dungeonProcessor.rng);
-        playerGlyph.setPosition(player.x, player.y);
-        seen.remake(inView.refill(FOV.reuseFOV(res, light, player.x, player.y, 6.5f, Radius.CIRCLE), 0.001f, 2f));
+        playerGlyph.setPosition(player.x(), player.y());
+        seen.remake(inView.refill(FOV.reuseFOV(res, light, player.x(), player.y(), 6.5f, Radius.CIRCLE), 0.001f, 2f));
         blockage.remake(seen).not().fringe8way();
         LineTools.pruneLines(dungeon, seen, prunedDungeon);
         gg.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];

@@ -368,14 +368,14 @@ public class SerpentDeepMapGenerator {
                 Coord higher = above.random(random);
                 while(above.size() > 0)
                 {
-                    nearAbove.empty().insert(columns[higher.x], rows[higher.y]).flood(floors[i - 1], dlimit);
-                    near.empty().insert(columns[higher.x], rows[higher.y]).flood(floors[i], dlimit).and(nearAbove);
+                    nearAbove.empty().insert(columns[higher.x()], rows[higher.y()]).flood(floors[i - 1], dlimit);
+                    near.empty().insert(columns[higher.x()], rows[higher.y()]).flood(floors[i], dlimit).and(nearAbove);
                     Coord subLink = near.singleRandom(random);
                     ups.get(i).add(subLink);
                     downs.get(i-1).add(subLink);
                     for(Coord abv : linksDown.get(i-1))
                     {
-                        if(nearAbove.contains(columns[abv.x], rows[abv.y]))
+                        if(nearAbove.contains(columns[abv.x()], rows[abv.y()]))
                             above.remove(abv);
                     }
                     if(above.isEmpty())
@@ -392,7 +392,7 @@ public class SerpentDeepMapGenerator {
                 int count = used.getOrDefault(up, 10000);
                 if(count != 10000 && count > 1)
                     continue;
-                dungeon[i][up.x][up.y] = '<';
+                dungeon[i][up.x()][up.y()] = '<';
 
                 used.put(up, (count == 10000) ? 1 : count + 1);
             }
@@ -402,7 +402,7 @@ public class SerpentDeepMapGenerator {
                 int count = used.getOrDefault(down, 10000);
                 if(count != 10000 && count > 1)
                     continue;
-                dungeon[i][down.x][down.y] = '>';
+                dungeon[i][down.x()][down.y()] = '>';
 
                 used.put(down, (count == 10000) ? 1 : count + 1);
             }

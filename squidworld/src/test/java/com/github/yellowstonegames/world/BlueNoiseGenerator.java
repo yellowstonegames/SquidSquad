@@ -58,7 +58,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
     {
         @Override
         protected int place(@NonNull Object item) {
-            final int x = ((Coord)item).x, y = ((Coord)item).y;
+            final int x = ((Coord) item).x(), y = ((Coord) item).y();
             // Cantor pairing function
             return y + ((x + y) * (x + y + 1) >> 1) & mask;
         }
@@ -112,7 +112,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
     private void energize(Coord point) {
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                energy.getAndIncrement(Coord.get(x, y), 0f, lut[x - point.x & mask][y - point.y & mask]);
+                energy.getAndIncrement(Coord.get(x, y), 0f, lut[x - point.x() & mask][y - point.y() & mask]);
             }
         }
     }
@@ -152,7 +152,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
         int ctr = 0;
         for(Coord c : initial) {
             energize(c);
-            done[c.x][c.y] = ctr++;
+            done[c.x()][c.y()] = ctr++;
         }
 
         for (int n = size * size; ctr < n; ctr++) {
@@ -160,7 +160,7 @@ public class BlueNoiseGenerator extends ApplicationAdapter {
                     (o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)),
                     1);
             energize(low);
-            done[low.x][low.y] = ctr;
+            done[low.x()][low.y()] = ctr;
         }
         final int toByteShift = Math.max(0, shift + shift - 8);
 

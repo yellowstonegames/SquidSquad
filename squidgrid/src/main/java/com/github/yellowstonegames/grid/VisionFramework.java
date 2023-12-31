@@ -298,7 +298,7 @@ public class VisionFramework {
      * @param newCell the char value to use at the given position (in {@link #linePlaceMap})
      */
     public void editSingle(Coord position, char newCell) {
-        editSingle(position.x, position.y, newCell);
+        editSingle(position.x(), position.y(), newCell);
     }
 
     /**
@@ -475,7 +475,7 @@ public class VisionFramework {
      * @return the packed Oklab int color to tint any foreground creature or object with at {@code pos}
      */
     public int getForegroundColor(Coord pos, float millisSinceLastMove) {
-        return getForegroundColor(pos.x, pos.y, millisSinceLastMove);
+        return getForegroundColor(pos.x(), pos.y(), millisSinceLastMove);
     }
 
     /**

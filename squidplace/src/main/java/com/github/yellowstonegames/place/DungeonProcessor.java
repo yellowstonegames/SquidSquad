@@ -671,8 +671,8 @@ public class DungeonProcessor implements PlaceGenerator{
 
     protected CoordOrderedSet removeAdjacent(CoordOrderedSet coll, Coord pt)
     {
-        for(Coord temp : new Coord[]{Coord.get(pt.x + 1, pt.y), Coord.get(pt.x - 1, pt.y),
-                Coord.get(pt.x, pt.y + 1), Coord.get(pt.x, pt.y - 1)})
+        for(Coord temp : new Coord[]{Coord.get(pt.x() + 1, pt.y()), Coord.get(pt.x() - 1, pt.y()),
+                Coord.get(pt.x(), pt.y() + 1), Coord.get(pt.x(), pt.y() - 1)})
         {
             coll.remove(temp);
         }
@@ -681,14 +681,14 @@ public class DungeonProcessor implements PlaceGenerator{
     }
     protected CoordOrderedSet removeAdjacent(CoordOrderedSet coll, Coord pt1, Coord pt2)
     {
-        if(!(pt1.x == pt2.x && pt1.y + 1 == pt2.y)) coll.remove(Coord.get(pt1.x, pt1.y + 1));
-        if(!(pt1.x == pt2.x && pt1.y - 1 == pt2.y)) coll.remove(Coord.get(pt1.x, pt1.y - 1));
-        if(!(pt2.x == pt1.x && pt2.y + 1 == pt1.y)) coll.remove(Coord.get(pt2.x, pt2.y + 1));
-        if(!(pt2.x == pt1.x && pt2.y - 1 == pt1.y)) coll.remove(Coord.get(pt2.x, pt2.y - 1));
-        if(!(pt1.x + 1 == pt2.x && pt1.y == pt2.y)) coll.remove(Coord.get(pt1.x + 1, pt1.y));
-        if(!(pt1.x - 1 == pt2.x && pt1.y == pt2.y)) coll.remove(Coord.get(pt1.x - 1, pt1.y));
-        if(!(pt2.x + 1 == pt1.x && pt2.y == pt1.y)) coll.remove(Coord.get(pt2.x + 1, pt2.y));
-        if(!(pt2.x - 1 == pt1.x && pt2.y == pt1.y)) coll.remove(Coord.get(pt2.x - 1, pt2.y));
+        if(!(pt1.x() == pt2.x() && pt1.y() + 1 == pt2.y())) coll.remove(Coord.get(pt1.x(), pt1.y() + 1));
+        if(!(pt1.x() == pt2.x() && pt1.y() - 1 == pt2.y())) coll.remove(Coord.get(pt1.x(), pt1.y() - 1));
+        if(!(pt2.x() == pt1.x() && pt2.y() + 1 == pt1.y())) coll.remove(Coord.get(pt2.x(), pt2.y() + 1));
+        if(!(pt2.x() == pt1.x() && pt2.y() - 1 == pt1.y())) coll.remove(Coord.get(pt2.x(), pt2.y() - 1));
+        if(!(pt1.x() + 1 == pt2.x() && pt1.y() == pt2.y())) coll.remove(Coord.get(pt1.x() + 1, pt1.y()));
+        if(!(pt1.x() - 1 == pt2.x() && pt1.y() == pt2.y())) coll.remove(Coord.get(pt1.x() - 1, pt1.y()));
+        if(!(pt2.x() + 1 == pt1.x() && pt2.y() == pt1.y())) coll.remove(Coord.get(pt2.x() + 1, pt2.y()));
+        if(!(pt2.x() - 1 == pt1.x() && pt2.y() == pt1.y())) coll.remove(Coord.get(pt2.x() - 1, pt2.y()));
 
         return coll;
     }
@@ -701,9 +701,9 @@ public class DungeonProcessor implements PlaceGenerator{
         COORD_WISE:
         for(Coord c : coll)
         {
-            for (int x = Math.max(0, c.x - 1); x <= Math.min(width - 1, c.x + 1); x++) {
+            for (int x = Math.max(0, c.x() - 1); x <= Math.min(width - 1, c.x() + 1); x++) {
 
-                for (int y = Math.max(0, c.y - 1); y <= Math.min(height - 1, c.y + 1); y++) {
+                for (int y = Math.max(0, c.y() - 1); y <= Math.min(height - 1, c.y() + 1); y++) {
                     if(disallowed[x][y] != '#')
                         continue COORD_WISE;
                 }
@@ -1084,9 +1084,9 @@ public class DungeonProcessor implements PlaceGenerator{
         }
         placement = new Placement(finder);
         if(markStairsUp)
-            dungeon[stairsUp.x][stairsUp.y] = '<';
+            dungeon[stairsUp.x()][stairsUp.y()] = '<';
         if(markStairsDown)
-            dungeon[stairsDown.x][stairsDown.y] = '>';
+            dungeon[stairsDown.x()][stairsDown.y()] = '>';
         return dungeon;
 
     }
@@ -1117,19 +1117,19 @@ public class DungeonProcessor implements PlaceGenerator{
         BigLoop:
         for(int i = 0; i < total; i++) {
             Coord entry = doorways.random(rng);
-            if (map[entry.x][entry.y] == '<' || map[entry.x][entry.y] == '>')
+            if (map[entry.x()][entry.y()] == '<' || map[entry.x()][entry.y()] == '>')
                 continue;
-            if (map[entry.x - 1][entry.y] != '#' && map[entry.x + 1][entry.y] != '#' &&
-                    map[entry.x - 1][entry.y] != '*' && map[entry.x + 1][entry.y] != '*') {
-                map[entry.x][entry.y] = '+';
+            if (map[entry.x() - 1][entry.y()] != '#' && map[entry.x() + 1][entry.y()] != '#' &&
+                    map[entry.x() - 1][entry.y()] != '*' && map[entry.x() + 1][entry.y()] != '*') {
+                map[entry.x()][entry.y()] = '+';
             } else {
-                map[entry.x][entry.y] = '/';
+                map[entry.x()][entry.y()] = '/';
             }
-            Coord[] adj = new Coord[]{Coord.get(entry.x + 1, entry.y), Coord.get(entry.x - 1, entry.y),
-                    Coord.get(entry.x, entry.y + 1), Coord.get(entry.x, entry.y - 1)};
+            Coord[] adj = new Coord[]{Coord.get(entry.x() + 1, entry.y()), Coord.get(entry.x() - 1, entry.y()),
+                    Coord.get(entry.x(), entry.y() + 1), Coord.get(entry.x(), entry.y() - 1)};
             for (Coord near : adj) {
                 if (doorways.contains(near)) {
-                    map[near.x][near.y] = '*';
+                    map[near.x()][near.y()] = '*';
                     doorways.remove(near);
                     doorways.remove(entry);
                     i++;
@@ -1280,7 +1280,7 @@ public class DungeonProcessor implements PlaceGenerator{
             Coord t;
             for (int i = 0; i < boulders.length; i++) {
                 t = boulders[i];
-                map[t.x][t.y] = '#';
+                map[t.x()][t.y()] = '#';
             }
         }
 
@@ -1339,14 +1339,14 @@ public class DungeonProcessor implements PlaceGenerator{
             for (Coord pt : allWater) {
                 hazards.remove(pt);
                 //obstacles.add(pt);
-                if (map[pt.x][pt.y] != '<' && map[pt.x][pt.y] != '>')
-                    map[pt.x][pt.y] = '~';
+                if (map[pt.x()][pt.y()] != '<' && map[pt.x()][pt.y()] != '>')
+                    map[pt.x()][pt.y()] = '~';
             }
             for (Coord pt : allWater) {
-                if (map[pt.x][pt.y] != '<' && map[pt.x][pt.y] != '>' &&
-                        (map[pt.x - 1][pt.y] == '.' || map[pt.x + 1][pt.y] == '.' ||
-                                map[pt.x][pt.y - 1] == '.' || map[pt.x][pt.y + 1] == '.'))
-                    map[pt.x][pt.y] = ',';
+                if (map[pt.x()][pt.y()] != '<' && map[pt.x()][pt.y()] != '>' &&
+                        (map[pt.x() - 1][pt.y()] == '.' || map[pt.x() + 1][pt.y()] == '.' ||
+                                map[pt.x()][pt.y() - 1] == '.' || map[pt.x()][pt.y() + 1] == '.'))
+                    map[pt.x()][pt.y()] = ',';
             }
         }
 
@@ -1370,15 +1370,15 @@ public class DungeonProcessor implements PlaceGenerator{
         if(islandSpacing > 1 && targetWater > 0) {
             CoordOrderedSet islands = PoissonDisk.sampleMap(map, islandSpacing, rng, '#', '.', '"', '+', '/', '^', '<', '>');
             for (Coord c : islands) {
-                map[c.x][c.y] = '.';
-                if (map[c.x - 1][c.y] != '#' && map[c.x - 1][c.y] != '<' && map[c.x - 1][c.y] != '>')
-                    map[c.x - 1][c.y] = ',';
-                if (map[c.x + 1][c.y] != '#' && map[c.x + 1][c.y] != '<' && map[c.x + 1][c.y] != '>')
-                    map[c.x + 1][c.y] = ',';
-                if (map[c.x][c.y - 1] != '#' && map[c.x][c.y - 1] != '<' && map[c.x][c.y - 1] != '>')
-                    map[c.x][c.y - 1] = ',';
-                if (map[c.x][c.y + 1] != '#' && map[c.x][c.y + 1] != '<' && map[c.x][c.y + 1] != '>')
-                    map[c.x][c.y + 1] = ',';
+                map[c.x()][c.y()] = '.';
+                if (map[c.x() - 1][c.y()] != '#' && map[c.x() - 1][c.y()] != '<' && map[c.x() - 1][c.y()] != '>')
+                    map[c.x() - 1][c.y()] = ',';
+                if (map[c.x() + 1][c.y()] != '#' && map[c.x() + 1][c.y()] != '<' && map[c.x() + 1][c.y()] != '>')
+                    map[c.x() + 1][c.y()] = ',';
+                if (map[c.x()][c.y() - 1] != '#' && map[c.x()][c.y() - 1] != '<' && map[c.x()][c.y() - 1] != '>')
+                    map[c.x()][c.y() - 1] = ',';
+                if (map[c.x()][c.y() + 1] != '#' && map[c.x()][c.y() + 1] != '<' && map[c.x()][c.y() + 1] != '>')
+                    map[c.x()][c.y() + 1] = ',';
             }
         }
 
@@ -1389,9 +1389,9 @@ public class DungeonProcessor implements PlaceGenerator{
             for(int i = 0; i < total; i++)
             {
                 Coord entry = hazards.random(rng);
-                if(map[entry.x][entry.y] == '<' || map[entry.x][entry.y] == '>')
+                if(map[entry.x()][entry.y()] == '<' || map[entry.x()][entry.y()] == '>')
                     continue;
-                map[entry.x][entry.y] = '^';
+                map[entry.x()][entry.y()] = '^';
                 hazards.remove(entry);
             }
         }

@@ -41,7 +41,7 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
         ObjectList<Coord> s2 = new ObjectList<>(sequence.size());
         for(Coord c : sequence)
         {
-            if(c.x * 1.0 / width + c.y * 1.0 / height <= 1.0)
+            if(c.x() * 1.0 / width + c.y() * 1.0 / height <= 1.0)
                 s2.add(c);
         }
         return listToMap(s2);
@@ -51,20 +51,20 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
         Set<Coord> keyset = connections.keySet(), newkeys = new ObjectOrderedSet<>(connections.size());
         final double iw = 1.0 / width, ih = 1.0 / height;
         for (Coord c : keyset) {
-            if (c.x * iw + c.y * ih <= 1.0) {
+            if (c.x() * iw + c.y() * ih <= 1.0) {
                 newkeys.add(c);
             }
         }
         Coord[] keys = newkeys.toArray(new Coord[0]);
         for (int i = 0; i < keys.length; i++) {
             Coord c = keys[i];
-            if (c.x * 1.0 / width + c.y * 1.0 / height <= 1.0) {
+            if (c.x() * 1.0 / width + c.y() * 1.0 / height <= 1.0) {
                 ObjectList<Coord> cs = new ObjectList<>(4);
                 for (Coord c2 : connections.get(c)) {
-                    if (c2.x * 1.0 / width + c2.y * 1.0 / height <= 1.0) {
+                    if (c2.x() * 1.0 / width + c2.y() * 1.0 / height <= 1.0) {
                         cs.add(c2);
-                    } else if (keys[(i + 1) % keys.length].x * 1.0 / width +
-                            keys[(i + 1) % keys.length].y * 1.0 / height <= 1.0) {
+                    } else if (keys[(i + 1) % keys.length].x() * 1.0 / width +
+                            keys[(i + 1) % keys.length].y() * 1.0 / height <= 1.0) {
                         cs.add(keys[(i + 1) % keys.length]);
                     }
 
@@ -219,7 +219,7 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
                     Coord lc = left.get(i);
                     for (int j = 0; j < right.size(); j++) {
                         Coord rc = right.get(j);
-                        Coord rc2 = Coord.get(width - 1 - rc.x, height - 1 - rc.y);
+                        Coord rc2 = Coord.get(width - 1 - rc.x(), height - 1 - rc.y());
                         double dist = lc.distanceD(rc2);
                         if (dist < 0.001)
                             continue;

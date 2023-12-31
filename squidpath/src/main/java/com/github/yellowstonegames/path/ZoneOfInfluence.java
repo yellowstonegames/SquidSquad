@@ -152,12 +152,12 @@ public class ZoneOfInfluence {
                 influenced.insert(cell);
                 for (int d = 0; d < dirs.length; d++) {
                     Coord adj = cell.translate(dirs[d].deltaX, dirs[d].deltaY);
-                    if (adj.x < 0 || adj.y < 0 || width <= adj.x || height <= adj.y)
+                    if (adj.x() < 0 || adj.y() < 0 || width <= adj.x() || height <= adj.y())
                     	/* Outside the map */
                     	continue;
-                    if (!open.contains(adj) && dm[adj.x][adj.y] < DijkstraMap.FLOOR && !influenced.contains(adj)) {
+                    if (!open.contains(adj) && dm[adj.x()][adj.y()] < DijkstraMap.FLOOR && !influenced.contains(adj)) {
                         //h = heuristic(dirs[d]);
-                        diff = dm[adj.x][adj.y] - dm[cell.x][cell.y];
+                        diff = dm[adj.x()][adj.y()] - dm[cell.x()][cell.y()];
                         if (diff <= 1.0 && diff >= 0) {
                             fresh.add(adj);
                             influenced.insert(adj);

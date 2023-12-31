@@ -86,8 +86,8 @@ public class TwistedLine {
             rng.shuffle(dirs);
 
             for (Direction dir : dirs) {
-                x = p.x + dir.deltaX;
-                y = p.y + dir.deltaY;
+                x = p.x() + dir.deltaX;
+                y = p.y() + dir.deltaY;
                 if (x >= 0 && x < graph.width && y >= 0 && y < graph.height) {
                     Coord c = Coord.get(x, y);
                     if (graph.getEdges(c).isEmpty() && deck.add(c)) {

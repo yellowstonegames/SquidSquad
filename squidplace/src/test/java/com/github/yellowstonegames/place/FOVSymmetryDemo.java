@@ -42,10 +42,10 @@ public class FOVSymmetryDemo {
 //        }
         for (int i = 0; i < floors.length; i++) {
             Coord center = floors[i];
-            FOV.reuseFOVSymmetrical(res, light, center.x, center.y, 7f, Radius.CIRCLE);
+            FOV.reuseFOVSymmetrical(res, light, center.x(), center.y(), 7f, Radius.CIRCLE);
             working.refill(light, 0.001f, 100f).and(floorRegion);
             for(Coord c : working) {
-                if(FOV.reuseFOVSymmetrical(res, light, c.x, c.y, 7f, Radius.CIRCLE)[center.x][center.y] <= 0f)
+                if(FOV.reuseFOVSymmetrical(res, light, c.x(), c.y(), 7f, Radius.CIRCLE)[center.x()][center.y()] <= 0f)
                 {
                     System.out.println(working);
                     System.out.println("Not symmetrical between " + center + " and " + c + "!");
@@ -55,7 +55,7 @@ public class FOVSymmetryDemo {
             }
         }
         Coord start = random.randomElement(floors);
-        float[][] lightMap = FOV.reuseFOVSymmetrical(res, light, start.x, start.y, 8f, Radius.CIRCLE);
+        float[][] lightMap = FOV.reuseFOVSymmetrical(res, light, start.x(), start.y(), 8f, Radius.CIRCLE);
         CoordFloatOrderedMap des = FOV.cellsByDescendingValue(lightMap);
         Region lightRegion = new Region(lightMap, 1E-32f, Float.MAX_VALUE);
         System.out.println("Descending Value Map size      : " + des.size());

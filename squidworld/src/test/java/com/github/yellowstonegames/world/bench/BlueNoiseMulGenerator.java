@@ -113,7 +113,7 @@ public class BlueNoiseMulGenerator extends ApplicationAdapter {
         @Override
         protected int place(final @NonNull Object item) {
             final Coord c = (Coord) item;
-            return c.x * 0x7587 + c.y * 0x6A89 & mask;
+            return c.x() * 0x7587 + c.y() * 0x6A89 & mask;
         }
 
         @Override
@@ -164,23 +164,23 @@ public class BlueNoiseMulGenerator extends ApplicationAdapter {
     }
 
     private void energize(Coord point) {
-        final int outerX = point.x & ~sectorMask, outerY = point.y & ~sectorMask;
+        final int outerX = point.x() & ~sectorMask, outerY = point.y() & ~sectorMask;
         for (int x = 0; x < sector; x++) {
             for (int y = 0; y < sector; y++) {
-                if((point.x & sectorMask) <= x + wrapMask && (point.x & sectorMask) + wrapMask >= x &&
-                        (point.y & sectorMask) <= y + wrapMask && (point.y & sectorMask) + wrapMask >= y)
+                if((point.x() & sectorMask) <= x + wrapMask && (point.x() & sectorMask) + wrapMask >= x &&
+                        (point.y() & sectorMask) <= y + wrapMask && (point.y() & sectorMask) + wrapMask >= y)
                 {
                     energy.getAndIncrement(Coord.get(outerX + x, outerY + y),
-                            0f, lut[x - point.x & sectorMask][y - point.y & sectorMask]);
+                            0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask]);
                 }
                 else
                 {
                     for (int ex = 0; ex < sectors; ex++) {
                         for (int ey = 0; ey < sectors; ey++) {
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                                    0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask] * fraction);
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + sectorMask - y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                                    0f, lut[x - point.x() & sectorMask][y - point.y() & sectorMask] * fraction);
                         }
                     }
                 }
@@ -242,7 +242,7 @@ public class BlueNoiseMulGenerator extends ApplicationAdapter {
 
         for(Coord c : initial) {
             energize(c);
-            done[c.x][c.y] = ctr++;
+            done[c.x()][c.y()] = ctr++;
         }
 
         for (int n = sizeSq; ctr < n; ctr++) {
@@ -256,13 +256,13 @@ public class BlueNoiseMulGenerator extends ApplicationAdapter {
             int k = 1;
             Coord low = energy.keyAt(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
-            while(lightCounts[(low.x >>> shift - sectorShift) << sectorShift | (low.y >>> shift - sectorShift)] >= lightOccurrence){
+            while(lightCounts[(low.x() >>> shift - sectorShift) << sectorShift | (low.y() >>> shift - sectorShift)] >= lightOccurrence){
                 low = energy.keyAt(k++);
 //                low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), ++k);
             }
-            lightCounts[(low.x >>> shift - sectorShift) << sectorShift | (low.y >>> shift - sectorShift)]++;
+            lightCounts[(low.x() >>> shift - sectorShift) << sectorShift | (low.y() >>> shift - sectorShift)]++;
             energize(low);
-            done[low.x][low.y] = ctr;
+            done[low.x()][low.y()] = ctr;
         }
         ByteBuffer buffer = pm.getPixels();
         if(isTriangular) {
