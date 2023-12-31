@@ -85,8 +85,8 @@ public final class JsonGrid {
             @Override
             public void write(Json json, Coord object, Class knownType) {
                 json.writeArrayStart();
-                json.writeValue(object.x());
-                json.writeValue(object.y());
+                json.writeValue(object.x);
+                json.writeValue(object.y);
                 json.writeArrayEnd();
             }
 

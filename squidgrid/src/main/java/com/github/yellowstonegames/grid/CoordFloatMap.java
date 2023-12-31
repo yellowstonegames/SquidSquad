@@ -38,7 +38,7 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
     }
 
     public CoordFloatMap(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordFloatMap(int initialCapacity, float loadFactor) {
@@ -50,16 +50,18 @@ public class CoordFloatMap extends ObjectFloatMap<Coord> {
     }
 
     public CoordFloatMap(Coord[] keys, float[] values) {
-        super(keys, values);
+        this(Math.min(keys.length, values.length));
+        this.putAll(keys, values);
     }
 
     public CoordFloatMap(Collection<? extends Coord> keys, PrimitiveCollection.OfFloat values) {
-        super(keys, values);
+        this(Math.min(keys.size(), values.size()));
+        this.putAll(keys, values);
     }
 
     @Override
     protected int place(final Object item) {
-        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Cantor
+        return item.hashCode() & mask; // Uses default Coord hashCode(), precalculated
     }
 
     @Override

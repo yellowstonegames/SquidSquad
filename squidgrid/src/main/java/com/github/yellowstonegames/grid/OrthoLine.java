@@ -150,7 +150,7 @@ public class OrthoLine implements LineDrawer {
      */
     public static boolean reachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
                                     ObjectList<Coord> buffer){
-        return reachable(start.x(), start.y(), target.x(), target.y(), 0x7FFFFFFF, resistanceMap, buffer);
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap}
@@ -248,7 +248,7 @@ public class OrthoLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap){
-        return reachable(start.x(), start.y(), target.x(), target.y(), 0x7FFFFFFF, resistanceMap);
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
@@ -332,7 +332,7 @@ public class OrthoLine implements LineDrawer {
      */
     public static ObjectList<Coord> line(Coord start, Coord end)
     {
-        return line(start.x(), start.y(), end.x(), end.y());
+        return line(start.x, start.y, end.x, end.y);
     }
     /**
      * Draws a line from (startX, startY) to (endX, endY) using only N/S/E/W movement.
@@ -401,7 +401,7 @@ public class OrthoLine implements LineDrawer {
      */
     public static Coord[] lineArray(Coord start, Coord end)
     {
-        return lineArray(start.x(), start.y(), end.x(), end.y());
+        return lineArray(start.x, start.y, end.x, end.y);
     }
 
     /**
@@ -427,8 +427,8 @@ public class OrthoLine implements LineDrawer {
         if(len == 0) return new char[0];
         if(len == 1) return new char[]{'─'};
         char[] cs = new char[len];
-        cs[0] = line[0].x() == line[1].x() ? '│' : '─';
-        cs[len - 1] = line[len - 1].x() == line[len - 2].x() ? '│' : '─';
+        cs[0] = line[0].x == line[1].x ? '│' : '─';
+        cs[len - 1] = line[len - 1].x == line[len - 2].x ? '│' : '─';
         Coord before, current, next;
         for (int i = 1; i < len - 1; i++) {
             before = line[i-1];
@@ -506,8 +506,8 @@ public class OrthoLine implements LineDrawer {
         if(len == 0) return new char[0];
         if(len == 1) return new char[]{'─'};
         char[] cs = new char[len];
-        cs[0] = line.get(0).x() == line.get(1).x() ? '│' : '─';
-        cs[len - 1] = line.get(len - 1).x() == line.get(len - 2).x() ? '│' : '─';
+        cs[0] = line.get(0).x == line.get(1).x ? '│' : '─';
+        cs[len - 1] = line.get(len - 1).x == line.get(len - 2).x ? '│' : '─';
         Coord before, current, next;
         for (int i = 1; i < len - 1; i++) {
             before = line.get(i-1);
@@ -586,7 +586,7 @@ public class OrthoLine implements LineDrawer {
     @Override
     public ObjectList<Coord> drawLine(Coord a, Coord b) {
         lastLine.clear();
-        return line(a.x(), a.y(), b.x(), b.y(), lastLine);
+        return line(a.x, a.y, b.x, b.y, lastLine);
     }
 
     /**
@@ -687,7 +687,7 @@ public class OrthoLine implements LineDrawer {
     @Override
     public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
                                ObjectList<Coord> buffer){
-        return reachable(start.x(), start.y(), target.x(), target.y(), resistanceMap, buffer);
+        return reachable(start.x, start.y, target.x, target.y, resistanceMap, buffer);
     }
 
     /**
@@ -782,7 +782,7 @@ public class OrthoLine implements LineDrawer {
      */
     @Override
     public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap){
-        return reachable(start.x(), start.y(), target.x(), target.y(), resistanceMap);
+        return reachable(start.x, start.y, target.x, target.y, resistanceMap);
     }
 
     /**
@@ -834,7 +834,7 @@ public class OrthoLine implements LineDrawer {
      */
     @Override
     public Coord[] drawLineArray(Coord a, Coord b) {
-        return lineArray(a.x(), a.y(), b.x(), b.y());
+        return lineArray(a.x, a.y, b.x, b.y);
     }
 
     /**

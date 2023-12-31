@@ -122,7 +122,7 @@ public class SerpentMapGenerator implements PlaceGenerator {
         Coord temp;
         for (int i = 0, m = random.next(6), r; i < 256; r = random.nextInt(4, 12), i += r, m += r) {
             temp = HilbertCurve.mooreToCoord(m);
-            points.add(Coord.get(columns[temp.x()], rows[temp.y()]));
+            points.add(Coord.get(columns[temp.x], rows[temp.y]));
         }
         points.add(points.get(0));
         if (symmetrical) {
@@ -206,19 +206,19 @@ public class SerpentMapGenerator implements PlaceGenerator {
         m += r;
         for (int i = r; i < 256; i += r, m += r) {
             ObjectList<Coord> cl = new ObjectList<>(4);
-            cl.add(Coord.get(columns[temp.x()], rows[temp.y()]));
+            cl.add(Coord.get(columns[temp.x], rows[temp.y]));
             temp = HilbertCurve.mooreToCoord(m);
             r = random.nextInt(4, 12);
             for (int j = 0, p = r - 1;
                  j < 3 && p > 2 && Math.min(random.nextDouble(), random.nextDouble()) < branchingChance;
                  j++, p -= random.nextInt(1, p)) {
                 t = HilbertCurve.mooreToCoord(m + p);
-                cl.add(Coord.get(columns[t.x()], rows[t.y()]));
+                cl.add(Coord.get(columns[t.x], rows[t.y]));
             }
-            connections.put(Coord.get(columns[temp.x()], rows[temp.y()]), cl);
+            connections.put(Coord.get(columns[temp.x], rows[temp.y]), cl);
         }
-        connections.get(Coord.get(columns[temp.x()], rows[temp.y()])).add(
-                Coord.get(columns[starter.x()], rows[starter.y()]));
+        connections.get(Coord.get(columns[temp.x], rows[temp.y])).add(
+                Coord.get(columns[starter.x], rows[starter.y]));
         if (symmetrical) {
             mix = new SymmetryDungeonGenerator(width, height, random,
                     SymmetryDungeonGenerator.removeSomeOverlap(width, height, connections));

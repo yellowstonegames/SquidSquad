@@ -138,10 +138,10 @@ public class EliasWuLine implements LineDrawer {
     }
     @Override
     public ObjectList<Coord> drawLine(Coord start, Coord end) {
-        return drawLine(start.x(), start.y(), end.x(), end.y());
+        return drawLine(start.x, start.y, end.x, end.y);
     }
     public ObjectList<Coord> drawLine(Coord start, Coord end, float brightnessThreshold) {
-        return floatLine(start.x(), start.y(), end.x(), end.y(), path, Integer.MAX_VALUE, brightnessThreshold);
+        return floatLine(start.x, start.y, end.x, end.y, path, Integer.MAX_VALUE, brightnessThreshold);
     }
 
     @Override

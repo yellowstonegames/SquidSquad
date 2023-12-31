@@ -249,7 +249,7 @@ public class WorldWildGridDemo extends ApplicationAdapter {
                 .separatedRegionBlue(0.1f, 500) // get 500 points in a regularly-tiling but unpredictable, sparse pattern
                 .randomPortion(rng, 112); // randomly select less than 1/4 of those points, breaking the pattern
         for (int i = 0; i < points.length; i++) {
-            char p = political[points[i].x()][points[i].y()];
+            char p = political[points[i].x][points[i].y];
             if(p == '~' || p == '%')
                 continue;
             Language lang = atlas.get(p);
@@ -324,14 +324,14 @@ public class WorldWildGridDemo extends ApplicationAdapter {
             String cname = cities.getAt(i);
             if(cname == null) continue;
             int nationColor = toRGBA8888(differentiateLightness(DescriptiveColor.edit(
-                    DescriptiveColor.COLORS_BY_HUE.get((int) (((pm.politicalMap[ct.x()][ct.y()] + rng.getSelectedState(0)) * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
+                    DescriptiveColor.COLORS_BY_HUE.get((int) (((pm.politicalMap[ct.x][ct.y] + rng.getSelectedState(0)) * 0x9E3779B97F4A7C15L >>> 32) * 48 >>> 32) + 2),
                     0.15f, 0f, 0f, 0f, 1.2f, 0.8f, 0.8f, 1f), 0xFE7F7F40)); // dark gray
-            display.put(ct.x(), ct.y(), '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, oklab[ct.x()][ct.y()])));
-            int pos = ct.x() - (cname.length() >> 1);
-            if(ct.y() >= display.backgrounds[0].length - 1 || pos < 0 || pos + cname.length() >= display.backgrounds.length) continue;
+            display.put(ct.x, ct.y, '□', toRGBA8888(differentiateLightness(DescriptiveColor.GRAY, oklab[ct.x][ct.y])));
+            int pos = ct.x - (cname.length() >> 1);
+            if(ct.y >= display.backgrounds[0].length - 1 || pos < 0 || pos + cname.length() >= display.backgrounds.length) continue;
             for (int j = 0; j < cname.length(); pos++, j++) {
-                display.backgrounds[pos][ct.y() + 1] = dark;
-                display.put(pos, ct.y() + 1, cname.charAt(j), nationColor);
+                display.backgrounds[pos][ct.y + 1] = dark;
+                display.put(pos, ct.y + 1, cname.charAt(j), nationColor);
             }
         }
     }

@@ -132,8 +132,8 @@ public class XPIO {
         buf.putInt(h); // Image height.
         long[][] map = new long[w][h];
         for(CoordLongOrderedMap.Entry<Coord> e : data.map){
-            int x = e.key.x();
-            int y = e.key.y();
+            int x = e.key.x;
+            int y = e.key.y;
             map[x][h-1-y] = e.value;
         }
         SnapshotArray<Actor> snap = data.getChildren();
@@ -143,7 +143,7 @@ public class XPIO {
             if(!(a instanceof GlyphActor)) continue;
             GlyphActor g = (GlyphActor) a;
             Coord loc = g.getLocation();
-            map[loc.x()][h-1- loc.y()] = g.glyph;
+            map[loc.x][h-1- loc.y] = g.glyph;
         }
         snap.end();
 

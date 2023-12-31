@@ -43,8 +43,8 @@ public class PoissonDiskTest {
         CoordOrderedSet disks = PoissonDisk.sampleMap(dun, 4f, rng, '#');
 
         for (Coord c : disks) {
-            if (dun[c.x()][c.y()] != '#')
-                dun[c.x()][c.y()] = 'o';
+            if (dun[c.x][c.y] != '#')
+                dun[c.x][c.y] = 'o';
             else
                 System.out.println("Problem at " + c);
         }
@@ -61,7 +61,7 @@ public class PoissonDiskTest {
                 80, 80, 30, rng);
         for (int i = 0; i < points.size(); i++) {
             Coord c = points.keyAt(i);
-            dun[c.x()][c.y()] = (char) ('0' + points.getAt(i).size());
+            dun[c.x][c.y] = (char) ('0' + points.getAt(i).size());
         }
         dg.setDungeon(dun);
         System.out.println(dg);

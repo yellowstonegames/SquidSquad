@@ -40,17 +40,17 @@ public class CoordGlider extends Glider {
         end = start = Coord.get(0, 0);
     }
     public CoordGlider(@NonNull Coord start) {
-        super(new Changer("x", start.x(), start.x()), new Changer("y", start.y(), start.y()));
+        super(new Changer("x", start.x, start.x), new Changer("y", start.y, start.y));
         this.start = start;
         this.end = start;
     }
     public CoordGlider(@NonNull Coord start, @NonNull Coord end) {
-        super(new Changer("x", start.x(), end.x()), new Changer("y", start.y(), end.y()));
+        super(new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;
     }
     public CoordGlider(@NonNull Interpolation interpolation, Runnable completeRunner, @NonNull Coord start, @NonNull Coord end) {
-        super(interpolation, completeRunner, new Changer("x", start.x(), end.x()), new Changer("y", start.y(), end.y()));
+        super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;
     }
@@ -81,8 +81,8 @@ public class CoordGlider extends Glider {
 
     public void setStart(@NonNull Coord start) {
         this.start = start;
-        setStartFloat("x", start.x());
-        setStartFloat("y", start.y());
+        setStartFloat("x", start.x);
+        setStartFloat("y", start.y);
         change = 0f;
     }
 
@@ -93,8 +93,8 @@ public class CoordGlider extends Glider {
 
     public void setEnd(@NonNull Coord end) {
         this.end = end;
-        setEndFloat("x", end.x());
-        setEndFloat("y", end.y());
+        setEndFloat("x", end.x);
+        setEndFloat("y", end.y);
         change = 0f;
     }
 

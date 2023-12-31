@@ -1011,9 +1011,9 @@ public class Region implements Collection<Coord> {
         yEndMask = -1L >>> (64 - (height & 63));
         data = new long[width * ySections];
         counts = new int[width * ySections];
-        if(single.x() < width && single.y() < height && single.x() >= 0 && single.y() >= 0)
+        if(single.x < width && single.y < height && single.x >= 0 && single.y >= 0)
         {
-            data[ct = single.x() * ySections + (single.y() >> 6)] |= 1L << (single.y() & 63);
+            data[ct = single.x * ySections + (single.y >> 6)] |= 1L << (single.y & 63);
             counts[ct] = 1;
             ct = 1;
             tallied = true;
@@ -1043,8 +1043,8 @@ public class Region implements Collection<Coord> {
         if(points != null)
         {
             for (int i = 0, x, y; i < points.length; i++) {
-                x = points[i].x();
-                y = points[i].y();
+                x = points[i].x;
+                y = points[i].y;
                 if(x < width && y < height && x >= 0 && y >= 0)
                     data[x * ySections + (y >> 6)] |= 1L << (y & 63);
             }
@@ -1071,8 +1071,8 @@ public class Region implements Collection<Coord> {
         if(points != null) {
             int x, y;
             for (Coord c : points) {
-                x = c.x();
-                y = c.y();
+                x = c.x;
+                y = c.y;
                 if (x < width && y < height && x >= 0 && y >= 0)
                     data[x * ySections + (y >> 6)] |= 1L << (y & 63);
             }
@@ -1616,7 +1616,7 @@ public class Region implements Collection<Coord> {
     public Region set(boolean value, Coord point)
     {
         if(point == null) return this;
-        return set(value, point.x(), point.y());
+        return set(value, point.x, point.y);
     }
 
     /**
@@ -1661,7 +1661,7 @@ public class Region implements Collection<Coord> {
     {
 
         if(point == null) return this;
-        return insert(point.x(), point.y());
+        return insert(point.x, point.y);
     }
 
     /**
@@ -1793,8 +1793,8 @@ public class Region implements Collection<Coord> {
     public Region insertSeveral(Coord... points)
     {
         for (int i = 0, x, y; i < points.length; i++) {
-            x = points[i].x();
-            y = points[i].y();
+            x = points[i].x;
+            y = points[i].y;
             if(x < width && y < height && x >= 0 && y >= 0)
             {
                 data[x * ySections + (y >> 6)] |= 1L << (y & 63);
@@ -1821,8 +1821,8 @@ public class Region implements Collection<Coord> {
     {
         int x, y;
         for (Coord pt : points) {
-            x = pt.x();
-            y = pt.y();
+            x = pt.x;
+            y = pt.y;
             if(x < width && y < height && x >= 0 && y >= 0)
             {
                 data[x * ySections + (y >> 6)] |= 1L << (y & 63);
@@ -1891,11 +1891,11 @@ public class Region implements Collection<Coord> {
             changedX = dx - 0.25f * (dx >> 31 | -dx >>> 31); // project nayuki signum
             rndX = Math.round(changedX);
             high = (float) Math.sqrt(radius * radius - changedX * changedX);             
-            insert(center.x() + rndX, center.y());
+            insert(center.x + rndX, center.y);
             for (float dy = high; dy >= 0.75f; --dy) {
                 rndY = Math.round(dy - 0.25f);                 
-                insert(center.x() + rndX, center.y() + rndY);
-                insert(center.x() + rndX, center.y() - rndY);
+                insert(center.x + rndX, center.y + rndY);
+                insert(center.x + rndX, center.y - rndY);
             }
         }
         return this;
@@ -1912,7 +1912,7 @@ public class Region implements Collection<Coord> {
     }
     public Region remove(Coord point)
     {
-        return remove(point.x(), point.y());
+        return remove(point.x, point.y);
     }
     /**
      * Takes another Region, called other, with potentially different size and removes its "on" cells from this
@@ -2045,8 +2045,8 @@ public class Region implements Collection<Coord> {
     public Region removeSeveral(Coord... points)
     {
         for (int i = 0, x, y; i < points.length; i++) {
-            x = points[i].x();
-            y = points[i].y();
+            x = points[i].x;
+            y = points[i].y;
             if(x < width && y < height && x >= 0 && y >= 0)
             {
                 data[x * ySections + (y >> 6)] &= ~(1L << (y & 63));
@@ -2060,8 +2060,8 @@ public class Region implements Collection<Coord> {
     {
         int x, y;
         for (Coord pt : points) {
-            x = pt.x();
-            y = pt.y();
+            x = pt.x;
+            y = pt.y;
             if(x < width && y < height && x >= 0 && y >= 0)
             {
                 data[x * ySections + (y >> 6)] &= ~(1L << (y & 63));
@@ -2146,11 +2146,11 @@ public class Region implements Collection<Coord> {
             changedX = dx - 0.25f * (dx >> 31 | -dx >>> 31); // project nayuki signum
             rndX = Math.round(changedX);
             high = (float) Math.sqrt(radius * radius - changedX * changedX);
-            remove(center.x() + rndX, center.y());
+            remove(center.x + rndX, center.y);
             for (float dy = high; dy >= 0.75f; --dy) {
                 rndY = Math.round(dy - 0.25f);
-                remove(center.x() + rndX, center.y() + rndY);
-                remove(center.x() + rndX, center.y() - rndY);
+                remove(center.x + rndX, center.y + rndY);
+                remove(center.x + rndX, center.y - rndY);
             }
         }
         return this;
@@ -4326,8 +4326,8 @@ public class Region implements Collection<Coord> {
                     int x, y, p;
                     for (int i = current; i < volume; i++) {
                         c = temp2.singleRandom(rng);
-                        x = c.x();
-                        y = c.y();
+                        x = c.x;
+                        y = c.y;
                         if (data[p = x * ySections + (y >> 6)] != (data[p] |= 1L << (y & 63))) {
                             counts[p]++;
                             for (int j = p + 1; j < data.length; j++) {
@@ -6401,7 +6401,7 @@ public class Region implements Collection<Coord> {
      * @return true if {@code c} is an "on" cell in this Region, or false otherwise, including if c is null
      */
     public boolean contains(Coord c) {
-        return c != null && contains(c.x(), c.y());
+        return c != null && contains(c.x, c.y);
     }
 
     /**
@@ -6412,9 +6412,9 @@ public class Region implements Collection<Coord> {
      */
     public int xBound(boolean findSmallest) {
         if(findSmallest)
-            return first().x();
+            return first().x;
         else
-            return last().x();
+            return last().x;
     }
 
     /**

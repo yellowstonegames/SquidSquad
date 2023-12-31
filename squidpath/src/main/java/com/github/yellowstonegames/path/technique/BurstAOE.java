@@ -94,7 +94,7 @@ public class BurstAOE implements AOE {
     public boolean mayContainTarget(Collection<Coord> targets) {
         for (Coord p : targets)
         {
-            if(radiusType.radius(center.x(), center.y(), p.x(), p.y()) <= radius)
+            if(radiusType.radius(center.x, center.y, p.x, p.y) <= radius)
                 return true;
         }
         return false;
@@ -136,7 +136,7 @@ public class BurstAOE implements AOE {
         for (int i = 0; i < exs.length; ++i) {
             t = exs[i];
 
-            FOV.reuseFOV(map, buffer, t.x(), t.y(), radius, radiusType);
+            FOV.reuseFOV(map, buffer, t.x, t.y, radius, radiusType);
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
@@ -153,13 +153,13 @@ public class BurstAOE implements AOE {
             DijkstraMap dm = new DijkstraMap(map, dmm, true);
 
             t = ts[i];
-            FOV.reuseFOV(map, buffer, t.x(), t.y(), radius, radiusType);
+            FOV.reuseFOV(map, buffer, t.x, t.y, radius, radiusType);
 
             float dist;
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     if (buffer[x][y] > 0f) {
-                        dist = reach.metric.radius(origin.x(), origin.y(), x, y);
+                        dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius)
                             compositeMap[i][x][y] = dm.physicalMap[x][y];
                         else
@@ -168,7 +168,7 @@ public class BurstAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][ts[i].x()][ts[i].y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][ts[i].x][ts[i].y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < map.length; x++) {
                     Arrays.fill(compositeMap[i][x], 99999f);
@@ -266,7 +266,7 @@ public class BurstAOE implements AOE {
         Coord tempPt;
         for (int i = 0; i < exs.length; ++i) {
             t = exs[i];
-            FOV.reuseFOV(map, buffer, t.x(), t.y(), radius, radiusType);
+            FOV.reuseFOV(map, buffer, t.x, t.y, radius, radiusType);
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
@@ -283,13 +283,13 @@ public class BurstAOE implements AOE {
             DijkstraMap dm = new DijkstraMap(map, dmm);
             t = pts[i];
 
-            FOV.reuseFOV(map, buffer, t.x(), t.y(), radius, radiusType);
+            FOV.reuseFOV(map, buffer, t.x, t.y, radius, radiusType);
 
             float dist;
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     if (buffer[x][y] > 0f){
-                        dist = reach.metric.radius(origin.x(), origin.y(), x, y);
+                        dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius) {
                             compositeMap[i][x][y] = dm.physicalMap[x][y];
                             mapPriorities[x][y] = map[x][y];
@@ -300,7 +300,7 @@ public class BurstAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][t.x()][t.y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][t.x][t.y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < map.length; x++) {
                     Arrays.fill(compositeMap[i][x], 399999f);
@@ -326,13 +326,13 @@ public class BurstAOE implements AOE {
             DijkstraMap dm = new DijkstraMap(map, dmm);
             t = lts[i - pts.length];
 
-            FOV.reuseFOV(map, buffer, t.x(), t.y(), radius, radiusType);
+            FOV.reuseFOV(map, buffer, t.x, t.y, radius, radiusType);
 
             float dist;
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     if (buffer[x][y] > 0f){
-                        dist = reach.metric.radius(origin.x(), origin.y(), x, y);
+                        dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius)
                             compositeMap[i][x][y] = dm.physicalMap[x][y];
                         else
@@ -341,7 +341,7 @@ public class BurstAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][t.x()][t.y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][t.x][t.y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < map.length; x++)
                 {
@@ -510,7 +510,7 @@ public class BurstAOE implements AOE {
 
     @Override
     public CoordFloatOrderedMap findArea() {
-        return AreaUtils.arrayToMap(FOV.reuseFOV(map, buffer, center.x(), center.y(), radius, radiusType));
+        return AreaUtils.arrayToMap(FOV.reuseFOV(map, buffer, center.x, center.y, radius, radiusType));
     }
 
     @Override

@@ -95,9 +95,9 @@ public final class DrunkenWalk {
         Direction dir;
         do {
             buffer.add(start);
-            dir = stepWobbly(start.x(), start.y(), endX, endY, weight, width, height, rng);
+            dir = stepWobbly(start.x, start.y, endX, endY, weight, width, height, rng);
             start = start.translate(dir);
-            if(start.x() < 1 || start.y() < 1 || start.x() >= width - 1 || start.y() >= height - 1)
+            if(start.x < 1 || start.y < 1 || start.x >= width - 1 || start.y >= height - 1)
                 break;
         }while (dir != Direction.NONE);
         return buffer;
@@ -200,6 +200,6 @@ public final class DrunkenWalk {
      */
     public static ObjectList<Coord> line(Coord start, Coord end, int width, int height)
     {
-        return line(start.x(), start.y(), end.x(), end.y(), width, height);
+        return line(start.x, start.y, end.x, end.y, width, height);
     }
 }

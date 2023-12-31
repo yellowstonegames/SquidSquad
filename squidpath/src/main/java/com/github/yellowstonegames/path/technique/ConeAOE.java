@@ -47,8 +47,8 @@ public class ConeAOE implements AOE {
     public ConeAOE(Coord origin, Coord endCenter, float span, Radius radiusType)
     {
         this.origin = origin;
-        radius = radiusType.radius(origin.x(), origin.y(), endCenter.x(), endCenter.y());
-        angle = TrigTools.atan2Deg360(endCenter.y() - origin.y(), endCenter.x() - origin.x());
+        radius = radiusType.radius(origin.x, origin.y, endCenter.x, endCenter.y);
+        angle = TrigTools.atan2Deg360(endCenter.y - origin.y, endCenter.x - origin.x);
         this.span = span;
         this.radiusType = radiusType;
     }
@@ -158,7 +158,7 @@ public class ConeAOE implements AOE {
 
     public void setEndCenter(Coord endCenter) {
         if (AreaUtils.verifyLimit(reach.limit, origin, endCenter)) {
-            angle = TrigTools.atan2Deg360(endCenter.y() - origin.y(), endCenter.x() - origin.x());
+            angle = TrigTools.atan2Deg360(endCenter.y - origin.y, endCenter.x - origin.x);
         }
     }
 
@@ -186,8 +186,8 @@ public class ConeAOE implements AOE {
     @Override
     public boolean mayContainTarget(Collection<Coord> targets) {
         for (Coord p : targets) {
-            if (radiusType.radius(origin.x(), origin.y(), p.x(), p.y()) <= radius) {
-                float d = (angle - TrigTools.atan2Deg360(p.y() - origin.y(), p.x() - origin.x()) + 360f) % 360f;
+            if (radiusType.radius(origin.x, origin.y, p.x, p.y) <= radius) {
+                float d = (angle - TrigTools.atan2Deg360(p.y - origin.y, p.x - origin.x) + 360f) % 360f;
                 if(d > 180f)
                     d = 360f - d;
                 if(d < span * 0.5f)
@@ -220,12 +220,12 @@ public class ConeAOE implements AOE {
 
         for (int i = 0; i < exs.length; i++) {
             t = exs[i];
-            tAngle = TrigTools.atan2Deg360(t.y() - origin.y(), t.x() - origin.x());
-            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x(), origin.y(), radius, radiusType, tAngle, span);
+            tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
-                    dungeonCopy[x][y] = !(origin.x() == x && origin.y() == y) && (tmpMap[x][y] > 0.0 || !AreaUtils.verifyLimit(reach.limit, origin, tempPt)) ? Float.NaN : map[x][y];
+                    dungeonCopy[x][y] = !(origin.x == x && origin.y == y) && (tmpMap[x][y] > 0.0 || !AreaUtils.verifyLimit(reach.limit, origin, tempPt)) ? Float.NaN : map[x][y];
                 }
             }
         }
@@ -234,9 +234,9 @@ public class ConeAOE implements AOE {
         for (int i = 0; i < ts.length; ++i) {
             dm.initializeByResistance(map);
             t = ts[i];
-            tAngle = TrigTools.atan2Deg360(t.y() - origin.y(), t.x() - origin.x());
+            tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
 
-            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x(), origin.y(), radius, radiusType, tAngle, span);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
 
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
@@ -247,7 +247,7 @@ public class ConeAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][t.x()][t.y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][t.x][t.y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < map.length; x++) {
                     Arrays.fill(compositeMap[i][x], 99999f);
@@ -341,8 +341,8 @@ public class ConeAOE implements AOE {
         Coord tempPt;
         for (int i = 0; i < exs.length; ++i) {
             t = exs[i];
-            tAngle = TrigTools.atan2Deg360(t.y() - origin.y(), t.x() - origin.x());
-            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x(), origin.y(), radius, radiusType, tAngle, span);
+            tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
@@ -358,8 +358,8 @@ public class ConeAOE implements AOE {
         for (int i = 0; i < pts.length; ++i) {
             DijkstraMap dm = new DijkstraMap(map, dmm, true);
             t = pts[i];
-            tAngle = TrigTools.atan2Deg360(t.y() - origin.y(), t.x() - origin.x());
-            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x(), origin.y(), radius, radiusType, tAngle, span);
+            tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
 
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
@@ -370,7 +370,7 @@ public class ConeAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][pts[i].x()][pts[i].y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][pts[i].x][pts[i].y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < map.length; x++) {
                     Arrays.fill(compositeMap[i][x], 399999f);
@@ -394,9 +394,9 @@ public class ConeAOE implements AOE {
             DijkstraMap dm = new DijkstraMap(map, dmm, true);
             t = lts[i - pts.length];
 
-            tAngle = TrigTools.atan2Deg360(t.y() - origin.y(), t.x() - origin.x());
+            tAngle = TrigTools.atan2Deg360(t.y - origin.y, t.x - origin.x);
 
-            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x(), origin.y(), radius, radiusType, tAngle, span);
+            FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius, radiusType, tAngle, span);
 
             for (int x = 0; x < map.length; x++) {
                 for (int y = 0; y < map[x].length; y++) {
@@ -406,7 +406,7 @@ public class ConeAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][lts[i - pts.length].x()][lts[i - pts.length].y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][lts[i - pts.length].x][lts[i - pts.length].y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < map.length; x++)
                 {
@@ -494,7 +494,7 @@ public class ConeAOE implements AOE {
 
     @Override
     public CoordFloatOrderedMap findArea() {
-        CoordFloatOrderedMap r = AreaUtils.arrayToMap(FOV.reuseRippleFOV(map, tmpMap, 3, origin.x(), origin.y(), radius,
+        CoordFloatOrderedMap r = AreaUtils.arrayToMap(FOV.reuseRippleFOV(map, tmpMap, 3, origin.x, origin.y, radius,
                 radiusType, angle, span));
         r.remove(origin);
         return r;

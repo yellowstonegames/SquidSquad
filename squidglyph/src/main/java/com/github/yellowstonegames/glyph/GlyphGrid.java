@@ -266,7 +266,7 @@ public class GlyphGrid extends Group {
 //        x += font.cellWidth * 0.5f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            font.drawGlyph(batch, map.getAt(i), x + pos.x(), y + pos.y());
+            font.drawGlyph(batch, map.getAt(i), x + pos.x, y + pos.y);
         }
         super.drawChildren(batch, 1f);
     }
@@ -292,8 +292,8 @@ public class GlyphGrid extends Group {
 //        x += font.cellWidth * 0.5f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
-            xPos = x + pos.x();
-            yPos = y + pos.y();
+            xPos = x + pos.x;
+            yPos = y + pos.y;
             if (limit.boundsInFrustum(xPos, yPos, 0, boundsWidth, boundsHeight, 1f))
                 font.drawGlyph(batch, map.getAt(i), xPos, yPos);
         }

@@ -214,7 +214,7 @@ public class LOSTest {
 
                 BresenhamLine.reachable(10, 10, x, y, length, res, buffer);
                 for(Coord c : buffer)
-                    grid[c.x()][c.y()] = '*';
+                    grid[c.x][c.y] = '*';
             }
             for (int y = 0; y < 21; y++) {
                 for (int x = 0; x < 21; x++) {
@@ -247,7 +247,7 @@ public class LOSTest {
 
                 OrthoLine.reachable(10, 10, x, y, length, res, buffer);
                 for(Coord c : buffer)
-                    grid[c.x()][c.y()] = '*';
+                    grid[c.x][c.y] = '*';
             }
             for (int y = 0; y < 21; y++) {
                 for (int x = 0; x < 21; x++) {
@@ -280,7 +280,7 @@ public class LOSTest {
 
                 sadLine(10, 10, x, y, (a, b) -> res[a][b] < 1f && buffer.add(Coord.get(a, b)) && buffer.size() < finalLength);
                 for(Coord c : buffer)
-                    grid[c.x()][c.y()] = '*';
+                    grid[c.x][c.y] = '*';
             }
             for (int y = 0; y < 21; y++) {
                 for (int x = 0; x < 21; x++) {

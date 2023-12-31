@@ -181,7 +181,7 @@ public class Placement {
             Coord pt;
             for (int d = 0; d < finder.connections.length; d++) {
                 pt = finder.connections[d];
-                FOV.reuseFOV(resMap, temp, pt.x(), pt.y(), range, radiusStrategy);
+                FOV.reuseFOV(resMap, temp, pt.x, pt.y, range, radiusStrategy);
                 for (int x = 0; x < finder.width; x++) {
                     for (int y = 0; y < finder.height; y++) {
                         composite[x][y] += temp[x][y] * temp[x][y];

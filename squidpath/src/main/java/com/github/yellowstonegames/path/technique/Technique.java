@@ -228,17 +228,17 @@ public class Technique {
                 !AreaUtils.verifyReach(aoe.getReach(), user, possibleTarget)) return false;
         Radius radiusStrategy = aoe.getMetric();
         Coord[] path = BresenhamLine.lineArray(user, possibleTarget);
-        float rad = radiusStrategy.radius(user.x(), user.y(), possibleTarget.x(), possibleTarget.y());
+        float rad = radiusStrategy.radius(user.x, user.y, possibleTarget.x, possibleTarget.y);
         if(rad < aoe.getMinRange() || rad > aoe.getMaxRange()) {
             return false;
         }
         Coord p;
         for (int i = 0; i < path.length; i++) {
             p = path[i];
-            if (p.x() == possibleTarget.x() && p.y() == possibleTarget.y()) {
+            if (p.x == possibleTarget.x && p.y == possibleTarget.y) {
                 return true;//reached the end
             }
-            if ((p.x() != user.x() || p.y() != user.y()) && map[p.x()][p.y()] == '#') {
+            if ((p.x != user.x || p.y != user.y) && map[p.x][p.y] == '#') {
                 // if this isn't the starting cell and the map has a wall here, then stop and return false
                 return false;
             }
@@ -282,7 +282,7 @@ public class Technique {
     public Region possibleTargets(Coord user, float[][] resistanceMap) {
         if (aoe.getMaxRange() <= 0) return new Region(user, map.length, map[0].length);
         float[][] fovmap = new float[map.length][map[0].length];
-        FOV.reuseFOV(resistanceMap, fovmap, user.x(), user.y(), aoe.getMaxRange(), aoe.getMetric());
+        FOV.reuseFOV(resistanceMap, fovmap, user.x, user.y, aoe.getMaxRange(), aoe.getMetric());
         float rangeBound = 1.0001f - ((float) aoe.getMinRange() / aoe.getMaxRange());
         AimLimit limit = aoe.getLimitType();
         if (limit == null) limit = AimLimit.FREE;
@@ -290,15 +290,15 @@ public class Technique {
             case ORTHOGONAL: {
                 // Thanks, SillyNameRandomNumber, for finding this fix
                 return new Region(fovmap, 0.0001f, rangeBound)
-                        .removeRectangle(0, 0, user.x(), user.y())
-                        .removeRectangle(0, user.y() + 1, user.x(), map[0].length - user.y() - 1)
-                        .removeRectangle(user.x() + 1, 0, map.length - user.x() - 1, user.y())
-                        .removeRectangle(user.x() + 1, user.y() + 1, map.length - user.x() - 1, map[0].length - user.y() - 1);
+                        .removeRectangle(0, 0, user.x, user.y)
+                        .removeRectangle(0, user.y + 1, user.x, map[0].length - user.y - 1)
+                        .removeRectangle(user.x + 1, 0, map.length - user.x - 1, user.y)
+                        .removeRectangle(user.x + 1, user.y + 1, map.length - user.x - 1, map[0].length - user.y - 1);
             }
             case DIAGONAL: {
                 Region all = new Region(fovmap, 0.0001f, rangeBound), used = new Region(map.length, map[0].length);
                 for (Coord c : all) {
-                    if (Math.abs(c.x() - user.x()) == Math.abs(c.y() - user.y()))
+                    if (Math.abs(c.x - user.x) == Math.abs(c.y - user.y))
                         used.insert(c);
                 }
                 return used;
@@ -306,7 +306,7 @@ public class Technique {
             case EIGHT_WAY: {
                 Region all = new Region(fovmap, 0.0001f, rangeBound), used = new Region(map.length, map[0].length);
                 for (Coord c : all) {
-                    if (Math.abs(c.x() - user.x()) == Math.abs(c.y() - user.y()) || c.x() == user.x() || c.y() == user.y())
+                    if (Math.abs(c.x - user.x) == Math.abs(c.y - user.y) || c.x == user.x || c.y == user.y)
                         used.insert(c);
                 }
                 return used;

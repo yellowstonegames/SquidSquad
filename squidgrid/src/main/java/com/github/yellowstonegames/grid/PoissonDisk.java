@@ -99,7 +99,7 @@ public final class PoissonDisk {
      */
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(Coord minPosition, Coord maxPosition, float minimumDistance)
     {
-        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x() + 1, maxPosition.y() + 1, 10, new PouchRandom());
+        return sampleRectangle(minPosition, maxPosition, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, 10, new PouchRandom());
     }
 
     /**
@@ -119,7 +119,7 @@ public final class PoissonDisk {
     public static CoordObjectOrderedMap<ObjectList<Coord>> sampleRectangle(
             Coord minPosition, Coord maxPosition, float minimumDistance, int pointsPerIteration, EnhancedRandom rng)
     {
-        return sample(minPosition, maxPosition, 0f, minimumDistance, maxPosition.x() + 1, maxPosition.y() + 1, pointsPerIteration, rng);
+        return sample(minPosition, maxPosition, 0f, minimumDistance, maxPosition.x + 1, maxPosition.y + 1, pointsPerIteration, rng);
     }
 
     /**
@@ -209,22 +209,22 @@ public final class PoissonDisk {
         Coord dimensions = maxPosition.subtract(minPosition);
         float cellSize = Math.max(minimumDistance * inverseRootTwo, 1f);
         float minimumDistance2 = minimumDistance * minimumDistance;
-        int gridWidth = (int) (dimensions.x() / cellSize) + 1;
-        int gridHeight = (int) (dimensions.y() / cellSize) + 1;
+        int gridWidth = (int) (dimensions.x / cellSize) + 1;
+        int gridHeight = (int) (dimensions.y / cellSize) + 1;
         Coord[][] grid = new Coord[gridWidth][gridHeight];
         ObjectList<Coord> activePoints = new ObjectList<>();
         CoordOrderedSet points = new CoordOrderedSet(128);
 
         //add first point
-        Region valid = map.copy().and(new Region(width, height).insertRectangle(minPosition.x(),
-                minPosition.y(), maxPosition.x() - minPosition.x() + 1, maxPosition.y() - minPosition.y() + 1));
+        Region valid = map.copy().and(new Region(width, height).insertRectangle(minPosition.x,
+                minPosition.y, maxPosition.x - minPosition.x + 1, maxPosition.y - minPosition.y + 1));
 
         Coord p = valid.singleRandom(rng);
         if (p == null)
             return points;
         Coord index = p.subtract(minPosition).divide(cellSize);
 
-        grid[index.x()][index.y()] = p;
+        grid[index.x][index.y] = p;
 
         activePoints.add(p);
         points.add(p);
@@ -259,13 +259,13 @@ public final class PoissonDisk {
 
                 //end get random point around
 
-                if (q.x() >= minPosition.x() && q.x() <= maxPosition.x() &&
-                        q.y() >= minPosition.y() && q.y() <= maxPosition.y()) {
+                if (q.x >= minPosition.x && q.x <= maxPosition.x &&
+                        q.y >= minPosition.y && q.y <= maxPosition.y) {
                     Coord qIndex = q.subtract(minPosition).divide((int) Math.ceil(cellSize));
                     boolean tooClose = false;
 
-                    for (int i = Math.max(0, qIndex.x() - 2); i < Math.min(gridWidth, qIndex.x() + 3) && !tooClose; i++) {
-                        for (int j = Math.max(0, qIndex.y() - 2); j < Math.min(gridHeight, qIndex.y() + 3); j++) {
+                    for (int i = Math.max(0, qIndex.x - 2); i < Math.min(gridWidth, qIndex.x + 3) && !tooClose; i++) {
+                        for (int j = Math.max(0, qIndex.y - 2); j < Math.min(gridHeight, qIndex.y + 3); j++) {
                             if (grid[i][j] != null && grid[i][j].distanceSq(q) < minimumDistance2) {
                                 tooClose = true;
                                 break;
@@ -277,7 +277,7 @@ public final class PoissonDisk {
                         activePoints.add(q);
                         if(valid.contains(q))
                             points.add(q);
-                        grid[qIndex.x()][qIndex.y()] = q;
+                        grid[qIndex.x][qIndex.y] = q;
                     }
                 }
                 //end add next point
@@ -321,7 +321,7 @@ public final class PoissonDisk {
 
         Coord index = p.divide(cellSize);
 
-        grid[index.x()][index.y()] = p;
+        grid[index.x][index.y] = p;
 
         activePoints.add(p);
         points.add(p);
@@ -359,8 +359,8 @@ public final class PoissonDisk {
                 Coord qIndex = q.divide((int) Math.ceil(cellSize));
                 boolean tooClose = false;
 
-                for (int i = Math.max(0, qIndex.x() - 2); i < Math.min(gridWidth, qIndex.x() + 3) && !tooClose; i++) {
-                    for (int j = Math.max(0, qIndex.y() - 2); j < Math.min(gridHeight, qIndex.y() + 3); j++) {
+                for (int i = Math.max(0, qIndex.x - 2); i < Math.min(gridWidth, qIndex.x + 3) && !tooClose; i++) {
+                    for (int j = Math.max(0, qIndex.y - 2); j < Math.min(gridHeight, qIndex.y + 3); j++) {
                         if (grid[i][j] != null && grid[i][j].distanceSq(q) < minimumDistance2) {
                             tooClose = true;
                             break;
@@ -372,7 +372,7 @@ public final class PoissonDisk {
                     activePoints.add(q);
                     if (map.contains(q))
                         points.add(q);
-                    grid[qIndex.x()][qIndex.y()] = q;
+                    grid[qIndex.x][qIndex.y] = q;
                 }
 
                 //end add next point
@@ -397,7 +397,7 @@ public final class PoissonDisk {
         final float radius2 = radius * radius;
         final float iCellSize = 1f / (radius * inverseRootTwo);
         final float ik = 1f / pointsPerTry;
-        final float width = maxPos.x() - minPos.x() + 1, height = maxPos.y() - minPos.y() + 1;
+        final float width = maxPos.x - minPos.x + 1, height = maxPos.y - minPos.y + 1;
         final Coord gridCenter = minPos.average(maxPos);
         final int gridWidth = Math.min((int) Math.ceil(width * iCellSize), xBound);
         final int gridHeight = Math.min((int) Math.ceil(height * iCellSize), yBound);
@@ -425,7 +425,7 @@ public final class PoissonDisk {
 
                 // Accept candidates that are inside the allowed extent
                 // and farther than 2 * radius to all existing samples.
-                if (x >= minPos.x() && x < maxPos.x() + 0.99999994f && y >= minPos.y() && y < maxPos.y() + 0.99999994f && far(x, y, iCellSize, radius2,
+                if (x >= minPos.x && x < maxPos.x + 0.99999994f && y >= minPos.y && y < maxPos.y + 0.99999994f && far(x, y, iCellSize, radius2,
                         gridCenter, maxSampleRadius, gridX, gridY, minPos)) {
                     final Coord sam = sample(x, y, iCellSize, qx, qy, gridX, gridY, minPos);
                     graph.get(parent).add(sam);
@@ -442,8 +442,8 @@ public final class PoissonDisk {
     }
     private static boolean far(float x, float y, float iCellSize, float radius2, Coord gridCenter, float maxSampleRadius, float[][] gridX, float[][] gridY, Coord minPos){
         if(maxSampleRadius != 0f && gridCenter.distanceSq(x, y) > maxSampleRadius) return false;
-        final int i = (int)((x - minPos.x()) * iCellSize);
-        final int j = (int)((y - minPos.y()) * iCellSize);
+        final int i = (int)((x - minPos.x) * iCellSize);
+        final int j = (int)((y - minPos.y) * iCellSize);
         final int gridWidth = gridX.length;
         final int i0 = Math.max(i - 2, 0);
         final int j0 = Math.max(j - 2, 0);
@@ -463,7 +463,7 @@ public final class PoissonDisk {
         return true;
     }
     private static Coord sample(float x, float y, float invCellSize, FloatBag qx, FloatBag qy, float[][] gridX, float[][] gridY, Coord minPos){
-        final int gx = (int)((x - minPos.x()) * invCellSize), gy = (int)((y - minPos.y()) * invCellSize);
+        final int gx = (int)((x - minPos.x) * invCellSize), gy = (int)((y - minPos.y) * invCellSize);
         gridX[gx][gy] = x;
         gridY[gx][gy] = y;
         qx.add(x);

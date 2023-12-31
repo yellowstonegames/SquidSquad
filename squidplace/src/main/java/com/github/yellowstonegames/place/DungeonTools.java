@@ -235,7 +235,7 @@ public class DungeonTools {
      * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
      */
     public static boolean inLevel(char[][] level, Coord c) {
-        return inLevel(level, c.x(), c.y());
+        return inLevel(level, c.x, c.y);
     }
 
     /**
@@ -254,7 +254,7 @@ public class DungeonTools {
      * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
      */
     public static boolean inLevel(float[][] level, Coord c) {
-        return inLevel(level, c.x(), c.y());
+        return inLevel(level, c.x, c.y);
     }
 
     /**
@@ -273,7 +273,7 @@ public class DungeonTools {
      * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
      */
     public static <T> boolean inLevel(T[][] level, Coord c) {
-        return inLevel(level, c.x(), c.y());
+        return inLevel(level, c.x, c.y);
     }
 
     /**
@@ -381,10 +381,10 @@ public class DungeonTools {
         ObjectList<Coord> points = new ObjectList<>(80);
         int m = rng.next(6);
         Coord temp = HilbertCurve.mooreToCoord(m), next;
-        temp = Coord.get(columns[temp.x()], rows[temp.y()]);
+        temp = Coord.get(columns[temp.x], rows[temp.y]);
         for (int i = 0, r; i < 256; r = rng.nextInt(4, 12), i += r, m += r) {
             next = HilbertCurve.mooreToCoord(m);
-            next = Coord.get(columns[next.x()], rows[next.y()]);
+            next = Coord.get(columns[next.x], rows[next.y]);
             points.addAll(OrthoLine.line(temp, next));
             temp = next;
         }
@@ -414,8 +414,8 @@ public class DungeonTools {
         System.arraycopy(blocking, 0, blocks, 0, blocking.length);
         Arrays.sort(blocks);
         for (Coord c : points) {
-            if (c.x() >= 0 && c.x() < width && c.y() >= 0 && c.y() < height && Arrays.binarySearch(blocks, map[c.x()][c.y()]) >= 0) {
-                map[c.x()][c.y()] = replacement;
+            if (c.x >= 0 && c.x < width && c.y >= 0 && c.y < height && Arrays.binarySearch(blocks, map[c.x][c.y]) >= 0) {
+                map[c.x][c.y] = replacement;
             }
         }
         return points;

@@ -57,7 +57,7 @@ public class BresenhamLine implements LineDrawer {
      * @return The path between {@code a} and {@code b}.
      */
     public static ObjectList<Coord> line(Coord a, Coord b) {
-        return line(a.x(), a.y(), b.x(), b.y(), 0x7fffffff, null);
+        return line(a.x, a.y, b.x, b.y, 0x7fffffff, null);
     }
 
 
@@ -71,7 +71,7 @@ public class BresenhamLine implements LineDrawer {
      * @return The path between {@code a} and {@code b}.
      */
     public static Coord[] lineArray(Coord a, Coord b) {
-        return lineArray(a.x(), a.y(), b.x(), b.y(), 0x7fffffff);
+        return lineArray(a.x, a.y, b.x, b.y, 0x7fffffff);
     }
 
     /**
@@ -348,7 +348,7 @@ public class BresenhamLine implements LineDrawer {
      */
     public static boolean reachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
                                     @Nullable ObjectList<Coord> buffer){
-        return reachable(start.x(), start.y(), target.x(), target.y(), 0x7FFFFFFF, resistanceMap, buffer);
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
     /**
@@ -616,7 +616,7 @@ public class BresenhamLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap){
-        return reachable(start.x(), start.y(), target.x(), target.y(), 0x7FFFFFFF, resistanceMap);
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap} to determine whether
@@ -846,7 +846,7 @@ public class BresenhamLine implements LineDrawer {
     @Override
     public ObjectList<Coord> drawLine(Coord a, Coord b) {
         lastLine.clear();
-        return line(a.x(), a.y(), b.x(), b.y(), 0x7FFFFFFF, lastLine);
+        return line(a.x, a.y, b.x, b.y, 0x7FFFFFFF, lastLine);
     }
 
     /**
@@ -947,7 +947,7 @@ public class BresenhamLine implements LineDrawer {
     @Override
     public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
                                ObjectList<Coord> buffer){
-        return reachable(start.x(), start.y(), target.x(), target.y(), 0x7FFFFFFF, resistanceMap, buffer);
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
     /**
@@ -1042,7 +1042,7 @@ public class BresenhamLine implements LineDrawer {
      */
     @Override
     public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap){
-        return reachable(start.x(), start.y(), target.x(), target.y(), 0x7FFFFFFF, resistanceMap);
+        return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
 
     /**
@@ -1094,7 +1094,7 @@ public class BresenhamLine implements LineDrawer {
      */
     @Override
     public Coord[] drawLineArray(Coord a, Coord b) {
-        return lineArray(a.x(), a.y(), b.x(), b.y(), 0x7FFFFFFF);
+        return lineArray(a.x, a.y, b.x, b.y, 0x7FFFFFFF);
     }
 
     /**

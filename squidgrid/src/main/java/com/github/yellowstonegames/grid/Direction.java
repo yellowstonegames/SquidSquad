@@ -158,7 +158,7 @@ public enum Direction {
 	 *         can be cardinal or diagonal.
 	 */
 	public static Direction toGoTo(Coord from, Coord to) {
-		return getDirection(to.x() - from.x(), to.y() - from.y());
+		return getDirection(to.x - from.x, to.y - from.y);
 	}
 
     /**

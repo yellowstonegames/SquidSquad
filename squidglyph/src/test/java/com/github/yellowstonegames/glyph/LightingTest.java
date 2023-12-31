@@ -108,7 +108,7 @@ public class LightingTest extends ApplicationAdapter {
         gg.addActor(playerGlyph);
         post = () -> {
             Coord player = playerGlyph.getLocation();
-            lighting.calculateFOV(player.x(), player.y(), player.x() - 10, player.y() - 10, player.x() + 11, player.y() + 11);
+            lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
             seen.or(inView.refill(lighting.fovResult, 0.001f, 2f));
             blockage.remake(seen).not().fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
@@ -166,7 +166,7 @@ public class LightingTest extends ApplicationAdapter {
                 gg.viewport.unproject(pos);
                 if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
                     // we also need to check if screenX or screenY is the same cell.
-                    if (cursor.x() == screenX && cursor.y() == screenY) {
+                    if (cursor.x == screenX && cursor.y == screenY) {
                         return false;
                     }
                     cursor = Coord.get(screenX, screenY);
@@ -199,8 +199,8 @@ public class LightingTest extends ApplicationAdapter {
         if(playerGlyph.hasActions()) return;
 
         final Coord next = Coord.get(Math.round(playerGlyph.getX() + way.deltaX), Math.round(playerGlyph.getY() + way.deltaY));
-        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x()][next.y()] == '.') {
-            playerGlyph.addAction(MoreActions.slideTo(next.x(), next.y(), 0.2f, post));
+        if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
+            playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.2f, post));
         }
         else{
 //            if(MathUtils.randomBoolean())
@@ -229,7 +229,7 @@ public class LightingTest extends ApplicationAdapter {
         Region floors = new Region(bare, '.');
         EnhancedRandom rng = dungeonProcessor.rng;
         Coord player = floors.singleRandom(rng);
-        playerGlyph.setPosition(player.x(), player.y());
+        playerGlyph.setPosition(player.x, player.y);
 
         lighting = new LightingManager(res, DescriptiveColor.describeOklab("dark gray black"), Radius.CIRCLE, 9f, LightingManager.SymmetryMode.SYMMETRICAL);
         Coord[] lightPositions = floors.separatedBlue(0.075f);
@@ -237,7 +237,7 @@ public class LightingTest extends ApplicationAdapter {
             lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,
                     FullPalette.COLOR_WHEEL_PALETTE_BRIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_BRIGHT.length)], 0.5f, 0f));
         }
-        lighting.calculateFOV(player.x(), player.y(), player.x() - 10, player.y() - 10, player.x() + 11, player.y() + 11);
+        lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
         seen.remake(inView.refill(lighting.fovResult, 0.001f, 2f));
         blockage.remake(seen).not().fringe8way();
         LineTools.pruneLines(dungeon, seen, prunedDungeon);
@@ -273,7 +273,7 @@ public class LightingTest extends ApplicationAdapter {
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(inView.contains(curr))
-                gg.backgrounds[curr.x()][curr.y()] = rainbow;
+                gg.backgrounds[curr.x][curr.y] = rainbow;
         }
     }
 

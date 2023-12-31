@@ -49,13 +49,13 @@ public interface Heuristic<V> {
 	 * A predefined Heuristic for Coord nodes in a 2D plane where diagonal movement is estimated as costing twice as
 	 * much as orthogonal movement. This is a good choice for graphs where only four-way movement is used.
 	 */
-	Heuristic<Coord> MANHATTAN = (node, endNode) -> Math.abs(node.x() - endNode.x()) + Math.abs(node.y() - endNode.y());
+	Heuristic<Coord> MANHATTAN = (node, endNode) -> Math.abs(node.x - endNode.x) + Math.abs(node.y - endNode.y);
 	/**
 	 * A predefined Heuristic for Coord nodes in a 2D plane where diagonal movement is estimated as costing the same as
 	 * orthogonal movement. This is only suggested for graphs where eight-way movement is used, and it may produce
 	 * erratic paths compared to {@link #EUCLIDEAN}.
 	 */
-	Heuristic<Coord> CHEBYSHEV = (node, endNode) -> Math.max(Math.abs(node.x() - endNode.x()), Math.abs(node.y() - endNode.y()));
+	Heuristic<Coord> CHEBYSHEV = (node, endNode) -> Math.max(Math.abs(node.x - endNode.x), Math.abs(node.y - endNode.y));
 	/**
 	 * A predefined Heuristic for Coord nodes in a 2D plane where all movement is calculated "as-the-crow-flies," using
 	 * the standard Pythagorean formula for distance as in the real world. This does not make diagonal connections, if

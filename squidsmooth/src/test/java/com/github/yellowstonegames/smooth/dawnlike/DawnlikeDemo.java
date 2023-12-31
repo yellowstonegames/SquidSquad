@@ -325,7 +325,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         // Uses shadowcasting FOV and reuses the visible array without creating new arrays constantly.
-        FOV.reuseFOV(resistance, lightLevels, player.x(), player.y(), fovRange, Radius.CIRCLE);
+        FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
         // Stores the current light level as the previous light level, to avoid fade-in artifacts.
         ArrayTools.set(lightLevels, previousLightLevels);
         // 0.0 is the upper bound (inclusive), so any Coord in visible that is more well-lit than 0.0 will _not_ be in
@@ -529,7 +529,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 mainViewport.unproject(pos);
                 if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
                     // we also need to check if screenX or screenY is the same cell.
-                    if (cursor.x() == screenX && cursor.y() == screenY) {
+                    if (cursor.x == screenX && cursor.y == screenY) {
                         return false;
                     }
                     cursor = Coord.get(screenX, screenY);
@@ -566,7 +566,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // this prevents movements from restarting while a slide is already in progress.
         if(cg.getChange() != 0f && cg.getChange() != 1f) return;
 
-        int newX = next.x(), newY = next.y();
+        int newX = next.x, newY = next.y;
         playerSprite.setPackedColor(Color.WHITE_FLOAT_BITS);
         if (newX >= 0 && newY >= 0 && newX < dungeonWidth && newY < dungeonHeight
                 && bareDungeon[newX][newY] != '#') {
@@ -583,7 +583,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                 // assigns to justHidden all cells that were visible in lightLevels in the last turn.
                 justHidden.refill(previousLightLevels, 0f).not();
                 // recalculate FOV, store it in lightLevels for the render to use.
-                FOV.reuseFOV(resistance, lightLevels, player.x(), player.y(), fovRange, Radius.CIRCLE);
+                FOV.reuseFOV(resistance, lightLevels, player.x, player.y, fovRange, Radius.CIRCLE);
                 // assigns to blockage all cells that were NOT visible in the latest lightLevels calculation.
                 blockage.refill(lightLevels, 0f);
                 // store current previously-in-view cells as justSeen, so they can be used to ease those cells into being seen.
@@ -669,7 +669,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
             AnimatedGlidingSprite mon = monsters.getAt(ci);
             if(mon == null) continue;
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
-            if (lightLevels[pos.x()][pos.y()] > 0.1) {
+            if (lightLevels[pos.x][pos.y] > 0.1) {
                 // the player's position is set as a goal by findPath(), later.
                 getToPlayer.clearGoals();
                 // clear the buffer, we fill it next
@@ -687,7 +687,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     Coord tmp = nextMovePositions.get(0);
                     if(tmp == null) continue;
                     // if we would move into the player, instead damage the player and animate a bump motion.
-                    if (tmp.x() == player.x() && tmp.y() == player.y()) {
+                    if (tmp.x == player.x && tmp.y == player.y) {
                         playerSprite.setPackedColor(DescriptiveColor.oklabIntToFloat(INT_BLOOD));
                         health--;
                         VectorSequenceGlider small = VectorSequenceGlider.BUMPS.getOrDefault(pos.toGoTo(player), null);
@@ -922,7 +922,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
             }
             System.out.print(' ');
             for (int x = 0; x < lineDungeon.length; x++) {
-                if(player.x() == x && player.y() == y)
+                if(player.x == x && player.y == y)
                     System.out.print('@');
                 else
                     System.out.print(lightLevels[x][y] > 0f ? '+' : '_');

@@ -52,7 +52,7 @@ public class TestDijkstraMap {
 
         char ch = '0';
         for(Coord c : path) {
-            map[c.x()][c.y()] = ch++;
+            map[c.x][c.y] = ch++;
         }
         print(map);
     }

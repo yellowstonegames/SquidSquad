@@ -47,11 +47,25 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * tend to exhaust all of Java's heap (using only Coord items), so supporting larger sizes isn't at all a priority.
  */
 public class Coord {
-    private final short x;
+    /**
+     * The x-coordinate.
+     */
+    public final short x;
 
-    private final short y;
+    /**
+     * The y-coordinate (the ordinate)
+     */
+    public final short y;
 
-    private final int hash;
+    /**
+     * Accessible via {@link #hashCode()}, this is a precalculated hashCode() result. It is only assigned in
+     * {@link #Coord(int, int)}. It uses a method of computing a hash value that won't collide in full for at least tens
+     * of millions of Coord values. Even using a smaller portion of the hash, if a hash table can fit 8192x8192 Coord
+     * values with load factor 0.5f, an appropriate mask will still not cause collisions here. The hash values are
+     * organized so that if a Coord is close to the origin, it will effectively reserve bit patterns that won't be seen
+     * in Coord values that are far from the origin.
+     */
+    protected final int hash;
 
     protected Coord() {
         this(0, 0);
@@ -98,7 +112,7 @@ public class Coord {
      * @return the angle in radians from {@code from} to {@code to}; 0 is to the right
      */
     public static float radians(final Coord from, final Coord to) {
-        return TrigTools.atan2(to.y() - from.y(), to.x() - from.x());
+        return TrigTools.atan2(to.y - from.y, to.x - from.x);
     }
 
     /**
@@ -116,7 +130,7 @@ public class Coord {
      * @return the angle in degrees from {@code from} to {@code to}; 0 is to the right
      */
     public static float degrees(final Coord from, final Coord to) {
-        return TrigTools.atan2Deg360(to.y() - from.y(), to.x() - from.x());
+        return TrigTools.atan2Deg360(to.y - from.y, to.x - from.x);
     }
 
     /**
@@ -134,7 +148,7 @@ public class Coord {
      * @return the angle in turns from {@code from} to {@code to}; 0 is to the right
      */
     public static float turns(final Coord from, final Coord to) {
-        return TrigTools.atan2Turns(to.y() - from.y(), to.x() - from.x());
+        return TrigTools.atan2Turns(to.y - from.y, to.x - from.x);
     }
 
     /**
@@ -154,7 +168,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) that has been moved the specified distance
      */
     public Coord translate(final int x, final int y) {
-        return get(this.x() + x, this.y() + y);
+        return get(this.x + x, this.y + y);
     }
 
     /**
@@ -168,7 +182,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) that has been moved the specified distance
      */
     public Coord translateCapped(final int x, final int y, final int width, final int height) {
-        return get(Math.min(Math.max(0, this.x() + x), width - 1), Math.min(Math.max(0, this.y() + y), height - 1));
+        return get(Math.min(Math.max(0, this.x + x), width - 1), Math.min(Math.max(0, this.y + y), height - 1));
     }
 
     /**
@@ -178,7 +192,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x + other.x; y = this.y + other.y}
      */
     public Coord add(final Coord other) {
-        return get(x() + other.x(), y() + other.y());
+        return get(x + other.x, y + other.y);
     }
 
     /**
@@ -189,7 +203,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x + operand; y = this.y + operand}
      */
     public Coord add(final int operand) {
-        return get(x() + operand, y() + operand);
+        return get(x + operand, y + operand);
     }
 
     /**
@@ -201,7 +215,7 @@ public class Coord {
      * operand}, with both x and y rounded accordingly
      */
     public Coord add(final double operand) {
-        return get((int) Math.round(x() + operand), (int) Math.round(y() + operand));
+        return get((int) Math.round(x + operand), (int) Math.round(y + operand));
     }
 
     /**
@@ -212,7 +226,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x - other.x; y = this.y - other.y}
      */
     public Coord subtract(final Coord other) {
-        return get(x() - other.x(), y() - other.y());
+        return get(x - other.x, y - other.y);
     }
 
     /**
@@ -223,7 +237,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x - operand; y = this.y - operand}
      */
     public Coord subtract(final int operand) {
-        return get(x() - operand, y() - operand);
+        return get(x - operand, y - operand);
     }
 
     /**
@@ -235,7 +249,7 @@ public class Coord {
      * operand}, with both x and y rounded accordingly
      */
     public Coord subtract(final double operand) {
-        return get((int) Math.round(x() - operand), (int) Math.round(y() - operand));
+        return get((int) Math.round(x - operand), (int) Math.round(y - operand));
     }
 
     /**
@@ -246,7 +260,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x * other.x; y = this.y * other.y}
      */
     public Coord multiply(final Coord other) {
-        return get(x() * other.x(), y() * other.y());
+        return get(x * other.x, y * other.y);
     }
 
     /**
@@ -257,7 +271,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x * operand; y = this.y * operand}
      */
     public Coord multiply(final int operand) {
-        return get(x() * operand, y() * operand);
+        return get(x * operand, y * operand);
     }
 
     /**
@@ -269,7 +283,7 @@ public class Coord {
      * operand}, with both x and y rounded accordingly
      */
     public Coord multiply(final double operand) {
-        return get((int) Math.round(x() * operand), (int) Math.round(y() * operand));
+        return get((int) Math.round(x * operand), (int) Math.round(y * operand));
     }
 
     /**
@@ -280,7 +294,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x / other.x; y = this.y / other.y}
      */
     public Coord divide(final Coord other) {
-        return get(x() / other.x(), y() / other.y());
+        return get(x / other.x, y / other.y);
     }
 
     /**
@@ -291,7 +305,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x / operand; y = this.y / operand}
      */
     public Coord divide(final int operand) {
-        return get(x() / operand, y() / operand);
+        return get(x / operand, y / operand);
     }
 
     /**
@@ -304,7 +318,7 @@ public class Coord {
      * operand}, with both x and y rounded accordingly
      */
     public Coord divide(final double operand) {
-        return get((int) (x() / operand), (int) (y() / operand));
+        return get((int) (x / operand), (int) (y / operand));
     }
 
     /**
@@ -317,7 +331,7 @@ public class Coord {
      * operand}, with both x and y rounded accordingly
      */
     public Coord divideRounding(final double operand) {
-        return get((int) Math.round(x() / operand), (int) Math.round(y() / operand));
+        return get((int) Math.round(x / operand), (int) Math.round(y / operand));
     }
 
     /**
@@ -328,7 +342,7 @@ public class Coord {
      * @return a Coord (usually cached and not a new instance) halfway between this and other, rounded nearest.
      */
     public Coord average(final Coord other) {
-        return get(Math.round((x() + other.x()) / 2.0f), Math.round((y() + other.y()) / 2.0f));
+        return get(Math.round((x + other.x) / 2.0f), Math.round((y + other.y) / 2.0f));
     }
 
     /**
@@ -344,7 +358,7 @@ public class Coord {
      * @return {@code (x*i,y*i)}.
      */
     public Coord scale(final int i) {
-        return Coord.get(x() * i, y() * i);
+        return Coord.get(x * i, y * i);
     }
 
     /**
@@ -353,7 +367,7 @@ public class Coord {
      * @return {@code (x*i,y*j)}.
      */
     public Coord scale(final int i, final int j) {
-        return Coord.get(x() * i, y() * j);
+        return Coord.get(x * i, y * j);
     }
 
     /**
@@ -364,7 +378,7 @@ public class Coord {
      * @return Euclidean distance from this Coord to the other given Coord, as a float
      */
     public float distance(final float x2, final float y2) {
-        return (float) Math.sqrt((x2 - x()) * (x2 - x()) + (y2 - y()) * (y2 - y()));
+        return (float) Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
     }
 
     /**
@@ -374,7 +388,7 @@ public class Coord {
      * @return Euclidean distance from this Coord to the other given Coord, as a float
      */
     public float distance(final Coord co) {
-        return (float) Math.sqrt((co.x() - x()) * (co.x() - x()) + (co.y() - y()) * (co.y() - y()));
+        return (float) Math.sqrt((co.x - x) * (co.x - x) + (co.y - y) * (co.y - y));
     }
 
     /**
@@ -385,7 +399,7 @@ public class Coord {
      * @return squared Euclidean distance from this Coord to the other given Coord, as a float
      */
     public float distanceSq(final float x2, final float y2) {
-        return (x2 - x()) * (x2 - x()) + (y2 - y()) * (y2 - y());
+        return (x2 - x) * (x2 - x) + (y2 - y) * (y2 - y);
     }
 
     /**
@@ -395,7 +409,7 @@ public class Coord {
      * @return squared Euclidean distance from this Coord to the other given Coord, as a float
      */
     public float distanceSq(final Coord co) {
-        return (co.x() - x()) * (co.x() - x()) + (co.y() - y()) * (co.y() - y());
+        return (co.x - x) * (co.x - x) + (co.y - y) * (co.y - y);
     }
 
     /**
@@ -406,7 +420,7 @@ public class Coord {
      * @return Euclidean distance from this Coord to the other given Coord, as a double
      */
     public double distanceD(final double x2, final double y2) {
-        return Math.sqrt((x2 - x()) * (x2 - x()) + (y2 - y()) * (y2 - y()));
+        return Math.sqrt((x2 - x) * (x2 - x) + (y2 - y) * (y2 - y));
     }
 
     /**
@@ -416,7 +430,7 @@ public class Coord {
      * @return Euclidean distance from this Coord to the other given Coord, as a double
      */
     public double distanceD(final Coord co) {
-        return Math.sqrt((co.x() - x()) * (co.x() - x()) + (co.y() - y()) * (co.y() - y()));
+        return Math.sqrt((co.x - x) * (co.x - x) + (co.y - y) * (co.y - y));
     }
 
     /**
@@ -427,7 +441,7 @@ public class Coord {
      * @return squared Euclidean distance from this Coord to the other given Coord, as a double
      */
     public double distanceSqD(final double x2, final double y2) {
-        return (x2 - x()) * (x2 - x()) + (y2 - y()) * (y2 - y());
+        return (x2 - x) * (x2 - x) + (y2 - y) * (y2 - y);
     }
 
     /**
@@ -437,7 +451,7 @@ public class Coord {
      * @return squared Euclidean distance from this Coord to the other given Coord, as a double
      */
     public double distanceSqD(final Coord co) {
-        return (co.x() - x()) * (co.x() - x()) + (co.y() - y()) * (co.y() - y());
+        return (co.x - x) * (co.x - x) + (co.y - y) * (co.y - y);
     }
 
     /**
@@ -446,7 +460,7 @@ public class Coord {
      * @return a Coord (probably from the pool) with even x and even y, changing (decrementing) only if they are odd
      */
     public Coord makeEven() {
-        return get(x() & -2, y() & -2);
+        return get(x & -2, y & -2);
     }
 
     /**
@@ -455,7 +469,7 @@ public class Coord {
      * @return a Coord (probably from the pool) with odd x and odd y, changing (incrementing) only if they are even
      */
     public Coord makeOdd() {
-        return get(x() | 1, y() | 1);
+        return get(x | 1, y | 1);
     }
 
     /**
@@ -464,11 +478,11 @@ public class Coord {
      * not adjacent to itself with this method.
      */
     public boolean isAdjacent(final Coord c) {
-        switch (Math.abs(x() - c.x())) {
+        switch (Math.abs(x - c.x)) {
             case 0:
-                return Math.abs(y() - c.y()) == 1;
+                return Math.abs(y - c.y) == 1;
             case 1:
-                return y() == c.y() || Math.abs(y() - c.y()) == 1;
+                return y == c.y || Math.abs(y - c.y) == 1;
             default:
                 return false;
         }
@@ -498,7 +512,7 @@ public class Coord {
      * @return true if this Coord is within the limits of width and height and has non-negative x and y
      */
     public boolean isWithin(final int width, final int height) {
-        return x() >= 0 && y() >= 0 && x() < width && y() < height;
+        return x >= 0 && y >= 0 && x < width && y < height;
     }
 
     /**
@@ -512,28 +526,28 @@ public class Coord {
      * @return true if this Coord is within the limits of the given parameters
      */
     public boolean isWithinRectangle(int minX, int minY, int maxX, int maxY) {
-        return x() >= minX && y() >= minY && x() < maxX && y() < maxY;
+        return x >= minX && y >= minY && x < maxX && y < maxY;
     }
 
     public int getX() {
-        return x();
+        return x;
     }
 
     public Coord setX(final int x) {
-        return get(x, y());
+        return get(x, y);
     }
 
     public int getY() {
-        return y();
+        return y;
     }
 
     public Coord setY(final int y) {
-        return get(x(), y);
+        return get(x, y);
     }
 
     @Override
     public String toString() {
-        return "(" + x() + "," + y() + ")";
+        return "(" + x + "," + y + ")";
     }
 
     @Override
@@ -567,7 +581,7 @@ public class Coord {
 //        final int n = (x >= y ? x * (x + 2) - y : y * y + x);
         //// This modifies Rosenberg-Strong so here, x is effectively (x+3) and y is (y+3).
         //// This requires less addition sometimes, and shouldn't ever require more.
-        return (x() >= y() ? x() * (x() + 8) - y() + 12 : y() * (y() + 6) + x() + 12);
+        return (x >= y ? x * (x + 8) - y + 12 : y * (y + 6) + x + 12);
     }
 
     /**
@@ -587,7 +601,7 @@ public class Coord {
      * @return an int that should, for different non-negative Coord values, be at least a little different from other hash codes
      */
     public int hastyHashCode() {
-        return y() + ((x() + y()) * (x() + y() + 1) >> 1);
+        return y + ((x + y) * (x + y + 1) >> 1);
     }
 
     /**
@@ -683,7 +697,7 @@ public class Coord {
      * @return an int as a unique code for this Coord
      */
     public int encode() {
-        return ((x() + 256) << 16) ^ (y() + 256);
+        return ((x + 256) << 16) ^ (y + 256);
     }
 
     /**
@@ -716,7 +730,7 @@ public class Coord {
     public boolean equals(Object o) {
         if (o instanceof Coord) {
             Coord other = (Coord) o;
-            return x() == other.x() && y() == other.y();
+            return x == other.x && y == other.y;
         } else {
             return false;
         }
@@ -877,8 +891,8 @@ public class Coord {
      * @return a Coord that is between this and end as long as amountTraveled is between 0 and 1
      */
     public Coord interpolate(Coord end, float amountTraveled) {
-        return Coord.get(x() + Math.round((end.x() - x()) * amountTraveled),
-                y() + Math.round((end.y() - y()) * amountTraveled));
+        return Coord.get(x + Math.round((end.x - x) * amountTraveled),
+                y + Math.round((end.y - y) * amountTraveled));
     }
 
     /**

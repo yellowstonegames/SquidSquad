@@ -113,14 +113,14 @@ public class GrowingTreeMazeGenerator implements PlaceGenerator {
             rng.shuffle(dirs);
 
             for (Direction dir : dirs) {
-                x = p.x() + dir.deltaX * 2;
-                y = p.y() + dir.deltaY * 2;
+                x = p.x + dir.deltaX * 2;
+                y = p.y + dir.deltaY * 2;
                 if (x > 0 && x < width - 1 && y > 0 && y < height - 1) {
                     if (dungeon[x][y] == '#' && deck.add(Coord.get(x, y))) {
                         dungeon[x][y] = '.';
                         environment[x][y] = DungeonTools.CORRIDOR_FLOOR;
-                        dungeon[p.x() + dir.deltaX][p.y() + dir.deltaY] = '.';
-                        environment[p.x() + dir.deltaX][p.y() + dir.deltaY] = DungeonTools.CORRIDOR_FLOOR;
+                        dungeon[p.x + dir.deltaX][p.y + dir.deltaY] = '.';
+                        environment[p.x + dir.deltaX][p.y + dir.deltaY] = DungeonTools.CORRIDOR_FLOOR;
                         continue OUTER;
                     }
                 }

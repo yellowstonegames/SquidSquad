@@ -131,7 +131,7 @@ public class RoomFinder {
                 Coord[] doors = someDoors.asCoords();
                 ObjectList<Region> near = new ObjectList<>(4);
                 for (int i = 0; i < doors.length; i++) {
-                    near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), rs));
+                    near.addAll(Region.whichContain(doors[i].x, doors[i].y, rs));
                 }
                 corridors.put(sep, near);
             }
@@ -141,7 +141,7 @@ public class RoomFinder {
                 Coord[] doors = aroundDoors.asCoords();
                 ObjectList<Region> near = new ObjectList<>(10);
                 for (int i = 0; i < doors.length; i++) {
-                    near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), cs));
+                    near.addAll(Region.whichContain(doors[i].x, doors[i].y, cs));
                 }
                 rooms.put(sep, near);
             }
@@ -199,12 +199,12 @@ public class RoomFinder {
             Coord[] doors = someDoors.asCoords();
             ObjectList<Region> near = new ObjectList<>(16);
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), rs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, rs));
             }
             someDoors.remake(sep).fringe().and(allCaves);
             doors = someDoors.asCoords();
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), vs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, vs));
             }
             corridors.put(sep, near);
         }
@@ -214,12 +214,12 @@ public class RoomFinder {
             Coord[] doors = aroundDoors.asCoords();
             ObjectList<Region> near = new ObjectList<>(32);
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), cs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, cs));
             }
             aroundDoors.remake(sep).fringe().and(allCaves);
             doors = aroundDoors.asCoords();
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), vs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, vs));
             }
             rooms.put(sep, near);
         }
@@ -228,12 +228,12 @@ public class RoomFinder {
             Coord[] maws = aroundMouths.asCoords();
             ObjectList<Region> near = new ObjectList<>(48);
             for (int i = 0; i < maws.length; i++) {
-                near.addAll(Region.whichContain(maws[i].x(), maws[i].y(), cs));
+                near.addAll(Region.whichContain(maws[i].x, maws[i].y, cs));
             }
             aroundMouths.remake(sep).fringe().and(allRooms);
             maws = aroundMouths.asCoords();
             for (int i = 0; i < maws.length; i++) {
-                near.addAll(Region.whichContain(maws[i].x(), maws[i].y(), rs));
+                near.addAll(Region.whichContain(maws[i].x, maws[i].y, rs));
             }
             caves.put(sep, near);
         }
@@ -278,7 +278,7 @@ public class RoomFinder {
                 Coord[] doors = someDoors.asCoords();
                 ObjectList<Region> near = new ObjectList<>(4);
                 for (int i = 0; i < doors.length; i++) {
-                    near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), rs));
+                    near.addAll(Region.whichContain(doors[i].x, doors[i].y, rs));
                 }
                 corridors.put(sep, near);
             }
@@ -288,7 +288,7 @@ public class RoomFinder {
                 Coord[] doors = aroundDoors.asCoords();
                 ObjectList<Region> near = new ObjectList<>(10);
                 for (int i = 0; i < doors.length; i++) {
-                    near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), cs));
+                    near.addAll(Region.whichContain(doors[i].x, doors[i].y, cs));
                 }
                 rooms.put(sep, near);
             }
@@ -342,12 +342,12 @@ public class RoomFinder {
             Coord[] doors = someDoors.asCoords();
             ObjectList<Region> near = new ObjectList<>(16);
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), rs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, rs));
             }
             someDoors.remake(sep).fringe().and(allCaves);
             doors = someDoors.asCoords();
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), vs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, vs));
             }
             corridors.put(sep, near);
         }
@@ -357,12 +357,12 @@ public class RoomFinder {
             Coord[] doors = aroundDoors.asCoords();
             ObjectList<Region> near = new ObjectList<>(32);
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), cs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, cs));
             }
             aroundDoors.remake(sep).fringe().and(allCaves);
             doors = aroundDoors.asCoords();
             for (int i = 0; i < doors.length; i++) {
-                near.addAll(Region.whichContain(doors[i].x(), doors[i].y(), vs));
+                near.addAll(Region.whichContain(doors[i].x, doors[i].y, vs));
             }
             rooms.put(sep, near);
         }
@@ -371,12 +371,12 @@ public class RoomFinder {
             Coord[] maws = aroundMouths.asCoords();
             ObjectList<Region> near = new ObjectList<>(48);
             for (int i = 0; i < maws.length; i++) {
-                near.addAll(Region.whichContain(maws[i].x(), maws[i].y(), cs));
+                near.addAll(Region.whichContain(maws[i].x, maws[i].y, cs));
             }
             aroundMouths.remake(sep).fringe().and(allRooms);
             maws = aroundMouths.asCoords();
             for (int i = 0; i < maws.length; i++) {
-                near.addAll(Region.whichContain(maws[i].x(), maws[i].y(), rs));
+                near.addAll(Region.whichContain(maws[i].x, maws[i].y, rs));
             }
             caves.put(sep, near);
         }

@@ -118,7 +118,7 @@ public class LineAOE implements AOE {
     }
     private float[][] initDijkstra()
     {
-        los.isReachable(origin.x(), origin.y(), end.x(), end.y(), dungeon, los.lastLine);
+        los.isReachable(origin.x, origin.y, end.x, end.y, dungeon, los.lastLine);
         ObjectList<Coord> lit = los.lastLine;
 
         dijkstra.initializeByResistance(dungeon);
@@ -217,8 +217,8 @@ public class LineAOE implements AOE {
     public boolean mayContainTarget(Collection<Coord> targets) {
         for (Coord p : targets)
         {
-            if(rt.radius(origin.x(), origin.y(), p.x(), p.y()) + rt.radius(end.x(), end.y(), p.x(), p.y()) -
-                    rt.radius(origin.x(), origin.y(), end.x(), end.y()) <= 3.0 + radius)
+            if(rt.radius(origin.x, origin.y, p.x, p.y) + rt.radius(end.x, end.y, p.x, p.y) -
+                    rt.radius(origin.x, origin.y, end.x, end.y) <= 3.0 + radius)
                 return true;
         }
         return false;
@@ -250,7 +250,7 @@ public class LineAOE implements AOE {
             dt.resetMap();
             dt.clearGoals();
 
-            los.isReachable(origin.x(), origin.y(), t.x(), t.y(), dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
             ObjectList<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -275,7 +275,7 @@ public class LineAOE implements AOE {
             t = ts[i];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x(), origin.y(), t.x(), t.y(), dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
             ObjectList<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -290,7 +290,7 @@ public class LineAOE implements AOE {
             for (int x = 0; x < dungeon.length; x++) {
                 for (int y = 0; y < dungeon[x].length; y++) {
                     if (dt.gradientMap[x][y] < DijkstraMap.FLOOR){
-                        dist = reach.metric.radius(origin.x(), origin.y(), x, y);
+                        dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius)
                             compositeMap[i][x][y] = dm.physicalMap[x][y];
                         else
@@ -299,7 +299,7 @@ public class LineAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][ts[i].x()][ts[i].y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][ts[i].x][ts[i].y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < dungeon.length; x++) {
                     Arrays.fill(compositeMap[i][x], 99999f);
@@ -392,7 +392,7 @@ public class LineAOE implements AOE {
             t = exs[i];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x(), origin.y(), t.x(), t.y(), dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
             ObjectList<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -416,7 +416,7 @@ public class LineAOE implements AOE {
             t = pts[i];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x(), origin.y(), t.x(), t.y(), dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
             ObjectList<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -431,7 +431,7 @@ public class LineAOE implements AOE {
             for (int x = 0; x < dungeon.length; x++) {
                 for (int y = 0; y < dungeon[x].length; y++) {
                     if (dt.gradientMap[x][y] < DijkstraMap.FLOOR){
-                        dist = reach.metric.radius(origin.x(), origin.y(), x, y);
+                        dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius) {
                             compositeMap[i][x][y] = dm.physicalMap[x][y];
                             dungeonPriorities[x][y] = dungeon[x][y];
@@ -442,7 +442,7 @@ public class LineAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][pts[i].x()][pts[i].y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][pts[i].x][pts[i].y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < dungeon.length; x++) {
                     Arrays.fill(compositeMap[i][x], 399999.0f);
@@ -468,7 +468,7 @@ public class LineAOE implements AOE {
             t = lts[i - pts.length];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x(), origin.y(), t.x(), t.y(), dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
             ObjectList<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -482,7 +482,7 @@ public class LineAOE implements AOE {
             for (int x = 0; x < dungeon.length; x++) {
                 for (int y = 0; y < dungeon[x].length; y++) {
                     if (dt.gradientMap[x][y] < DijkstraMap.FLOOR){
-                        dist = reach.metric.radius(origin.x(), origin.y(), x, y);
+                        dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius)
                             compositeMap[i][x][y] = dm.physicalMap[x][y];
                         else
@@ -491,7 +491,7 @@ public class LineAOE implements AOE {
                     else compositeMap[i][x][y] = DijkstraMap.WALL;
                 }
             }
-            if(compositeMap[i][lts[i - pts.length].x()][lts[i - pts.length].y()] > DijkstraMap.FLOOR)
+            if(compositeMap[i][lts[i - pts.length].x][lts[i - pts.length].y] > DijkstraMap.FLOOR)
             {
                 for (int x = 0; x < dungeon.length; x++)
                 {
@@ -650,7 +650,7 @@ public class LineAOE implements AOE {
     @Override
     public CoordFloatOrderedMap findArea() {
         float[][] dmap = initDijkstra();
-        dmap[origin.x()][origin.y()] = DijkstraMap.DARK;
+        dmap[origin.x][origin.y] = DijkstraMap.DARK;
         dijkstra.resetMap();
         dijkstra.clearGoals();
         return AreaUtils.dijkstraToHashMap(dmap);

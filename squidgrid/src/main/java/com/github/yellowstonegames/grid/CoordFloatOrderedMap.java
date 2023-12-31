@@ -43,7 +43,7 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
     }
 
     public CoordFloatOrderedMap(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordFloatOrderedMap(int initialCapacity, float loadFactor) {
@@ -59,20 +59,23 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
     }
 
     public CoordFloatOrderedMap(Coord[] keys, float[] values) {
-        super(keys, values);
+        this(Math.min(keys.length, values.length));
+        this.putAll(keys, values);
     }
 
     public CoordFloatOrderedMap(Collection<? extends Coord> keys, PrimitiveCollection.OfFloat values) {
-        super(keys, values);
+        this(Math.min(keys.size(), values.size()));
+        this.putAll(keys, values);
     }
 
     public CoordFloatOrderedMap(ObjectFloatOrderedMap<? extends Coord> other, int offset, int count) {
-        super(other, offset, count);
+        this(count);
+        this.putAll(0, other, offset, count);
     }
 
     @Override
     protected int place(final Object item) {
-        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Cantor
+        return item.hashCode() & mask; // Uses default Coord hashCode(), precalculated
     }
 
     @Override

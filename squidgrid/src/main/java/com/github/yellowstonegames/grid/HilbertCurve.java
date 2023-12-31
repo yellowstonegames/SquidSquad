@@ -353,7 +353,7 @@ public final class HilbertCurve {
      */
     public static int coordToHilbert(final Coord pt)
     {
-        return posToHilbert(pt.x(), pt.y());
+        return posToHilbert(pt.x, pt.y);
     }
 
     /**
@@ -365,7 +365,7 @@ public final class HilbertCurve {
      */
     public static int coordToMoore(final Coord pt)
     {
-        return posToMoore(pt.x(), pt.y());
+        return posToMoore(pt.x, pt.y);
     }
 
     public static int mortonEncode3D( int index1, int index2, int index3 )

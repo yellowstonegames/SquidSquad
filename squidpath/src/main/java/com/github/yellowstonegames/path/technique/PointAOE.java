@@ -68,7 +68,7 @@ public class PointAOE implements AOE {
     public boolean mayContainTarget(Collection<Coord> targets) {
         for (Coord p : targets)
         {
-            if(center.x() == p.x() && center.y() == p.y())
+            if(center.x == p.x && center.y == p.y)
                 return true;
         }
         return false;
@@ -92,7 +92,7 @@ public class PointAOE implements AOE {
                 continue;
             if (AreaUtils.verifyReach(reach, origin, p)) {
 
-                dist = reach.metric.radius(origin.x(), origin.y(), p.x(), p.y());
+                dist = reach.metric.radius(origin.x, origin.y, p.x, p.y);
                 if (dist <= reach.maxDistance && dist >= reach.minDistance) {
                     ObjectList<Coord> ap = ObjectList.with(p);
                     bestPoints.put(p, ap);
@@ -118,7 +118,7 @@ public class PointAOE implements AOE {
                 continue;
             if (AreaUtils.verifyReach(reach, origin, p)) {
 
-                dist = reach.metric.radius(origin.x(), origin.y(), p.x(), p.y());
+                dist = reach.metric.radius(origin.x, origin.y, p.x, p.y);
                 if (dist <= reach.maxDistance && dist >= reach.minDistance) {
                     ObjectList<Coord> ap = new ObjectList<>(4);
                     ap.add(p);
@@ -135,7 +135,7 @@ public class PointAOE implements AOE {
                     continue;
                 if (AreaUtils.verifyReach(reach, origin, p)) {
 
-                    dist = reach.metric.radius(origin.x(), origin.y(), p.x(), p.y());
+                    dist = reach.metric.radius(origin.x, origin.y, p.x, p.y);
                     if (dist <= reach.maxDistance && dist >= reach.minDistance) {
                         ObjectList<Coord> ap = ObjectList.with(p);
                         bestPoints.put(p, ap);

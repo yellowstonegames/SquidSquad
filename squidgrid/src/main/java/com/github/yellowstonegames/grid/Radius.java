@@ -59,12 +59,12 @@ public enum Radius {
     public static final Radius[] ALL = values();
 
     public float radius(Coord start, Coord end) {
-        float dx = start.x() - end.x();
-        float dy = start.y() - end.y();
+        float dx = start.x - end.x;
+        float dy = start.y - end.y;
         return radius(dx, dy);
     }
     public float radius(Coord end) {
-        return radius(end.x(), end.y());
+        return radius(end.x, end.y);
     }
 
     public float radius(float startx, float starty, float endx, float endy) {
@@ -146,7 +146,7 @@ public enum Radius {
     public CoordOrderedSet perimeter(Coord center, int radiusLength, boolean surpassEdges, int width, int height)
     {
         CoordOrderedSet rim = new CoordOrderedSet(4 * radiusLength);
-        if(!surpassEdges && (center.x() < 0 || center.x() >= width || center.y() < 0 || center.y() > height))
+        if(!surpassEdges && (center.x < 0 || center.x >= width || center.y < 0 || center.y > height))
             return rim;
         if(radiusLength < 1) {
             rim.add(center);
@@ -154,23 +154,23 @@ public enum Radius {
         }
         switch (this) {
             case SQUARE: {
-                for (int i = center.x() - radiusLength; i <= center.x() + radiusLength; i++) {
+                for (int i = center.x - radiusLength; i <= center.x + radiusLength; i++) {
                     int x = i;
                     if(!surpassEdges) x = clamp(i, 0, width);
-                    rim.add(Coord.get(x, clamp(center.y() - radiusLength, 0, height)));
-                    rim.add(Coord.get(x, clamp(center.y() + radiusLength, 0, height)));
+                    rim.add(Coord.get(x, clamp(center.y - radiusLength, 0, height)));
+                    rim.add(Coord.get(x, clamp(center.y + radiusLength, 0, height)));
                 }
-                for (int j = center.y() - radiusLength; j <= center.y() + radiusLength; j++) {
+                for (int j = center.y - radiusLength; j <= center.y + radiusLength; j++) {
                     int y = j;
                     if(!surpassEdges) y = clamp(j, 0, height);
-                    rim.add(Coord.get(clamp(center.x() - radiusLength, 0, height), y));
-                    rim.add(Coord.get(clamp(center.x() + radiusLength, 0, height), y));
+                    rim.add(Coord.get(clamp(center.x - radiusLength, 0, height), y));
+                    rim.add(Coord.get(clamp(center.x + radiusLength, 0, height), y));
                 }
             }
             break;
             case DIAMOND: {
-                int xUp = center.x() + radiusLength, xDown = center.x() - radiusLength,
-                        yUp = center.y() + radiusLength, yDown = center.y() - radiusLength;
+                int xUp = center.x + radiusLength, xDown = center.x - radiusLength,
+                        yUp = center.y + radiusLength, yDown = center.y - radiusLength;
                 if(!surpassEdges) {
                     xDown = clamp(xDown, 0, width);
                     xUp = clamp(xUp, 0, width);
@@ -178,22 +178,22 @@ public enum Radius {
                     yUp = clamp(yUp, 0, height);
                 }
 
-                rim.add(Coord.get(xDown, center.y()));
-                rim.add(Coord.get(xUp, center.y()));
-                rim.add(Coord.get(center.x(), yDown));
-                rim.add(Coord.get(center.x(), yUp));
+                rim.add(Coord.get(xDown, center.y));
+                rim.add(Coord.get(xUp, center.y));
+                rim.add(Coord.get(center.x, yDown));
+                rim.add(Coord.get(center.x, yUp));
 
-                for (int i = xDown + 1, c = 1; i < center.x(); i++, c++) {
+                for (int i = xDown + 1, c = 1; i < center.x; i++, c++) {
                     int x = i;
                     if(!surpassEdges) x = clamp(i, 0, width);
-                    rim.add(Coord.get(x, clamp(center.y() - c, 0, height)));
-                    rim.add(Coord.get(x, clamp(center.y() + c, 0, height)));
+                    rim.add(Coord.get(x, clamp(center.y - c, 0, height)));
+                    rim.add(Coord.get(x, clamp(center.y + c, 0, height)));
                 }
-                for (int i = center.x() + 1, c = 1; i < center.x() + radiusLength; i++, c++) {
+                for (int i = center.x + 1, c = 1; i < center.x + radiusLength; i++, c++) {
                     int x = i;
                     if(!surpassEdges) x = clamp(i, 0, width);
-                    rim.add(Coord.get(x, clamp(center.y() + radiusLength - c, 0, height)));
-                    rim.add(Coord.get(x, clamp(center.y() - radiusLength + c, 0, height)));
+                    rim.add(Coord.get(x, clamp(center.y + radiusLength - c, 0, height)));
+                    rim.add(Coord.get(x, clamp(center.y - radiusLength + c, 0, height)));
                 }
             }
             break;
@@ -206,8 +206,8 @@ public enum Radius {
                     for (int i = 1; i <= denom; i+=2)
                     {
                         theta = i / denom;
-                        x = (int) (TrigTools.cosTurns(theta) * (radiusLength + 0.25)) + center.x();
-                        y = (int) (TrigTools.sinTurns(theta) * (radiusLength + 0.25)) + center.y();
+                        x = (int) (TrigTools.cosTurns(theta) * (radiusLength + 0.25)) + center.x;
+                        y = (int) (TrigTools.sinTurns(theta) * (radiusLength + 0.25)) + center.y;
                         
                         if (!surpassEdges) {
                             x = clamp(x, 0, width);
@@ -230,16 +230,16 @@ public enum Radius {
     }
     public Coord extend(Coord center, Coord middle, int radiusLength, boolean surpassEdges, int width, int height)
     {
-        if(!surpassEdges && (center.x() < 0 || center.x() >= width || center.y() < 0 || center.y() > height ||
-                middle.x() < 0 || middle.x() >= width || middle.y() < 0 || middle.y() > height))
+        if(!surpassEdges && (center.x < 0 || center.x >= width || center.y < 0 || center.y > height ||
+                middle.x < 0 || middle.x >= width || middle.y < 0 || middle.y > height))
             return Coord.get(0, 0);
         if(radiusLength < 1) {
             return center;
         }
-        float theta = TrigTools.atan2Turns(middle.y() - center.y(), middle.x() - center.x()),
+        float theta = TrigTools.atan2Turns(middle.y - center.y, middle.x - center.x),
                 cosTheta = TrigTools.cosTurns(theta), sinTheta = TrigTools.sinTurns(theta);
 
-        Coord end = Coord.get(middle.x(), middle.y());
+        Coord end = Coord.get(middle.x, middle.y);
         switch (this) {
             case SQUARE:
             case DIAMOND:
@@ -247,18 +247,18 @@ public enum Radius {
                 int rad2 = 0;
                 if(surpassEdges)
                 {
-                    while (radius(center.x(), center.y(), end.x(), end.y()) < radiusLength) {
+                    while (radius(center.x, center.y, end.x, end.y) < radiusLength) {
                         rad2++;
-                        end = Coord.get((int) Math.round(cosTheta * rad2) + center.x()
-                                , (int) Math.round(sinTheta * rad2) + center.y());
+                        end = Coord.get((int) Math.round(cosTheta * rad2) + center.x
+                                , (int) Math.round(sinTheta * rad2) + center.y);
                     }
                 }
                 else {
-                    while (radius(center.x(), center.y(), end.x(), end.y()) < radiusLength) {
+                    while (radius(center.x, center.y, end.x, end.y) < radiusLength) {
                         rad2++;
-                        end = Coord.get(clamp((int) Math.round(cosTheta * rad2) + center.x(), 0, width)
-                                      , clamp((int) Math.round(sinTheta * rad2) + center.y(), 0, height));
-                        if (end.x() == 0 || end.x() == width - 1 || end.y() == 0 || end.y() == height - 1)
+                        end = Coord.get(clamp((int) Math.round(cosTheta * rad2) + center.x, 0, width)
+                                      , clamp((int) Math.round(sinTheta * rad2) + center.y, 0, height));
+                        if (end.x == 0 || end.x == width - 1 || end.y == 0 || end.y == height - 1)
                             return end;
                     }
                 }
@@ -267,39 +267,39 @@ public enum Radius {
             }
             default:
             {
-                end = Coord.get(clamp( (int) Math.round(cosTheta * radiusLength) + center.x(), 0, width)
-                        , clamp( (int) Math.round(sinTheta * radiusLength) + center.y(), 0, height));
+                end = Coord.get(clamp( (int) Math.round(cosTheta * radiusLength) + center.x, 0, width)
+                        , clamp( (int) Math.round(sinTheta * radiusLength) + center.y, 0, height));
                 if(!surpassEdges) {
                     long edgeLength;
 //                    if (end.x == 0 || end.x == width - 1 || end.y == 0 || end.y == height - 1)
-                    if (end.x() < 0)
+                    if (end.x < 0)
                     {
                         // wow, we lucked out here. the only situation where cos(angle) is 0 is if the angle aims
                         // straight up or down, and then x cannot be < 0 or >= width.
-                        edgeLength = Math.round((-center.x()) / cosTheta);
-                        end = end.setY(clamp((int) Math.round(sinTheta * edgeLength) + center.y(), 0, height));
+                        edgeLength = Math.round((-center.x) / cosTheta);
+                        end = end.setY(clamp((int) Math.round(sinTheta * edgeLength) + center.y, 0, height));
                     }
-                    else if(end.x() >= width)
+                    else if(end.x >= width)
                     {
                         // wow, we lucked out here. the only situation where cos(angle) is 0 is if the angle aims
                         // straight up or down, and then x cannot be < 0 or >= width.
-                        edgeLength = Math.round((width - 1 - center.x()) / cosTheta);
-                        end = end.setY(clamp((int) Math.round(sinTheta * edgeLength) + center.y(), 0, height));
+                        edgeLength = Math.round((width - 1 - center.x) / cosTheta);
+                        end = end.setY(clamp((int) Math.round(sinTheta * edgeLength) + center.y, 0, height));
                     }
 
-                    if (end.y() < 0)
+                    if (end.y < 0)
                     {
                         // wow, we lucked out here. the only situation where sin(angle) is 0 is if the angle aims
                         // straight left or right, and then y cannot be < 0 or >= height.
-                        edgeLength = Math.round((-center.y()) / sinTheta);
-                        end = end.setX(clamp((int) Math.round(cosTheta * edgeLength) + center.x(), 0, width));
+                        edgeLength = Math.round((-center.y) / sinTheta);
+                        end = end.setX(clamp((int) Math.round(cosTheta * edgeLength) + center.x, 0, width));
                     }
-                    else if(end.y() >= height)
+                    else if(end.y >= height)
                     {
                         // wow, we lucked out here. the only situation where sin(angle) is 0 is if the angle aims
                         // straight left or right, and then y cannot be < 0 or >= height.
-                        edgeLength = Math.round((height - 1 - center.y()) / sinTheta);
-                        end = end.setX(clamp((int) Math.round(cosTheta * edgeLength) + center.x(), 0, width));
+                        edgeLength = Math.round((height - 1 - center.y) / sinTheta);
+                        end = end.setX(clamp((int) Math.round(cosTheta * edgeLength) + center.x, 0, width));
                     }
                 }
                 return end;
@@ -336,7 +336,7 @@ public enum Radius {
     public List<Coord> pointsInside(Coord center, int radiusLength, boolean surpassEdges, int width, int height)
     {
         if(center == null) return null;
-        return pointsInside(center.x(), center.y(), radiusLength, surpassEdges, width, height, null);
+        return pointsInside(center.x, center.y, radiusLength, surpassEdges, width, height, null);
     }
 
     public List<Coord> pointsInside(int centerX, int centerY, int radiusLength, boolean surpassEdges, int width, int height, List<Coord> buf)
@@ -531,8 +531,8 @@ public enum Radius {
         {
             for(Coord ar : around)
             {
-                tx = pt.x() + ar.x() - distance;
-                ty = pt.y() + ar.y() - distance;
+                tx = pt.x + ar.x - distance;
+                ty = pt.y + ar.y - distance;
                 if(tx >= 0 && tx < width && ty >= 0 && ty < height)
                     expanded.add(Coord.get(tx, ty));
             }

@@ -166,7 +166,7 @@ public class VisionFrameworkRgb extends VisionFramework {
      * @return the RGBA8888 int color to tint any foreground creature or object with at {@code pos}
      */
     public int getForegroundColor(Coord pos, float millisSinceLastMove) {
-        return getForegroundColor(pos.x(), pos.y(), millisSinceLastMove);
+        return getForegroundColor(pos.x, pos.y, millisSinceLastMove);
     }
 
     /**

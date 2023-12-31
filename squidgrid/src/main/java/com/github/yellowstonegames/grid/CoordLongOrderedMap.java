@@ -69,7 +69,7 @@ public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
 
     @Override
     protected int place(final Object item) {
-        return item.hashCode() & mask; // Uses default Coord hashCode(), currently Cantor
+        return item.hashCode() & mask; // Uses default Coord hashCode(), precalculated
     }
 
     @Override
