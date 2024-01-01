@@ -18,6 +18,8 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TextTools;
+import com.github.tommyettinger.ds.CharFilter;
+import com.github.tommyettinger.ds.FilteredStringSet;
 import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
 import org.junit.Test;
@@ -82,7 +84,7 @@ public class MarkovTest {
             System.out.print("..."+markovText.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
         
-        FilteredStringSet names = FilteredStringSet.with(Category.L::contains, Character::toUpperCase, ArrayTools.stringSpan(48, 72));
+        FilteredStringSet names = FilteredStringSet.with(CharFilter.getOrCreate("LetterOnlyCaseInsensitive", Category.L::contains, Character::toUpperCase), ArrayTools.stringSpan(48, 72));
 
         MarkovText copy = markovText.copy();
 
