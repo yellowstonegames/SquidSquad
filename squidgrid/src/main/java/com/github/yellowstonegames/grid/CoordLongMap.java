@@ -34,7 +34,7 @@ import java.util.Collection;
  */
 public class CoordLongMap extends ObjectLongMap<Coord> {
     public CoordLongMap() {
-        super();
+        this(51, 0.5f);
     }
 
     public CoordLongMap(int initialCapacity) {

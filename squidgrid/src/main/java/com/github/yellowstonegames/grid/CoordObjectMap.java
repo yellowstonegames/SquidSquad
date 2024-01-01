@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     public CoordObjectMap() {
-        super();
+        this(51, 0.5f);
     }
 
     public CoordObjectMap(int initialCapacity) {

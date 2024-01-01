@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
     public CoordObjectOrderedMap() {
-        super();
+        this(51, 0.5f);
     }
 
     public CoordObjectOrderedMap(int initialCapacity) {

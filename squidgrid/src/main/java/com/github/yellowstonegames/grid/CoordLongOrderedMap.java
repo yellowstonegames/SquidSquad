@@ -34,7 +34,7 @@ import java.util.Collection;
  */
 public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
     public CoordLongOrderedMap() {
-        super();
+        this(51, 0.5f);
     }
 
     public CoordLongOrderedMap(int initialCapacity) {

@@ -34,7 +34,7 @@ import java.util.Collection;
  */
 public class CoordIntMap extends ObjectIntMap<Coord> {
     public CoordIntMap() {
-        super();
+        this(51, 0.5f);
     }
 
     public CoordIntMap(int initialCapacity) {

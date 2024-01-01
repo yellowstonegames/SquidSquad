@@ -39,7 +39,7 @@ import java.util.Collection;
  */
 public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
     public CoordFloatOrderedMap() {
-        super();
+        this(51, 0.5f);
     }
 
     public CoordFloatOrderedMap(int initialCapacity) {
