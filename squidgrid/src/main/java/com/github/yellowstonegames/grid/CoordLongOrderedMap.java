@@ -16,9 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.ObjectLongMap;
-import com.github.tommyettinger.ds.ObjectLongOrderedMap;
-import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -40,7 +38,7 @@ public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
     }
 
     public CoordLongOrderedMap(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordLongOrderedMap(int initialCapacity, float loadFactor) {
@@ -56,15 +54,18 @@ public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
     }
 
     public CoordLongOrderedMap(Coord[] keys, long[] values) {
-        super(keys, values);
+        this(Math.min(keys.length, values.length));
+        this.putAll(keys, values);
     }
 
     public CoordLongOrderedMap(Collection<? extends Coord> keys, PrimitiveCollection.OfLong values) {
-        super(keys, values);
+        this(Math.min(keys.size(), values.size()));
+        this.putAll(keys, values);
     }
 
     public CoordLongOrderedMap(ObjectLongOrderedMap<? extends Coord> other, int offset, int count) {
-        super(other, offset, count);
+        this(count);
+        this.putAll(0, other, offset, count);
     }
 
     @Override

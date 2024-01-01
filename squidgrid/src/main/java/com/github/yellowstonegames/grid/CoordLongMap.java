@@ -38,7 +38,7 @@ public class CoordLongMap extends ObjectLongMap<Coord> {
     }
 
     public CoordLongMap(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordLongMap(int initialCapacity, float loadFactor) {
@@ -50,11 +50,13 @@ public class CoordLongMap extends ObjectLongMap<Coord> {
     }
 
     public CoordLongMap(Coord[] keys, long[] values) {
-        super(keys, values);
+        this(Math.min(keys.length, values.length));
+        this.putAll(keys, values);
     }
 
     public CoordLongMap(Collection<? extends Coord> keys, PrimitiveCollection.OfLong values) {
-        super(keys, values);
+        this(Math.min(keys.size(), values.size()));
+        this.putAll(keys, values);
     }
 
     @Override

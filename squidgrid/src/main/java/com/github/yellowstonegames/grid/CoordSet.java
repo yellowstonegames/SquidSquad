@@ -34,7 +34,7 @@ public class CoordSet extends ObjectSet<Coord> {
     }
 
     public CoordSet(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordSet(int initialCapacity, float loadFactor) {
@@ -46,15 +46,17 @@ public class CoordSet extends ObjectSet<Coord> {
     }
 
     public CoordSet(Collection<? extends Coord> coll) {
-        super(coll);
+        this(coll.size());
+        this.addAll(coll);
     }
 
     public CoordSet(Coord[] array, int offset, int length) {
-        super(array, offset, length);
+        this(length);
+        this.addAll(array, offset, length);
     }
 
     public CoordSet(Coord[] array) {
-        super(array);
+        this(array, 0, array.length);
     }
 
     @Override

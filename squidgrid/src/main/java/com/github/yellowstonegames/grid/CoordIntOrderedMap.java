@@ -16,9 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.ObjectIntMap;
-import com.github.tommyettinger.ds.ObjectIntOrderedMap;
-import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -40,7 +38,7 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
     }
 
     public CoordIntOrderedMap(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordIntOrderedMap(int initialCapacity, float loadFactor) {
@@ -56,15 +54,18 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
     }
 
     public CoordIntOrderedMap(Coord[] keys, int[] values) {
-        super(keys, values);
+        this(Math.min(keys.length, values.length));
+        this.putAll(keys, values);
     }
 
     public CoordIntOrderedMap(Collection<? extends Coord> keys, PrimitiveCollection.OfInt values) {
-        super(keys, values);
+        this(Math.min(keys.size(), values.size()));
+        this.putAll(keys, values);
     }
 
     public CoordIntOrderedMap(ObjectIntOrderedMap<? extends Coord> other, int offset, int count) {
-        super(other, offset, count);
+        this(count);
+        this.putAll(0, other, offset, count);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     }
 
     public CoordOrderedSet(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordOrderedSet(ObjectOrderedSet<? extends Coord> set) {
@@ -46,15 +46,18 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     }
 
     public CoordOrderedSet(Collection<? extends Coord> coll) {
-        super(coll);
+        this(coll.size());
+        this.addAll(coll);
     }
 
     public CoordOrderedSet(Coord[] array, int offset, int length) {
-        super(array, offset, length);
+        this(length);
+        this.addAll(array, offset, length);
     }
 
     public CoordOrderedSet(Coord[] items) {
-        super(items);
+        this(items.length);
+        this.addAll(items);
     }
 
     @Override

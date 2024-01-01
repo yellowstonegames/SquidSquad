@@ -35,7 +35,7 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     }
 
     public CoordObjectMap(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordObjectMap(int initialCapacity, float loadFactor) {
@@ -47,15 +47,18 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     }
 
     public CoordObjectMap(Map<? extends Coord, ? extends V> map) {
-        super(map);
+        this(map.size());
+        this.putAll(map);
     }
 
     public CoordObjectMap(Coord[] keys, V[] values) {
-        super(keys, values);
+        this(Math.min(keys.length, values.length));
+        this.putAll(keys, values);
     }
 
     public CoordObjectMap(Collection<? extends Coord> keys, Collection<? extends V> values) {
-        super(keys, values);
+        this(Math.min(keys.size(), values.size()));
+        this.putAll(keys, values);
     }
 
     @Override

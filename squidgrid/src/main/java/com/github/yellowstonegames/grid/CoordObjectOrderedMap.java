@@ -36,7 +36,7 @@ public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
     }
 
     public CoordObjectOrderedMap(int initialCapacity) {
-        super(initialCapacity);
+        super(initialCapacity, 0.5f);
     }
 
     public CoordObjectOrderedMap(int initialCapacity, float loadFactor) {
@@ -48,15 +48,18 @@ public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
     }
 
     public CoordObjectOrderedMap(Map<? extends Coord, ? extends V> map) {
-        super(map);
+        this(map.size());
+        putAll(map);
     }
 
     public CoordObjectOrderedMap(Coord[] keys, V[] values) {
-        super(keys, values);
+        this(Math.min(keys.length, values.length));
+        this.putAll(keys, values);
     }
 
     public CoordObjectOrderedMap(Collection<? extends Coord> keys, Collection<? extends V> values) {
-        super(keys, values);
+        this(Math.min(keys.size(), values.size()));
+        this.putAll(keys, values);
     }
 
     @Override
