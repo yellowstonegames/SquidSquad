@@ -237,11 +237,11 @@ float cyclicNoise(vec3 p){
             xx = outputs[0][0];
             yy = outputs[0][1];
 
-            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
 
             noise += TrigTools.sinTurns((
-                            SIN_TABLE[xc] * SIN_TABLE[ys] + SIN_TABLE[yc] * SIN_TABLE[xs]
+                            COS_TABLE[xs] * SIN_TABLE[ys] + COS_TABLE[ys] * SIN_TABLE[xs]
 //                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
                     ) * (0.5f/2f)
             ) * amp;
@@ -284,14 +284,14 @@ float cyclicNoise(vec3 p){
             yy = outputs[1][1];
             zz = outputs[1][2];
 
-            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
 
             noise += TrigTools.sinTurns((
-                    SIN_TABLE[xc] * SIN_TABLE[zs] +
-                    SIN_TABLE[yc] * SIN_TABLE[xs] +
-                    SIN_TABLE[zc] * SIN_TABLE[ys]
+                    COS_TABLE[xs] * SIN_TABLE[zs] +
+                    COS_TABLE[ys] * SIN_TABLE[xs] +
+                    COS_TABLE[zs] * SIN_TABLE[ys]
                     ) * (0.5f/3f)
             ) * amp;
 
@@ -338,16 +338,16 @@ float cyclicNoise(vec3 p){
             zz = outputs[2][2];
             ww = outputs[2][3];
 
-            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
-            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
+            int ws = radiansToTableIndex(ww);
 
             noise += TrigTools.sinTurns((
-                    + SIN_TABLE[xc] * SIN_TABLE[ws]
-                    + SIN_TABLE[yc] * SIN_TABLE[xs]
-                    + SIN_TABLE[zc] * SIN_TABLE[ys]
-                    + SIN_TABLE[wc] * SIN_TABLE[zs]
+                    + COS_TABLE[xs] * SIN_TABLE[ws]
+                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                    + COS_TABLE[ws] * SIN_TABLE[zs]
                     ) * (0.5f/4f)
             ) * amp;
 
@@ -399,18 +399,18 @@ float cyclicNoise(vec3 p){
             ww = outputs[3][3];
             uu = outputs[3][4];
 
-            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
-            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
-            int us = (int) (uu * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
+            int ws = radiansToTableIndex(ww);
+            int us = radiansToTableIndex(uu);
 
             noise += TrigTools.sinTurns((
-                    + SIN_TABLE[xc] * SIN_TABLE[us]
-                    + SIN_TABLE[yc] * SIN_TABLE[xs]
-                    + SIN_TABLE[zc] * SIN_TABLE[ys]
-                    + SIN_TABLE[wc] * SIN_TABLE[zs]
-                    + SIN_TABLE[uc] * SIN_TABLE[ws]
+                    + COS_TABLE[xs] * SIN_TABLE[us]
+                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                    + COS_TABLE[ws] * SIN_TABLE[zs]
+                    + COS_TABLE[us] * SIN_TABLE[ws]
                     ) * (0.5f/5f)
             ) * amp;
 
@@ -467,20 +467,20 @@ float cyclicNoise(vec3 p){
             uu = outputs[4][4];
             vv = outputs[4][5];
 
-            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
-            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
-            int us = (int) (uu * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
-            int vs = (int) (vv * radToIndex) & TABLE_MASK, vc = vs + SIN_TO_COS & TABLE_MASK;
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
+            int ws = radiansToTableIndex(ww);
+            int us = radiansToTableIndex(uu);
+            int vs = radiansToTableIndex(vv);
 
             noise += TrigTools.sinTurns((
-                    + SIN_TABLE[xc] * SIN_TABLE[vs]
-                    + SIN_TABLE[yc] * SIN_TABLE[xs]
-                    + SIN_TABLE[zc] * SIN_TABLE[ys]
-                    + SIN_TABLE[wc] * SIN_TABLE[zs]
-                    + SIN_TABLE[uc] * SIN_TABLE[ws]
-                    + SIN_TABLE[vc] * SIN_TABLE[us]
+                    + COS_TABLE[xs] * SIN_TABLE[vs]
+                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                    + COS_TABLE[ws] * SIN_TABLE[zs]
+                    + COS_TABLE[us] * SIN_TABLE[ws]
+                    + COS_TABLE[vs] * SIN_TABLE[us]
                     ) * (0.5f/6f)
             ) * amp;
 
@@ -541,22 +541,22 @@ float cyclicNoise(vec3 p){
             vv = outputs[5][5];
             mm = outputs[5][6];
 
-            int xs = (int) (xx * radToIndex) & TABLE_MASK, xc = xs + SIN_TO_COS & TABLE_MASK;
-            int ys = (int) (yy * radToIndex) & TABLE_MASK, yc = ys + SIN_TO_COS & TABLE_MASK;
-            int zs = (int) (zz * radToIndex) & TABLE_MASK, zc = zs + SIN_TO_COS & TABLE_MASK;
-            int ws = (int) (ww * radToIndex) & TABLE_MASK, wc = ws + SIN_TO_COS & TABLE_MASK;
-            int us = (int) (uu * radToIndex) & TABLE_MASK, uc = us + SIN_TO_COS & TABLE_MASK;
-            int vs = (int) (vv * radToIndex) & TABLE_MASK, vc = vs + SIN_TO_COS & TABLE_MASK;
-            int ms = (int) (mm * radToIndex) & TABLE_MASK, mc = ms + SIN_TO_COS & TABLE_MASK;
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
+            int ws = radiansToTableIndex(ww);
+            int us = radiansToTableIndex(uu);
+            int vs = radiansToTableIndex(vv);
+            int ms = radiansToTableIndex(mm);
 
             noise += TrigTools.sinTurns((
-                                    + SIN_TABLE[xc] * SIN_TABLE[ms]
-                                    + SIN_TABLE[yc] * SIN_TABLE[xs]
-                                    + SIN_TABLE[zc] * SIN_TABLE[ys]
-                                    + SIN_TABLE[wc] * SIN_TABLE[zs]
-                                    + SIN_TABLE[uc] * SIN_TABLE[ws]
-                                    + SIN_TABLE[vc] * SIN_TABLE[us]
-                                    + SIN_TABLE[mc] * SIN_TABLE[vs]
+                                    + COS_TABLE[xs] * SIN_TABLE[ms]
+                                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                                    + COS_TABLE[ws] * SIN_TABLE[zs]
+                                    + COS_TABLE[us] * SIN_TABLE[ws]
+                                    + COS_TABLE[vs] * SIN_TABLE[us]
+                                    + COS_TABLE[ms] * SIN_TABLE[vs]
                     ) * (0.5f/7f)
             ) * amp;
 
