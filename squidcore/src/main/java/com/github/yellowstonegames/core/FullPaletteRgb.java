@@ -21,8 +21,8 @@ import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 
-import static com.github.yellowstonegames.core.DescriptiveColor.chroma;
-import static com.github.yellowstonegames.core.DescriptiveColor.hue;
+import static com.github.yellowstonegames.core.DescriptiveColorRgb.chroma;
+import static com.github.yellowstonegames.core.DescriptiveColorRgb.hue;
 
 /**
  * A palette of many predefined colors as RGBA ints; this contains the full palette that is present in SquidLib
@@ -31,7 +31,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.hue;
  * You can access colors by their constant name, such as {@code cactus}, by the {@link #NAMED} map using
  * {@code NAMED.get("Baby Blue")}, by getting a color by its name's position in alphabetical order with
  * {@code NAMED.getAt(12)}, or by index in the IntList called {@link #LIST}. When accessing a color with
- * {@link ObjectIntOrderedMap#get(Object)}, if the name is not found, get() will return {@link #AURORA_TRANSPARENT}. If
+ * {@link ObjectIntOrderedMap#get(Object)}, if the name is not found, get() will return {@link #PLACEHOLDER}. If
  * you want to control the not-found value, you can use {@link ObjectIntOrderedMap#getOrDefault(Object, int)}. You can
  * access the names in a specific order with {@link #NAMES} (which is alphabetical), {@link #NAMES_BY_HUE} (which is
  * sorted by the hue of the matching color, with all grayscale colors at the start, then from red to yellow to blue to
@@ -58,7 +58,8 @@ public final class FullPaletteRgb {
 
         /**
          * A fully-transparent color that is not exactly transparent black (rather, transparent very dark blue), to be
-         * used as a placeholder for colors that aren't valid in some way.
+         * used as a placeholder for colors that aren't valid in some way. This is not included in {@link #NAMED} or
+         * {@link #LIST}.
          */
         public static final int PLACEHOLDER = 0x00000100;
 
@@ -12321,8 +12322,8 @@ public final class FullPaletteRgb {
         static {
             NAMES_BY_HUE.sort((o1, o2) -> {
                 final int c1 = NAMED.get(o1), c2 = NAMED.get(o2);
-                if(c1 >= 0) return -10000;
-                else if(c2 >= 0) return 10000;
+                if((c1 & 0x80) == 0) return -10000;
+                else if((c2 & 0x80) == 0) return 10000;
 
                 final float s1 = chroma(c1), s2 = chroma(c2);
                 if (s1 <= 0x1p-6f && s2 > 0x1p-6f)
@@ -12910,12 +12911,4 @@ public final class FullPaletteRgb {
         idx *= 89;
         return COLOR_WHEEL_PALETTE_REDUCED[idx % 144 ^ (idx >> 2 & 3)];
     }
-
-
-    /*
-     * A palette, the same as the one in {@link FullPalette}, just using RGBA8888 ints instead of Oklab ints for
-     * each color entry. This provides the same ways of looking up colors, but nothing currently to modify int colors.
-     * There is considerably more existing code available elsewhere to modify RGBA colors, though.
-     */
-
 }

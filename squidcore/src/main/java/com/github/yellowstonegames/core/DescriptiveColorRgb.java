@@ -1362,6 +1362,8 @@ public final class DescriptiveColorRgb {
 
     /**
      * Gets the saturation of the given RGBA8888 color, as a float ranging from 0.0f to 1.0f, inclusive.
+     * Saturation is a related concept to {@link #chroma(int)}; saturation is simply chroma mapped to a range where 0.0
+     * chroma is 0.0 saturation, and the highest possible chroma (which is almost always less than 1) is 1.0 saturation.
      * @param rgba a color as an RGBA8888 int
      * @return the saturation of the color from 0.0 (a grayscale color; inclusive) to 1.0 (a bright color, inclusive)
      */
@@ -1382,6 +1384,31 @@ public final class DescriptiveColorRgb {
             w = r;
         }
         else {
+            w = x;
+            x = r;
+        }
+        return x - Math.min(w, y);
+    }
+    /**
+     * Gets the chroma of the given RGBA8888 color, as a float ranging from 0.0f to 1.0f, inclusive.
+     * Chroma is a related concept to {@link #saturation(int)}; saturation is simply chroma mapped to a range where 0.0
+     * chroma is 0.0 saturation, and the highest possible chroma (which is almost always less than 1) is 1.0 saturation.
+     * @param rgba a color as an RGBA8888 int
+     * @return the chroma of the color from 0.0 (a grayscale color; inclusive) to 1.0 (the most colorful a color can be, inclusive)
+     */
+    public static float chroma(final int rgba) {
+        final float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
+        float x, y, w;
+        if (g < b) {
+            x = b;
+            y = g;
+        } else {
+            x = g;
+            y = b;
+        }
+        if (r < x) {
+            w = r;
+        } else {
             w = x;
             x = r;
         }
