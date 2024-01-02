@@ -31,7 +31,7 @@ import static com.github.yellowstonegames.core.DescriptiveColor.hue;
  * You can access colors by their constant name, such as {@code cactus}, by the {@link #NAMED} map using
  * {@code NAMED.get("Baby Blue")}, by getting a color by its name's position in alphabetical order with
  * {@code NAMED.getAt(12)}, or by index in the IntList called {@link #LIST}. When accessing a color with
- * {@link ObjectIntOrderedMap#get(Object)}, if the name is not found, get() will return {@link #AURORA_TRANSPARENT}. If
+ * {@link ObjectIntOrderedMap#get(Object)}, if the name is not found, get() will return {@link #PLACEHOLDER}. If
  * you want to control the not-found value, you can use {@link ObjectIntOrderedMap#getOrDefault(Object, int)}. You can
  * access the names in a specific order with {@link #NAMES} (which is alphabetical), {@link #NAMES_BY_HUE} (which is
  * sorted by the hue of the matching color, with all grayscale colors at the start, then from red to yellow to blue to
@@ -53,6 +53,15 @@ public final class FullPalette {
     public static final ObjectIntOrderedMap<String> NAMED = new ObjectIntOrderedMap<>(1020);
     public static final IntList LIST = new IntList(1020);
 
+    /**
+     * A fully-transparent color that is out-of-range for valid colors in Oklab, to be used as a placeholder for colors
+     * that aren't valid in some way. This is not included in {@link #NAMED} or {@link #LIST}.
+     * <br>
+     * If this is shown for some reason, it should look black, nearly-black, or deep blue-green, depending on how
+     * out-of-range colors are handled. That shouldn't happen very often, because this color has 0.0 alpha (making it
+     * fully transparent).
+     */
+    public static final int PLACEHOLDER = 0x00000100;
 
     /**
      * This color constant "Alice Blue" has RGBA8888 code {@code F0F8FFFF}, L 0.96862745, A 0.49411765, B 0.49411765, alpha 1.0, hue 0.625, saturation 0.05656854, and chroma 0.016572814.
@@ -12289,7 +12298,7 @@ public final class FullPalette {
     public static final ObjectList<String> NAMES = NAMED.order();
 
     static {
-        NAMED.setDefaultValue(AURORA_TRANSPARENT);
+        NAMED.setDefaultValue(PLACEHOLDER);
         NAMES.sort(null);
     }
 

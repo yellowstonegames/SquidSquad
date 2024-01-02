@@ -27,8 +27,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A palette, the same as the one in {@link DescriptiveColor}, just using RGBA8888 ints instead of Oklab ints for
- * each color entry. This provides the same ways of looking up colors, but nothing currently to modify int colors.
- * There is considerably more existing code available elsewhere to modify RGBA colors, though.
+ * each color entry. This provides the same ways of looking up colors, as well as most of the same ways to modify
+ * RGBA8888 int colors (or similar ways, at least).
  */
 public final class DescriptiveColorRgb {
     /**
@@ -64,10 +64,10 @@ public final class DescriptiveColorRgb {
 
     /**
      * A fully-transparent color that is not exactly transparent black (rather, transparent very dark blue), to be
-     * used as a placeholder for colors that aren't valid in some way.
+     * used as a placeholder for colors that aren't valid in some way. This is not included in {@link #NAMED} or
+     * {@link #LIST}.
      */
     public static final int PLACEHOLDER = 0x00000100;
-
 
     /**
      * This color constant "black" has RGBA8888 code {@code 0x000000FF}, red 0.0, green 0.0, blue 0.0, alpha 1.0, hue 0.0, saturation 0.0, and lightness 0.0.
@@ -2687,10 +2687,10 @@ public final class DescriptiveColorRgb {
     static {
         NAMES_BY_HUE.sort((o1, o2) -> {
             final int c1 = NAMED.get(o1), c2 = NAMED.get(o2);
-            if (c1 >= 0) return -10000;
-            else if (c2 >= 0) return 10000;
+            if ((c1 & 0x80) == 0) return -10000;
+            else if ((c2 & 0x80) == 0) return 10000;
 
-            final float s1 = DescriptiveColor.chroma(c1), s2 = DescriptiveColor.chroma(c2);
+            final float s1 = chroma(c1), s2 = chroma(c2);
             if (s1 <= 0x1p-6f && s2 > 0x1p-6f)
                 return -1000;
             else if (s1 > 0x1p-6f && s2 <= 0x1p-6f)
@@ -2698,7 +2698,7 @@ public final class DescriptiveColorRgb {
             else if (s1 <= 0x1p-6f && s2 <= 0x1p-6f)
                 return (c1 & 255) - (c2 & 255);
             else
-                return ((int) Math.signum(DescriptiveColor.hue(c1) - DescriptiveColor.hue(c2)) << 8)
+                return ((int) Math.signum(hue(c1) - hue(c2)) << 8)
                         + (c1 & 255) - (c2 & 255);
         });
         for (String name : NAMES_BY_HUE) {

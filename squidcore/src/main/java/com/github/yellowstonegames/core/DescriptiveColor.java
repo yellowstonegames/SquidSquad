@@ -90,7 +90,11 @@ public final class DescriptiveColor {
 
     /**
      * A fully-transparent color that is out-of-range for valid colors in Oklab, to be used as a placeholder for colors
-     * that aren't valid in some way.
+     * that aren't valid in some way. This is not included in {@link #NAMED} or {@link #LIST}.
+     * <br>
+     * If this is shown for some reason, it should look black, nearly-black, or deep blue-green, depending on how
+     * out-of-range colors are handled. That shouldn't happen very often, because this color has 0.0 alpha (making it
+     * fully transparent).
      */
     public static final int PLACEHOLDER = 0x00000100;
 
