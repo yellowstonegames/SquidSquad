@@ -2538,7 +2538,7 @@ public final class DescriptiveColor {
      * some usage, like summing up distances.
      * @param oklab0 a packed Oklab int color
      * @param oklab1 a packed Oklab int color
-     * @return the squared Euclidean distance between encodedA and encodedB in Oklab space; usually less than 1.0f
+     * @return the squared Euclidean distance between oklab0 and oklab1 in Oklab space; usually less than 1.0f
      */
     public static float distanceSquared(final int oklab0, final int oklab1) {
         final float L0 = reverseLight((oklab0 & 0xff) / 255f);

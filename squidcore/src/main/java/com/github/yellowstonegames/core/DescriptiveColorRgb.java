@@ -2651,6 +2651,41 @@ public final class DescriptiveColorRgb {
     }
 
     /**
+     * Gets the squared Euclidean distance between two colors as RGBA8888 ints. This is a very approximate measure
+     * of how different two colors are from each other, and is typically less correlated to perceptual difference than
+     * {@link #distanceSquaredOklab(int, int)} the distance in Oklab color space}. The result should typically be rather
+     * small; each RGB channel can only be 1 unit of distance apart at most, so the maximum squared distance is 3. Note
+     * that this is squared, so it isn't an admissible metric for some usage, like summing up distances.
+     * @param rgba0 an RGBA8888 int color
+     * @param rgba1 an RGBA8888 int color
+     * @return the squared Euclidean distance between rgba0 and rgba1 in RGB space; never greater than 3.0f
+     */
+    public static float distanceSquared(final int rgba0, final int rgba1) {
+        final float R0 = ((rgba0 >>> 24 & 255) / 255f);
+        final float G0 = ((rgba0 >>> 16 & 255) / 255f);
+        final float B0 = ((rgba0 >>>  8 & 255) / 255f);
+        final float RDiff = ((rgba1 >>> 24 & 255) / 255f) - R0;
+        final float GDiff = ((rgba1 >>> 16 & 255) / 255f) - G0;
+        final float BDiff = ((rgba1 >>>  8 & 255) / 255f) - B0;
+        return RDiff * RDiff + GDiff * GDiff + BDiff * BDiff;
+    }
+
+    /**
+     * Gets the actual Euclidean distance between two colors as RGBA8888 ints. This is an approximate measure
+     * of how different two colors are from each other, and is typically less correlated to perceptual difference than
+     * {@link #distanceOklab(int, int)} the distance in Oklab color space}. The result should typically be rather small;
+     * each RGB channel can only be 1 unit of distance apart at most, so the maximum distance is {@code Math.sqrt(3)},
+     * or {@code 1.7320508f}. Note that this is not squared, so unlike {@link #distanceSquared(int, int)}, it is an
+     * admissible metric for things like summing up distances.
+     * @param rgba0 an RGBA8888 int color
+     * @param rgba1 an RGBA8888 int color
+     * @return the Euclidean distance between rgba0 and rgba1 in RGB space; never greater than 1.7320508f
+     */
+    public static float distance(final int rgba0, final int rgba1) {
+        return (float) Math.sqrt(distanceSquared(rgba0, rgba1));
+    }
+
+    /**
      * Gets the squared difference between two colors, each RGBA8888 ints, calculating the difference by the squared
      * Euclidean distance in the Oklab color space. This is a very approximate measure of how different two colors are
      * from each other, but in Oklab this measurement is relatively more accurate than if you used plain RGB as the
@@ -2658,29 +2693,29 @@ public final class DescriptiveColorRgb {
      * (from black to white), and the A and B channels are usually just a tiny bit away from the vertical lightness
      * axis. A result of 1 may be the largest this can produce, but it is very possible that somewhat larger results can
      * happen. Note that this is squared, so it isn't an admissible metric for some usage, like summing up distances.
-     * You can use {@link #distance(int, int)} as a metric, though.
-     * @param rgba0 a packed RGBA int color
-     * @param rgba1 a packed RGBA int color
-     * @return the squared Euclidean distance between encodedA and encodedB in Oklab space; usually less than 1.0f
+     * You can use {@link #distanceOklab(int, int)} as a metric, though.
+     * @param rgba0 an RGBA8888 int color
+     * @param rgba1 an RGBA8888 int color
+     * @return the squared Euclidean distance between rgba0 and rgba1 in Oklab space; usually less than 1.0f
      */
-    public static float distanceSquared(final int rgba0, final int rgba1) {
+    public static float distanceSquaredOklab(final int rgba0, final int rgba1) {
         return DescriptiveColor.distanceSquared(DescriptiveColor.fromRGBA8888(rgba0), DescriptiveColor.fromRGBA8888(rgba1));
     }
 
     /**
      * Gets the difference between two colors, each RGBA8888 ints, calculating the difference by the Euclidean distance
-     * in the Oklab color space. This is a very approximate measure of how different two colors are from each other, but
+     * in the Oklab color space. This is an approximate measure of how different two colors are from each other, but
      * in Oklab this measurement is relatively more accurate than if you used plain RGB as the color space. The result
      * should typically be rather small; lightness can only be 1 unit of distance apart at most (from black to white),
      * and the A and B channels are usually just a tiny bit away from the vertical lightness axis. A result of 1 may be
      * the largest this can produce, but it is very possible that somewhat larger results can happen. Note that this is
-     * not squared, so unlike {@link #distanceSquared(int, int)}, it is an admissible metric for things like summing up
-     * distances.
-     * @param rgba0 a packed RGBA int color
-     * @param rgba1 a packed RGBA int color
-     * @return the Euclidean distance between encodedA and encodedB in Oklab space; usually less than 1.0f
+     * not squared, so unlike {@link #distanceSquaredOklab(int, int)}, it is an admissible metric for things like
+     * summing up distances.
+     * @param rgba0 an RGBA8888 int color
+     * @param rgba1 an RGBA8888 int color
+     * @return the Euclidean distance between rgba0 and rgba1 in Oklab space; usually less than 1.0f
      */
-    public static float distance(final int rgba0, final int rgba1) {
+    public static float distanceOklab(final int rgba0, final int rgba1) {
         return DescriptiveColor.distance(DescriptiveColor.fromRGBA8888(rgba0), DescriptiveColor.fromRGBA8888(rgba1));
     }
 
