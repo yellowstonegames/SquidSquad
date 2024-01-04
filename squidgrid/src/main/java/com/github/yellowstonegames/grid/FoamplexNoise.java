@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 See AUTHORS file.
+ * Copyright (c) 2023-2022-2024 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.yellowstonegames.world;
+package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.SimplexNoise;
+import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * Foam noise but using Simplex noise instead of Value noise. An {@link INoise} implementation.
+ * This has a somewhat-similar appearance to higher-frequency Foam noise. It can be a little faster in dimensions 4
+ * and up, though it can be hard to notice.
  */
+@Beta
 public class FoamplexNoise implements INoise {
 
     /**

@@ -115,6 +115,11 @@ public class SorbetNoise extends CyclicNoise {
     }
 
     @Override
+    public SorbetNoise copy() {
+        return new SorbetNoise(seed, octaves, frequency);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

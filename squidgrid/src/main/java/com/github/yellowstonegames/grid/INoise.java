@@ -317,6 +317,7 @@ public interface INoise {
             register(new CyclicNoise());
             register(new FlanNoise());
             register(new FoamNoise());
+            register(new FoamplexNoise());
             register(new HighDimensionalValueNoise());
             register(new HoneyNoise());
             register(new Noise());
