@@ -16,11 +16,21 @@
 
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.MizuchiRandom;
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.yellowstonegames.grid.*;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.ObjectDeque;
+import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.FlowRandom;
+import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
+import com.github.yellowstonegames.grid.CoordOrderedSet;
+import com.github.yellowstonegames.grid.CoordSet;
+import com.github.yellowstonegames.grid.Direction;
+import com.github.yellowstonegames.grid.LineDrawer;
+import com.github.yellowstonegames.grid.Measurement;
+import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.path.technique.Technique;
 
 import java.util.Arrays;
@@ -156,7 +166,7 @@ public class DijkstraMap {
      * deterministically before any usage. There will only be one path produced for a given set of parameters, and it
      * will be returned again and again if the same parameters are requested.
      */
-    protected MizuchiRandom rng = new MizuchiRandom(0L, 0x9E3779B97F4A7C15L);
+    protected FlowRandom rng = new FlowRandom(0L, 0x9E3779B97F4A7C15L);
     private int frustration;
     public Coord[][] targetMap;
 
@@ -1183,7 +1193,7 @@ public class DijkstraMap {
         resetMap();
         Coord start2 = start;
         int xShift = width / 6, yShift = height / 6;
-        rng.setState(start.hashCode(), (long) targets.size() << 1);
+        rng.setState(start.hashCode(), targets.size());
         int frustration = 0;
         while (physicalMap[start2.x][start2.y] >= WALL && frustration++ < 50) {
             start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
@@ -1269,7 +1279,7 @@ public class DijkstraMap {
             return new ObjectDeque<>(path);
         }
         Coord currentPos = findNearest(start, targets);
-        rng.setState(start.hashCode(), (long) targets.length << 1);
+        rng.setState(start.hashCode(), targets.length);
         while (true) {
             float best = gradientMap[currentPos.x][currentPos.y];
             appendDirToShuffle(rng);
@@ -1331,7 +1341,7 @@ public class DijkstraMap {
         resetMap();
         Coord start2 = start;
         int xShift = width / 6, yShift = height / 6;
-        rng.setState(start.hashCode(), (long) targets.size() << 1);
+        rng.setState(start.hashCode(), targets.size());
         while (physicalMap[start2.x][start2.y] >= WALL && frustration < 50) {
             start2 = Coord.get(Math.min(Math.max(1, start.x + rng.nextInt(1 + xShift * 2) - xShift), width - 2),
                     Math.min(Math.max(1, start.y + rng.nextInt(1 + yShift * 2) - yShift), height - 2));
@@ -1876,7 +1886,7 @@ public class DijkstraMap {
             partialScan(start, scanLimit, impassable2);
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), (long) targets.length << 1);
+        rng.setState(start.hashCode(), targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2145,7 +2155,7 @@ public class DijkstraMap {
         }
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), (long) targets.length << 1);
+        rng.setState(start.hashCode(), targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2707,7 +2717,7 @@ public class DijkstraMap {
         }
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), (long) fearSources.length << 1);
+        rng.setState(start.hashCode(), fearSources.length);
 
         while (true) {
             if (frustration > 500) {
@@ -2845,7 +2855,7 @@ public class DijkstraMap {
 
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), (long) targets.length << 1);
+        rng.setState(start.hashCode(), targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -2991,7 +3001,7 @@ public class DijkstraMap {
 
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), (long) targets.length << 1);
+        rng.setState(start.hashCode(), targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3138,7 +3148,7 @@ public class DijkstraMap {
 
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), (long) targets.length << 1);
+        rng.setState(start.hashCode(), targets.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3264,7 +3274,7 @@ public class DijkstraMap {
         }
         Coord currentPos = start;
         float paidLength = 0f;
-        rng.setState(start.hashCode(), (long) fearSources.length << 1);
+        rng.setState(start.hashCode(), fearSources.length);
         while (true) {
             if (frustration > 500) {
                 path.clear();
@@ -3500,7 +3510,7 @@ public class DijkstraMap {
      * @param blockingRequirement the desired level of blocking required to stop a diagonal move
      */
     public void setBlockingRequirement(int blockingRequirement) {
-        this.blockingRequirement = blockingRequirement > 2 ? 2 : Math.max(blockingRequirement, 0);
+        this.blockingRequirement = Math.min(Math.max(blockingRequirement, 0), 2);
     }
 
     private void appendDirToShuffle(EnhancedRandom rng) {
@@ -3509,7 +3519,8 @@ public class DijkstraMap {
         final int n = measurement.directionCount();
         System.arraycopy(src, 0, dirs, 0, n);
         for (int i = n - 1; i > 0; i--) {
-            final int r = rng.nextInt(i+1);
+            // equivalent to rng.nextInt(i+1), but here it can omit an unnecessary check and be inlined.
+            final int r = (int)((i + 1) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
             Direction t = dirs[r];
             dirs[r] = dirs[i];
             dirs[i] = t;
