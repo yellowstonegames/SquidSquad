@@ -50,7 +50,7 @@ public class GlyphGridTest extends ApplicationAdapter {
     public void create() {
         random = new WhiskerRandom();
         stage = new Stage();
-        font = KnownFonts.getIosevkaSlab().scaleTo(12f, 20f);
+        font = KnownFonts.getIosevkaSlab().setDescent(0f).scaleTo(12f, 20f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);

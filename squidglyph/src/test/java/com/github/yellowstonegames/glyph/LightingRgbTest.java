@@ -64,10 +64,10 @@ public class LightingRgbTest extends ApplicationAdapter {
     private Runnable post;
     private LightingManagerRgb lighting;
 
-    private static final int GRID_WIDTH = 90;
-    private static final int GRID_HEIGHT = 25;
-    private static final int CELL_WIDTH = 32;
-    private static final int CELL_HEIGHT = 32;
+    private static final int GRID_WIDTH = 75;
+    private static final int GRID_HEIGHT = 40;
+    private static final int CELL_WIDTH = 24;
+    private static final int CELL_HEIGHT = 24;
 
     private static final int DEEP_RGBA = describe("dark dull cobalt");
     private static final int SHALLOW_RGBA = describe("dull denim");
@@ -100,7 +100,7 @@ public class LightingRgbTest extends ApplicationAdapter {
         Gdx.app.log("SEED", "Initial seed is " + seed);
         EnhancedRandom random = new WhiskerRandom(seed);
         stage = new Stage();
-        Font font = KnownFonts.getIosevkaSlab().scaleTo(16f, 28f).adjustLineHeight(1.25f);
+        Font font = KnownFonts.getIosevkaSlab().scaleTo(16f, 28f).setDescent(0f).adjustLineHeight(1.25f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         playerGlyph = new GlyphActor('@', "[red orange]", gg.font);
