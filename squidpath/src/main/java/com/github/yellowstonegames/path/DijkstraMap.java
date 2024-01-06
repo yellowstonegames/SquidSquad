@@ -17,20 +17,10 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.ObjectDeque;
-import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.FlowRandom;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
-import com.github.yellowstonegames.grid.CoordOrderedSet;
-import com.github.yellowstonegames.grid.CoordSet;
-import com.github.yellowstonegames.grid.Direction;
-import com.github.yellowstonegames.grid.LineDrawer;
-import com.github.yellowstonegames.grid.Measurement;
-import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.technique.Technique;
 
 import java.util.Arrays;
@@ -73,13 +63,33 @@ import java.util.Collection;
  * If you can't remember how to spell this, just remember: Does It Just Know Stuff? That's Really Awesome!
  * <br>
  * You shouldn't use DijkstraMap for all purposes; it isn't very good at handling terrains with a cost to enter, and
- * can't handle directional costs like a one-way ledge. For those tasks, {@link DefaultGraph} or {@link CostlyGraph}
- * will be better fits. CostlyGraph and similar versions of {@link DirectedGraph} can handle even very complicated kinds
+ * can't handle directional costs like a one-way ledge. For those tasks, {@link com.github.yellowstonegames.path.DefaultGraph}
+ * or {@link com.github.yellowstonegames.path.CostlyGraph} will be better fits. CostlyGraph and similar versions of
+ * {@link com.github.yellowstonegames.path.DirectedGraph} can handle even very complicated kinds
  * of map, including the types of pathfinding that were handled by CustomDijkstraMap in earlier versions of SquidLib.
  * <br>
  * Created by Tommy Ettinger on 4/4/2015. Optimized ruthlessly by Tommy Ettinger over the next few years.
  */
 public class DijkstraMap {
+    /**
+     * Goals are by default marked with 0f. Some situations may have positions with lower values that are especially
+     * urgent to move towards.
+     */
+    public static final float GOAL = 0f;
+    /**
+     * Floor cells, which include any walkable cell, are marked with a high number equal to 999200f .
+     */
+    public static final float FLOOR = 999200f;
+    /**
+     * Walls, which are solid no-entry cells, are marked with a high number equal to 999500f .
+     */
+    public static final float WALL = 999500f;
+    /**
+     * This is used to mark cells that the scan couldn't reach, and these dark cells are marked with a high number
+     * equal to 999800f .
+     */
+    public static final float DARK = 999800f;
+
 
     /**
      * This affects how distance is measured on diagonal directions vs. orthogonal directions. MANHATTAN should form a
@@ -132,34 +142,20 @@ public class DijkstraMap {
 
     private CoordOrderedSet impassable2;
 
-    private CoordOrderedSet friends;
+    private CoordSet friends;
 
-    private CoordOrderedSet tempSet;
-    
     public boolean cutShort;
 
     /**
-     * Goals are always marked with 0.
+     * Goals that pathfinding will seek out. Each item is an encoded point, as done by {@link #encode(int, int)}.
      */
-    public static final float GOAL = 0f;
+    protected IntList goals = new IntList(256);
     /**
-     * Floor cells, which include any walkable cell, are marked with a high number equal to 999200f .
+     * Working data used during scanning, this tracks the perimeter of the scanned area so far. This is a member
+     * variable and not a local one to avoid reallocating the data structure. Each item is an encoded point, as done by
+     * {@link #encode(int, int)}.
      */
-    public static final float FLOOR = 999200f;
-    /**
-     * Walls, which are solid no-entry cells, are marked with a high number equal to 999500f .
-     */
-    public static final float WALL = 999500f;
-    /**
-     * This is used to mark cells that the scan couldn't reach, and these dark cells are marked with a high number
-     * equal to 999800f .
-     */
-    public static final float DARK = 999800f;
-    /**
-     * Goals that pathfinding will seek out. The float value should almost always be 0f , the same as the static GOAL
-     * constant in this class.
-     */
-    protected IntList goals = new IntList(256), fresh = new IntList(256);
+    protected IntDeque fresh = new IntDeque(256);
 
     /**
      * The MizuchiRandom used to decide which one of multiple equally-short paths to take; this has its state set
@@ -177,6 +173,12 @@ public class DijkstraMap {
     private int mappedCount;
 
     private int blockingRequirement = 2;
+
+    private float cachedLongerPaths = 1.2f;
+    private final CoordOrderedSet cachedImpassable = new CoordOrderedSet(32);
+    private Coord[] cachedFearSources;
+    private float[][] cachedFleeMap;
+    private int cachedSize = 1;
 
     /**
      * Construct a DijkstraMap without a level to actually scan. If you use this constructor, you must call an
@@ -204,18 +206,19 @@ public class DijkstraMap {
     public DijkstraMap(final float[][] level, Measurement measurement) {
         this(level, measurement, false);
     }
+
     /**
      * Used to construct a DijkstraMap from either the output of another DijkstraMap, or from a resistance map of the
      * type used by {@link com.github.yellowstonegames.grid.FOV}. ALso specifies a distance calculation.
      *
-     * @param level a 2D float array that either was produced by {@link #scan()} or is a resistance map, depending on the last parameter
-     * @param measurement the distance calculation to use
+     * @param level                a 2D float array that either was produced by {@link #scan()} or is a resistance map, depending on the last parameter
+     * @param measurement          the distance calculation to use
      * @param levelIsResistanceMap if true, {@code level} will be treated as a resistance map; if false, the output of another DijkstraMap
      */
     public DijkstraMap(final float[][] level, Measurement measurement, boolean levelIsResistanceMap) {
         this.measurement = measurement;
         path = new ObjectDeque<>();
-        if(levelIsResistanceMap)
+        if (levelIsResistanceMap)
             initializeByResistance(level);
         else
             initialize(level);
@@ -258,7 +261,7 @@ public class DijkstraMap {
      * {@link Measurement#EUCLIDEAN} for more reasonable 8-way movement that prefers straight
      * lines.
      *
-     * @param level a char[x][y] map where '#' is a wall, and anything else is walkable
+     * @param level       a char[x][y] map where '#' is a wall, and anything else is walkable
      * @param measurement how this should measure orthogonal vs. diagonal measurement, such as {@link Measurement#MANHATTAN} for 4-way only movement
      */
     public DijkstraMap(final char[][] level, Measurement measurement) {
@@ -280,13 +283,12 @@ public class DijkstraMap {
         int oldWidth = width, oldHeight = height;
         width = level.length;
         height = level[0].length;
-        if(width != oldWidth || height != oldHeight) {
+        if (width != oldWidth || height != oldHeight) {
             gradientMap = new float[width][height];
             physicalMap = new float[width][height];
             costMap = new float[width][height];
             targetMap = new Coord[width][height];
-        }
-        else {
+        } else {
             ArrayTools.fill(targetMap, null);
         }
         for (int x = 0; x < width; x++) {
@@ -294,16 +296,12 @@ public class DijkstraMap {
             System.arraycopy(level[x], 0, physicalMap[x], 0, height);
             Arrays.fill(costMap[x], 1f);
         }
-        if(impassable2 == null)
+        if (impassable2 == null)
             impassable2 = new CoordOrderedSet(32);
         else
             impassable2.clear();
-        if(tempSet == null)
-            tempSet = new CoordOrderedSet(32);
-        else
-            tempSet.clear();
-        if(friends == null)
-            friends = new CoordOrderedSet(32);
+        if (friends == null)
+            friends = new CoordSet(32);
         else
             friends.clear();
         standardCosts = true;
@@ -323,13 +321,12 @@ public class DijkstraMap {
         int oldWidth = width, oldHeight = height;
         width = level.length;
         height = level[0].length;
-        if(width != oldWidth || height != oldHeight) {
+        if (width != oldWidth || height != oldHeight) {
             gradientMap = new float[width][height];
             physicalMap = new float[width][height];
             costMap = new float[width][height];
             targetMap = new Coord[width][height];
-        }
-        else {
+        } else {
             ArrayTools.fill(targetMap, null);
         }
         for (int x = 0; x < width; x++) {
@@ -340,16 +337,12 @@ public class DijkstraMap {
                 physicalMap[x][y] = t;
             }
         }
-        if(impassable2 == null)
+        if (impassable2 == null)
             impassable2 = new CoordOrderedSet(32);
         else
             impassable2.clear();
-        if(tempSet == null)
-            tempSet = new CoordOrderedSet(32);
-        else
-            tempSet.clear();
-        if(friends == null)
-            friends = new CoordOrderedSet(32);
+        if (friends == null)
+            friends = new CoordSet(32);
         else
             friends.clear();
         standardCosts = true;
@@ -363,7 +356,7 @@ public class DijkstraMap {
      * creature moved; for that you pass the positions of creatures that block paths to scan() or findPath() ). This
      * initialize() method allows you to specify an alternate wall char other than the default character, '#' .
      *
-     * @param level a 2D char array that this will use to establish which cells are walls (alternateWall defines the wall char, everything else is floor)
+     * @param level         a 2D char array that this will use to establish which cells are walls (alternateWall defines the wall char, everything else is floor)
      * @param alternateWall the char to consider a wall when it appears in level
      * @return this for chaining
      */
@@ -371,13 +364,12 @@ public class DijkstraMap {
         int oldWidth = width, oldHeight = height;
         width = level.length;
         height = level[0].length;
-        if(width != oldWidth || height != oldHeight) {
+        if (width != oldWidth || height != oldHeight) {
             gradientMap = new float[width][height];
             physicalMap = new float[width][height];
             costMap = new float[width][height];
             targetMap = new Coord[width][height];
-        }
-        else {
+        } else {
             ArrayTools.fill(targetMap, null);
         }
         for (int x = 0; x < width; x++) {
@@ -388,16 +380,12 @@ public class DijkstraMap {
                 physicalMap[x][y] = t;
             }
         }
-        if(impassable2 == null)
+        if (impassable2 == null)
             impassable2 = new CoordOrderedSet(32);
         else
             impassable2.clear();
-        if(tempSet == null)
-            tempSet = new CoordOrderedSet(32);
-        else
-            tempSet.clear();
-        if(friends == null)
-            friends = new CoordOrderedSet(32);
+        if (friends == null)
+            friends = new CoordSet(32);
         else
             friends.clear();
         standardCosts = true;
@@ -421,13 +409,12 @@ public class DijkstraMap {
         int oldWidth = width, oldHeight = height;
         width = level.length;
         height = level[0].length;
-        if(width != oldWidth || height != oldHeight) {
+        if (width != oldWidth || height != oldHeight) {
             gradientMap = new float[width][height];
             physicalMap = new float[width][height];
             costMap = new float[width][height];
             targetMap = new Coord[width][height];
-        }
-        else {
+        } else {
             ArrayTools.fill(targetMap, null);
         }
         for (int x = 0; x < width; x++) {
@@ -438,16 +425,12 @@ public class DijkstraMap {
                 physicalMap[x][y] = t;
             }
         }
-        if(impassable2 == null)
+        if (impassable2 == null)
             impassable2 = new CoordOrderedSet(32);
         else
             impassable2.clear();
-        if(tempSet == null)
-            tempSet = new CoordOrderedSet(32);
-        else
-            tempSet.clear();
-        if(friends == null)
-            friends = new CoordOrderedSet(32);
+        if (friends == null)
+            friends = new CoordSet(32);
         else
             friends.clear();
         standardCosts = true;
@@ -518,65 +501,64 @@ public class DijkstraMap {
     }
 
     /**
-     * Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
-     * this DijkstraMap's width and height. This method converts from a Coord to an encoded int that stores the same
-     * information, but is specific to this width and height and is somewhat more efficient to work with.
+     * Internally, DijkstraMap uses int primitives instead of Coord objects. This method converts from a Coord to an
+     * encoded int that stores the same information, but is somewhat more efficient to work with.
+     *
      * @param point a Coord to find an encoded int for
-     * @return an int that encodes the given Coord for this DijkstraMap's width and height
+     * @return an int that encodes the given Coord
      */
-    public int encode(final Coord point)
-    {
-        return width * point.y + point.x;
+    public int encode(final Coord point) {
+        return point.y << 16 | (point.x & 0xFFFF);
     }
+
     /**
-     * Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
-     * this DijkstraMap's width and height. This method converts from an x,y point to an encoded int that stores the
-     * same information, but is specific to this width and height and is somewhat more efficient to work with.
+     * Internally, DijkstraMap uses int primitives instead of Coord objects. This method converts from an x,y point to
+     * an encoded int that stores the same information, but is somewhat more efficient to work with.
+     *
      * @param x the x component of the point to find an encoded int for
      * @param y the y component of the point to find an encoded int for
-     * @return an int that encodes the given x,y point for this DijkstraMap's width and height
+     * @return an int that encodes the given x,y point
      */
-    public int encode(final int x, final int y)
-    {
-        return width * y + x;
+    public int encode(final int x, final int y) {
+        return y << 16 | (x & 0xFFFF);
     }
 
     /**
      * If you for some reason have one of the internally-used ints produced by {@link #encode(Coord)}, this will convert
      * it back to a Coord if you need it as such. You may prefer using {@link #decodeX(int)} and  {@link #decodeY(int)}
      * to get the x and y components independently and without involving objects.
+     *
      * @param encoded an encoded int specific to this DijkstraMap's height and width; see {@link #encode(Coord)}
      * @return the Coord that represents the same x,y position that the given encoded int stores
      */
-    public Coord decode(final int encoded)
-    {
-        return Coord.get(encoded % width, encoded / width);
+    public Coord decode(final int encoded) {
+        return Coord.get(encoded & 0xFFFF, encoded >>> 16);
     }
 
     /**
      * If you for some reason have one of the internally-used ints produced by {@link #encode(Coord)}, this will decode
      * the x component of the point encoded in that int. This is an extremely simple method that is equivalent to the
-     * code {@code encoded % width}, where width is a public field in this class. You probably would use this method in
+     * code {@code encoded & 0xFFFF}. You probably would use this method in
      * conjunction with {@link #decodeY(int)}, or would instead use {@link #decode(int)} to get a Coord.
-     * @param encoded an encoded int specific to this DijkstraMap's height and width; see {@link #encode(Coord)}
+     *
+     * @param encoded an encoded int; see {@link #encode(Coord)}
      * @return the x component of the position that the given encoded int stores
      */
-    public int decodeX(final int encoded)
-    {
-        return encoded % width;
+    public int decodeX(final int encoded) {
+        return encoded & 0xFFFF;
     }
 
     /**
      * If you for some reason have one of the internally-used ints produced by {@link #encode(Coord)}, this will decode
      * the y component of the point encoded in that int. This is an extremely simple method that is equivalent to the
-     * code {@code encoded / width}, where width is a public field in this class. You probably would use this method in
+     * code {@code encoded >>> 16}. You probably would use this method in
      * conjunction with {@link #decodeX(int)}, or would instead use {@link #decode(int)} to get a Coord.
-     * @param encoded an encoded int specific to this DijkstraMap's height and width; see {@link #encode(Coord)}
+     *
+     * @param encoded an encoded int; see {@link #encode(Coord)}
      * @return the y component of the position that the given encoded int stores
      */
-    public int decodeY(final int encoded)
-    {
-        return encoded / width;
+    public int decodeY(final int encoded) {
+        return encoded >>> 16;
     }
 
     /**
@@ -646,6 +628,7 @@ public class DijkstraMap {
         gradientMap[pt.x][pt.y] = 0f;
 
     }
+
     /**
      * Marks many cells as goals for pathfinding, ignoring cells in walls or unreachable areas. Possibly more efficient
      * than a loop that calls {@link #setGoal(Coord)} over and over, since this doesn't need to do a bounds check. The
@@ -655,9 +638,8 @@ public class DijkstraMap {
      */
     public void setGoals(Region pts) {
         if (!initialized || pts.width > width || pts.height > height) return;
-        for(Coord c : pts)
-        {
-            if(physicalMap[c.x][c.y] <= FLOOR) {
+        for (Coord c : pts) {
+            if (physicalMap[c.x][c.y] <= FLOOR) {
                 goals.add(encode(c));
                 gradientMap[c.x][c.y] = 0f;
             }
@@ -668,24 +650,25 @@ public class DijkstraMap {
      * Marks many cells as goals for pathfinding, ignoring cells in walls or unreachable areas. Simply loops through
      * pts and calls {@link #setGoal(Coord)} on each Coord in pts.
      * If you have a Region, you should use it with {@link #setGoals(Region)}, which is faster.
+     *
      * @param pts any Iterable of Coord, which can be a List, Set, Queue, etc. of Coords to mark as goals
      */
     public void setGoals(Iterable<Coord> pts) {
         if (!initialized) return;
-        for(Coord c : pts)
-        {
+        for (Coord c : pts) {
             setGoal(c);
         }
     }
+
     /**
      * Marks many cells as goals for pathfinding, ignoring cells in walls or unreachable areas. Simply loops through
      * pts and calls {@link #setGoal(Coord)} on each Coord in pts.
+     *
      * @param pts an array of Coord to mark as goals
      */
     public void setGoals(Coord[] pts) {
         if (!initialized) return;
-        for(int i = 0; i < pts.length; i++)
-        {
+        for (int i = 0; i < pts.length; i++) {
             setGoal(pts[i]);
         }
     }
@@ -703,7 +686,7 @@ public class DijkstraMap {
             costMap[pt.x][pt.y] = 1f;
             return;
         }
-        if(cost != 1f)
+        if (cost != 1f)
             standardCosts = false;
         costMap[pt.x][pt.y] = cost;
     }
@@ -722,7 +705,7 @@ public class DijkstraMap {
             costMap[x][y] = 1f;
             return;
         }
-        if(cost != 1f)
+        if (cost != 1f)
             standardCosts = false;
         costMap[x][y] = cost;
     }
@@ -775,14 +758,14 @@ public class DijkstraMap {
         if (x < 0 || x >= width || y < 0 || y >= height || gradientMap[x][y] < counter)
             return;
         gradientMap[x][y] = counter;
-        fresh.add(encode(x, y));
+        fresh.addFirst(encode(x, y));
     }
 
     private void setFresh(final Coord pt, float counter) {
         if (!pt.isWithin(width, height) || gradientMap[pt.x][pt.y] < counter)
             return;
         gradientMap[pt.x][pt.y] = counter;
-        fresh.add(encode(pt));
+        fresh.addFirst(encode(pt));
     }
 
     /**
@@ -846,7 +829,7 @@ public class DijkstraMap {
      * are still FLOOR could not be reached from any goal), and the overloads of scan that return 2D float
      * arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to {@link #WALL}.
      *
-     * @param start a Coord representing the location of the pathfinder; may be null, which has this scan the whole map
+     * @param start      a Coord representing the location of the pathfinder; may be null, which has this scan the whole map
      * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      */
@@ -874,18 +857,18 @@ public class DijkstraMap {
      * are still FLOOR could not be reached from any goal), and the overloads of scan that return 2D float
      * arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to {@link #WALL}.
      *
-     * @param start a Coord representing the location of the pathfinder; may be null, which has this scan the whole map
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
-     *                   path that cannot be moved through; this can be null if there are no such obstacles.
+     * @param start          a Coord representing the location of the pathfinder; may be null, which has this scan the whole map
+     * @param impassable     A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     *                       path that cannot be moved through; this can be null if there are no such obstacles.
      * @param nonZeroOptimum if the cell to pathfind toward should have a value of {@link #GOAL} (0f), this should be
-     *                       false; if it should have a different value or if you don't know, it should be true 
+     *                       false; if it should have a different value or if you don't know, it should be true
      */
     public void scan(final Coord start, final Collection<Coord> impassable, final boolean nonZeroOptimum) {
 
         if (!initialized) return;
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height))
+                if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
             }
         }
@@ -897,7 +880,7 @@ public class DijkstraMap {
             gradientMap[decodeX(dec)][decodeY(dec)] = GOAL;
         }
         float cs, dist;
-        if(nonZeroOptimum) {
+        if (nonZeroOptimum) {
             float currentLowest = 999000f;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
@@ -920,8 +903,8 @@ public class DijkstraMap {
         while (numAssigned > 0) {
             numAssigned = 0;
             fsz = fresh.size();
-            for (int ci = fsz-1; ci >= 0; ci--) {
-                cen = fresh.removeAt(ci);
+            for (int ci = fsz; ci > 0; ci--) {
+                cen = fresh.removeLast();
                 cenX = decodeX(cen);
                 cenY = decodeY(cen);
                 dist = gradientMap[cenX][cenY];
@@ -932,12 +915,11 @@ public class DijkstraMap {
                     if (adjX < 0 || adjY < 0 || width <= adjX || height <= adjY)
                         /* Outside the map */
                         continue;
-                    if(d >= 4 && blockingRequirement > 0) // diagonal
+                    if (d >= 4 && blockingRequirement > 0) // diagonal
                     {
-                        if((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
+                        if ((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
                                 + (gradientMap[cenX][adjY] > FLOOR ? 1 : 0)
-                                >= blockingRequirement)
-                        {
+                                >= blockingRequirement) {
                             continue;
                         }
                     }
@@ -947,11 +929,10 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
-                        {
+                        if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
-                                    if(pt != null && pt.isWithin(width, height))
+                                    if (pt != null && pt.isWithin(width, height))
                                         gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
                                 }
                             }
@@ -963,7 +944,7 @@ public class DijkstraMap {
         }
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height))
+                if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
             }
         }
@@ -978,7 +959,7 @@ public class DijkstraMap {
      * was unable to reach, which will have a value defined by the DARK constant in this class. This uses the
      * current measurement. The result is stored in the {@link #gradientMap} field and a copy is returned.
      *
-     * @param limit      The maximum number of steps to scan outward from a goal.
+     * @param limit The maximum number of steps to scan outward from a goal.
      * @return A 2D float[width][height] using the width and height of what this knows about the physical map.
      */
     public float[][] partialScan(final int limit) {
@@ -1033,7 +1014,7 @@ public class DijkstraMap {
      * partialScan that return 2D float arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to
      * {@link #WALL}.
      *
-     * @param start a Coord representing the location of the pathfinder; may be null to have this scan more of the map
+     * @param start      a Coord representing the location of the pathfinder; may be null to have this scan more of the map
      * @param limit      The maximum number of steps to scan outward from a goal.
      * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
@@ -1061,10 +1042,10 @@ public class DijkstraMap {
      * partialScan that return 2D float arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to
      * {@link #WALL}.
      *
-     * @param start a Coord representing the location of the pathfinder; may be null to have this scan more of the map
-     * @param limit      The maximum number of steps to scan outward from a goal.
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
-     *                   path that cannot be moved through; this can be null if there are no such obstacles.
+     * @param start          a Coord representing the location of the pathfinder; may be null to have this scan more of the map
+     * @param limit          The maximum number of steps to scan outward from a goal.
+     * @param impassable     A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     *                       path that cannot be moved through; this can be null if there are no such obstacles.
      * @param nonZeroOptimum if the cell to pathfind toward should have a value of {@link #GOAL} (0f), this should be
      *                       false; if it should have a different value or if you don't know, it should be true
      */
@@ -1073,7 +1054,7 @@ public class DijkstraMap {
         if (!initialized || limit <= 0) return;
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height))
+                if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
             }
         }
@@ -1085,7 +1066,7 @@ public class DijkstraMap {
             gradientMap[decodeX(dec)][decodeY(dec)] = GOAL;
         }
         float cs, dist;
-        if(nonZeroOptimum) {
+        if (nonZeroOptimum) {
             float currentLowest = 999000;
             if (start == null) {
                 for (int x = 0; x < width; x++) {
@@ -1127,8 +1108,8 @@ public class DijkstraMap {
         while (numAssigned > 0 && iter++ < limit) {
             numAssigned = 0;
             fsz = fresh.size();
-            for (int ci = fsz-1; ci >= 0; ci--) {
-                cen = fresh.removeAt(ci);
+            for (int ci = fsz; ci > 0; ci--) {
+                cen = fresh.removeLast();
                 cenX = decodeX(cen);
                 cenY = decodeY(cen);
                 dist = gradientMap[cenX][cenY];
@@ -1139,12 +1120,11 @@ public class DijkstraMap {
                     if (adjX < 0 || adjY < 0 || width <= adjX || height <= adjY)
                         /* Outside the map */
                         continue;
-                    if(d >= 4 && blockingRequirement > 0) // diagonal
+                    if (d >= 4 && blockingRequirement > 0) // diagonal
                     {
-                        if((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
+                        if ((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
                                 + (gradientMap[cenX][adjY] > FLOOR ? 1 : 0)
-                                >= blockingRequirement)
-                        {
+                                >= blockingRequirement) {
                             continue;
                         }
                     }
@@ -1154,11 +1134,10 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
-                        {
+                        if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
-                                    if(pt != null && pt.isWithin(width, height))
+                                    if (pt != null && pt.isWithin(width, height))
                                         gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
                                 }
                             }
@@ -1170,7 +1149,7 @@ public class DijkstraMap {
         }
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height))
+                if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
             }
         }
@@ -1212,8 +1191,8 @@ public class DijkstraMap {
         while (numAssigned > 0) {
             numAssigned = 0;
             fsz = fresh.size();
-            for (int ci = fsz-1; ci >= 0; ci--) {
-                cen = fresh.removeAt(ci);
+            for (int ci = fsz; ci > 0; ci--) {
+                cen = fresh.removeLast();
                 cenX = decodeX(cen);
                 cenY = decodeY(cen);
                 dist = gradientMap[cenX][cenY];
@@ -1224,12 +1203,11 @@ public class DijkstraMap {
                     if (adjX < 0 || adjY < 0 || width <= adjX || height <= adjY)
                         /* Outside the map */
                         continue;
-                    if(d >= 4 && blockingRequirement > 0) // diagonal
+                    if (d >= 4 && blockingRequirement > 0) // diagonal
                     {
-                        if((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
+                        if ((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
                                 + (gradientMap[cenX][adjY] > FLOOR ? 1 : 0)
-                                >= blockingRequirement)
-                        {
+                                >= blockingRequirement) {
                             continue;
                         }
                     }
@@ -1238,7 +1216,6 @@ public class DijkstraMap {
                     if (gradientMap[adjX][adjY] <= FLOOR && cs < gradientMap[adjX][adjY]) {
                         ++mappedCount;
                         if (targets.contains(adj = Coord.get(adjX, adjY))) {
-                            fresh.clear();
                             return adj;
                         }
                         setFresh(adjX, adjY, cs);
@@ -1359,8 +1336,8 @@ public class DijkstraMap {
         while (numAssigned > 0) {
             numAssigned = 0;
             fsz = fresh.size();
-            for (int ci = fsz-1; ci >= 0; ci--) {
-                cen = fresh.removeAt(ci);
+            for (int ci = fsz; ci > 0; ci--) {
+                cen = fresh.removeLast();
                 cenX = decodeX(cen);
                 cenY = decodeY(cen);
                 dist = gradientMap[cenX][cenY];
@@ -1371,12 +1348,11 @@ public class DijkstraMap {
                     if (adjX < 0 || adjY < 0 || width <= adjX || height <= adjY)
                         /* Outside the map */
                         continue;
-                    if(d >= 4 && blockingRequirement > 0) // diagonal
+                    if (d >= 4 && blockingRequirement > 0) // diagonal
                     {
-                        if((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
+                        if ((gradientMap[adjX][cenY] > FLOOR ? 1 : 0)
                                 + (gradientMap[cenX][adjY] > FLOOR ? 1 : 0)
-                                >= blockingRequirement)
-                        {
+                                >= blockingRequirement) {
                             continue;
                         }
                     }
@@ -1469,13 +1445,13 @@ public class DijkstraMap {
         float[][] gradientClone = ArrayTools.copy(gradientMap);
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height))
+                if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
             }
         }
         for (int xx = size; xx < width; xx++) {
             for (int yy = size; yy < height; yy++) {
-                if(gradientMap[xx][yy] > FLOOR) {
+                if (gradientMap[xx][yy] > FLOOR) {
                     for (int xs = xx, xi = 0; xi < size && xs >= 0; xs--, xi++) {
                         for (int ys = yy, yi = 0; yi < size && ys >= 0; ys--, yi++) {
                             gradientClone[xs][ys] = WALL;
@@ -1491,7 +1467,7 @@ public class DijkstraMap {
             dec = goals.get(i);
             for (int xs = decodeX(dec), xi = 0; xi < size && xs >= 0; xs--, xi++) {
                 for (int ys = decodeY(dec), yi = 0; yi < size && ys >= 0; ys--, yi++) {
-                    if(physicalMap[xs][ys] > FLOOR)
+                    if (physicalMap[xs][ys] > FLOOR)
                         continue PER_GOAL;
                     gradientClone[xs][ys] = GOAL;
                 }
@@ -1519,8 +1495,8 @@ public class DijkstraMap {
         while (numAssigned > 0) {
             numAssigned = 0;
             fsz = fresh.size();
-            for (int ci = fsz-1; ci >= 0; ci--) {
-                cen = fresh.removeAt(ci);
+            for (int ci = fsz; ci > 0; ci--) {
+                cen = fresh.removeLast();
                 cenX = decodeX(cen);
                 cenY = decodeY(cen);
                 dist = gradientClone[cenX][cenY];
@@ -1531,12 +1507,11 @@ public class DijkstraMap {
                     if (adjX < 0 || adjY < 0 || width <= adjX || height <= adjY)
                         /* Outside the map */
                         continue;
-                    if(d >= 4 && blockingRequirement > 0) // diagonal
+                    if (d >= 4 && blockingRequirement > 0) // diagonal
                     {
-                        if((gradientClone[adjX][cenY] > FLOOR ? 1 : 0)
+                        if ((gradientClone[adjX][cenY] > FLOOR ? 1 : 0)
                                 + (gradientClone[cenX][adjY] > FLOOR ? 1 : 0)
-                                >= blockingRequirement)
-                        {
+                                >= blockingRequirement) {
                             continue;
                         }
                     }
@@ -1546,11 +1521,10 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
-                        {
+                        if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
-                                    if(pt != null && pt.isWithin(width, height)) {
+                                    if (pt != null && pt.isWithin(width, height)) {
                                         for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
                                             for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
                                                 gradientClone[xs][ys] = physicalMap[xs][ys];
@@ -1568,7 +1542,7 @@ public class DijkstraMap {
         }
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height)) {
+                if (pt != null && pt.isWithin(width, height)) {
                     for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
                         for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
                             gradientClone[xs][ys] = physicalMap[xs][ys];
@@ -1602,7 +1576,7 @@ public class DijkstraMap {
      * @return A 2D float[width][height] using the width and height of what this knows about the physical map.
      */
     public float[][] partialScan(final int limit, final Collection<Coord> impassable, final int size) {
-        partialScan(limit,null, impassable, size);
+        partialScan(limit, null, impassable, size);
         float[][] gradientClone = new float[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -1650,13 +1624,13 @@ public class DijkstraMap {
         float[][] gradientClone = ArrayTools.copy(gradientMap);
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height))
+                if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
             }
         }
         for (int xx = size; xx < width; xx++) {
             for (int yy = size; yy < height; yy++) {
-                if(gradientMap[xx][yy] > FLOOR) {
+                if (gradientMap[xx][yy] > FLOOR) {
                     for (int xs = xx, xi = 0; xi < size && xs >= 0; xs--, xi++) {
                         for (int ys = yy, yi = 0; yi < size && ys >= 0; ys--, yi++) {
                             gradientClone[xs][ys] = WALL;
@@ -1672,7 +1646,7 @@ public class DijkstraMap {
             dec = goals.get(i);
             for (int xs = decodeX(dec), xi = 0; xi < size && xs >= 0; xs--, xi++) {
                 for (int ys = decodeY(dec), yi = 0; yi < size && ys >= 0; ys--, yi++) {
-                    if(physicalMap[xs][ys] > FLOOR)
+                    if (physicalMap[xs][ys] > FLOOR)
                         continue PER_GOAL;
                     gradientClone[xs][ys] = GOAL;
                 }
@@ -1701,8 +1675,8 @@ public class DijkstraMap {
         while (numAssigned > 0 && iter++ < limit) {
             numAssigned = 0;
             fsz = fresh.size();
-            for (int ci = fsz-1; ci >= 0; ci--) {
-                cen = fresh.removeAt(ci);
+            for (int ci = fsz; ci > 0; ci--) {
+                cen = fresh.removeLast();
                 cenX = decodeX(cen);
                 cenY = decodeY(cen);
                 dist = gradientClone[cenX][cenY];
@@ -1713,12 +1687,11 @@ public class DijkstraMap {
                     if (adjX < 0 || adjY < 0 || width <= adjX || height <= adjY)
                         /* Outside the map */
                         continue;
-                    if(d >= 4 && blockingRequirement > 0) // diagonal
+                    if (d >= 4 && blockingRequirement > 0) // diagonal
                     {
-                        if((gradientClone[adjX][cenY] > FLOOR ? 1 : 0)
+                        if ((gradientClone[adjX][cenY] > FLOOR ? 1 : 0)
                                 + (gradientClone[cenX][adjY] > FLOOR ? 1 : 0)
-                                >= blockingRequirement)
-                        {
+                                >= blockingRequirement) {
                             continue;
                         }
                     }
@@ -1728,11 +1701,10 @@ public class DijkstraMap {
                         setFresh(adjX, adjY, cs);
                         ++numAssigned;
                         ++mappedCount;
-                        if(start != null && start.x == adjX && start.y == adjY && standardCosts)
-                        {
+                        if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
                             if (impassable != null && !impassable.isEmpty()) {
                                 for (Coord pt : impassable) {
-                                    if(pt != null && pt.isWithin(width, height)) {
+                                    if (pt != null && pt.isWithin(width, height)) {
                                         for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
                                             for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
                                                 gradientClone[xs][ys] = physicalMap[xs][ys];
@@ -1750,7 +1722,7 @@ public class DijkstraMap {
         }
         if (impassable != null && !impassable.isEmpty()) {
             for (Coord pt : impassable) {
-                if(pt != null && pt.isWithin(width, height)) {
+                if (pt != null && pt.isWithin(width, height)) {
                     for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
                         for (int ys = pt.y, yi = 0; yi < size && ys >= 0; ys--, yi++) {
                             gradientClone[xs][ys] = physicalMap[xs][ys];
@@ -1776,6 +1748,7 @@ public class DijkstraMap {
      * <br>
      * This caches its result in a member field, path, which can be fetched after finding a path and will change with
      * each call to a pathfinding method.
+     *
      * @param length       the length of the path to calculate
      * @param impassable   a Set of impassable Coord positions that may change (not constant like walls); can be null
      * @param onlyPassable a Set of Coord positions that this pathfinder cannot end a path occupying (typically allies); can be null
@@ -1784,7 +1757,7 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findPath(int length, Collection<Coord> impassable,
-                                     Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                       Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findPath(length, -1, impassable, onlyPassable, start, targets);
     }
 
@@ -1814,9 +1787,10 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findPath(int length, int scanLimit, Collection<Coord> impassable,
-                                     Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                       Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findPath(null, length, scanLimit, impassable, onlyPassable, start, targets);
     }
+
     /**
      * Scans the dungeon using DijkstraMap.scan or DijkstraMap.partialScan with the listed goals and start
      * point, and returns a list of Coord positions (using the current measurement) needed to get closer
@@ -1846,41 +1820,36 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findPath(ObjectDeque<Coord> buffer, int length, int scanLimit, Collection<Coord> impassable,
-                                     Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                       Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         path.clear();
-        if (!initialized || length <= 0)
-        {
+        if (!initialized || length <= 0) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
         if (impassable == null)
             impassable2.clear();
-        else
-        {
+        else if(impassable != impassable2){
             impassable2.clear();
             impassable2.addAll(impassable);
         }
-        if (onlyPassable != null && length == 1) 
+        if (onlyPassable != null && length == 1)
             impassable2.addAll(onlyPassable);
-        
+
         resetMap();
         setGoals(targets);
-        if (goals.isEmpty())
-        {
+        if (goals.isEmpty()) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
-        if(scanLimit <= 0 || scanLimit < length)
+        if (scanLimit <= 0 || scanLimit < length)
             scan(start, impassable2);
         else
             partialScan(start, scanLimit, impassable2);
@@ -1921,10 +1890,9 @@ public class DijkstraMap {
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                if(buffer == null)
+                if (buffer == null)
                     return new ObjectDeque<>(path);
-                else
-                {
+                else {
                     buffer.addAll(path);
                     return buffer;
                 }
@@ -1935,10 +1903,8 @@ public class DijkstraMap {
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findPath(buffer, length, scanLimit, tempSet, onlyPassable, start, targets);
+                    impassable2.add(currentPos);
+                    return findPath(buffer, length, scanLimit, impassable2, onlyPassable, start, targets);
                 }
                 break;
             }
@@ -1948,10 +1914,9 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        if(buffer == null)
+        if (buffer == null)
             return new ObjectDeque<>(path);
-        else
-        {
+        else {
             buffer.addAll(path);
             return buffer;
         }
@@ -1982,7 +1947,7 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findAttackPath(int moveLength, int preferredRange, LineDrawer los, Collection<Coord> impassable,
-                                            Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                             Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findAttackPath(moveLength, preferredRange, preferredRange, los, impassable, onlyPassable, start, targets);
     }
 
@@ -2013,9 +1978,10 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findAttackPath(int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
-                                           Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                             Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findAttackPath(null, moveLength, minPreferredRange, maxPreferredRange, los, impassable, onlyPassable, start, targets);
     }
+
     /**
      * Scans the dungeon using DijkstraMap.scan with the listed goals and start point, and returns a list
      * of Coord positions (using the current measurement) needed to get closer to a goal, until a cell is reached with
@@ -2050,14 +2016,12 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findAttackPath(ObjectDeque<Coord> buffer, int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
-                                           Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
-        if (!initialized || moveLength <= 0)
-        {
+                                             Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+        if (!initialized || moveLength <= 0) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
@@ -2074,8 +2038,7 @@ public class DijkstraMap {
         path.clear();
         if (impassable == null)
             impassable2.clear();
-        else
-        {
+        else if(impassable != impassable2) {
             impassable2.clear();
             impassable2.addAll(impassable);
         }
@@ -2086,13 +2049,11 @@ public class DijkstraMap {
         for (Coord goal : targets) {
             setGoal(goal.x, goal.y);
         }
-        if (goals.isEmpty())
-        {
+        if (goals.isEmpty()) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
@@ -2139,15 +2100,13 @@ public class DijkstraMap {
                 }
             }
         }
-        if(gradientMap[start.x][start.y] <= 0f)
-        {
+        if (gradientMap[start.x][start.y] <= 0f) {
             cutShort = false;
             frustration = 0;
             goals.clear();
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>(path);
-            else
-            {
+            else {
                 buffer.addAll(path);
                 return buffer;
             }
@@ -2179,7 +2138,7 @@ public class DijkstraMap {
                         continue;
                 }
                 Coord pt = Coord.get(adjX, adjY);
-                if (gradientMap[pt.x][pt.y] < best  && !impassable2.contains(pt)) {
+                if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
                         best = gradientMap[pt.x][pt.y];
                         choice = d;
@@ -2190,10 +2149,9 @@ public class DijkstraMap {
             if (best >= gradientMap[currentPos.x][currentPos.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                if(buffer == null)
+                if (buffer == null)
                     return new ObjectDeque<>(path);
-                else
-                {
+                else {
                     buffer.addAll(path);
                     return buffer;
                 }
@@ -2204,10 +2162,8 @@ public class DijkstraMap {
             if (paidLength > moveLength - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findAttackPath(buffer, moveLength, minPreferredRange, maxPreferredRange, los, tempSet,
+                    impassable2.add(currentPos);
+                    return findAttackPath(buffer, moveLength, minPreferredRange, maxPreferredRange, los, impassable2,
                             onlyPassable, start, targets);
                 }
                 break;
@@ -2218,10 +2174,9 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        if(buffer == null)
+        if (buffer == null)
             return new ObjectDeque<>(path);
-        else
-        {
+        else {
             buffer.addAll(path);
             return buffer;
         }
@@ -2271,9 +2226,10 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
      */
     public ObjectDeque<Coord> findTechniquePath(int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
-                                               Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
+                                                Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
         return findTechniquePath(null, moveLength, tech, dungeon, los, impassable, allies, start, targets);
     }
+
     /**
      * Scans the dungeon using DijkstraMap.scan with the listed goals and start point, and returns a list
      * of Coord positions (using the current measurement) needed to get closer to a goal, where goals are
@@ -2321,14 +2277,12 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that represents a path to travel to get to an ideal place to use tech. Copy of path.
      */
     public ObjectDeque<Coord> findTechniquePath(ObjectDeque<Coord> buffer, int moveLength, Technique tech, float[][] dungeon, LineDrawer los,
-                                              Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
-        if (!initialized || moveLength <= 0)
-        {
+                                                Collection<Coord> impassable, Collection<Coord> allies, Coord start, Collection<Coord> targets) {
+        if (!initialized || moveLength <= 0) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
@@ -2340,19 +2294,17 @@ public class DijkstraMap {
         ArrayTools.fill(targetMap, null);
 
         path.clear();
-        if (targets == null || targets.size() == 0)
-        {
+        if (targets == null || targets.size() == 0) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
         if (impassable == null)
             impassable2.clear();
-        else {
+        else if(impassable != impassable2){
             impassable2.clear();
             impassable2.addAll(impassable);
         }
@@ -2372,13 +2324,11 @@ public class DijkstraMap {
         for (Coord goal : targets) {
             setGoal(goal.x, goal.y);
         }
-        if (goals.isEmpty())
-        {
+        if (goals.isEmpty()) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
@@ -2422,7 +2372,7 @@ public class DijkstraMap {
                     gradientMap[x][y] = FLOOR;
             }
         }
-        scan(null,impassable2);
+        scan(null, impassable2);
 
         float currentDistance = gradientMap[start.x][start.y];
         if (currentDistance <= moveLength) {
@@ -2442,9 +2392,7 @@ public class DijkstraMap {
                     goals.clear();
                     goals.add(g);
                     bestWorth = worthMap[decX][decY];
-                }
-                else if (gradientMap[decX][decY] <= moveLength && bestWorth > 0 && worthMap[decX][decY] == bestWorth)
-                {
+                } else if (gradientMap[decX][decY] <= moveLength && bestWorth > 0 && worthMap[decX][decY] == bestWorth) {
                     goals.add(g);
                 }
             }
@@ -2467,7 +2415,7 @@ public class DijkstraMap {
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
                 Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
-                if(!pt.isWithin(width, height))
+                if (!pt.isWithin(width, height))
                     continue;
                 if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
@@ -2478,10 +2426,8 @@ public class DijkstraMap {
             }
             if (best >= gradientMap[currentPos.x][currentPos.y]) {
                 if (friends.contains(currentPos)) {
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, tempSet,
+                    impassable2.add(currentPos);
+                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, impassable2,
                             friends, start, targets);
                 }
                 break;
@@ -2489,10 +2435,9 @@ public class DijkstraMap {
             if (best > gradientMap[start.x][start.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                if(buffer == null)
+                if (buffer == null)
                     return new ObjectDeque<>(path);
-                else
-                {
+                else {
                     buffer.addAll(path);
                     return buffer;
                 }
@@ -2503,10 +2448,8 @@ public class DijkstraMap {
             frustration++;
             if (paidLength > moveLength - 1f) {
                 if (friends.contains(currentPos)) {
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, tempSet,
+                    impassable2.add(currentPos);
+                    return findTechniquePath(buffer, moveLength, tech, dungeon, los, impassable2,
                             friends, start, targets);
                 }
                 break;
@@ -2515,24 +2458,16 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        if(buffer == null)
+        if (buffer == null)
             return new ObjectDeque<>(path);
-        else
-        {
+        else {
             buffer.addAll(path);
             return buffer;
         }
     }
 
-
-    private float cachedLongerPaths = 1.2f;
-    private final CoordOrderedSet cachedImpassable = new CoordOrderedSet(32);
-    private Coord[] cachedFearSources;
-    private float[][] cachedFleeMap;
-    private int cachedSize = 1;
-
     /**
-     * Scans the dungeon using DijkstraMap.scan with the listed fearSources and start point, and returns a list
+     * Scans the dungeon using DijkstraMap.scan() with the listed fearSources and start point, and returns a list
      * of Coord positions (using Manhattan distance) needed to get further from the closest fearSources, meant
      * for running away. The maximum length of the returned list is given by length; if moving the full
      * length of the list would place the mover in a position shared by one of the positions in onlyPassable
@@ -2558,7 +2493,7 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
     public ObjectDeque<Coord> findFleePath(int length, float preferLongerPaths, Collection<Coord> impassable,
-                                         Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
+                                           Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
         return findFleePath(null, length, -1, preferLongerPaths, impassable, onlyPassable, start, fearSources);
     }
 
@@ -2595,9 +2530,10 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
     public ObjectDeque<Coord> findFleePath(int length, int scanLimit, float preferLongerPaths, Collection<Coord> impassable,
-                                         Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
+                                           Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
         return findFleePath(null, length, scanLimit, preferLongerPaths, impassable, onlyPassable, start, fearSources);
     }
+
     /**
      * Scans the dungeon using DijkstraMap.scan or DijkstraMap.partialScan with the listed fearSources and start
      * point, and returns a list of Coord positions (using this DijkstraMap's metric) needed to get further from
@@ -2634,36 +2570,32 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
     public ObjectDeque<Coord> findFleePath(ObjectDeque<Coord> buffer, int length, int scanLimit, float preferLongerPaths, Collection<Coord> impassable,
-                                         Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
-        if (!initialized || length <= 0)
-        {
+                                           Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
+        if (!initialized || length <= 0) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
         path.clear();
         if (fearSources == null || fearSources.length < 1) {
             cutShort = true;
-            if(buffer == null)
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
 
         if (impassable == null)
             impassable2.clear();
-        else
-        {
+        else if(impassable != impassable2){
             impassable2.clear();
             impassable2.addAll(impassable);
         }
-        if(onlyPassable != null && length == 1)
+        if (onlyPassable != null && length == 1)
             impassable2.addAll(onlyPassable);
         if (cachedSize == 1 && preferLongerPaths == cachedLongerPaths && impassable2.equals(cachedImpassable) &&
                 Arrays.equals(fearSources, cachedFearSources)) {
@@ -2677,18 +2609,16 @@ public class DijkstraMap {
             cachedSize = 1;
             resetMap();
             setGoals(fearSources);
-            if (goals.isEmpty())
-            {
+            if (goals.isEmpty()) {
                 cutShort = true;
-                if(buffer == null)
+                if (buffer == null)
                     return new ObjectDeque<>();
-                else
-                {
+                else {
                     return buffer;
                 }
             }
 
-            if(scanLimit <= 0 || scanLimit < length)
+            if (scanLimit <= 0 || scanLimit < length)
                 cachedFleeMap = scan(impassable2);
             else
                 cachedFleeMap = partialScan(scanLimit, impassable2);
@@ -2700,8 +2630,7 @@ public class DijkstraMap {
                 }
             }
 
-            if(scanLimit <= 0 || scanLimit < length)
-            {
+            if (scanLimit <= 0 || scanLimit < length) {
                 scan(null, impassable2, true);
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
@@ -2711,8 +2640,7 @@ public class DijkstraMap {
                     }
                     System.arraycopy(gradientMap[x], 0, cachedFleeMap[x], 0, height);
                 }
-            }
-            else
+            } else
                 cachedFleeMap = partialScan(scanLimit, impassable2);
         }
         Coord currentPos = start;
@@ -2752,16 +2680,15 @@ public class DijkstraMap {
             if (best >= gradientMap[start.x][start.y] || physicalMap[currentPos.x + dirs[choice].deltaX][currentPos.y + dirs[choice].deltaY] > FLOOR) {
                 cutShort = true;
                 frustration = 0;
-                if(buffer == null)
+                if (buffer == null)
                     return new ObjectDeque<>(path);
-                else
-                {
+                else {
                     buffer.addAll(path);
                     return buffer;
                 }
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
-            if (path.size() > 0) {
+            if (!path.isEmpty()) {
                 Coord last = path.peekLast();
                 if (gradientMap[last.x][last.y] <= gradientMap[currentPos.x][currentPos.y])
                     break;
@@ -2771,10 +2698,8 @@ public class DijkstraMap {
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findFleePath(buffer, length, scanLimit, preferLongerPaths, tempSet, onlyPassable, start, fearSources);
+                    impassable2.add(currentPos);
+                    return findFleePath(buffer, length, scanLimit, preferLongerPaths, impassable2, onlyPassable, start, fearSources);
                 }
                 break;
             }
@@ -2782,10 +2707,9 @@ public class DijkstraMap {
         cutShort = false;
         frustration = 0;
         goals.clear();
-        if(buffer == null) 
+        if (buffer == null)
             return new ObjectDeque<>(path);
-        else
-        {
+        else {
             buffer.addAll(path);
             return buffer;
         }
@@ -2818,37 +2742,36 @@ public class DijkstraMap {
      */
 
     public ObjectDeque<Coord> findPathLarge(final int size, int length, Collection<Coord> impassable,
-                                          Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                            Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         return findPathLarge(size, length, -1, impassable, onlyPassable, start, targets);
     }
+
     public ObjectDeque<Coord> findPathLarge(final int size, int length, final int scanLimit, Collection<Coord> impassable,
-                                          Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                            Collection<Coord> onlyPassable, Coord start, Coord... targets) {
 
         if (!initialized) return null;
         path.clear();
         if (impassable == null)
             impassable2.clear();
-        else
-        {
+        else if(impassable != impassable2) {
             impassable2.clear();
             impassable2.addAll(impassable);
         }
-        if(onlyPassable != null && length == 1)
+        if (onlyPassable != null && length == 1)
             impassable2.addAll(onlyPassable);
 
         resetMap();
         for (Coord goal : targets) {
             setGoal(goal.x, goal.y);
         }
-        if (goals.isEmpty())
-        {
+        if (goals.isEmpty()) {
             cutShort = true;
             return new ObjectDeque<>(path);
         }
 
-        if(length < 0)
+        if (length < 0)
             length = 0;
-        if(scanLimit <= 0 || scanLimit < length)
+        if (scanLimit <= 0 || scanLimit < length)
             scan(start, impassable2, size);
         else
             partialScan(scanLimit, start, impassable2, size);
@@ -2867,7 +2790,7 @@ public class DijkstraMap {
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
                 Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
-                if(!pt.isWithin(width, height))
+                if (!pt.isWithin(width, height))
                     continue;
                 if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
@@ -2889,10 +2812,8 @@ public class DijkstraMap {
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findPathLarge(size, length, tempSet, onlyPassable, start, targets);
+                    impassable2.add(currentPos);
+                    return findPathLarge(size, length, impassable2, onlyPassable, start, targets);
                 }
                 break;
             }
@@ -2935,7 +2856,7 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findAttackPathLarge(int size, int moveLength, int preferredRange, LineDrawer los, Collection<Coord> impassable,
-                                                Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                                  Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         if (!initialized) return null;
         if (preferredRange < 0) preferredRange = 0;
         float[][] resMap = new float[width][height];
@@ -2949,20 +2870,18 @@ public class DijkstraMap {
         path.clear();
         if (impassable == null)
             impassable2.clear();
-        else
-        {
+        else if(impassable != impassable2) {
             impassable2.clear();
             impassable2.addAll(impassable);
         }
-        if(onlyPassable != null && moveLength == 1)
+        if (onlyPassable != null && moveLength == 1)
             impassable2.addAll(onlyPassable);
 
         resetMap();
         for (Coord goal : targets) {
             setGoal(goal.x, goal.y);
         }
-        if (goals.isEmpty())
-        {
+        if (goals.isEmpty()) {
             cutShort = true;
             return new ObjectDeque<>(path);
         }
@@ -2985,7 +2904,7 @@ public class DijkstraMap {
                                 || los.isReachable(x, y, goal.x, goal.y, resMap)
                                 || los.isReachable(x + 1, y, goal.x, goal.y, resMap)
                                 || los.isReachable(x, y + 1, goal.x, goal.y, resMap)
-                                || los.isReachable(x + 1, y + 1, goal.x, goal.y, resMap)){
+                                || los.isReachable(x + 1, y + 1, goal.x, goal.y, resMap)) {
                             setGoal(x, y);
                             gradientMap[x][y] = 0;
                             continue CELL;
@@ -3013,7 +2932,7 @@ public class DijkstraMap {
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
                 Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
-                if(!pt.isWithin(width, height))
+                if (!pt.isWithin(width, height))
                     continue;
                 if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
@@ -3034,10 +2953,8 @@ public class DijkstraMap {
             if (paidLength > moveLength - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findAttackPathLarge(size, moveLength, preferredRange, los, tempSet, onlyPassable, start, targets);
+                    impassable2.add(currentPos);
+                    return findAttackPathLarge(size, moveLength, preferredRange, los, impassable2, onlyPassable, start, targets);
                 }
                 break;
             }
@@ -3081,7 +2998,7 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the min-x, min-y locations of this creature as it goes toward a target. Copy of path.
      */
     public ObjectDeque<Coord> findAttackPathLarge(int size, int moveLength, int minPreferredRange, int maxPreferredRange, LineDrawer los,
-                                                Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
+                                                  Collection<Coord> impassable, Collection<Coord> onlyPassable, Coord start, Coord... targets) {
         if (!initialized) return null;
         if (minPreferredRange < 0) minPreferredRange = 0;
         if (maxPreferredRange < minPreferredRange) maxPreferredRange = minPreferredRange;
@@ -3096,20 +3013,18 @@ public class DijkstraMap {
         path.clear();
         if (impassable == null)
             impassable2.clear();
-        else
-        {
+        else if(impassable != impassable2) {
             impassable2.clear();
             impassable2.addAll(impassable);
         }
-        if(onlyPassable != null && moveLength == 1)
+        if (onlyPassable != null && moveLength == 1)
             impassable2.addAll(onlyPassable);
 
         resetMap();
         for (Coord goal : targets) {
             setGoal(goal);
         }
-        if (goals.isEmpty())
-        {
+        if (goals.isEmpty()) {
             cutShort = true;
             return new ObjectDeque<>(path);
         }
@@ -3161,7 +3076,7 @@ public class DijkstraMap {
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
                 Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
-                if(!pt.isWithin(width, height))
+                if (!pt.isWithin(width, height))
                     continue;
                 if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
@@ -3182,10 +3097,8 @@ public class DijkstraMap {
             if (paidLength > moveLength - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findAttackPathLarge(size, moveLength, minPreferredRange, maxPreferredRange, los, tempSet,
+                    impassable2.add(currentPos);
+                    return findAttackPathLarge(size, moveLength, minPreferredRange, maxPreferredRange, los, impassable2,
                             onlyPassable, start, targets);
                 }
                 break;
@@ -3230,16 +3143,16 @@ public class DijkstraMap {
      * @return an ObjectDeque of Coord that will contain the locations of this creature as it goes away from fear sources. Copy of path.
      */
     public ObjectDeque<Coord> findFleePathLarge(int size, int length, float preferLongerPaths, Collection<Coord> impassable,
-                                              Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
+                                                Collection<Coord> onlyPassable, Coord start, Coord... fearSources) {
         if (!initialized) return null;
         path.clear();
         if (impassable == null)
             impassable2.clear();
-        else {
+        else if(impassable != impassable2) {
             impassable2.clear();
             impassable2.addAll(impassable);
         }
-        if(onlyPassable != null && length == 1)
+        if (onlyPassable != null && length == 1)
             impassable2.addAll(onlyPassable);
         if (fearSources == null || fearSources.length < 1) {
             cutShort = true;
@@ -3257,8 +3170,7 @@ public class DijkstraMap {
             cachedSize = size;
             resetMap();
             setGoals(fearSources);
-            if (goals.isEmpty())
-            {
+            if (goals.isEmpty()) {
                 cutShort = true;
                 return new ObjectDeque<>(path);
             }
@@ -3287,7 +3199,7 @@ public class DijkstraMap {
 
             for (int d = 0; d <= measurement.directionCount(); d++) {
                 Coord pt = Coord.get(currentPos.x + dirs[d].deltaX, currentPos.y + dirs[d].deltaY);
-                if(!pt.isWithin(width, height))
+                if (!pt.isWithin(width, height))
                     continue;
                 if (gradientMap[pt.x][pt.y] < best && !impassable2.contains(pt)) {
                     if (dirs[choice] == Direction.NONE || !path.contains(pt)) {
@@ -3313,10 +3225,8 @@ public class DijkstraMap {
             if (paidLength > length - 1f) {
                 if (onlyPassable != null && onlyPassable.contains(currentPos)) {
                     frustration++;
-                    tempSet.clear();
-                    tempSet.addAll(impassable2);
-                    tempSet.add(currentPos);
-                    return findFleePathLarge(size, length, preferLongerPaths, tempSet, onlyPassable, start, fearSources);
+                    impassable2.add(currentPos);
+                    return findFleePathLarge(size, length, preferLongerPaths, impassable2, onlyPassable, start, fearSources);
                 }
                 break;
             }
@@ -3343,6 +3253,7 @@ public class DijkstraMap {
     public ObjectDeque<Coord> findPathPreScanned(Coord target) {
         return findPathPreScanned(null, target);
     }
+
     /**
      * When you can control how often the (relatively time-intensive) scan() method is called, but may need simple paths
      * very frequently (such as for a path that follows the mouse), you can use this method to reduce the amount of work
@@ -3360,24 +3271,20 @@ public class DijkstraMap {
      */
     public ObjectDeque<Coord> findPathPreScanned(ObjectDeque<Coord> buffer, Coord target) {
         path.clear();
-        if (!initialized || goals == null || goals.isEmpty())
-        {
-            if(buffer == null)
+        if (!initialized || goals == null || goals.isEmpty()) {
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
         Coord currentPos = target;
-        if(gradientMap[currentPos.x][currentPos.y] <= FLOOR)
+        if (gradientMap[currentPos.x][currentPos.y] <= FLOOR)
             path.add(currentPos);
-        else
-        {
-            if(buffer == null)
+        else {
+            if (buffer == null)
                 return new ObjectDeque<>();
-            else
-            {
+            else {
                 return buffer;
             }
         }
@@ -3423,10 +3330,9 @@ public class DijkstraMap {
 
         } while (gradientMap[currentPos.x][currentPos.y] != 0);
         cutShort = false;
-        if(buffer == null)
+        if (buffer == null)
             return new ObjectDeque<>(path);
-        else
-        {
+        else {
             buffer.addAll(path);
             return buffer;
         }
@@ -3486,6 +3392,7 @@ public class DijkstraMap {
      * If this is 2 (the default), having two orthogonal obstacles adjacent to both the current cell and the cell the
      * pathfinder is trying to diagonally enter will block diagonal moves. As an example, if there is a wall to the
      * north and a wall to the east, then the pathfinder won't be able to move northeast even if there is a floor there.
+     *
      * @return the current level of blocking required to stop a diagonal move
      */
     public int getBlockingRequirement() {
@@ -3507,6 +3414,7 @@ public class DijkstraMap {
      * If this is 2 (the default), having two orthogonal obstacles adjacent to both the current cell and the cell the
      * pathfinder is trying to diagonally enter will block diagonal moves. As an example, if there is a wall to the
      * north and a wall to the east, then the pathfinder won't be able to move northeast even if there is a floor there.
+     *
      * @param blockingRequirement the desired level of blocking required to stop a diagonal move
      */
     public void setBlockingRequirement(int blockingRequirement) {
@@ -3520,7 +3428,7 @@ public class DijkstraMap {
         System.arraycopy(src, 0, dirs, 0, n);
         for (int i = n - 1; i > 0; i--) {
             // equivalent to rng.nextInt(i+1), but here it can omit an unnecessary check and be inlined.
-            final int r = (int)((i + 1) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
+            final int r = (int) ((i + 1) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
             Direction t = dirs[r];
             dirs[r] = dirs[i];
             dirs[i] = t;
