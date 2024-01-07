@@ -5,17 +5,13 @@ eclipse.project.name = ext.projectName
 idea.module.excludeDirs += [file("src/main/java/com/github/yellowstonegames/emu/")]
 [compileJava, compileTestJava, javadoc]*.exclude("com/github/yellowstonegames/emu")
 
-java.withSourcesJar()
-
 dependencies {
 //    api "com.github.tommyettinger:funderby:$funderbyVersion"
     api "com.github.tommyettinger:digital:$digitalVersion"
     api "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion"
     api "com.github.tommyettinger:regexodus:$regexodusVersion"
     api "com.github.tommyettinger:juniper:$juniperVersion"
-    sourcesElements "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion:sources"
-    sourcesElements "com.github.tommyettinger:regexodus:$regexodusVersion:sources"
-    sourcesElements "com.github.tommyettinger:juniper:$juniperVersion:sources"
+
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }

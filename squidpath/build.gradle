@@ -2,8 +2,6 @@
 ext.projectName = 'SquidPath'
 eclipse.project.name = ext.projectName
 
-java.withSourcesJar()
-
 dependencies {
     api project(':squidcore')
     api project(':squidgrid')
