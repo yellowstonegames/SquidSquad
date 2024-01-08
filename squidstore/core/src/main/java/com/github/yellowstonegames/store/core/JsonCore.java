@@ -287,7 +287,6 @@ public final class JsonCore {
         JsonSupport.registerObjectList(json);
         JsonSupport.registerIntList(json);
         JsonSupport.registerNumberedSet(json);
-        json.addClassTag("#PrbT", ProbabilityTable.class);
         json.setSerializer(ProbabilityTable.class, new Json.Serializer<ProbabilityTable>() {
             @Override
             public void write(Json json, ProbabilityTable object, Class knownType) {

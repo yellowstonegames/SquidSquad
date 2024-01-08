@@ -748,6 +748,56 @@ public final class JsonGrid {
     }
 
     /**
+     * Registers FoamplexNoise with the given Json object, so FoamplexNoise can be written to and read from JSON.
+     * This is a simple wrapper around FoamplexNoise's built-in {@link FoamplexNoise#stringSerialize()} and
+     * {@link FoamplexNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerFoamplexNoise(@NonNull Json json) {
+        json.addClassTag("FoaN", FoamplexNoise.class);
+        json.setSerializer(FoamplexNoise.class, new Json.Serializer<FoamplexNoise>() {
+            @Override
+            public void write(Json json, FoamplexNoise object, Class knownType) {
+                json.writeObjectStart(FoamplexNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public FoamplexNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return FoamplexNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers HoneyNoise with the given Json object, so HoneyNoise can be written to and read from JSON.
+     * This is a simple wrapper around HoneyNoise's built-in {@link HoneyNoise#stringSerialize()} and
+     * {@link HoneyNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerHoneyNoise(@NonNull Json json) {
+        json.addClassTag("FoaN", HoneyNoise.class);
+        json.setSerializer(HoneyNoise.class, new Json.Serializer<HoneyNoise>() {
+            @Override
+            public void write(Json json, HoneyNoise object, Class knownType) {
+                json.writeObjectStart(HoneyNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public HoneyNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return HoneyNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
      * Registers SimplexNoise with the given Json object, so SimplexNoise can be written to and read from JSON.
      * This is a simple wrapper around SimplexNoise's built-in {@link SimplexNoise#stringSerialize()} and
      * {@link SimplexNoise#recreateFromString(String)} methods.
@@ -959,7 +1009,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerSorbetNoise(@NonNull Json json) {
-        json.addClassTag("PerN", SorbetNoise.class);
+        json.addClassTag("SorN", SorbetNoise.class);
         json.setSerializer(SorbetNoise.class, new Json.Serializer<SorbetNoise>() {
             @Override
             public void write(Json json, SorbetNoise object, Class knownType) {
