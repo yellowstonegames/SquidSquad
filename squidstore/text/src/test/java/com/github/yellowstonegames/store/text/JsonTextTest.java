@@ -80,4 +80,22 @@ public class JsonTextTest {
         System.out.println();
     }
 
+    @Test
+    public void testMnemonic() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonText.registerMnemonic(json);
+        Mnemonic m = new Mnemonic(12345L);
+        String triplets = m.toMnemonic(1L, true);
+        String words = m.toWordMnemonic(2, true);
+        String longWords = m.toLongWordMnemonic(3L, true);
+        String data = json.toJson(m);
+        System.out.println(data);
+        Mnemonic m2 = json.fromJson(Mnemonic.class, data);
+        Assert.assertEquals(triplets, m2.toMnemonic(1L, true));
+        Assert.assertEquals(words, m2.toWordMnemonic(2, true));
+        Assert.assertEquals(longWords, m2.toLongWordMnemonic(3L, true));
+        Assert.assertEquals(m, m2);
+        System.out.println();
+    }
+
 }

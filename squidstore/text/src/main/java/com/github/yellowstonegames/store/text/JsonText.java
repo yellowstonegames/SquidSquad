@@ -18,12 +18,14 @@ package com.github.yellowstonegames.store.text;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.store.core.JsonCore;
-import com.github.yellowstonegames.text.*;
-
+import com.github.yellowstonegames.text.Language;
+import com.github.yellowstonegames.text.Mnemonic;
+import com.github.yellowstonegames.text.Translator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class JsonText {
@@ -39,6 +41,7 @@ public final class JsonText {
         registerLanguage(json);
         registerLanguageSentenceForm(json);
         registerTranslator(json);
+        registerMnemonic(json);
     }
     
     
@@ -94,6 +97,8 @@ public final class JsonText {
 
     /**
      * Registers Translator with the given Json object, so Translator can be written to and read from JSON.
+     * Registers {@link ObjectObjectMap} with {@link JsonSupport#registerObjectObjectMap(Json)}, and registers
+     * {@link Language} with {@link #registerLanguage(Json)}.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -127,6 +132,36 @@ public final class JsonText {
                 current = current.next;
                 ObjectObjectMap<String, String> reverse = json.readValue(ObjectObjectMap.class, current);
                 return new Translator(language, shift, cacheLevel, table, reverse);
+            }
+        });
+    }
+
+    /**
+     * Registers Mnemonic with the given Json object, so Mnemonic can be written to and read from JSON.
+     * Registers {@link NumberedSet} with {@link JsonSupport#registerNumberedSet(Json)}.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerMnemonic(@NonNull Json json) {
+        json.addClassTag("Mnem", Mnemonic.class);
+        JsonSupport.registerNumberedSet(json);
+        json.setSerializer(Mnemonic.class, new Json.Serializer<Mnemonic>() {
+            @Override
+            public void write(Json json, Mnemonic object, Class knownType) {
+                json.writeObjectStart();
+                json.writeType(Mnemonic.class);
+                json.writeValue("i", object.items, NumberedSet.class);
+                json.writeValue("a", object.allAdjectives, NumberedSet.class);
+                json.writeValue("n", object.allNouns, NumberedSet.class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Mnemonic read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Mnemonic(json.readValue("i", NumberedSet.class, jsonData),
+                        json.readValue("a", NumberedSet.class, jsonData),
+                        json.readValue("n", NumberedSet.class, jsonData));
             }
         });
     }

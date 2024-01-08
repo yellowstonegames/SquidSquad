@@ -215,6 +215,24 @@ public class Mnemonic {
         allNouns.renumber();
     }
 
+    public Mnemonic(NumberedSet<String> items, NumberedSet<String> allAdjectives, NumberedSet<String> allNouns) {
+        if(items == null || items.size() < 256)
+            throw new IllegalArgumentException("items must be non-null, with length of at least 256.");
+        this.items = items;
+        if(allAdjectives == null || allAdjectives.isEmpty())
+            throw new IllegalArgumentException("allAdjectives must be non-null and non-empty.");
+        this.allAdjectives = allAdjectives;
+        if(allNouns == null || allNouns.isEmpty())
+            throw new IllegalArgumentException("allNouns must be non-null and non-empty.");
+        this.allNouns = allNouns;
+    }
+
+    public Mnemonic(Mnemonic other) {
+        items = new NumberedSet<>(other.items);
+        allAdjectives = new NumberedSet<>(other.allAdjectives);
+        allNouns = new NumberedSet<>(other.allNouns);
+    }
+
     /**
      * Given any long, generates a slightly-more-memorable gibberish phrase that can be decoded back to the original
      * long with {@link #fromMnemonic(String)}. Examples of what this can produce are "noahritwimoesaidrubiotso" and
@@ -428,5 +446,23 @@ public class Mnemonic {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Mnemonic mnemonic = (Mnemonic) o;
+
+        if (!items.equals(mnemonic.items)) return false;
+        if (!allAdjectives.equals(mnemonic.allAdjectives)) return false;
+        return allNouns.equals(mnemonic.allNouns);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = items.hashCode();
+        result = 31 * result + allAdjectives.hashCode();
+        result = 31 * result + allNouns.hashCode();
+        return result;
+    }
 }
