@@ -68,8 +68,9 @@ public class Mnemonic {
             "veeveiveovrevwevyevieviovrivwivyivoevoivrovuovyovuevuivruvwuvyu" +
             "yaiyauyeayeeyeiyeoyiayieyioyoayoeyoiyouyuayueyuiyuo" +
             "zaizauzvazlazwazyazeazeezeizeozvezlezwezyeziazieziozvizlizwizyizoazoezoizouzvozlozuozyozuazuezuizvuzluzwuzyu";
-    public final NumberedSet<String> items = new NumberedSet<>(256, 0.5f);
-    public final NumberedSet<String> allAdjectives, allNouns;
+    public final NumberedSet<String> items;
+    public final NumberedSet<String> allAdjectives;
+    public final NumberedSet<String> allNouns;
 
     /**
      * Default constructor for a Mnemonic generator; equivalent to {@code new Mnemonic(1L)}, and probably a good choice
@@ -109,6 +110,7 @@ public class Mnemonic {
         int[] order = ArrayTools.range(431);
         rng.shuffle(order);
         int o;
+        items = new NumberedSet<>(256, 0.5f);
         for (int i = 0; i < 256; i++) {
             o = order[i];
             items.add(baseTriplets.substring(o * 3, o * 3 + 3));
@@ -118,19 +120,21 @@ public class Mnemonic {
         for (int i = 0; i < adjective.size(); i++) {
             ObjectList<String> words = adjective.getAt(i);
             for (int j = 0; j < words.size(); j++) {
-                if(!words.get(j).contains(" "))
+                if(-1 == words.get(j).indexOf(' '))
                     allAdjectives.add(words.get(j));
             }
         }
         allAdjectives.shuffle(rng);
+        allAdjectives.renumber();
         for (int i = 0; i < noun.size(); i++) {
             ObjectList<String> words = noun.getAt(i);
             for (int j = 0; j < words.size(); j++) {
-                if(!words.get(j).contains(" "))
+                if(-1 == words.get(j).indexOf(' '))
                     allNouns.add(words.get(j));
             }
         }
         allNouns.shuffle(rng);
+        allNouns.renumber();
     }
 
     /**
@@ -154,6 +158,7 @@ public class Mnemonic {
         int[] order = ArrayTools.range(431);
         rng.shuffle(order);
         int o;
+        items = new NumberedSet<>(256, 0.5f);
         for (int i = 0; i < 256; i++) {
             o = order[i];
             items.add(baseTriplets.substring(o * 3, o * 3 + 3));
@@ -161,12 +166,15 @@ public class Mnemonic {
         allAdjectives = new NumberedSet<>(adjectives.size(), 0.5f);
         allNouns = new NumberedSet<>(nouns.size(), 0.5f);
         for(String word : adjectives)
-            if(!word.contains(" ")) allAdjectives.add(word);
+            if(-1 == word.indexOf(' ')) allAdjectives.add(word);
         allAdjectives.shuffle(rng);
+        allAdjectives.renumber();
         for(String word : nouns)
-            if(!word.contains(" ")) allNouns.add(word);
+            if(-1 == word.indexOf(' ')) allNouns.add(word);
         allNouns.shuffle(rng);
+        allNouns.renumber();
     }
+
     /**
      * Constructor that allows you to specify the adjective and noun collections (given as arrays) used by
      * {@link #toWordMnemonic(int, boolean)} as well as a seed. This should be useful when you want to enforce a stable
@@ -190,6 +198,7 @@ public class Mnemonic {
         int[] order = ArrayTools.range(431);
         rng.shuffle(order);
         int o;
+        items = new NumberedSet<>(256, 0.5f);
         for (int i = 0; i < 256; i++) {
             o = order[i];
             items.add(baseTriplets.substring(o * 3, o * 3 + 3));
@@ -197,11 +206,13 @@ public class Mnemonic {
         allAdjectives = new NumberedSet<>(adjectives.length, 0.5f);
         allNouns = new NumberedSet<>(nouns.length, 0.5f);
         for(String word : adjectives)
-            if(!word.contains(" ")) allAdjectives.add(word);
+            if(-1 == word.indexOf(' ')) allAdjectives.add(word);
         allAdjectives.shuffle(rng);
+        allAdjectives.renumber();
         for(String word : nouns)
-            if(!word.contains(" ")) allNouns.add(word);
+            if(-1 == word.indexOf(' ')) allNouns.add(word);
         allNouns.shuffle(rng);
+        allNouns.renumber();
     }
 
     /**
