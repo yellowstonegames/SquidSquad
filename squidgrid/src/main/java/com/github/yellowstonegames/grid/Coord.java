@@ -43,8 +43,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * isn't much of a possible way to store more than 32767x32767 (where 32767 is {@link Short#MAX_VALUE}) Coords in any
  * Java application due to limits on array size. There is also an immutable, precalculated result for
  * {@link #hashCode()} to return without needing to recalculate anything. The precalculated hash won't overlap with the
- * hash for any other Coord as long as all Coord values have x and y each in the -4096 to 4095 range. Larger ranges
- * tend to exhaust all of Java's heap (using only Coord items), so supporting larger sizes isn't at all a priority.
+ * hash for any other Coord as long as all Coord values have x and y each in the range from {@link Short#MIN_VALUE} to
+ * {@link Short#MAX_VALUE}. Larger ranges than a 8192x8192 grid of Coord items tend to exhaust all of Java's heap
+ * (using only Coord items), so supporting larger sizes isn't at all a priority.
  */
 public class Coord {
     /**
@@ -82,9 +83,9 @@ public class Coord {
         int mx = this.x ^ xs;
         // same for my
         int my = this.y ^ ys;
-        // Cantor pairing function, and XOR with every odd-index bit of xs and every even-index bit of ys
+        // Rosenberg-Strong pairing function, and XOR with every odd-index bit of xs and every even-index bit of ys
         // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
-        my = my + ((mx + my) * (mx + my + 1) >>> 1) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+        my = (mx >= my ? mx * (mx + 2) - my : my * my + mx) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
         // a specific combination of XOR and two rotations that doesn't produce duplicate hashes for our target range
         this.hash = (my ^ (my << 16 | my >>> 16) ^ (my << 8 | my >>> 24));
     }
@@ -555,6 +556,31 @@ public class Coord {
         return hash;
     }
 
+    /**
+     * If x and y are valid {@code short} numbers, then this will return a unique {@code int} hash code for those two.
+     * If either is not a valid short, this cannot be guaranteed to produce a unique result. This is the same as the
+     * algorithm used to precalculate the hash returned by {@link #hashCode()}. Unlike most of the other hashCode()
+     * variants here, this acts fine with negative inputs, and should still return random-enough hashes when x or y
+     * isn't in the short range (just not guaranteed to be unique).
+     * @param x should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
+     * @param y should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
+     * @return an int hash code that will be unique for any combination of short x and short y
+     */
+    public static int signedRosenbergStrongHashCode(int x, int y) {
+        // Calculates a hash that won't overlap until very, very many Coords have been produced.
+        // the signs for x and y; each is either -1 or 0
+        int xs = x >> 31, ys = y >> 31;
+        // makes x equivalent to -1 ^ this.x if this.x is negative
+        x ^= xs;
+        // same for y
+        y ^= ys;
+        // Rosenberg-Strong pairing function, and XOR with every odd-index bit of xs and every even-index bit of ys
+        // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+        y = (x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+        // a specific combination of XOR and two rotations that doesn't produce duplicate hashes for our target range
+        return (y ^ (y << 16 | y >>> 16) ^ (y << 8 | y >>> 24));
+
+    }
     /**
      * Gets a variant hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs
      * will generate, but instead uses a highly-specific technique based on the
