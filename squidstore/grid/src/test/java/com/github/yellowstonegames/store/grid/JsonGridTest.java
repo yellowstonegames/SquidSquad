@@ -550,6 +550,4 @@ public class JsonGridTest {
         System.out.println(vf2);
         Assert.assertEquals(vf, vf2);
     }
-
-
 }

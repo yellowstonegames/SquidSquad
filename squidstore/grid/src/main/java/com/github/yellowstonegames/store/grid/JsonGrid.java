@@ -1158,8 +1158,6 @@ public final class JsonGrid {
 
     /**
      * Registers LightingManagerRgb with the given Json object, so LightingManagerRgb can be written to and read from JSON.
-     * This does not register a custom serializer for LightingManagerRgb, but instead allows Json to handle it and
-     * registers all types of field in a LightingManagerRgb in one go.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -1170,12 +1168,66 @@ public final class JsonGrid {
         registerCoordObjectOrderedMap(json);
         JsonCore.registerFloat2D(json);
         JsonCore.registerInt2D(json);
+
+        json.setSerializer(LightingManagerRgb.class, new Json.Serializer<LightingManagerRgb>() {
+            @Override
+            public void write(Json json, LightingManagerRgb object, Class knownType) {
+                json.writeObjectStart(LightingManagerRgb.class, knownType);
+                json.writeValue("width", object.width);
+                json.writeValue("height", object.height);
+                json.writeValue("backgroundColor", object.backgroundColor);
+                json.writeValue("viewerRange", object.viewerRange);
+                json.writeValue("resistances", object.resistances, float[][].class);
+                json.writeValue("fovResult", object.fovResult, float[][].class);
+                json.writeValue("lightFromFOV", object.lightFromFOV, float[][].class);
+                json.writeValue("lightingStrength", object.lightingStrength, float[][].class);
+                json.writeValue("losResult", object.losResult, float[][].class);
+                json.writeValue("colorLighting", object.colorLighting, int[][].class);
+                json.writeValue("fovLightColors", object.fovLightColors, int[][].class);
+                json.writeValue("noticeable", object.noticeable, Region.class);
+                json.writeValue("radiusStrategy", object.radiusStrategy.name());
+                json.writeValue("symmetry", object.symmetry.name());
+                json.writeValue("lights", object.lights, CoordObjectOrderedMap.class, Radiance.class);
+                json.writeObjectEnd();
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public LightingManagerRgb read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                int width = json.readValue(int.class, jsonData.get("width"));
+                int height = json.readValue(int.class, jsonData.get("height"));
+                int backgroundColor = json.readValue(int.class, jsonData.get("backgroundColor"));
+                float viewerRange = json.readValue(float.class, jsonData.get("viewerRange"));
+                float[][] resistances = json.readValue(float[][].class, jsonData.get("resistances"));
+                float[][] fovResult = json.readValue(float[][].class, jsonData.get("fovResult"));
+                float[][] lightFromFOV = json.readValue(float[][].class, jsonData.get("lightFromFOV"));
+                float[][] lightingStrength = json.readValue(float[][].class, jsonData.get("lightingStrength"));
+                float[][] losResult = json.readValue(float[][].class, jsonData.get("losResult"));
+                int[][] colorLighting = json.readValue(int[][].class, jsonData.get("colorLighting"));
+                int[][] fovLightColors = json.readValue(int[][].class, jsonData.get("fovLightColors"));
+                Region noticeable = json.readValue(Region.class, jsonData.get("noticeable"));
+                Radius radiusStrategy = Radius.valueOf(json.readValue(String.class, jsonData.get("radiusStrategy")));
+                LightingManagerRgb.SymmetryMode symmetry = LightingManagerRgb.SymmetryMode.valueOf(json.readValue(String.class, jsonData.get("symmetry")));
+                CoordObjectOrderedMap lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
+                LightingManagerRgb data = new LightingManagerRgb(resistances, backgroundColor, radiusStrategy, viewerRange, symmetry);
+                data.width = width;
+                data.height = height;
+                data.fovResult = fovResult;
+                data.lightFromFOV = lightFromFOV;
+                data.lightingStrength = lightingStrength;
+                data.losResult = losResult;
+                data.colorLighting = colorLighting;
+                data.fovLightColors = fovLightColors;
+                data.noticeable = noticeable;
+                data.lights = lights;
+                return data;
+            }
+        });
     }
 
     /**
      * Registers VisionFramework with the given Json object, so VisionFramework can be written to and read from JSON.
-     * This does not register a custom serializer for VisionFramework, but instead allows Json to handle it and
-     * registers all types of field in a VisionFramework in one go.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -1233,8 +1285,6 @@ public final class JsonGrid {
 
     /**
      * Registers VisionFrameworkRgb with the given Json object, so VisionFrameworkRgb can be written to and read from JSON.
-     * This does not register a custom serializer for VisionFrameworkRgb, but instead allows Json to handle it and
-     * registers all types of field in a VisionFrameworkRgb in one go.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -1243,5 +1293,50 @@ public final class JsonGrid {
         registerLightingManagerRgb(json);
         JsonCore.registerChar2D(json);
         JsonGrid.registerCoordFloatOrderedMap(json);
+
+        json.setSerializer(VisionFrameworkRgb.class, new Json.Serializer<VisionFrameworkRgb>() {
+            @Override
+            public void write(Json json, VisionFrameworkRgb object, Class knownType) {
+                json.writeObjectStart(VisionFrameworkRgb.class, knownType);
+                json.writeValue("placeWidth", object.placeWidth);
+                json.writeValue("placeHeight", object.placeHeight);
+                json.writeValue("rememberedColor", object.rememberedColor);
+                json.writeValue("backgroundColors", object.backgroundColors, int[][].class);
+                json.writeValue("previousLightLevels", object.previousLightLevels, float[][].class);
+                json.writeValue("linePlaceMap", object.linePlaceMap, char[][].class);
+                json.writeValue("prunedPlaceMap", object.prunedPlaceMap, char[][].class);
+                json.writeValue("blockage", object.blockage, Region.class);
+                json.writeValue("inView", object.inView, Region.class);
+                json.writeValue("justHidden", object.justHidden, Region.class);
+                json.writeValue("justSeen", object.justSeen, Region.class);
+                json.writeValue("seen", object.seen, Region.class);
+                json.writeValue("newlyVisible", object.newlyVisible, Region.class);
+                json.writeValue("lighting", object.lighting, LightingManagerRgb.class);
+                json.writeValue("viewers", object.viewers, CoordFloatOrderedMap.class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public VisionFrameworkRgb read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                VisionFrameworkRgb data = new VisionFrameworkRgb();
+                data.placeWidth = json.readValue(int.class, jsonData.get("placeWidth"));
+                data.placeHeight = json.readValue(int.class, jsonData.get("placeHeight"));
+                data.rememberedColor = json.readValue(int.class, jsonData.get("rememberedColor"));
+                data.backgroundColors = json.readValue(int[][].class, jsonData.get("backgroundColors"));
+                data.previousLightLevels = json.readValue(float[][].class, jsonData.get("previousLightLevels"));
+                data.linePlaceMap = json.readValue(char[][].class, jsonData.get("linePlaceMap"));
+                data.prunedPlaceMap = json.readValue(char[][].class, jsonData.get("prunedPlaceMap"));
+                data.blockage = json.readValue(Region.class, jsonData.get("blockage"));
+                data.inView = json.readValue(Region.class, jsonData.get("inView"));
+                data.justHidden = json.readValue(Region.class, jsonData.get("justHidden"));
+                data.justSeen = json.readValue(Region.class, jsonData.get("justSeen"));
+                data.seen = json.readValue(Region.class, jsonData.get("seen"));
+                data.newlyVisible = json.readValue(Region.class, jsonData.get("newlyVisible"));
+                data.lighting = json.readValue(LightingManagerRgb.class, jsonData.get("lighting"));
+                data.viewers = json.readValue(CoordFloatOrderedMap.class, jsonData.get("viewers"));
+                return data;
+            }
+        });
     }
 }
