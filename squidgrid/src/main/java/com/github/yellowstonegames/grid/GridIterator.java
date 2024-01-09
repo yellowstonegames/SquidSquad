@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.yellowstonegames.core.annotations.Beta;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -41,12 +42,12 @@ public abstract class GridIterator implements Iterator<Coord> {
      * @author smelC
      */
     public static class CenteredSquare extends GridIterator {
-        protected/* @Nullable */Coord previous;
+        protected @Nullable Coord previous;
 
-        protected final int xstart;
-        protected final int ystart;
+        protected int xstart;
+        protected int ystart;
 
-        protected final int size;
+        protected int size;
 
         protected boolean done;
 
@@ -117,12 +118,12 @@ public abstract class GridIterator implements Iterator<Coord> {
             throw new UnsupportedOperationException();
         }
 
-        protected/* @Nullable */Coord findNext(boolean mute) {
+        protected @Nullable Coord findNext(boolean mutate) {
             while (!done) {
                 final Coord result = findNext0();
                 if (result != null) {
                     if (isInGrid(result.x, result.y)) {
-                        if (mute)
+                        if (mutate)
                             previous = result;
                         return result;
                     }
@@ -140,7 +141,7 @@ public abstract class GridIterator implements Iterator<Coord> {
         /*
          * This method doesn't care about validity, findNext(boolean) handles it
          */
-        protected/* @Nullable */Coord findNext0() {
+        protected @Nullable Coord findNext0() {
             if (previous == null) {
                 /* Init */
                 /* We're in SquidSquad coordinates here ((0,0) is bottom left) */
@@ -168,4 +169,126 @@ public abstract class GridIterator implements Iterator<Coord> {
             return 0 <= x && x < width && 0 <= y && y < height;
         }
     }
+
+
+    /**
+     * An iterator to iterate from a starting position (exclusive) and going up.
+     * This iterator cycles when reaching the map's bound, but it iterates at
+     * most once on a cell, i.e. it does at most one roll over a column of the
+     * map.
+     *
+     * @author smelC
+     */
+    public static class VerticalUp extends GridIterator {
+
+        /** The starting X-coordinate */
+        protected int startx;
+
+        /** The starting Y-coordinate */
+        protected int starty;
+
+        /* Initially null */
+        protected Coord prev;
+
+        /**
+         * An iterator to iterate vertically, starting AFTER
+         * {@code (startx, starty)}. This iterates cycles when it reaches the
+         * map's bound, but it iterates at most once on a cell, i.e. it does at
+         * most one roll over a column of the map.
+         *
+         * @param startx
+         *            The starting X-coordinate.
+         * @param starty
+         *            The starting vertical-coordinate.
+         * @param width
+         *            The map's width.
+         * @param height
+         *            The map's height.
+         */
+        public VerticalUp(int startx, int starty, int width, int height) {
+            if (startx < 0 || width <= startx)
+                throw new IllegalStateException(
+                        "Illegal x-coordinate: " + startx + " (map's width: " + width + ")");
+            this.startx = startx;
+            if (starty < 0 || height <= starty)
+                throw new IllegalStateException(
+                        "Illegal y-coordinate: " + starty + " (map's width: " + height + ")");
+            this.starty = starty;
+
+            this.width = width;
+            this.height = height;
+        }
+
+        /**
+         * An iterator to iterate vertically, starting AFTER {@code start}. This
+         * iterates cycles when it reaches the map's bound, but it iterates at
+         * most once on a cell, i.e. it does at most one roll over a column of
+         * the map.
+         *
+         * @param start
+         *            The starting coordinate.
+         * @param width
+         *            The map's width.
+         * @param height
+         *            The map's height.
+         */
+        public VerticalUp(Coord start, int width, int height) {
+            this(start.x, start.y, width, height);
+        }
+
+        @Override
+        public boolean hasNext() {
+            final Coord n = findNext();
+            if (prev == null)
+                return n != null;
+            else {
+                /* Not done && has next */
+                return (prev.x != startx || prev.y != starty) && n != null;
+            }
+        }
+
+        @Override
+        public Coord next() {
+            prev = findNext();
+            if (prev == null)
+                throw new NoSuchElementException();
+            return prev;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        protected Coord findNext() {
+            if (prev == null) {
+                /* First iteration */
+                if (starty == 0)
+                    /* Start from the bottom */
+                    return Coord.get(startx, 0);
+                else
+                    /* Start from the cell above (startx, starty) */
+                    return Coord.get(startx, starty + 1);
+            } else {
+                if (prev.x == startx && prev.y == starty)
+                    /* Done iterating */
+                    return null;
+                else if (prev.y == 0) {
+                    /* Continue from the bottom */
+                    return Coord.get(startx, 0);
+                } else {
+                    /* Go up */
+                    assert 0 < prev.y && prev.y < height;
+                    final Coord r = Coord.get(startx, prev.y + 1);
+                    if (r.y == starty)
+                        /* We would return the starting position */
+                        return null;
+                    else
+                        return r;
+                }
+            }
+        }
+
+    }
+
 }
