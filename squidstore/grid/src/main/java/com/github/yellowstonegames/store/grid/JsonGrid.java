@@ -1088,8 +1088,6 @@ public final class JsonGrid {
 
     /**
      * Registers LightingManager with the given Json object, so LightingManager can be written to and read from JSON.
-     * This does not register a custom serializer for LightingManager, but instead allows Json to handle it and
-     * registers all types of field in a LightingManager in one go.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -1100,12 +1098,69 @@ public final class JsonGrid {
         registerCoordObjectOrderedMap(json);
         JsonCore.registerFloat2D(json);
         JsonCore.registerInt2D(json);
+
+        json.setSerializer(LightingManager.class, new Json.Serializer<LightingManager>() {
+            @Override
+            public void write(Json json, LightingManager object, Class knownType) {
+                json.writeObjectStart(LightingManager.class, knownType);
+                json.writeValue("width", object.width);
+                json.writeValue("height", object.height);
+                json.writeValue("backgroundColor", object.backgroundColor);
+                json.writeValue("viewerRange", object.viewerRange);
+                json.writeValue("resistances", object.resistances, float[][].class);
+                json.writeValue("fovResult", object.fovResult, float[][].class);
+                json.writeValue("lightFromFOV", object.lightFromFOV, float[][].class);
+                json.writeValue("lightingStrength", object.lightingStrength, float[][].class);
+                json.writeValue("losResult", object.losResult, float[][].class);
+                json.writeValue("colorLighting", object.colorLighting, int[][].class);
+                json.writeValue("fovLightColors", object.fovLightColors, int[][].class);
+                json.writeValue("noticeable", object.noticeable, Region.class);
+                json.writeValue("radiusStrategy", object.radiusStrategy.name());
+                json.writeValue("symmetry", object.symmetry.name());
+                json.writeValue("lights", object.lights, CoordObjectOrderedMap.class, Radiance.class);
+                json.writeObjectEnd();
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public LightingManager read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                int width = json.readValue(int.class, jsonData.get("width"));
+                int height = json.readValue(int.class, jsonData.get("height"));
+                int backgroundColor = json.readValue(int.class, jsonData.get("backgroundColor"));
+                float viewerRange = json.readValue(float.class, jsonData.get("viewerRange"));
+                float[][] resistances = json.readValue(float[][].class, jsonData.get("resistances"));
+                float[][] fovResult = json.readValue(float[][].class, jsonData.get("fovResult"));
+                float[][] lightFromFOV = json.readValue(float[][].class, jsonData.get("lightFromFOV"));
+                float[][] lightingStrength = json.readValue(float[][].class, jsonData.get("lightingStrength"));
+                float[][] losResult = json.readValue(float[][].class, jsonData.get("losResult"));
+                int[][] colorLighting = json.readValue(int[][].class, jsonData.get("colorLighting"));
+                int[][] fovLightColors = json.readValue(int[][].class, jsonData.get("fovLightColors"));
+                Region noticeable = json.readValue(Region.class, jsonData.get("noticeable"));
+                Radius radiusStrategy = Radius.valueOf(json.readValue(String.class, jsonData.get("radiusStrategy")));
+                LightingManager.SymmetryMode symmetry = LightingManager.SymmetryMode.valueOf(json.readValue(String.class, jsonData.get("symmetry")));
+                CoordObjectOrderedMap lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
+                LightingManager data = new LightingManager(resistances, backgroundColor, radiusStrategy, viewerRange, symmetry);
+                data.width = width;
+                data.height = height;
+                data.fovResult = fovResult;
+                data.lightFromFOV = lightFromFOV;
+                data.lightingStrength = lightingStrength;
+                data.losResult = losResult;
+                data.colorLighting = colorLighting;
+                data.fovLightColors = fovLightColors;
+                data.noticeable = noticeable;
+                data.lights = lights;
+                return data;
+            }
+        });
+
     }
 
     /**
-     * Registers LightingManager with the given Json object, so LightingManager can be written to and read from JSON.
-     * This does not register a custom serializer for LightingManager, but instead allows Json to handle it and
-     * registers all types of field in a LightingManager in one go.
+     * Registers LightingManagerRgb with the given Json object, so LightingManagerRgb can be written to and read from JSON.
+     * This does not register a custom serializer for LightingManagerRgb, but instead allows Json to handle it and
+     * registers all types of field in a LightingManagerRgb in one go.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */

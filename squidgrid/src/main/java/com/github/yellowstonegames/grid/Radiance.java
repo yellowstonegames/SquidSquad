@@ -309,7 +309,7 @@ public class Radiance {
     public String toString() {
         return "Radiance{" +
                 "range=" + range +
-                ", color=" + color +
+                ", color=0x" + Base.BASE16.unsigned(color) +
                 ", flicker=" + flicker +
                 ", strobe=" + strobe +
                 ", delay=" + delay +
@@ -353,7 +353,7 @@ public class Radiance {
         Base.SIMPLE64.appendSigned(sb, strobe).append('~');
         Base.SIMPLE64.appendSigned(sb, delay).append('~');
         Base.SIMPLE64.appendSigned(sb, flare).append('~');
-        Base.SIMPLE64.appendSigned(sb, color).append('`');
+        Base.SIMPLE64.appendSigned(sb, seed).append('`');
         return sb.toString();
     }
     
