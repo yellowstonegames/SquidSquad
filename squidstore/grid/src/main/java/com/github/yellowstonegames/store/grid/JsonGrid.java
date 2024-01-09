@@ -1154,7 +1154,6 @@ public final class JsonGrid {
                 return data;
             }
         });
-
     }
 
     /**
@@ -1185,6 +1184,51 @@ public final class JsonGrid {
         registerLightingManager(json);
         JsonCore.registerChar2D(json);
         JsonGrid.registerCoordFloatOrderedMap(json);
+
+        json.setSerializer(VisionFramework.class, new Json.Serializer<VisionFramework>() {
+            @Override
+            public void write(Json json, VisionFramework object, Class knownType) {
+                json.writeObjectStart(VisionFramework.class, knownType);
+                json.writeValue("placeWidth", object.placeWidth);
+                json.writeValue("placeHeight", object.placeHeight);
+                json.writeValue("rememberedColor", object.rememberedColor);
+                json.writeValue("backgroundColors", object.backgroundColors, int[][].class);
+                json.writeValue("previousLightLevels", object.previousLightLevels, float[][].class);
+                json.writeValue("linePlaceMap", object.linePlaceMap, char[][].class);
+                json.writeValue("prunedPlaceMap", object.prunedPlaceMap, char[][].class);
+                json.writeValue("blockage", object.blockage, Region.class);
+                json.writeValue("inView", object.inView, Region.class);
+                json.writeValue("justHidden", object.justHidden, Region.class);
+                json.writeValue("justSeen", object.justSeen, Region.class);
+                json.writeValue("seen", object.seen, Region.class);
+                json.writeValue("newlyVisible", object.newlyVisible, Region.class);
+                json.writeValue("lighting", object.lighting, LightingManager.class);
+                json.writeValue("viewers", object.viewers, CoordFloatOrderedMap.class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public VisionFramework read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                VisionFramework data = new VisionFramework();
+                data.placeWidth = json.readValue(int.class, jsonData.get("placeWidth"));
+                data.placeHeight = json.readValue(int.class, jsonData.get("placeHeight"));
+                data.rememberedColor = json.readValue(int.class, jsonData.get("rememberedColor"));
+                data.backgroundColors = json.readValue(int[][].class, jsonData.get("backgroundColors"));
+                data.previousLightLevels = json.readValue(float[][].class, jsonData.get("previousLightLevels"));
+                data.linePlaceMap = json.readValue(char[][].class, jsonData.get("linePlaceMap"));
+                data.prunedPlaceMap = json.readValue(char[][].class, jsonData.get("prunedPlaceMap"));
+                data.blockage = json.readValue(Region.class, jsonData.get("blockage"));
+                data.inView = json.readValue(Region.class, jsonData.get("inView"));
+                data.justHidden = json.readValue(Region.class, jsonData.get("justHidden"));
+                data.justSeen = json.readValue(Region.class, jsonData.get("justSeen"));
+                data.seen = json.readValue(Region.class, jsonData.get("seen"));
+                data.newlyVisible = json.readValue(Region.class, jsonData.get("newlyVisible"));
+                data.lighting = json.readValue(LightingManager.class, jsonData.get("lighting"));
+                data.viewers = json.readValue(CoordFloatOrderedMap.class, jsonData.get("viewers"));
+                return data;
+            }
+        });
     }
 
     /**
