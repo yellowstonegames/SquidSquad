@@ -250,7 +250,7 @@ public class SunriseDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         vision.restart(linePlaceMap, player, 8);
-        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.3f, 0f));
+        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f));
         floors.remove(player);
         int numMonsters = 100;
         monsters = new CoordObjectOrderedMap<>(numMonsters);
@@ -264,7 +264,7 @@ public class SunriseDemo extends ApplicationAdapter {
             monster.setSize(1f, 1f);
             monsters.put(monPos, monster);
             vision.lighting.addLight(monPos, new Radiance(rng.nextFloat(3f) + 2f,
-                    FullPalette.COLOR_WHEEL_PALETTE_LIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_LIGHT.length)], 0.5f, 0f));
+                    FullPalette.COLOR_WHEEL_PALETTE_RICH[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_RICH.length)], 0.45f, 0f, rng.nextFloat()));
         }
 //        monsterDirector = new Director<>((e) -> e.getValue().getLocation(), monsters, 125);
         monsterDirector = new Director<>(c -> monsters.get(c).getLocation(), monsters.order(), 150);

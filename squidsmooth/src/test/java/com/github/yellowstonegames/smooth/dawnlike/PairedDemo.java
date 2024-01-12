@@ -253,9 +253,9 @@ public class PairedDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         rgbVision.restart(linePlaceMap, player, 8);
-        rgbVision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0.3f, 0f));
+        rgbVision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0.4f, 0f, 0f, 0f, 123));
         oklabVision.restart(linePlaceMap, player, 8);
-        oklabVision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.3f, 0f));
+        oklabVision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f, 0f, 0f, 123));
         floors.remove(player);
         int numMonsters = 100;
         monsters = new CoordObjectOrderedMap<>(numMonsters);
@@ -272,9 +272,9 @@ public class PairedDemo extends ApplicationAdapter {
             int colorIndex = rng.nextInt(FullPaletteRgb.COLOR_WHEEL_PALETTE_RICH.length);
             int sd = rng.nextInt();
             rgbVision.lighting.addLight(monPos, new Radiance(range,
-                    FullPaletteRgb.COLOR_WHEEL_PALETTE_RICH[colorIndex], 0.5f, 0f, 0f, 0f, sd));
+                    FullPaletteRgb.COLOR_WHEEL_PALETTE_RICH[colorIndex], 0.45f, 0f, 0f, 0f, sd));
             oklabVision.lighting.addLight(monPos, new Radiance(range,
-                    FullPalette.COLOR_WHEEL_PALETTE_RICH[colorIndex], 0.5f, 0f, 0f, 0f, sd));
+                    FullPalette.COLOR_WHEEL_PALETTE_RICH[colorIndex], 0.45f, 0f, 0f, 0f, sd));
         }
 //        monsterDirector = new Director<>((e) -> e.getValue().getLocation(), monsters, 125);
         monsterDirector = new Director<>(c -> monsters.get(c).getLocation(), monsters.order(), 150);

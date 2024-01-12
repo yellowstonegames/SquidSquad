@@ -276,8 +276,8 @@ public class Radiance {
         float current = range;
         if(flicker != 0f) 
             current *=
-                    LineWobble.splobble(seed, time * flicker + delay) * 0.25f +
-                    LineWobble.splobble(seed ^ 0x9E3779B9, PHI * (time * flicker + delay + PHI)) * 0.125f +
+                    LineWobble.trobble(seed, time * flicker + delay) * 0.25f +
+                    LineWobble.trobble(seed ^ 0x9E3779B9, PHI * (time * flicker + delay + PHI)) * 0.125f +
                             0.5f;
         if(strobe != 0f)
             current *= TrigTools.sinTurns(time * strobe + delay) * 0.25f + 0.75f;
