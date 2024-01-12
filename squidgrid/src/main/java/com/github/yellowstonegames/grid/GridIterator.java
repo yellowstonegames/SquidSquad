@@ -33,7 +33,7 @@ public abstract class GridIterator implements Iterator<Coord> {
      * {@code 0} creates an iterator that returns one location (the starting
      * one); a square of size {@code 1} is an iterator that returns at most 9
      * locations, (start.x-1,start.y+1), (start.x,start.y+1), ...; a square of
-     * size {@code 2} returns at most ((2*2)+1)*((2*2)+1) = 25 locations, etc..
+     * size {@code 2} returns at most ((2*2)+1)*((2*2)+1) = 25 locations, etc.
      *
      * <p>
      * Instances of this iterator never return a coordinate outside the map.
@@ -44,8 +44,8 @@ public abstract class GridIterator implements Iterator<Coord> {
     public static class CenteredSquare extends GridIterator {
         protected @Nullable Coord previous;
 
-        protected int xstart;
-        protected int ystart;
+        protected int xStart;
+        protected int yStart;
 
         protected int size;
 
@@ -76,8 +76,8 @@ public abstract class GridIterator implements Iterator<Coord> {
             if (height <= 0)
                 throw new IllegalStateException("Cannot build a centered square iterator over an empty grid");
 
-            this.xstart = x;
-            this.ystart = y;
+            this.xStart = x;
+            this.yStart = y;
 
             if (size < 0)
                 throw new IllegalStateException("Cannot build a square iterator with a negative size");
@@ -120,7 +120,7 @@ public abstract class GridIterator implements Iterator<Coord> {
 
         protected @Nullable Coord findNext(boolean mutate) {
             while (!done) {
-                final Coord result = findNext0();
+                final Coord result = findNextCandidate();
                 if (result != null) {
                     if (isInGrid(result.x, result.y)) {
                         if (mutate)
@@ -141,28 +141,134 @@ public abstract class GridIterator implements Iterator<Coord> {
         /*
          * This method doesn't care about validity, findNext(boolean) handles it
          */
-        protected @Nullable Coord findNext0() {
+        protected @Nullable Coord findNextCandidate() {
             if (previous == null) {
                 /* Init */
                 /* We're in SquidSquad coordinates here ((0,0) is bottom left) */
-                return Coord.get(xstart - size, ystart - size);
+                return Coord.get(xStart - size, yStart - size);
             }
 
-            assert xstart - size <= previous.x && previous.x <= xstart + size;
-            assert ystart - size <= previous.y && previous.y <= ystart + size;
+            assert xStart - size <= previous.x && previous.x <= xStart + size;
+            assert yStart - size <= previous.y && previous.y <= yStart + size;
 
-            if (previous.x == xstart + size) {
-                /* Need to go up and left (one column up, go left) */
-                if (previous.y == ystart + size) {
+            if (previous.x == xStart + size) {
+                /* Need to go up and left (one row up, go left) */
+                if (previous.y == yStart + size) {
                     /* We're done */
                     done = true;
                     return null;
                 } else
-                    return Coord.get(xstart - size, previous.y + 1);
+                    return Coord.get(xStart - size, previous.y + 1);
             } else {
                 /* Can go right in the same line */
                 return Coord.get(previous.x + 1, previous.y);
             }
+        }
+
+        protected boolean isInGrid(int x, int y) {
+            return 0 <= x && x < width && 0 <= y && y < height;
+        }
+    }
+
+    /**
+     * Iterates in a square spiral going outward from a starting position. Iteration stops once a position would be
+     * out of bounds.
+     */
+    public static class SquareSpiral extends GridIterator {
+        protected @Nullable Coord previous;
+
+        protected int xStart;
+        protected int yStart;
+        protected int index;
+
+        protected boolean done;
+
+        /**
+         * An iterator to iterate in the square of size {@code size} around
+         * {@code (x, y)}.
+         *
+         * @param width
+         *            The map's width
+         * @param height
+         *            The map's height
+         * @param x
+         *            The starting x coordinate.
+         * @param y
+         *            The starting y coordinate.
+         * @throws IllegalStateException
+         *             If {@code width <= 0 || height <= 0 || size < 0}.
+         */
+        public SquareSpiral(int width, int height, int x, int y) {
+            this.width = width;
+            if (width <= 0)
+                throw new IllegalStateException("Cannot build a square spiral iterator over an empty grid");
+            this.height = height;
+            if (height <= 0)
+                throw new IllegalStateException("Cannot build a square spiral iterator over an empty grid");
+
+            this.xStart = x;
+            this.yStart = y;
+            this.index = 0;
+        }
+
+        /**
+         * An iterator to iterate in the square of size {@code size} around
+         * {@code start}.
+         *
+         * @param width
+         *            The grid's width
+         * @param height
+         *            The grid's height
+         * @param start
+         *            The starting coordinate.
+         */
+        public SquareSpiral(int width, int height, Coord start) {
+            this(width, height, start.x, start.y);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return findNext(false) != null;
+        }
+
+        @Override
+        public Coord next() {
+            final Coord next = findNext(true);
+            if (next == null)
+                throw new NoSuchElementException();
+            return next;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        protected @Nullable Coord findNext(boolean mutate) {
+            final Coord result = findNextCandidate();
+            if (isInGrid(result.x, result.y)) {
+                if (mutate)
+                    previous = result;
+                return result;
+            }
+            previous = null;
+            return null;
+        }
+
+        /*
+         * This method doesn't care about validity, findNext(boolean) handles it
+         */
+        protected @Nullable Coord findNextCandidate() {
+            if (previous == null) {
+                /* Init */
+                return Coord.get(xStart, yStart);
+            }
+            final int root = (int) (Math.sqrt(index));
+            final int sign = -(root & 1);
+            final int big = (root * (root + 1)) - index << 1;
+            final int y = ((root + 1 >> 1) + sign ^ sign) + ((sign ^ sign + Math.min(big, 0)) >> 1);
+            final int x = ((root + 1 >> 1) + sign ^ sign) - ((sign ^ sign + Math.max(big, 0)) >> 1);
+            return Coord.get(xStart + x, yStart + y);
         }
 
         protected boolean isInGrid(int x, int y) {
@@ -182,12 +288,12 @@ public abstract class GridIterator implements Iterator<Coord> {
     public static class VerticalUp extends GridIterator {
 
         /** The starting X-coordinate */
-        protected int startx;
+        protected int xStart;
 
         /** The starting Y-coordinate */
-        protected int starty;
+        protected int yStart;
 
-        /* Initially null */
+        /** Initially null */
         protected Coord prev;
 
         /**
@@ -196,24 +302,24 @@ public abstract class GridIterator implements Iterator<Coord> {
          * map's bound, but it iterates at most once on a cell, i.e. it does at
          * most one roll over a column of the map.
          *
-         * @param startx
+         * @param xStart
          *            The starting X-coordinate.
-         * @param starty
+         * @param yStart
          *            The starting vertical-coordinate.
          * @param width
          *            The map's width.
          * @param height
          *            The map's height.
          */
-        public VerticalUp(int startx, int starty, int width, int height) {
-            if (startx < 0 || width <= startx)
+        public VerticalUp(int xStart, int yStart, int width, int height) {
+            if (xStart < 0 || width <= xStart)
                 throw new IllegalStateException(
-                        "Illegal x-coordinate: " + startx + " (map's width: " + width + ")");
-            this.startx = startx;
-            if (starty < 0 || height <= starty)
+                        "Illegal x-coordinate: " + xStart + " (map's width: " + width + ")");
+            this.xStart = xStart;
+            if (yStart < 0 || height <= yStart)
                 throw new IllegalStateException(
-                        "Illegal y-coordinate: " + starty + " (map's width: " + height + ")");
-            this.starty = starty;
+                        "Illegal y-coordinate: " + yStart + " (map's width: " + height + ")");
+            this.yStart = yStart;
 
             this.width = width;
             this.height = height;
@@ -243,7 +349,7 @@ public abstract class GridIterator implements Iterator<Coord> {
                 return n != null;
             else {
                 /* Not done && has next */
-                return (prev.x != startx || prev.y != starty) && n != null;
+                return (prev.x != xStart || prev.y != yStart) && n != null;
             }
         }
 
@@ -263,24 +369,24 @@ public abstract class GridIterator implements Iterator<Coord> {
         protected Coord findNext() {
             if (prev == null) {
                 /* First iteration */
-                if (starty == 0)
+                if (yStart == 0)
                     /* Start from the bottom */
-                    return Coord.get(startx, 0);
+                    return Coord.get(xStart, 0);
                 else
                     /* Start from the cell above (startx, starty) */
-                    return Coord.get(startx, starty + 1);
+                    return Coord.get(xStart, yStart + 1);
             } else {
-                if (prev.x == startx && prev.y == starty)
+                if (prev.x == xStart && prev.y == yStart)
                     /* Done iterating */
                     return null;
                 else if (prev.y == 0) {
                     /* Continue from the bottom */
-                    return Coord.get(startx, 0);
+                    return Coord.get(xStart, 0);
                 } else {
                     /* Go up */
                     assert 0 < prev.y && prev.y < height;
-                    final Coord r = Coord.get(startx, prev.y + 1);
-                    if (r.y == starty)
+                    final Coord r = Coord.get(xStart, prev.y + 1);
+                    if (r.y == yStart)
                         /* We would return the starting position */
                         return null;
                     else
@@ -288,7 +394,8 @@ public abstract class GridIterator implements Iterator<Coord> {
                 }
             }
         }
-
     }
+
+
 
 }
