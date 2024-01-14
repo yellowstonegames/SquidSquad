@@ -1026,6 +1026,31 @@ public final class JsonGrid {
         });
     }
 
+    /**
+     * Registers WhiteNoise with the given Json object, so WhiteNoise can be written to and read from JSON.
+     * This is a simple wrapper around WhiteNoise's built-in {@link WhiteNoise#stringSerialize()} and
+     * {@link WhiteNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerWhiteNoise(@NonNull Json json) {
+        json.addClassTag("WhtN", WhiteNoise.class);
+        json.setSerializer(WhiteNoise.class, new Json.Serializer<WhiteNoise>() {
+            @Override
+            public void write(Json json, WhiteNoise object, Class knownType) {
+                json.writeObjectStart(WhiteNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public WhiteNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return WhiteNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
     // To get BasicHashNoise to ser/deser, we would need all IPointHash to be possible to create from a String...
 
 //    /**
