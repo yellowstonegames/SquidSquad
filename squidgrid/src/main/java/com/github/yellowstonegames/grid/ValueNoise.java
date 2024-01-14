@@ -36,7 +36,7 @@ public class ValueNoise implements INoise {
     }
 
     public ValueNoise(long seed) {
-        this.seed = (int) (seed ^ seed >>> 32);
+        this.seed = (int) seed;
     }
 
     @Override
@@ -666,6 +666,10 @@ public class ValueNoise implements INoise {
         return valueNoise(x, y, z, w, u, v, seed);
     }
 
+    public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        return valueNoise(x, y, z, w, u, v, m, seed);
+    }
+
     @Override
     public void setSeed(long seed) {
         this.seed = (int)seed;
@@ -699,5 +703,9 @@ public class ValueNoise implements INoise {
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
         return valueNoise(x, y, z, w, u, v, (int) seed);
+    }
+
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        return valueNoise(x, y, z, w, u, v, m, (int) seed);
     }
 }

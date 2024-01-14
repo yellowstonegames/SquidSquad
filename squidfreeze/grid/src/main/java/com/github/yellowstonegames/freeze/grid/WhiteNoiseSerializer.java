@@ -20,29 +20,30 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.yellowstonegames.grid.ValueNoise;
+import com.github.yellowstonegames.grid.WhiteNoise;
+import com.github.yellowstonegames.grid.WhiteNoise;
 
 /**
- * Serializer for {@link ValueNoise}; doesn't need anything else registered.
+ * Serializer for {@link WhiteNoise}; doesn't need anything else registered.
  */
-public class ValueNoiseSerializer extends Serializer<ValueNoise> {
-    public ValueNoiseSerializer() {
+public class WhiteNoiseSerializer extends Serializer<WhiteNoise> {
+    public WhiteNoiseSerializer() {
         setImmutable(false);
         setAcceptsNull(false);
     }
 
     @Override
-    public void write(final Kryo kryo, final Output output, final ValueNoise data) {
+    public void write(final Kryo kryo, final Output output, final WhiteNoise data) {
         output.writeInt(data.seed);
     }
 
     @Override
-    public ValueNoise read(final Kryo kryo, final Input input, final Class<? extends ValueNoise> dataClass) {
-        return new ValueNoise(input.readInt());
+    public WhiteNoise read(final Kryo kryo, final Input input, final Class<? extends WhiteNoise> dataClass) {
+        return new WhiteNoise(input.readInt());
     }
 
     @Override
-    public ValueNoise copy(Kryo kryo, ValueNoise original) {
-        return new ValueNoise(original.seed);
+    public WhiteNoise copy(Kryo kryo, WhiteNoise original) {
+        return new WhiteNoise(original.seed);
     }
 }

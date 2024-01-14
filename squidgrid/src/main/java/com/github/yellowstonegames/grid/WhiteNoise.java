@@ -34,6 +34,10 @@ public class WhiteNoise implements INoise {
         this.seed = seed;
     }
 
+    public WhiteNoise(final long seed) {
+        this.seed = (int) seed;
+    }
+
     /**
      * Gets the minimum dimension supported by this generator, which is 2.
      *
