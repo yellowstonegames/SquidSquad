@@ -34,7 +34,7 @@ import static com.github.yellowstonegames.grid.GradientVectors.*;
  * This variant also uses different {@link com.github.yellowstonegames.grid.GradientVectors gradient vectors} than the
  * ones used in "Improved Perlin Noise." Here all the gradient vectors are unit vectors, like in the original Perlin
  * Noise, which makes some calculations regarding the range the functions can return easier... in theory. In practice,
- * the somewhat-flawed gradient vectors used in earlier iterations of Perlin Noise permitted a very different range
+ * the somewhat-flawed gradient vectors used in earlier iterations of this PerlinNoise permitted a very different range
  * calculation, and so this class uses a carefully-crafted sigmoid function to move around the most frequent values to
  * roughly match earlier Perlin Noise results, but without risking going out-of-range. You can adjust the sigmoid
  * function parameters for a given dimension using {@link #setEqualization(int, float)}; "add" parameters closer to 0
@@ -59,10 +59,8 @@ public class PerlinNoise implements INoise {
      * @return a float closer to 0 than x
      */
     public static float towardsZero(float x) {
-        int bits = BitConversion.floatToIntBits(x), sign = bits & 0x80000000;
-        bits ^= sign;
-        if(bits >>> 1 == 0) return 0;
-        return BitConversion.intBitsToFloat(bits - 2 | sign);
+        final int bits = BitConversion.floatToIntBits(x), sign = bits & 0x80000000;
+        return BitConversion.intBitsToFloat(Math.max(0, (bits ^ sign) - 2) | sign);
     }
 
     /**
@@ -84,11 +82,11 @@ public class PerlinNoise implements INoise {
         return a * a * a * (20f + a * ((a - 2.5f) * 12f)) - 1.0000014f;
     }
 
-    public static final float SCALE2 = towardsZero(1f/ (float) Math.sqrt(2f / 4f));
-    public static final float SCALE3 = towardsZero(1f/ (float) Math.sqrt(3f / 4f));
-    public static final float SCALE4 = towardsZero(1f)                            ;
-    public static final float SCALE5 = towardsZero(1f/ (float) Math.sqrt(5f / 4f));
-    public static final float SCALE6 = towardsZero(1f/ (float) Math.sqrt(6f / 4f));
+    public static final float SCALE2 = 1.41421330f; //towardsZero(1f/ (float) Math.sqrt(2f / 4f));
+    public static final float SCALE3 = 1.15470030f; //towardsZero(1f/ (float) Math.sqrt(3f / 4f));
+    public static final float SCALE4 = 0.99999990f; //towardsZero(1f)                            ;
+    public static final float SCALE5 = 0.89442706f; //towardsZero(1f/ (float) Math.sqrt(5f / 4f));
+    public static final float SCALE6 = 0.81649643f; //towardsZero(1f/ (float) Math.sqrt(6f / 4f));
 
     private final float[] eqAdd = {
             1f/1.75f,
@@ -98,12 +96,19 @@ public class PerlinNoise implements INoise {
             0.2f/1.75f,
     };
     private final float[] eqMul = {
-            calculateEqualizeAdjustment(eqAdd[0]),
-            calculateEqualizeAdjustment(eqAdd[1]),
-            calculateEqualizeAdjustment(eqAdd[2]),
-            calculateEqualizeAdjustment(eqAdd[3]),
-            calculateEqualizeAdjustment(eqAdd[4]),
+            1.2535664f,
+            1.2071217f,
+            1.1588172f,
+            1.1084094f,
+            1.0555973f,
     };
+//    private final float[] eqMul = {
+//            calculateEqualizeAdjustment(eqAdd[0]),
+//            calculateEqualizeAdjustment(eqAdd[1]),
+//            calculateEqualizeAdjustment(eqAdd[2]),
+//            calculateEqualizeAdjustment(eqAdd[3]),
+//            calculateEqualizeAdjustment(eqAdd[4]),
+//    };
 
     public long seed;
 

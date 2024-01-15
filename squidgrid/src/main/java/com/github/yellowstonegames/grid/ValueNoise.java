@@ -131,7 +131,7 @@ public class ValueNoise implements INoise {
     }
 
     /**
-     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
+     * Constants are the most significant 20 bits of constants from QuasiRandomTools, incremented if even.
      * They should normally be used for the 3D version of R2, but we only use 2 of the 3 constants.
      * @param x should be premultiplied by 0xD1B55
      * @param y should be premultiplied by 0xABC99
@@ -170,7 +170,7 @@ public class ValueNoise implements INoise {
     }
 
     /**
-     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
+     * Constants are the most significant 20 bits of constants from QuasiRandomTools, incremented if even.
      * They should normally be used for the 4D version of R2, but we only use 3 of the 4 constants.
      * @param x should be premultiplied by 0xDB4F1
      * @param y should be premultiplied by 0xBBE05
@@ -223,7 +223,7 @@ public class ValueNoise implements INoise {
     }
 
     /**
-     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
+     * Constants are the most significant 20 bits of constants from QuasiRandomTools, incremented if even.
      * They should normally be used for the 5D version of R2, but we only use 4 of the 5 constants.
      * @param x should be premultiplied by 0xE19B1
      * @param y should be premultiplied by 0xC6D1D
@@ -300,7 +300,7 @@ public class ValueNoise implements INoise {
     }
 
     /**
-     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
+     * Constants are the most significant 20 bits of constants from QuasiRandomTools, incremented if even.
      * They should normally be used for the 6D version of R2, but we only use 5 of the 6 constants.
      * @param x should be premultiplied by 0xE60E3
      * @param y should be premultiplied by 0xCEBD7
@@ -417,7 +417,7 @@ public class ValueNoise implements INoise {
     }
 
     /**
-     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
+     * Constants are the most significant 20 bits of constants from QuasiRandomTools, incremented if even.
      * They should normally be used for the 7D version of R2, but we only use 6 of the 7 constants.
      * @param x should be premultiplied by 0xE95E1
      * @param y should be premultiplied by 0xD4BC7
@@ -609,7 +609,7 @@ public class ValueNoise implements INoise {
     }
 
     /**
-     * Constants are the most significant 20 bits of constants from PhantomNoise, incremented if even.
+     * Constants are the most significant 20 bits of constants from QuasiRandomTools, incremented if even.
      * They should normally be used for the 8D version of R2, but we only use 7 of the 8 constants.
      * @param x should be premultiplied by 0xEBEDF
      * @param y should be premultiplied by 0xD96EB

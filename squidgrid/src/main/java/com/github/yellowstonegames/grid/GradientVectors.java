@@ -16,6 +16,13 @@
 
 package com.github.yellowstonegames.grid;
 
+/**
+ * Stores arrays representing vectors on the unit hypersphere in 2D through 6D. This is used by {@link PerlinNoise} and
+ * {@link SimplexNoise}, as well as indirectly by all classes that use those. Each constant in this class stores 256
+ * unit vectors in a 1D array, one after the next, but sometimes with padding.  See the docs for each constant for more
+ * information, but {@link #GRADIENTS_2D} and {@link #GRADIENTS_4D} have no padding, and the others have one to three
+ * ignored floats after each vector.
+ */
 public final class GradientVectors {
     /**
      * No need to instantiate.
@@ -30,7 +37,7 @@ public final class GradientVectors {
      * The points were randomly rotated to try to avoid correlation on any typical axis; all points used the same
      * rotation to keep their distance to each other and shape.
      * <br>
-     * This particular set of 256 gradient vectors is either optimal or very close to optimal for a this size of a
+     * This particular set of 256 gradient vectors is either optimal or very close to optimal for this size of a
      * set of vectors.
      */
     public static final float[] GRADIENTS_2D = {
