@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2022-2024 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,7 +176,8 @@ public class TriplexNoise implements INoise {
 
         float n = 0, o = 0, p = 0;
 
-
+        i *= M0;
+        j *= M1;
 
         t = 0.5f - x0 * x0 - y0 * y0;
         if (t > 0) {
@@ -213,9 +214,12 @@ public class TriplexNoise implements INoise {
             final int hp = h256(seed + 0xBDBDBDBDBDBDBDL ^ inp) << 1; p += t * (x2 * GRADIENTS_2D[hp] + y2 * GRADIENTS_2D[hp+1]);
             // @formatter:on
         }
-
+        o *= 99.20689070704672f;
+        p *= 99.20689070704672f;
+        float mag2 = (o * o + p * p);
+        mag2 *= mag2 + mag2;
         float theta = TrigTools.atan2Turns(o, p) + n * (0.125f * 99.20689070704672f);
-        return wrappingTrobble(seed, theta * 16f);
+        return wrappingTrobble(seed, theta * 16f) * (mag2 / (0.2f + mag2));
     }
 
     public static float noise(final float x, final float y, final float z, final long seed) {
