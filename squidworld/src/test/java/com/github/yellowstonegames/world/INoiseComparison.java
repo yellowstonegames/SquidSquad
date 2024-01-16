@@ -79,8 +79,9 @@ public class INoiseComparison extends ApplicationAdapter {
             new HoneyNoise(1L, 0.6f),
             new HoneyNoise(1L, 0.7f),
             new ColorNoise(1L),
+            new TriplexNoise(1L),
     };
-    private int index0 = noises.length - 5;
+    private int index0 = 0;
     private int index1 = noises.length - 1;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
@@ -88,7 +89,7 @@ public class INoiseComparison extends ApplicationAdapter {
     private int octaves = 1;
     private float freq = 1f/32f;
     private boolean slice = true;
-    private boolean hue = true;
+    private boolean hue = false;
 
     private ImmediateModeRenderer20 renderer;
 
@@ -107,16 +108,16 @@ public class INoiseComparison extends ApplicationAdapter {
         if(hue){
             n = (n + 1) - (int)(n + 1);
         } else {
-            n = TrigTools.sinTurns(n) * 0.5f + 0.5f;
-//            n = n * 0.5f + 0.5f;
+//            n = TrigTools.sinTurns(n) * 0.5f + 0.5f;
+            n = n * 0.5f + 0.5f;
         }
         freq0[Math.min(Math.max((int)(n * 256), 0), freq0.length-1)]++;
         return n;
     }
     public float prepare1(float n) {
         if(!hue){
-            n = TrigTools.sinTurns(n) * 0.5f + 0.5f;
-//            n = n * 0.5f + 0.5f;
+//            n = TrigTools.sinTurns(n) * 0.5f + 0.5f;
+            n = n * 0.5f + 0.5f;
             freq1[Math.min(Math.max((int)(n * 256), 0), freq1.length-1)]++;
         }
         return n;

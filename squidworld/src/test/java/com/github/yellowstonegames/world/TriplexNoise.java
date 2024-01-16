@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 See AUTHORS file.
+ * Copyright (c) 2023-2022-2024 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.yellowstonegames.grid;
+package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.grid.GradientVectors;
+import com.github.yellowstonegames.grid.INoise;
+import com.github.yellowstonegames.grid.SimplexNoise;
 
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
+import static com.github.tommyettinger.digital.TrigTools.SIN_TABLE;
+import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
 import static com.github.yellowstonegames.grid.LongPointHash.hash256;
 import static com.github.yellowstonegames.grid.LongPointHash.hash32;
 
 /**
- * Simplex noise functions, in 2D, 3D, 4D, 5D, and 6D. This variety scales the result with multiplication by a constant,
- * which isn't always guaranteed to produce a value in the -1 to 1 range for 4D, 5D, or 6D noise. Because this has to
- * scale by a rather small constant in 4D and up, the mostly-mid-range results for those dimensions are run through a
- * gain function that sharpens the result, making high and low values more common than they would otherwise be.
- * {@link SimplexNoiseHard} uses a different approach for 4D, 5D, and 6D that makes extreme
- * values more frequent and ensures the results are in-range.
- * <br>
- * You can use {@link SimplexNoiseHard} if you want high contrast even at the expense of losing the "cloudiness" that
- * Perlin and Simplex noise are typically known for. SimplexNoiseHard is only different from this class in 4D and up.
- * If you want cloudier results in higher dimensions, you can use {@link SimplexNoiseScaled}.
+ * Runs Simplex noise three times per point requested (regardless of dimension), uses two of those results in a call to
+ * {@link com.github.tommyettinger.digital.TrigTools#atan2Turns(float, float)}, adds the third result to counteract the
+ * bias in the atan2() result, and then finally runs the angle from atan2 through a wrapping 1D noise function. The
+ * three calls share much common state, so it makes more sense to calculate that state once here than by calling
+ * methods in {@link SimplexNoise} multiple times.
  */
-public class SimplexNoise implements INoise {
+@Beta
+public class TriplexNoise implements INoise {
 
     public long seed;
-    public static final SimplexNoise instance = new SimplexNoise();
+    public static final TriplexNoise instance = new TriplexNoise();
 
-    public SimplexNoise() {
+    public TriplexNoise() {
         seed = 0x1337BEEF2A22L;
     }
 
-    public SimplexNoise(long seed)
+    public TriplexNoise(long seed)
     {
         this.seed = seed;
     }
@@ -89,28 +92,65 @@ public class SimplexNoise implements INoise {
         return noise(x, y, z, w, u, v, seed);
     }
 
-    protected static final float F2 = 0.36602540378443864676372317075294f,
-            G2 = 0.21132486540518711774542560974902f,
-            H2 = G2 * 2.0f,
-            F3 = (float)(1.0 / 3.0),
-            G3 = (float)(1.0 / 6.0),
-            LIMIT3 = 0.6f,
-            F4 = (float)((Math.sqrt(5.0) - 1.0) * 0.25),
-            G4 = (float)((5.0 - Math.sqrt(5.0)) * 0.05),
-            LIMIT4 = 0.62f,
-            F5 = (float)((Math.sqrt(6.0) - 1.0) / 5.0),
-            G5 = (float)((6.0 - Math.sqrt(6.0)) / 30.0),
-            LIMIT5 = 0.7f,
-            F6 = (float)((Math.sqrt(7.0) - 1.0) / 6.0),
-            G6 = (float)(F6 / (1.0 + 6.0 * F6)),
-            LIMIT6 = 0.8375f;
+    protected static final float F2 = 0.36602540378443864676372317075294f;
+    protected static final float G2 = 0.21132486540518711774542560974902f;
+    protected static final float H2 = G2 * 2.0f;
+    protected static final float F3 = (float)(1.0 / 3.0);
+    protected static final float G3 = (float)(1.0 / 6.0);
+    protected static final float LIMIT3 = 0.6f;
+    protected static final float F4 = (float)((Math.sqrt(5.0) - 1.0) * 0.25);
+    protected static final float G4 = (float)((5.0 - Math.sqrt(5.0)) * 0.05);
+    protected static final float LIMIT4 = 0.62f;
+    protected static final float F5 = (float)((Math.sqrt(6.0) - 1.0) / 5.0);
+    protected static final float G5 = (float)((6.0 - Math.sqrt(6.0)) / 30.0);
+    protected static final float LIMIT5 = 0.7f;
+    protected static final float F6 = (float)((Math.sqrt(7.0) - 1.0) / 6.0);
+    protected static final float G6 = (float)(F6 / (1.0 + 6.0 * F6));
+    protected static final float LIMIT6 = 0.8375f;
+
+    protected static final long M0 = 0xE95E1DD17D35800DL;
+    protected static final long M1 = 0xD4BC74E13F3C782FL;
+    protected static final long M2 = 0xC1EDBC5B5C68AC25L;
+    protected static final long M3 = 0xB0C8AC50F0EDEF5DL;
+    protected static final long M4 = 0xA127A31C56D1CDB5L;
+    protected static final long M5 = 0x92E852C80D153DB3L;
+
+    protected static int h32(long s){
+        return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 59);
+    }
+
+    protected static int h256(long s){
+        return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 56);
+    }
+
+    protected static long hAll(long s){
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
+    }
+
+    /**
+     * Trigonometric wobble. Domain for {@code value} is effectively [-16384, 16384]. Range is (-1, 1).
+     * @param seed a long seed that will determine the pattern of peaks and valleys this will generate as value changes; this should not change between calls
+     * @param value a float that typically changes slowly, by less than 2.0, with direction changes at integer inputs
+     * @return a pseudo-random float between -1f and 1f (both exclusive), smoothly changing with value
+     */
+    protected static float wrappingTrobble(long seed, float value)
+    {
+        final long floor = ((int)(value + 16384.0) & 16383);
+        final long z = seed + floor * 0x6C8E9CF570932BD5L;
+        final long start = ((z ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5C323L),
+                end = ((z + 0x6C8E9CF570932BD5L ^ 0x9E3779B97F4A7C15L) * 0xC6BC279692B5C323L);
+        value = SIN_TABLE[(int) ((value - floor) * 4096f) & TABLE_MASK];
+        value *= value;
+        return ((1f - value) * start + value * end) * 0x0.ffffffp-63f;
+    }
+
 
     public static float noise(final float x, final float y, final long seed) {
         final float[] GRADIENTS_2D = GradientVectors.GRADIENTS_2D;
 
         float t = (x + y) * F2;
-        int i = fastFloor(x + t);
-        int j = fastFloor(y + t);
+        long i = fastFloor(x + t);
+        long j = fastFloor(y + t);
 
         t = (i + j) * G2;
         float X0 = i - t;
@@ -120,12 +160,13 @@ public class SimplexNoise implements INoise {
         float y0 = y - Y0;
 
         int i1, j1;
+        long mi1, mj1;
         if (x0 > y0) {
-            i1 = 1;
-            j1 = 0;
+            i1 = 1; mi1 = M0;
+            j1 = 0; mj1 = 0;
         } else {
-            i1 = 0;
-            j1 = 1;
+            i1 = 0; mi1 = 0;
+            j1 = 1; mj1 = M1;
         }
 
         float x1 = x0 - i1 + G2;
@@ -133,30 +174,48 @@ public class SimplexNoise implements INoise {
         float x2 = x0 - 1 + H2;
         float y2 = y0 - 1 + H2;
 
-        float n = 0;
+        float n = 0, o = 0, p = 0;
+
+
 
         t = 0.5f - x0 * x0 - y0 * y0;
         if (t > 0) {
             t *= t;
-            final int h = hash256(i, j, seed) << 1;
-            n += t * t * (x0 * GRADIENTS_2D[h] + y0 * GRADIENTS_2D[h+1]);
+            t *= t;
+            long inp = i + j;
+            // @formatter:off
+            final int hn = h256(seed                     ^ inp) << 1; n += t * (x0 * GRADIENTS_2D[hn] + y0 * GRADIENTS_2D[hn+1]);
+            final int ho = h256(seed + 0x71717171717171L ^ inp) << 1; o += t * (x0 * GRADIENTS_2D[ho] + y0 * GRADIENTS_2D[ho+1]);
+            final int hp = h256(seed + 0xBDBDBDBDBDBDBDL ^ inp) << 1; p += t * (x0 * GRADIENTS_2D[hp] + y0 * GRADIENTS_2D[hp+1]);
+            // @formatter:on
         }
 
         t = 0.5f - x1 * x1 - y1 * y1;
         if (t > 0) {
+            long inp = i + mi1 + j + mj1;
             t *= t;
-            final int h = hash256(i + i1, j + j1, seed) << 1;
-            n += t * t * (x1 * GRADIENTS_2D[h] + y1 * GRADIENTS_2D[h+1]);
+            t *= t;
+            // @formatter:off
+            final int hn = h256(seed                     ^ inp) << 1; n += t * (x1 * GRADIENTS_2D[hn] + y1 * GRADIENTS_2D[hn+1]);
+            final int ho = h256(seed + 0x71717171717171L ^ inp) << 1; o += t * (x1 * GRADIENTS_2D[ho] + y1 * GRADIENTS_2D[ho+1]);
+            final int hp = h256(seed + 0xBDBDBDBDBDBDBDL ^ inp) << 1; p += t * (x1 * GRADIENTS_2D[hp] + y1 * GRADIENTS_2D[hp+1]);
+            // @formatter:on
         }
 
         t = 0.5f - x2 * x2 - y2 * y2;
         if (t > 0)  {
+            long inp = i + M0 + j + M1;
             t *= t;
-            final int h = hash256(i + 1, j + 1, seed) << 1;
-            n += t * t * (x2 * GRADIENTS_2D[h] + y2 * GRADIENTS_2D[h+1]);
+            t *= t;
+            // @formatter:off
+            final int hn = h256(seed                     ^ inp) << 1; n += t * (x2 * GRADIENTS_2D[hn] + y2 * GRADIENTS_2D[hn+1]);
+            final int ho = h256(seed + 0x71717171717171L ^ inp) << 1; o += t * (x2 * GRADIENTS_2D[ho] + y2 * GRADIENTS_2D[ho+1]);
+            final int hp = h256(seed + 0xBDBDBDBDBDBDBDL ^ inp) << 1; p += t * (x2 * GRADIENTS_2D[hp] + y2 * GRADIENTS_2D[hp+1]);
+            // @formatter:on
         }
 
-        return n * 99.20689070704672f; // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
+        float theta = TrigTools.atan2Turns(o, p) + n * (0.125f * 99.20689070704672f);
+        return wrappingTrobble(seed, theta * 16f);
     }
 
     public static float noise(final float x, final float y, final float z, final long seed) {
@@ -369,6 +428,15 @@ public class SimplexNoise implements INoise {
             n += t4 * t4 * (x4 * GRADIENTS_4D[h4] + y4 * GRADIENTS_4D[h4 + 1] + z4 * GRADIENTS_4D[h4 + 2] + w4 * GRADIENTS_4D[h4 + 3]);
         }
 
+        // debug code, for finding what constant should be used for 14.75
+//        final float ret =  (n0 + n1 + n2 + n3 + n4) * (14.7279);
+//        if(ret < -1 || ret > 1) {
+//            System.out.println(ret + " is out of bounds! seed=" + seed + ", x=" + x + ", y=" + y + ", z=" + z + ", w=" + w);
+//            return ret * -0.5f;
+//        }
+//        return ret;
+        // normal return code
+//        return (n0 + n1 + n2 + n3 + n4) * 14.7279f;
         n *= 37.20266f;
         return n / (0.3f * Math.abs(n) + (1f - 0.3f));
 // return n / (0.3f * Math.abs(n) + (1f - 0.3f));// gain function for [-1, 1] domain and range
@@ -773,23 +841,23 @@ public class SimplexNoise implements INoise {
         return "`" + seed + "`";
     }
 
-    public SimplexNoise stringDeserialize(String data) {
+    public TriplexNoise stringDeserialize(String data) {
         seed = (DigitTools.longFromDec(data, 1, data.length() - 1));
         return this;
     }
 
-    public static SimplexNoise recreateFromString(String data) {
-        return new SimplexNoise(DigitTools.longFromDec(data, 1, data.length() - 1));
+    public static TriplexNoise recreateFromString(String data) {
+        return new TriplexNoise(DigitTools.longFromDec(data, 1, data.length() - 1));
     }
 
     @Override
-    public SimplexNoise copy() {
-        return new SimplexNoise(seed);
+    public TriplexNoise copy() {
+        return new TriplexNoise(seed);
     }
 
     @Override
     public String toString() {
-        return "SimplexNoise{seed=" + seed + "}";
+        return "TriplexNoise{seed=" + seed + "}";
     }
 
     @Override
@@ -797,7 +865,7 @@ public class SimplexNoise implements INoise {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimplexNoise that = (SimplexNoise) o;
+        TriplexNoise that = (TriplexNoise) o;
 
         return seed == that.seed;
     }
