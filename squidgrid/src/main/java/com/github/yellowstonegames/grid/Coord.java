@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -83,11 +84,15 @@ public class Coord {
         int mx = this.x ^ xs;
         // same for my
         int my = this.y ^ ys;
-        // Rosenberg-Strong pairing function, and XOR with every odd-index bit of xs and every even-index bit of ys
-        // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
-        my = (mx >= my ? mx * (mx + 2) - my : my * my + mx) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
-        // a specific combination of XOR and two rotations that doesn't produce duplicate hashes for our target range
-        this.hash = (my ^ (my << 16 | my >>> 16) ^ (my << 8 | my >>> 24));
+        // imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
+        this.hash = BitConversion.imul(
+                // Rosenberg-Strong pairing function
+                (mx >= my ? mx * (mx + 2) - my : my * my + mx)
+                // XOR with every odd-index bit of xs and every even-index bit of ys
+                // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+                        ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
+                // use imul() to multiply by a golden-ratio-based number to randomize upper bits
+                , 0x9E3779B9);
     }
 
     @NonNull
@@ -576,11 +581,10 @@ public class Coord {
         y ^= ys;
         // Rosenberg-Strong pairing function, and XOR with every odd-index bit of xs and every even-index bit of ys
         // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
-        y = (x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
-        // a specific combination of XOR and two rotations that doesn't produce duplicate hashes for our target range
-        return (y ^ (y << 16 | y >>> 16) ^ (y << 8 | y >>> 24));
-
+        // then multiply by a golden-ratio-based number to randomize upper bits without hitting collisions
+        return BitConversion.imul((x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555), 0x9E3779B9);
     }
+
     /**
      * Gets a variant hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs
      * will generate, but instead uses a highly-specific technique based on the

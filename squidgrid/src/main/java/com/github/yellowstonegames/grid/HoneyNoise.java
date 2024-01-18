@@ -106,7 +106,7 @@ public class HoneyNoise implements INoise {
 
     @Override
     public String toString() {
-        return "ValueNoise{" +
+        return "HoneyNoise{" +
                 "seed=" + seed +
                 ", sharpness=" + sharpness +
                 '}';

@@ -139,22 +139,6 @@ public final class RotationTools {
         }
     }
 
-//    public static void main(String[] args) {
-//        float[] pts = {.11f,.12f,.13f,.21f,.22f,.23f,.31f,.32f,.33f},
-//        its = {11,12,13,21,22,23,31,32,33}, out = new float[9], vc = {11,12,13}, o3 = new float[3];
-//        matrixMultiply(pts, its, out, 3);
-//        for (int y = 0, m = 0; y < 3; y++) {
-//            for (int x = 0; x < 3; x++, m++) {
-//                System.out.printf("%5.2f, ", out[m]);
-//            }
-//            System.out.println();
-//        }
-//        rotate(vc, pts, o3);
-//        for (int i = 0; i < 3; i++) {
-//            System.out.printf("%5.2f ", o3[i]);
-//        }
-//    }
-
     // Section using a long seed and randomize()
 
     /**
@@ -240,7 +224,7 @@ public final class RotationTools {
     public static float[] randomRotation2D(long seed) {
         final int index = (int)(randomize(seed * 0x9E3779B97F4A7C15L) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
         final float s = TrigTools.SIN_TABLE[index];
-        final float c = TrigTools.SIN_TABLE[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        final float c = TrigTools.COS_TABLE[index];
         return new float[]{c, s, -s, c};
     }
 
@@ -734,7 +718,7 @@ public final class RotationTools {
     public static double[] randomDoubleRotation2D(long seed) {
         final int index = (int)(randomize(seed * 0x9E3779B974A7C15L) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
         final double s = TrigTools.SIN_TABLE_D[index];
-        final double c = TrigTools.SIN_TABLE_D[index + TrigTools.SIN_TO_COS & TrigTools.TABLE_MASK];
+        final double c = TrigTools.COS_TABLE_D[index];
         return new double[]{c, s, -s, c};
     }
 
