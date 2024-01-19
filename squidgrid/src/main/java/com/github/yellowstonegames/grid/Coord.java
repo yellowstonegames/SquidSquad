@@ -60,14 +60,24 @@ public class Coord {
     public final short y;
 
     /**
-     * Accessible via {@link #hashCode()}, this is a precalculated hashCode() result. It is only assigned in
-     * {@link #Coord(int, int)}. It uses a method of computing a hash value that won't collide in full for at least tens
-     * of millions of Coord values. Even using a smaller portion of the hash, if a hash table can fit 8192x8192 Coord
-     * values with load factor 0.5f, an appropriate mask will still not cause collisions here. The hash values are
-     * organized so that if a Coord is close to the origin, it will effectively reserve bit patterns that won't be seen
-     * in Coord values that are far from the origin.
+     * Also accessible via {@link #hashCode()}, this is a precalculated hashCode() result. It is only assigned when a
+     * Coord is first created. It uses a method of computing a hash value that won't collide in full (over all 32 bits)
+     * for any possible Coord values. Even using a smaller portion of the hash, if a hash table can fit 8192x8192 Coord
+     * values with load factor 0.5f, an appropriate mask will still not cause collisions here. This does randomize the
+     * upper bits of the hash somewhat, but the lower bits (where collisions are most important, because masks typically
+     * keep only some range of the lower bits) are more orderly.
+     * <br>
+     * The actual method used to assign this involves passing x and y to the Rosenberg-Strong pairing function, then
+     * multiplying that by 0x9E3779B9, or -1640531527 in decimal. The Rosenberg-Strong pairing function is discussed
+     * more <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">here (a good introduction)</a> and
+     * <a href="https://arxiv.org/abs/1706.04129">here (a more technical paper)</a>. 0x9E3779B9 is used because it is
+     * (2 to the 32) divided by the golden ratio, and because of properties of the golden ratio, 0x9E3779B9 helps ensure
+     * "sub-random" bit patterns in its multiples. Because 0x9E3779B9 is odd, if every possible hashCode() is taken and
+     * multiplied by 0x9E3779B9, the full set of (2 to the 32) numbers will just be rearranged; nothing will collide.
+     *
+     * @see #signedRosenbergStrongHashCode(int, int)
      */
-    protected final int hash;
+    public final int hash;
 
     protected Coord() {
         this(0, 0);
@@ -80,16 +90,18 @@ public class Coord {
         // Calculates a hash that won't overlap until very, very many Coords have been produced.
         // the signs for x and y; each is either -1 or 0
         int xs = this.x >> 31, ys = this.y >> 31;
-        // makes mx equivalent to -1 ^ this.x if this.x is negative
+        // makes mx equivalent to -1 ^ this.x if this.x is negative; this means mx is never negative
         int mx = this.x ^ xs;
-        // same for my
+        // same for my; it is also never negative
         int my = this.y ^ ys;
+        // Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
+        final int max = Math.max(mx, my);
         // imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
         this.hash = BitConversion.imul(
-                // Rosenberg-Strong pairing function
-                (mx >= my ? mx * (mx + 2) - my : my * my + mx)
-                // XOR with every odd-index bit of xs and every even-index bit of ys
-                // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+                // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
+                (max * max + max + mx - my)
+                        // XOR with every odd-index bit of xs and every even-index bit of ys
+                        // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
                         ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
                 // use imul() to multiply by a golden-ratio-based number to randomize upper bits
                 , 0x9E3779B9);
@@ -563,10 +575,25 @@ public class Coord {
 
     /**
      * If x and y are valid {@code short} numbers, then this will return a unique {@code int} hash code for those two.
-     * If either is not a valid short, this cannot be guaranteed to produce a unique result. This is the same as the
-     * algorithm used to precalculate the hash returned by {@link #hashCode()}. Unlike most of the other hashCode()
-     * variants here, this acts fine with negative inputs, and should still return random-enough hashes when x or y
-     * isn't in the short range (just not guaranteed to be unique).
+     * If either is not a valid short, this cannot be guaranteed to produce a unique result. If you compare the results
+     * for two nearby x,y points, the upper bits of the hash codes this produces will be more random than the lower
+     * bits. This helps avoid collisions in dense sets or maps of Coord.
+     * <br>
+     * The actual method this uses involves passing x and y to the Rosenberg-Strong pairing function, then
+     * multiplying that by 0x9E3779B9, or -1640531527 in decimal. The Rosenberg-Strong pairing function is discussed
+     * more <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">here (a good introduction)</a> and
+     * <a href="https://arxiv.org/abs/1706.04129">here (a more technical paper)</a>. 0x9E3779B9 is used because it is
+     * (2 to the 32) divided by the golden ratio, and because of properties of the golden ratio, 0x9E3779B9 helps ensure
+     * "sub-random" bit patterns in its multiples. Because 0x9E3779B9 is odd, if every possible int is taken and
+     * multiplied by 0x9E3779B9, the full set of (2 to the 32) numbers will just be rearranged; nothing will collide.
+     * <br>
+     * This is the same as the algorithm used to precalculate the hash returned by {@link #hashCode()}. Unlike most of
+     * the other hashCode() variants here, this acts fine with negative inputs, and should still return random-enough
+     * hashes when x or y isn't in the short range (just not guaranteed to be unique).
+     * <br>
+     * Calculating this is branchless if calculating {@link Math#max(int, int)} is branchless. This is true on modern
+     * desktop JVMs with sufficient optimization, and may be true on other platforms as well.
+     *
      * @param x should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
      * @param y should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
      * @return an int hash code that will be unique for any combination of short x and short y
@@ -575,19 +602,26 @@ public class Coord {
         // Calculates a hash that won't overlap until very, very many Coords have been produced.
         // the signs for x and y; each is either -1 or 0
         int xs = x >> 31, ys = y >> 31;
-        // makes x equivalent to -1 ^ this.x if this.x is negative
+        // makes x equivalent to -1 ^ x if x is negative; this means x is never negative after this
         x ^= xs;
-        // same for y
+        // same for y; it is also never negative
         y ^= ys;
-        // Rosenberg-Strong pairing function, and XOR with every odd-index bit of xs and every even-index bit of ys
-        // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
-        // then multiply by a golden-ratio-based number to randomize upper bits without hitting collisions
-        return BitConversion.imul((x >= y ? x * (x + 2) - y : y * y + x) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555), 0x9E3779B9);
+        // Math.max can be branchless on modern JVMs, which may speed this method up a little if called often
+        final int max = Math.max(x, y);
+        // imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
+        return BitConversion.imul(
+                // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
+                (max * max + max + x - y)
+                        // XOR with every odd-index bit of xs and every even-index bit of ys
+                        // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+                        ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
+                // use imul() to multiply by a golden-ratio-based number to randomize upper bits
+                , 0x9E3779B9);
     }
 
     /**
      * Gets a variant hash code for this Coord; does not use the standard "auto-complete" style of hash that most IDEs
-     * will generate, but instead uses a highly-specific technique based on the
+     * will generate, but instead uses a specific technique based on the
      * <a href="https://arxiv.org/abs/1706.04129">Rosenberg-Strong pairing function</a>. This technique will generally
      * return all low values before it returns high values, if small Coord components are hashed first. The bits of the
      * results will not be especially random, but they won't collide much at all, so in this case we may not want the
