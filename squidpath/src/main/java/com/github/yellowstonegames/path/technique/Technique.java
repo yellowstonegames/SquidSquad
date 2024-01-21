@@ -62,8 +62,6 @@ import java.util.Set;
  * A Technique has a String name, which typically should be in a form that can be presented to a user, and an Object
  * userData, which defaults to null but can be given some value not meant for users that records
  * any additional identifying characteristics the game needs for things like comparisons.
- *
- * Created by Tommy Ettinger on 7/27/2015.
  */
 public class Technique {
     public String name;

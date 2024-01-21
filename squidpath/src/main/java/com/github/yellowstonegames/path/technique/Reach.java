@@ -17,13 +17,13 @@
 package com.github.yellowstonegames.path.technique;
 
 import com.github.yellowstonegames.grid.Radius;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A struct-like class that holds information about targeting rules for actions or other effects that reach from one
  * square into another one, with certain potential restrictions.
  *
- * @see AreaUtils AreaUtils and its verifyReach method may be useful with this
- * Created by Tommy Ettinger on 12/17/2015.
+ * @see AreaUtils AreaUtils and its verifyReach method may be useful with this.
  */
 public class Reach {
     /**
@@ -40,9 +40,9 @@ public class Reach {
     /**
      * An AimLimit enum that may be used to determine limitations to targeting cells; defaults to FREE (no limits other
      * than those from distance), but can also be set to ORTHOGONAL (rook move in chess), DIAGONAL (bishop move in
-     * chess), EIGHT_WAY (queen or king move in chess), or null (which usually)
+     * chess), EIGHT_WAY (queen or king move in chess), or null (which usually is equivalent to FREE).
      */
-    public AimLimit limit;
+    public @Nullable AimLimit limit;
     /**
      * Determines how distance will be measured. SQUARE or CUBE correspond to 8-way or Chebyshev movement, DIAMOND or
      * OCTAHEDRON correspond to 4-way or Manhattan movement, and CIRCLE or SPHERE correspond to Euclidean movement.
@@ -119,5 +119,37 @@ public class Reach {
         this.maxDistance = Math.max(this.minDistance, maxDistance);
         this.limit = limit;
         this.metric = metric;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Reach reach = (Reach) o;
+
+        if (minDistance != reach.minDistance) return false;
+        if (maxDistance != reach.maxDistance) return false;
+        if (limit != reach.limit) return false;
+        return metric == reach.metric;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = minDistance;
+        result = 31 * result + maxDistance;
+        result = 31 * result + (limit != null ? limit.hashCode() : 0);
+        result = 31 * result + (metric != null ? metric.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Reach{" +
+                "minDistance=" + minDistance +
+                ", maxDistance=" + maxDistance +
+                ", limit=" + limit +
+                ", metric=" + metric +
+                '}';
     }
 }

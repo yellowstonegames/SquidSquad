@@ -34,11 +34,11 @@ import java.util.Collection;
  */
 public class CoordFloatMap extends ObjectFloatMap<Coord> {
     public CoordFloatMap() {
-        this(51, 0.5f);
+        this(51, 0.9f);
     }
 
     public CoordFloatMap(int initialCapacity) {
-        super(initialCapacity, 0.5f);
+        super(initialCapacity, 0.9f);
     }
 
     public CoordFloatMap(int initialCapacity, float loadFactor) {

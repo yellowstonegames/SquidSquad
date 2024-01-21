@@ -56,15 +56,15 @@ public interface AOE {
      * hit as many of the Points in targets as possible without hitting any Points in requiredExclusions, and each value
      * is the collection of targets that will be hit if the associated key is used. The length of any ArrayList in the
      * returned collection's values will be the number of targets likely to be affected by the AOE when shift() is
-     * called with the Coord key as an argument; all of the ArrayLists should have the same length. The second argument
+     * called with the Coord key as an argument; all ArrayLists should have the same length. The second argument
      * may be null, in which case this will initialize it to an empty Set of Coord and disregard it.
-     *
+     * <br>
      * With complex maps and varied arrangements of obstacles and desirable targets, calculating the best points to
      * evaluate for AI can be computationally difficult. This method provides a way to calculate with good accuracy
      * the best Points to pass to shift(Coord) before calling findArea(). For "blackened thrash industrial death metal"
      * levels of brutality for the AI, the results of this can be used verbatim, but for more reasonable AI levels, you
      * can intentionally alter the best options to simulate imperfect aim or environmental variance on the AOE.
-     *
+     * <br>
      * Beast-like creatures that do not need devious AI should probably not use this method at all and instead use
      * shift(Coord) with the location of some enemy (probably the closest) as its argument.
      * @param targets a Set of Points that are desirable targets to include in this AOE
@@ -81,6 +81,7 @@ public interface AOE {
      * in the same ArrayList; this is done only for priorityTargets that are affected by the target Coord at the
      * associated key, and is done so that the length of each similar-quality ArrayList should be identical (since a
      * priorityTarget is worth four times what a lesserTarget is worth in the calculation this uses).
+     *
      * @param priorityTargets A Set of Points that are the most-wanted targets to include in this AOE
      * @param lesserTargets A Set of Points that are the less-wanted targets to include in this AOE, should not overlap with priorityTargets
      * @param requiredExclusions a Set of Points that this tries strongly to avoid including in this AOE
@@ -101,7 +102,7 @@ public interface AOE {
      * with '#' for walls, '.' for floors and potentially other chars that implementors can use if they are present in
      * the map. The map must be bounded by walls, which DungeonProcessor does automatically and other generators can
      * easily add with {@code DungeonTools.wallWrap(dungeon);}.
-     *
+     * <br>
      * This returns a CoordFloatOrderedMap; if a cell is 100% affected by the AOE then the value
      * should be 1.0; if it is 50% affected it should be 0.5, if unaffected should be 0.0, etc. The Coord keys should
      * have the same x and y as the x,y map positions they correspond to.
@@ -113,7 +114,8 @@ public interface AOE {
      * Get the position from which the AOE originates, which may be related to the location of the AOE's effect, as for
      * lines, cones, and other emitted effects, or may be unrelated except for determining which enemies can be seen
      * or targeted from a given origin point (as for distant effects that radiate from a chosen central point, but
-     * have a maxRange at which they can deliver that effect).
+     * have a maxRange at which they can deliver that effect). In most cases, this is the position of a character
+     * producing the AOE in question.
      */
     Coord getOrigin();
 
@@ -121,7 +123,8 @@ public interface AOE {
      * Set the position from which the AOE originates, which may be related to the location of the AOE's effect, as for
      * lines, cones, and other emitted effects, or may be unrelated except for determining which enemies can be seen
      * or targeted from a given origin point (as for distant effects that radiate from a chosen central point, but
-     * have a maxRange at which they can deliver that effect).
+     * have a maxRange at which they can deliver that effect). In most cases, this is the position of a character
+     * producing the AOE in question.
      */
     void setOrigin(Coord origin);
 
@@ -148,13 +151,13 @@ public interface AOE {
         return getReach().limit;
     }
     /**
-     * The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.
+     * The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.
      */
     default int getMinRange(){
         return getReach().minDistance;
     }
     /**
-     * The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.
+     * The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.
      */
     default int getMaxRange(){
         return getReach().maxDistance;
@@ -201,13 +204,13 @@ public interface AOE {
         getReach().limit = limitType;
     }
     /**
-     * The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.
+     * The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.
      */
     default void setMinRange(int minRange){
         getReach().minDistance = minRange;
     }
     /**
-     * The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.
+     * The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.
      */
     default void setMaxRange(int maxRange){
         getReach().maxDistance = maxRange;

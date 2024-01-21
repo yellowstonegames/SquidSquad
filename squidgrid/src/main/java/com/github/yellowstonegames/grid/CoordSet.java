@@ -30,11 +30,11 @@ import java.util.Collection;
  */
 public class CoordSet extends ObjectSet<Coord> {
     public CoordSet() {
-        this(51, 0.5f);
+        this(51, 0.9f);
     }
 
     public CoordSet(int initialCapacity) {
-        super(initialCapacity, 0.5f);
+        super(initialCapacity, 0.9f);
     }
 
     public CoordSet(int initialCapacity, float loadFactor) {

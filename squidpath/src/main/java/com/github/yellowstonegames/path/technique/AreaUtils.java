@@ -24,7 +24,6 @@ import java.util.Collection;
 
 /**
  * Static utilities for use in AOE and anything else that might need CoordFloatOrderedMaps.
- * Created by Tommy Ettinger on 7/13/2015.
  */
 public class AreaUtils {
     /**
@@ -106,7 +105,7 @@ public class AreaUtils {
     }
 
     /**
-     * This takes a DijkstraMap that has already completed a scan() and returns a CoordFloatOrderedMa, and will have a
+     * This takes a DijkstraMap that has already completed a scan() and returns a CoordFloatOrderedMap, and will have a
      * key for every position that was reached in the DijkstraMap, with 1.0 as the only value.
      * @param map a float[][] returned by a DijkstraMap running its scan()
      * @return a CoordFloatOrderedMap, with values of 1.0 only

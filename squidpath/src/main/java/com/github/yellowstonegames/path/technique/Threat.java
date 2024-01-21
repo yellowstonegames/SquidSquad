@@ -19,9 +19,11 @@ package com.github.yellowstonegames.path.technique;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Radius;
 
+import java.util.Objects;
+
 /**
  * A small class to store the area that a creature is perceived by other creatures to threaten.
- * Created by Tommy Ettinger on 11/8/2015.
+ * Composed only of a {@link Coord} position and a {@link Reach} reach.
  */
 public class Threat {
     public Coord position;
@@ -43,5 +45,31 @@ public class Threat {
     public Threat(Coord position, int minThreatDistance, int maxThreatDistance, Radius measurement, AimLimit limits) {
         this.position = position;
         reach = new Reach(minThreatDistance, maxThreatDistance, measurement, limits);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Threat threat = (Threat) o;
+
+        if (!Objects.equals(position, threat.position)) return false;
+        return Objects.equals(reach, threat.reach);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = position != null ? position.hashCode() : 0;
+        result = 31 * result + (reach != null ? reach.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Threat{" +
+                "position=" + position +
+                ", reach=" + reach +
+                '}';
     }
 }

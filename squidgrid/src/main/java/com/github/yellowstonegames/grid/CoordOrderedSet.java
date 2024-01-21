@@ -30,7 +30,7 @@ import java.util.Collection;
  */
 public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     public CoordOrderedSet() {
-        this(51, 0.5f);
+        this(51, 0.9f);
     }
 
     public CoordOrderedSet(int initialCapacity, float loadFactor) {
@@ -38,7 +38,7 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     }
 
     public CoordOrderedSet(int initialCapacity) {
-        super(initialCapacity, 0.5f);
+        super(initialCapacity, 0.9f);
     }
 
     public CoordOrderedSet(ObjectOrderedSet<? extends Coord> set) {
