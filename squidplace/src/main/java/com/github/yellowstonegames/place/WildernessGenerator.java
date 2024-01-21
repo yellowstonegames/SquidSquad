@@ -65,7 +65,7 @@ public class WildernessGenerator implements PlaceGenerator {
     public ObjectList<String> contentTypes;
     public ObjectList<String> floorTypes;
     public ObjectLongMap<String> viewer;
-    public final int[][] content, floors, colors, environment;
+    public final int[][] content, floors, colors, colorsOklab, environment;
     public final char[][] grid;
     public final long[][] glyphs;
 
@@ -574,6 +574,7 @@ public class WildernessGenerator implements PlaceGenerator {
         environment = ArrayTools.fill(DungeonTools.NATURAL_FLOOR, width, height);
         floors = new int[width][height];
         colors = new int[width][height];
+        colorsOklab = new int[width][height];
         grid = new char[width][height];
         glyphs = new long[width][height];
         this.floorTypes = floorTypes;
@@ -603,13 +604,13 @@ public class WildernessGenerator implements PlaceGenerator {
                 {
                     pair = viewer.get(contentTypes.get(content[x][y] = b));
                     grid[x][y] = (char) pair;
-                    colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (viewer.get(floorTypes.get(floors[x][y])) >>> 32));
+                    colors[x][y] = toRGBA8888(colorsOklab[x][y] = color = (rng.nextInt() & 0x00000007) ^ (int) (viewer.get(floorTypes.get(floors[x][y])) >>> 32));
                     glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.differentiateLightness((int)(pair >>> 32), color)) << 32;
                 }
                 else {
                     pair = viewer.get(floorTypes.get(floors[x][y]));
                     grid[x][y] = (char) pair;
-                    colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (pair >>> 32));
+                    colors[x][y] = toRGBA8888(colorsOklab[x][y] = color = (rng.nextInt() & 0x00000007) ^ (int) (pair >>> 32));
                     glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.offsetLightness(color)) << 32;
                 }
             }
@@ -779,13 +780,13 @@ public class WildernessGenerator implements PlaceGenerator {
                     if ((c = piece.content[x][y]) >= 0) {
                         pair = viewer.get(contentTypes.get(content[x][y] = c + minContents[p]));
                         grid[x][y] = (char) pair;
-                        colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (viewer.get(floorTypes.get(floor)) >>> 32));
+                        colors[x][y] = toRGBA8888(colorsOklab[x][y] = color = (rng.nextInt() & 0x00000007) ^ (int) (viewer.get(floorTypes.get(floor)) >>> 32));
                         glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.differentiateLightness((int)(pair >>> 32), color)) << 32;
 
                     } else {
                         pair = viewer.get(floorTypes.get(floors[x][y]));
                         grid[x][y] = (char) pair;
-                        colors[x][y] = toRGBA8888(color = (rng.nextInt() & 0x00000007) ^ (int) (pair >>> 32));
+                        colors[x][y] = toRGBA8888(colorsOklab[x][y] = color = (rng.nextInt() & 0x00000007) ^ (int) (pair >>> 32));
                         glyphs[x][y] = (pair & 0xFFFFFFFFL) | (long) toRGBA8888(DescriptiveColor.offsetLightness(color)) << 32;
                     }
                 }
