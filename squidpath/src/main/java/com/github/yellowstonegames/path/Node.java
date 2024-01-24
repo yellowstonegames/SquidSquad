@@ -97,7 +97,7 @@ public class Node<V> extends BinaryHeap.Node {
     // Public Methods
     //================================================================================
 
-    public Collection<Connection<V>> getConnections() {
+    public ObjectList<Connection<V>> getConnections() {
         return outEdges;
     }
 

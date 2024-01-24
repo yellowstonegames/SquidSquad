@@ -24,7 +24,7 @@ import com.github.yellowstonegames.grid.Coord;
  * @param <V> the vertex type; often {@link Coord}
  * @author earlygrey
  */
-public class Connection<V> extends Edge<V> {
+public abstract class Connection<V> extends Edge<V> {
     //================================================================================
     // Fields and constants
     //================================================================================
@@ -116,6 +116,11 @@ public class Connection<V> extends Edge<V> {
     public static class DirectedConnection<V> extends Connection<V> {
 
         @Override
+        public boolean hasEndpoints(V u, V v) {
+            return getA().equals(u) && getB().equals(v);
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
@@ -140,6 +145,11 @@ public class Connection<V> extends Edge<V> {
      * @param <V> the vertex type; often {@link Coord}
      */
     public static class UndirectedConnection<V> extends Connection<V> {
+
+        @Override
+        public boolean hasEndpoints(V u, V v) {
+            return hasEndpoint(u) && hasEndpoint(v);
+        }
 
         @Override
         public boolean equals(Object o) {

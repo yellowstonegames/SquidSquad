@@ -140,6 +140,21 @@ class AlgorithmImplementations<V> {
         else return end.distance;
     }
 
+    /**
+     * Find the length of a shortest path from the start vertex to the target vertex, using the A* search algorithm with the provided heuristic, and implemented with a priority queue.
+     * @param start the starting vertex
+     * @param target the target vertex
+     * @return the sum of the weights in a shortest path from the starting vertex to the target vertex.
+     * If there is no path from the start vertex to the target vertex, {@link Float#MAX_VALUE} is returned.
+     */
+    public float findMinimumDistance(Node<V> start, Node<V> target, Heuristic<V> heuristic) {
+        Node<V> search = aStarSearch(start, target, heuristic);
+        if (search == null) return Float.MAX_VALUE;
+        else return search.distance;
+    }
+
+
+
     ObjectDeque<V> findShortestPath(Node<V> start, Node<V> target) {
         ObjectDeque<V> path = new ObjectDeque<>();
         findShortestPath(start, target, path);

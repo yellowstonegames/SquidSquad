@@ -231,7 +231,7 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 * @return true if the graph contains a cycle, false otherwise
 	 */
 	public boolean detectCycle() {
-		return algorithms.detectCycle();
+		return algorithms.containsCycle();
 	}
 
 	/**

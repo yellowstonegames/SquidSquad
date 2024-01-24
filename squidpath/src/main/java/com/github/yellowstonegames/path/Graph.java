@@ -17,12 +17,11 @@ package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.function.ObjPredicate;
 import com.github.yellowstonegames.grid.Coord;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Abstract superclass of actual Graph types.
@@ -95,6 +94,17 @@ public abstract class Graph<V> {
     }
 
     /**
+     * Adds all the vertices in the array or varargs to the graph.
+     * @param vertices an array or varargs of vertices to be added
+     */
+    @SafeVarargs
+    public final void addVertices(V... vertices) {
+        for (V v : vertices) {
+            addVertex(v);
+        }
+    }
+
+    /**
      * Removes a vertex from the graph, and any adjacent edges.
      * @param v the vertex to be removed
      * @return true if the vertex was in the graph, false otherwise
@@ -114,6 +124,25 @@ public abstract class Graph<V> {
         for (V v : vertices) {
             removeVertex(v);
         }
+    }
+
+    public void removeVertexIf(final ObjPredicate<V> predicate) {
+        ArrayList<V> vertices = new ArrayList<>(getVertices());
+        vertices.removeIf(v -> !predicate.test(v));
+        removeVertices(vertices);
+    }
+
+    public void disconnect(V v) {
+        Node<V> existing = vertexMap.get(v);
+        if (existing == null) throw new IllegalArgumentException("No node is present for the given V vertex.");
+        disconnect(existing);
+    }
+
+    protected void disconnect(Node<V> node) {
+        for (int i = node.getConnections().size() - 1; i >= 0; i--) {
+            removeConnection(node, node.getConnections().get(i).b);
+        }
+        node.disconnect();
     }
 
     /**
@@ -158,6 +187,18 @@ public abstract class Graph<V> {
 
     public boolean removeEdge(Edge<V> edge) {
         return removeConnection(edge.getInternalNodeA(), edge.getInternalNodeB());
+    }
+
+    public void removeEdges(Collection<? extends Edge<V>> edges) {
+        for (Edge<V> e : edges) {
+            removeConnection(e.getInternalNodeA(), e.getInternalNodeB());
+        }
+    }
+
+    public void removeEdgeIf(final ObjPredicate<Edge<V>> predicate) {
+        ArrayList<Edge<V>> edges = new ArrayList<>(getEdges());
+        edges.removeIf(v -> !predicate.test(v));
+        removeEdges(edges);
     }
 
     /**

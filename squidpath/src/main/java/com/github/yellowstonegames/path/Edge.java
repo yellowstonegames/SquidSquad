@@ -28,6 +28,11 @@ public abstract class Edge<V> {
     public abstract V getA();
     public abstract V getB();
 
+    public abstract boolean hasEndpoints(V u, V v);
+    public boolean hasEndpoint(V u) {
+        return getA().equals(u) || getB().equals(u);
+    }
+
     public abstract float getWeight();
     public abstract void setWeight(float weight);
 

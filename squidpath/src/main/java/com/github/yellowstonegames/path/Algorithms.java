@@ -23,7 +23,7 @@ import com.github.yellowstonegames.grid.Coord;
  * The most-frequently-used algorithm here is probably {@link #findShortestPath(Object, Object, ObjectDeque, Heuristic)},
  * or some overload of it; this is a standard A-Star algorithm backed by a priority queue that is very fast. Somewhat
  * surprisingly, it doesn't need indices like gdx-ai's IndexedAStarPathFinder needs, and this makes the code easier to
- * use. There's a good amount of other useful algorithms here, like {@link #detectCycle()} and various non-A-Star search
+ * use. There's a good amount of other useful algorithms here, like {@link #containsCycle()} and various non-A-Star search
  * methods, like {@link #breadthFirstSearch(Object, int, int)} and {@link #depthFirstSearch(Object, int, int)}.
  * <br>
  * This class is not meant to be extended from outside of this package, so it uses a package-private implementation.
@@ -89,9 +89,31 @@ public class Algorithms<V> {
      * @param start the starting vertex
      * @param target the target vertex
      * @return the sum of the weights in a shortest path from the starting vertex to the target vertex
+     * If there is no path from the start vertex to the target vertex, {@link Float#MAX_VALUE} is returned.
      */
     public float findMinimumDistance(V start, V target) {
         return implementations.findMinimumDistance(graph.getNode(start), graph.getNode(target));
+    }
+
+    /**
+     * Find the length of the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.
+     * @param start the starting vertex
+     * @param target the target vertex
+     * @return the sum of the weights in a shortest path from the starting vertex to the target vertex
+     * If there is no path from the start vertex to the target vertex, {@link Float#MAX_VALUE} is returned.
+     */
+    public float findMinimumDistance(V start, V target, Heuristic<V> heuristic) {
+        return implementations.findMinimumDistance(graph.getNode(start), graph.getNode(target), heuristic);
+    }
+
+    /**
+     * Checks whether there exists a path from the start vertex to target vertex, using Dijkstra's algorithm implemented with a priority queue.
+     * @param start the starting vertex
+     * @param target the target vertex
+     * @return whether there exists a path from the start vertex to target vertex
+     */
+    public boolean isConnected(V start, V target) {
+        return findMinimumDistance(start, target) < Float.MAX_VALUE;
     }
 
     //--------------------
@@ -167,7 +189,7 @@ public class Algorithms<V> {
      * Checks whether there are any cycles in the graph using depth first searches.
      * @return true if the graph contains a cycle, false otherwise
      */
-    public boolean detectCycle() {
+    public boolean containsCycle() {
         return implementations.containsCycle(graph);
     }
 
