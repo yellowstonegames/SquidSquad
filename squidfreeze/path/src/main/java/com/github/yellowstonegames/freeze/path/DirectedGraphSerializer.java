@@ -22,7 +22,7 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.path.DirectedGraph;
-import com.github.yellowstonegames.path.Edge;
+import com.github.yellowstonegames.path.Connection;
 
 import java.util.Collection;
 import java.util.Set;
@@ -40,7 +40,7 @@ public class DirectedGraphSerializer extends Serializer<DirectedGraph<?>> {
     @Override
     public void write(final Kryo kryo, final Output output, final DirectedGraph<?> data) {
         Collection<?> vertices = data.getVertices();
-        Set<? extends Edge<?>> edges = data.getEdges();
+        Set<? extends Connection<?>> edges = data.getEdges();
         int length = vertices.size();
         output.writeInt(length, true);
         for(Object v : vertices) {
@@ -48,7 +48,7 @@ public class DirectedGraphSerializer extends Serializer<DirectedGraph<?>> {
         }
         length = edges.size();
         output.writeInt(length, true);
-        for(Edge<?> e : edges) {
+        for(Connection<?> e : edges) {
             kryo.writeClassAndObject(output, e.getA());
             kryo.writeClassAndObject(output, e.getB());
             output.writeFloat(e.getWeight());
@@ -81,8 +81,8 @@ public class DirectedGraphSerializer extends Serializer<DirectedGraph<?>> {
         for(Object v : vertices){
             raw.addVertex(kryo.copy(v));
         }
-        Set<? extends Edge<?>> edges = graph.getEdges();
-        for(Edge<?> e : edges){
+        Set<? extends Connection<?>> edges = graph.getEdges();
+        for(Connection<?> e : edges){
             raw.addEdge(kryo.copy(e.getA()), kryo.copy(e.getB()), e.getWeight());
         }
         return graph;

@@ -16,6 +16,7 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.grid.Coord;
 
 import java.util.Collection;
@@ -35,7 +36,7 @@ public abstract class Graph<V> {
     //================================================================================
     
     protected ObjectObjectOrderedMap<V, Node<V>> vertexMap;
-    protected ObjectObjectOrderedMap<Connection<V>, Connection<V>> edgeMap;
+    protected ObjectOrderedSet<Connection<V>> edgeSet;
     
     //================================================================================
     // Constructors
@@ -43,7 +44,7 @@ public abstract class Graph<V> {
 
     protected Graph() {
         vertexMap = new ObjectObjectOrderedMap<>();
-        edgeMap = new ObjectObjectOrderedMap<>();
+        edgeSet = new ObjectOrderedSet<>();
     }
 
     protected Graph(Collection<V> vertices) {
@@ -166,14 +167,14 @@ public abstract class Graph<V> {
         for (Node<V> v : getNodes()) {
             v.disconnect();
         }
-        edgeMap.clear();
+        edgeSet.clear();
     }
 
     /**
      * Removes all vertices and edges from the graph.
      */
     public void removeAllVertices() {
-        edgeMap.clear();
+        edgeSet.clear();
         vertexMap.clear();
     }
 
@@ -192,7 +193,7 @@ public abstract class Graph<V> {
      * @param comparator a comparator for comparing edges
      */
     public void sortEdges(Comparator<Connection<V>> comparator) {
-        edgeMap.sort(comparator);
+        edgeSet.sort(comparator);
     }
 
     //--------------------
@@ -209,20 +210,20 @@ public abstract class Graph<V> {
 
     protected Connection<V> addConnection(Node<V> a, Node<V> b) {
         Connection<V> e = a.addEdge(b, Connection.DEFAULT_WEIGHT);
-        edgeMap.put(e, e);
+        edgeSet.add(e);
         return e;
     }
 
     protected Connection<V> addConnection(Node<V> a, Node<V> b, float weight) {
         Connection<V> e = a.addEdge(b, weight);
-        edgeMap.put(e, e);
+        edgeSet.add(e);
         return e;
     }
 
     protected boolean removeConnection(Node<V> a, Node<V> b) {
         Connection<V> e = a.removeEdge(b);
         if (e == null) return false;
-        edgeMap.remove(e);
+        edgeSet.remove(e);
         return true;
     }
 
@@ -245,11 +246,12 @@ public abstract class Graph<V> {
 
     /**
      * Retrieve the edge which is from v to w.
+     *
      * @param v the source vertex of the edge
      * @param w the destination vertex of the edge
      * @return the edge if it is in the graph, otherwise null
      */
-    public Edge<V> getEdge(V v, V w) {
+    public Connection<V> getEdge(V v, V w) {
         Node<V> a = getNode(v), b = getNode(w);
         if (a == null  || b == null) throw new IllegalArgumentException("At least one vertex is not in the graph");
         return getEdge(a, b);
@@ -269,21 +271,23 @@ public abstract class Graph<V> {
 
     /**
      * Get a List containing all the edges which have v as a source.
+     *
      * @param v the source vertex of all the edges
      * @return a List of edges
      */
-    public List<? extends Edge<V>> getEdges(V v) {
+    public List<? extends Connection<V>> getEdges(V v) {
         Node<V> node = getNode(v);
         if (node==null) return null;
         return node.outEdges;
     }
 
     /**
-     * Get a Set containing all the edges in the graph.
-     * @return a Set collection of all the edges in the graph
+     * Get an ObjectOrderedSet containing all the edges in the graph.
+     *
+     * @return an ObjectOrderedSet of all the edges in the graph
      */
-    public Set<? extends Edge<V>> getEdges() {
-        return edgeMap.keySet();
+    public ObjectOrderedSet<? extends Connection<V>> getEdges() {
+        return edgeSet;
     }
 
     /**
@@ -316,7 +320,7 @@ public abstract class Graph<V> {
      * @return the number of edges
      */
     public int getEdgeCount() {
-        return edgeMap.size();
+        return edgeSet.size();
     }
 
 

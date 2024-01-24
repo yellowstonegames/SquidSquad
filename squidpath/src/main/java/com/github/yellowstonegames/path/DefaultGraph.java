@@ -90,7 +90,7 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 		Coord.expandPoolTo(width, height);
 		ObjectList<Coord> vs = new ObjectList<>(width * height >>> 1);
 		vertexMap.clear();
-		edgeMap.clear();
+		edgeSet.clear();
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				if(map[x][y] != '#')

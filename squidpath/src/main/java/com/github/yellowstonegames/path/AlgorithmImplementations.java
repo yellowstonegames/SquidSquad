@@ -290,7 +290,7 @@ class AlgorithmImplementations<V> {
 
         spanningTree.addVertices(graph.vertexMap.keySet());
 
-        ObjectList<Connection<V>> edgeList = new ObjectList<>(graph.edgeMap.values());
+        ObjectList<Connection<V>> edgeList = new ObjectList<>(graph.edgeSet.order());
 
         edgeList.sort(minSpanningTree ? weightComparator : reverseWeightComparator);
 

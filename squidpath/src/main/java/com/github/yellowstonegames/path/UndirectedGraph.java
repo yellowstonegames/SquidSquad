@@ -56,7 +56,7 @@ public class UndirectedGraph<V> extends Graph<V>{
     @Override
     protected Connection<V> addConnection(Node<V> a, Node<V> b, float weight) {
         Connection<V> e = a.addEdge(b, weight);
-        edgeMap.put(e, e);
+        edgeSet.add(e);
         b.addEdge(a, weight);
         return e;
     }
@@ -66,7 +66,7 @@ public class UndirectedGraph<V> extends Graph<V>{
         Connection<V> e = a.removeEdge(b);
         if (e == null) return false;
         b.removeEdge(a);
-        edgeMap.remove(e);
+        edgeSet.remove(e);
         return true;
     }
 
@@ -74,7 +74,7 @@ public class UndirectedGraph<V> extends Graph<V>{
     protected Connection<V> getEdge(Node<V> a, Node<V> b) {
         Connection<V> edge = a.getEdge(b);
         if (edge == null) return null;
-        edge = edgeMap.get(edge);
+        edge = edgeSet.get(edge);
         return edge;
     }
 
