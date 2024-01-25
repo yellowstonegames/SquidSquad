@@ -33,8 +33,8 @@ public final class GraphBuilder {
 
     public static <V, G extends Graph<V>> void buildCompleteGraph(G graph) {
         ObjectObjectMap.Values<V, Node<V>> values1 = new ObjectObjectMap.Values<>(graph.vertexMap);
-        ObjectObjectMap.Values<V, Node<V>> values2 = new ObjectObjectMap.Values<>(graph.vertexMap);
         for (Node<V> a : values1) {
+            ObjectObjectMap.Values<V, Node<V>> values2 = new ObjectObjectMap.Values<>(graph.vertexMap);
             for (Node<V> b : values2) {
                 if (!a.equals(b)) {
                     Connection<V> e = a.getEdge(b);
