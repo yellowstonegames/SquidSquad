@@ -39,6 +39,7 @@ public class Node<V> extends BinaryHeap.Node {
     protected final V object;
     protected ObjectObjectMap<Node<V>, Connection<V>> neighbors = new ObjectObjectMap<>(4);
     protected ObjectList<Connection<V>> outEdges = new ObjectList<>(4); // ObjectList reuses its iterator, should be fast
+    protected ObjectList<Connection<V>> inEdges;
 
     private static int hashCounter = 12345;
 
@@ -51,6 +52,8 @@ public class Node<V> extends BinaryHeap.Node {
         this.object = v;
         this.graph = graph;
         idHash = (hashCounter = hashCounter * 0xDAB ^ 0xBEEFACED); // simple XLCG, won't have GWT problems
+        if(graph.isDirected())
+            inEdges = new ObjectList<>(4);
     }
 
     //================================================================================
@@ -68,6 +71,7 @@ public class Node<V> extends BinaryHeap.Node {
             edge.set(this, v, weight);
             neighbors.put(v, edge);
             outEdges.add(edge);
+            if (v.inEdges != null) v.inEdges.add(edge);
             return edge;
         } else {
             edge.setWeight(weight);
@@ -81,8 +85,16 @@ public class Node<V> extends BinaryHeap.Node {
         for (int j = outEdges.size()-1; j >= 0; j--) {
             Connection<V> connection = outEdges.get(j);
             if (connection.equals(edge)) {
-                outEdges.remove(j);
+                outEdges.removeAt(j);
                 break;
+            }
+        }
+        if(v.inEdges != null) {
+            for (int j = v.inEdges.size() - 1; j >= 0; j--) {
+                if (v.inEdges.get(j).equals(edge)) {
+                    v.inEdges.removeAt(j);
+                    break;
+                }
             }
         }
         return edge;
@@ -91,6 +103,7 @@ public class Node<V> extends BinaryHeap.Node {
     protected void disconnect() {
         neighbors.clear();
         outEdges.clear();
+        if(inEdges != null) inEdges.clear();
     }
 
     //================================================================================

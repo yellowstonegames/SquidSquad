@@ -15,6 +15,8 @@
  */
 package com.github.yellowstonegames.path;
 
+import com.github.tommyettinger.ds.ObjectBag;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.function.ObjPredicate;
@@ -127,7 +129,7 @@ public abstract class Graph<V> {
     }
 
     public void removeVertexIf(final ObjPredicate<V> predicate) {
-        ArrayList<V> vertices = new ArrayList<>(getVertices());
+        ObjectBag<V> vertices = new ObjectBag<>(getVertices());
         vertices.removeIf(v -> !predicate.test(v));
         removeVertices(vertices);
     }
@@ -142,7 +144,11 @@ public abstract class Graph<V> {
         for (int i = node.getConnections().size() - 1; i >= 0; i--) {
             Connection<V> c = node.getConnections().get(i);
             removeConnection(node, c.b);
-            removeConnection(c.b, node);
+        }
+        if (node.inEdges != null) {
+            for (int i = node.inEdges.size() - 1; i >= 0; i--) {
+                removeConnection(node.inEdges.get(i).a, node);
+            }
         }
         node.disconnect();
     }
