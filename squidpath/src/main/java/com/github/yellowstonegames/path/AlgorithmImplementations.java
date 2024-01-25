@@ -34,6 +34,7 @@ class AlgorithmImplementations<V> {
     private final Graph<V> graph;
     private final BinaryHeap<Node<V>> heap;
     private final ObjectDeque<Node<V>> queue;
+    private Node<V> cursor;
     private int runID;
 
     //================================================================================
@@ -236,56 +237,58 @@ class AlgorithmImplementations<V> {
     //================================================================================
 
     boolean topologicalSort(ObjectList<V> sortedVertices) {
-        sortedVertices.clear();
+        if (graph.vertexMap.size() < 2 || graph.getEdgeCount() < 1) return true;
+
         init();
-        ObjectOrderedSet<Node<V>> set = new ObjectOrderedSet<>(graph.vertexMap.values());
+
+        // start the cursor at the tail and work towards the head,
+        // so the list is sorted from head to tail
+        cursor = graph.vertexMap.getAt(sortedVertices.size() - 1);//.get(sortedVertices.get(sortedVertices.size()-1));
+
         boolean success = true;
-        while (success && !set.isEmpty()) {
-            success = recursiveTopologicalSort(sortedVertices, set.first(), set);
-        }
-        if (success) {
-            sortedVertices.reverse();
+        while (success && cursor != null) {
+            success = recursiveTopologicalSort(cursor, sortedVertices);
         }
 
+        cursor = null;
         return success;
     }
 
     boolean topologicalSort() {
-        ObjectList<V> sortedVertices = new ObjectList<>();
-        init();
-        ObjectOrderedSet<Node<V>> set = new ObjectOrderedSet<>(graph.vertexMap.values());
-        boolean success = true;
-        while (success && !set.isEmpty()) {
-            success = recursiveTopologicalSort(sortedVertices, set.first(), set);
-        }
-        if (success) {
-            for (int i = sortedVertices.size()-1; i >= 0; i--) {
-                graph.vertexMap.order().swap(graph.vertexMap.size() - 1, graph.vertexMap.order().indexOf(sortedVertices.get(i)));
-            }
-        }
-        return success;
+        return topologicalSort(graph.vertexMap.order());
     }
 
-    private boolean recursiveTopologicalSort(ObjectList<V> sortedVertices, Node<V> v, Set<Node<V>> set) {
+    private boolean recursiveTopologicalSort(Node<V> v, ObjectList<V> sortedVertices) {
         v.resetAlgorithmAttributes(runID);
 
         if (v.visited) return true;
-        if (v.seen) {
-            // not a DAG
-            return false;
-        }
+        if (v.seen) return false; // not a DAG
+
         v.seen = true;
-        int n = v.outEdges.size();
-        for (int i = 0; i < n; i++) {
-            Connection<V> e = v.outEdges.get(i);
-            boolean success = recursiveTopologicalSort(sortedVertices, e.b, set);
-            if (!success) return false;
+
+        ObjectList<Connection<V>> outEdges = v.outEdges;
+        for (Connection<V> e : outEdges) {
+            if (!recursiveTopologicalSort(e.getNodeB(), sortedVertices)) return false;
         }
+
         v.seen = false;
         v.visited = true;
-        sortedVertices.add(v.object);
-        set.remove(v);
+
+        if (cursor != v) {
+            // move v from its current position to just after the cursor
+            sortedVertices.remove(v.object);
+            sortedVertices.insert(sortedVertices.indexOf(cursor.object) + 1, v.object);
+        } else {
+            // v is already in the cursor position, just need to move the cursor along
+            int idx = sortedVertices.indexOf(cursor.object);
+            if(idx <= 0)
+                cursor = null;
+            else
+                cursor = graph.vertexMap.get(sortedVertices.get(idx - 1));
+        }
+
         return true;
+
     }
 
     //================================================================================

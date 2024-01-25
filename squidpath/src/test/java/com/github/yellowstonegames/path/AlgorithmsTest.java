@@ -210,7 +210,8 @@ public class AlgorithmsTest {
     public void topologicalSortShouldWork() {
         DirectedGraph<Integer> graph = new DirectedGraph<>();
         int n = 10;
-        for (int i = 0; i < n; i++) graph.addVertex(i);
+        for (int i = 0; i < n; i++)
+            graph.addVertex(i);
 
         graph.addEdge(9,8);
         graph.addEdge(6,7);
@@ -218,7 +219,8 @@ public class AlgorithmsTest {
 
         graph.removeAllEdges();
 
-        for (int i = 0; i < n-1; i++) graph.addEdge(i+1, i);
+        for (int i = 0; i < n-1; i++)
+            graph.addEdge(i+1, i);
 
         assertTrue(graph.algorithms().topologicalSort());
         int i = n-1;
@@ -230,7 +232,7 @@ public class AlgorithmsTest {
 
         graph.addEdge(n/2, n/2 + 1);
         boolean success = graph.algorithms().topologicalSort();
-        assertTrue(!success);
+        assertFalse(success);
 
         graph = new DirectedGraph<>();
         graph.addVertices(0, 1, 2, 3, 4, 5);
