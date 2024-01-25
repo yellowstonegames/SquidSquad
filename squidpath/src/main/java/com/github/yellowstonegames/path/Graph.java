@@ -140,7 +140,9 @@ public abstract class Graph<V> {
 
     protected void disconnect(Node<V> node) {
         for (int i = node.getConnections().size() - 1; i >= 0; i--) {
-            removeConnection(node, node.getConnections().get(i).b);
+            Connection<V> c = node.getConnections().get(i);
+            removeConnection(node, c.b);
+            removeConnection(c.b, node);
         }
         node.disconnect();
     }
