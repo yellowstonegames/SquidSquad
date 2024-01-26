@@ -63,4 +63,8 @@ public class DirectedGraph<V> extends Graph<V>{
         return algorithms;
     }
 
+    @Override
+    public String toString() {
+        return "DirectedGraph" + vertexMap.keySet();
+    }
 }

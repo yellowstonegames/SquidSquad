@@ -7,6 +7,7 @@ javadoc.destinationDir = file("../../docs/squidfreeze/$name/apidocs")
 dependencies {
     api project(':squidcore')
     api project(':squidfreeze:core')
+    api project(':squidfreeze:grid')
     api project(':squidpath')
 
     testImplementation "junit:junit:$junitVersion"

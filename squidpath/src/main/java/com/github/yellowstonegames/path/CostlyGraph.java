@@ -444,4 +444,9 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 		result = 107 * result + height;
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "CostlyGraph: {\n" + String.valueOf(show()) + "\n}";
+	}
 }

@@ -284,4 +284,9 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 		result = 107 * result + height;
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "DefaultGraph: {\n" + String.valueOf(show()) + "\n}";
+	}
 }

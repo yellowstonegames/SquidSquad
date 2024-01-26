@@ -20,6 +20,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.yellowstonegames.freeze.grid.CoordSerializer;
+import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.path.DefaultGraph;
 import com.github.yellowstonegames.path.Graph;
 import com.github.yellowstonegames.path.UndirectedGraph;
 import com.github.yellowstonegames.path.DirectedGraph;
@@ -76,12 +79,11 @@ public class PathTest {
         System.out.println("Undirected byte length: " + bytes.length);
         try (Input input = new Input(bytes)) {
             UndirectedGraph<?> data2 = kryo.readObject(input, UndirectedGraph.class);
-//            Assert.assertEquals(data.numberOfComponents(), data2.numberOfComponents());
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
                     data2.getEdges().stream().map(Object::toString).collect(Collectors.toList()));
-//            Assert.assertEquals(data, data2);
+            Assert.assertEquals(data, data2);
         }
     }
 
@@ -101,12 +103,43 @@ public class PathTest {
         System.out.println("Directed byte length: " + bytes.length);
         try (Input input = new Input(bytes)) {
             DirectedGraph<?> data2 = kryo.readObject(input, DirectedGraph.class);
+            Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
+            Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
+            Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
+                    data2.getEdges().stream().map(Object::toString).collect(Collectors.toList()));
+            Assert.assertEquals(data, data2);
+        }
+    }
+    
+    @Test
+    public void testDefaultGraph() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(DefaultGraph.class, new DefaultGraphSerializer());
+
+        int n = 5;
+        Graph<Coord> data = new DefaultGraph(new char[][]{
+                "######".toCharArray(),
+                "#....#".toCharArray(),
+                "#....#".toCharArray(),
+                "#..#.#".toCharArray(),
+                "#....#".toCharArray(),
+                "######".toCharArray(),
+        }, true);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        System.out.println("Undirected byte length: " + bytes.length);
+        try (Input input = new Input(bytes)) {
+            DefaultGraph data2 = kryo.readObject(input, DefaultGraph.class);
 //            Assert.assertEquals(data.numberOfComponents(), data2.numberOfComponents());
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
                     data2.getEdges().stream().map(Object::toString).collect(Collectors.toList()));
-//            Assert.assertEquals(data, data2);
+            Assert.assertEquals(data, data2);
         }
     }
 

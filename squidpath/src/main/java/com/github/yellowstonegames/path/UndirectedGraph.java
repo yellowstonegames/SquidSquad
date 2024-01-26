@@ -97,4 +97,9 @@ public class UndirectedGraph<V> extends Graph<V>{
     public UndirectedGraphAlgorithms<V> algorithms() {
         return algorithms;
     }
+
+    @Override
+    public String toString() {
+        return "UndirectedGraph" + vertexMap.keySet();
+    }
 }
