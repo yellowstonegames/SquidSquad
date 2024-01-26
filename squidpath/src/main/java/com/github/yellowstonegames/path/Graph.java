@@ -112,9 +112,9 @@ public abstract class Graph<V> {
      * @return true if the vertex was in the graph, false otherwise
      */
     public boolean removeVertex(V v) {
-        Node<V> existing = getNode(v);
+        Node<V> existing = vertexMap.remove(v);
         if (existing==null) return false;
-        removeNode(existing);
+        disconnect(existing);
         return true;
     }
 

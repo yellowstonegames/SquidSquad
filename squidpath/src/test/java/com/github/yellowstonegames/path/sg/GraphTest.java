@@ -112,7 +112,7 @@ public class GraphTest {
     }
 
     @Test
-    public void vertexanBeRemovedFromDirectedGraph() {
+    public void vertexCanBeRemovedFromDirectedGraph() {
         DirectedGraph<Integer> graph = new DirectedGraph<>();
 
         int n = 10;
