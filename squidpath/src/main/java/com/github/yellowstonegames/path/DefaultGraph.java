@@ -18,6 +18,7 @@ package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
@@ -41,6 +42,7 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 */
 	public DefaultGraph() {
 		vertexMap = new CoordObjectOrderedMap<>();
+		edgeSet = new ObjectOrderedSet<>();
 		algorithms = new UndirectedGraphAlgorithms<>(this);
 		width = 0;
 		height = 0;
@@ -63,6 +65,7 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 */
 	public DefaultGraph(char[][] map, boolean eightWay) {
 		vertexMap = new CoordObjectOrderedMap<>();
+		edgeSet = new ObjectOrderedSet<>();
 		algorithms = new UndirectedGraphAlgorithms<>(this);
 		init(map, eightWay);
 	}
@@ -230,7 +233,7 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 * Checks whether there are any cycles in the graph using depth first searches.
 	 * @return true if the graph contains a cycle, false otherwise
 	 */
-	public boolean detectCycle() {
+	public boolean containsCycle() {
 		return algorithms.containsCycle();
 	}
 
@@ -260,5 +263,25 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 			cs[y * w5 + x + 3] = (char) ('0' + d % 10);
 		}
 		return cs;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		DefaultGraph that = (DefaultGraph) o;
+
+		if (width != that.width) return false;
+        return height == that.height;
+    }
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 107 * result + width;
+		result = 107 * result + height;
+		return result;
 	}
 }

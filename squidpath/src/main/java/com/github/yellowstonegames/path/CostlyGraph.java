@@ -20,6 +20,7 @@ package com.github.yellowstonegames.path;
 import com.github.tommyettinger.ds.IntFloatMap;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
@@ -33,6 +34,9 @@ import java.util.Arrays;
  * Created by Tommy Ettinger on 7/9/2020.
  */
 public class CostlyGraph extends DirectedGraph<Coord> {
+	public int width;
+	public int height;
+
 	/**
 	 * Given a char[][] for the map, produces a float[][] that can be used as a cost map by this class. It
 	 * expects any doors to be represented by '+' if closed or '/' if open and any walls to be '#' or box drawing
@@ -135,16 +139,13 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 		return portion;
 	}
 
-
-	public int width;
-	public int height;
-
 	/**
 	 * No-op no-arg constructor, present for serialization; if you use this you must call
 	 * {@link #init(float[][])} or {@link #init(float[][], boolean)} before using the CostlyGraph.
 	 */
 	public CostlyGraph() {
 		vertexMap = new CoordObjectOrderedMap<>();
+		edgeSet = new ObjectOrderedSet<>();
 		algorithms = new DirectedGraphAlgorithms<>(this);
 		width = 0;
 		height = 0;
@@ -172,6 +173,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 */
 	public CostlyGraph(float[][] map, boolean eightWay) {
 		vertexMap = new CoordObjectOrderedMap<>();
+		edgeSet = new ObjectOrderedSet<>();
 		algorithms = new DirectedGraphAlgorithms<>(this);
 		init(map, eightWay);
 	}
@@ -189,9 +191,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * @param map a 2D char array where {@code '#'}, {@code '+'}, and all box drawing characters are considered impassable
 	 */
 	public CostlyGraph(char[][] map) {
-		vertexMap = new CoordObjectOrderedMap<>();
-		algorithms = new DirectedGraphAlgorithms<>(this);
-		init(generateAStarCostMap(map), false);
+		this(map, false);
 	}
 
 	/**
@@ -210,6 +210,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 */
 	public CostlyGraph(char[][] map, boolean eightWay) {
 		vertexMap = new CoordObjectOrderedMap<>();
+		edgeSet = new ObjectOrderedSet<>();
 		algorithms = new DirectedGraphAlgorithms<>(this);
 		init(generateAStarCostMap(map), eightWay);
 	}
@@ -392,7 +393,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	 * Checks whether there are any cycles in the graph using depth first searches.
 	 * @return true if the graph contains a cycle, false otherwise
 	 */
-	public boolean detectCycle() {
+	public boolean containsCycle() {
 		return algorithms.containsCycle();
 	}
 
@@ -424,4 +425,23 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 		return cs;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		CostlyGraph that = (CostlyGraph) o;
+
+		if (width != that.width) return false;
+        return height == that.height;
+    }
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 107 * result + width;
+		result = 107 * result + height;
+		return result;
+	}
 }

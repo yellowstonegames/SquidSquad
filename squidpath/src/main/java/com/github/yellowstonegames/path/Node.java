@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.yellowstonegames.grid.Coord;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * An extended version of {@link BinaryHeap.Node} that also stores a reference to the parent Graph,
@@ -35,7 +36,6 @@ public class Node<V> extends BinaryHeap.Node {
     //================================================================================
 
     protected final Graph<V> graph;
-    protected final int idHash;
     protected final V object;
     protected ObjectObjectMap<Node<V>, Connection<V>> neighbors = new ObjectObjectMap<>(4);
     protected ObjectList<Connection<V>> outEdges = new ObjectList<>(4); // ObjectList reuses its iterator, should be fast
@@ -51,7 +51,6 @@ public class Node<V> extends BinaryHeap.Node {
         super(0f);
         this.object = v;
         this.graph = graph;
-        idHash = (hashCounter = hashCounter * 0xDAB ^ 0xBEEFACED); // simple XLCG, won't have GWT problems
         if(graph.isDirected())
             inEdges = new ObjectList<>(4);
     }
@@ -177,12 +176,17 @@ public class Node<V> extends BinaryHeap.Node {
 
     @Override
     public boolean equals(Object o) {
-        return o == this;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node<?> node = (Node<?>) o;
+
+        return Objects.equals(object, node.object);
     }
 
     @Override
     public int hashCode() {
-        return idHash;
+        return object.hashCode();
     }
 
     @Override

@@ -206,4 +206,14 @@ public class Algorithms<V> {
         return implementations.getRunID();
     }
 
+    /**
+     * Sets the identifier for the last run of an algorithm; this should mostly be usable internally, but may be useful
+     * when serializing and deserializing a Graph and you, for whatever reason, need to ensure previous runs of an
+     * algorithm on that Graph can be resumed.
+     * @param newID an identifier for which algorithm ran last, as a probably-unique int
+     */
+    public void setRunID(int newID) {
+        implementations.setRunID(newID);
+    }
+
 }

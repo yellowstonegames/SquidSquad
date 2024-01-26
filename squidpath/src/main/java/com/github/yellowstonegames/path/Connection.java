@@ -125,8 +125,8 @@ public abstract class Connection<V> extends Edge<V> {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Connection edge = (Connection) o;
-            // this assumes a and b are non-null when equals() is called.
-            return a.equals(edge.a) && b.equals(edge.b);
+            // this assumes a.object and b.object are non-null when equals() is called.
+            return a.object.equals(edge.a.object) && b.object.equals(edge.b.object);
         }
 
         @Override
@@ -156,9 +156,9 @@ public abstract class Connection<V> extends Edge<V> {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Connection edge = (Connection) o;
-            // this assumes a and b are non-null when equals() is called.
-            return (a.equals(edge.a) && b.equals(edge.b))
-                    || (a.equals(edge.b) && b.equals(edge.a));
+            // this assumes a.object and b.object are non-null when equals() is called.
+            return (a.object.equals(edge.a.object) && b.object.equals(edge.b.object))
+                    || (a.object.equals(edge.b.object) && b.object.equals(edge.a.object));
         }
 
         @Override

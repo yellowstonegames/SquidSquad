@@ -393,6 +393,21 @@ public abstract class Graph<V> {
         return a.getEdge(b);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Graph<?> graph = (Graph<?>) o;
 
+        if (!vertexMap.keySet().equals(graph.vertexMap.keySet())) return false;
+        return edgeSet.equals(graph.edgeSet);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = vertexMap.keySet().hashCode();
+        result = 31 * result + edgeSet.hashCode();
+        return result;
+    }
 }
