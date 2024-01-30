@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.yellowstonegames.core.DigitTools;
 
 /**
  * Combined higher-dimensional value noise with simplex noise as one of its axes. Though much like
@@ -27,12 +26,12 @@ import com.github.yellowstonegames.core.DigitTools;
  * you generate, this may be a good, similar alternative.
  */
 public class BadgerNoise implements INoise {
-    public int state;
+    public int seed;
     public BadgerNoise() {
         this(0x9E3779B97F4A7C15L);
     }
     public BadgerNoise(long seed) {
-        state = (int)seed;
+        this.seed = (int)seed;
     }
 
     @Override
@@ -52,12 +51,12 @@ public class BadgerNoise implements INoise {
 
     @Override
     public void setSeed(long seed) {
-        state = (int)seed;
+        this.seed = (int)seed;
     }
 
     @Override
     public long getSeed() {
-        return state;
+        return seed;
     }
 
     @Override
@@ -67,47 +66,47 @@ public class BadgerNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y) {
-        float n = SimplexNoise.noise(x, y, state); // regular simplex noise call
-        n = (ValueNoise.valueNoise(x+y, y-x, n * 0.75f, state) - n) * 0.5f; // uses higher-dim value noise with n
+        float n = SimplexNoise.noise(x, y, seed); // regular simplex noise call
+        n = (ValueNoise.valueNoise(x+y, y-x, n * 0.75f, seed) - n) * 0.5f; // uses higher-dim value noise with n
         return n / (float)Math.sqrt(0.29f + n * n); // approach 1 or -1 quickly
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        float n = SimplexNoise.noise(x, y, z, state);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+x, n * 0.75f, state) - n) * 0.5f;
+        float n = SimplexNoise.noise(x, y, z, seed);
+        n = (ValueNoise.valueNoise(x+y, y+z, z+x, n * 0.75f, seed) - n) * 0.5f;
         return n / (float)Math.sqrt(0.27f + n * n);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        float n = SimplexNoise.noise(x, y, z, w, state);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+x, n * 0.75f, state) - n) * 0.5f;
+        float n = SimplexNoise.noise(x, y, z, w, seed);
+        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+x, n * 0.75f, seed) - n) * 0.5f;
         return n / (float)Math.sqrt(0.25f + n * n);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        float n = SimplexNoise.noise(x, y, z, w, u, state);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+u, u+x, n * 0.75f, state) - n) * 0.5f;
+        float n = SimplexNoise.noise(x, y, z, w, u, seed);
+        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+u, u+x, n * 0.75f, seed) - n) * 0.5f;
         return n / (float)Math.sqrt(0.23f + n * n);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        float n = SimplexNoise.noise(x, y, z, w, u, v, state);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+u, u+v, v+x, n * 0.75f, state) - n) * 0.5f;
+        float n = SimplexNoise.noise(x, y, z, w, u, v, seed);
+        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+u, u+v, v+x, n * 0.75f, seed) - n) * 0.5f;
         return n / (float)Math.sqrt(0.21f + n * n);
     }
 
     public String stringSerialize() {
-        return "`" + state + '`';
+        return "`" + seed + '`';
     }
 
     public BadgerNoise stringDeserialize(String data) {
         if(data == null || data.length() < 3)
             return this;
-        this.state = Base.BASE10.readInt(data, 1, data.indexOf('`', 2));
+        this.seed = Base.BASE10.readInt(data, 1, data.indexOf('`', 2));
         return this;
     }
 
@@ -127,13 +126,13 @@ public class BadgerNoise implements INoise {
      */
     @Override
     public BadgerNoise copy() {
-        return new BadgerNoise(state);
+        return new BadgerNoise(seed);
     }
 
     @Override
     public String toString() {
         return "BadgerNoise{" +
-                "state=" + state +
+                "state=" + seed +
                 '}';
     }
 
@@ -144,11 +143,11 @@ public class BadgerNoise implements INoise {
 
         BadgerNoise that = (BadgerNoise) o;
 
-        return state == that.state;
+        return seed == that.seed;
     }
 
     @Override
     public int hashCode() {
-        return state;
+        return seed;
     }
 }
