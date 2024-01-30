@@ -110,14 +110,13 @@ public class PathTest {
             Assert.assertEquals(data, data2);
         }
     }
-    
+
     @Test
     public void testDefaultGraph() {
         Kryo kryo = new Kryo();
         kryo.register(Coord.class, new CoordSerializer());
         kryo.register(DefaultGraph.class, new DefaultGraphSerializer());
 
-        int n = 5;
         Graph<Coord> data = new DefaultGraph(new char[][]{
                 "######".toCharArray(),
                 "#....#".toCharArray(),
@@ -134,7 +133,6 @@ public class PathTest {
         System.out.println("Undirected byte length: " + bytes.length);
         try (Input input = new Input(bytes)) {
             DefaultGraph data2 = kryo.readObject(input, DefaultGraph.class);
-//            Assert.assertEquals(data.numberOfComponents(), data2.numberOfComponents());
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),

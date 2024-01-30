@@ -72,7 +72,6 @@ public class INoiseComparison extends ApplicationAdapter {
             new SorbetNoise(1L, 1),
             new SorbetNoise(1L, 3),
             new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
-            new ToothNoise(),
             new HoneyNoise(1L, 0.3f),
             new HoneyNoise(1L, 0.4f),
             new HoneyNoise(1L, 0.5f),
@@ -80,6 +79,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new HoneyNoise(1L, 0.7f),
             new ColorNoise(1L),
             new TriplexNoise(1L),
+            new BadgerNoise(),
     };
     private int index0 = 0;
     private int index1 = noises.length - 1;
