@@ -54,6 +54,7 @@ public final class JsonGrid {
         registerRadiance(json);
         registerLightingManager(json);
 //        registerBasicHashNoise(json); // Cannot be serialized to JSON without IPointHash being serializable, too.
+        registerBadgerNoise(json);
         registerCyclicNoise(json);
         registerFlanNoise(json);
         registerFoamNoise(json);
@@ -693,6 +694,31 @@ public final class JsonGrid {
             public FlanNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return FlanNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers BadgerNoise with the given Json object, so BadgerNoise can be written to and read from JSON.
+     * This is a simple wrapper around BadgerNoise's built-in {@link BadgerNoise#stringSerialize()} and
+     * {@link BadgerNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerBadgerNoise(@NonNull Json json) {
+        json.addClassTag("BdgN", BadgerNoise.class);
+        json.setSerializer(BadgerNoise.class, new Json.Serializer<BadgerNoise>() {
+            @Override
+            public void write(Json json, BadgerNoise object, Class knownType) {
+                json.writeObjectStart(BadgerNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public BadgerNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return BadgerNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }

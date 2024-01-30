@@ -445,6 +445,20 @@ public class JsonGridTest {
         System.out.println();
     }
 
+    @Test
+    public void testBadgerNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerBadgerNoise(json);
+        BadgerNoise noise, noise2;
+        noise = new BadgerNoise(-987654321);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(BadgerNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
     public static class IGI implements IGridIdentified {
         public final int id;
         public Coord position;
