@@ -21,10 +21,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.path.Connection;
 import com.github.yellowstonegames.path.UndirectedGraph;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -39,8 +39,8 @@ public class UndirectedGraphSerializer extends Serializer<UndirectedGraph<?>> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final UndirectedGraph<?> data) {
-        Collection<?> vertices = data.getVertices();
-        Set<? extends Connection<?>> edges = data.getEdges();
+        Set<?> vertices = data.getVertices();
+        ObjectOrderedSet<? extends Connection<?>> edges = data.getEdges();
         int length = vertices.size();
         output.writeInt(length, true);
         for(Object v : vertices) {
@@ -76,11 +76,11 @@ public class UndirectedGraphSerializer extends Serializer<UndirectedGraph<?>> {
     public UndirectedGraph<?> copy(Kryo kryo, UndirectedGraph<?> original) {
         UndirectedGraph<?> graph = new UndirectedGraph<>();
         UndirectedGraph raw = graph;
-        Collection<?> vertices = graph.getVertices();
+        Set<?> vertices = graph.getVertices();
         for(Object v : vertices){
             raw.addVertex(kryo.copy(v));
         }
-        Collection<? extends Connection<?>> edges = graph.getEdges();
+        ObjectOrderedSet<? extends Connection<?>> edges = graph.getEdges();
         for(Connection<?> e : edges){
             raw.addEdge(kryo.copy(e.getA()), kryo.copy(e.getB()), e.getWeight());
         }

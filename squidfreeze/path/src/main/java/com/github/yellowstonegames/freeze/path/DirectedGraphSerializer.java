@@ -21,10 +21,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.path.DirectedGraph;
 import com.github.yellowstonegames.path.Connection;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -39,8 +39,8 @@ public class DirectedGraphSerializer extends Serializer<DirectedGraph<?>> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final DirectedGraph<?> data) {
-        Collection<?> vertices = data.getVertices();
-        Set<? extends Connection<?>> edges = data.getEdges();
+        Set<?> vertices = data.getVertices();
+        ObjectOrderedSet<? extends Connection<?>> edges = data.getEdges();
         int length = vertices.size();
         output.writeInt(length, true);
         for(Object v : vertices) {
@@ -66,7 +66,6 @@ public class DirectedGraphSerializer extends Serializer<DirectedGraph<?>> {
         }
         length = input.readInt(true);
         for (int i = 0; i < length; i++) {
-//            raw.addEdge(kryo.readClassAndObject(input), kryo.readClassAndObject(input), (WeightFunction) kryo.readClassAndObject(input));
             raw.addEdge(kryo.readClassAndObject(input), kryo.readClassAndObject(input), input.readFloat());
         }
         return graph;
@@ -77,11 +76,11 @@ public class DirectedGraphSerializer extends Serializer<DirectedGraph<?>> {
     public DirectedGraph<?> copy(Kryo kryo, DirectedGraph<?> original) {
         DirectedGraph<?> graph = new DirectedGraph<>();
         DirectedGraph raw = graph;
-        Collection<?> vertices = graph.getVertices();
+        Set<?> vertices = graph.getVertices();
         for(Object v : vertices){
             raw.addVertex(kryo.copy(v));
         }
-        Set<? extends Connection<?>> edges = graph.getEdges();
+        ObjectOrderedSet<? extends Connection<?>> edges = graph.getEdges();
         for(Connection<?> e : edges){
             raw.addEdge(kryo.copy(e.getA()), kryo.copy(e.getB()), e.getWeight());
         }

@@ -77,7 +77,7 @@ public class Coord {
      *
      * @see #signedRosenbergStrongHashCode(int, int)
      */
-    public final int hash;
+    public transient final int hash;
 
     protected Coord() {
         this(0, 0);

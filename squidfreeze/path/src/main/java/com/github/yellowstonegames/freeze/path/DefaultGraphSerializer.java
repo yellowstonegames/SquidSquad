@@ -21,12 +21,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.freeze.grid.CoordSerializer;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.path.Edge;
+import com.github.yellowstonegames.path.Connection;
 import com.github.yellowstonegames.path.DefaultGraph;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -43,8 +43,8 @@ public class DefaultGraphSerializer extends Serializer<DefaultGraph> {
     public void write(final Kryo kryo, final Output output, final DefaultGraph data) {
         output.writeInt(data.width, true);
         output.writeInt(data.height, true);
-        Collection<Coord> vertices = data.getVertices();
-        Set<? extends Edge<Coord>> edges = data.getEdges();
+        Set<Coord> vertices = data.getVertices();
+        ObjectOrderedSet<? extends Connection<Coord>> edges = data.getEdges();
         int length = vertices.size();
         output.writeInt(length, true);
         for(Coord v : vertices) {
@@ -52,7 +52,7 @@ public class DefaultGraphSerializer extends Serializer<DefaultGraph> {
         }
         length = edges.size();
         output.writeInt(length, true);
-        for(Edge<?> e : edges) {
+        for(Connection<Coord> e : edges) {
             kryo.writeObject(output, e.getA());
             kryo.writeObject(output, e.getB());
             output.writeFloat(e.getWeight());
@@ -78,13 +78,13 @@ public class DefaultGraphSerializer extends Serializer<DefaultGraph> {
     @Override
     public DefaultGraph copy(Kryo kryo, DefaultGraph original) {
         DefaultGraph graph = new DefaultGraph();
-        Collection<Coord> vertices = graph.getVertices();
+        Set<Coord> vertices = graph.getVertices();
         for(Coord v : vertices){
             graph.addVertex(kryo.copy(v));
         }
-        Collection<? extends Edge<Coord>> edges = graph.getEdges();
-        for(Edge<Coord> e : edges){
-            graph.addEdge(kryo.copy(e.getA()), kryo.copy(e.getB()), e.getWeight());
+        ObjectOrderedSet<? extends Connection<Coord>> edges = graph.getEdges();
+        for(Connection<Coord> e : edges){
+            graph.addEdge(e.getA(), e.getB(), e.getWeight());
         }
         return graph;
     }

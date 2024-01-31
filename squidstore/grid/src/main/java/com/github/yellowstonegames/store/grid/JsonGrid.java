@@ -85,16 +85,16 @@ public final class JsonGrid {
         json.setSerializer(Coord.class, new Json.Serializer<Coord>() {
             @Override
             public void write(Json json, Coord object, Class knownType) {
-                json.writeArrayStart();
-                json.writeValue(object.x);
-                json.writeValue(object.y);
-                json.writeArrayEnd();
+                json.writeObjectStart(Coord.class, knownType);
+                json.writeValue("x", object.x);
+                json.writeValue("y", object.y);
+                json.writeObjectEnd();
             }
 
             @Override
             public Coord read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Coord.get(jsonData.getInt(0), jsonData.getInt(1));
+                return Coord.get(jsonData.getInt("x", 0), jsonData.getInt("y", 0));
             }
         });
     }
