@@ -27,8 +27,6 @@ import java.util.Collection;
  * Uses Region for faster storage and manipulation of zones; it's suggested if you use this class to be
  * somewhat familiar with the methods for manipulating data in that class, though a Region can also be used just
  * like a Collection of Coord values.
- * <br>
- * Created by Tommy Ettinger on 1/14/2018.
  */
 public class ZoneOfInfluence {
     protected DijkstraMap dijkstra;

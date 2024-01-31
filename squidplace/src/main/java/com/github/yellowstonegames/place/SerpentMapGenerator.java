@@ -36,7 +36,6 @@ import com.github.yellowstonegames.grid.HilbertCurve;
  * The name comes from a vivid dream I had about gigantic, multi-colored snakes that completely occupied a roguelike
  * dungeon. Shortly after, I made the connection to the Australian mythology I'd heard about the Rainbow Serpent, which
  * in some stories dug water-holes and was similarly gigantic.
- * Created by Tommy Ettinger on 10/24/2015.
  */
 public class SerpentMapGenerator implements PlaceGenerator {
     private MixedGenerator mix;

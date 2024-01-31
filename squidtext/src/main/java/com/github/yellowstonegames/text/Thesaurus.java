@@ -38,8 +38,6 @@ import static com.github.tommyettinger.ds.ObjectList.with;
  * {@code "By the shimmering inferno in my heart, I will vanquish thee!"} on one run, and
  * {@code "By the gleaming conflagration in my heart, I will vanquish thee!"} on another. This can also generate some
  * plant names and basic descriptions of potions, as well as make some text sound like {@link #ORK}. 
- * <br>
- * Created by Tommy Ettinger on 5/23/2016.
  */
 public class Thesaurus {
     protected static final Pattern wordMatch = Pattern.compile("([\\pL`\\|_]+|@)"),

@@ -22,10 +22,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.freeze.grid.CoordSerializer;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.path.DefaultGraph;
-import com.github.yellowstonegames.path.Graph;
-import com.github.yellowstonegames.path.UndirectedGraph;
-import com.github.yellowstonegames.path.DirectedGraph;
+import com.github.yellowstonegames.path.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -130,9 +127,39 @@ public class PathTest {
         Output output = new Output(baos);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
-        System.out.println("Undirected byte length: " + bytes.length);
+        System.out.println("Default byte length: " + bytes.length);
         try (Input input = new Input(bytes)) {
             DefaultGraph data2 = kryo.readObject(input, DefaultGraph.class);
+            Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
+            Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
+            Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
+                    data2.getEdges().stream().map(Object::toString).collect(Collectors.toList()));
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCostlyGraph() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(CostlyGraph.class, new CostlyGraphSerializer());
+
+        Graph<Coord> data = new CostlyGraph(new char[][]{
+                "######".toCharArray(),
+                "#....#".toCharArray(),
+                "#....#".toCharArray(),
+                "#..#.#".toCharArray(),
+                "#....#".toCharArray(),
+                "######".toCharArray(),
+        }, true);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        System.out.println("Costly byte length: " + bytes.length);
+        try (Input input = new Input(bytes)) {
+            CostlyGraph data2 = kryo.readObject(input, CostlyGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),

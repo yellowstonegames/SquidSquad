@@ -32,8 +32,6 @@ import java.util.Iterator;
  * T, not a Collection, because it can iterate without stopping, infinitely, unless you break out of a foreach loop that
  * iterates through one of these, or call the iterator's next() method only a limited number of times. Collections have
  * a size that can be checked, but Iterables can be infinite (and in this case, this one is).
- * <br>
- * Created by Tommy Ettinger on 5/21/2016.
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
 public class GapShuffler<T> implements Iterator<T>, Iterable<T> {

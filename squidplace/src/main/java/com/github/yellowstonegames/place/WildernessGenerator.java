@@ -55,8 +55,6 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
  * doesn't have any breaks. While the wilderness maps this produces are usable, they don't have paths or areas that a
  * character would have to find a way around (like a cliff). This is meant to be added at some point, probably in
  * conjunction with some system for connecting WildernessGenerators.
- * <br>
- * Created by Tommy Ettinger on 10/16/2019.
  */
 public class WildernessGenerator implements PlaceGenerator {
     public final int width, height;

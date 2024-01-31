@@ -31,8 +31,6 @@ import java.util.*;
  * A variant on {@link MixedGenerator} that creates bi-radially symmetric maps (basically a yin-yang shape). Useful for
  * strategy games and possibly competitive multi-player games. The Coords passed to constructors as room positions do
  * not necessarily need to be symmetrical already; they will be duplicated in their mirror position in the dungeon.
- *
- * Created by Tommy Ettinger on 11/20/2015.
  */
 public class SymmetryDungeonGenerator extends MixedGenerator {
 

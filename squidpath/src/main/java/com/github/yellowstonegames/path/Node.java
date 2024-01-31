@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.yellowstonegames.grid.Coord;
 
-import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -41,14 +40,13 @@ public class Node<V> extends BinaryHeap.Node {
     protected ObjectList<Connection<V>> outEdges = new ObjectList<>(4); // ObjectList reuses its iterator, should be fast
     protected ObjectList<Connection<V>> inEdges;
 
-    private static int hashCounter = 12345;
-
     //================================================================================
     // Constructor
     //================================================================================
 
     protected Node(V v, Graph<V> graph) {
         super(0f);
+        assert (v != null);
         this.object = v;
         this.graph = graph;
         if(graph.isDirected())

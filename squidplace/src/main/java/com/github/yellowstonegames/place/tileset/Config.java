@@ -18,7 +18,6 @@ package com.github.yellowstonegames.place.tileset;
 
 /**
  * Part of the JSON that defines a tileset.
- * Created by Tommy Ettinger on 3/10/2015.
  */
 public class Config {
 

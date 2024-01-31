@@ -126,8 +126,6 @@ import java.util.List;
  * construct a fresh Region to an existing one of the same dimensions with {@link #refill(boolean[][])} or any
  * of the overloads of refill(). These re-methods don't do as much work as a constructor does if the width and height
  * of their argument are identical to their current width and height, and don't create more garbage for the GC.
- * <br>
- * Created by Tommy Ettinger on 6/24/2016.
  */
 public class Region implements Collection<Coord> {
     public long[] data;

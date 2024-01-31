@@ -67,8 +67,6 @@ import java.util.Collection;
  * or {@link com.github.yellowstonegames.path.CostlyGraph} will be better fits. CostlyGraph and similar versions of
  * {@link com.github.yellowstonegames.path.DirectedGraph} can handle even very complicated kinds
  * of map, including the types of pathfinding that were handled by CustomDijkstraMap in earlier versions of SquidLib.
- * <br>
- * Created by Tommy Ettinger on 4/4/2015. Optimized ruthlessly by Tommy Ettinger over the next few years.
  */
 public class DijkstraMap {
     /**

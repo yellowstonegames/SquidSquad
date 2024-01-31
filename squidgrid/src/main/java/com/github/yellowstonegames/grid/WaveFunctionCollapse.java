@@ -33,7 +33,7 @@ import java.util.Arrays;
  * original WaveFunctionCollapse code, <a href="https://github.com/mxgmn/WaveFunctionCollapse">here</a>, used colors in
  * bitmap images, but this uses 2D int arrays that can stand as substitutes for colors or chars.
  * <br>
- * Created by Tommy Ettinger on 3/28/2018. Port of <a href="https://github.com/mxgmn/WaveFunctionCollapse">mxgmn's original C# repo</a>
+ * Port of <a href="https://github.com/mxgmn/WaveFunctionCollapse">mxgmn's original C# repo</a>.
  */
 public class WaveFunctionCollapse {
     private boolean[][] wave;

@@ -30,8 +30,6 @@ import static java.lang.Math.min;
  * <br>
  * Don't count on this class giving reliable output; it is marked Beta and will remain so. If you want to ensure a
  * particular behavior of a FlawedPointHash can be replicated, copy the implementation into your own code.
- * <br>
- * Created by Tommy Ettinger on 4/14/2020.
  */
 @Beta
 public interface FlawedPointHash extends IPointHash, IFlawed {

@@ -21,9 +21,6 @@ import com.github.tommyettinger.random.FourWheelRandom;
 import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.place.DungeonTools;
 
-/**
- * Created by Tommy Ettinger on 3/28/2018.
- */
 public class WFCTest {
     public static void main(String[] args)
     {

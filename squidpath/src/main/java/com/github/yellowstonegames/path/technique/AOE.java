@@ -26,7 +26,6 @@ import java.util.Collection;
 
 /**
  * Area of Effect interface meant to be implemented by various specific burst, line, flowing, and user-made AOE types.
- * Created by Tommy Ettinger on 5/8/2015.
  */
 public interface AOE {
     /**

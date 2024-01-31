@@ -36,8 +36,6 @@ import java.util.Collection;
  * do this conveniently is to use {@link #stringSerialize()} after calling analyze() once and to save the resulting
  * String; then, rather than calling analyze() again on future runs, you would call
  * {@link #stringDeserialize(String)} to create the MarkovText without needing any repeated analysis.
- * <br>
- * Created by Tommy Ettinger on 1/30/2018.
  */
 public class MarkovText {
 

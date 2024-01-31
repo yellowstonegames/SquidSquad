@@ -29,8 +29,6 @@ import java.util.Arrays;
  * A default setting for an {@link UndirectedGraph} of Coord vertices where all connections have cost 1. This should be
  * initialized with a 2D (rectangular) char array using the map convention where {@code '#'} is a wall and anything else
  * is passable.
- * <br>
- * Created by Tommy Ettinger on 7/9/2020.
  */
 public class DefaultGraph extends UndirectedGraph<Coord>{
 	public int width;

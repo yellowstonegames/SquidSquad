@@ -18,7 +18,6 @@ package com.github.yellowstonegames.place.tileset;
 
 /**
  * The outermost class in the JSON that defines a tileset.
- * Created by Tommy Ettinger on 3/10/2015.
  */
 public class Tileset {
     public Config config;

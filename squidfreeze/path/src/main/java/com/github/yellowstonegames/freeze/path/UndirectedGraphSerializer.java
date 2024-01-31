@@ -22,7 +22,6 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.path.Connection;
-import com.github.yellowstonegames.path.Edge;
 import com.github.yellowstonegames.path.UndirectedGraph;
 
 import java.util.Collection;
@@ -41,7 +40,7 @@ public class UndirectedGraphSerializer extends Serializer<UndirectedGraph<?>> {
     @Override
     public void write(final Kryo kryo, final Output output, final UndirectedGraph<?> data) {
         Collection<?> vertices = data.getVertices();
-        Set<? extends Edge<?>> edges = data.getEdges();
+        Set<? extends Connection<?>> edges = data.getEdges();
         int length = vertices.size();
         output.writeInt(length, true);
         for(Object v : vertices) {
@@ -49,10 +48,9 @@ public class UndirectedGraphSerializer extends Serializer<UndirectedGraph<?>> {
         }
         length = edges.size();
         output.writeInt(length, true);
-        for(Edge<?> e : edges) {
+        for(Connection<?> e : edges) {
             kryo.writeClassAndObject(output, e.getA());
             kryo.writeClassAndObject(output, e.getB());
-//            kryo.writeClassAndObject(output, e.getWeightFunction());
             output.writeFloat(e.getWeight());
         }
     }
@@ -68,7 +66,6 @@ public class UndirectedGraphSerializer extends Serializer<UndirectedGraph<?>> {
         }
         length = input.readInt(true);
         for (int i = 0; i < length; i++) {
-//            raw.addEdge(kryo.readClassAndObject(input), kryo.readClassAndObject(input), (WeightFunction) kryo.readClassAndObject(input));
             raw.addEdge(kryo.readClassAndObject(input), kryo.readClassAndObject(input), input.readFloat());
         }
         return graph;
@@ -83,9 +80,8 @@ public class UndirectedGraphSerializer extends Serializer<UndirectedGraph<?>> {
         for(Object v : vertices){
             raw.addVertex(kryo.copy(v));
         }
-        Collection<? extends Edge<?>> edges = graph.getEdges();
-        for(Edge<?> e : edges){
-//            raw.addEdge(kryo.copy(e.getA()), kryo.copy(e.getB()), e.getWeightFunction());
+        Collection<? extends Connection<?>> edges = graph.getEdges();
+        for(Connection<?> e : edges){
             raw.addEdge(kryo.copy(e.getA()), kryo.copy(e.getB()), e.getWeight());
         }
         return graph;

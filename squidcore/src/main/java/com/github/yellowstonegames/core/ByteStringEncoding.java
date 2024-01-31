@@ -28,8 +28,6 @@ import java.util.HashSet;
  * <br>
  * Like almost all of SquidSquad, this class is not thread-safe. It reuses internal data structures rather than
  * repeatedly re-creating them, which strongly helps its single-threaded performance.
- * <br>
- * Created by Tommy Ettinger on 1/11/2020.
  */
 public final class ByteStringEncoding {
     private ByteStringEncoding(){}

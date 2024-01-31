@@ -28,11 +28,10 @@ import java.util.Collection;
  * An AOE type that has a center and a radius, and uses shadowcasting to create a burst of rays from the center, out to
  * the distance specified by radius. You can specify the RadiusType to Radius.DIAMOND for Manhattan distance,
  * RADIUS.SQUARE for Chebyshev, or RADIUS.CIRCLE for Euclidean.
- *
+ * <br>
  * This will produce floats for its {@link #findArea()} method which are equal to 1.0.
- *
+ * <br>
  * This class uses {@link FOV} to create its area of effect.
- * Created by Tommy Ettinger on 7/13/2015.
  */
 public class BurstAOE implements AOE {
     private Coord center, origin;

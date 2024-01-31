@@ -129,8 +129,6 @@ import com.github.yellowstonegames.grid.Region;
  * │.....+.....│.....│...........│...........│.....│.....│.....│
  * └─────┴─────┴─────┴───────────┴───────────┴─────┴─────┴─────┘
  * }</pre>
- * <br>
- * Created by Tommy Ettinger on 5/7/2019.
  */
 public class ConnectingMapGenerator implements PlaceGenerator {
     

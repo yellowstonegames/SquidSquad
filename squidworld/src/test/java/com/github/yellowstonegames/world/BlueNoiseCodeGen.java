@@ -24,9 +24,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 
 import java.nio.ByteBuffer;
 
-/**
- * Created by Tommy Ettinger on 1/21/2018.
- */
 public class BlueNoiseCodeGen extends ApplicationAdapter {
 
     public static void main(String[] arg) {

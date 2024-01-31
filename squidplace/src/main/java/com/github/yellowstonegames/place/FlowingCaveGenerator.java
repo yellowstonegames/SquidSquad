@@ -106,7 +106,6 @@ import com.github.yellowstonegames.place.tileset.TilesetType;
  *     └─┘   └────────┘            └────┘       └─┘       └─┘           └──────┘        └───┘              └──┘
  * }
  * </pre>
- * Created by Tommy Ettinger on 8/18/2017.
  */
 public class FlowingCaveGenerator implements PlaceGenerator {
     public DungeonBoneGen gen;

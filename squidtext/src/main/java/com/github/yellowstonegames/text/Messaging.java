@@ -81,7 +81,6 @@ import regexodus.TextBuffer;
  *     <li>When userName is {@code "the goblins"}, userTrait is {@code Pronoun.GROUP}, and targetTrait is
  *     {@code Pronoun.SECOND_PERSON_SINGULAR}, this returns "The goblins spit in your face!"</li>
  * </ul>
- * Created by Tommy Ettinger on 10/31/2016.
  */
 public final class Messaging {
     /**

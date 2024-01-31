@@ -47,8 +47,6 @@ import static com.github.yellowstonegames.text.Thesaurus.*;
  * If using a constructor that doesn't specify an array or Collection of String words to use, then this will load its
  * noun and adjective list from {@link Thesaurus}. Thesaurus sometimes receives updates to its word list, but it can
  * have a specific word list loaded from a String using {@link Thesaurus#addArchivedCategoriesAlternate(String)}.
- * <br>
- * Created by Tommy Ettinger on 1/24/2018.
  */
 public class Mnemonic {
     private static final String baseTriplets =

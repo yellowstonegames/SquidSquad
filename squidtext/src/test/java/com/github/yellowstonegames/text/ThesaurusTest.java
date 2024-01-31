@@ -2,15 +2,11 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
 
-/**
- * Created by Tommy Ettinger on 5/23/2016.
- */
 public class ThesaurusTest {
     public static void main(String[] args) {
         if(!TextInternals.PRINTING) return;

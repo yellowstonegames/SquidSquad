@@ -38,7 +38,6 @@ import java.util.*;
  * <br>
  * Based on <a href="http://mpatraw.github.io/libdrunkard/"></a>Michael Patraw's excellent Drunkard's Walk dungeon generator</a>.
  *
- * Created by Tommy Ettinger on 10/22/2015.
  * @see SerpentMapGenerator SerpentMapGenerator is a normal use for MixedGenerator that makes winding dungeons
  * @see SerpentDeepMapGenerator SerpentDeepMapGenerator uses MixedGenerator as it makes a multi-level dungeon
  */

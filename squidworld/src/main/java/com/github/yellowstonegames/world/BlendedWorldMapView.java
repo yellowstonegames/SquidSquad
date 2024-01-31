@@ -26,8 +26,6 @@ import com.github.yellowstonegames.world.BiomeMapper.BlendedBiomeMapper;
  * {@link WorldMapGenerator#generate()} and {@link BlendedBiomeMapper#makeBiomes(WorldMapGenerator)}.
  * For extra convenience, you can get a possible interpretation of how the generated world would look by calling
  * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors.
- * <br>
- * Created by Tommy Ettinger on 9/6/2019.
  */
 public class BlendedWorldMapView implements WorldMapView {
     protected int width, height;

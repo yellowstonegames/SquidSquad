@@ -49,8 +49,6 @@ import java.util.Map;
  * this is to use cacheLevel 2 and cipher the whole game script, or just the unique words in it (maybe just a large word
  * list, such as <a href="http://wordlist.aspell.net/12dicts/">12dicts</a> ), then serialize the Translator
  * for later usage.
- * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
- * Created by Tommy Ettinger on 5/1/2016.
  */
 public class Translator{
 

@@ -33,9 +33,8 @@ import java.util.Collection;
  * <br>
  * RADIUS.CIRCLE (Euclidean measurement) will produce the most real-looking cones. This will produce floats for its
  * {@link #findArea()} method which are greater than 0.0 and less than or equal to 1.0.
- *
+ * <br>
  * This class uses {@link FOV} to create its area of effect.
- * Created by Tommy Ettinger on 7/13/2015.
  */
 public class ConeAOE implements AOE {
     private Coord origin;

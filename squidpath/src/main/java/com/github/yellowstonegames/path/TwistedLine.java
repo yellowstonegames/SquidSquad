@@ -18,7 +18,7 @@ package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.random.PouchRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.Direction;
@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * <br>
  * This generates a fully-connected graph for a given rectangular area, then solves it with
  * {@link DefaultGraph#findShortestPath(Coord, Coord, ObjectDeque, Heuristic)}.
- * <br>
- * Created by Tommy Ettinger on 6/26/2020.
  */
 public class TwistedLine {
     @NonNull
@@ -54,7 +52,7 @@ public class TwistedLine {
         graph = new DefaultGraph();
         graph.width = Math.max(width, 2);
         graph.height = Math.max(height, 2);
-        this.rng = rng == null ? new WhiskerRandom() : rng;
+        this.rng = rng == null ? new PouchRandom() : rng;
         lastPath = new ObjectDeque<>(graph.width + graph.height);
         reinitialize();
     }
@@ -85,7 +83,8 @@ public class TwistedLine {
             Coord p = deck.getAt(i);
             rng.shuffle(dirs);
 
-            for (Direction dir : dirs) {
+            for (int j = 0; j < dirs.length; j++) {
+                Direction dir = dirs[j];
                 x = p.x + dir.deltaX;
                 y = p.y + dir.deltaY;
                 if (x >= 0 && x < graph.width && y >= 0 && y < graph.height) {
@@ -125,7 +124,7 @@ public class TwistedLine {
     }
 
     public void setRng(EnhancedRandom rng) {
-        this.rng = rng == null ? new WhiskerRandom() : rng;
+        this.rng = rng == null ? new PouchRandom() : rng;
     }
 
     /**

@@ -26,8 +26,6 @@ package com.github.yellowstonegames.grid;
  * {@link #hash(int, int)} if states aren't supported. If states are supported, then calling {@link #hash(int, int)}
  * while the state is, for example, 42 should be the same as calling {@link #hashWithState(int, int, int)} with a state
  * parameter of 42 (regardless of what the state actually is in the implementor).
- * <br>
- * Created by Tommy Ettinger on 4/13/2020.
  */
 public interface IPointHash {
     void setState(int state);

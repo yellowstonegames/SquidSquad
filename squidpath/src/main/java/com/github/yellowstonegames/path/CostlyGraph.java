@@ -30,8 +30,6 @@ import java.util.Arrays;
 /**
  * A default setting for a DirectedGraph of Coord vertices where each passable cell has a cost to enter it from any
  * passable neighbor.
- * <br>
- * Created by Tommy Ettinger on 7/9/2020.
  */
 public class CostlyGraph extends DirectedGraph<Coord> {
 	public int width;

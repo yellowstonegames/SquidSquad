@@ -42,7 +42,6 @@ import java.util.Collection;
  * This will produce floats for its {@link #findArea()} method which are equal to 1.0.
  * <br>
  * This class uses {@link BresenhamLine} and {@link DijkstraMap} to create its area of effect.
- * Created by Tommy Ettinger on 7/14/2015.
  */
 public class LineAOE implements AOE {
     private Coord origin, end;

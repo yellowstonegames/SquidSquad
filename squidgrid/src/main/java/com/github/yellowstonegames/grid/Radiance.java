@@ -45,8 +45,6 @@ import static com.github.tommyettinger.digital.MathTools.PHI;
  * </ul>
  * These all have defaults; if no parameters are specified the light will be white, affect only the current cell, and
  * won't flicker or strobe.
- * <br>
- * Created by Tommy Ettinger on 6/16/2018.
  */
 public class Radiance {
     /**
