@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.path.CostlyGraph;
 import com.github.yellowstonegames.path.DirectedGraph;
 import com.github.yellowstonegames.path.UndirectedGraph;
 import com.github.yellowstonegames.store.grid.JsonGrid;
@@ -65,4 +66,62 @@ public class JsonPathTest {
         Assert.assertEquals(graph, graph2);
         System.out.println();
     }
+
+    @Test
+    public void testCostlyGraph () {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoord(json);
+        JsonPath.registerCostlyGraph(json);
+        char[][] grid = new char[][]{
+"##########################################".toCharArray(),
+"##..#########.....################..######".toCharArray(),
+"##......#####.....################..######".toCharArray(),
+"##......###.......###...#....#####..######".toCharArray(),
+"##..#...###.....####.....................#".toCharArray(),
+"##........#.....#........................#".toCharArray(),
+"##........#.....#.......#.....##..########".toCharArray(),
+"##........#..#..#.......#.....##..########".toCharArray(),
+"##...#.......#.....#....###...##......####".toCharArray(),
+"#............#.....##.....#...##......####".toCharArray(),
+"#.......###..#.....##.....#..###......####".toCharArray(),
+"######..###..#.....#####..######......####".toCharArray(),
+"###.....###..##########...######.....#####".toCharArray(),
+"#.......###..########.....#....#.......###".toCharArray(),
+"#...............#.........#....#.......###".toCharArray(),
+"#...............#......................#.#".toCharArray(),
+"#..#####........#..#.................###.#".toCharArray(),
+"#..#...#........#..#.....................#".toCharArray(),
+"#..#...#......###..##....................#".toCharArray(),
+"#..#...####........##........#...........#".toCharArray(),
+"#..#.....##........##........#.........###".toCharArray(),
+"#..#.....#####..######.....#######....####".toCharArray(),
+"#........#####..######......########..####".toCharArray(),
+"#.....########..##...........##.......####".toCharArray(),
+"####..#.........##............#.......####".toCharArray(),
+"#..#..#.........##...#........#..........#".toCharArray(),
+"#..#..#.......####.......#....#..........#".toCharArray(),
+"#..#..#.......####.......#....#...########".toCharArray(),
+"#..####.......####...#..##........########".toCharArray(),
+"#.........##..####................#....###".toCharArray(),
+"#........###..####...........##...#....###".toCharArray(),
+"####..######..########......###...#....###".toCharArray(),
+"####..######..#####################....###".toCharArray(),
+"#..............#..###.#############..#####".toCharArray(),
+"#..............#..###.##..........#......#".toCharArray(),
+"#..#........#.....##..............#......#".toCharArray(),
+"#.................##......####....#..#####".toCharArray(),
+"#..#........#..#..##..##..####....#....###".toCharArray(),
+"#..............#......##..####...##....###".toCharArray(),
+"#..............#......##..#####........###".toCharArray(),
+"##..############..###.##..#####........###".toCharArray(),
+"##########################################".toCharArray(),
+        };
+        CostlyGraph graph = new CostlyGraph(grid);
+        String data = json.toJson(graph);
+        System.out.println(data);
+        CostlyGraph graph2 = json.fromJson(CostlyGraph.class, data);
+        Assert.assertEquals(graph, graph2);
+        System.out.println();
+    }
+
 }

@@ -19,9 +19,12 @@ package com.github.yellowstonegames.store.path;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.path.Connection;
+import com.github.yellowstonegames.path.CostlyGraph;
 import com.github.yellowstonegames.path.DirectedGraph;
 import com.github.yellowstonegames.path.UndirectedGraph;
+import com.github.yellowstonegames.store.grid.JsonGrid;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Set;
@@ -40,7 +43,6 @@ public final class JsonPath {
         registerDirectedGraph(json);
         registerUndirectedGraph(json);
     }
-    
     
     /**
      * Registers DirectedGraph with the given Json object, so DirectedGraph can be written to and read from JSON.
@@ -133,4 +135,57 @@ public final class JsonPath {
             }
         });
     }
+
+
+    /**
+     * Registers CostlyGraph with the given Json object, so CostlyGraph can be written to and read from JSON.
+     * This registers {@link Coord} using {@link JsonGrid#registerCoord(Json)}.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCostlyGraph(@NonNull Json json) {
+        json.addClassTag("CosG", CostlyGraph.class);
+        JsonGrid.registerCoord(json);
+        json.setSerializer(CostlyGraph.class, new Json.Serializer<CostlyGraph>() {
+            @Override
+            public void write(Json json, CostlyGraph data, Class knownType) {
+                json.writeObjectStart(CostlyGraph.class, knownType);
+                json.writeValue("w", data.width);
+                json.writeValue("h", data.height);
+                Set<?> vertices = data.getVertices();
+                json.writeArrayStart("v");
+                for(Object vertex : vertices) {
+                    json.writeValue(vertex, null);
+                }
+                json.writeArrayEnd();
+                ObjectOrderedSet<? extends Connection<?>> edges = data.getEdges();
+                json.writeArrayStart("e");
+                for(Connection<?> edge : edges) {
+                    json.writeValue(edge.getA(), null);
+                    json.writeValue(edge.getB(), null);
+                    json.writeValue(edge.getWeight(), float.class);
+                }
+                json.writeArrayEnd();
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public CostlyGraph read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                CostlyGraph graph = new CostlyGraph();
+                graph.width = jsonData.get("w").asInt();
+                graph.height = jsonData.get("h").asInt();
+                JsonValue entry = jsonData.getChild("v");
+                for (; entry != null; entry = entry.next) {
+                    graph.addVertex(json.readValue(null, entry));
+                }
+                entry = jsonData.getChild("e");
+                for (; entry != null; entry = entry.next) {
+                    graph.addEdge(json.readValue(null, entry), json.readValue(null, entry = entry.next), (entry = entry.next).asFloat());
+                }
+                return graph;
+            }
+        });
+    }
+
 }
