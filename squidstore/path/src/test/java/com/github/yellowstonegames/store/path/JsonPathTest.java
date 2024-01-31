@@ -18,9 +18,10 @@ package com.github.yellowstonegames.store.path;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordSet;
-import com.github.yellowstonegames.path.*;
+import com.github.yellowstonegames.path.DirectedGraph;
+import com.github.yellowstonegames.path.UndirectedGraph;
 import com.github.yellowstonegames.store.grid.JsonGrid;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class JsonPathTest {
 		JsonGrid.registerCoord(json);
         JsonPath.registerDirectedGraph(json);
         Coord[] pts = {get(0, 0), get(1, 0), get(0, 1), get(1, 1)};
-        DirectedGraph<Coord> graph = new DirectedGraph<>(CoordSet.with(pts));
+        DirectedGraph<Coord> graph = new DirectedGraph<>(ObjectList.with(pts));
         graph.addEdge(pts[0], pts[1], 1);
         graph.addEdge(pts[1], pts[0], 2);
         graph.addEdge(pts[1], pts[2], 1);
@@ -44,6 +45,23 @@ public class JsonPathTest {
         String data = json.toJson(graph);
         System.out.println(data);
         DirectedGraph<?> graph2 = json.fromJson(DirectedGraph.class, data);
+        Assert.assertEquals(graph, graph2);
+        System.out.println();
+    }
+
+    @Test
+    public void testUndirectedGraph () {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+		JsonGrid.registerCoord(json);
+        JsonPath.registerUndirectedGraph(json);
+        Coord[] pts = {get(0, 0), get(1, 0), get(0, 1), get(1, 1)};
+        UndirectedGraph<Coord> graph = new UndirectedGraph<>(ObjectList.with(pts));
+        graph.addEdge(pts[0], pts[1], 1);
+        graph.addEdge(pts[1], pts[2], 1);
+        graph.addEdge(pts[2], pts[3], 1);
+        String data = json.toJson(graph);
+        System.out.println(data);
+        UndirectedGraph<?> graph2 = json.fromJson(UndirectedGraph.class, data);
         Assert.assertEquals(graph, graph2);
         System.out.println();
     }

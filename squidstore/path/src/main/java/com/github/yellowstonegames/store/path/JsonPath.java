@@ -19,16 +19,14 @@ package com.github.yellowstonegames.store.path;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
-import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.path.Connection;
 import com.github.yellowstonegames.path.DirectedGraph;
-import com.github.yellowstonegames.store.core.JsonCore;
-import com.github.yellowstonegames.store.grid.JsonGrid;
+import com.github.yellowstonegames.path.UndirectedGraph;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Set;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public final class JsonPath {
     private JsonPath() {
     }
@@ -40,6 +38,7 @@ public final class JsonPath {
      */
     public static void registerAll(@NonNull Json json) {
         registerDirectedGraph(json);
+        registerUndirectedGraph(json);
     }
     
     
@@ -76,14 +75,59 @@ public final class JsonPath {
             public DirectedGraph read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 DirectedGraph<?> graph = new DirectedGraph<>();
-                DirectedGraph raw = graph;
                 JsonValue entry = jsonData.getChild("v");
                 for (; entry != null; entry = entry.next) {
-                    raw.addVertex(json.readValue(null, entry));
+                    graph.addVertex(json.readValue(null, entry));
                 }
                 entry = jsonData.getChild("e");
                 for (; entry != null; entry = entry.next) {
-                    raw.addEdge(json.readValue(null, entry), json.readValue(null, entry = entry.next), (entry = entry.next).asFloat());
+                    ((DirectedGraph) graph).addEdge(json.readValue(null, entry), json.readValue(null, entry = entry.next), (entry = entry.next).asFloat());
+                }
+                return graph;
+            }
+        });
+    }
+    
+    /**
+     * Registers UndirectedGraph with the given Json object, so UndirectedGraph can be written to and read from JSON.
+     * You must register the vertex type yourself before you try to serialize or deserialize JSON containing an UndirectedGraph.
+	 *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerUndirectedGraph(@NonNull Json json) {
+        json.addClassTag("UdrG", UndirectedGraph.class);
+        json.setSerializer(UndirectedGraph.class, new Json.Serializer<UndirectedGraph>() {
+            @Override
+            public void write(Json json, UndirectedGraph data, Class knownType) {
+                json.writeObjectStart(UndirectedGraph.class, knownType);
+                Set<?> vertices = data.getVertices();
+                json.writeArrayStart("v");
+                for(Object vertex : vertices) {
+                    json.writeValue(vertex, null);
+                }
+                json.writeArrayEnd();
+                ObjectOrderedSet<? extends Connection<?>> edges = data.getEdges();
+                json.writeArrayStart("e");
+                for(Connection<?> edge : edges) {
+                    json.writeValue(edge.getA(), null);
+                    json.writeValue(edge.getB(), null);
+                    json.writeValue(edge.getWeight(), float.class);
+                }
+                json.writeArrayEnd();
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public UndirectedGraph read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                UndirectedGraph<?> graph = new UndirectedGraph<>();
+                JsonValue entry = jsonData.getChild("v");
+                for (; entry != null; entry = entry.next) {
+                    graph.addVertex(json.readValue(null, entry));
+                }
+                entry = jsonData.getChild("e");
+                for (; entry != null; entry = entry.next) {
+                    ((UndirectedGraph) graph).addEdge(json.readValue(null, entry), json.readValue(null, entry = entry.next), (entry = entry.next).asFloat());
                 }
                 return graph;
             }
