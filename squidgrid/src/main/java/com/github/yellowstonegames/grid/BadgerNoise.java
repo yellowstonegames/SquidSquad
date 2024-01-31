@@ -67,35 +67,35 @@ public class BadgerNoise implements INoise {
     @Override
     public float getNoise(float x, float y) {
         float n = SimplexNoise.noise(x, y, seed); // regular simplex noise call
-        n = (ValueNoise.valueNoise(x+y, y-x, n * 0.75f, seed) - n) * 0.5f; // uses higher-dim value noise with n
-        return n / (float)Math.sqrt(0.29f + n * n); // approach 1 or -1 quickly
+        n = (ValueNoise.valueNoise(x, y, n * 0.75f, seed) - n) * 0.5f; // uses higher-dim value noise with n
+        return n / (float)Math.sqrt(0.33f + n * n); // approach 1 or -1 quickly
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
         float n = SimplexNoise.noise(x, y, z, seed);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+x, n * 0.75f, seed) - n) * 0.5f;
-        return n / (float)Math.sqrt(0.27f + n * n);
+        n = (ValueNoise.valueNoise(x, y, z, n * 0.75f, seed) - n) * 0.5f;
+        return n / (float)Math.sqrt(0.30f + n * n);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
         float n = SimplexNoise.noise(x, y, z, w, seed);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+x, n * 0.75f, seed) - n) * 0.5f;
-        return n / (float)Math.sqrt(0.25f + n * n);
+        n = (ValueNoise.valueNoise(x, y, z, w, n * 0.75f, seed) - n) * 0.5f;
+        return n / (float)Math.sqrt(0.27f + n * n);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
         float n = SimplexNoise.noise(x, y, z, w, u, seed);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+u, u+x, n * 0.75f, seed) - n) * 0.5f;
-        return n / (float)Math.sqrt(0.23f + n * n);
+        n = (ValueNoise.valueNoise(x, y, z, w, u, n * 0.75f, seed) - n) * 0.5f;
+        return n / (float)Math.sqrt(0.24f + n * n);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
         float n = SimplexNoise.noise(x, y, z, w, u, v, seed);
-        n = (ValueNoise.valueNoise(x+y, y+z, z+w, w+u, u+v, v+x, n * 0.75f, seed) - n) * 0.5f;
+        n = (ValueNoise.valueNoise(x, y, z, w, u, v, n * 0.75f, seed) - n) * 0.5f;
         return n / (float)Math.sqrt(0.21f + n * n);
     }
 
