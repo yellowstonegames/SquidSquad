@@ -42,7 +42,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -73,6 +73,10 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">com.github.yellowstonegames.grid.LightingManager</div>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid">LightingManagerRgb</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">LightingManager</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
@@ -90,12 +94,42 @@ loadScripts(document, 'script');</script>
  GlyphMap). To place user-interface lighting effects that don't affect the in-game-world lights, you can use
  <a href="#updateUI(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Radiance)"><code>updateUI(Coord, Radiance)</code></a>, which is called after <a href="#update()"><code>update()</code></a> but before <a href="#draw(int%5B%5D%5B%5D)"><code>draw(int[][])</code></a>.
  <br>
+ This class uses the same Oklab color space that <code>DescriptiveColor</code> uses for almost every place it deals with
+ color. The exception here is <a href="#draw(int%5B%5D%5B%5D)"><code>draw(int[][])</code></a>, which uses Oklab internally but converts the colors to RGBA8888
+ when it outputs them.
+ <br>
  Honestly, this class is quite complex, and you should really take a look at a demo that uses it to see how the
  different parts fit together. If you have the SquidSquad test sources, LightingTest in squidglyph provides a
- relatively simple example using many colors of light.</div>
+ relatively simple example using many colors of light. <a href="VisionFramework.html" title="class in com.github.yellowstonegames.grid"><code>VisionFramework</code></a> also can be used to handle much of the
+ boilerplate associated with vision and lighting.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="LightingManager.FovFunction.html" class="type-name-link" title="interface in com.github.yellowstonegames.grid">LightingManager.FovFunction</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A functional interface that is really only meant to be one of two functions:
+ <a href="FOV.html#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)"><code>FOV.reuseFOV(float[][], float[][], int, int, float, Radius)</code></a> or
+ <a href="FOV.html#reuseFOVSymmetrical(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)"><code>FOV.reuseFOVSymmetrical(float[][], float[][], int, int, float, Radius)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="LightingManager.SymmetryMode.html" class="type-name-link" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Used to choose whether FOV calculations should be done as quickly as possible (without symmetry guarantees) or
+ more precisely (and more slowly, but with a symmetry guarantee).</div>
+</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -108,8 +142,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>int</code></div>
 <div class="col-second even-row-color"><code><a href="#backgroundColor" class="member-name-link">backgroundColor</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The packed float color to mix background cells with when a cell has lighting and is within line-of-sight, but has
- no background color to start with (its color is a packed Oklab int, <code>DescriptiveColor.TRANSPARENT</code>).</div>
+<div class="block">The packed Oklab int color to mix background cells with when a cell has lighting and is within line-of-sight, but
+ has no background color to start with.</div>
 </div>
 <div class="col-first odd-row-color"><code>int[][]</code></div>
 <div class="col-second odd-row-color"><code><a href="#colorLighting" class="member-name-link">colorLighting</a></code></div>
@@ -119,7 +153,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>int[][]</code></div>
 <div class="col-second even-row-color"><code><a href="#fovLightColors" class="member-name-link">fovLightColors</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Represents the Oklab colors associated with lights in <a href="#lightFromFOV"><code>lightFromFOV</code></a>.</div>
+<div class="block">Represents the Oklab int colors associated with lights in <a href="#lightFromFOV"><code>lightFromFOV</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>float[][]</code></div>
 <div class="col-second odd-row-color"><code><a href="#fovResult" class="member-name-link">fovResult</a></code></div>
@@ -170,17 +204,20 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="#resistances" class="member-name-link">resistances</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">The 2D array of light-resistance values from 0.0f to 1.0f for each cell on the map, as produced by
- <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>.</div>
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><code>float</code></div>
-<div class="col-second even-row-color"><code><a href="#viewerRange" class="member-name-link">viewerRange</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><code><a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a></code></div>
+<div class="col-second even-row-color"><code><a href="#symmetry" class="member-name-link">symmetry</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>float</code></div>
+<div class="col-second odd-row-color"><code><a href="#viewerRange" class="member-name-link">viewerRange</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">How far the viewer can see without light; defaults to 4.0f cells, and you are encouraged to change this member
  field if the vision range changes after construction.</div>
 </div>
-<div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><a href="#width" class="member-name-link">width</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>int</code></div>
+<div class="col-second even-row-color"><code><a href="#width" class="member-name-link">width</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Width of the 2D arrays used in this, as obtained from <a href="#resistances"><code>resistances</code></a>.</div>
 </div>
 </div>
@@ -213,11 +250,21 @@ loadScripts(document, 'script');</script>
  or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>, makes a
  LightingManager that can have <a href="Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects added to it in various locations.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(float%5B%5D%5B%5D,java.lang.String,com.github.yellowstonegames.grid.Radius,float)" class="member-name-link">LightingManager</a><wbr>(float[][]&nbsp;resistance,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(float%5B%5D%5B%5D,int,com.github.yellowstonegames.grid.Radius,float,com.github.yellowstonegames.grid.LightingManager.SymmetryMode)" class="member-name-link">LightingManager</a><wbr>(float[][]&nbsp;resistance,
+ int&nbsp;backgroundColor,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusStrategy,
+ float&nbsp;viewerVisionRange,
+ <a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a>&nbsp;symmetry)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Given a resistance array as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>
+ or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>, makes a
+ LightingManager that can have <a href="Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects added to it in various locations.</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float%5B%5D%5B%5D,java.lang.String,com.github.yellowstonegames.grid.Radius,float)" class="member-name-link">LightingManager</a><wbr>(float[][]&nbsp;resistance,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;backgroundColor,
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusStrategy,
  float&nbsp;viewerVisionRange)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Given a resistance array as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>
  or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>, makes a
  LightingManager that can have <a href="Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects added to it in various locations.</div>
@@ -266,14 +313,30 @@ loadScripts(document, 'script');</script>
 <div class="block">Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculateFOV(com.github.yellowstonegames.grid.Coord)" class="member-name-link">calculateFOV</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;viewer)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculateFOV(com.github.tommyettinger.ds.ObjectFloatMap,int,int,int,int)" class="member-name-link">calculateFOV</a><wbr>(com.github.tommyettinger.ds.ObjectFloatMap&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;viewers,
+ int&nbsp;minX,
+ int&nbsp;minY,
+ int&nbsp;maxX,
+ int&nbsp;maxY)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#draw(int%5B%5D%5B%5D)" class="member-name-link">draw</a><wbr>(int[][]&nbsp;backgrounds)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#calculateFOV(com.github.yellowstonegames.grid.Coord)" class="member-name-link">calculateFOV</a><wbr>(<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&nbsp;viewer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Given a 2D array that should hold RGBA8888 int colors, fills the 2D array with different colors based on what
+<div class="block">Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#draw(int%5B%5D%5B%5D)" class="member-name-link">draw</a><wbr>(int[][]&nbsp;backgrounds)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Given a 2D array that should hold RGBA int colors, fills the 2D array with different RGBA colors based on what
+ lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
+ sources can do.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#drawOklab(int%5B%5D%5B%5D)" class="member-name-link">drawOklab</a><wbr>(int[][]&nbsp;backgrounds)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Given a 2D array that will hold Oklab int colors, fills the 2D array with different Oklab colors based on what
  lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
  sources can do.</div>
 </div>
@@ -291,6 +354,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the Radiance at the given position, if present, or null if there is no light source there.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNeutralColor()" class="member-name-link">getNeutralColor</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">An extension point for subclasses that don't use the Oklab color space; this defaults to returning
+ <code>DescriptiveColor.WHITE</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymmetry()" class="member-name-link">getSymmetry</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -337,6 +409,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Removes a Radiance as a light source from the given position, if any is present.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSymmetry(com.github.yellowstonegames.grid.LightingManager.SymmetryMode)" class="member-name-link">setSymmetry</a><wbr>(<a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a>&nbsp;symmetry)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Typically called every frame, this updates the flicker and strobe effects of Radiance objects and applies those
@@ -369,7 +447,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -393,7 +471,7 @@ loadScripts(document, 'script');</script>
 <h3>resistances</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">resistances</span></div>
 <div class="block">The 2D array of light-resistance values from 0.0f to 1.0f for each cell on the map, as produced by
- <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>.</div>
+ <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a> or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>.</div>
 </section>
 </li>
 <li>
@@ -443,7 +521,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fovLightColors">
 <h3>fovLightColors</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">fovLightColors</span></div>
-<div class="block">Represents the Oklab colors associated with lights in <a href="#lightFromFOV"><code>lightFromFOV</code></a>.
+<div class="block">Represents the Oklab int colors associated with lights in <a href="#lightFromFOV"><code>lightFromFOV</code></a>.
  To make effective use of this field, you will probably need
  to be reading the source for LightingManager.</div>
 </section>
@@ -466,8 +544,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="backgroundColor">
 <h3>backgroundColor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">backgroundColor</span></div>
-<div class="block">The packed float color to mix background cells with when a cell has lighting and is within line-of-sight, but has
- no background color to start with (its color is a packed Oklab int, <code>DescriptiveColor.TRANSPARENT</code>).</div>
+<div class="block">The packed Oklab int color to mix background cells with when a cell has lighting and is within line-of-sight, but
+ has no background color to start with. Its color defaults to the (RGBA or Oklab int) <code>0</code>, which is always
+ transparent.</div>
 </section>
 </li>
 <li>
@@ -494,6 +573,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></span>&nbsp;<span class="element-name">noticeable</span></div>
 <div class="block">A GreasedRegion that stores any cells that are in line-of-sight or are close enough to a cell in line-of-sight to
  potentially cast light into such a cell. Depends on the highest <a href="Radiance.html#range"><code>Radiance.range</code></a> in <a href="#lights"><code>lights</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="symmetry">
+<h3>symmetry</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a></span>&nbsp;<span class="element-name">symmetry</span></div>
 </section>
 </li>
 </ul>
@@ -567,6 +652,27 @@ loadScripts(document, 'script');</script>
 </dl>
 </section>
 </li>
+<li>
+<section class="detail" id="&lt;init&gt;(float[][],int,com.github.yellowstonegames.grid.Radius,float,com.github.yellowstonegames.grid.LightingManager.SymmetryMode)">
+<h3>LightingManager</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">LightingManager</span><wbr><span class="parameters">(float[][]&nbsp;resistance,
+ int&nbsp;backgroundColor,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusStrategy,
+ float&nbsp;viewerVisionRange,
+ <a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a>&nbsp;symmetry)</span></div>
+<div class="block">Given a resistance array as produced by <a href="FOV.html#generateResistances(char%5B%5D%5B%5D)"><code>FOV.generateResistances(char[][])</code></a>
+ or <a href="FOV.html#generateSimpleResistances(char%5B%5D%5B%5D)"><code>FOV.generateSimpleResistances(char[][])</code></a>, makes a
+ LightingManager that can have <a href="Radiance.html" title="class in com.github.yellowstonegames.grid"><code>Radiance</code></a> objects added to it in various locations.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>resistance</code> - a resistance array as produced by DungeonUtility</dd>
+<dd><code>backgroundColor</code> - the background color to use, as a packed Oklab int</dd>
+<dd><code>radiusStrategy</code> - the shape lights should take, typically <a href="Radius.html#CIRCLE"><code>Radius.CIRCLE</code></a> for "realistic" lights or one
+                       of <a href="Radius.html#DIAMOND"><code>Radius.DIAMOND</code></a> or <a href="Radius.html#SQUARE"><code>Radius.SQUARE</code></a> to match game rules for distance</dd>
+<dd><code>viewerVisionRange</code> - how far the player can see without light, in cells</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -575,6 +681,30 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getSymmetry()">
+<h3>getSymmetry</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a></span>&nbsp;<span class="element-name">getSymmetry</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setSymmetry(com.github.yellowstonegames.grid.LightingManager.SymmetryMode)">
+<h3>setSymmetry</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSymmetry</span><wbr><span class="parameters">(<a href="LightingManager.SymmetryMode.html" title="enum class in com.github.yellowstonegames.grid">LightingManager.SymmetryMode</a>&nbsp;symmetry)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNeutralColor()">
+<h3>getNeutralColor</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getNeutralColor</span>()</div>
+<div class="block">An extension point for subclasses that don't use the Oklab color space; this defaults to returning
+ <code>DescriptiveColor.WHITE</code>. There is no setter or field for the neutral color.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>if not overridden, <code>DescriptiveColor.WHITE</code></dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="addLight(int,int,com.github.yellowstonegames.grid.Radiance)">
 <h3>addLight</h3>
@@ -801,14 +931,37 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="draw(int[][])">
 <h3>draw</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">draw</span><wbr><span class="parameters">(int[][]&nbsp;backgrounds)</span></div>
-<div class="block">Given a 2D array that should hold RGBA8888 int colors, fills the 2D array with different colors based on what
+<div class="block">Given a 2D array that should hold RGBA int colors, fills the 2D array with different RGBA colors based on what
  lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
  sources can do. You should usually call <a href="#update()"><code>update()</code></a> before each call to draw(), but you may want to make
  custom changes to the lighting in between those two calls (that is the only place those changes will be noticed).
- A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.</div>
+ A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
+ This always mixes the calculated lights in <a href="#colorLighting"><code>colorLighting</code></a> with the <a href="#backgroundColor"><code>backgroundColor</code></a>, using
+ <a href="#lightingStrength"><code>lightingStrength</code></a> to determine how much the lights should affect the background color.
+ <br>
+ If this class is extended, this method should be considered as one to override.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>backgrounds</code> - a 2D int array, which will be modified in-place</dd>
+<dd><code>backgrounds</code> - a 2D int array, which will be modified in-place; visible cells will receive RGBA8888 colors</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="drawOklab(int[][])">
+<h3>drawOklab</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">drawOklab</span><wbr><span class="parameters">(int[][]&nbsp;backgrounds)</span></div>
+<div class="block">Given a 2D array that will hold Oklab int colors, fills the 2D array with different Oklab colors based on what
+ lights are present in line of sight of the viewer and the various flicker or strobe effects that Radiance light
+ sources can do. You should usually call <a href="#update()"><code>update()</code></a> before each call to drawOklab(), but you may want to
+ make custom changes to the lighting in between those two calls (that is the only place those changes will be
+ noticed). A common use for this in text-based games uses a GlyphMap's backgrounds field as the parameter.
+ This always mixes the calculated lights in <a href="#colorLighting"><code>colorLighting</code></a> with the <a href="#backgroundColor"><code>backgroundColor</code></a>, using
+ <a href="#lightingStrength"><code>lightingStrength</code></a> to determine how much the lights should affect the background color.
+ <br>
+ If this class is extended, this method should be considered as one to override.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>backgrounds</code> - a 2D int array, which will be modified in-place; visible cells will receive Oklab colors</dd>
 </dl>
 </section>
 </li>
@@ -887,6 +1040,36 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="calculateFOV(com.github.tommyettinger.ds.ObjectFloatMap,int,int,int,int)">
+<h3>calculateFOV</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">calculateFOV</span><wbr><span class="parameters">(com.github.tommyettinger.ds.ObjectFloatMap&lt;<a href="Coord.html" title="class in com.github.yellowstonegames.grid">Coord</a>&gt;&nbsp;viewers,
+ int&nbsp;minX,
+ int&nbsp;minY,
+ int&nbsp;maxX,
+ int&nbsp;maxY)</span></div>
+<div class="block">Used to calculate what cells are visible as if any flicker or strobe effects were simply constant light sources.
+ Runs part of the calculations to draw lighting as if all radii are at their widest, but does no actual drawing.
+ This should be called any time the viewer moves to a different cell, and it is critical that this is called (at
+ least) once after a move but before <a href="#update()"><code>update()</code></a> gets called to change lighting at the new cell. This sets
+ important information on what lights might need to be calculated during each update(Coord) call; it does not need
+ to be called before <a href="#updateAll()"><code>updateAll()</code></a> (with no arguments) because that doesn't need a viewer. This overload
+ allows the area this processes to be restricted to a rectangle between <code>minX</code> and <code>maxX</code> and between
+ <code>minY</code> and <code>maxY</code>, ignoring any lights outside that area (typically because they are a long way out
+ from the map's shown area). Sets <a href="#fovResult"><code>fovResult</code></a>, <a href="#losResult"><code>losResult</code></a>, and <a href="#noticeable"><code>noticeable</code></a> based on the
+ given viewer position and any lights in <a href="#lights"><code>lights</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>viewers</code> - an ObjectFloatMap with Coord keys representing viewer positions and float values for their vision ranges; often a <a href="CoordFloatOrderedMap.html" title="class in com.github.yellowstonegames.grid"><code>CoordFloatOrderedMap</code></a></dd>
+<dd><code>minX</code> - inclusive lower bound on x to calculate</dd>
+<dd><code>minY</code> - inclusive lower bound on y to calculate</dd>
+<dd><code>maxX</code> - exclusive upper bound on x to calculate</dd>
+<dd><code>maxY</code> - exclusive upper bound on y to calculate</dd>
+<dt>Returns:</dt>
+<dd>the calculated FOV 2D array, which is also stored in <a href="#fovResult"><code>fovResult</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="equals(java.lang.Object)">
 <h3>equals</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
@@ -903,6 +1086,16 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>

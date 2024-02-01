@@ -77,8 +77,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">AOE</span></div>
-<div class="block">Area of Effect interface meant to be implemented by various specific burst, line, flowing, and user-made AOE types.
- Created by Tommy Ettinger on 5/8/2015.</div>
+<div class="block">Area of Effect interface meant to be implemented by various specific burst, line, flowing, and user-made AOE types.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -106,7 +105,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getMaxRange()" class="member-name-link">getMaxRange</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default com.github.yellowstonegames.grid.Radius</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getMetric()" class="member-name-link">getMetric</a>()</code></div>
@@ -117,7 +116,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getMinRange()" class="member-name-link">getMinRange</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>com.github.yellowstonegames.grid.Coord</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getOrigin()" class="member-name-link">getOrigin</a>()</code></div>
@@ -178,7 +177,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#setMaxRange(int)" class="member-name-link">setMaxRange</a><wbr>(int&nbsp;maxRange)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#setMetric(com.github.yellowstonegames.grid.Radius)" class="member-name-link">setMetric</a><wbr>(com.github.yellowstonegames.grid.Radius&nbsp;metric)</code></div>
@@ -189,7 +188,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#setMinRange(int)" class="member-name-link">setMinRange</a><wbr>(int&nbsp;minRange)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setOrigin(com.github.yellowstonegames.grid.Coord)" class="member-name-link">setOrigin</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;origin)</code></div>
@@ -266,15 +265,15 @@ loadScripts(document, 'script');</script>
  hit as many of the Points in targets as possible without hitting any Points in requiredExclusions, and each value
  is the collection of targets that will be hit if the associated key is used. The length of any ArrayList in the
  returned collection's values will be the number of targets likely to be affected by the AOE when shift() is
- called with the Coord key as an argument; all of the ArrayLists should have the same length. The second argument
+ called with the Coord key as an argument; all ArrayLists should have the same length. The second argument
  may be null, in which case this will initialize it to an empty Set of Coord and disregard it.
-
+ <br>
  With complex maps and varied arrangements of obstacles and desirable targets, calculating the best points to
  evaluate for AI can be computationally difficult. This method provides a way to calculate with good accuracy
  the best Points to pass to shift(Coord) before calling findArea(). For "blackened thrash industrial death metal"
  levels of brutality for the AI, the results of this can be used verbatim, but for more reasonable AI levels, you
  can intentionally alter the best options to simulate imperfect aim or environmental variance on the AOE.
-
+ <br>
  Beast-like creatures that do not need devious AI should probably not use this method at all and instead use
  shift(Coord) with the location of some enemy (probably the closest) as its argument.</div>
 <dl class="notes">
@@ -330,7 +329,7 @@ loadScripts(document, 'script');</script>
  with '#' for walls, '.' for floors and potentially other chars that implementors can use if they are present in
  the map. The map must be bounded by walls, which DungeonProcessor does automatically and other generators can
  easily add with <code>DungeonTools.wallWrap(dungeon);</code>.
-
+ <br>
  This returns a CoordFloatOrderedMap; if a cell is 100% affected by the AOE then the value
  should be 1.0; if it is 50% affected it should be 0.5, if unaffected should be 0.0, etc. The Coord keys should
  have the same x and y as the x,y map positions they correspond to.</div>
@@ -347,7 +346,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Get the position from which the AOE originates, which may be related to the location of the AOE's effect, as for
  lines, cones, and other emitted effects, or may be unrelated except for determining which enemies can be seen
  or targeted from a given origin point (as for distant effects that radiate from a chosen central point, but
- have a maxRange at which they can deliver that effect).</div>
+ have a maxRange at which they can deliver that effect). In most cases, this is the position of a character
+ producing the AOE in question.</div>
 </section>
 </li>
 <li>
@@ -357,7 +357,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Set the position from which the AOE originates, which may be related to the location of the AOE's effect, as for
  lines, cones, and other emitted effects, or may be unrelated except for determining which enemies can be seen
  or targeted from a given origin point (as for distant effects that radiate from a chosen central point, but
- have a maxRange at which they can deliver that effect).</div>
+ have a maxRange at which they can deliver that effect). In most cases, this is the position of a character
+ producing the AOE in question.</div>
 </section>
 </li>
 <li>
@@ -387,14 +388,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getMinRange()">
 <h3>getMinRange</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMinRange</span>()</div>
-<div class="block">The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getMaxRange()">
 <h3>getMaxRange</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMaxRange</span>()</div>
-<div class="block">The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </section>
 </li>
 <li>
@@ -451,14 +452,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setMinRange(int)">
 <h3>setMinRange</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMinRange</span><wbr><span class="parameters">(int&nbsp;minRange)</span></div>
-<div class="block">The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="setMaxRange(int)">
 <h3>setMaxRange</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMaxRange</span><wbr><span class="parameters">(int&nbsp;maxRange)</span></div>
-<div class="block">The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </section>
 </li>
 <li>

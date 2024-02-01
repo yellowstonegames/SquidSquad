@@ -106,8 +106,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Registers Language.SentenceForm with the given Json object, so Language.SentenceForm can be written to and read from JSON.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerTranslator(com.badlogic.gdx.utils.Json)" class="member-name-link">registerTranslator</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerMnemonic(com.badlogic.gdx.utils.Json)" class="member-name-link">registerMnemonic</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Registers Mnemonic with the given Json object, so Mnemonic can be written to and read from JSON.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#registerTranslator(com.badlogic.gdx.utils.Json)" class="member-name-link">registerTranslator</a><wbr>(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Registers Translator with the given Json object, so Translator can be written to and read from JSON.</div>
 </div>
 </div>
@@ -169,7 +174,21 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="registerTranslator(com.badlogic.gdx.utils.Json)">
 <h3>registerTranslator</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerTranslator</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
-<div class="block">Registers Translator with the given Json object, so Translator can be written to and read from JSON.</div>
+<div class="block">Registers Translator with the given Json object, so Translator can be written to and read from JSON.
+ Registers <code>ObjectObjectMap</code> with <code>JsonSupport.registerObjectObjectMap(Json)</code>, and registers
+ <code>Language</code> with <a href="#registerLanguage(com.badlogic.gdx.utils.Json)"><code>registerLanguage(Json)</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="registerMnemonic(com.badlogic.gdx.utils.Json)">
+<h3>registerMnemonic</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerMnemonic</span><wbr><span class="parameters">(@NonNull com.badlogic.gdx.utils.Json&nbsp;json)</span></div>
+<div class="block">Registers Mnemonic with the given Json object, so Mnemonic can be written to and read from JSON.
+ Registers <code>NumberedSet</code> with <code>JsonSupport.registerNumberedSet(Json)</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>json</code> - a libGDX Json object that will have a serializer registered</dd>

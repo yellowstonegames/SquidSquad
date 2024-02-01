@@ -72,6 +72,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">GradientVectors</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Stores arrays representing vectors on the unit hypersphere in 2D through 6D. This is used by <a href="PerlinNoise.html" title="class in com.github.yellowstonegames.grid"><code>PerlinNoise</code></a> and
+ <a href="SimplexNoise.html" title="class in com.github.yellowstonegames.grid"><code>SimplexNoise</code></a>, as well as indirectly by all classes that use those. Each constant in this class stores 256
+ unit vectors in a 1D array, one after the next, but sometimes with padding.  See the docs for each constant for more
+ information, but <a href="#GRADIENTS_2D"><code>GRADIENTS_2D</code></a> and <a href="#GRADIENTS_4D"><code>GRADIENTS_4D</code></a> have no padding, and the others have one to three
+ ignored floats after each vector.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -143,7 +148,7 @@ loadScripts(document, 'script');</script>
  The points were randomly rotated to try to avoid correlation on any typical axis; all points used the same
  rotation to keep their distance to each other and shape.
  <br>
- This particular set of 256 gradient vectors is either optimal or very close to optimal for a this size of a
+ This particular set of 256 gradient vectors is either optimal or very close to optimal for this size of a
  set of vectors.</div>
 </section>
 </li>

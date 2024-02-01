@@ -85,9 +85,7 @@ implements <a href="WorldMapView.html" title="interface in com.github.yellowston
  and wraps it so that you can call <a href="#generate()"><code>generate()</code></a> on this to coordinate calls to
  <a href="WorldMapGenerator.html#generate()"><code>WorldMapGenerator.generate()</code></a> and <a href="BiomeMapper.BlendedBiomeMapper.html#makeBiomes(com.github.yellowstonegames.world.WorldMapGenerator)"><code>BiomeMapper.BlendedBiomeMapper.makeBiomes(WorldMapGenerator)</code></a>.
  For extra convenience, you can get a possible interpretation of how the generated world would look by calling
- <a href="#show()"><code>show()</code></a>, which returns a 2D array of ints as RGBA8888 colors.
- <br>
- Created by Tommy Ettinger on 9/6/2019.</div>
+ <a href="#show()"><code>show()</code></a>, which returns a 2D array of ints as RGBA8888 colors.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -431,7 +429,7 @@ implements <a href="WorldMapView.html" title="interface in com.github.yellowston
 <div class="block">Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.
  There should be at least one packed int Oklab color given in similarColors, but there can be many of them. This
  type of color can be any of the color constants from <code>DescriptiveColor</code>, may be produced by
- <code>DescriptiveColor.describeOklab(CharSequence)</code>, or might be made manually, in advanced cases, with
+ <code>DescriptiveColor.describeOklab(String)</code>, or might be made manually, in advanced cases, with
  <code>DescriptiveColor.limitToGamut(int, int, int)</code> and specifying the L, A, and B channels.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -449,7 +447,7 @@ implements <a href="WorldMapView.html" title="interface in com.github.yellowston
 <div class="block">Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.
  There should be at least one packed int Oklab color given in similarColors, but there can be many of them. This
  type of color can be any of the color constants from <code>DescriptiveColor</code>, may be produced by
- <code>DescriptiveColor.describeOklab(CharSequence)</code>, or might be made manually, in advanced cases, with
+ <code>DescriptiveColor.describeOklab(String)</code>, or might be made manually, in advanced cases, with
  <code>DescriptiveColor.limitToGamut(int, int, int)</code> and specifying the L, A, and B channels.</div>
 <dl class="notes">
 <dt>Specified by:</dt>

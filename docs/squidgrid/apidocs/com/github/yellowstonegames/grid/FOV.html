@@ -204,6 +204,21 @@ loadScripts(document, 'script');</script>
  levels, and ordered so the most-visible cell (typically where the viewer is) is first in the iteration order.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fillResistancesInto(char%5B%5D%5B%5D,float%5B%5D%5B%5D)" class="member-name-link">fillResistancesInto</a><wbr>(char[][]&nbsp;map,
+ float[][]&nbsp;into)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
+ be used with most of the methods in FOV, like <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>reuseFOV(float[][], float[][], int, int, float)</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fillSimpleResistancesInto(char%5B%5D%5B%5D,float%5B%5D%5B%5D)" class="member-name-link">fillSimpleResistancesInto</a><wbr>(char[][]&nbsp;map,
+ float[][]&nbsp;into)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
+ be used with most of the methods in FOV, like <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>reuseFOV(float[][], float[][], int, int, float)</code></a>, but does
+ not treat any cells as partly transparent, only fully-blocking or fully-permitting light.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#generateResistances(char%5B%5D%5B%5D)" class="member-name-link">generateResistances</a><wbr>(char[][]&nbsp;map)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given a char[][] for the map, produces a float[][] that can be used with most of the methods in FOV, like
@@ -255,38 +270,44 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Adds together multiple FOV maps, but only adds to a position if it is visible in the given LOS map.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resistance(char)" class="member-name-link">resistance</a><wbr>(char&nbsp;cell)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Given a single char, returns what <a href="#generateResistances(char%5B%5D%5B%5D)"><code>generateResistances(char[][])</code></a> or
+ <a href="#fillResistancesInto(char%5B%5D%5B%5D,float%5B%5D%5B%5D)"><code>fillResistancesInto(char[][], float[][])</code></a> would consider as its light resistance value.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startx,
  int&nbsp;starty)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Calculates the Field Of View for the provided map from the given x, y
- coordinates.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
- float[][]&nbsp;light,
- int&nbsp;startx,
- int&nbsp;starty,
- float&nbsp;radius)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates the Field Of View for the provided map from the given x, y
  coordinates.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
- int&nbsp;startX,
- int&nbsp;startY,
- float&nbsp;radius,
- <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
+ int&nbsp;startx,
+ int&nbsp;starty,
+ float&nbsp;radius)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates the Field Of View for the provided map from the given x, y
  coordinates.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius,float,float)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+ float[][]&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY,
+ float&nbsp;radius,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Calculates the Field Of View for the provided map from the given x, y
+ coordinates.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius,float,float)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY,
@@ -294,13 +315,13 @@ loadScripts(document, 'script');</script>
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique,
  float&nbsp;angle,
  float&nbsp;span)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates the Field Of View for the provided map from the given x, y
  coordinates, lighting at the given angle in  degrees and covering a span
  centered on that angle, also in degrees.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius,float,float,float,float,float,float)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius,float,float,float,float,float,float)" class="member-name-link">reuseFOV</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY,
@@ -312,24 +333,13 @@ loadScripts(document, 'script');</script>
  float&nbsp;side,
  float&nbsp;sideBack,
  float&nbsp;back)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates the Field Of View for the provided map from the given x, y
  coordinates, lighting with the view "pointed at" the given <code>angle</code> in degrees,
  extending to different ranges based on the direction the light is traveling.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOVOrtho(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOVOrtho</a><wbr>(float[][]&nbsp;resistanceMap,
- float[][]&nbsp;light,
- int&nbsp;startX,
- int&nbsp;startY,
- float&nbsp;radius,
- <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Calculates the symmetrical Field Of View for the provided resistanceMap from the given x, y viewer
- coordinates.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOVSymmetrical(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOVSymmetrical</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOVOrtho(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOVOrtho</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY,
@@ -340,15 +350,26 @@ loadScripts(document, 'script');</script>
  coordinates.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseFOVSymmetrical(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseFOVSymmetrical</a><wbr>(float[][]&nbsp;resistanceMap,
+ float[][]&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY,
+ float&nbsp;radius,
+ <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Calculates the symmetrical Field Of View for the provided resistanceMap from the given x, y viewer
+ coordinates.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,int,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,int,int,int)" class="member-name-link">reuseLOS</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY,
@@ -356,19 +377,19 @@ loadScripts(document, 'script');</script>
  int&nbsp;minY,
  int&nbsp;maxX,
  int&nbsp;maxY)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int)" class="member-name-link">reuseLOS</a><wbr>(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
- @NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;light,
- int&nbsp;startX,
- int&nbsp;startY)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int,int,int,int,int)" class="member-name-link">reuseLOS</a><wbr>(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int)" class="member-name-link">reuseLOS</a><wbr>(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
+ @NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;light,
+ int&nbsp;startX,
+ int&nbsp;startY)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseLOS(com.github.yellowstonegames.grid.Region,com.github.yellowstonegames.grid.Region,int,int,int,int,int,int)" class="member-name-link">reuseLOS</a><wbr>(@NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;blockingMap,
  @NonNull <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;light,
  int&nbsp;startX,
  int&nbsp;startY,
@@ -376,34 +397,34 @@ loadScripts(document, 'script');</script>
  int&nbsp;minY,
  int&nbsp;maxX,
  int&nbsp;maxY)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Calculates which cells have line of sight from the given x, y coordinates.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;x,
  int&nbsp;y,
  float&nbsp;radius,
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Like the <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)"><code>reuseFOV(float[][], float[][], int, int, float, Radius)</code></a> method, but this uses Ripple FOV
  with a tightness/looseness of 2.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;rippleLooseness,
  int&nbsp;x,
  int&nbsp;y,
  float&nbsp;radius,
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Like the <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)"><code>reuseFOV(float[][], float[][], int, int, float, Radius)</code></a> method, but this uses Ripple FOV
  with a configurable tightness/looseness (between 1, tightest, and 6, loosest).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,float,com.github.yellowstonegames.grid.Radius,float,float)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseRippleFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,int,float,com.github.yellowstonegames.grid.Radius,float,float)" class="member-name-link">reuseRippleFOV</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;light,
  int&nbsp;rippleLooseness,
  int&nbsp;x,
@@ -412,21 +433,27 @@ loadScripts(document, 'script');</script>
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique,
  float&nbsp;angle,
  float&nbsp;span)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Like the <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius,float,float)"><code>reuseFOV(float[][], float[][], int, int, float, Radius, float, float)</code></a> method, but this
  uses Ripple FOV with a configurable tightness/looseness (between 1, tightest, and 6, loosest).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseSoundField(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseSoundField</a><wbr>(float[][]&nbsp;resistanceMap,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#reuseSoundField(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)" class="member-name-link">reuseSoundField</a><wbr>(float[][]&nbsp;resistanceMap,
  float[][]&nbsp;sound,
  int&nbsp;x,
  int&nbsp;y,
  float&nbsp;radius,
  <a href="Radius.html" title="enum class in com.github.yellowstonegames.grid">Radius</a>&nbsp;radiusTechnique)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Like the <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float,com.github.yellowstonegames.grid.Radius)"><code>reuseFOV(float[][], float[][], int, int, float, Radius)</code></a> method, but this is meant for sound
  rather than light, and so uses Ripple FOV with maximum looseness, and expects a sound resistance map rather than
  a light one.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#simpleResistance(char)" class="member-name-link">simpleResistance</a><wbr>(char&nbsp;cell)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Given a single char, returns what <a href="#generateSimpleResistances(char%5B%5D%5B%5D)"><code>generateSimpleResistances(char[][])</code></a> or
+ <a href="#fillSimpleResistancesInto(char%5B%5D%5B%5D,float%5B%5D%5B%5D)"><code>fillSimpleResistancesInto(char[][], float[][])</code></a> would consider as its light resistance value.</div>
 </div>
 </div>
 </div>
@@ -528,13 +555,13 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>resistanceMap</code> - the grid of cells to calculate on; the kind made by <a href="#generateResistances(char%5B%5D%5B%5D)"><code>generateResistances(char[][])</code></a></dd>
-<dd><code>light</code> - the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"</dd>
+<dd><code>light</code> - the grid of cells to assign to, which will be cleared; 0f means "unlit" and 1f means "fully lit"</dd>
 <dd><code>startX</code> - the horizontal component of the starting location</dd>
 <dd><code>startY</code> - the vertical component of the starting location</dd>
 <dd><code>radius</code> - the distance the light will extend to</dd>
-<dd><code>radiusTechnique</code> - provides a means to calculate the radius as desired</dd>
+<dd><code>radiusTechnique</code> - a Radius enum constant, such as <a href="Radius.html#CIRCLE"><code>Radius.CIRCLE</code></a>, that provides the shape of the FOV</dd>
 <dt>Returns:</dt>
-<dd>the computed light grid, which is the same 2D array as the value assigned to <code>light</code></dd>
+<dd>the computed light grid, which is the same 2D array as <code>light</code></dd>
 </dl>
 </section>
 </li>
@@ -562,13 +589,13 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>resistanceMap</code> - the grid of cells to calculate on; the kind made by <a href="#generateResistances(char%5B%5D%5B%5D)"><code>generateResistances(char[][])</code></a></dd>
-<dd><code>light</code> - the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"</dd>
+<dd><code>light</code> - the grid of cells to assign to, which will be cleared; 0f means "unlit" and 1f means "fully lit"</dd>
 <dd><code>startX</code> - the horizontal component of the starting location</dd>
 <dd><code>startY</code> - the vertical component of the starting location</dd>
 <dd><code>radius</code> - the distance the light will extend to</dd>
-<dd><code>radiusTechnique</code> - provides a means to calculate the radius as desired</dd>
+<dd><code>radiusTechnique</code> - a Radius enum constant, such as <a href="Radius.html#CIRCLE"><code>Radius.CIRCLE</code></a>, that provides the shape of the FOV</dd>
 <dt>Returns:</dt>
-<dd>the computed light grid, which is the same 2D array as the value assigned to <code>light</code></dd>
+<dd>the computed light grid, which is the same 2D array as <code>light</code></dd>
 </dl>
 </section>
 </li>
@@ -1139,6 +1166,40 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="resistance(char)">
+<h3>resistance</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">resistance</span><wbr><span class="parameters">(char&nbsp;cell)</span></div>
+<div class="block">Given a single char, returns what <a href="#generateResistances(char%5B%5D%5B%5D)"><code>generateResistances(char[][])</code></a> or
+ <a href="#fillResistancesInto(char%5B%5D%5B%5D,float%5B%5D%5B%5D)"><code>fillResistancesInto(char[][], float[][])</code></a> would consider as its light resistance value.
+ This means that for a wall char (<code>'#'</code> or a box drawing character) or an impossible-to-see character
+ (<code>' '</code>), this returns a resistance of 1f, for an open door (<code>'/'</code>) this returns
+ 0.15f, for a closed door (<code>'+'</code>) this returns 0.95f, and for any other char, this returns 0f.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cell</code> - a single char that uses the place-map conventions the rest of this class uses</dd>
+<dt>Returns:</dt>
+<dd>the light resistance value for a cell represented by <code>cell</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="simpleResistance(char)">
+<h3>simpleResistance</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">simpleResistance</span><wbr><span class="parameters">(char&nbsp;cell)</span></div>
+<div class="block">Given a single char, returns what <a href="#generateSimpleResistances(char%5B%5D%5B%5D)"><code>generateSimpleResistances(char[][])</code></a> or
+ <a href="#fillSimpleResistancesInto(char%5B%5D%5B%5D,float%5B%5D%5B%5D)"><code>fillSimpleResistancesInto(char[][], float[][])</code></a> would consider as its light resistance value.
+ This means that for a wall char (<code>'#'</code> or a box drawing character), a closed door (<code>'+'</code>), or an
+ impossible-to-see character (<code>' '</code>), this returns a resistance of 1f, and for any
+ other char, this returns 0f.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cell</code> - a single char that uses the place-map conventions the rest of this class uses</dd>
+<dt>Returns:</dt>
+<dd>the light resistance value for a cell represented by <code>cell</code></dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="generateResistances(char[][])">
 <h3>generateResistances</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">generateResistances</span><wbr><span class="parameters">(char[][]&nbsp;map)</span></div>
@@ -1150,9 +1211,35 @@ loadScripts(document, 'script');</script>
  and anything else does not obscure light.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()</dd>
+<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/'</dd>
 <dt>Returns:</dt>
 <dd>a resistance map suitable for use with the FOV class, with clear cells assigned 0.0f and blocked ones 1.0f</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="#generateSimpleResistances(char%5B%5D%5B%5D)"><code>generateSimpleResistances(char[][])</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fillResistancesInto(char[][],float[][])">
+<h3>fillResistancesInto</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">fillResistancesInto</span><wbr><span class="parameters">(char[][]&nbsp;map,
+ float[][]&nbsp;into)</span></div>
+<div class="block">Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
+ be used with most of the methods in FOV, like <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>reuseFOV(float[][], float[][], int, int, float)</code></a>. It
+ expects any doors to be represented by '+' if closed or '/' if open, any walls to be '#' or box drawing
+ characters, and it doesn't care what other chars are used (only doors, including open ones, and walls obscure
+ light and thus have a resistance by default). Open doors slightly obscure light, closed doors obscure almost all
+ light coming from the other side, walls block all light, and anything else does not obscure light.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>map</code> - a 2D char array, width by height, with any closed doors as '+' and open doors as '/'</dd>
+<dd><code>into</code> - a 2D float array that should have the same dimensions as <code>map</code>; will be modified completely</dd>
+<dt>Returns:</dt>
+<dd><code>into</code> modified so it acts as a resistance map, with clear cells assigned 0.0f and blocked ones 1.0f</dd>
 </dl>
 </section>
 </li>
@@ -1169,7 +1256,7 @@ loadScripts(document, 'script');</script>
  and thus have a resistance normally).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()</dd>
+<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/'</dd>
 <dt>Returns:</dt>
 <dd>a resistance map suitable for use with the FOV class and subcell lighting, with triple width/height</dd>
 </dl>
@@ -1188,9 +1275,30 @@ loadScripts(document, 'script');</script>
  doors or 0.0f for any other cell.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()</dd>
+<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/'</dd>
 <dt>Returns:</dt>
 <dd>a resistance map suitable for use with the FOV class, but with no partially transparent cells</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fillSimpleResistancesInto(char[][],float[][])">
+<h3>fillSimpleResistancesInto</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float[][]</span>&nbsp;<span class="element-name">fillSimpleResistancesInto</span><wbr><span class="parameters">(char[][]&nbsp;map,
+ float[][]&nbsp;into)</span></div>
+<div class="block">Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
+ be used with most of the methods in FOV, like <a href="#reuseFOV(float%5B%5D%5B%5D,float%5B%5D%5B%5D,int,int,float)"><code>reuseFOV(float[][], float[][], int, int, float)</code></a>, but does
+ not treat any cells as partly transparent, only fully-blocking or fully-permitting light. This is mainly useful
+ if you expect the FOV radius to be very high or (effectively) infinite, since anything less than complete
+ blockage would be passed through by infinite-radius FOV. This expects any doors to be represented by '+' if
+ closed or '/' if open, and any walls to be '#' or box drawing characters. This will assign 1.0f resistance to
+ walls and closed doors or 0.0f for any other cell.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>map</code> - a 2D char array, width by height, with any closed doors as '+' and open doors as '/'</dd>
+<dd><code>into</code> - a 2D float array that should have the same dimensions as <code>map</code>; will be modified completely</dd>
+<dt>Returns:</dt>
+<dd><code>into</code> modified so it acts as a resistance map, with clear cells assigned 0.0f and blocked ones 1.0f</dd>
 </dl>
 </section>
 </li>
@@ -1206,7 +1314,7 @@ loadScripts(document, 'script');</script>
  doors where a line of the box drawing char would block light, or 0.0f for any other subcell.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()</dd>
+<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/'</dd>
 <dt>Returns:</dt>
 <dd>a resistance map suitable for use with the FOV class and subcell lighting, with triple width/height</dd>
 </dl>
@@ -1225,7 +1333,7 @@ loadScripts(document, 'script');</script>
  cells block all sound, and everything else lets sound through.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/' as per closeDoors()</dd>
+<dd><code>map</code> - a dungeon, width by height, with any closed doors as '+' and open doors as '/'</dd>
 <dt>Returns:</dt>
 <dd>a resistance map meant for sound resistance rather than light, with clear cells assigned 0.0f and fully-blocked ones 1.0f</dd>
 </dl>

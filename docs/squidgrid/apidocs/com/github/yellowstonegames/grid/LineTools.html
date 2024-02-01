@@ -78,7 +78,19 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Tools for constructing patterns using box-drawing characters in grids.
  This can be useful in both text-based games and graphical ones, where graphical games would use a single box-drawing
- character, like any of <code>"╴╵┘╶─└┴╷┐│┤┌┬├┼"</code> to determine which wall graphic to draw at a position.</div>
+ character, like any of <code>"╴╵┘╶─└┴╷┐│┤┌┬├┼"</code> to determine which wall graphic to draw at a position. The methods
+ <a href="#hashesToLines(char%5B%5D%5B%5D)"><code>hashesToLines(char[][])</code></a> and <a href="#pruneLines(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region,char%5B%5D%5B%5D)"><code>pruneLines(char[][], Region, char[][])</code></a> are especially commonly-used.
+ The first creates a map that uses box-drawing characters from a "bare" map that represents walls with <code>'#'</code>;
+ there is a variant that fills an existing 2D char array with the box-drawing character map (instead of creating a new
+ 2D array). The second is meant to be used in tandem with <a href="FOV.html" title="class in com.github.yellowstonegames.grid"><code>FOV</code></a> to limit the set of small lines in each
+ box-drawing character to those matching walls a viewer can see. It may be better to use <a href="VisionFramework.html" title="class in com.github.yellowstonegames.grid"><code>VisionFramework</code></a> for
+ handling vision and lighting, because it calls pruneLines() automatically and keeps its parameters up-to-date.
+ <br>
+ The rest of this class is some sort of mad science experiment, meant for procedurally generating decorations in some
+ area (like a circle, square, diamond, shield-shape...). Methods like <a href="#encode4x4(char%5B%5D%5B%5D)"><code>encode4x4(char[][])</code></a>,
+ <a href="#decode4x4(long)"><code>decode4x4(long)</code></a>, <a href="#rotateClockwise(long)"><code>rotateClockwise(long)</code></a>, <a href="#flipHorizontal4x4(long)"><code>flipHorizontal4x4(long)</code></a>, and so on are probably
+ not widely useful, but if you find a good use for them (or have a feature request to make them better), an issue on
+ the SquidSquad repo would be a good place to mention it.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -278,9 +290,27 @@ loadScripts(document, 'script');</script>
  filled with more walls before) with space characters, ' '.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#linesToHashes(char%5B%5D%5B%5D)" class="member-name-link">linesToHashes</a><wbr>(char[][]&nbsp;map)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hashesToLinesInto(char%5B%5D%5B%5D,char%5B%5D%5B%5D,boolean)" class="member-name-link">hashesToLinesInto</a><wbr>(char[][]&nbsp;source,
+ char[][]&nbsp;target,
+ boolean&nbsp;keepSingleHashes)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Reverses most of the effects of hashesToLines().</div>
+<div class="block">Takes a char[][] place <code>source</code> that uses '#' to represent walls, and fills a different char[][] <code>target</code>
+ with Unicode box drawing characters to draw straight, continuous lines for walls, filling regions between walls
+ (that were
+ filled with more walls before) with space characters, ' '.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#linesToHashes(char%5B%5D%5B%5D)" class="member-name-link">linesToHashes</a><wbr>(char[][]&nbsp;map)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Reverses most of the effects of hashesToLines() that may have been applied to <code>map</code> and returns the result
+ in a new char[][].</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#linesToHashesInto(char%5B%5D%5B%5D,char%5B%5D%5B%5D)" class="member-name-link">linesToHashesInto</a><wbr>(char[][]&nbsp;source,
+ char[][]&nbsp;target)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Reverses most of the effects of hashesToLinesInto() that may have been applied to <code>source</code> and stores the
+ result in <code>target</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char[][]</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#pruneLines(char%5B%5D%5B%5D,com.github.yellowstonegames.grid.Region,char%5B%5D%5B%5D)" class="member-name-link">pruneLines</a><wbr>(char[][]&nbsp;map,
@@ -318,6 +348,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char[][]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transposeLines(char%5B%5D%5B%5D)" class="member-name-link">transposeLines</a><wbr>(char[][]&nbsp;map)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">If you call hashesToLines() on a map that uses [y][x] conventions instead of [x][y], it will have the lines not
+ connect as you expect.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static char[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#transposeLinesInPlace(char%5B%5D%5B%5D)" class="member-name-link">transposeLinesInPlace</a><wbr>(char[][]&nbsp;changing)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">If you call hashesToLines() on a map that uses [y][x] conventions instead of [x][y], it will have the lines not
  connect as you expect.</div>
 </div>
@@ -1081,10 +1117,45 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="hashesToLinesInto(char[][],char[][],boolean)">
+<h3>hashesToLinesInto</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="element-name">hashesToLinesInto</span><wbr><span class="parameters">(char[][]&nbsp;source,
+ char[][]&nbsp;target,
+ boolean&nbsp;keepSingleHashes)</span></div>
+<div class="block">Takes a char[][] place <code>source</code> that uses '#' to represent walls, and fills a different char[][] <code>target</code>
+ with Unicode box drawing characters to draw straight, continuous lines for walls, filling regions between walls
+ (that were
+ filled with more walls before) with space characters, ' '. If keepSingleHashes is true, then '#' will be used if
+ a wall has no orthogonal wall neighbors; if it is false, then a horizontal line will be used for stand-alone
+ wall cells. If the lines "point the wrong way," such as having multiple horizontally adjacent vertical lines
+ where there should be horizontal lines, call <a href="#transposeLines(char%5B%5D%5B%5D)"><code>transposeLines(char[][])</code></a> on the returned map, which will
+ keep the dimensions of the map the same and only change the line chars. You will also need to call transposeLines
+ if you call hashesToLinesInto() on a map that already has "correct" line-drawing characters, which means
+ hashesToLinesInto()
+ should only be called on maps that use '#' for walls. If you have a jumbled map that contains two or more of the
+ following: "correct" line-drawing characters, "incorrect" line-drawing characters, and '#' characters for walls,
+ you can reset by calling linesToHashes() and then potentially calling hashesToLinesInto() again.
+ <br>
+ This also treats any '+' and '/' chars that are next to a cell this is changing as if they were walls, even
+ though neither '+' nor '/' will be changed itself. This is because '+' and '/' are typically used as door glyphs,
+ and since walls connect to doors, the box-drawing characters for adjacent walls should connect to the door as if
+ it is or is embedded in a wall.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>source</code> - a 2D char array indexed with x,y that uses '#' for walls</dd>
+<dd><code>target</code> - a 2D char array that will be entirely modified in-place; if null, a new array will be made</dd>
+<dd><code>keepSingleHashes</code> - true if walls that are not orthogonally adjacent to other walls should stay as '#'</dd>
+<dt>Returns:</dt>
+<dd>into, with box-drawing characters replacing '#' walls</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="linesToHashes(char[][])">
 <h3>linesToHashes</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="element-name">linesToHashes</span><wbr><span class="parameters">(char[][]&nbsp;map)</span></div>
-<div class="block">Reverses most of the effects of hashesToLines(). The only things that will not be reversed are the placement of
+<div class="block">Reverses most of the effects of hashesToLines() that may have been applied to <code>map</code> and returns the result
+ in a new char[][]. The only things that will not be reversed are the placement of
  space characters in unreachable wall-cells-behind-wall-cells, which remain as spaces. This is useful if you
  have a modified map that contains wall characters of conflicting varieties, as described in hashesToLines().</div>
 <dl class="notes">
@@ -1096,6 +1167,24 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="linesToHashesInto(char[][],char[][])">
+<h3>linesToHashesInto</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="element-name">linesToHashesInto</span><wbr><span class="parameters">(char[][]&nbsp;source,
+ char[][]&nbsp;target)</span></div>
+<div class="block">Reverses most of the effects of hashesToLinesInto() that may have been applied to <code>source</code> and stores the
+ result in <code>target</code>. The only things that will not be reversed are the placement of
+ space characters in unreachable wall-cells-behind-wall-cells, which remain as spaces. This is useful if you
+ have a modified map that contains wall characters of conflicting varieties, as described in hashesToLinesInto().</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>source</code> - a 2D char array indexed with x,y that uses box-drawing characters for walls</dd>
+<dd><code>target</code> - a 2D char array that will be entirely modified in-place; if null, a new array will be made</dd>
+<dt>Returns:</dt>
+<dd>into, with '#' replacing box-drawing characters for walls</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="transposeLines(char[][])">
 <h3>transposeLines</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="element-name">transposeLines</span><wbr><span class="parameters">(char[][]&nbsp;map)</span></div>
@@ -1103,12 +1192,32 @@ loadScripts(document, 'script');</script>
  connect as you expect. Use this function to change the directions of the box-drawing characters only, without
  altering the dimensions in any way. This returns a new char[][], instead of modifying the parameter in place.
  transposeLines is also needed if the lines in a map have become transposed when they were already correct;
- calling this method on an incorrectly transposed map will change the directions on all of its lines.</div>
+ calling this method on an incorrectly transposed map will change the directions on all of its lines.
+ <br>
+ This method simply calls <a href="#transposeLinesInPlace(char%5B%5D%5B%5D)"><code>transposeLinesInPlace(char[][])</code></a> on a copy of <code>map</code> made with
+ <code>ArrayTools.copy(char[][])</code>. You may want to just use transposeLinesInPlace() if map is incorrect.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>map</code> - a 2D char array indexed with y,x that uses box-drawing characters for walls</dd>
 <dt>Returns:</dt>
 <dd>a copy of map that uses box-drawing characters for walls that will be correct when indexed with x,y</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="transposeLinesInPlace(char[][])">
+<h3>transposeLinesInPlace</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">char[][]</span>&nbsp;<span class="element-name">transposeLinesInPlace</span><wbr><span class="parameters">(char[][]&nbsp;changing)</span></div>
+<div class="block">If you call hashesToLines() on a map that uses [y][x] conventions instead of [x][y], it will have the lines not
+ connect as you expect. Use this function to change the directions of the box-drawing characters only, without
+ altering the dimensions in any way. This modifies the parameter <code>changing</code> in-place. Calling
+ transposeLines() is also needed if the lines in a map have become transposed when they were already correct;
+ calling this method on an incorrectly transposed map will change the directions on all of its lines.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>changing</code> - a 2D char array that will be modified in-place to use different box-drawing characters</dd>
+<dt>Returns:</dt>
+<dd>changing, modified in-place to use x,y instead of y,x box-drawing characters</dd>
 </dl>
 </section>
 </li>

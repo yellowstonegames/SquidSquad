@@ -78,6 +78,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds all the vertices in the collection to the graph.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#addVertices(V...)" class="member-name-link">addVertices(V...)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>
+<div class="block">Adds all the vertices in the array or varargs to the graph.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AimLimit.html" class="type-name-link" title="enum class in com.github.yellowstonegames.path.technique">AimLimit</a> - Enum Class in <a href="com/github/yellowstonegames/path/technique/package-summary.html">com.github.yellowstonegames.path.technique</a></dt>
 <dd>
 <div class="block">Enum used for common targeting limitations (or lack thereof, in the case of AimLimit.FREE ).</div>
@@ -247,6 +251,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Check if the graph contains a vertex.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/path/Algorithms.html#containsCycle()" class="member-name-link">containsCycle()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path">Algorithms</a></dt>
+<dd>
+<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/path/CostlyGraph.html#containsCycle()" class="member-name-link">containsCycle()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
+<dd>
+<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/path/DefaultGraph.html#containsCycle()" class="member-name-link">containsCycle()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></dt>
+<dd>
+<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/path/CostlyGraph.html" class="type-name-link" title="class in com.github.yellowstonegames.path">CostlyGraph</a> - Class in <a href="com/github/yellowstonegames/path/package-summary.html">com.github.yellowstonegames.path</a></dt>
 <dd>
 <div class="block">A default setting for a DirectedGraph of Coord vertices where each passable cell has a cost to enter it from any
@@ -360,18 +376,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Perform a depth first search starting from the specified vertex.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/path/Algorithms.html#detectCycle()" class="member-name-link">detectCycle()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path">Algorithms</a></dt>
-<dd>
-<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/path/CostlyGraph.html#detectCycle()" class="member-name-link">detectCycle()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
-<dd>
-<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
-</dd>
-<dt><a href="com/github/yellowstonegames/path/DefaultGraph.html#detectCycle()" class="member-name-link">detectCycle()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></dt>
-<dd>
-<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
-</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AimLimit.html#DIAGONAL" class="member-name-link">DIAGONAL</a> - Enum constant in enum class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/AimLimit.html" title="enum class in com.github.yellowstonegames.path.technique">AimLimit</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/ZoneOfInfluence.html#dijkstra" class="member-name-link">dijkstra</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/ZoneOfInfluence.html" title="class in com.github.yellowstonegames.path">ZoneOfInfluence</a></dt>
@@ -421,7 +425,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AreaUtils.html#dijkstraToHashMap(float%5B%5D%5B%5D)" class="member-name-link">dijkstraToHashMap(float[][])</a> - Static method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/AreaUtils.html" title="class in com.github.yellowstonegames.path.technique">AreaUtils</a></dt>
 <dd>
-<div class="block">This takes a DijkstraMap that has already completed a scan() and returns a CoordFloatOrderedMa, and will have a
+<div class="block">This takes a DijkstraMap that has already completed a scan() and returns a CoordFloatOrderedMap, and will have a
  key for every position that was reached in the DijkstraMap, with 1.0 as the only value.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html#%3Cinit%3E()" class="member-name-link">DirectedConnection()</a> - Constructor for class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.DirectedConnection</a></dt>
@@ -441,6 +445,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/Node.html#disconnect()" class="member-name-link">disconnect()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#disconnect(com.github.yellowstonegames.path.Node)" class="member-name-link">disconnect(Node&lt;V&gt;)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#disconnect(V)" class="member-name-link">disconnect(V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Node.html#distance" class="member-name-link">distance</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
 <dd>
 <div class="block">Internal; confirmed distance so far to get to this Node from the start.</div>
@@ -458,25 +466,33 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Check if the graph contains an edge from v to w.</div>
 </dd>
-<dt><a href="com/github/yellowstonegames/path/Graph.html#edgeMap" class="member-name-link">edgeMap</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#edgeSet" class="member-name-link">edgeSet</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AimLimit.html#EIGHT_WAY" class="member-name-link">EIGHT_WAY</a> - Enum constant in enum class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/AimLimit.html" title="enum class in com.github.yellowstonegames.path.technique">AimLimit</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/DijkstraMap.html#encode(int,int)" class="member-name-link">encode(int, int)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
-<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
- this DijkstraMap's width and height.</div>
+<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/DijkstraMap.html#encode(com.github.yellowstonegames.grid.Coord)" class="member-name-link">encode(Coord)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
-<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
- this DijkstraMap's width and height.</div>
+<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.DirectedConnection</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.UndirectedConnection</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/CostlyGraph.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/DefaultGraph.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Node.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/technique/Reach.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/Reach.html" title="class in com.github.yellowstonegames.path.technique">Reach</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/technique/Threat.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/Threat.html" title="class in com.github.yellowstonegames.path.technique">Threat</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Node.html#estimate" class="member-name-link">estimate</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
 <dd>
@@ -542,7 +558,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/DijkstraMap.html#findFleePath(int,float,java.util.Collection,java.util.Collection,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord...)" class="member-name-link">findFleePath(int, float, Collection&lt;Coord&gt;, Collection&lt;Coord&gt;, Coord, Coord...)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
-<div class="block">Scans the dungeon using DijkstraMap.scan with the listed fearSources and start point, and returns a list
+<div class="block">Scans the dungeon using DijkstraMap.scan() with the listed fearSources and start point, and returns a list
  of Coord positions (using Manhattan distance) needed to get further from the closest fearSources, meant
  for running away.</div>
 </dd>
@@ -573,6 +589,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Find the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/Algorithms.html#findMinimumDistance(V,V)" class="member-name-link">findMinimumDistance(V, V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path">Algorithms</a></dt>
+<dd>
+<div class="block">Find the length of the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/path/Algorithms.html#findMinimumDistance(V,V,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findMinimumDistance(V, V, Heuristic&lt;V&gt;)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path">Algorithms</a></dt>
 <dd>
 <div class="block">Find the length of the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
 </dd>
@@ -708,7 +728,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/DijkstraMap.html#fresh" class="member-name-link">fresh</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
-<div class="block">Goals that pathfinding will seek out.</div>
+<div class="block">Working data used during scanning, this tracks the perimeter of the scanned area so far.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -760,7 +780,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/Graph.html#getEdges()" class="member-name-link">getEdges()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>
-<div class="block">Get a Set containing all the edges in the graph.</div>
+<div class="block">Get an ObjectOrderedSet containing all the edges in the graph.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/Graph.html#getEdges(V)" class="member-name-link">getEdges(V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>
@@ -798,7 +818,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AOE.html#getMaxRange()" class="member-name-link">getMaxRange()</a> - Method in interface com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/AOE.html" title="interface in com.github.yellowstonegames.path.technique">AOE</a></dt>
 <dd>
-<div class="block">The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/technique/ConeAOE.html#getMaxRange()" class="member-name-link">getMaxRange()</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/ConeAOE.html" title="class in com.github.yellowstonegames.path.technique">ConeAOE</a></dt>
 <dd>&nbsp;</dd>
@@ -811,7 +831,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AOE.html#getMinRange()" class="member-name-link">getMinRange()</a> - Method in interface com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/AOE.html" title="interface in com.github.yellowstonegames.path.technique">AOE</a></dt>
 <dd>
-<div class="block">The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/technique/ConeAOE.html#getMinRange()" class="member-name-link">getMinRange()</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/ConeAOE.html" title="class in com.github.yellowstonegames.path.technique">ConeAOE</a></dt>
 <dd>&nbsp;</dd>
@@ -895,7 +915,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/DijkstraMap.html#GOAL" class="member-name-link">GOAL</a> - Static variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
-<div class="block">Goals are always marked with 0.</div>
+<div class="block">Goals are by default marked with 0f.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/DijkstraMap.html#goals" class="member-name-link">goals</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DijkstraMap.html" title="class in com.github.yellowstonegames.path">DijkstraMap</a></dt>
 <dd>
@@ -925,11 +945,29 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/path/Edge.html#hasEndpoint(V)" class="member-name-link">hasEndpoint(V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Edge.html" title="class in com.github.yellowstonegames.path">Edge</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html#hasEndpoints(V,V)" class="member-name-link">hasEndpoints(V, V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.DirectedConnection</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html#hasEndpoints(V,V)" class="member-name-link">hasEndpoints(V, V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.UndirectedConnection</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Edge.html#hasEndpoints(V,V)" class="member-name-link">hasEndpoints(V, V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Edge.html" title="class in com.github.yellowstonegames.path">Edge</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.DirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.DirectedConnection</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.UndirectedConnection</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/CostlyGraph.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/DefaultGraph.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Node.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/technique/Reach.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/Reach.html" title="class in com.github.yellowstonegames.path.technique">Reach</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/technique/Threat.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/Threat.html" title="class in com.github.yellowstonegames.path.technique">Threat</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/AStarSearch.html#height" class="member-name-link">height</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/AStarSearch.html" title="class in com.github.yellowstonegames.path">AStarSearch</a></dt>
 <dd>&nbsp;</dd>
@@ -994,9 +1032,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/PointAOE.html#idealLocations(java.util.Collection,java.util.Collection,java.util.Collection)" class="member-name-link">idealLocations(Collection&lt;Coord&gt;, Collection&lt;Coord&gt;, Collection&lt;Coord&gt;)</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/PointAOE.html" title="class in com.github.yellowstonegames.path.technique">PointAOE</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/github/yellowstonegames/path/Node.html#idHash" class="member-name-link">idHash</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/ZoneOfInfluence.html#increasing(float%5B%5D%5B%5D,com.github.yellowstonegames.grid.Coord%5B%5D)" class="member-name-link">increasing(float[][], Coord[])</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/ZoneOfInfluence.html" title="class in com.github.yellowstonegames.path">ZoneOfInfluence</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Node.html#inEdges" class="member-name-link">inEdges</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/ZoneOfInfluence.html#influences" class="member-name-link">influences</a> - Variable in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/ZoneOfInfluence.html" title="class in com.github.yellowstonegames.path">ZoneOfInfluence</a></dt>
 <dd>&nbsp;</dd>
@@ -1056,6 +1094,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Used to initialize the entry cost modifiers for games that require variable costs to enter squares.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/path/Algorithms.html#isConnected(V,V)" class="member-name-link">isConnected(V, V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path">Algorithms</a></dt>
+<dd>
+<div class="block">Checks whether there exists a path from the start vertex to target vertex, using Dijkstra's algorithm implemented with a priority queue.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/path/Graph.html#isDirected()" class="member-name-link">isDirected()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>
 <div class="block">Check if the graph is directed, that is whether the edges form an ordered pair or a set.</div>
@@ -1080,7 +1122,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An AimLimit enum that may be used to determine limitations to targeting cells; defaults to FREE (no limits other
  than those from distance), but can also be set to ORTHOGONAL (rook move in chess), DIAGONAL (bishop move in
- chess), EIGHT_WAY (queen or king move in chess), or null (which usually)</div>
+ chess), EIGHT_WAY (queen or king move in chess), or null (which usually is equivalent to FREE).</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/TwistedLine.html#line(int,int,int,int)" class="member-name-link">line(int, int, int, int)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/TwistedLine.html" title="class in com.github.yellowstonegames.path">TwistedLine</a></dt>
 <dd>&nbsp;</dd>
@@ -1320,12 +1362,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Removes the edge from v to w from the graph.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#removeEdgeIf(com.github.tommyettinger.function.ObjPredicate)" class="member-name-link">removeEdgeIf(ObjPredicate&lt;Edge&lt;V&gt;&gt;)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#removeEdges(java.util.Collection)" class="member-name-link">removeEdges(Collection&lt;? extends Edge&lt;V&gt;&gt;)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Graph.html#removeNode(com.github.yellowstonegames.path.Node)" class="member-name-link">removeNode(Node&lt;V&gt;)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Graph.html#removeVertex(V)" class="member-name-link">removeVertex(V)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>
 <div class="block">Removes a vertex from the graph, and any adjacent edges.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/path/Graph.html#removeVertexIf(com.github.tommyettinger.function.ObjPredicate)" class="member-name-link">removeVertexIf(ObjPredicate&lt;V&gt;)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Graph.html#removeVertices(java.util.Collection)" class="member-name-link">removeVertices(Collection&lt;V&gt;)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></dt>
 <dd>
 <div class="block">Removes all the vertices in the collection from the graph, and any adjacent edges.</div>
@@ -1485,7 +1533,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AOE.html#setMaxRange(int)" class="member-name-link">setMaxRange(int)</a> - Method in interface com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/AOE.html" title="interface in com.github.yellowstonegames.path.technique">AOE</a></dt>
 <dd>
-<div class="block">The maximum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The maximum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/technique/ConeAOE.html#setMaxRange(int)" class="member-name-link">setMaxRange(int)</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/ConeAOE.html" title="class in com.github.yellowstonegames.path.technique">ConeAOE</a></dt>
 <dd>&nbsp;</dd>
@@ -1498,7 +1546,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/AOE.html#setMinRange(int)" class="member-name-link">setMinRange(int)</a> - Method in interface com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/AOE.html" title="interface in com.github.yellowstonegames.path.technique">AOE</a></dt>
 <dd>
-<div class="block">The minimum inclusive range that the AOE can be shift()-ed to using the distance measurement from radiusType.</div>
+<div class="block">The minimum inclusive range that the AOE can shift() to using the distance measurement from radiusType.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/technique/ConeAOE.html#setMinRange(int)" class="member-name-link">setMinRange(int)</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/ConeAOE.html" title="class in com.github.yellowstonegames.path.technique">ConeAOE</a></dt>
 <dd>&nbsp;</dd>
@@ -1555,6 +1603,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/path/TwistedLine.html#setRng(com.github.tommyettinger.random.EnhancedRandom)" class="member-name-link">setRng(EnhancedRandom)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/TwistedLine.html" title="class in com.github.yellowstonegames.path">TwistedLine</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/Algorithms.html#setRunID(int)" class="member-name-link">setRunID(int)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Algorithms.html" title="class in com.github.yellowstonegames.path">Algorithms</a></dt>
+<dd>
+<div class="block">Sets the identifier for the last run of an algorithm; this should mostly be usable internally, but may be useful
+ when serializing and deserializing a Graph and you, for whatever reason, need to ensure previous runs of an
+ algorithm on that Graph can be resumed.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/path/technique/ConeAOE.html#setSpan(float)" class="member-name-link">setSpan(float)</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/ConeAOE.html" title="class in com.github.yellowstonegames.path.technique">ConeAOE</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Connection.html#setWeight(float)" class="member-name-link">setWeight(float)</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.html" title="class in com.github.yellowstonegames.path">Connection</a></dt>
@@ -1666,7 +1720,19 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Connection.UndirectedConnection.html" title="class in com.github.yellowstonegames.path">Connection.UndirectedConnection</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/CostlyGraph.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/CostlyGraph.html" title="class in com.github.yellowstonegames.path">CostlyGraph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/DefaultGraph.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DefaultGraph.html" title="class in com.github.yellowstonegames.path">DefaultGraph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/DirectedGraph.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/DirectedGraph.html" title="class in com.github.yellowstonegames.path">DirectedGraph</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/Node.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/Node.html" title="class in com.github.yellowstonegames.path">Node</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/technique/Reach.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/Reach.html" title="class in com.github.yellowstonegames.path.technique">Reach</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/technique/Threat.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.technique.<a href="com/github/yellowstonegames/path/technique/Threat.html" title="class in com.github.yellowstonegames.path.technique">Threat</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/path/UndirectedGraph.html#toString()" class="member-name-link">toString()</a> - Method in class com.github.yellowstonegames.path.<a href="com/github/yellowstonegames/path/UndirectedGraph.html" title="class in com.github.yellowstonegames.path">UndirectedGraph</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/path/TwistedLine.html" class="type-name-link" title="class in com.github.yellowstonegames.path">TwistedLine</a> - Class in <a href="com/github/yellowstonegames/path/package-summary.html">com.github.yellowstonegames.path</a></dt>
 <dd>

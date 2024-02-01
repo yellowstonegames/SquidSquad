@@ -94,9 +94,7 @@ loadScripts(document, 'script');</script>
  <li>delay, which delays the pattern of effects like strobe so a sequence can be formed with multiple Radiance</li>
  </ul>
  These all have defaults; if no parameters are specified the light will be white, affect only the current cell, and
- won't flicker or strobe.
- <br>
- Created by Tommy Ettinger on 6/16/2018.</div>
+ won't flicker or strobe.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -112,7 +110,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>int</code></div>
 <div class="col-second even-row-color"><code><a href="#color" class="member-name-link">color</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The color of light as an Oklab int; typically opaque and lighter than the glowing object's symbol.</div>
+<div class="block">The color of light as an int; will be interpreted as Oklab by <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>, but as RGBA by
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>float</code></div>
 <div class="col-second odd-row-color"><code><a href="#delay" class="member-name-link">delay</a></code></div>
@@ -135,9 +134,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">How far the radiated light extends; 0f is "just this cell", anything higher can go into neighboring cells.</div>
 </div>
-<div class="col-first odd-row-color"><code>float</code></div>
-<div class="col-second odd-row-color"><code><a href="#strobe" class="member-name-link">strobe</a></code></div>
+<div class="col-first odd-row-color"><code>int</code></div>
+<div class="col-second odd-row-color"><code><a href="#seed" class="member-name-link">seed</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">Assigned during construction by an internal <code>PouchRandom</code>, this is used for flickering effects, but does
+ not affect <a href="#equals(java.lang.Object)"><code>equals(Object)</code></a> or <a href="#hashCode()"><code>hashCode()</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><code>float</code></div>
+<div class="col-second even-row-color"><code><a href="#strobe" class="member-name-link">strobe</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">The rate of non-random continuous change to radiance range, like a mechanical strobe effect.</div>
 </div>
 </div>
@@ -201,18 +206,30 @@ loadScripts(document, 'script');</script>
  parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
  parameter affects the rate at which this will steadily reduce its range and return to normal.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(float,java.lang.String,float,float)" class="member-name-link">Radiance</a><wbr>(float&nbsp;range,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(float,int,float,float,float,float,int)" class="member-name-link">Radiance</a><wbr>(float&nbsp;range,
+ int&nbsp;color,
+ float&nbsp;flicker,
+ float&nbsp;strobe,
+ float&nbsp;delay,
+ float&nbsp;flare,
+ int&nbsp;seed)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
+ parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
+ parameter affects the rate at which this will steadily reduce its range and return to normal.</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float,java.lang.String,float,float)" class="member-name-link">Radiance</a><wbr>(float&nbsp;range,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;color,
  float&nbsp;flicker,
  float&nbsp;strobe)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Makes a flickering light with the given color (as a String that can be interpreted by <code>DescriptiveColor</code>)
  and the specified range in cells; the flicker parameter affects the rate at which this will randomly reduce its
  range and return to normal, and the strobe parameter affects the rate at which this will steadily reduce its
  range and return to normal.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.grid.Radiance)" class="member-name-link">Radiance</a><wbr>(<a href="Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a>&nbsp;other)</code></div>
-<div class="col-last even-row-color">
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.github.yellowstonegames.grid.Radiance)" class="member-name-link">Radiance</a><wbr>(<a href="Radiance.html" title="class in com.github.yellowstonegames.grid">Radiance</a>&nbsp;other)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Copies another Radiance exactly, except for the pattern its flicker may have, if any.</div>
 </div>
 </div>
@@ -287,7 +304,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="color">
 <h3>color</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">color</span></div>
-<div class="block">The color of light as an Oklab int; typically opaque and lighter than the glowing object's symbol.</div>
+<div class="block">The color of light as an int; will be interpreted as Oklab by <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>, but as RGBA by
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>. Typically opaque and lighter than the glowing object's symbol.</div>
 </section>
 </li>
 <li>
@@ -295,7 +313,7 @@ loadScripts(document, 'script');</script>
 <h3>flicker</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">flicker</span></div>
 <div class="block">The rate of random continuous change to radiance range, like the light from a campfire. The random component of
- the change is determined by a unique seed produced by an internal <code>WhiskerRandom</code>, which will
+ the change is determined by a unique seed produced by an internal <code>PouchRandom</code>, which will
  probably make all flicker effects different when flicker is non-0.</div>
 </section>
 </li>
@@ -326,6 +344,18 @@ loadScripts(document, 'script');</script>
  This should be a float between 0f and 1f, with 0f meaning no change and 1f meaning always max radius.</div>
 </section>
 </li>
+<li>
+<section class="detail" id="seed">
+<h3>seed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">seed</span></div>
+<div class="block">Assigned during construction by an internal <code>PouchRandom</code>, this is used for flickering effects, but does
+ not affect <a href="#equals(java.lang.Object)"><code>equals(Object)</code></a> or <a href="#hashCode()"><code>hashCode()</code></a>. You can synchronize the flickering effect of two
+ different Radiance objects by setting their seed to the same int. Seeds do not have to be globally unique.
+ <br>
+ In earlier versions, this was private and transient, but that preventing synchronizing flicker effects. Now, it
+ is public and generally should be serialized.</div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -340,7 +370,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Radiance</span>()</div>
 <div class="block">All-default constructor; makes a single-cell unchanging white light. This assumes the color is being treated as
  Oklab; if you treat this as RGBA8888 without first converting with <code>DescriptiveColor.toRGBA8888(int)</code>, this
- will look like light red.</div>
+ will look like light red. Because this defaults to using Oklab, it is meant for use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>,
+ not <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>.</div>
 </section>
 </li>
 <li>
@@ -349,7 +380,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Radiance</span><wbr><span class="parameters">(float&nbsp;range)</span></div>
 <div class="block">Makes an unchanging white light with the specified range in cells. This assumes the color is being treated as
  Oklab; if you treat this as RGBA8888 without first converting with <code>DescriptiveColor.toRGBA8888(int)</code>, this
- will look like light red.</div>
+ will look like light red. Because this defaults to using Oklab, it is meant for use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>,
+ not <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
@@ -361,11 +393,13 @@ loadScripts(document, 'script');</script>
 <h3>Radiance</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Radiance</span><wbr><span class="parameters">(float&nbsp;range,
  int&nbsp;color)</span></div>
-<div class="block">Makes an unchanging light with the given color (as an Oklab int) and the specified range in cells.</div>
+<div class="block">Makes an unchanging light with the given color (as an Oklab int) and the specified range in cells.
+ You can give this an Oklab color (to use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>) or an RGBA8888 color (to use with
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
-<dd><code>color</code> - an Oklab int color</dd>
+<dd><code>color</code> - an Oklab or RGBA8888 int color</dd>
 </dl>
 </section>
 </li>
@@ -376,11 +410,13 @@ loadScripts(document, 'script');</script>
  int&nbsp;color,
  float&nbsp;flicker)</span></div>
 <div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
- parameter affects the rate at which this will randomly reduce its range and return to normal.</div>
+ parameter affects the rate at which this will randomly reduce its range and return to normal.
+ You can give this an Oklab color (to use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>) or an RGBA8888 color (to use with
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
-<dd><code>color</code> - an Oklab int color</dd>
+<dd><code>color</code> - an Oklab or RGBA8888 int color</dd>
 <dd><code>flicker</code> - the rate at which to flicker, as a non-negative float</dd>
 </dl>
 </section>
@@ -395,11 +431,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
  parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
  parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
- flicker or strobe is 0; if both are non-0, the radius will be smaller than normal.</div>
+ flicker or strobe is 0; if both are non-0, the radius will be smaller than normal.
+ You can give this an Oklab color (to use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>) or an RGBA8888 color (to use with
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
-<dd><code>color</code> - an Oklab int color</dd>
+<dd><code>color</code> - an Oklab or RGBA8888 int color</dd>
 <dd><code>flicker</code> - the rate at which to flicker, as a non-negative float</dd>
 <dd><code>strobe</code> - the rate at which to strobe or pulse, as a non-negative float</dd>
 </dl>
@@ -416,11 +454,12 @@ loadScripts(document, 'script');</script>
  and the specified range in cells; the flicker parameter affects the rate at which this will randomly reduce its
  range and return to normal, and the strobe parameter affects the rate at which this will steadily reduce its
  range and return to normal. Usually one of flicker or strobe is 0; if both are non-0, the radius will be smaller
- than normal.</div>
+ than normal. You can only give this a description that will be translated to Oklab, so this is meant to be used
+ only with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>, not <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
-<dd><code>color</code> - a String that describes a color as per <code>DescriptiveColor.describeOklab(CharSequence)</code></dd>
+<dd><code>color</code> - a String that describes a color as per <code>DescriptiveColor.describeOklab(String)</code></dd>
 <dd><code>flicker</code> - the rate at which to flicker, as a non-negative float</dd>
 <dd><code>strobe</code> - the rate at which to strobe or pulse, as a non-negative float</dd>
 </dl>
@@ -439,11 +478,13 @@ loadScripts(document, 'script');</script>
  parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
  flicker or strobe is 0; if both are non-0, the radius will be smaller than normal. The delay parameter is usually
  from 0f to 1f, and is almost always 0f unless this is part of a group of related Radiance objects; it affects
- when strobe and flicker hit "high points" and "low points", and should usually be used with strobe.</div>
+ when strobe and flicker hit "high points" and "low points", and should usually be used with strobe.
+ You can give this an Oklab color (to use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>) or an RGBA8888 color (to use with
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
-<dd><code>color</code> - an Oklab int color</dd>
+<dd><code>color</code> - an Oklab or RGBA8888 int color</dd>
 <dd><code>flicker</code> - the rate at which to flicker, as a non-negative float</dd>
 <dd><code>strobe</code> - the rate at which to strobe or pulse, as a non-negative float</dd>
 <dd><code>delay</code> - a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f</dd>
@@ -467,15 +508,50 @@ loadScripts(document, 'script');</script>
  when strobe and flicker hit "high points" and "low points", and should usually be used with strobe. This allows
  setting flare, where flare is used to create a sudden increase in the minimum radius for the Radiance, but flare
  makes the most sense to set when an event should brighten a Radiance, not in the constructor. Valid values for
- flare are usually between 0f and 1f.</div>
+ flare are usually between 0f and 1f.
+ You can give this an Oklab color (to use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>) or an RGBA8888 color (to use with
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
-<dd><code>color</code> - an Oklab int color</dd>
+<dd><code>color</code> - an Oklab or RGBA8888 int color</dd>
 <dd><code>flicker</code> - the rate at which to flicker, as a non-negative float</dd>
 <dd><code>strobe</code> - the rate at which to strobe or pulse, as a non-negative float</dd>
 <dd><code>delay</code> - a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f</dd>
 <dd><code>flare</code> - affects the minimum radius for the Radiance, from 0f to 1f with a default of 0f</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(float,int,float,float,float,float,int)">
+<h3>Radiance</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Radiance</span><wbr><span class="parameters">(float&nbsp;range,
+ int&nbsp;color,
+ float&nbsp;flicker,
+ float&nbsp;strobe,
+ float&nbsp;delay,
+ float&nbsp;flare,
+ int&nbsp;seed)</span></div>
+<div class="block">Makes a flickering light with the given color (as an Oklab int) and the specified range in cells; the flicker
+ parameter affects the rate at which this will randomly reduce its range and return to normal, and the strobe
+ parameter affects the rate at which this will steadily reduce its range and return to normal. Usually one of
+ flicker or strobe is 0; if both are non-0, the radius will be smaller than normal. The delay parameter is usually
+ from 0f to 1f, and is almost always 0f unless this is part of a group of related Radiance objects; it affects
+ when strobe and flicker hit "high points" and "low points", and should usually be used with strobe. This allows
+ setting flare, where flare is used to create a sudden increase in the minimum radius for the Radiance, but flare
+ makes the most sense to set when an event should brighten a Radiance, not in the constructor. Valid values for
+ flare are usually between 0f and 1f.
+ You can give this an Oklab color (to use with <a href="LightingManager.html" title="class in com.github.yellowstonegames.grid"><code>LightingManager</code></a>) or an RGBA8888 color (to use with
+ <a href="LightingManagerRgb.html" title="class in com.github.yellowstonegames.grid"><code>LightingManagerRgb</code></a>).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>range</code> - possibly-non-integer radius to light, in cells</dd>
+<dd><code>color</code> - an Oklab or RGBA8888 int color</dd>
+<dd><code>flicker</code> - the rate at which to flicker, as a non-negative float</dd>
+<dd><code>strobe</code> - the rate at which to strobe or pulse, as a non-negative float</dd>
+<dd><code>delay</code> - a delay applied to the "high points" and "low points" of strobe and flicker, from 0f to 1f</dd>
+<dd><code>flare</code> - affects the minimum radius for the Radiance, from 0f to 1f with a default of 0f</dd>
+<dd><code>seed</code> - a forced seed that can be used to synchronize flicker effects between Radiance objects</dd>
 </dl>
 </section>
 </li>
@@ -526,7 +602,7 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>length</code> - how many Radiance objects should be in the returned array</dd>
 <dd><code>range</code> - in cells, how far each Radiance should expand from its start at its greatest radius</dd>
-<dd><code>color</code> - as an Oklab int color</dd>
+<dd><code>color</code> - as an Oklab or RGBA8888 int color</dd>
 <dd><code>strobe</code> - the rate at which the chain will pulse; should be greater than 0</dd>
 <dt>Returns:</dt>
 <dd>an array of Radiance objects that will pulse in sequence.</dd>

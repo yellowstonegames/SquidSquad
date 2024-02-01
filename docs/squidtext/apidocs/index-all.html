@@ -151,6 +151,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Thesaurus.html#alterations" class="member-name-link">alterations</a> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#analyze(java.lang.CharSequence)" class="member-name-link">analyze(CharSequence)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">This is the main necessary step before using a MarkovChar; you must call this method at some point before you can
+ call any other methods.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#analyze(java.lang.CharSequence)" class="member-name-link">analyze(CharSequence)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
 <div class="block">This is the main necessary step before using a MarkovText; you must call this method at some point before you can
@@ -216,12 +221,24 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Fantasy language that is meant to sound like it could be spoken by divine or (magical) otherworldly beings.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#chain(long)" class="member-name-link">chain(long)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Generate a word-like String based on the previously analyzed corpus text (using <a href="com/github/yellowstonegames/text/MarkovChar.html#analyze(java.lang.CharSequence)"><code>MarkovChar.analyze(CharSequence)</code></a>)
+ that terminates when a non-letter character other than <code>"'"</code> is encountered, or once
+ the length would be greater than 200 characters without stopping.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#chain(long)" class="member-name-link">chain(long)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
 <div class="block">Generate a roughly-sentence-sized piece of text based on the previously analyzed corpus text (using
  <a href="com/github/yellowstonegames/text/MarkovText.html#analyze(java.lang.CharSequence)"><code>MarkovText.analyze(CharSequence)</code></a>) that terminates when stop punctuation is used (".", "!", "?", or "..."), or once
  the length would be greater than 200 characters without encountering stop punctuation(it terminates such a
  sentence with "." or "...").</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#chain(long,int)" class="member-name-link">chain(long, int)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Generate a word-like String based on the previously analyzed corpus text (using <a href="com/github/yellowstonegames/text/MarkovChar.html#analyze(java.lang.CharSequence)"><code>MarkovChar.analyze(CharSequence)</code></a>)
+ that terminates when a non-letter character other than <code>"'"</code> is encountered, or once
+ the length would be greater than <code>maxLength</code> characters without stopping.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#chain(long,int)" class="member-name-link">chain(long, int)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
@@ -237,9 +254,19 @@ loadScripts(document, 'script');</script>
  were used as a proper noun (determined by whether they were capitalized in the middle of a sentence), changing
  them to a ciphered version using the given <a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text"><code>Translator</code></a>.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovText.html#changeNames(com.github.yellowstonegames.text.Translator,java.util.Collection)" class="member-name-link">changeNames(Translator, Collection&lt;? extends CharSequence&gt;)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
+<dd>
+<div class="block">After calling <a href="com/github/yellowstonegames/text/MarkovText.html#analyze(java.lang.CharSequence)"><code>MarkovText.analyze(CharSequence)</code></a>, you can optionally call this to alter any words in this MarkovText
+ that are present in the given Collection, changing them to a ciphered version using the given <a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text"><code>Translator</code></a>.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.Modifier.html#charReplacementTable(java.lang.String,java.lang.String)" class="member-name-link">charReplacementTable(String, String)</a> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.Modifier.html" title="class in com.github.yellowstonegames.text">Language.Modifier</a></dt>
 <dd>
 <div class="block">Creates a Modifier that will replace the nth char in initial with the nth char in change.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#chars" class="member-name-link">chars</a> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">All chars (case-sensitive and only counting chars that are letters in Unicode, plus <code>"'"</code>) that this
+ encountered during the latest call to <a href="com/github/yellowstonegames/text/MarkovChar.html#analyze(java.lang.CharSequence)"><code>MarkovChar.analyze(CharSequence)</code></a>.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/text/Language.html#checkAll(java.lang.CharSequence,regexodus.Pattern%5B%5D)" class="member-name-link">checkAll(CharSequence, Pattern[])</a> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
@@ -283,6 +310,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.html#copy()" class="member-name-link">copy()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#copy()" class="member-name-link">copy()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Copies the char array <a href="com/github/yellowstonegames/text/MarkovChar.html#chars"><code>MarkovChar.chars</code></a>, the IntIntMap <code>pairs</code>, and the 2D jagged int array
+ <a href="com/github/yellowstonegames/text/MarkovChar.html#processed"><code>MarkovChar.processed</code></a> into a new MarkovChar.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#copy()" class="member-name-link">copy()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
 <div class="block">Copies the String array <a href="com/github/yellowstonegames/text/MarkovText.html#words"><code>MarkovText.words</code></a> and the 2D jagged int array <a href="com/github/yellowstonegames/text/MarkovText.html#processed"><code>MarkovText.processed</code></a> into a new MarkovText.</div>
@@ -349,6 +381,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/text/Language.Modifier.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.Modifier.html" title="class in com.github.yellowstonegames.text">Language.Modifier</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.SentenceForm.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.SentenceForm.html" title="class in com.github.yellowstonegames.text">Language.SentenceForm</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/Mnemonic.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Mnemonic.html" title="class in com.github.yellowstonegames.text">Mnemonic</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Translator.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Translator.html" title="class in com.github.yellowstonegames.text">Translator</a></dt>
 <dd>&nbsp;</dd>
@@ -472,6 +506,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/github/yellowstonegames/text/Language.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.Modifier.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.Modifier.html" title="class in com.github.yellowstonegames.text">Language.Modifier</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/Mnemonic.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Mnemonic.html" title="class in com.github.yellowstonegames.text">Mnemonic</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.html#HINDI_ROMANIZED" class="member-name-link">HINDI_ROMANIZED</a> - Static variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
@@ -745,6 +781,16 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/github/yellowstonegames/text/Thesaurus.html#mappings" class="member-name-link">mappings</a> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Thesaurus.html" title="class in com.github.yellowstonegames.text">Thesaurus</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html" class="type-name-link" title="class in com.github.yellowstonegames.text">MarkovChar</a> - Class in <a href="com/github/yellowstonegames/text/package-summary.html">com.github.yellowstonegames.text</a></dt>
+<dd>
+<div class="block">A simple Markov chain text generator; call <a href="com/github/yellowstonegames/text/MarkovChar.html#analyze(java.lang.CharSequence)"><code>MarkovChar.analyze(CharSequence)</code></a> once on a large sample text, then you can
+ call <a href="com/github/yellowstonegames/text/MarkovChar.html#chain(long)"><code>MarkovChar.chain(long)</code></a> many times to get odd-sounding "remixes" of the sample text, one char at a time.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#%3Cinit%3E()" class="member-name-link">MarkovChar()</a> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Creates an empty MarkovChar; you should call <a href="com/github/yellowstonegames/text/MarkovChar.html#analyze(java.lang.CharSequence)"><code>MarkovChar.analyze(CharSequence)</code></a> before doing anything else with this
+ new object.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html" class="type-name-link" title="class in com.github.yellowstonegames.text">MarkovText</a> - Class in <a href="com/github/yellowstonegames/text/package-summary.html">com.github.yellowstonegames.text</a></dt>
 <dd>
 <div class="block">A simple Markov chain text generator; call <a href="com/github/yellowstonegames/text/MarkovText.html#analyze(java.lang.CharSequence)"><code>MarkovText.analyze(CharSequence)</code></a> once on a large sample text, then you can
@@ -830,6 +876,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Constructor that allows you to specify the adjective and noun collections used by
  <a href="com/github/yellowstonegames/text/Mnemonic.html#toWordMnemonic(int,boolean)"><code>Mnemonic.toWordMnemonic(int, boolean)</code></a> as well as a seed.</div>
 </dd>
+<dt><a href="com/github/yellowstonegames/text/Mnemonic.html#%3Cinit%3E(com.github.tommyettinger.ds.NumberedSet,com.github.tommyettinger.ds.NumberedSet,com.github.tommyettinger.ds.NumberedSet)" class="member-name-link">Mnemonic(NumberedSet&lt;String&gt;, NumberedSet&lt;String&gt;, NumberedSet&lt;String&gt;)</a> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Mnemonic.html" title="class in com.github.yellowstonegames.text">Mnemonic</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/Mnemonic.html#%3Cinit%3E(com.github.yellowstonegames.text.Mnemonic)" class="member-name-link">Mnemonic(Mnemonic)</a> - Constructor for class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Mnemonic.html" title="class in com.github.yellowstonegames.text">Mnemonic</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.html#modifier(java.lang.String,java.lang.String)" class="member-name-link">modifier(String, String)</a> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>
 <div class="block">Convenience method that just calls <a href="com/github/yellowstonegames/text/Language.Modifier.html#%3Cinit%3E(java.lang.String,java.lang.String)"><code>Modifier(String, String)</code></a>.</div>
@@ -959,6 +1009,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:P">P</h2>
 <dl class="index">
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#pairs" class="member-name-link">pairs</a> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Map of all pairs of chars encountered to the position in the order they were encountered.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#pairs" class="member-name-link">pairs</a> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
 <div class="block">Map of all pairs of words encountered to the position in the order they were encountered.</div>
@@ -981,6 +1035,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Given a String, StringBuilder, or other CharSequence that should contain words this knows synonyms for, this
  replaces each occurrence of such a known word with one of its synonyms, leaving unknown words untouched.</div>
+</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#processed" class="member-name-link">processed</a> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Complicated data that mixes probabilities of chars using their indices in <a href="com/github/yellowstonegames/text/MarkovChar.html#chars"><code>MarkovChar.chars</code></a> and the indices of char
+ pairs in <a href="com/github/yellowstonegames/text/MarkovChar.html#pairs"><code>MarkovChar.pairs</code></a>, generated during the latest call to <a href="com/github/yellowstonegames/text/MarkovChar.html#analyze(java.lang.CharSequence)"><code>MarkovChar.analyze(CharSequence)</code></a>.</div>
 </dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#processed" class="member-name-link">processed</a> - Variable in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
@@ -1235,6 +1294,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.html#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize(String)</a> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize(String)</a> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Recreates an already-analyzed MarkovChar given a String produced by <a href="com/github/yellowstonegames/text/MarkovChar.html#stringSerialize()"><code>MarkovChar.stringSerialize()</code></a>.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize(String)</a> - Static method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
 <div class="block">Recreates an already-analyzed MarkovText given a String produced by <a href="com/github/yellowstonegames/text/MarkovText.html#stringSerialize()"><code>MarkovText.stringSerialize()</code></a>.</div>
@@ -1247,6 +1310,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/github/yellowstonegames/text/Language.html#stringSerialize()" class="member-name-link">stringSerialize()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/Language.html" title="class in com.github.yellowstonegames.text">Language</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/github/yellowstonegames/text/MarkovChar.html#stringSerialize()" class="member-name-link">stringSerialize()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovChar.html" title="class in com.github.yellowstonegames.text">MarkovChar</a></dt>
+<dd>
+<div class="block">Returns a representation of this MarkovChar as a String; use <a href="com/github/yellowstonegames/text/MarkovChar.html#stringDeserialize(java.lang.String)"><code>MarkovChar.stringDeserialize(String)</code></a> to get a
+ MarkovChar back from this String.</div>
+</dd>
 <dt><a href="com/github/yellowstonegames/text/MarkovText.html#stringSerialize()" class="member-name-link">stringSerialize()</a> - Method in class com.github.yellowstonegames.text.<a href="com/github/yellowstonegames/text/MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></dt>
 <dd>
 <div class="block">Returns a representation of this MarkovText as a String; use <a href="com/github/yellowstonegames/text/MarkovText.html#stringDeserialize(java.lang.String)"><code>MarkovText.stringDeserialize(String)</code></a> to get a

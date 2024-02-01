@@ -108,9 +108,7 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
  This is marked Beta because there's still some work to be done, and the actual output will change even if the API
  doesn't have any breaks. While the wilderness maps this produces are usable, they don't have paths or areas that a
  character would have to find a way around (like a cliff). This is meant to be added at some point, probably in
- conjunction with some system for connecting WildernessGenerators.
- <br>
- Created by Tommy Ettinger on 10/16/2019.</div>
+ conjunction with some system for connecting WildernessGenerators.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -148,38 +146,41 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <div class="col-second odd-row-color"><code><a href="#colors" class="member-name-link">colors</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>final int[][]</code></div>
-<div class="col-second even-row-color"><code><a href="#content" class="member-name-link">content</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#contentTypes" class="member-name-link">contentTypes</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>final int[][]</code></div>
-<div class="col-second even-row-color"><code><a href="#environment" class="member-name-link">environment</a></code></div>
+<div class="col-second even-row-color"><code><a href="#colorsOklab" class="member-name-link">colorsOklab</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>final int[][]</code></div>
-<div class="col-second odd-row-color"><code><a href="#floors" class="member-name-link">floors</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#content" class="member-name-link">content</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#floorTypes" class="member-name-link">floorTypes</a></code></div>
+<div class="col-second even-row-color"><code><a href="#contentTypes" class="member-name-link">contentTypes</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final long[][]</code></div>
-<div class="col-second odd-row-color"><code><a href="#glyphs" class="member-name-link">glyphs</a></code></div>
+<div class="col-first odd-row-color"><code>final int[][]</code></div>
+<div class="col-second odd-row-color"><code><a href="#environment" class="member-name-link">environment</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>final char[][]</code></div>
-<div class="col-second even-row-color"><code><a href="#grid" class="member-name-link">grid</a></code></div>
+<div class="col-first even-row-color"><code>final int[][]</code></div>
+<div class="col-second even-row-color"><code><a href="#floors" class="member-name-link">floors</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#height" class="member-name-link">height</a></code></div>
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.ObjectList&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#floorTypes" class="member-name-link">floorTypes</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
-<div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
+<div class="col-first even-row-color"><code>final long[][]</code></div>
+<div class="col-second even-row-color"><code><a href="#glyphs" class="member-name-link">glyphs</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>com.github.tommyettinger.ds.ObjectLongMap&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#viewer" class="member-name-link">viewer</a></code></div>
+<div class="col-first odd-row-color"><code>final char[][]</code></div>
+<div class="col-second odd-row-color"><code><a href="#grid" class="member-name-link">grid</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>final int</code></div>
-<div class="col-second even-row-color"><code><a href="#width" class="member-name-link">width</a></code></div>
+<div class="col-second even-row-color"><code><a href="#height" class="member-name-link">height</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>com.github.tommyettinger.random.EnhancedRandom</code></div>
+<div class="col-second odd-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.ObjectLongMap&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#viewer" class="member-name-link">viewer</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#width" class="member-name-link">width</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -391,6 +392,12 @@ implements <a href="PlaceGenerator.html" title="interface in com.github.yellowst
 <section class="detail" id="colors">
 <h3>colors</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">colors</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="colorsOklab">
+<h3>colorsOklab</h3>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">colorsOklab</span></div>
 </section>
 </li>
 <li>

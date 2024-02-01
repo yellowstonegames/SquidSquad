@@ -83,7 +83,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations">@Beta
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">SorbetNoise</span>
 <span class="extends-implements">extends <a href="CyclicNoise.html" title="class in com.github.yellowstonegames.grid">CyclicNoise</a></span></div>
-<div class="block">A mix of <a href="CyclicNoise.html" title="class in com.github.yellowstonegames.grid"><code>CyclicNoise</code></a> with value noise; much less periodic than CyclicNoise alone. Largely based upon
+<div class="block">A mix of <a href="CyclicNoise.html" title="class in com.github.yellowstonegames.grid"><code>CyclicNoise</code></a> with Simplex noise; much less periodic than CyclicNoise alone. Largely based upon
  <a href="https://www.shadertoy.com/view/3tcyD7">this ShaderToy by jeyko</a>, which in turn is based on
  <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>. This uses cyclic noise with a
  dimension one higher than requested, and uses a call to <a href="SimplexNoise.html#noise(float,float,long)"><code>SimplexNoise.noise(float, float, long)</code></a> to fill that parameter.
@@ -146,72 +146,78 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SorbetNoise.html" title="class in com.github.yellowstonegames.grid">SorbetNoise</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copy()" class="member-name-link">copy</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates a copy of this INoise, which should be a deep copy for any mutable state but can be shallow for immutable
+ types such as functions.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
  float&nbsp;y)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets 2D noise with a default or pre-set seed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets 3D noise with a default or pre-set seed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets 4D noise with a default or pre-set seed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets 5D noise with a default or pre-set seed.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNoise(float,float,float,float,float,float)" class="member-name-link">getNoise</a><wbr>(float&nbsp;x,
  float&nbsp;y,
  float&nbsp;z,
  float&nbsp;w,
  float&nbsp;u,
  float&nbsp;v)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets 6D noise with a default or pre-set seed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTag()" class="member-name-link">getTag</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTag()" class="member-name-link">getTag</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a typically-four-character String constant that should uniquely identify this INoise as well as possible.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SorbetNoise.html" title="class in com.github.yellowstonegames.grid">SorbetNoise</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#recreateFromString(java.lang.String)" class="member-name-link">recreateFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SorbetNoise.html" title="class in com.github.yellowstonegames.grid">SorbetNoise</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SorbetNoise.html" title="class in com.github.yellowstonegames.grid">SorbetNoise</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#recreateFromString(java.lang.String)" class="member-name-link">recreateFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SorbetNoise.html" title="class in com.github.yellowstonegames.grid">SorbetNoise</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Given a serialized String produced by <a href="INoise.html#stringSerialize()"><code>INoise.stringSerialize()</code></a>, reassigns this INoise to have the described
  state from the given String.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.yellowstonegames.grid.CyclicNoise">Methods inherited from class&nbsp;com.github.yellowstonegames.grid.<a href="CyclicNoise.html" title="class in com.github.yellowstonegames.grid">CyclicNoise</a></h3>
-<code><a href="CyclicNoise.html#canUseSeed()">canUseSeed</a>, <a href="CyclicNoise.html#copy()">copy</a>, <a href="CyclicNoise.html#getFrequency()">getFrequency</a>, <a href="CyclicNoise.html#getMaxDimension()">getMaxDimension</a>, <a href="CyclicNoise.html#getMinDimension()">getMinDimension</a>, <a href="CyclicNoise.html#getNoise(float,float,float,float,float,float,float)">getNoise</a>, <a href="CyclicNoise.html#getOctaves()">getOctaves</a>, <a href="CyclicNoise.html#getSeed()">getSeed</a>, <a href="CyclicNoise.html#hashCode()">hashCode</a>, <a href="CyclicNoise.html#setFrequency(float)">setFrequency</a>, <a href="CyclicNoise.html#setOctaves(int)">setOctaves</a>, <a href="CyclicNoise.html#setSeed(long)">setSeed</a>, <a href="CyclicNoise.html#setSeed(long,float)">setSeed</a>, <a href="CyclicNoise.html#stringSerialize()">stringSerialize</a></code></div>
+<code><a href="CyclicNoise.html#canUseSeed()">canUseSeed</a>, <a href="CyclicNoise.html#getFrequency()">getFrequency</a>, <a href="CyclicNoise.html#getMaxDimension()">getMaxDimension</a>, <a href="CyclicNoise.html#getMinDimension()">getMinDimension</a>, <a href="CyclicNoise.html#getNoise(float,float,float,float,float,float,float)">getNoise</a>, <a href="CyclicNoise.html#getOctaves()">getOctaves</a>, <a href="CyclicNoise.html#getSeed()">getSeed</a>, <a href="CyclicNoise.html#hashCode()">hashCode</a>, <a href="CyclicNoise.html#setFrequency(float)">setFrequency</a>, <a href="CyclicNoise.html#setOctaves(int)">setOctaves</a>, <a href="CyclicNoise.html#setSeed(long)">setSeed</a>, <a href="CyclicNoise.html#setSeed(long,float)">setSeed</a>, <a href="CyclicNoise.html#stringSerialize()">stringSerialize</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -441,6 +447,26 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="CyclicNoise.html#getTag()">getTag</a></code>&nbsp;in class&nbsp;<code><a href="CyclicNoise.html" title="class in com.github.yellowstonegames.grid">CyclicNoise</a></code></dd>
 <dt>Returns:</dt>
 <dd>a short String constant that identifies this INoise type</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="copy()">
+<h3>copy</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SorbetNoise.html" title="class in com.github.yellowstonegames.grid">SorbetNoise</a></span>&nbsp;<span class="element-name">copy</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="INoise.html#copy()">INoise</a></code></span></div>
+<div class="block">Creates a copy of this INoise, which should be a deep copy for any mutable state but can be shallow for immutable
+ types such as functions. This almost always just calls a copy constructor.
+ <br>
+ The default implementation throws an <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/UnsupportedOperationException.html" title="class or interface in java.lang" class="external-link"><code>UnsupportedOperationException</code></a> only. Implementors are strongly
+ encouraged to implement this in general, and that is required to use an INoise class with <a href="INoise.Serializer.html" title="class in com.github.yellowstonegames.grid"><code>INoise.Serializer</code></a>.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="INoise.html#copy()">copy</a></code>&nbsp;in interface&nbsp;<code><a href="INoise.html" title="interface in com.github.yellowstonegames.grid">INoise</a></code></dd>
+<dt>Overrides:</dt>
+<dd><code><a href="CyclicNoise.html#copy()">copy</a></code>&nbsp;in class&nbsp;<code><a href="CyclicNoise.html" title="class in com.github.yellowstonegames.grid">CyclicNoise</a></code></dd>
+<dt>Returns:</dt>
+<dd>a copy of this INoise</dd>
 </dl>
 </section>
 </li>

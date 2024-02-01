@@ -35,6 +35,7 @@ loadScripts(document, 'script');</script>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
 <li><a href="package-tree.html">Tree</a></li>
+<li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
 <li><a href="../../../../help-doc.html#class">Help</a></li>
 </ul>
@@ -83,7 +84,7 @@ loadScripts(document, 'script');</script>
  You can access colors by their constant name, such as <code>cactus</code>, by the <a href="#NAMED"><code>NAMED</code></a> map using
  <code>NAMED.get("Baby Blue")</code>, by getting a color by its name's position in alphabetical order with
  <code>NAMED.getAt(12)</code>, or by index in the IntList called <a href="#LIST"><code>LIST</code></a>. When accessing a color with
- <code>ObjectIntMap.get(Object)</code>, if the name is not found, get() will return <a href="#AURORA_TRANSPARENT"><code>AURORA_TRANSPARENT</code></a>. If
+ <code>ObjectIntMap.get(Object)</code>, if the name is not found, get() will return <a href="#PLACEHOLDER"><code>PLACEHOLDER</code></a>. If
  you want to control the not-found value, you can use <code>ObjectIntMap.getOrDefault(Object, int)</code>. You can
  access the names in a specific order with <a href="#NAMES"><code>NAMES</code></a> (which is alphabetical), <a href="#NAMES_BY_HUE"><code>NAMES_BY_HUE</code></a> (which is
  sorted by the hue of the matching color, with all grayscale colors at the start, then from red to yellow to blue to
@@ -4555,825 +4556,831 @@ loadScripts(document, 'script');</script>
 <div class="block">This color constant "Pink Orange" has RGBA8888 code <code>FF9966FF</code>, L 0.70980394, A 0.5411765, B 0.54509807, alpha 1.0, hue 0.13191529, saturation 0.54262733, and chroma 0.121659465.</div>
 </div>
 <div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PLAIN_MOUSE" class="member-name-link">PLAIN_MOUSE</a></code></div>
+<div class="col-second even-row-color"><code><a href="#PLACEHOLDER" class="member-name-link">PLACEHOLDER</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">A fully-transparent color that is out-of-range for valid colors in Oklab, to be used as a placeholder for colors
+ that aren't valid in some way.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PLAIN_MOUSE" class="member-name-link">PLAIN_MOUSE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Plain Mouse" has RGBA8888 code <code>6E5F57FF</code>, L 0.38431373, A 0.5058824, B 0.5058824, alpha 1.0, hue 0.125, saturation 0.13797206, and chroma 0.016572814.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PLATINUM" class="member-name-link">PLATINUM</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PLATINUM" class="member-name-link">PLATINUM</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Platinum" has RGBA8888 code <code>E5E4E2FF</code>, L 0.89411765, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PLUM" class="member-name-link">PLUM</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PLUM" class="member-name-link">PLUM</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Plum" has RGBA8888 code <code>CC99CCFF</code>, L 0.6784314, A 0.53333336, B 0.4745098, alpha 1.0, hue 0.90641636, saturation 0.23014158, and chroma 0.0835974.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PLUM_BLOSSOM_MOUSE" class="member-name-link">PLUM_BLOSSOM_MOUSE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PLUM_BLOSSOM_MOUSE" class="member-name-link">PLUM_BLOSSOM_MOUSE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Plum Blossom Mouse" has RGBA8888 code <code>97645AFF</code>, L 0.44705883, A 0.5254902, B 0.5176471, alpha 1.0, hue 0.09871597, saturation 0.3072259, and chroma 0.061763234.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PLUM_DYED" class="member-name-link">PLUM_DYED</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PLUM_DYED" class="member-name-link">PLUM_DYED</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Plum Dyed" has RGBA8888 code <code>FA9258FF</code>, L 0.6862745, A 0.5411765, B 0.54901963, alpha 1.0, hue 0.1382321, saturation 0.6081924, and chroma 0.12753771.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PLUM_PURPLE" class="member-name-link">PLUM_PURPLE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PLUM_PURPLE" class="member-name-link">PLUM_PURPLE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Plum Purple" has RGBA8888 code <code>8F4155FF</code>, L 0.36078432, A 0.5529412, B 0.5019608, alpha 1.0, hue 0.011349191, saturation 0.5198396, and chroma 0.105541065.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#POLISHED_BROWN" class="member-name-link">POLISHED_BROWN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#POLISHED_BROWN" class="member-name-link">POLISHED_BROWN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Polished Brown" has RGBA8888 code <code>9F5233FF</code>, L 0.4117647, A 0.5372549, B 0.5372549, alpha 1.0, hue 0.125, saturation 0.65777373, and chroma 0.104961164.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#POWDER_BLUE" class="member-name-link">POWDER_BLUE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#POWDER_BLUE" class="member-name-link">POWDER_BLUE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Powder Blue" has RGBA8888 code <code>B0E0E6FF</code>, L 0.8392157, A 0.47843137, B 0.4862745, alpha 1.0, hue 0.58601034, saturation 0.28443667, and chroma 0.050931267.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PRUSSIAN_BLUE" class="member-name-link">PRUSSIAN_BLUE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PRUSSIAN_BLUE" class="member-name-link">PRUSSIAN_BLUE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Prussian Blue" has RGBA8888 code <code>003153FF</code>, L 0.18431373, A 0.48235294, B 0.45882353, alpha 1.0, hue 0.6894406, saturation 0.89752746, and chroma 0.08924734.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PSYCHEDELIC_PURPLE" class="member-name-link">PSYCHEDELIC_PURPLE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PSYCHEDELIC_PURPLE" class="member-name-link">PSYCHEDELIC_PURPLE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Psychedelic Purple" has RGBA8888 code <code>DD00FFFF</code>, L 0.53333336, A 0.61960787, B 0.4, alpha 1.0, hue 0.89198726, saturation 0.9596293, and chroma 0.31058988.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PUCE" class="member-name-link">PUCE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PUCE" class="member-name-link">PUCE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Puce" has RGBA8888 code <code>CC8899FF</code>, L 0.61960787, A 0.5372549, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.25974026, and chroma 0.07432148.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PUMPKIN" class="member-name-link">PUMPKIN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PUMPKIN" class="member-name-link">PUMPKIN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Pumpkin" has RGBA8888 code <code>FF7518FF</code>, L 0.62352943, A 0.5568628, B 0.5686275, alpha 1.0, hue 0.13942872, saturation 0.88417923, and chroma 0.17755185.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PURE_CRIMSON" class="member-name-link">PURE_CRIMSON</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PURE_CRIMSON" class="member-name-link">PURE_CRIMSON</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Pure Crimson" has RGBA8888 code <code>C3272BFF</code>, L 0.40392157, A 0.58431375, B 0.5411765, alpha 1.0, hue 0.07379155, saturation 0.8481637, and chroma 0.18692946.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PURE_DARK_GRAY" class="member-name-link">PURE_DARK_GRAY</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PURE_DARK_GRAY" class="member-name-link">PURE_DARK_GRAY</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Pure Dark Gray" has RGBA8888 code <code>3F4041FF</code>, L 0.2509804, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PURPLE" class="member-name-link">PURPLE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PURPLE" class="member-name-link">PURPLE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Purple" has RGBA8888 code <code>800080FF</code>, L 0.29411766, A 0.58431375, B 0.44313726, alpha 1.0, hue 0.9098022, saturation 0.9482476, and chroma 0.20259848.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PURPLE_DYE" class="member-name-link">PURPLE_DYE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PURPLE_DYE" class="member-name-link">PURPLE_DYE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Purple Dye" has RGBA8888 code <code>4F284BFF</code>, L 0.21960784, A 0.5372549, B 0.47843137, alpha 1.0, hue 0.92620844, saturation 0.50819725, and chroma 0.08575976.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#PURPLE_KITE" class="member-name-link">PURPLE_KITE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#PURPLE_KITE" class="member-name-link">PURPLE_KITE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Purple Kite" has RGBA8888 code <code>512C31FF</code>, L 0.21960784, A 0.5294118, B 0.5058824, alpha 1.0, hue 0.03898975, saturation 0.42288262, and chroma 0.059754133.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#PURPLE_TAUPE" class="member-name-link">PURPLE_TAUPE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#PURPLE_TAUPE" class="member-name-link">PURPLE_TAUPE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Purple Taupe" has RGBA8888 code <code>50404DFF</code>, L 0.27058825, A 0.5137255, B 0.49019608, alpha 1.0, hue 0.92620844, saturation 0.17888544, and chroma 0.033602834.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RABBIT_EAR_IRIS" class="member-name-link">RABBIT_EAR_IRIS</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RABBIT_EAR_IRIS" class="member-name-link">RABBIT_EAR_IRIS</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rabbit Ear Iris" has RGBA8888 code <code>491E3CFF</code>, L 0.18431373, A 0.5411765, B 0.48235294, alpha 1.0, hue 0.94449127, saturation 0.61603683, and chroma 0.08924734.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#RAINBOW" class="member-name-link">RAINBOW</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int[]</code></div>
+<div class="col-second even-row-color"><code><a href="#RAINBOW" class="member-name-link">RAINBOW</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This array is loaded with the colors found in the rainbow, in the
  standard ROYGBIV order.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RAPEBLOSSOM_BROWN" class="member-name-link">RAPEBLOSSOM_BROWN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RAPEBLOSSOM_BROWN" class="member-name-link">RAPEBLOSSOM_BROWN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rapeblossom Brown" has RGBA8888 code <code>E3B130FF</code>, L 0.72156864, A 0.5019608, B 0.57254905, alpha 1.0, hue 0.24163093, saturation 0.86483175, and chroma 0.14458403.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RAPESEED_OIL" class="member-name-link">RAPESEED_OIL</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RAPESEED_OIL" class="member-name-link">RAPESEED_OIL</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Rapeseed Oil" has RGBA8888 code <code>A17917FF</code>, L 0.49803922, A 0.5019608, B 0.56078434, alpha 1.0, hue 0.24006547, saturation 0.9430129, and chroma 0.12115674.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RAW_UMBER" class="member-name-link">RAW_UMBER</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RAW_UMBER" class="member-name-link">RAW_UMBER</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Raw Umber" has RGBA8888 code <code>734A12FF</code>, L 0.3254902, A 0.5137255, B 0.54509807, alpha 1.0, hue 0.19879162, saturation 0.9035079, and chroma 0.09391262.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RAZZMATAZZ" class="member-name-link">RAZZMATAZZ</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RAZZMATAZZ" class="member-name-link">RAZZMATAZZ</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Razzamatazz" has RGBA8888 code <code>E30B5CFF</code>, L 0.45882353, A 0.6156863, B 0.5137255, alpha 1.0, hue 0.021096015, saturation 0.96080923, and chroma 0.23208517.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RED" class="member-name-link">RED</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED" class="member-name-link">RED</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Red" has RGBA8888 code <code>FF0000FF</code>, L 0.49803922, A 0.6117647, B 0.56078434, alpha 1.0, hue 0.0802403, saturation 0.98868626, and chroma 0.25345513.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RED_BEAN" class="member-name-link">RED_BEAN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RED_BEAN" class="member-name-link">RED_BEAN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Red Bean" has RGBA8888 code <code>672422FF</code>, L 0.23529412, A 0.54509807, B 0.52156866, alpha 1.0, hue 0.07379155, saturation 0.6544589, and chroma 0.09959023.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RED_BIRCH" class="member-name-link">RED_BIRCH</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED_BIRCH" class="member-name-link">RED_BIRCH</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Red Birch" has RGBA8888 code <code>9D2B22FF</code>, L 0.3372549, A 0.5647059, B 0.5372549, alpha 1.0, hue 0.08462641, saturation 0.75858015, and chroma 0.14874557.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RED_DYE_TURMERIC" class="member-name-link">RED_DYE_TURMERIC</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RED_DYE_TURMERIC" class="member-name-link">RED_DYE_TURMERIC</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Red Dye Turmeric" has RGBA8888 code <code>FB8136FF</code>, L 0.6431373, A 0.54901963, B 0.56078434, alpha 1.0, hue 0.14140569, saturation 0.7929049, and chroma 0.1555649.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RED_INCENSE" class="member-name-link">RED_INCENSE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED_INCENSE" class="member-name-link">RED_INCENSE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Red Incense" has RGBA8888 code <code>F07F5EFF</code>, L 0.6313726, A 0.5529412, B 0.5411765, alpha 1.0, hue 0.105992556, saturation 0.5478306, and chroma 0.1336143.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RED_KITE" class="member-name-link">RED_KITE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RED_KITE" class="member-name-link">RED_KITE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Red Kite" has RGBA8888 code <code>913228FF</code>, L 0.32941177, A 0.5568628, B 0.5294118, alpha 1.0, hue 0.0779789, saturation 0.6666667, and chroma 0.12753771.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RED_OCHRE" class="member-name-link">RED_OCHRE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED_OCHRE" class="member-name-link">RED_OCHRE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Red Ochre" has RGBA8888 code <code>9F5233FF</code>, L 0.4117647, A 0.5372549, B 0.5372549, alpha 1.0, hue 0.125, saturation 0.65777373, and chroma 0.104961164.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RED_PIGMENT" class="member-name-link">RED_PIGMENT</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RED_PIGMENT" class="member-name-link">RED_PIGMENT</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Red Pigment" has RGBA8888 code <code>ED1C24FF</code>, L 0.4745098, A 0.6039216, B 0.54901963, alpha 1.0, hue 0.07141628, saturation 0.9220507, and chroma 0.22890759.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RED_PLUM" class="member-name-link">RED_PLUM</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED_PLUM" class="member-name-link">RED_PLUM</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Red Plum" has RGBA8888 code <code>DB5A6BFF</code>, L 0.53333336, A 0.57254905, B 0.5176471, alpha 1.0, hue 0.04095457, saturation 0.5694749, and chroma 0.14874557.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#RED_SERIES" class="member-name-link">RED_SERIES</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int[]</code></div>
+<div class="col-second even-row-color"><code><a href="#RED_SERIES" class="member-name-link">RED_SERIES</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This array is loaded with the colors from the traditional Japanese Red
  Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RED_VIOLET" class="member-name-link">RED_VIOLET</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED_VIOLET" class="member-name-link">RED_VIOLET</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Red Violet" has RGBA8888 code <code>C71585FF</code>, L 0.42745098, A 0.6117647, B 0.4745098, alpha 1.0, hue 0.9675296, saturation 0.94013286, and chroma 0.22837369.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#RED_VIOLET_SERIES" class="member-name-link">RED_VIOLET_SERIES</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int[]</code></div>
+<div class="col-second even-row-color"><code><a href="#RED_VIOLET_SERIES" class="member-name-link">RED_VIOLET_SERIES</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This array is loaded with the colors from the traditional Japanese
  Red-Violet Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RED_WISTERIA" class="member-name-link">RED_WISTERIA</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED_WISTERIA" class="member-name-link">RED_WISTERIA</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Red Wisteria" has RGBA8888 code <code>BB7796FF</code>, L 0.5568628, A 0.5411765, B 0.49019608, alpha 1.0, hue 0.97137564, saturation 0.2981424, and chroma 0.084324345.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RICH_CARMINE" class="member-name-link">RICH_CARMINE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RICH_CARMINE" class="member-name-link">RICH_CARMINE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Rich Carmine" has RGBA8888 code <code>D70040FF</code>, L 0.42745098, A 0.60784316, B 0.5294118, alpha 1.0, hue 0.04429303, saturation 0.9706813, and chroma 0.22269051.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RICH_GARDENIA" class="member-name-link">RICH_GARDENIA</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RICH_GARDENIA" class="member-name-link">RICH_GARDENIA</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rich Gardenia" has RGBA8888 code <code>F57F4FFF</code>, L 0.63529414, A 0.5529412, B 0.54901963, alpha 1.0, hue 0.11910819, saturation 0.6368324, and chroma 0.14373726.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RIKAN_BROWN" class="member-name-link">RIKAN_BROWN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RIKAN_BROWN" class="member-name-link">RIKAN_BROWN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Rikan Brown" has RGBA8888 code <code>534A32FF</code>, L 0.2901961, A 0.49803922, B 0.5176471, alpha 1.0, hue 0.25, saturation 0.41666666, and chroma 0.0353726.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RINSED_OUT_RED" class="member-name-link">RINSED_OUT_RED</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RINSED_OUT_RED" class="member-name-link">RINSED_OUT_RED</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rinsed Out Red" has RGBA8888 code <code>FF7952FF</code>, L 0.6392157, A 0.56078434, B 0.54901963, alpha 1.0, hue 0.10859431, saturation 0.62471294, and chroma 0.1555649.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#ROBIN_EGG_BLUE" class="member-name-link">ROBIN_EGG_BLUE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#ROBIN_EGG_BLUE" class="member-name-link">ROBIN_EGG_BLUE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Robin Egg Blue" has RGBA8888 code <code>00CCCCFF</code>, L 0.6901961, A 0.43529412, B 0.48235294, alpha 1.0, hue 0.5389897, saturation 0.9162457, and chroma 0.1336143.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#ROSE" class="member-name-link">ROSE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#ROSE" class="member-name-link">ROSE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rose" has RGBA8888 code <code>FF007FFF</code>, L 0.52156866, A 0.6313726, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.98550725, and chroma 0.2617479.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#ROSE_MADDER" class="member-name-link">ROSE_MADDER</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#ROSE_MADDER" class="member-name-link">ROSE_MADDER</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Rose Madder" has RGBA8888 code <code>E32636FF</code>, L 0.4627451, A 0.6, B 0.5411765, alpha 1.0, hue 0.063700125, saturation 0.8962282, and chroma 0.21544659.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#ROSE_TAUPE" class="member-name-link">ROSE_TAUPE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#ROSE_TAUPE" class="member-name-link">ROSE_TAUPE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rose Taupe" has RGBA8888 code <code>905D5DFF</code>, L 0.42352942, A 0.5294118, B 0.50980395, alpha 1.0, hue 0.057100154, saturation 0.2848001, and chroma 0.061763234.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#ROYAL_BLUE" class="member-name-link">ROYAL_BLUE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#ROYAL_BLUE" class="member-name-link">ROYAL_BLUE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Royal Blue" has RGBA8888 code <code>4169E1FF</code>, L 0.44705883, A 0.49019608, B 0.40784314, alpha 1.0, hue 0.736195, saturation 0.4397484, and chroma 0.18462972.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#ROYAL_PURPLE" class="member-name-link">ROYAL_PURPLE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#ROYAL_PURPLE" class="member-name-link">ROYAL_PURPLE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Royal Purple" has RGBA8888 code <code>6B3FA0FF</code>, L 0.34901962, A 0.5411765, B 0.43529412, alpha 1.0, hue 0.84585714, saturation 0.5710732, and chroma 0.15279381.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RUBY" class="member-name-link">RUBY</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RUBY" class="member-name-link">RUBY</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Ruby" has RGBA8888 code <code>E0115FFF</code>, L 0.45490196, A 0.6156863, B 0.50980395, alpha 1.0, hue 0.0158628, saturation 0.97256863, and chroma 0.23129487.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RUSSET" class="member-name-link">RUSSET</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RUSSET" class="member-name-link">RUSSET</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Russet" has RGBA8888 code <code>80461BFF</code>, L 0.3372549, A 0.5254902, B 0.5411765, alpha 1.0, hue 0.15980223, saturation 0.8149003, and chroma 0.096477255.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RUST" class="member-name-link">RUST</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RUST" class="member-name-link">RUST</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Rust" has RGBA8888 code <code>B7410EFF</code>, L 0.4117647, A 0.56078434, B 0.5529412, alpha 1.0, hue 0.11440556, saturation 0.9046933, and chroma 0.1605844.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RUSTED_LIGHT_BLUE" class="member-name-link">RUSTED_LIGHT_BLUE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RUSTED_LIGHT_BLUE" class="member-name-link">RUSTED_LIGHT_BLUE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rusted Light Blue" has RGBA8888 code <code>6A7F7AFF</code>, L 0.4745098, A 0.4862745, B 0.49803922, alpha 1.0, hue 0.5, saturation 0.2, and chroma 0.027621359.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RUSTY_CELADON" class="member-name-link">RUSTY_CELADON</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RUSTY_CELADON" class="member-name-link">RUSTY_CELADON</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Rusty Celadon" has RGBA8888 code <code>898A74FF</code>, L 0.53333336, A 0.49411765, B 0.5137255, alpha 1.0, hue 0.28898975, saturation 0.22287057, and chroma 0.029749114.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#RUSTY_STORAGE" class="member-name-link">RUSTY_STORAGE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#RUSTY_STORAGE" class="member-name-link">RUSTY_STORAGE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Rusty Storage" has RGBA8888 code <code>455859FF</code>, L 0.3254902, A 0.4862745, B 0.49411765, alpha 1.0, hue 0.5512084, saturation 0.2874798, and chroma 0.029749114.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#RUSTY_STOREROOM" class="member-name-link">RUSTY_STOREROOM</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#RUSTY_STOREROOM" class="member-name-link">RUSTY_STOREROOM</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Rusty Storeroom" has RGBA8888 code <code>3A403BFF</code>, L 0.24313726, A 0.49411765, B 0.5019608, alpha 1.0, hue 0.375, saturation 0.09123959, and chroma 0.012352647.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SAFETY_ORANGE" class="member-name-link">SAFETY_ORANGE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SAFETY_ORANGE" class="member-name-link">SAFETY_ORANGE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Safety Orange" has RGBA8888 code <code>FF6600FF</code>, L 0.59607846, A 0.5647059, B 0.5686275, alpha 1.0, hue 0.12954596, saturation 0.9342957, and chroma 0.18790646.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SAFFLOWER" class="member-name-link">SAFFLOWER</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SAFFLOWER" class="member-name-link">SAFFLOWER</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Safflower" has RGBA8888 code <code>5A4F74FF</code>, L 0.3372549, A 0.5137255, B 0.47058824, alpha 1.0, hue 0.8326245, saturation 0.23712523, and chroma 0.064659946.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SAFFRON" class="member-name-link">SAFFRON</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SAFFRON" class="member-name-link">SAFFRON</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Saffron" has RGBA8888 code <code>F4C430FF</code>, L 0.7882353, A 0.49411765, B 0.5764706, alpha 1.0, hue 0.25795132, saturation 0.8706515, and chroma 0.15279381.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SALMON" class="member-name-link">SALMON</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SALMON" class="member-name-link">SALMON</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Salmon" has RGBA8888 code <code>FF8C69FF</code>, L 0.68235296, A 0.5529412, B 0.5411765, alpha 1.0, hue 0.105992556, saturation 0.5160723, and chroma 0.1336143.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SANDY_BROWN" class="member-name-link">SANDY_BROWN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SANDY_BROWN" class="member-name-link">SANDY_BROWN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Sandy Brown" has RGBA8888 code <code>F4A460FF</code>, L 0.7176471, A 0.5254902, B 0.5529412, alpha 1.0, hue 0.17620845, saturation 0.63887656, and chroma 0.11705722.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SANGRIA" class="member-name-link">SANGRIA</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SANGRIA" class="member-name-link">SANGRIA</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sangria" has RGBA8888 code <code>92000AFF</code>, L 0.28235295, A 0.5764706, B 0.5411765, alpha 1.0, hue 0.08002978, saturation 0.97129464, and chroma 0.17302527.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SAPPANWOOD" class="member-name-link">SAPPANWOOD</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SAPPANWOOD" class="member-name-link">SAPPANWOOD</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Sappanwood" has RGBA8888 code <code>7E2639FF</code>, L 0.28235295, A 0.56078434, B 0.50980395, alpha 1.0, hue 0.029498879, saturation 0.70777476, and chroma 0.12265874.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SAPPANWOOD_INCENSE" class="member-name-link">SAPPANWOOD_INCENSE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SAPPANWOOD_INCENSE" class="member-name-link">SAPPANWOOD_INCENSE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sappanwood Incense" has RGBA8888 code <code>A24F46FF</code>, L 0.4117647, A 0.54509807, B 0.5254902, alpha 1.0, hue 0.08404553, saturation 0.4709303, and chroma 0.10320191.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SAPPHIRE" class="member-name-link">SAPPHIRE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SAPPHIRE" class="member-name-link">SAPPHIRE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Sapphire" has RGBA8888 code <code>082567FF</code>, L 0.16862746, A 0.49019608, B 0.43137255, alpha 1.0, hue 0.7313617, saturation 0.62244517, and chroma 0.1381068.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SAWTOOTH_OAK" class="member-name-link">SAWTOOTH_OAK</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SAWTOOTH_OAK" class="member-name-link">SAWTOOTH_OAK</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sawtooth Oak" has RGBA8888 code <code>EC956CFF</code>, L 0.6745098, A 0.5372549, B 0.5372549, alpha 1.0, hue 0.125, saturation 0.47939444, and chroma 0.104961164.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SCARLET" class="member-name-link">SCARLET</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SCARLET" class="member-name-link">SCARLET</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Scarlet" has RGBA8888 code <code>FF2400FF</code>, L 0.50980395, A 0.6039216, B 0.56078434, alpha 1.0, hue 0.085140646, saturation 0.9230797, and chroma 0.23984502.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SCHOOL_BUS_YELLOW" class="member-name-link">SCHOOL_BUS_YELLOW</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SCHOOL_BUS_YELLOW" class="member-name-link">SCHOOL_BUS_YELLOW</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "School Bus Yellow" has RGBA8888 code <code>FFD800FF</code>, L 0.8509804, A 0.4862745, B 0.5882353, alpha 1.0, hue 0.2706426, saturation 0.9467276, and chroma 0.17789528.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SCORCHED_BROWN" class="member-name-link">SCORCHED_BROWN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SCORCHED_BROWN" class="member-name-link">SCORCHED_BROWN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Scorched Brown" has RGBA8888 code <code>351F19FF</code>, L 0.14509805, A 0.5137255, B 0.50980395, alpha 1.0, hue 0.10241663, saturation 0.3846154, and chroma 0.033602834.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SEA_GREEN" class="member-name-link">SEA_GREEN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SEA_GREEN" class="member-name-link">SEA_GREEN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sea Green" has RGBA8888 code <code>2E8B57FF</code>, L 0.45882353, A 0.44313726, B 0.52156866, alpha 1.0, hue 0.43555963, saturation 0.7811049, and chroma 0.12115674.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SEASHELL" class="member-name-link">SEASHELL</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SEASHELL" class="member-name-link">SEASHELL</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Seashell" has RGBA8888 code <code>FFF5EEFF</code>, L 0.96862745, A 0.5019608, B 0.5019608, alpha 1.0, hue 0.125, saturation 0.03771236, and chroma 0.0055242716.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SELECTIVE_YELLOW" class="member-name-link">SELECTIVE_YELLOW</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SELECTIVE_YELLOW" class="member-name-link">SELECTIVE_YELLOW</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Selective Yellow" has RGBA8888 code <code>FFBA00FF</code>, L 0.7764706, A 0.5058824, B 0.58431375, alpha 1.0, hue 0.23557091, saturation 0.96046615, and chroma 0.16837704.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SEN_NO_RIKYUS_TEA" class="member-name-link">SEN_NO_RIKYUS_TEA</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SEN_NO_RIKYUS_TEA" class="member-name-link">SEN_NO_RIKYUS_TEA</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Sen No Rikyu's Tea" has RGBA8888 code <code>826B58FF</code>, L 0.4392157, A 0.5058824, B 0.5176471, alpha 1.0, hue 0.1894406, saturation 0.3167744, and chroma 0.03705794.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SEPIA" class="member-name-link">SEPIA</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SEPIA" class="member-name-link">SEPIA</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sepia" has RGBA8888 code <code>704214FF</code>, L 0.30588236, A 0.5176471, B 0.5411765, alpha 1.0, hue 0.18210036, saturation 0.8630747, and chroma 0.08924734.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SHAMROCK_GREEN" class="member-name-link">SHAMROCK_GREEN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SHAMROCK_GREEN" class="member-name-link">SHAMROCK_GREEN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Shamrock Green" has RGBA8888 code <code>009E60FF</code>, L 0.5137255, A 0.42745098, B 0.5254902, alpha 1.0, hue 0.44097084, saturation 0.9421077, and chroma 0.15319274.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SHOCKING_PINK" class="member-name-link">SHOCKING_PINK</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SHOCKING_PINK" class="member-name-link">SHOCKING_PINK</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Shocking Pink" has RGBA8888 code <code>FC0FC0FF</code>, L 0.54901963, A 0.63529414, B 0.4509804, alpha 1.0, hue 0.9474314, saturation 0.9736842, and chroma 0.28667724.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SHRIMP_BROWN" class="member-name-link">SHRIMP_BROWN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SHRIMP_BROWN" class="member-name-link">SHRIMP_BROWN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Shrimp Brown" has RGBA8888 code <code>5E2824FF</code>, L 0.22745098, A 0.5372549, B 0.5176471, alpha 1.0, hue 0.07379155, saturation 0.559017, and chroma 0.0821242.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SILK_CREPE_BROWN" class="member-name-link">SILK_CREPE_BROWN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SILK_CREPE_BROWN" class="member-name-link">SILK_CREPE_BROWN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Silk Crepe Brown" has RGBA8888 code <code>354E4BFF</code>, L 0.28235295, A 0.48235294, B 0.49411765, alpha 1.0, hue 0.5389897, saturation 0.41231054, and chroma 0.03705794.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SILVER" class="member-name-link">SILVER</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SILVER" class="member-name-link">SILVER</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Silver" has RGBA8888 code <code>C0C0C0FF</code>, L 0.7529412, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SILVER_GREY" class="member-name-link">SILVER_GREY</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SILVER_GREY" class="member-name-link">SILVER_GREY</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Silver Grey" has RGBA8888 code <code>97867CFF</code>, L 0.5411765, A 0.5058824, B 0.5058824, alpha 1.0, hue 0.125, saturation 0.11091871, and chroma 0.016572814.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SILVERED_RED" class="member-name-link">SILVERED_RED</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SILVERED_RED" class="member-name-link">SILVERED_RED</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Silvered Red" has RGBA8888 code <code>BC2D29FF</code>, L 0.39607844, A 0.5803922, B 0.5411765, alpha 1.0, hue 0.07679413, saturation 0.81746686, and chroma 0.17994207.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SIMMERED_SEAWEED" class="member-name-link">SIMMERED_SEAWEED</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SIMMERED_SEAWEED" class="member-name-link">SIMMERED_SEAWEED</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Simmered Seawead" has RGBA8888 code <code>4C3D30FF</code>, L 0.2509804, A 0.5058824, B 0.5137255, alpha 1.0, hue 0.17620845, saturation 0.3577709, and chroma 0.029749114.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SISKIN_SPROUT_YELLOW" class="member-name-link">SISKIN_SPROUT_YELLOW</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SISKIN_SPROUT_YELLOW" class="member-name-link">SISKIN_SPROUT_YELLOW</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Siskin Sprout Yellow" has RGBA8888 code <code>7A942EFF</code>, L 0.5294118, A 0.4627451, B 0.5568628, alpha 1.0, hue 0.33601037, saturation 0.8329931, and chroma 0.13542919.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SKY" class="member-name-link">SKY</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SKY" class="member-name-link">SKY</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sky" has RGBA8888 code <code>4D8FACFF</code>, L 0.52156866, A 0.47058824, B 0.47058824, alpha 1.0, hue 0.625, saturation 0.5999694, and chroma 0.082864076.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SKY_BLUE" class="member-name-link">SKY_BLUE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SKY_BLUE" class="member-name-link">SKY_BLUE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Sky Blue" has RGBA8888 code <code>87CEEBFF</code>, L 0.7607843, A 0.47058824, B 0.47058824, alpha 1.0, hue 0.625, saturation 0.47140452, and chroma 0.082864076.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SLATE_GRAY" class="member-name-link">SLATE_GRAY</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SLATE_GRAY" class="member-name-link">SLATE_GRAY</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Slate Gray" has RGBA8888 code <code>708090FF</code>, L 0.49411765, A 0.49411765, B 0.48235294, alpha 1.0, hue 0.7110103, saturation 0.13976629, and chroma 0.03705794.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SMALT" class="member-name-link">SMALT</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SMALT" class="member-name-link">SMALT</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Smalt" has RGBA8888 code <code>003399FF</code>, L 0.24313726, A 0.4862745, B 0.4117647, alpha 1.0, hue 0.72843033, saturation 0.8539848, and chroma 0.17789528.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SOOTY_BAMBOO" class="member-name-link">SOOTY_BAMBOO</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SOOTY_BAMBOO" class="member-name-link">SOOTY_BAMBOO</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sooty Bamboo" has RGBA8888 code <code>593A27FF</code>, L 0.25882354, A 0.5137255, B 0.52156866, alpha 1.0, hue 0.15641639, saturation 0.5341557, and chroma 0.050931267.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SOOTY_WILLOW_BAMBOO" class="member-name-link">SOOTY_WILLOW_BAMBOO</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SOOTY_WILLOW_BAMBOO" class="member-name-link">SOOTY_WILLOW_BAMBOO</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Sooty Willow Bamboo" has RGBA8888 code <code>4D4B3AFF</code>, L 0.2901961, A 0.49411765, B 0.5137255, alpha 1.0, hue 0.28898975, saturation 0.32984844, and chroma 0.029749114.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SPARROW_BROWN" class="member-name-link">SPARROW_BROWN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SPARROW_BROWN" class="member-name-link">SPARROW_BROWN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sparrow Brown" has RGBA8888 code <code>8C4736FF</code>, L 0.36078432, A 0.5372549, B 0.5254902, alpha 1.0, hue 0.09720023, saturation 0.4882622, and chroma 0.08992863.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SPRING_BUD" class="member-name-link">SPRING_BUD</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SPRING_BUD" class="member-name-link">SPRING_BUD</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Spring Bud" has RGBA8888 code <code>A7FC00FF</code>, L 0.8666667, A 0.42352942, B 0.5921569, alpha 1.0, hue 0.35657662, saturation 0.95657676, and chroma 0.23856924.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SPRING_GREEN" class="member-name-link">SPRING_GREEN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SPRING_GREEN" class="member-name-link">SPRING_GREEN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Spring Green" has RGBA8888 code <code>00FF7FFF</code>, L 0.8235294, A 0.39607844, B 0.54901963, alpha 1.0, hue 0.42620847, saturation 0.95307815, and chroma 0.22890759.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#STAINED_RED" class="member-name-link">STAINED_RED</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#STAINED_RED" class="member-name-link">STAINED_RED</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Stained Red" has RGBA8888 code <code>78779BFF</code>, L 0.48235294, A 0.5058824, B 0.4745098, alpha 1.0, hue 0.8012084, saturation 0.13749033, and chroma 0.052115876.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#STEAMED_CHESTNUT" class="member-name-link">STEAMED_CHESTNUT</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#STEAMED_CHESTNUT" class="member-name-link">STEAMED_CHESTNUT</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Steamed Chestnut" has RGBA8888 code <code>D3B17DFF</code>, L 0.7137255, A 0.5058824, B 0.53333336, alpha 1.0, hue 0.21519771, saturation 0.4190702, and chroma 0.06743233.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#STEEL_BLUE" class="member-name-link">STEEL_BLUE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#STEEL_BLUE" class="member-name-link">STEEL_BLUE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Steel Blue" has RGBA8888 code <code>4682B4FF</code>, L 0.4862745, A 0.47843137, B 0.45490196, alpha 1.0, hue 0.68210036, saturation 0.5753831, and chroma 0.09959023.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#STOREROOM_BROWN" class="member-name-link">STOREROOM_BROWN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#STOREROOM_BROWN" class="member-name-link">STOREROOM_BROWN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Storeroom Brown" has RGBA8888 code <code>3D4035FF</code>, L 0.24313726, A 0.49411765, B 0.5058824, alpha 1.0, hue 0.32379153, saturation 0.186339, and chroma 0.016572814.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#STYLISH_PERSIMMON" class="member-name-link">STYLISH_PERSIMMON</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#STYLISH_PERSIMMON" class="member-name-link">STYLISH_PERSIMMON</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Stylish Persimnmon" has RGBA8888 code <code>FFA26BFF</code>, L 0.7294118, A 0.53333336, B 0.54509807, alpha 1.0, hue 0.14758338, saturation 0.53571427, and chroma 0.11172148.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#SUMAC" class="member-name-link">SUMAC</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#SUMAC" class="member-name-link">SUMAC</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Sumac" has RGBA8888 code <code>592B1FFF</code>, L 0.22352941, A 0.5294118, B 0.52156866, alpha 1.0, hue 0.10241663, saturation 0.5882353, and chroma 0.07266045.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#SUMAC_DYED" class="member-name-link">SUMAC_DYED</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#SUMAC_DYED" class="member-name-link">SUMAC_DYED</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Sumac Dyed" has RGBA8888 code <code>E08A1EFF</code>, L 0.62352943, A 0.5254902, B 0.5686275, alpha 1.0, hue 0.19097084, saturation 0.8982887, and chroma 0.14584495.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TAN" class="member-name-link">TAN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TAN" class="member-name-link">TAN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Tan" has RGBA8888 code <code>D2B48CFF</code>, L 0.7254902, A 0.5058824, B 0.5254902, alpha 1.0, hue 0.20570697, saturation 0.3165265, and chroma 0.052115876.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TANGERINE" class="member-name-link">TANGERINE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TANGERINE" class="member-name-link">TANGERINE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Tangerine" has RGBA8888 code <code>F28500FF</code>, L 0.63529414, A 0.5372549, B 0.57254905, alpha 1.0, hue 0.17289318, saturation 0.9335179, and chroma 0.16247371.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TANGERINE_YELLOW" class="member-name-link">TANGERINE_YELLOW</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TANGERINE_YELLOW" class="member-name-link">TANGERINE_YELLOW</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Tangerine Yellow" has RGBA8888 code <code>FFCC00FF</code>, L 0.81960785, A 0.49411765, B 0.5882353, alpha 1.0, hue 0.25691554, saturation 0.979648, and chroma 0.17617144.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TATARIAN_ASTER" class="member-name-link">TATARIAN_ASTER</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TATARIAN_ASTER" class="member-name-link">TATARIAN_ASTER</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Tatarian Aster" has RGBA8888 code <code>976E9AFF</code>, L 0.49411765, A 0.5294118, B 0.4745098, alpha 1.0, hue 0.89758337, saturation 0.25641027, and chroma 0.07753685.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TAUPE" class="member-name-link">TAUPE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TAUPE" class="member-name-link">TAUPE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Taupe" has RGBA8888 code <code>483C32FF</code>, L 0.24313726, A 0.5058824, B 0.50980395, alpha 1.0, hue 0.15641639, saturation 0.2773501, and chroma 0.022777155.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TAWNY" class="member-name-link">TAWNY</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TAWNY" class="member-name-link">TAWNY</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Tawny" has RGBA8888 code <code>CD5700FF</code>, L 0.4862745, A 0.5529412, B 0.56078434, alpha 1.0, hue 0.13559444, saturation 0.9243605, and chroma 0.1605844.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TEA_GARDEN_CONTEMPLATION" class="member-name-link">TEA_GARDEN_CONTEMPLATION</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TEA_GARDEN_CONTEMPLATION" class="member-name-link">TEA_GARDEN_CONTEMPLATION</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Tea Garden Contemplation" has RGBA8888 code <code>665343FF</code>, L 0.34117648, A 0.5058824, B 0.5137255, alpha 1.0, hue 0.17620845, saturation 0.2981424, and chroma 0.029749114.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TEA_GREEN" class="member-name-link">TEA_GREEN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TEA_GREEN" class="member-name-link">TEA_GREEN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Tea Green" has RGBA8888 code <code>D0F0C0FF</code>, L 0.89411765, A 0.4745098, B 0.52156866, alpha 1.0, hue 0.375, saturation 0.23247345, and chroma 0.06652104.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TEA_ORANGE" class="member-name-link">TEA_ORANGE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TEA_ORANGE" class="member-name-link">TEA_ORANGE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Tea Orange" has RGBA8888 code <code>F88379FF</code>, L 0.65882355, A 0.5568628, B 0.5254902, alpha 1.0, hue 0.069491126, saturation 0.41382366, and chroma 0.124142565.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TEA_ROSE" class="member-name-link">TEA_ROSE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TEA_ROSE" class="member-name-link">TEA_ROSE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Tea Rose" has RGBA8888 code <code>F4C2C2FF</code>, L 0.8156863, A 0.52156866, B 0.5058824, alpha 1.0, hue 0.051208384, saturation 0.13900122, and chroma 0.044538103.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TEAL" class="member-name-link">TEAL</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TEAL" class="member-name-link">TEAL</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Teal" has RGBA8888 code <code>008080FF</code>, L 0.43137255, A 0.4509804, B 0.4862745, alpha 1.0, hue 0.5389897, saturation 0.9162457, and chroma 0.10141215.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TERRA_COTTA" class="member-name-link">TERRA_COTTA</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TERRA_COTTA" class="member-name-link">TERRA_COTTA</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Terra Cotta" has RGBA8888 code <code>E2725BFF</code>, L 0.58431375, A 0.5529412, B 0.5372549, alpha 1.0, hue 0.09871597, saturation 0.52135307, and chroma 0.12896542.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#THIN_VIOLET" class="member-name-link">THIN_VIOLET</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#THIN_VIOLET" class="member-name-link">THIN_VIOLET</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Thin Violet" has RGBA8888 code <code>A87CA0FF</code>, L 0.54901963, A 0.5294118, B 0.48235294, alpha 1.0, hue 0.92620844, saturation 0.22643727, and chroma 0.068331465.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#THISTLE" class="member-name-link">THISTLE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#THISTLE" class="member-name-link">THISTLE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Thistle" has RGBA8888 code <code>D8BFD8FF</code>, L 0.78431374, A 0.5137255, B 0.4862745, alpha 1.0, hue 0.89758337, saturation 0.094339624, and chroma 0.038669903.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#THOUSAND_HERB" class="member-name-link">THOUSAND_HERB</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#THOUSAND_HERB" class="member-name-link">THOUSAND_HERB</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Thousand Herb" has RGBA8888 code <code>317589FF</code>, L 0.41568628, A 0.46666667, B 0.4745098, alpha 1.0, hue 0.60241663, saturation 0.7407407, and chroma 0.0835974.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#THOUSAND_YEAR_OLD_BROWN" class="member-name-link">THOUSAND_YEAR_OLD_BROWN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#THOUSAND_YEAR_OLD_BROWN" class="member-name-link">THOUSAND_YEAR_OLD_BROWN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Thousand Year Old Brown" has RGBA8888 code <code>3B3429FF</code>, L 0.20784314, A 0.5019608, B 0.50980395, alpha 1.0, hue 0.19879162, saturation 0.3011693, and chroma 0.019918045.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#THOUSAND_YEAR_OLD_GREEN" class="member-name-link">THOUSAND_YEAR_OLD_GREEN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#THOUSAND_YEAR_OLD_GREEN" class="member-name-link">THOUSAND_YEAR_OLD_GREEN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Thousand Year Old Green" has RGBA8888 code <code>374231FF</code>, L 0.24313726, A 0.4862745, B 0.50980395, alpha 1.0, hue 0.375, saturation 0.27371874, and chroma 0.033602834.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#THRICE_DYED_CRIMSON" class="member-name-link">THRICE_DYED_CRIMSON</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#THRICE_DYED_CRIMSON" class="member-name-link">THRICE_DYED_CRIMSON</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Thrice Dyed Crimson" has RGBA8888 code <code>F7665AFF</code>, L 0.5921569, A 0.57254905, B 0.5372549, alpha 1.0, hue 0.07710682, saturation 0.5725576, and chroma 0.16247371.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TOMATO" class="member-name-link">TOMATO</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TOMATO" class="member-name-link">TOMATO</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Tomato" has RGBA8888 code <code>FF6347FF</code>, L 0.59607846, A 0.5764706, B 0.54901963, alpha 1.0, hue 0.09173302, saturation 0.6626034, and chroma 0.1809568.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TREE_PEONY" class="member-name-link">TREE_PEONY</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TREE_PEONY" class="member-name-link">TREE_PEONY</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Tree Peony" has RGBA8888 code <code>A4345DFF</code>, L 0.3764706, A 0.5764706, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.71428573, and chroma 0.15239382.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TRUE_PINK" class="member-name-link">TRUE_PINK</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TRUE_PINK" class="member-name-link">TRUE_PINK</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "True Pink" has RGBA8888 code <code>FFC0CBFF</code>, L 0.827451, A 0.5294118, B 0.5019608, alpha 1.0, hue 0.019791542, saturation 0.17526647, and chroma 0.058723815.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TRUE_RED" class="member-name-link">TRUE_RED</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TRUE_RED" class="member-name-link">TRUE_RED</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "True Red" has RGBA8888 code <code>8F1D21FF</code>, L 0.29803923, A 0.5686275, B 0.5294118, alpha 1.0, hue 0.06656226, saturation 0.82073814, and chroma 0.14874557.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TURMERIC" class="member-name-link">TURMERIC</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TURMERIC" class="member-name-link">TURMERIC</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Turmeric" has RGBA8888 code <code>E69B3AFF</code>, L 0.6745098, A 0.5176471, B 0.5647059, alpha 1.0, hue 0.20447324, saturation 0.8054566, and chroma 0.1336143.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#TURQUOISE" class="member-name-link">TURQUOISE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#TURQUOISE" class="member-name-link">TURQUOISE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Turquoise" has RGBA8888 code <code>30D5C8FF</code>, L 0.72156864, A 0.43529412, B 0.49019608, alpha 1.0, hue 0.51979154, saturation 0.84865874, and chroma 0.1303775.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#TYRIAN_PURPLE" class="member-name-link">TYRIAN_PURPLE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#TYRIAN_PURPLE" class="member-name-link">TYRIAN_PURPLE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Tyrian Purple" has RGBA8888 code <code>66023CFF</code>, L 0.21176471, A 0.57254905, B 0.49019608, alpha 1.0, hue 0.9833083, saturation 0.97974217, and chroma 0.14584495.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#ULTRAMARINE" class="member-name-link">ULTRAMARINE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#ULTRAMARINE" class="member-name-link">ULTRAMARINE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Ultramarine" has RGBA8888 code <code>120A8FFF</code>, L 0.1764706, A 0.49411765, B 0.39607844, alpha 1.0, hue 0.74388164, saturation 0.929258, and chroma 0.20736265.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#ULTRAMARINE_DYE" class="member-name-link">ULTRAMARINE_DYE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#ULTRAMARINE_DYE" class="member-name-link">ULTRAMARINE_DYE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Ultramarine Dye" has RGBA8888 code <code>5D8CAEFF</code>, L 0.52156866, A 0.47843137, B 0.46666667, alpha 1.0, hue 0.66109616, saturation 0.48379388, and chroma 0.079095535.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#UNBLEACHED_SILK" class="member-name-link">UNBLEACHED_SILK</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#UNBLEACHED_SILK" class="member-name-link">UNBLEACHED_SILK</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Unbleached Silk" has RGBA8888 code <code>FFDDCAFF</code>, L 0.8980392, A 0.50980395, B 0.5137255, alpha 1.0, hue 0.14758338, saturation 0.15625, and chroma 0.033602834.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#UNDRIED_WALL" class="member-name-link">UNDRIED_WALL</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#UNDRIED_WALL" class="member-name-link">UNDRIED_WALL</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Undried Wall" has RGBA8888 code <code>785E49FF</code>, L 0.3882353, A 0.50980395, B 0.5176471, alpha 1.0, hue 0.16398965, saturation 0.33319724, and chroma 0.040217306.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#VANISHING_RED_MOUSE" class="member-name-link">VANISHING_RED_MOUSE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#VANISHING_RED_MOUSE" class="member-name-link">VANISHING_RED_MOUSE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Vanishing Red Mouse" has RGBA8888 code <code>44312EFF</code>, L 0.21176471, A 0.5137255, B 0.5058824, alpha 1.0, hue 0.07379155, saturation 0.22934031, and chroma 0.029749114.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#VARIED_PALETTE" class="member-name-link">VARIED_PALETTE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int[]</code></div>
+<div class="col-second even-row-color"><code><a href="#VARIED_PALETTE" class="member-name-link">VARIED_PALETTE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">An array of Oklab int colors that should all be fairly different from any other in the group.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#VEGAS_GOLD" class="member-name-link">VEGAS_GOLD</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#VEGAS_GOLD" class="member-name-link">VEGAS_GOLD</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Vegas Gold" has RGBA8888 code <code>C5B358FF</code>, L 0.69803923, A 0.49019608, B 0.5529412, alpha 1.0, hue 0.27258337, saturation 0.65777373, and chroma 0.107261956.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#VELVET" class="member-name-link">VELVET</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#VELVET" class="member-name-link">VELVET</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Velvet" has RGBA8888 code <code>224634FF</code>, L 0.23921569, A 0.47058824, B 0.5058824, alpha 1.0, hue 0.45570695, saturation 0.633053, and chroma 0.059754133.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#VERMILION" class="member-name-link">VERMILION</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#VERMILION" class="member-name-link">VERMILION</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Vermillion" has RGBA8888 code <code>E34234FF</code>, L 0.49411765, A 0.58431375, B 0.54509807, alpha 1.0, hue 0.07947329, saturation 0.7480576, and chroma 0.19048727.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#VINE_GRAPE" class="member-name-link">VINE_GRAPE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#VINE_GRAPE" class="member-name-link">VINE_GRAPE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Vine Grape" has RGBA8888 code <code>6D2B50FF</code>, L 0.27058825, A 0.5529412, B 0.4862745, alpha 1.0, hue 0.9664035, saturation 0.609269, and chroma 0.10895567.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#VIOLET" class="member-name-link">VIOLET</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#VIOLET" class="member-name-link">VIOLET</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Violet" has RGBA8888 code <code>8B00FFFF</code>, L 0.4117647, A 0.57254905, B 0.37254903, alpha 1.0, hue 0.8352769, saturation 0.95424587, and chroma 0.29216033.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#VIOLET_DYE" class="member-name-link">VIOLET_DYE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#VIOLET_DYE" class="member-name-link">VIOLET_DYE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Violet Dye" has RGBA8888 code <code>5B3256FF</code>, L 0.25882354, A 0.5372549, B 0.47843137, alpha 1.0, hue 0.92620844, saturation 0.4658475, and chroma 0.08575976.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int[]</code></div>
-<div class="col-second even-row-color"><code><a href="#VIOLET_SERIES" class="member-name-link">VIOLET_SERIES</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#VIOLET_SERIES" class="member-name-link">VIOLET_SERIES</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This array is loaded with the colors from the traditional Japanese Violet
  Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#VIRIDIAN" class="member-name-link">VIRIDIAN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#VIRIDIAN" class="member-name-link">VIRIDIAN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Viridian" has RGBA8888 code <code>40826DFF</code>, L 0.4509804, A 0.45882353, B 0.5019608, alpha 1.0, hue 0.4841372, saturation 0.648379, and chroma 0.0821242.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WALNUT" class="member-name-link">WALNUT</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WALNUT" class="member-name-link">WALNUT</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Walnut" has RGBA8888 code <code>9F7462FF</code>, L 0.49803922, A 0.5176471, B 0.5176471, alpha 1.0, hue 0.125, saturation 0.28861502, and chroma 0.049718447.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WASHED_OUT_CRIMSON" class="member-name-link">WASHED_OUT_CRIMSON</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WASHED_OUT_CRIMSON" class="member-name-link">WASHED_OUT_CRIMSON</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Washed Out Crimson" has RGBA8888 code <code>FFB3A7FF</code>, L 0.78431374, A 0.53333336, B 0.5176471, alpha 1.0, hue 0.08070704, saturation 0.22627759, and chroma 0.07513822.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WASHED_OUT_PERSIMMON" class="member-name-link">WASHED_OUT_PERSIMMON</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WASHED_OUT_PERSIMMON" class="member-name-link">WASHED_OUT_PERSIMMON</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Washed Out Persimmon" has RGBA8888 code <code>EC8254FF</code>, L 0.6313726, A 0.54509807, B 0.54509807, alpha 1.0, hue 0.125, saturation 0.5954583, and chroma 0.12705825.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WATER" class="member-name-link">WATER</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WATER" class="member-name-link">WATER</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Water" has RGBA8888 code <code>86ABA5FF</code>, L 0.63529414, A 0.47843137, B 0.49803922, alpha 1.0, hue 0.5, saturation 0.2777778, and chroma 0.04314594.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WATER_PERSIMMON" class="member-name-link">WATER_PERSIMMON</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WATER_PERSIMMON" class="member-name-link">WATER_PERSIMMON</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Water Persimmon" has RGBA8888 code <code>B56C60FF</code>, L 0.5058824, A 0.5372549, B 0.52156866, alpha 1.0, hue 0.08601036, saturation 0.34299716, and chroma 0.08575976.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WHEAT" class="member-name-link">WHEAT</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WHEAT" class="member-name-link">WHEAT</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Wheat" has RGBA8888 code <code>F5DEB3FF</code>, L 0.88235295, A 0.5019608, B 0.5254902, alpha 1.0, hue 0.22741663, saturation 0.28284273, and chroma 0.050931267.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WHITE" class="member-name-link">WHITE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WHITE" class="member-name-link">WHITE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "White" has RGBA8888 code <code>FFFFFFFF</code>, L 1.0, A 0.49803922, B 0.49803922, alpha 1.0, hue 0.0, saturation 0.0, and chroma 0.0055242716.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WHITE_MOUSE" class="member-name-link">WHITE_MOUSE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WHITE_MOUSE" class="member-name-link">WHITE_MOUSE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "White Mouse" has RGBA8888 code <code>B9A193FF</code>, L 0.6509804, A 0.50980395, B 0.50980395, alpha 1.0, hue 0.125, saturation 0.14629795, and chroma 0.027621359.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WHITE_OAK" class="member-name-link">WHITE_OAK</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WHITE_OAK" class="member-name-link">WHITE_OAK</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "White Oak" has RGBA8888 code <code>CE9F6FFF</code>, L 0.6627451, A 0.5137255, B 0.5372549, alpha 1.0, hue 0.1894406, saturation 0.4786813, and chroma 0.079095535.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WHITE_TEA_DYE" class="member-name-link">WHITE_TEA_DYE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WHITE_TEA_DYE" class="member-name-link">WHITE_TEA_DYE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "White Tea Dye" has RGBA8888 code <code>C48E69FF</code>, L 0.60784316, A 0.52156866, B 0.5294118, alpha 1.0, hue 0.14758338, saturation 0.4, and chroma 0.07266045.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WHITISH_GREEN" class="member-name-link">WHITISH_GREEN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WHITISH_GREEN" class="member-name-link">WHITISH_GREEN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Whitish Green" has RGBA8888 code <code>A5BA93FF</code>, L 0.69803923, A 0.47843137, B 0.5176471, alpha 1.0, hue 0.375, saturation 0.22809896, and chroma 0.055518243.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WILLOW_DYE" class="member-name-link">WILLOW_DYE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WILLOW_DYE" class="member-name-link">WILLOW_DYE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Willow Dye" has RGBA8888 code <code>8C9E5EFF</code>, L 0.58431375, A 0.4745098, B 0.5372549, alpha 1.0, hue 0.33601037, saturation 0.5183068, and chroma 0.08992863.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WILLOW_GREY" class="member-name-link">WILLOW_GREY</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WILLOW_GREY" class="member-name-link">WILLOW_GREY</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Willow Grey" has RGBA8888 code <code>817B69FF</code>, L 0.48235294, A 0.49803922, B 0.50980395, alpha 1.0, hue 0.25, saturation 0.1764706, and chroma 0.019918045.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WILLOW_LEAVES_UNDERSIDE" class="member-name-link">WILLOW_LEAVES_UNDERSIDE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WILLOW_LEAVES_UNDERSIDE" class="member-name-link">WILLOW_LEAVES_UNDERSIDE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Willow Leaves Underside" has RGBA8888 code <code>BCB58CFF</code>, L 0.7058824, A 0.49411765, B 0.5254902, alpha 1.0, hue 0.27258337, saturation 0.32888687, and chroma 0.052115876.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WILLOW_TEA" class="member-name-link">WILLOW_TEA</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WILLOW_TEA" class="member-name-link">WILLOW_TEA</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Willow Tea" has RGBA8888 code <code>9C8A4DFF</code>, L 0.5411765, A 0.49411765, B 0.5411765, alpha 1.0, hue 0.2644291, saturation 0.6136311, and chroma 0.082864076.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WILTED_LAWN_CLIPPINGS" class="member-name-link">WILTED_LAWN_CLIPPINGS</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WILTED_LAWN_CLIPPINGS" class="member-name-link">WILTED_LAWN_CLIPPINGS</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Wilted Lawn Clippings" has RGBA8888 code <code>AB4C3DFF</code>, L 0.41960785, A 0.5529412, B 0.5294118, alpha 1.0, hue 0.08262452, saturation 0.5374839, and chroma 0.120651916.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WISTERIA" class="member-name-link">WISTERIA</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WISTERIA" class="member-name-link">WISTERIA</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Wisteria" has RGBA8888 code <code>C9A0DCFF</code>, L 0.69803923, A 0.5294118, B 0.46666667, alpha 1.0, hue 0.875, saturation 0.22183742, and chroma 0.08856081.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#WISTERIA_DYE" class="member-name-link">WISTERIA_DYE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#WISTERIA_DYE" class="member-name-link">WISTERIA_DYE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Wisteria Dye" has RGBA8888 code <code>89729EFF</code>, L 0.49019608, A 0.5176471, B 0.47058824, alpha 1.0, hue 0.84871596, saturation 0.20240766, and chroma 0.068331465.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#WISTERIA_PURPLE" class="member-name-link">WISTERIA_PURPLE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#WISTERIA_PURPLE" class="member-name-link">WISTERIA_PURPLE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Wisteria Purple" has RGBA8888 code <code>875F9AFF</code>, L 0.44313726, A 0.53333336, B 0.4627451, alpha 1.0, hue 0.875, saturation 0.33941126, and chroma 0.09959023.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#YELLOW" class="member-name-link">YELLOW</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#YELLOW" class="member-name-link">YELLOW</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Yellow" has RGBA8888 code <code>FFFF00FF</code>, L 0.9529412, A 0.4627451, B 0.59607846, alpha 1.0, hue 0.30499697, saturation 0.94895214, and chroma 0.20529193.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#YELLOW_GREEN" class="member-name-link">YELLOW_GREEN</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#YELLOW_GREEN" class="member-name-link">YELLOW_GREEN</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Yellow Green" has RGBA8888 code <code>9ACD32FF</code>, L 0.72156864, A 0.44313726, B 0.57254905, alpha 1.0, hue 0.35106787, saturation 0.87410545, and chroma 0.1836353.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#YELLOW_GREEN_SERIES" class="member-name-link">YELLOW_GREEN_SERIES</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int[]</code></div>
+<div class="col-second even-row-color"><code><a href="#YELLOW_GREEN_SERIES" class="member-name-link">YELLOW_GREEN_SERIES</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This array is loaded with the colors from the traditional Japanese Yellow
  Green Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int[]</code></div>
-<div class="col-second even-row-color"><code><a href="#YELLOW_RED_SERIES" class="member-name-link">YELLOW_RED_SERIES</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#YELLOW_RED_SERIES" class="member-name-link">YELLOW_RED_SERIES</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This array is loaded with the colors from the traditional Japanese Yellow
  Red Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#YELLOW_SEA_PINE_BROWN" class="member-name-link">YELLOW_SEA_PINE_BROWN</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#YELLOW_SEA_PINE_BROWN" class="member-name-link">YELLOW_SEA_PINE_BROWN</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Yellow Sea Pine Brown" has RGBA8888 code <code>896C39FF</code>, L 0.44313726, A 0.5019608, B 0.5372549, alpha 1.0, hue 0.2341372, saturation 0.6281172, and chroma 0.07432148.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int[]</code></div>
-<div class="col-second even-row-color"><code><a href="#YELLOW_SERIES" class="member-name-link">YELLOW_SERIES</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#YELLOW_SERIES" class="member-name-link">YELLOW_SERIES</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This array is loaded with the colors from the traditional Japanese Yellow
  Series found on <a href="http://en.wikipedia.org/wiki/Traditional_colors_of_Japan">Wikipedia</a>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final int</code></div>
-<div class="col-second odd-row-color"><code><a href="#YOUNG_BAMBOO" class="member-name-link">YOUNG_BAMBOO</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final int</code></div>
+<div class="col-second even-row-color"><code><a href="#YOUNG_BAMBOO" class="member-name-link">YOUNG_BAMBOO</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This color constant "Young Bamboo" has RGBA8888 code <code>6B9362FF</code>, L 0.5254902, A 0.46666667, B 0.5254902, alpha 1.0, hue 0.38559446, saturation 0.39370912, and chroma 0.0835974.</div>
 </div>
-<div class="col-first even-row-color"><code>static final int</code></div>
-<div class="col-second even-row-color"><code><a href="#ZINNWALDITE" class="member-name-link">ZINNWALDITE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final int</code></div>
+<div class="col-second odd-row-color"><code><a href="#ZINNWALDITE" class="member-name-link">ZINNWALDITE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This color constant "Zinnwaldite" has RGBA8888 code <code>EBC2AFFF</code>, L 0.8, A 0.5137255, B 0.5176471, alpha 1.0, hue 0.14261138, saturation 0.21343748, and chroma 0.044538103.</div>
 </div>
 </div>
@@ -5455,6 +5462,26 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="LIST">
 <h3>LIST</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntList</span>&nbsp;<span class="element-name">LIST</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="PLACEHOLDER">
+<h3>PLACEHOLDER</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">PLACEHOLDER</span></div>
+<div class="block">A fully-transparent color that is out-of-range for valid colors in Oklab, to be used as a placeholder for colors
+ that aren't valid in some way. This is not included in <a href="#NAMED"><code>NAMED</code></a> or <a href="#LIST"><code>LIST</code></a>.
+ <br>
+ If this is shown for some reason, it should look black, nearly-black, or deep blue-green, depending on how
+ out-of-range colors are handled. That shouldn't happen very often, because this color has 0.0 alpha (making it
+ fully transparent).</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.core.FullPalette.PLACEHOLDER">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>

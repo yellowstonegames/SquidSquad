@@ -83,9 +83,7 @@ loadScripts(document, 'script');</script>
  arrays in some serialized form, then you can reassign them to the same fields to avoid calling analyze(). One way to
  do this conveniently is to use <a href="#stringSerialize()"><code>stringSerialize()</code></a> after calling analyze() once and to save the resulting
  String; then, rather than calling analyze() again on future runs, you would call
- <a href="#stringDeserialize(java.lang.String)"><code>stringDeserialize(String)</code></a> to create the MarkovText without needing any repeated analysis.
- <br>
- Created by Tommy Ettinger on 1/30/2018.</div>
+ <a href="#stringDeserialize(java.lang.String)"><code>stringDeserialize(String)</code></a> to create the MarkovText without needing any repeated analysis.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -98,7 +96,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.IntIntOrderedMap</code></div>
+<div class="col-first even-row-color"><code>com.github.tommyettinger.ds.IntIntMap</code></div>
 <div class="col-second even-row-color"><code><a href="#pairs" class="member-name-link">pairs</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Map of all pairs of words encountered to the position in the order they were encountered.</div>
@@ -174,19 +172,26 @@ loadScripts(document, 'script');</script>
  were used as a proper noun (determined by whether they were capitalized in the middle of a sentence), changing
  them to a ciphered version using the given <a href="Translator.html" title="class in com.github.yellowstonegames.text"><code>Translator</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copy()" class="member-name-link">copy</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#changeNames(com.github.yellowstonegames.text.Translator,java.util.Collection)" class="member-name-link">changeNames</a><wbr>(<a href="Translator.html" title="class in com.github.yellowstonegames.text">Translator</a>&nbsp;translator,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&gt;&nbsp;names)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">After calling <a href="#analyze(java.lang.CharSequence)"><code>analyze(CharSequence)</code></a>, you can optionally call this to alter any words in this MarkovText
+ that are present in the given Collection, changing them to a ciphered version using the given <a href="Translator.html" title="class in com.github.yellowstonegames.text"><code>Translator</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#copy()" class="member-name-link">copy</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copies the String array <a href="#words"><code>words</code></a> and the 2D jagged int array <a href="#processed"><code>processed</code></a> into a new MarkovText.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="MarkovText.html" title="class in com.github.yellowstonegames.text">MarkovText</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Recreates an already-analyzed MarkovText given a String produced by <a href="#stringSerialize()"><code>stringSerialize()</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringSerialize()" class="member-name-link">stringSerialize</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringSerialize()" class="member-name-link">stringSerialize</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a representation of this MarkovText as a String; use <a href="#stringDeserialize(java.lang.String)"><code>stringDeserialize(String)</code></a> to get a
  MarkovText back from this String.</div>
 </div>
@@ -218,10 +223,10 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="pairs">
 <h3>pairs</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntIntOrderedMap</span>&nbsp;<span class="element-name">pairs</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntIntMap</span>&nbsp;<span class="element-name">pairs</span></div>
 <div class="block">Map of all pairs of words encountered to the position in the order they were encountered. Pairs are stored using
  their 16-bit <a href="#words"><code>words</code></a> indices placed into the most-significant bits for the first word and the
- least-significant bits for the second word. The size of this IntIntOrderedMap is likely to be larger than the
+ least-significant bits for the second word. The size of this IntIntMap is likely to be larger than the
  String array <a href="#words"><code>words</code></a>, but should be equal to <code>processed.length</code>. Will be null if
  <a href="#analyze(java.lang.CharSequence)"><code>analyze(CharSequence)</code></a> was never called.</div>
 </section>
@@ -283,12 +288,33 @@ loadScripts(document, 'script');</script>
 <div class="block">After calling <a href="#analyze(java.lang.CharSequence)"><code>analyze(CharSequence)</code></a>, you can optionally call this to alter any words in this MarkovText that
  were used as a proper noun (determined by whether they were capitalized in the middle of a sentence), changing
  them to a ciphered version using the given <a href="Translator.html" title="class in com.github.yellowstonegames.text"><code>Translator</code></a>. Normally you would initialize a
- NaturalLanguageCipher with a <a href="Language.html" title="class in com.github.yellowstonegames.text"><code>Language</code></a> that matches the style you want for all names in this text,
+ Translator with a <a href="Language.html" title="class in com.github.yellowstonegames.text"><code>Language</code></a> that matches the style you want for all names in this text,
  then pass that to this method during pre-processing (not necessarily at runtime, since this method isn't
  especially fast if the corpus was large). This method modifies this MarkovText in-place.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>translator</code> - a NaturalLanguageCipher that will be used to translate proper nouns in this MarkovText's word array</dd>
+<dd><code>translator</code> - a Translator that will be used to translate proper nouns in this MarkovText's word array</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="changeNames(com.github.yellowstonegames.text.Translator,java.util.Collection)">
+<h3>changeNames</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">changeNames</span><wbr><span class="parameters">(<a href="Translator.html" title="class in com.github.yellowstonegames.text">Translator</a>&nbsp;translator,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&gt;&nbsp;names)</span></div>
+<div class="block">After calling <a href="#analyze(java.lang.CharSequence)"><code>analyze(CharSequence)</code></a>, you can optionally call this to alter any words in this MarkovText
+ that are present in the given Collection, changing them to a ciphered version using the given <a href="Translator.html" title="class in com.github.yellowstonegames.text"><code>Translator</code></a>.
+ Normally you would initialize a Translator with a <a href="Language.html" title="class in com.github.yellowstonegames.text"><code>Language</code></a> that matches the style you want for all names
+ in this text, then pass that to this method during pre-processing (not necessarily at runtime, since this method
+ isn't especially fast if the corpus was large). This method modifies this MarkovText in-place.
+ <br>
+ A good way to use this when you have some group of names, but might encounter them in different cases (such as
+ ALL CAPS in a header, or Capitalized Like A Name), is to use a <code>CaseInsensitiveSet</code> as the Collection. It
+ won't handle punctuation next to a word, though; a somewhat different approach is needed for that.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>translator</code> - a Translator that will be used to translate proper nouns in this MarkovText's word array</dd>
+<dd><code>names</code> - a Collection of names that, if a word from the word array is also in names, will be translated</dd>
 </dl>
 </section>
 </li>

@@ -172,9 +172,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  and can be recycled) using <a href="#remake(com.github.yellowstonegames.grid.Region)"><code>remake(Region)</code></a>, or give the information that would normally be used to
  construct a fresh Region to an existing one of the same dimensions with <a href="#refill(boolean%5B%5D%5B%5D)"><code>refill(boolean[][])</code></a> or any
  of the overloads of refill(). These re-methods don't do as much work as a constructor does if the width and height
- of their argument are identical to their current width and height, and don't create more garbage for the GC.
- <br>
- Created by Tommy Ettinger on 6/24/2016.</div>
+ of their argument are identical to their current width and height, and don't create more garbage for the GC.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -1503,100 +1501,107 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Changes the on/off state of the cell with the given x and y, making an on cell into an off cell, or an off cell
  into an on cell.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toInts(int,int)" class="member-name-link">toInts</a><wbr>(int&nbsp;on,
+ int&nbsp;off)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns this Region's data as a 2D int array,  [width][height] in size, with "on" cells filled with the
+ int parameter on and "off" cells with the parameter off.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a legible String representation of this that can be printed over multiple lines, with all "on" cells
  represented by '.' and all "off" cells by '#', in roguelike floors-on walls-off convention, separating each row
  by newlines (without a final trailing newline, so you could append text right after this).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translate(int,int)" class="member-name-link">translate</a><wbr>(int&nbsp;x,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#translate(int,int)" class="member-name-link">translate</a><wbr>(int&nbsp;x,
  int&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Moves the "on" cells in this Region to the given x and y offset, removing cells that move out of bounds.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#whichContain(int,int,com.github.yellowstonegames.grid.Region...)" class="member-name-link">whichContain</a><wbr>(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#whichContain(int,int,com.github.yellowstonegames.grid.Region...)" class="member-name-link">whichContain</a><wbr>(int&nbsp;x,
  int&nbsp;y,
  <a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>...&nbsp;packed)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#whichContain(int,int,java.util.Collection)" class="member-name-link">whichContain</a><wbr>(int&nbsp;x,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.github.tommyettinger.ds.ObjectOrderedSet&lt;<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#whichContain(int,int,java.util.Collection)" class="member-name-link">whichContain</a><wbr>(int&nbsp;x,
  int&nbsp;y,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&gt;&nbsp;packed)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeChars(char%5B%5D%5B%5D,char)" class="member-name-link">writeChars</a><wbr>(char[][]&nbsp;map,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeChars(char%5B%5D%5B%5D,char)" class="member-name-link">writeChars</a><wbr>(char[][]&nbsp;map,
  char&nbsp;toWrite)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps the value in map intact,
  and where a cell is "on", it instead writes the char toWrite.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeCharsInto(char%5B%5D%5B%5D,char)" class="member-name-link">writeCharsInto</a><wbr>(char[][]&nbsp;map,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeCharsInto(char%5B%5D%5B%5D,char)" class="member-name-link">writeCharsInto</a><wbr>(char[][]&nbsp;map,
  char&nbsp;toWrite)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Like <a href="#writeChars(char%5B%5D%5B%5D,char)"><code>writeChars(char[][], char)</code></a>, but modifies <code>map</code> in-place and returns it.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeCharsToOff(char%5B%5D%5B%5D,char)" class="member-name-link">writeCharsToOff</a><wbr>(char[][]&nbsp;map,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>char[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeCharsToOff(char%5B%5D%5B%5D,char)" class="member-name-link">writeCharsToOff</a><wbr>(char[][]&nbsp;map,
  char&nbsp;filler)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
  and where a cell is "off", it instead writes the char filler.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeFloats(float%5B%5D%5B%5D,float)" class="member-name-link">writeFloats</a><wbr>(float[][]&nbsp;map,
- float&nbsp;toWrite)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
- the value in map intact, and where a cell is "on", it instead writes the float toWrite.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeFloatsInto(float%5B%5D%5B%5D,float)" class="member-name-link">writeFloatsInto</a><wbr>(float[][]&nbsp;map,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeFloats(float%5B%5D%5B%5D,float)" class="member-name-link">writeFloats</a><wbr>(float[][]&nbsp;map,
  float&nbsp;toWrite)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
  the value in map intact, and where a cell is "on", it instead writes the float toWrite.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeInts(int%5B%5D%5B%5D,int)" class="member-name-link">writeInts</a><wbr>(int[][]&nbsp;map,
- int&nbsp;toWrite)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeFloatsInto(float%5B%5D%5B%5D,float)" class="member-name-link">writeFloatsInto</a><wbr>(float[][]&nbsp;map,
+ float&nbsp;toWrite)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
+ the value in map intact, and where a cell is "on", it instead writes the float toWrite.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeInts(int%5B%5D%5B%5D,int)" class="member-name-link">writeInts</a><wbr>(int[][]&nbsp;map,
+ int&nbsp;toWrite)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps
  the value in map intact, and where a cell is "on", it instead writes the int toWrite.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeIntsInto(int%5B%5D%5B%5D,int)" class="member-name-link">writeIntsInto</a><wbr>(int[][]&nbsp;map,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeIntsInto(int%5B%5D%5B%5D,int)" class="member-name-link">writeIntsInto</a><wbr>(int[][]&nbsp;map,
  int&nbsp;toWrite)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a copy of map where if a cell is "off" in this Region, this keeps the value in map intact,
  and where a cell is "on", it instead writes the int toWrite.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>short[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeShortsToOff(short%5B%5D%5B%5D,short)" class="member-name-link">writeShortsToOff</a><wbr>(short[][]&nbsp;map,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>short[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeShortsToOff(short%5B%5D%5B%5D,short)" class="member-name-link">writeShortsToOff</a><wbr>(short[][]&nbsp;map,
  short&nbsp;filler)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a copy of map where if a cell is "on" in this Region, this keeps the value in map intact,
  and where a cell is "off", it instead writes the short filler.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#xBound(boolean)" class="member-name-link">xBound</a><wbr>(boolean&nbsp;findSmallest)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#xor(com.github.yellowstonegames.grid.Region)" class="member-name-link">xor</a><wbr>(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;other)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#xBound(boolean)" class="member-name-link">xBound</a><wbr>(boolean&nbsp;findSmallest)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#xor(com.github.yellowstonegames.grid.Region)" class="member-name-link">xor</a><wbr>(<a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a>&nbsp;other)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Symmetric difference (more commonly known as exclusive or, hence the name) of two Regions, assigning the
  result into this Region.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#yBound(boolean)" class="member-name-link">yBound</a><wbr>(boolean&nbsp;findSmallest)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#zoom(int,int)" class="member-name-link">zoom</a><wbr>(int&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#yBound(boolean)" class="member-name-link">yBound</a><wbr>(boolean&nbsp;findSmallest)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Region.html" title="class in com.github.yellowstonegames.grid">Region</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#zoom(int,int)" class="member-name-link">zoom</a><wbr>(int&nbsp;x,
  int&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Effectively doubles the x and y values of each cell this contains (not scaling each cell to be larger, so each
  "on" cell will be surrounded by "off" cells), and re-maps the positions so the given x and y in the doubled space
  become 0,0 in the resulting Region (which is this, assigning to itself).</div>
@@ -2863,6 +2868,22 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <dd><code>toWrite</code> - the int to use where this Region stores an "on" cell</dd>
 <dt>Returns:</dt>
 <dd>map, with "on" cells from this changed to toWrite; not a copy</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toInts(int,int)">
+<h3>toInts</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int[][]</span>&nbsp;<span class="element-name">toInts</span><wbr><span class="parameters">(int&nbsp;on,
+ int&nbsp;off)</span></div>
+<div class="block">Returns this Region's data as a 2D int array,  [width][height] in size, with "on" cells filled with the
+ int parameter on and "off" cells with the parameter off.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>on</code> - the int to use for "on" cells</dd>
+<dd><code>off</code> - the int to use for "off" cells</dd>
+<dt>Returns:</dt>
+<dd>a 2D int array that represents this Region's data</dd>
 </dl>
 </section>
 </li>
@@ -4304,7 +4325,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  least significant bit and every other bit after it are filled with the bits of x, while the
  second-least-significant bit and every other bit after that are filled with the bits of y. Essentially, this
  takes two numbers with bits labeled like <code>a b c</code> for x and <code>R S T</code> for y and makes a number with
- those bits arranged like <code>R a S b T c</code>.</div>
+ those bits arranged like <code>R a S b T c</code>. Numbers made by interleaving other numbers like this are sometimes
+ called Morton codes, and the sequence of Morton codes forms a pattern called the Z-order curve.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - an int between 0 and 65535, inclusive</dd>
@@ -4321,7 +4343,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="block">Narrow-purpose; takes an int that represents a distance down the Z-order curve and moves its bits around so that
  its x component is stored in the bottom 16 bits (use <code>(n &amp; 0xffff)</code> to obtain) and its y component is
  stored in the upper 16 bits (use <code>(n &gt;&gt;&gt; 16)</code> to obtain). This may be useful for ordering traversals of all
- points in a Region less predictably.</div>
+ points in a Region less predictably. Numbers made by interleaving other numbers, like <code>n</code>, are sometimes
+ called Morton codes, and the sequence of Morton codes forms a pattern called the Z-order curve.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>n</code> - an int that has already been interleaved, though this can really be any int</dd>

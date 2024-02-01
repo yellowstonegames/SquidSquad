@@ -89,7 +89,7 @@ loadScripts(document, 'script');</script>
  The most-frequently-used algorithm here is probably <a href="#findShortestPath(V,V,com.github.tommyettinger.ds.ObjectDeque,com.github.yellowstonegames.path.Heuristic)"><code>findShortestPath(Object, Object, ObjectDeque, Heuristic)</code></a>,
  or some overload of it; this is a standard A-Star algorithm backed by a priority queue that is very fast. Somewhat
  surprisingly, it doesn't need indices like gdx-ai's IndexedAStarPathFinder needs, and this makes the code easier to
- use. There's a good amount of other useful algorithms here, like <a href="#detectCycle()"><code>detectCycle()</code></a> and various non-A-Star search
+ use. There's a good amount of other useful algorithms here, like <a href="#containsCycle()"><code>containsCycle()</code></a> and various non-A-Star search
  methods, like <a href="#breadthFirstSearch(V,int,int)"><code>breadthFirstSearch(Object, int, int)</code></a> and <a href="#depthFirstSearch(V,int,int)"><code>depthFirstSearch(Object, int, int)</code></a>.
  <br>
  This class is not meant to be extended from outside of this package, so it uses a package-private implementation.</div>
@@ -119,22 +119,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Perform a breadth first search starting from the specified vertex.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(V)" class="member-name-link">depthFirstSearch</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;v)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#containsCycle()" class="member-name-link">containsCycle</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Perform a depth first search starting from the specified vertex.</div>
+<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(V,int,int)" class="member-name-link">depthFirstSearch</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;v,
- int&nbsp;maxVertices,
- int&nbsp;maxDepth)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(V)" class="member-name-link">depthFirstSearch</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;v)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Perform a depth first search starting from the specified vertex.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#detectCycle()" class="member-name-link">detectCycle</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(V,int,int)" class="member-name-link">depthFirstSearch</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;v,
+ int&nbsp;maxVertices,
+ int&nbsp;maxDepth)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
+<div class="block">Perform a depth first search starting from the specified vertex.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findMinimumDistance(V,V)" class="member-name-link">findMinimumDistance</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
@@ -142,33 +142,53 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the length of the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(V,V)" class="member-name-link">findShortestPath</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
- <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findMinimumDistance(V,V,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findMinimumDistance</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+ <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target,
+ <a href="Heuristic.html" title="interface in com.github.yellowstonegames.path">Heuristic</a>&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;&nbsp;heuristic)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Find the length of the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(V,V)" class="member-name-link">findShortestPath</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+ <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(V,V,com.github.tommyettinger.ds.ObjectDeque,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(V,V,com.github.tommyettinger.ds.ObjectDeque,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
  <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target,
  com.github.tommyettinger.ds.ObjectDeque&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;&nbsp;path,
  <a href="Heuristic.html" title="interface in com.github.yellowstonegames.path">Heuristic</a>&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;&nbsp;heuristic)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the shortest path between the start and target vertices, using the A* search algorithm with the provided
  heuristic, and implemented with a priority queue.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(V,V,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(V,V,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
  <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target,
  <a href="Heuristic.html" title="interface in com.github.yellowstonegames.path">Heuristic</a>&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;&nbsp;heuristic)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the shortest path between the start and target vertices, using the A* search algorithm with the provided heuristic, and implemented with a priority queue.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isConnected(V,V)" class="member-name-link">isConnected</a><wbr>(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+ <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks whether there exists a path from the start vertex to target vertex, using Dijkstra's algorithm implemented with a priority queue.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lastRunID()" class="member-name-link">lastRunID</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the identifier for the last run of an algorithm; this should mostly be usable internally, but may be useful
  when different runs have affected a graph and a <a href="Node.html#lastRunID"><code>Node.lastRunID</code></a> may need to be checked against this.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRunID(int)" class="member-name-link">setRunID</a><wbr>(int&nbsp;newID)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the identifier for the last run of an algorithm; this should mostly be usable internally, but may be useful
+ when serializing and deserializing a Graph and you, for whatever reason, need to ensure previous runs of an
+ algorithm on that Graph can be resumed.</div>
 </div>
 </div>
 </div>
@@ -249,7 +269,40 @@ loadScripts(document, 'script');</script>
 <dd><code>start</code> - the starting vertex</dd>
 <dd><code>target</code> - the target vertex</dd>
 <dt>Returns:</dt>
-<dd>the sum of the weights in a shortest path from the starting vertex to the target vertex</dd>
+<dd>the sum of the weights in a shortest path from the starting vertex to the target vertex
+ If there is no path from the start vertex to the target vertex, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Float.MAX_VALUE</code></a> is returned.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="findMinimumDistance(V,V,com.github.yellowstonegames.path.Heuristic)">
+<h3 id="findMinimumDistance(java.lang.Object,java.lang.Object,com.github.yellowstonegames.path.Heuristic)">findMinimumDistance</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">findMinimumDistance</span><wbr><span class="parameters">(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+ <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target,
+ <a href="Heuristic.html" title="interface in com.github.yellowstonegames.path">Heuristic</a>&lt;<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&gt;&nbsp;heuristic)</span></div>
+<div class="block">Find the length of the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>start</code> - the starting vertex</dd>
+<dd><code>target</code> - the target vertex</dd>
+<dt>Returns:</dt>
+<dd>the sum of the weights in a shortest path from the starting vertex to the target vertex
+ If there is no path from the start vertex to the target vertex, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Float.html#MAX_VALUE" title="class or interface in java.lang" class="external-link"><code>Float.MAX_VALUE</code></a> is returned.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isConnected(V,V)">
+<h3 id="isConnected(java.lang.Object,java.lang.Object)">isConnected</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isConnected</span><wbr><span class="parameters">(<a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;start,
+ <a href="Algorithms.html" title="type parameter in Algorithms">V</a>&nbsp;target)</span></div>
+<div class="block">Checks whether there exists a path from the start vertex to target vertex, using Dijkstra's algorithm implemented with a priority queue.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>start</code> - the starting vertex</dd>
+<dd><code>target</code> - the target vertex</dd>
+<dt>Returns:</dt>
+<dd>whether there exists a path from the start vertex to target vertex</dd>
 </dl>
 </section>
 </li>
@@ -326,9 +379,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="detectCycle()">
-<h3>detectCycle</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">detectCycle</span>()</div>
+<section class="detail" id="containsCycle()">
+<h3>containsCycle</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">containsCycle</span>()</div>
 <div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -345,6 +398,19 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>an identifier for which algorithm ran last, as a probably-unique int</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setRunID(int)">
+<h3>setRunID</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRunID</span><wbr><span class="parameters">(int&nbsp;newID)</span></div>
+<div class="block">Sets the identifier for the last run of an algorithm; this should mostly be usable internally, but may be useful
+ when serializing and deserializing a Graph and you, for whatever reason, need to ensure previous runs of an
+ algorithm on that Graph can be resumed.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>newID</code> - an identifier for which algorithm ran last, as a probably-unique int</dd>
 </dl>
 </section>
 </li>

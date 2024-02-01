@@ -89,7 +89,7 @@ implements <a href="INoise.html" title="interface in com.github.yellowstonegames
  This variant also uses different <a href="GradientVectors.html" title="class in com.github.yellowstonegames.grid"><code>gradient vectors</code></a> than the
  ones used in "Improved Perlin Noise." Here all the gradient vectors are unit vectors, like in the original Perlin
  Noise, which makes some calculations regarding the range the functions can return easier... in theory. In practice,
- the somewhat-flawed gradient vectors used in earlier iterations of Perlin Noise permitted a very different range
+ the somewhat-flawed gradient vectors used in earlier iterations of this PerlinNoise permitted a very different range
  calculation, and so this class uses a carefully-crafted sigmoid function to move around the most frequent values to
  roughly match earlier Perlin Noise results, but without risking going out-of-range. You can adjust the sigmoid
  function parameters for a given dimension using <a href="#setEqualization(int,float)"><code>setEqualization(int, float)</code></a>; "add" parameters closer to 0
@@ -395,30 +395,23 @@ implements <a href="INoise.html" title="interface in com.github.yellowstonegames
 <div class="block">Sets the seed to the given long, if long seeds are supported, or <code>(int)seed</code> if only int seeds are
  supported.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#signedBias(float,float)" class="member-name-link">signedBias</a><wbr>(float&nbsp;x,
- float&nbsp;bias)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Emphasizes or de-emphasizes extreme values using Schlick's bias function when <code>x</code> is between 0 and 1
- (inclusive), or effectively <code>-bias(-x)</code> when x is between -1 and 0.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PerlinNoise.html" title="class in com.github.yellowstonegames.grid">PerlinNoise</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PerlinNoise.html" title="class in com.github.yellowstonegames.grid">PerlinNoise</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringDeserialize(java.lang.String)" class="member-name-link">stringDeserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;data)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Given a serialized String produced by <a href="#stringSerialize()"><code>stringSerialize()</code></a>, reassigns this PerlinNoise to have the
  described state from the given String.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringSerialize()" class="member-name-link">stringSerialize</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stringSerialize()" class="member-name-link">stringSerialize</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Produces a String that describes everything needed to recreate this INoise in full.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#towardsZero(float)" class="member-name-link">towardsZero</a><wbr>(float&nbsp;x)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#towardsZero(float)" class="member-name-link">towardsZero</a><wbr>(float&nbsp;x)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given a float <code>x</code>, this returns the second-closest float to x in the direction of zero.</div>
 </div>
 </div>
@@ -448,30 +441,70 @@ implements <a href="INoise.html" title="interface in com.github.yellowstonegames
 <section class="detail" id="SCALE2">
 <h3>SCALE2</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">SCALE2</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.PerlinNoise.SCALE2">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="SCALE3">
 <h3>SCALE3</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">SCALE3</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.PerlinNoise.SCALE3">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="SCALE4">
 <h3>SCALE4</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">SCALE4</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.PerlinNoise.SCALE4">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="SCALE5">
 <h3>SCALE5</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">SCALE5</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.PerlinNoise.SCALE5">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="SCALE6">
 <h3>SCALE6</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">SCALE6</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.grid.PerlinNoise.SCALE6">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -575,27 +608,6 @@ implements <a href="INoise.html" title="interface in com.github.yellowstonegames
 <dd><code>a</code> - a float between -1.0f and 1.0f inclusive</dd>
 <dt>Returns:</dt>
 <dd>a float between -1.0f and 1.0f inclusive that is more likely to be near the extremes</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="signedBias(float,float)">
-<h3>signedBias</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">signedBias</span><wbr><span class="parameters">(float&nbsp;x,
- float&nbsp;bias)</span></div>
-<div class="block">Emphasizes or de-emphasizes extreme values using Schlick's bias function when <code>x</code> is between 0 and 1
- (inclusive), or effectively <code>-bias(-x)</code> when x is between -1 and 0. The bias parameter is handled a little
- differently from how Schlick implemented it; here, <code>bias=1</code> produces a straight line (no bias), bias
- between 0 and 1 is shaped like the <code>MathTools.cbrt(float)</code> function, and
- bias greater than 1 is shaped like <code>MathTools.cube(float)</code>.
- <br>
- This static method is likely to be moved to <code>MathTools</code> at some point.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>x</code> - between -1 and 1, inclusive</dd>
-<dd><code>bias</code> - any float greater than 0 (exclusive)</dd>
-<dt>Returns:</dt>
-<dd>a biased float between -1 and 1, inclusive</dd>
 </dl>
 </section>
 </li>

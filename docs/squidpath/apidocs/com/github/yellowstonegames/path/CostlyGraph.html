@@ -82,9 +82,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CostlyGraph</span>
 <span class="extends-implements">extends <a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path">DirectedGraph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</span></div>
 <div class="block">A default setting for a DirectedGraph of Coord vertices where each passable cell has a cost to enter it from any
- passable neighbor.
- <br>
- Created by Tommy Ettinger on 7/9/2020.</div>
+ passable neighbor.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -109,7 +107,7 @@ loadScripts(document, 'script');</script>
 <code><a href="DirectedGraph.html#algorithms">algorithms</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.github.yellowstonegames.path.Graph">Fields inherited from class&nbsp;com.github.yellowstonegames.path.<a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></h3>
-<code><a href="Graph.html#edgeMap">edgeMap</a>, <a href="Graph.html#vertexMap">vertexMap</a></code></div>
+<code><a href="Graph.html#edgeSet">edgeSet</a>, <a href="Graph.html#vertexMap">vertexMap</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -173,64 +171,70 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Perform a breadth first search starting from the specified vertex.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(com.github.yellowstonegames.grid.Coord)" class="member-name-link">depthFirstSearch</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;coord)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Perform a depth first search starting from the specified vertex.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(com.github.yellowstonegames.grid.Coord,int,int)" class="member-name-link">depthFirstSearch</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;coord,
- int&nbsp;maxVertices,
- int&nbsp;maxDepth)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Perform a depth first search starting from the specified vertex.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#detectCycle()" class="member-name-link">detectCycle</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#containsCycle()" class="member-name-link">containsCycle</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findMinimumDistance(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">findMinimumDistance</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
- com.github.yellowstonegames.grid.Coord&nbsp;target)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(com.github.yellowstonegames.grid.Coord)" class="member-name-link">depthFirstSearch</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;coord)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Find the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
+<div class="block">Perform a depth first search starting from the specified vertex.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">findShortestPath</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#depthFirstSearch(com.github.yellowstonegames.grid.Coord,int,int)" class="member-name-link">depthFirstSearch</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;coord,
+ int&nbsp;maxVertices,
+ int&nbsp;maxDepth)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Perform a depth first search starting from the specified vertex.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findMinimumDistance(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">findMinimumDistance</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
  com.github.yellowstonegames.grid.Coord&nbsp;target)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,com.github.tommyettinger.ds.ObjectDeque,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord)" class="member-name-link">findShortestPath</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
+ com.github.yellowstonegames.grid.Coord&nbsp;target)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Find the shortest path between the start and target vertices, using Dijkstra's algorithm implemented with a priority queue.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,com.github.tommyettinger.ds.ObjectDeque,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
  com.github.yellowstonegames.grid.Coord&nbsp;target,
  com.github.tommyettinger.ds.ObjectDeque&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;path,
  <a href="Heuristic.html" title="interface in com.github.yellowstonegames.path">Heuristic</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;heuristic)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the shortest path between the start and target vertices, using the A* search algorithm with the provided
  heuristic, and implemented with a priority queue.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findShortestPath(com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.path.Heuristic)" class="member-name-link">findShortestPath</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;start,
  com.github.yellowstonegames.grid.Coord&nbsp;target,
  <a href="Heuristic.html" title="interface in com.github.yellowstonegames.path">Heuristic</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;heuristic)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the shortest path between the start and target vertices, using the A* search algorithm with the provided heuristic, and implemented with a priority queue.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#generateAStarCostMap(char%5B%5D%5B%5D)" class="member-name-link">generateAStarCostMap</a><wbr>(char[][]&nbsp;map)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#generateAStarCostMap(char%5B%5D%5B%5D)" class="member-name-link">generateAStarCostMap</a><wbr>(char[][]&nbsp;map)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given a char[][] for the map, produces a float[][] that can be used as a cost map by this class.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#generateAStarCostMap(char%5B%5D%5B%5D,com.github.tommyettinger.ds.IntFloatMap,float)" class="member-name-link">generateAStarCostMap</a><wbr>(char[][]&nbsp;map,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static float[][]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#generateAStarCostMap(char%5B%5D%5B%5D,com.github.tommyettinger.ds.IntFloatMap,float)" class="member-name-link">generateAStarCostMap</a><wbr>(char[][]&nbsp;map,
  com.github.tommyettinger.ds.IntFloatMap&nbsp;costs,
  float&nbsp;defaultValue)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given a char[][] for the map, a jdkgdxds IntFloatMap that maps chars in the map to their costs, and a float value
  for unhandled characters, produces a float[][] that can be used as a map by AStarSearch.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#init(float%5B%5D%5B%5D)" class="member-name-link">init</a><wbr>(float[][]&nbsp;map)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -260,6 +264,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Perform a topological sort on the graph, and puts the sorted vertices in the supplied list.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -268,10 +275,10 @@ loadScripts(document, 'script');</script>
 <code><a href="DirectedGraph.html#algorithms()">algorithms</a>, <a href="DirectedGraph.html#createNew()">createNew</a>, <a href="DirectedGraph.html#obtainEdge()">obtainEdge</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.github.yellowstonegames.path.Graph">Methods inherited from class&nbsp;com.github.yellowstonegames.path.<a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a></h3>
-<code><a href="Graph.html#addConnection(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">addConnection</a>, <a href="Graph.html#addConnection(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node,float)">addConnection</a>, <a href="Graph.html#addEdge(V,V)">addEdge</a>, <a href="Graph.html#addEdge(V,V,float)">addEdge</a>, <a href="Graph.html#addVertex(V)">addVertex</a>, <a href="Graph.html#addVertices(java.util.Collection)">addVertices</a>, <a href="Graph.html#connectionExists(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">connectionExists</a>, <a href="Graph.html#contains(V)">contains</a>, <a href="Graph.html#edgeExists(V,V)">edgeExists</a>, <a href="Graph.html#getEdge(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">getEdge</a>, <a href="Graph.html#getEdge(V,V)">getEdge</a>, <a href="Graph.html#getEdgeCount()">getEdgeCount</a>, <a href="Graph.html#getEdges()">getEdges</a>, <a href="Graph.html#getEdges(V)">getEdges</a>, <a href="Graph.html#getNode(V)">getNode</a>, <a href="Graph.html#getNodes()">getNodes</a>, <a href="Graph.html#getVertices()">getVertices</a>, <a href="Graph.html#isDirected()">isDirected</a>, <a href="Graph.html#removeAllEdges()">removeAllEdges</a>, <a href="Graph.html#removeAllVertices()">removeAllVertices</a>, <a href="Graph.html#removeConnection(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">removeConnection</a>, <a href="Graph.html#removeEdge(com.github.yellowstonegames.path.Edge)">removeEdge</a>, <a href="Graph.html#removeEdge(V,V)">removeEdge</a>, <a href="Graph.html#removeNode(com.github.yellowstonegames.path.Node)">removeNode</a>, <a href="Graph.html#removeVertex(V)">removeVertex</a>, <a href="Graph.html#removeVertices(java.util.Collection)">removeVertices</a>, <a href="Graph.html#size()">size</a>, <a href="Graph.html#sortEdges(java.util.Comparator)">sortEdges</a>, <a href="Graph.html#sortVertices(java.util.Comparator)">sortVertices</a></code></div>
+<code><a href="Graph.html#addConnection(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">addConnection</a>, <a href="Graph.html#addConnection(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node,float)">addConnection</a>, <a href="Graph.html#addEdge(V,V)">addEdge</a>, <a href="Graph.html#addEdge(V,V,float)">addEdge</a>, <a href="Graph.html#addVertex(V)">addVertex</a>, <a href="Graph.html#addVertices(java.util.Collection)">addVertices</a>, <a href="Graph.html#addVertices(V...)">addVertices</a>, <a href="Graph.html#connectionExists(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">connectionExists</a>, <a href="Graph.html#contains(V)">contains</a>, <a href="Graph.html#disconnect(com.github.yellowstonegames.path.Node)">disconnect</a>, <a href="Graph.html#disconnect(V)">disconnect</a>, <a href="Graph.html#edgeExists(V,V)">edgeExists</a>, <a href="Graph.html#getEdge(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">getEdge</a>, <a href="Graph.html#getEdge(V,V)">getEdge</a>, <a href="Graph.html#getEdgeCount()">getEdgeCount</a>, <a href="Graph.html#getEdges()">getEdges</a>, <a href="Graph.html#getEdges(V)">getEdges</a>, <a href="Graph.html#getNode(V)">getNode</a>, <a href="Graph.html#getNodes()">getNodes</a>, <a href="Graph.html#getVertices()">getVertices</a>, <a href="Graph.html#isDirected()">isDirected</a>, <a href="Graph.html#removeAllEdges()">removeAllEdges</a>, <a href="Graph.html#removeAllVertices()">removeAllVertices</a>, <a href="Graph.html#removeConnection(com.github.yellowstonegames.path.Node,com.github.yellowstonegames.path.Node)">removeConnection</a>, <a href="Graph.html#removeEdge(com.github.yellowstonegames.path.Edge)">removeEdge</a>, <a href="Graph.html#removeEdge(V,V)">removeEdge</a>, <a href="Graph.html#removeEdgeIf(com.github.tommyettinger.function.ObjPredicate)">removeEdgeIf</a>, <a href="Graph.html#removeEdges(java.util.Collection)">removeEdges</a>, <a href="Graph.html#removeNode(com.github.yellowstonegames.path.Node)">removeNode</a>, <a href="Graph.html#removeVertex(V)">removeVertex</a>, <a href="Graph.html#removeVertexIf(com.github.tommyettinger.function.ObjPredicate)">removeVertexIf</a>, <a href="Graph.html#removeVertices(java.util.Collection)">removeVertices</a>, <a href="Graph.html#size()">size</a>, <a href="Graph.html#sortEdges(java.util.Comparator)">sortEdges</a>, <a href="Graph.html#sortVertices(java.util.Comparator)">sortVertices</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -663,9 +670,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="detectCycle()">
-<h3>detectCycle</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">detectCycle</span>()</div>
+<section class="detail" id="containsCycle()">
+<h3>containsCycle</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">containsCycle</span>()</div>
 <div class="block">Checks whether there are any cycles in the graph using depth first searches.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -684,6 +691,36 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a 1D char array containing newline-separated rows of space-separated grid cells that contain estimated costs or '####' for unexplored</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="equals(java.lang.Object)">
+<h3>equals</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Graph.html#equals(java.lang.Object)">equals</a></code>&nbsp;in class&nbsp;<code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="hashCode()">
+<h3>hashCode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">hashCode</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Graph.html#hashCode()">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="Graph.html" title="class in com.github.yellowstonegames.path">Graph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="DirectedGraph.html#toString()">toString</a></code>&nbsp;in class&nbsp;<code><a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path">DirectedGraph</a>&lt;com.github.yellowstonegames.grid.Coord&gt;</code></dd>
 </dl>
 </section>
 </li>

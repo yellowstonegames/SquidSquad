@@ -113,11 +113,10 @@ loadScripts(document, 'script');</script>
  If you can't remember how to spell this, just remember: Does It Just Know Stuff? That's Really Awesome!
  <br>
  You shouldn't use DijkstraMap for all purposes; it isn't very good at handling terrains with a cost to enter, and
- can't handle directional costs like a one-way ledge. For those tasks, <a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path"><code>DefaultGraph</code></a> or <a href="CostlyGraph.html" title="class in com.github.yellowstonegames.path"><code>CostlyGraph</code></a>
- will be better fits. CostlyGraph and similar versions of <a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path"><code>DirectedGraph</code></a> can handle even very complicated kinds
- of map, including the types of pathfinding that were handled by CustomDijkstraMap in earlier versions of SquidLib.
- <br>
- Created by Tommy Ettinger on 4/4/2015. Optimized ruthlessly by Tommy Ettinger over the next few years.</div>
+ can't handle directional costs like a one-way ledge. For those tasks, <a href="DefaultGraph.html" title="class in com.github.yellowstonegames.path"><code>DefaultGraph</code></a>
+ or <a href="CostlyGraph.html" title="class in com.github.yellowstonegames.path"><code>CostlyGraph</code></a> will be better fits. CostlyGraph and similar versions of
+ <a href="DirectedGraph.html" title="class in com.github.yellowstonegames.path"><code>DirectedGraph</code></a> can handle even very complicated kinds
+ of map, including the types of pathfinding that were handled by CustomDijkstraMap in earlier versions of SquidLib.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -152,15 +151,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Floor cells, which include any walkable cell, are marked with a high number equal to 999200f .</div>
 </div>
-<div class="col-first even-row-color"><code>protected com.github.tommyettinger.ds.IntList</code></div>
+<div class="col-first even-row-color"><code>protected com.github.tommyettinger.ds.IntDeque</code></div>
 <div class="col-second even-row-color"><code><a href="#fresh" class="member-name-link">fresh</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Goals that pathfinding will seek out.</div>
+<div class="block">Working data used during scanning, this tracks the perimeter of the scanned area so far.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final float</code></div>
 <div class="col-second odd-row-color"><code><a href="#GOAL" class="member-name-link">GOAL</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Goals are always marked with 0.</div>
+<div class="block">Goals are by default marked with 0f.</div>
 </div>
 <div class="col-first even-row-color"><code>protected com.github.tommyettinger.ds.IntList</code></div>
 <div class="col-second even-row-color"><code><a href="#goals" class="member-name-link">goals</a></code></div>
@@ -193,7 +192,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Stores which parts of the map are accessible and which are not.</div>
 </div>
-<div class="col-first even-row-color"><code>protected com.github.tommyettinger.random.MizuchiRandom</code></div>
+<div class="col-first even-row-color"><code>protected com.github.tommyettinger.random.FlowRandom</code></div>
 <div class="col-second even-row-color"><code><a href="#rng" class="member-name-link">rng</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">The MizuchiRandom used to decide which one of multiple equally-short paths to take; this has its state set
@@ -304,14 +303,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encode(int,int)" class="member-name-link">encode</a><wbr>(int&nbsp;x,
  int&nbsp;y)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
- this DijkstraMap's width and height.</div>
+<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#encode(com.github.yellowstonegames.grid.Coord)" class="member-name-link">encode</a><wbr>(com.github.yellowstonegames.grid.Coord&nbsp;point)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
- this DijkstraMap's width and height.</div>
+<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.github.tommyettinger.ds.ObjectDeque&lt;com.github.yellowstonegames.grid.Coord&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findAttackPath(int,int,int,com.github.yellowstonegames.grid.LineDrawer,java.util.Collection,java.util.Collection,com.github.yellowstonegames.grid.Coord,com.github.yellowstonegames.grid.Coord...)" class="member-name-link">findAttackPath</a><wbr>(int&nbsp;moveLength,
@@ -396,7 +393,7 @@ loadScripts(document, 'script');</script>
  com.github.yellowstonegames.grid.Coord&nbsp;start,
  com.github.yellowstonegames.grid.Coord...&nbsp;fearSources)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Scans the dungeon using DijkstraMap.scan with the listed fearSources and start point, and returns a list
+<div class="block">Scans the dungeon using DijkstraMap.scan() with the listed fearSources and start point, and returns a list
  of Coord positions (using Manhattan distance) needed to get further from the closest fearSources, meant
  for running away.</div>
 </div>
@@ -810,6 +807,68 @@ loadScripts(document, 'script');</script>
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="GOAL">
+<h3>GOAL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">GOAL</span></div>
+<div class="block">Goals are by default marked with 0f. Some situations may have positions with lower values that are especially
+ urgent to move towards.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.GOAL">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="FLOOR">
+<h3>FLOOR</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">FLOOR</span></div>
+<div class="block">Floor cells, which include any walkable cell, are marked with a high number equal to 999200f .</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.FLOOR">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="WALL">
+<h3>WALL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">WALL</span></div>
+<div class="block">Walls, which are solid no-entry cells, are marked with a high number equal to 999500f .</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.WALL">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="DARK">
+<h3>DARK</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">DARK</span></div>
+<div class="block">This is used to mark cells that the scan couldn't reach, and these dark cells are marked with a high number
+ equal to 999800f .</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.DARK">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="measurement">
 <h3>measurement</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.github.yellowstonegames.grid.Measurement</span>&nbsp;<span class="element-name">measurement</span></div>
@@ -887,86 +946,25 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="GOAL">
-<h3>GOAL</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">GOAL</span></div>
-<div class="block">Goals are always marked with 0.</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="see-list">
-<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.GOAL">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="FLOOR">
-<h3>FLOOR</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">FLOOR</span></div>
-<div class="block">Floor cells, which include any walkable cell, are marked with a high number equal to 999200f .</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="see-list">
-<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.FLOOR">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="WALL">
-<h3>WALL</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">WALL</span></div>
-<div class="block">Walls, which are solid no-entry cells, are marked with a high number equal to 999500f .</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="see-list">
-<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.WALL">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="DARK">
-<h3>DARK</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">DARK</span></div>
-<div class="block">This is used to mark cells that the scan couldn't reach, and these dark cells are marked with a high number
- equal to 999800f .</div>
-<dl class="notes">
-<dt>See Also:</dt>
-<dd>
-<ul class="see-list">
-<li><a href="../../../../constant-values.html#com.github.yellowstonegames.path.DijkstraMap.DARK">Constant Field Values</a></li>
-</ul>
-</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="goals">
 <h3>goals</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntList</span>&nbsp;<span class="element-name">goals</span></div>
-<div class="block">Goals that pathfinding will seek out. The float value should almost always be 0f , the same as the static GOAL
- constant in this class.</div>
+<div class="block">Goals that pathfinding will seek out. Each item is an encoded point, as done by <a href="#encode(int,int)"><code>encode(int, int)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="fresh">
 <h3>fresh</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntList</span>&nbsp;<span class="element-name">fresh</span></div>
-<div class="block">Goals that pathfinding will seek out. The float value should almost always be 0f , the same as the static GOAL
- constant in this class.</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.ds.IntDeque</span>&nbsp;<span class="element-name">fresh</span></div>
+<div class="block">Working data used during scanning, this tracks the perimeter of the scanned area so far. This is a member
+ variable and not a local one to avoid reallocating the data structure. Each item is an encoded point, as done by
+ <a href="#encode(int,int)"><code>encode(int, int)</code></a>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="rng">
 <h3>rng</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.MizuchiRandom</span>&nbsp;<span class="element-name">rng</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.github.tommyettinger.random.FlowRandom</span>&nbsp;<span class="element-name">rng</span></div>
 <div class="block">The MizuchiRandom used to decide which one of multiple equally-short paths to take; this has its state set
  deterministically before any usage. There will only be one path produced for a given set of parameters, and it
  will be returned again and again if the same parameters are requested.</div>
@@ -1223,14 +1221,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="encode(com.github.yellowstonegames.grid.Coord)">
 <h3>encode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">encode</span><wbr><span class="parameters">(com.github.yellowstonegames.grid.Coord&nbsp;point)</span></div>
-<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
- this DijkstraMap's width and height. This method converts from a Coord to an encoded int that stores the same
- information, but is specific to this width and height and is somewhat more efficient to work with.</div>
+<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects. This method converts from a Coord to an
+ encoded int that stores the same information, but is somewhat more efficient to work with.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>point</code> - a Coord to find an encoded int for</dd>
 <dt>Returns:</dt>
-<dd>an int that encodes the given Coord for this DijkstraMap's width and height</dd>
+<dd>an int that encodes the given Coord</dd>
 </dl>
 </section>
 </li>
@@ -1239,15 +1236,14 @@ loadScripts(document, 'script');</script>
 <h3>encode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">encode</span><wbr><span class="parameters">(int&nbsp;x,
  int&nbsp;y)</span></div>
-<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects, but the specific encoding depends on
- this DijkstraMap's width and height. This method converts from an x,y point to an encoded int that stores the
- same information, but is specific to this width and height and is somewhat more efficient to work with.</div>
+<div class="block">Internally, DijkstraMap uses int primitives instead of Coord objects. This method converts from an x,y point to
+ an encoded int that stores the same information, but is somewhat more efficient to work with.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>x</code> - the x component of the point to find an encoded int for</dd>
 <dd><code>y</code> - the y component of the point to find an encoded int for</dd>
 <dt>Returns:</dt>
-<dd>an int that encodes the given x,y point for this DijkstraMap's width and height</dd>
+<dd>an int that encodes the given x,y point</dd>
 </dl>
 </section>
 </li>
@@ -1272,11 +1268,11 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">decodeX</span><wbr><span class="parameters">(int&nbsp;encoded)</span></div>
 <div class="block">If you for some reason have one of the internally-used ints produced by <a href="#encode(com.github.yellowstonegames.grid.Coord)"><code>encode(Coord)</code></a>, this will decode
  the x component of the point encoded in that int. This is an extremely simple method that is equivalent to the
- code <code>encoded % width</code>, where width is a public field in this class. You probably would use this method in
+ code <code>encoded &amp; 0xFFFF</code>. You probably would use this method in
  conjunction with <a href="#decodeY(int)"><code>decodeY(int)</code></a>, or would instead use <a href="#decode(int)"><code>decode(int)</code></a> to get a Coord.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>encoded</code> - an encoded int specific to this DijkstraMap's height and width; see <a href="#encode(com.github.yellowstonegames.grid.Coord)"><code>encode(Coord)</code></a></dd>
+<dd><code>encoded</code> - an encoded int; see <a href="#encode(com.github.yellowstonegames.grid.Coord)"><code>encode(Coord)</code></a></dd>
 <dt>Returns:</dt>
 <dd>the x component of the position that the given encoded int stores</dd>
 </dl>
@@ -1288,11 +1284,11 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">decodeY</span><wbr><span class="parameters">(int&nbsp;encoded)</span></div>
 <div class="block">If you for some reason have one of the internally-used ints produced by <a href="#encode(com.github.yellowstonegames.grid.Coord)"><code>encode(Coord)</code></a>, this will decode
  the y component of the point encoded in that int. This is an extremely simple method that is equivalent to the
- code <code>encoded / width</code>, where width is a public field in this class. You probably would use this method in
+ code <code>encoded &gt;&gt;&gt; 16</code>. You probably would use this method in
  conjunction with <a href="#decodeX(int)"><code>decodeX(int)</code></a>, or would instead use <a href="#decode(int)"><code>decode(int)</code></a> to get a Coord.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>encoded</code> - an encoded int specific to this DijkstraMap's height and width; see <a href="#encode(com.github.yellowstonegames.grid.Coord)"><code>encode(Coord)</code></a></dd>
+<dd><code>encoded</code> - an encoded int; see <a href="#encode(com.github.yellowstonegames.grid.Coord)"><code>encode(Coord)</code></a></dd>
 <dt>Returns:</dt>
 <dd>the y component of the position that the given encoded int stores</dd>
 </dl>
@@ -1550,7 +1546,7 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>start</code> - a Coord representing the location of the pathfinder; may be null, which has this scan the whole map</dd>
 <dd><code>impassable</code> - A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
-                   path that cannot be moved through; this can be null if there are no such obstacles.</dd>
+                       path that cannot be moved through; this can be null if there are no such obstacles.</dd>
 <dd><code>nonZeroOptimum</code> - if the cell to pathfind toward should have a value of <a href="#GOAL"><code>GOAL</code></a> (0f), this should be
                        false; if it should have a different value or if you don't know, it should be true</dd>
 </dl>
@@ -1658,7 +1654,7 @@ loadScripts(document, 'script');</script>
 <dd><code>start</code> - a Coord representing the location of the pathfinder; may be null to have this scan more of the map</dd>
 <dd><code>limit</code> - The maximum number of steps to scan outward from a goal.</dd>
 <dd><code>impassable</code> - A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
-                   path that cannot be moved through; this can be null if there are no such obstacles.</dd>
+                       path that cannot be moved through; this can be null if there are no such obstacles.</dd>
 <dd><code>nonZeroOptimum</code> - if the cell to pathfind toward should have a value of <a href="#GOAL"><code>GOAL</code></a> (0f), this should be
                        false; if it should have a different value or if you don't know, it should be true</dd>
 </dl>
@@ -2225,7 +2221,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.github.yellowstonegames.grid.Coord&gt;&nbsp;onlyPassable,
  com.github.yellowstonegames.grid.Coord&nbsp;start,
  com.github.yellowstonegames.grid.Coord...&nbsp;fearSources)</span></div>
-<div class="block">Scans the dungeon using DijkstraMap.scan with the listed fearSources and start point, and returns a list
+<div class="block">Scans the dungeon using DijkstraMap.scan() with the listed fearSources and start point, and returns a list
  of Coord positions (using Manhattan distance) needed to get further from the closest fearSources, meant
  for running away. The maximum length of the returned list is given by length; if moving the full
  length of the list would place the mover in a position shared by one of the positions in onlyPassable

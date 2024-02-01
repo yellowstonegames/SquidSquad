@@ -71,7 +71,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.badlogic.gdx.graphics.g2d.TextureRegion
-<div class="inheritance">com.badlogic.gdx.graphics.g2d.Sprite
+<div class="inheritance"><a href="ParentSprite.html" title="class in com.github.yellowstonegames.smooth">com.github.yellowstonegames.smooth.ParentSprite</a>
 <div class="inheritance">com.github.yellowstonegames.smooth.GlidingSprite</div>
 </div>
 </div>
@@ -79,7 +79,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">GlidingSprite</span>
-<span class="extends-implements">extends com.badlogic.gdx.graphics.g2d.Sprite</span></div>
+<span class="extends-implements">extends <a href="ParentSprite.html" title="class in com.github.yellowstonegames.smooth">ParentSprite</a></span></div>
 <div class="block">Extends <code>Sprite</code>, using a normal <code>TextureRegion</code> its visuals and a <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth"><code>CoordGlider</code></a> to store its
  position. The <a href="CoordGlider.html" title="class in com.github.yellowstonegames.smooth"><code>CoordGlider</code></a> is publicly available as <a href="#location"><code>location</code></a> or with <a href="#getLocation()"><code>getLocation()</code></a>, which
  should be used to determine or change where this started its move, where it is going, and how far it has gone between
@@ -110,6 +110,9 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="#smallMotion" class="member-name-link">smallMotion</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.github.yellowstonegames.smooth.ParentSprite">Fields inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="ParentSprite.html" title="class in com.github.yellowstonegames.smooth">ParentSprite</a></h3>
+<code><a href="ParentSprite.html#bounds">bounds</a>, <a href="ParentSprite.html#color">color</a>, <a href="ParentSprite.html#dirty">dirty</a>, <a href="ParentSprite.html#height">height</a>, <a href="ParentSprite.html#originX">originX</a>, <a href="ParentSprite.html#originY">originY</a>, <a href="ParentSprite.html#rotation">rotation</a>, <a href="ParentSprite.html#scaleX">scaleX</a>, <a href="ParentSprite.html#scaleY">scaleY</a>, <a href="ParentSprite.html#SPRITE_SIZE">SPRITE_SIZE</a>, <a href="ParentSprite.html#VERTEX_SIZE">VERTEX_SIZE</a>, <a href="ParentSprite.html#vertices">vertices</a>, <a href="ParentSprite.html#width">width</a>, <a href="ParentSprite.html#x">x</a>, <a href="ParentSprite.html#y">y</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -151,7 +154,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVertices()" class="member-name-link">getVertices</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the packed vertices, colors, and texture coordinates for this sprite.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getX()" class="member-name-link">getX</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -168,8 +173,8 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.badlogic.gdx.graphics.g2d.Sprite">Methods inherited from class&nbsp;com.badlogic.gdx.graphics.g2d.Sprite</h3>
-<code>draw, draw, flip, getBoundingRectangle, getColor, getHeight, getOriginX, getOriginY, getRotation, getScaleX, getScaleY, getWidth, rotate, rotate90, scale, scroll, set, setAlpha, setBounds, setCenter, setCenterX, setCenterY, setColor, setColor, setFlip, setOrigin, setOriginBasedPosition, setOriginCenter, setPackedColor, setPosition, setRegion, setRotation, setScale, setScale, setSize, setU, setU2, setV, setV2, setX, setY, translate, translateX, translateY</code></div>
+<h3 id="methods-inherited-from-class-com.github.yellowstonegames.smooth.ParentSprite">Methods inherited from class&nbsp;com.github.yellowstonegames.smooth.<a href="ParentSprite.html" title="class in com.github.yellowstonegames.smooth">ParentSprite</a></h3>
+<code><a href="ParentSprite.html#draw(com.badlogic.gdx.graphics.g2d.Batch)">draw</a>, <a href="ParentSprite.html#draw(com.badlogic.gdx.graphics.g2d.Batch,float)">draw</a>, <a href="ParentSprite.html#flip(boolean,boolean)">flip</a>, <a href="ParentSprite.html#getBoundingRectangle()">getBoundingRectangle</a>, <a href="ParentSprite.html#getColor()">getColor</a>, <a href="ParentSprite.html#getHeight()">getHeight</a>, <a href="ParentSprite.html#getOriginX()">getOriginX</a>, <a href="ParentSprite.html#getOriginY()">getOriginY</a>, <a href="ParentSprite.html#getRotation()">getRotation</a>, <a href="ParentSprite.html#getScaleX()">getScaleX</a>, <a href="ParentSprite.html#getScaleY()">getScaleY</a>, <a href="ParentSprite.html#getWidth()">getWidth</a>, <a href="ParentSprite.html#rotate(float)">rotate</a>, <a href="ParentSprite.html#rotate90(boolean)">rotate90</a>, <a href="ParentSprite.html#scale(float)">scale</a>, <a href="ParentSprite.html#scroll(float,float)">scroll</a>, <a href="ParentSprite.html#set(com.github.yellowstonegames.smooth.ParentSprite)">set</a>, <a href="ParentSprite.html#setAlpha(float)">setAlpha</a>, <a href="ParentSprite.html#setBounds(float,float,float,float)">setBounds</a>, <a href="ParentSprite.html#setCenter(float,float)">setCenter</a>, <a href="ParentSprite.html#setCenterX(float)">setCenterX</a>, <a href="ParentSprite.html#setCenterY(float)">setCenterY</a>, <a href="ParentSprite.html#setColor(float,float,float,float)">setColor</a>, <a href="ParentSprite.html#setColor(com.badlogic.gdx.graphics.Color)">setColor</a>, <a href="ParentSprite.html#setFlip(boolean,boolean)">setFlip</a>, <a href="ParentSprite.html#setOrigin(float,float)">setOrigin</a>, <a href="ParentSprite.html#setOriginBasedPosition(float,float)">setOriginBasedPosition</a>, <a href="ParentSprite.html#setOriginCenter()">setOriginCenter</a>, <a href="ParentSprite.html#setPackedColor(float)">setPackedColor</a>, <a href="ParentSprite.html#setPosition(float,float)">setPosition</a>, <a href="ParentSprite.html#setRegion(float,float,float,float)">setRegion</a>, <a href="ParentSprite.html#setRotation(float)">setRotation</a>, <a href="ParentSprite.html#setScale(float)">setScale</a>, <a href="ParentSprite.html#setScale(float,float)">setScale</a>, <a href="ParentSprite.html#setSize(float,float)">setSize</a>, <a href="ParentSprite.html#setU(float)">setU</a>, <a href="ParentSprite.html#setU2(float)">setU2</a>, <a href="ParentSprite.html#setV(float)">setV</a>, <a href="ParentSprite.html#setV2(float)">setV2</a>, <a href="ParentSprite.html#setX(float)">setX</a>, <a href="ParentSprite.html#setY(float)">setY</a>, <a href="ParentSprite.html#translate(float,float)">translate</a>, <a href="ParentSprite.html#translateX(float)">translateX</a>, <a href="ParentSprite.html#translateY(float)">translateY</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.badlogic.gdx.graphics.g2d.TextureRegion">Methods inherited from class&nbsp;com.badlogic.gdx.graphics.g2d.TextureRegion</h3>
 <code>getRegionHeight, getRegionWidth, getRegionX, getRegionY, getTexture, getU, getU2, getV, getV2, isFlipX, isFlipY, setRegion, setRegion, setRegion, setRegion, setRegionHeight, setRegionWidth, setRegionX, setRegionY, setTexture, split, split</code></div>
@@ -252,7 +257,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getX</span>()</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>getX</code>&nbsp;in class&nbsp;<code>com.badlogic.gdx.graphics.g2d.Sprite</code></dd>
+<dd><code><a href="ParentSprite.html#getX()">getX</a></code>&nbsp;in class&nbsp;<code><a href="ParentSprite.html" title="class in com.github.yellowstonegames.smooth">ParentSprite</a></code></dd>
 </dl>
 </section>
 </li>
@@ -262,7 +267,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getY</span>()</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>getY</code>&nbsp;in class&nbsp;<code>com.badlogic.gdx.graphics.g2d.Sprite</code></dd>
+<dd><code><a href="ParentSprite.html#getY()">getY</a></code>&nbsp;in class&nbsp;<code><a href="ParentSprite.html" title="class in com.github.yellowstonegames.smooth">ParentSprite</a></code></dd>
 </dl>
 </section>
 </li>
@@ -270,9 +275,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getVertices()">
 <h3>getVertices</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float[]</span>&nbsp;<span class="element-name">getVertices</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ParentSprite.html#getVertices()">ParentSprite</a></code></span></div>
+<div class="block">Returns the packed vertices, colors, and texture coordinates for this sprite.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>getVertices</code>&nbsp;in class&nbsp;<code>com.badlogic.gdx.graphics.g2d.Sprite</code></dd>
+<dd><code><a href="ParentSprite.html#getVertices()">getVertices</a></code>&nbsp;in class&nbsp;<code><a href="ParentSprite.html" title="class in com.github.yellowstonegames.smooth">ParentSprite</a></code></dd>
 </dl>
 </section>
 </li>
