@@ -25,17 +25,9 @@ import com.github.yellowstonegames.grid.*;
  */
 public class SnakeNoise implements INoise {
 
-    public static final float EQ_ADD_2 = 1.0f/1.75f;
-    public static final float EQ_ADD_3 = 0.8f/1.75f;
-    public static final float EQ_ADD_4 = 0.6f/1.75f;
-    public static final float EQ_ADD_5 = 0.4f/1.75f;
-    public static final float EQ_ADD_6 = 0.2f/1.75f;
+    public static final float EQ_ADD = 0.8f/1.75f;
 
-    public static final float EQ_MUL_2 = 1.2535664f;
-    public static final float EQ_MUL_3 = 1.2071217f;
-    public static final float EQ_MUL_4 = 1.1588172f;
-    public static final float EQ_MUL_5 = 1.1084094f;
-    public static final float EQ_MUL_6 = 1.0555973f;
+    public static final float EQ_MUL = 1.2071217f;
 
     public int seed;
     public SnakeNoise() {
@@ -78,45 +70,61 @@ public class SnakeNoise implements INoise {
     @Override
     public float getNoise(float x, float y) {
         float n = ValueNoise.valueNoise(x, y, seed) * 0.6f;
-        n = (ValueNoise.valueNoise(
-                x + LineWobble.bicubicWobble(seed^0x11111111, n + y),// * 0.3f,
-                y + LineWobble.bicubicWobble(seed^0x22222222, n + x),// * 0.3f,
+        n = (SimplexNoise.noise(
+                x + LineWobble.bicubicWobble(seed^0x11111111, n + y) * 0.3f,
+                y + LineWobble.bicubicWobble(seed^0x22222222, n + x) * 0.3f,
                 seed) - n) * 0.625f;
-        return n / (float)Math.sqrt(0.15f + n * n);
-//        return PerlinNoise.equalize(n, EQ_ADD_2, EQ_MUL_2);
+        return PerlinNoise.equalize(n, EQ_ADD, EQ_MUL);
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
         float n = ValueNoise.valueNoise(x, y, z, seed) * 0.6f;
-        n = (ValueNoise.valueNoise(
-                x + LineWobble.bicubicWobble(seed^0x11111111, n + y),
-                y + LineWobble.bicubicWobble(seed^0x22222222, n + z),
-                z + LineWobble.bicubicWobble(seed^0x33333333, n + x),
+        n = (SimplexNoise.noise(
+                x + LineWobble.bicubicWobble(seed^0x11111111, n + y) * 0.3f,
+                y + LineWobble.bicubicWobble(seed^0x22222222, n + z) * 0.3f,
+                z + LineWobble.bicubicWobble(seed^0x33333333, n + x) * 0.3f,
                 seed) - n) * 0.625f;
-        return n / (float)Math.sqrt(0.15f + n * n);
-//        return PerlinNoise.equalize(n, EQ_ADD_3, EQ_MUL_3);
+        return PerlinNoise.equalize(n, EQ_ADD, EQ_MUL);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        float n = SimplexNoise.noise(x, y, z, w, seed);
-        n = (ValueNoise.valueNoise(x, y, z, w, n * 0.75f, seed) - n) * 0.5f;
-        return n / (float)Math.sqrt(0.29f + n * n);
+        float n = ValueNoise.valueNoise(x, y, z, w, seed) * 0.6f;
+        n = (SimplexNoise.noise(
+                x + LineWobble.bicubicWobble(seed^0x11111111, n + y) * 0.3f,
+                y + LineWobble.bicubicWobble(seed^0x22222222, n + z) * 0.3f,
+                z + LineWobble.bicubicWobble(seed^0x33333333, n + w) * 0.3f,
+                w + LineWobble.bicubicWobble(seed^0x44444444, n + x) * 0.3f,
+                seed) - n) * 0.625f;
+        return PerlinNoise.equalize(n, EQ_ADD, EQ_MUL);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        float n = SimplexNoise.noise(x, y, z, w, u, seed);
-        n = (ValueNoise.valueNoise(x, y, z, w, u, n * 0.75f, seed) - n) * 0.5f;
-        return n / (float)Math.sqrt(0.29f + n * n);
+        float n = ValueNoise.valueNoise(x, y, z, w, u, seed) * 0.6f;
+        n = (SimplexNoise.noise(
+                x + LineWobble.bicubicWobble(seed^0x11111111, n + y) * 0.3f,
+                y + LineWobble.bicubicWobble(seed^0x22222222, n + z) * 0.3f,
+                z + LineWobble.bicubicWobble(seed^0x33333333, n + w) * 0.3f,
+                w + LineWobble.bicubicWobble(seed^0x44444444, n + u) * 0.3f,
+                u + LineWobble.bicubicWobble(seed^0x55555555, n + x) * 0.3f,
+                seed) - n) * 0.625f;
+        return PerlinNoise.equalize(n, EQ_ADD, EQ_MUL);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        float n = SimplexNoise.noise(x, y, z, w, u, v, seed);
-        n = (ValueNoise.valueNoise(x, y, z, w, u, v, n * 0.75f, seed) - n) * 0.5f;
-        return n / (float)Math.sqrt(0.29f + n * n);
+        float n = ValueNoise.valueNoise(x, y, z, w, u, v, seed) * 0.6f;
+        n = (SimplexNoise.noise(
+                x + LineWobble.bicubicWobble(seed^0x11111111, n + y) * 0.3f,
+                y + LineWobble.bicubicWobble(seed^0x22222222, n + z) * 0.3f,
+                z + LineWobble.bicubicWobble(seed^0x33333333, n + w) * 0.3f,
+                w + LineWobble.bicubicWobble(seed^0x44444444, n + u) * 0.3f,
+                u + LineWobble.bicubicWobble(seed^0x55555555, n + v) * 0.3f,
+                v + LineWobble.bicubicWobble(seed^0x66666666, n + x) * 0.3f,
+                seed) - n) * 0.625f;
+        return PerlinNoise.equalize(n, EQ_ADD, EQ_MUL);
     }
 
     public String stringSerialize() {
