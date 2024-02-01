@@ -78,22 +78,24 @@ public class SnakeNoise implements INoise {
     @Override
     public float getNoise(float x, float y) {
         float n = ValueNoise.valueNoise(x, y, seed) * 0.6f;
-        n = (SimplexNoise.noise(
-                x + LineWobble.bicubicWobble(seed^1, n + y) * 0.3f,
-                y + LineWobble.bicubicWobble(seed^2, n + x) * 0.3f,
+        n = (ValueNoise.valueNoise(
+                x + LineWobble.bicubicWobble(seed^0x11111111, n + y),// * 0.3f,
+                y + LineWobble.bicubicWobble(seed^0x22222222, n + x),// * 0.3f,
                 seed) - n) * 0.625f;
-        return PerlinNoise.equalize(n, EQ_ADD_2, EQ_MUL_2);
+        return n / (float)Math.sqrt(0.15f + n * n);
+//        return PerlinNoise.equalize(n, EQ_ADD_2, EQ_MUL_2);
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
         float n = ValueNoise.valueNoise(x, y, z, seed) * 0.6f;
-        n = (SimplexNoise.noise(
-                x + LineWobble.bicubicWobble(seed^1, n + y) * 0.3f,
-                y + LineWobble.bicubicWobble(seed^2, n + z) * 0.3f,
-                z + LineWobble.bicubicWobble(seed^3, n + x) * 0.3f,
+        n = (ValueNoise.valueNoise(
+                x + LineWobble.bicubicWobble(seed^0x11111111, n + y),
+                y + LineWobble.bicubicWobble(seed^0x22222222, n + z),
+                z + LineWobble.bicubicWobble(seed^0x33333333, n + x),
                 seed) - n) * 0.625f;
-        return PerlinNoise.equalize(n, EQ_ADD_3, EQ_MUL_3);
+        return n / (float)Math.sqrt(0.15f + n * n);
+//        return PerlinNoise.equalize(n, EQ_ADD_3, EQ_MUL_3);
     }
 
     @Override
