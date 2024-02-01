@@ -14,23 +14,34 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.grid;
+package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.random.LineWobble;
+import com.github.yellowstonegames.grid.*;
 
 /**
- * Combined higher-dimensional value noise with simplex noise as one of its axes. Though much like
- * {@link com.github.yellowstonegames.grid.HoneyNoise} on the surface, this looks quite different in practice.
- * This tends to look like simplex noise, but with more mid-range outputs. When used with ridged or billow modes, this
- * has fewer high or low lines than vanilla simplex noise, while keeping the lines' nice shapes. If patterns are
- * noticeable in some simplex noise you generate, this may be a good, similar alternative.
+ * Combines value noise with simplex noise, like {@link HoneyNoise}.
  */
-public class BadgerNoise implements INoise {
+public class SnakeNoise implements INoise {
+
+    public static final float EQ_ADD_2 = 1.0f/1.75f;
+    public static final float EQ_ADD_3 = 0.8f/1.75f;
+    public static final float EQ_ADD_4 = 0.6f/1.75f;
+    public static final float EQ_ADD_5 = 0.4f/1.75f;
+    public static final float EQ_ADD_6 = 0.2f/1.75f;
+
+    public static final float EQ_MUL_2 = 1.2535664f;
+    public static final float EQ_MUL_3 = 1.2071217f;
+    public static final float EQ_MUL_4 = 1.1588172f;
+    public static final float EQ_MUL_5 = 1.1084094f;
+    public static final float EQ_MUL_6 = 1.0555973f;
+
     public int seed;
-    public BadgerNoise() {
+    public SnakeNoise() {
         this(0x9E3779B97F4A7C15L);
     }
-    public BadgerNoise(long seed) {
+    public SnakeNoise(long seed) {
         this.seed = (int)seed;
     }
 
@@ -61,21 +72,28 @@ public class BadgerNoise implements INoise {
 
     @Override
     public String getTag() {
-        return "BdgN";
+        return "SnkN";
     }
 
     @Override
     public float getNoise(float x, float y) {
-        float n = SimplexNoise.noise(x, y, seed); // regular simplex noise call
-        n = (ValueNoise.valueNoise(x, y, n * 0.75f, seed) - n) * 0.5f; // uses higher-dim value noise with n
-        return n / (float)Math.sqrt(0.29f + n * n); // approach 1 or -1 quickly
+        float n = ValueNoise.valueNoise(x, y, seed) * 0.6f;
+        n = (SimplexNoise.noise(
+                x + LineWobble.bicubicWobble(seed^1, n + y) * 0.3f,
+                y + LineWobble.bicubicWobble(seed^2, n + x) * 0.3f,
+                seed) - n) * 0.625f;
+        return PerlinNoise.equalize(n, EQ_ADD_2, EQ_MUL_2);
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        float n = SimplexNoise.noise(x, y, z, seed);
-        n = (ValueNoise.valueNoise(x, y, z, n * 0.75f, seed) - n) * 0.5f;
-        return n / (float)Math.sqrt(0.29f + n * n);
+        float n = ValueNoise.valueNoise(x, y, z, seed) * 0.6f;
+        n = (SimplexNoise.noise(
+                x + LineWobble.bicubicWobble(seed^1, n + y) * 0.3f,
+                y + LineWobble.bicubicWobble(seed^2, n + z) * 0.3f,
+                z + LineWobble.bicubicWobble(seed^3, n + x) * 0.3f,
+                seed) - n) * 0.625f;
+        return PerlinNoise.equalize(n, EQ_ADD_3, EQ_MUL_3);
     }
 
     @Override
@@ -103,35 +121,35 @@ public class BadgerNoise implements INoise {
         return "`" + seed + '`';
     }
 
-    public BadgerNoise stringDeserialize(String data) {
+    public SnakeNoise stringDeserialize(String data) {
         if(data == null || data.length() < 3)
             return this;
         this.seed = Base.BASE10.readInt(data, 1, data.indexOf('`', 2));
         return this;
     }
 
-    public static BadgerNoise recreateFromString(String data) {
+    public static SnakeNoise recreateFromString(String data) {
         if(data == null || data.length() < 3)
             return null;
         int seed =   Base.BASE10.readInt(data, 1, data.indexOf('`', 2));
 
-        return new BadgerNoise(seed);
+        return new SnakeNoise(seed);
     }
 
     /**
      * Creates a copy of this INoise, which should be a deep copy for any mutable state but can be shallow for immutable
      * types such as functions. This just calls a copy constructor.
      *
-     * @return a copy of this BadgerNoise
+     * @return a copy of this SnakeNoise
      */
     @Override
-    public BadgerNoise copy() {
-        return new BadgerNoise(seed);
+    public SnakeNoise copy() {
+        return new SnakeNoise(seed);
     }
 
     @Override
     public String toString() {
-        return "BadgerNoise{" +
+        return "SnakeNoise{" +
                 "state=" + seed +
                 '}';
     }
@@ -141,7 +159,7 @@ public class BadgerNoise implements INoise {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BadgerNoise that = (BadgerNoise) o;
+        SnakeNoise that = (SnakeNoise) o;
 
         return seed == that.seed;
     }

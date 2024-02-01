@@ -79,7 +79,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new HoneyNoise(1L, 0.7f),
             new ColorNoise(1L),
             new TriplexNoise(1L),
-            new BadgerNoise(),
+            new BadgerNoise(1L),
+            new SnakeNoise(1L),
     };
     private int index0 = 0;
     private int index1 = noises.length - 1;
