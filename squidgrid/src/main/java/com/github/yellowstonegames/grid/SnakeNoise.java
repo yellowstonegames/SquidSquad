@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2022-2024 See AUTHORS file.
+ * Copyright (c) 2022-2024 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.world;
+package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.random.LineWobble;
-import com.github.yellowstonegames.grid.*;
 
 /**
- * Combines value noise with simplex noise, like {@link HoneyNoise}.
+ * Combines value noise with simplex noise, like {@link HoneyNoise}, but has more sinuous squashing and stretching of
+ * its lattice because each axis is run through {@link LineWobble#bicubicWobble(int, float)}. This was developed at
+ * about the same time as {@link BadgerNoise}, but BadgerNoise focuses more on having flatter areas of mid-range values,
+ * and SnakeNoise focuses on removing any predictable patterns for extreme values present in SimplexNoise. SnakeNoise
+ * tends to look like SimplexNoise or HoneyNoise with multiple octaves, while BadgerNoise does not.
  */
 public class SnakeNoise implements INoise {
 

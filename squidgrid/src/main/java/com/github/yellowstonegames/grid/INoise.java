@@ -313,6 +313,7 @@ public interface INoise {
 
         static {
             NOISE_BY_TAG.put("(NO)", null); // for classes that cannot be serialized
+            register(new BadgerNoise());
             register(new BasicHashNoise());
             register(new CyclicNoise());
             register(new FlanNoise());
@@ -328,6 +329,7 @@ public interface INoise {
             register(new SimplexNoise());
             register(new SimplexNoiseHard());
             register(new SimplexNoiseScaled());
+            register(new SnakeNoise());
             register(new SorbetNoise());
             register(new TaffyNoise());
             register(new ValueNoise());
