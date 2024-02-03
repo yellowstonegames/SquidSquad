@@ -20,10 +20,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.path.Connection;
-import com.github.yellowstonegames.path.CostlyGraph;
-import com.github.yellowstonegames.path.DirectedGraph;
-import com.github.yellowstonegames.path.UndirectedGraph;
+import com.github.yellowstonegames.path.*;
 import com.github.yellowstonegames.store.grid.JsonGrid;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -42,6 +39,7 @@ public final class JsonPath {
     public static void registerAll(@NonNull Json json) {
         registerDirectedGraph(json);
         registerUndirectedGraph(json);
+        registerCostlyGraph(json);
     }
     
     /**
@@ -152,17 +150,17 @@ public final class JsonPath {
                 json.writeObjectStart(CostlyGraph.class, knownType);
                 json.writeValue("w", data.width);
                 json.writeValue("h", data.height);
-                Set<?> vertices = data.getVertices();
+                Set<Coord> vertices = data.getVertices();
                 json.writeArrayStart("v");
                 for(Object vertex : vertices) {
-                    json.writeValue(vertex, null);
+                    json.writeValue(vertex);
                 }
                 json.writeArrayEnd();
-                ObjectOrderedSet<? extends Connection<?>> edges = data.getEdges();
+                ObjectOrderedSet<? extends Connection<Coord>> edges = data.getEdges();
                 json.writeArrayStart("e");
-                for(Connection<?> edge : edges) {
-                    json.writeValue(edge.getA(), null);
-                    json.writeValue(edge.getB(), null);
+                for(Connection<Coord> edge : edges) {
+                    json.writeValue(edge.getA());
+                    json.writeValue(edge.getB());
                     json.writeValue(edge.getWeight(), float.class);
                 }
                 json.writeArrayEnd();
@@ -177,11 +175,11 @@ public final class JsonPath {
                 graph.height = jsonData.get("h").asInt();
                 JsonValue entry = jsonData.getChild("v");
                 for (; entry != null; entry = entry.next) {
-                    graph.addVertex(json.readValue(null, entry));
+                    graph.addVertex(json.readValue(Coord.class, entry));
                 }
                 entry = jsonData.getChild("e");
                 for (; entry != null; entry = entry.next) {
-                    graph.addEdge(json.readValue(null, entry), json.readValue(null, entry = entry.next), (entry = entry.next).asFloat());
+                    graph.addEdge(json.readValue(Coord.class, entry), json.readValue(Coord.class, entry = entry.next), (entry = entry.next).asFloat());
                 }
                 return graph;
             }
