@@ -40,6 +40,7 @@ public final class JsonPath {
         registerDirectedGraph(json);
         registerUndirectedGraph(json);
         registerCostlyGraph(json);
+        registerDefaultGraph(json);
     }
     
     /**
@@ -134,7 +135,6 @@ public final class JsonPath {
         });
     }
 
-
     /**
      * Registers CostlyGraph with the given Json object, so CostlyGraph can be written to and read from JSON.
      * This registers {@link Coord} using {@link JsonGrid#registerCoord(Json)}.
@@ -186,4 +186,54 @@ public final class JsonPath {
         });
     }
 
+    /**
+     * Registers DefaultGraph with the given Json object, so DefaultGraph can be written to and read from JSON.
+     * This registers {@link Coord} using {@link JsonGrid#registerCoord(Json)}.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDefaultGraph(@NonNull Json json) {
+        json.addClassTag("DftG", DefaultGraph.class);
+        JsonGrid.registerCoord(json);
+        json.setSerializer(DefaultGraph.class, new Json.Serializer<DefaultGraph>() {
+            @Override
+            public void write(Json json, DefaultGraph data, Class knownType) {
+                json.writeObjectStart(DefaultGraph.class, knownType);
+                json.writeValue("w", data.width);
+                json.writeValue("h", data.height);
+                Set<Coord> vertices = data.getVertices();
+                json.writeArrayStart("v");
+                for(Coord vertex : vertices) {
+                    json.writeValue(vertex);
+                }
+                json.writeArrayEnd();
+                ObjectOrderedSet<? extends Connection<Coord>> edges = data.getEdges();
+                json.writeArrayStart("e");
+                for(Connection<Coord> edge : edges) {
+                    json.writeValue(edge.getA());
+                    json.writeValue(edge.getB());
+                    json.writeValue(edge.getWeight(), float.class);
+                }
+                json.writeArrayEnd();
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public DefaultGraph read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                DefaultGraph graph = new DefaultGraph();
+                graph.width = jsonData.get("w").asInt();
+                graph.height = jsonData.get("h").asInt();
+                JsonValue entry = jsonData.getChild("v");
+                for (; entry != null; entry = entry.next) {
+                    graph.addVertex(json.readValue(Coord.class, entry));
+                }
+                entry = jsonData.getChild("e");
+                for (; entry != null; entry = entry.next) {
+                    graph.addEdge(json.readValue(Coord.class, entry), json.readValue(Coord.class, entry = entry.next), (entry = entry.next).asFloat());
+                }
+                return graph;
+            }
+        });
+    }
 }
