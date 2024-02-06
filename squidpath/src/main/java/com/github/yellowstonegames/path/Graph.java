@@ -101,8 +101,8 @@ public abstract class Graph<V> {
      */
     @SafeVarargs
     public final void addVertices(V... vertices) {
-        for (V v : vertices) {
-            addVertex(v);
+        for (int i = 0; i < vertices.length; i++) {
+            addVertex(vertices[i]);
         }
     }
 

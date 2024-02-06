@@ -15,10 +15,7 @@
  */
 package com.github.yellowstonegames.path;
 
-import com.github.tommyettinger.ds.BinaryHeap;
-import com.github.tommyettinger.ds.ObjectDeque;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.digital.BitConversion;
 
 import java.util.Comparator;
@@ -270,8 +267,8 @@ class AlgorithmImplementations<V> {
 
         v.seen = true;
 
-        ObjectList<Connection<V>> outEdges = v.outEdges;
-        for (Connection<V> e : outEdges) {
+        for (int i = 0; i < v.outEdges.size(); i++) {
+            Connection<V> e = v.outEdges.get(i);
             if (!recursiveTopologicalSort(e.getNodeB(), sortedVertices)) return false;
         }
 
@@ -380,7 +377,7 @@ class AlgorithmImplementations<V> {
     boolean containsCycle(Graph<V> graph) {
         if (graph.size() < 3 || graph.getEdgeCount() < 3) return false;
         init();
-        HashSet<Node<V>> set = new HashSet<>();
+        ObjectSet<Node<V>> set = new ObjectSet<>();
         for (Node<V> v : graph.getNodes()) {
             v.resetAlgorithmAttributes(runID);
             if (detectCycleDFS(v, null, set)) {

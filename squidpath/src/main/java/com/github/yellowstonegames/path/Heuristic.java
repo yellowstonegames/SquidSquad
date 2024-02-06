@@ -31,7 +31,7 @@ import java.util.List;
  * heuristic function such as Dijkstra. SquidSquad's {@link DijkstraMap} is specialized for some cases
  * that A* isn't, so there are reasons to prefer DijkstraMap when, for instance, you have multiple goals, or the goal is
  * unchanging for some section of usage but the start point changes often (this is useful for mouse tracking when the
- * path is reversed). The astar package should be significantly faster when paths are short and always have one goal,
+ * path is reversed). The A-Star code should be significantly faster when paths are short and always have one goal,
  * unless you compare it to DijkstraMap when it can reuse a scan and call
  * {@link DijkstraMap#findPathPreScanned(ObjectDeque, Coord)}
  * 

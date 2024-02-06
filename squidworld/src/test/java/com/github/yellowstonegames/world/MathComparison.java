@@ -42,12 +42,17 @@ import static com.badlogic.gdx.Input.Keys.*;
 
 public class MathComparison extends ApplicationAdapter {
 
-    public static float exp(float power) {
-        return BitConversion.intBitsToFloat(1065353216 +
-                (int)((12102203 - 0x1.6p-14f * BitConversion.floatToIntBits(power)) * power));
+    public static float exp(float n) {
+        return (1 + n * (1 + n / 2 * (1 + n / 3 * (1 + n / 4)))) * BitConversion.intBitsToFloat(1065353216 + (int)(12102203 * n));
+//        return 1 + n * (1 + n / 2 * (1 + n / 3 * (1 + n / 4 * (1 + n / 5 * (1 + n / 6)))));
     }
     private final FloatFloatToFloatBiFunction[] functions = new FloatFloatToFloatBiFunction[]{
             (x, y) -> (float) Math.exp(-x*x-y*y),
+            (x, y) -> {x = (x * x + y * y) * -0.125f; x = (2 + x * (2 + x))*0.5f; x *= x; x *= x; return x * x;},
+            (x, y) -> {x = (x * x + y * y) * -0.5f; x = (12 + x * (6 + x))/(12 + x * (-6 + x)); return x * x;},
+            (x, y) -> {x = (-x * x - y * y) * 0.5f; x = (120 + x * (60 + x * (12 + x)))/(120 + x * (-60 + x * (12 - x))); return x * x;},
+            (x, y) -> {x = (-x * x - y * y) * 0.25f; x = (6 + x * (6 + x * (3 + x))) / 6f; return (x *= x) * x;},
+            (x, y) -> {x = -(x * x + y * y); return (2 + x * (2 + x)) * BitConversion.intBitsToFloat(0x3f000000 + (int)(12102203 * x));},
             (x, y) -> BitConversion.intBitsToFloat(1065353216 - (int)(12102203 * (x * x + y * y))),
             (x, y) -> exp(-x*x-y*y),
             (x, y) -> BitConversion.intBitsToFloat(1065353216 - (int)((12102203 + 0x1.6p-14f * BitConversion.floatToIntBits(x = x * x + y * y)) * x)),

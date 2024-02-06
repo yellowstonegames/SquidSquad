@@ -20,7 +20,7 @@ import com.github.tommyettinger.digital.Base;
 
 /**
  * Combined higher-dimensional value noise with simplex noise as one of its axes. Though much like
- * {@link com.github.yellowstonegames.grid.HoneyNoise} on the surface, this looks quite different in practice.
+ * {@link HoneyNoise} on the surface, this looks quite different in practice.
  * This tends to look like simplex noise, but with more mid-range outputs. When used with ridged or billow modes, this
  * has fewer high or low lines than vanilla simplex noise, while keeping the lines' nice shapes. If patterns are
  * noticeable in some simplex noise you generate, this may be a good, similar alternative.
