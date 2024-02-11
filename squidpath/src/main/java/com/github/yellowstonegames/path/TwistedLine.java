@@ -60,6 +60,24 @@ public class TwistedLine {
         reinitialize();
     }
 
+    public TwistedLine(int width, int height, EnhancedRandom rng, Collection<Coord> traversable) {
+        graph = new DefaultGraph();
+        graph.width = Math.max(width, 2);
+        graph.height = Math.max(height, 2);
+        this.rng = rng == null ? new PouchRandom() : rng;
+        lastPath = new ObjectDeque<>(graph.width + graph.height);
+        reinitialize(traversable);
+    }
+
+    public TwistedLine(int width, int height, EnhancedRandom rng, Coord[] traversable) {
+        graph = new DefaultGraph();
+        graph.width = Math.max(width, 2);
+        graph.height = Math.max(height, 2);
+        this.rng = rng == null ? new PouchRandom() : rng;
+        lastPath = new ObjectDeque<>(graph.width + graph.height);
+        reinitialize(traversable);
+    }
+
     /**
      * Called automatically during construction, this sets up a random maze as a {@link DefaultGraph} so a path can be
      * found. You can call this after construction to change the paths this can find.
@@ -92,7 +110,8 @@ public class TwistedLine {
                 y = p.y + dir.deltaY;
                 if (x >= 0 && x < graph.width && y >= 0 && y < graph.height) {
                     Coord c = Coord.get(x, y);
-                    if (graph.getEdges(c).isEmpty() && deck.add(c)) {
+                    List<? extends Connection<Coord>> edges = graph.getEdges(c);
+                    if (edges != null && edges.isEmpty() && deck.add(c)) {
                         graph.addEdge(p, c);
                         continue OUTER;
                     }
@@ -101,7 +120,6 @@ public class TwistedLine {
 
             deck.remove(p);
         }
-
     }
 
     /**
@@ -140,11 +158,88 @@ public class TwistedLine {
                     }
                 }
             }
+            deck.remove(p);
+        }
+    }
+
+    /**
+     * This sets up a random maze as a {@link DefaultGraph} so a path can be found, using the given array of Coord
+     * to represent which cells on a 2D grid can actually be traversed (and so can be used in a random path).
+     * You can call this after construction to change the paths this can find.
+     */
+    public void reinitialize(Coord[] traversable) {
+        graph.removeAllVertices();
+        graph.addVertices(traversable);
+
+        Coord start = graph.vertexMap.random(rng);
+
+        CoordOrderedSet deck = new CoordOrderedSet();
+        deck.add(start);
+
+        Direction[] dirs = new Direction[4];
+        System.arraycopy(Direction.CARDINALS, 0, dirs, 0, 4);
+        OUTER:
+        while (!deck.isEmpty()) {
+            int i = deck.size() - 1;
+            Coord p = deck.getAt(i);
+            rng.shuffle(dirs);
+
+            for (int j = 0; j < dirs.length; j++) {
+                Direction dir = dirs[j];
+                int x = p.x + dir.deltaX;
+                int y = p.y + dir.deltaY;
+                if (x >= 0 && x < graph.width && y >= 0 && y < graph.height) {
+                    Coord c = Coord.get(x, y);
+                    List<? extends Connection<Coord>> edges = graph.getEdges(c);
+                    if (edges != null && edges.isEmpty() && deck.add(c)) {
+                        graph.addEdge(p, c);
+                        continue OUTER;
+                    }
+                }
+            }
+            deck.remove(p);
+        }
+    }
+
+
+    /**
+     * Called automatically during construction, this sets up a random maze as a {@link DefaultGraph} so a path can be
+     * found. You can call this after construction to change the paths this can find.
+     */
+    public void randomize() {
+        graph.removeAllEdges();
+
+
+        CoordOrderedSet deck = new CoordOrderedSet();
+        deck.add(graph.vertexMap.random(rng));
+
+        Direction[] dirs = new Direction[4];
+        System.arraycopy(Direction.CARDINALS, 0, dirs, 0, 4);
+        OUTER:
+        while (!deck.isEmpty()) {
+            int i = deck.size() - 1;
+            Coord p = deck.getAt(i);
+            rng.shuffle(dirs);
+
+            for (int j = 0; j < dirs.length; j++) {
+                Direction dir = dirs[j];
+                int x = p.x + dir.deltaX;
+                int y = p.y + dir.deltaY;
+                if (x >= 0 && x < graph.width && y >= 0 && y < graph.height) {
+                    Coord c = Coord.get(x, y);
+                    List<? extends Connection<Coord>> edges = graph.getEdges(c);
+                    if (edges != null && edges.isEmpty() && deck.add(c)) {
+                        graph.addEdge(p, c);
+                        continue OUTER;
+                    }
+                }
+            }
 
             deck.remove(p);
         }
 
     }
+
 
     public ObjectDeque<Coord> line(int startX, int startY, int endX, int endY) {
         return line(Coord.get(startX, startY), Coord.get(endX, endY));
