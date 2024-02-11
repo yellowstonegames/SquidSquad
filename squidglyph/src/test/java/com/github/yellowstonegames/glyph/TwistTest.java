@@ -39,6 +39,7 @@ import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.FullPalette;
+import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.path.TwistedLine;
@@ -83,6 +84,8 @@ public class TwistTest extends ApplicationAdapter {
     private static final int SILVER_RGBA = toRGBA8888(SILVER);
     private static final int MEMORY_RGBA = describe("darker gray black");
 
+    private static final char[] ARROWS = "↑↓←→".toCharArray();
+
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Lighting Test");
@@ -105,7 +108,7 @@ public class TwistTest extends ApplicationAdapter {
         Font font = KnownFonts.getIosevkaSlab().scaleTo(16f, 28f).setDescent(0f).adjustLineHeight(1.25f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
-        playerGlyph = new GlyphActor('@', "[red orange]", gg.font);
+        playerGlyph = new GlyphActor('@', "[dark gray][%?whiten]", gg.font);
         gg.addActor(playerGlyph);
         post = () -> {
             Coord player = playerGlyph.getLocation();
@@ -181,12 +184,9 @@ public class TwistTest extends ApplicationAdapter {
                     toCursor.clear();
                     Coord player = playerGlyph.getLocation();
                     toCursor.addAll(playerToCursor.line(player, cursor));
-                    // findPathPreScanned includes the current cell (goal) by default, which is helpful when
-                    // you're finding a path to a monster or loot, and want to bump into it, but here can be
-                    // confusing because you would "move into yourself" as your first move without this.
-                    if (!toCursor.isEmpty()) {
+
+                    if (!toCursor.isEmpty())
                         toCursor.removeFirst();
-                    }
                 }
                 return false;
             }
@@ -238,7 +238,7 @@ public class TwistTest extends ApplicationAdapter {
         Coord[] lightPositions = floors.separatedBlue(0.075f);
         for (int i = 0; i < lightPositions.length; i++) {
             lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,
-                    FullPalette.COLOR_WHEEL_PALETTE_BRIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_BRIGHT.length)], 0.5f, 0f));
+                    DescriptiveColor.oklab(rng.nextFloat(0.4f, 0.9f), 0.5f, 0.5f, 1f), 0.5f, 0f));
         }
         lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
         seen.remake(inView.refill(lighting.fovResult, 0.001f, 2f));
@@ -250,9 +250,11 @@ public class TwistTest extends ApplicationAdapter {
             playerToCursor = new TwistedLine(GRID_WIDTH, GRID_HEIGHT, rng, floors);
         else
             playerToCursor.reinitialize(floors);
+
+        seen.allOn();
     }
 
-    public void recolor(){
+    public void recolor() {
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
 //        int rainbow = toRGBA8888(
 //                limitToGamut(100,
@@ -271,10 +273,14 @@ public class TwistTest extends ApplicationAdapter {
             }
         }
         lighting.draw(gg.backgrounds);
-        for (int i = 0; i < toCursor.size(); i++) {
-            Coord curr = toCursor.get(i);
-            if(inView.contains(curr))
+        if (toCursor.notEmpty()) {
+            for (int i = 0; i < toCursor.size() - 1; i++) {
+                Coord curr = toCursor.get(i), next = toCursor.get(i + 1);
                 gg.backgrounds[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(modifiedTime * 0.25f - i * 0.0625f, 0.9f, 1f, 1f);
+                gg.put(curr, 0xFFFFFFFF00000000L | Font.BLACK_OUTLINE | ARROWS[Direction.toGoTo(curr, next).ordinal()]);
+            }
+            gg.backgrounds[toCursor.last().x][toCursor.last().y] = DescriptiveColorRgb.hsb2rgb(modifiedTime * 0.25f - (toCursor.size - 1) * 0.0625f, 0.9f, 1f, 1f);
+            gg.put(toCursor.last(), 0xFFFFFFFF00000000L | Font.BLACK_OUTLINE | '*');
         }
     }
 
