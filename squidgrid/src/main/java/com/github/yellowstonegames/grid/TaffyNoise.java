@@ -183,7 +183,7 @@ public class TaffyNoise implements INoise {
 
     protected float valueNoise2D() {
         int bits = BitConversion.floatToRawIntBits(working[dim]);
-        int sx = (int)(seed ^ seed >>> 32 ^ bits) * 0x9E373 ^ 0x7F4A7C15;;
+        int sx = (int)(seed ^ seed >>> 32 ^ bits) * 0x9E373 ^ 0x7F4A7C15;
         int sy = sx * 0x9E373 ^ 0x7F4A7C15;
         float cx = working[0];
         float cy = working[1];

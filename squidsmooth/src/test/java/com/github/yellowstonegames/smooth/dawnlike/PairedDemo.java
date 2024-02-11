@@ -604,7 +604,7 @@ public class PairedDemo extends ApplicationAdapter {
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(rgbVision.inView.contains(curr))
-                rgbVision.backgroundColors[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f);;
+                rgbVision.backgroundColors[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f);
         }
 
         float[][] lightLevels = rgbVision.lighting.fovResult;

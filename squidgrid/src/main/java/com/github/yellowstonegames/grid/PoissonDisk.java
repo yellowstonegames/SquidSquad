@@ -242,7 +242,7 @@ public final class PoissonDisk {
                 //get random point around
                 float d = rng.nextFloat();
                 float radius = minimumDistance + minimumDistance * d;
-                float angle = rng.nextFloat();;
+                float angle = rng.nextFloat();
 
                 float newX = radius * TrigTools.sinTurns(angle);
                 float newY = radius * TrigTools.cosTurns(angle);

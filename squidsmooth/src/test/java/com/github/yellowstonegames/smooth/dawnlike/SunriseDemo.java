@@ -573,13 +573,13 @@ public class SunriseDemo extends ApplicationAdapter {
 //                greenRed = TrigTools.cosTurns(sun);
 //        vision.rememberedOklabColor = DescriptiveColor.oklab(0.45f + blueYellow * 0.15f, blueYellow * 0.02f + 0.5f, greenRed * 0.03f + 0.51f, 1f);
 
-        int rainbow = DescriptiveColor.maximizeSaturation(160,
-                (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
+//        int rainbow = DescriptiveColor.maximizeSaturation(160,
+//                (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
 
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(vision.inView.contains(curr))
-                vision.backgroundColors[curr.x][curr.y] = rainbow;
+                vision.backgroundColors[curr.x][curr.y] = DescriptiveColor.oklabByHSL(time * 0.5f - i * 0.0625f, 1f, 0.625f, 1f);
         }
 
         float[][] lightLevels = vision.lighting.fovResult;

@@ -42,6 +42,7 @@ import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.ChopRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
@@ -722,25 +723,28 @@ public class DawnlikeDemo extends ApplicationAdapter {
 
         final float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 0.004f, 0f), 1f);
 
-        int rainbow = DescriptiveColor.maximizeSaturation(160,
-                (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
+//        int rainbow = DescriptiveColor.maximizeSaturation(160,
+//                (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
         for (int i = 0; i < dungeonWidth; i++) {
             for (int j = 0; j < dungeonHeight; j++) {
                 if(lightLevels[i][j] > 0.01) {
                     if(newlyVisible.contains(i, j)){
+                        int idx = toCursor.indexOf(Coord.get(i, j));
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.fade(
-                                        toCursor.contains(Coord.get(i, j))
-                                                ? rainbow
+                                        idx != -1
+                                                ? DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f)
                                                 : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
                     } else if(justSeen.contains(i, j)){
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)),
                                         DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), 1f - change)));
                     } else {
-                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(toCursor.contains(Coord.get(i, j))
-                                ? rainbow
+                        int idx = toCursor.indexOf(Coord.get(i, j));
+                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
+                                idx != -1
+                                ? DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f)
                                 : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
                     }
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them

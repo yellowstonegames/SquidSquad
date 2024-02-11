@@ -566,12 +566,12 @@ public class SunriseRgbDemo extends ApplicationAdapter {
         float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
         vision.update(change);
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
-        int rainbow = hsl2rgb((time * 0.25f), 1f, 0.55f, 1f);
+//        int rainbow = hsl2rgb((time * 0.25f), 1f, 0.55f, 1f);
 
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(vision.inView.contains(curr))
-                vision.backgroundColors[curr.x][curr.y] = rainbow;
+                vision.backgroundColors[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f);
         }
 
         float[][] lightLevels = vision.lighting.fovResult;

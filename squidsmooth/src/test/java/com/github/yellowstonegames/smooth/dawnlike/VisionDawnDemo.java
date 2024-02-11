@@ -718,14 +718,14 @@ public class VisionDawnDemo extends ApplicationAdapter {
 
         final float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 0.004f, 0f), 1f);
 
-        int rainbow = DescriptiveColor.maximizeSaturation(160,
-                (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
+//        int rainbow = DescriptiveColor.maximizeSaturation(160,
+//                (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
         lighting.drawOklab(backgroundColors);
 
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(inView.contains(curr))
-                backgroundColors[curr.x][curr.y] = rainbow;
+                backgroundColors[curr.x][curr.y] = DescriptiveColor.oklabByHSL(time * 0.5f - i * 0.0625f, 1f, 0.625f, 1f);
         }
 
         float[][] lightLevels = lighting.fovResult;
