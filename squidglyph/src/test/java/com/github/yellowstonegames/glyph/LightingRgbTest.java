@@ -252,7 +252,7 @@ public class LightingRgbTest extends ApplicationAdapter {
 
     public void recolor(){
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
-        int rainbow = hsl2rgb((modifiedTime * 0.2f), 1f, 0.45f, 1f);
+//        int rainbow = hsl2rgb((modifiedTime * 0.2f), 1f, 0.45f, 1f);
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
@@ -269,7 +269,7 @@ public class LightingRgbTest extends ApplicationAdapter {
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(inView.contains(curr))
-                gg.backgrounds[curr.x][curr.y] = rainbow;
+                gg.backgrounds[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(modifiedTime * 0.25f - i * 0.0625f, 0.9f, 1f, 1f);
         }
     }
 

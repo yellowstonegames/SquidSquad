@@ -38,6 +38,7 @@ import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.FullPalette;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
@@ -253,9 +254,9 @@ public class LightingTest extends ApplicationAdapter {
 
     public void recolor(){
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
-        int rainbow = toRGBA8888(
-                limitToGamut(100,
-                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
+//        int rainbow = toRGBA8888(
+//                limitToGamut(100,
+//                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
 //        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
@@ -273,7 +274,7 @@ public class LightingTest extends ApplicationAdapter {
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(inView.contains(curr))
-                gg.backgrounds[curr.x][curr.y] = rainbow;
+                gg.backgrounds[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(modifiedTime * 0.25f - i * 0.0625f, 0.9f, 1f, 1f);
         }
     }
 

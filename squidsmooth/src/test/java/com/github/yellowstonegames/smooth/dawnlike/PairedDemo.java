@@ -599,12 +599,12 @@ public class PairedDemo extends ApplicationAdapter {
         float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
         rgbVision.update(change);
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
-        int rainbow = hsl2rgb((time * 0.25f), 1f, 0.55f, 1f);
+//        int rainbow = hsl2rgb((time * 0.25f), 1f, 0.55f, 1f);
 
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(rgbVision.inView.contains(curr))
-                rgbVision.backgroundColors[curr.x][curr.y] = rainbow;
+                rgbVision.backgroundColors[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f);;
         }
 
         float[][] lightLevels = rgbVision.lighting.fovResult;
@@ -654,12 +654,12 @@ public class PairedDemo extends ApplicationAdapter {
         float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
         oklabVision.update(change);
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
-        int rainbow = DescriptiveColor.oklabByHSL((time * 0.25f), 1f, 0.45f, 1f);
+//        int rainbow = DescriptiveColor.oklabByHSL((time * 0.25f), 1f, 0.45f, 1f);
 
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(oklabVision.inView.contains(curr))
-                oklabVision.backgroundColors[curr.x][curr.y] = rainbow;
+                oklabVision.backgroundColors[curr.x][curr.y] = DescriptiveColor.oklabByHSL(time * 0.5f - i * 0.0625f, 1f, 0.625f, 1f);
         }
 
         float[][] lightLevels = oklabVision.lighting.fovResult;

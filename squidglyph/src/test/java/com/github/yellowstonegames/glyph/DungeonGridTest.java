@@ -38,6 +38,7 @@ import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.glyph.rexpaint.XPIO;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
@@ -264,15 +265,17 @@ public class DungeonGridTest extends ApplicationAdapter {
         int playerX = Math.round(playerGlyph.getX());
         int playerY = Math.round(playerGlyph.getY());
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
-        int rainbow = toRGBA8888(
-                limitToGamut(100,
-                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
-        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
+        // this could be used if you want the cursor highlight to be all one color.
+//        int rainbow = toRGBA8888(
+//                limitToGamut(100,
+//                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
+        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.bicubicWobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 if (inView.contains(x, y)) {
-                    if(toCursor.contains(Coord.get(x, y))){
-                        gg.backgrounds[x][y] = rainbow;
+                    int idx = toCursor.indexOf(Coord.get(x, y));
+                    if(idx != -1){
+                        gg.backgrounds[x][y] = DescriptiveColorRgb.hsb2rgb(modifiedTime * 0.25f - idx * 0.0625f, 0.9f, 1f, 1f);
                         gg.put(x, y, prunedDungeon[x][y], stoneText);
                     }
                     else {
