@@ -25,6 +25,9 @@ import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.DrunkenWalk;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Like {@link DrunkenWalk}, this generates orthogonally-connected paths of {@link Coord} that meander through an area;
  * unlike DrunkenWalk, this won't ever generate paths that cross themselves.
@@ -90,6 +93,48 @@ public class TwistedLine {
                 if (x >= 0 && x < graph.width && y >= 0 && y < graph.height) {
                     Coord c = Coord.get(x, y);
                     if (graph.getEdges(c).isEmpty() && deck.add(c)) {
+                        graph.addEdge(p, c);
+                        continue OUTER;
+                    }
+                }
+            }
+
+            deck.remove(p);
+        }
+
+    }
+
+    /**
+     * This sets up a random maze as a {@link DefaultGraph} so a path can be found, using the given Collection of Coord
+     * to represent which cells on a 2D grid can actually be traversed (and so can be used in a random path). The
+     * {@code traversable} parameter is often a {@link com.github.yellowstonegames.grid.Region}.
+     * You can call this after construction to change the paths this can find.
+     */
+    public void reinitialize(Collection<Coord> traversable) {
+        graph.removeAllVertices();
+        graph.addVertices(traversable);
+
+        Coord start = graph.vertexMap.random(rng);
+
+        CoordOrderedSet deck = new CoordOrderedSet();
+        deck.add(start);
+
+        Direction[] dirs = new Direction[4];
+        System.arraycopy(Direction.CARDINALS, 0, dirs, 0, 4);
+        OUTER:
+        while (!deck.isEmpty()) {
+            int i = deck.size() - 1;
+            Coord p = deck.getAt(i);
+            rng.shuffle(dirs);
+
+            for (int j = 0; j < dirs.length; j++) {
+                Direction dir = dirs[j];
+                int x = p.x + dir.deltaX;
+                int y = p.y + dir.deltaY;
+                if (x >= 0 && x < graph.width && y >= 0 && y < graph.height) {
+                    Coord c = Coord.get(x, y);
+                    List<? extends Connection<Coord>> edges = graph.getEdges(c);
+                    if (edges != null && edges.isEmpty() && deck.add(c)) {
                         graph.addEdge(p, c);
                         continue OUTER;
                     }

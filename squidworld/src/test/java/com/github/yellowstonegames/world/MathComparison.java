@@ -46,10 +46,42 @@ public class MathComparison extends ApplicationAdapter {
         return (1 + n * (1 + n / 2 * (1 + n / 3 * (1 + n / 4)))) * BitConversion.intBitsToFloat(1065353216 + (int)(12102203 * n));
 //        return 1 + n * (1 + n / 2 * (1 + n / 3 * (1 + n / 4 * (1 + n / 5 * (1 + n / 6)))));
     }
+
+    /**
+     * Range is from 0.0051585725 to 1.
+     * @param x
+     * @param y
+     * @return
+     */
+    public static float gaussian2D(float x, float y) {
+        x = Math.max(-3.5f, (x * x + y * y) * -0.5f);
+        x = (12 + x * (6 + x))/(12 + x * (-6 + x));
+        return x * x;
+    }
+
+    /**
+     * Range is from 0 to 1.
+     * @param x
+     * @param y
+     * @return
+     */
+    public static float gaussianFinite2D(float x, float y) {
+        x = Math.max(-3.4060497f, (x * x + y * y) * -0.5f);
+        x = (12 + x * (6 + x))/(12 + x * (-6 + x));
+        return (x * x - 0.00516498f) * 1.0051918f;
+    }
+
     private final FloatFloatToFloatBiFunction[] functions = new FloatFloatToFloatBiFunction[]{
             (x, y) -> (float) Math.exp(-x*x-y*y),
             (x, y) -> {x = (x * x + y * y) * -0.125f; x = (2 + x * (2 + x))*0.5f; x *= x; x *= x; return x * x;},
-            (x, y) -> {x = (x * x + y * y) * -0.5f; x = (12 + x * (6 + x))/(12 + x * (-6 + x)); return x * x;},
+
+            MathComparison::gaussian2D,
+            MathComparison::gaussianFinite2D,
+            (x, y) -> {x = Math.max(-8, (x * x + y * y) * -0.5f); x = (12 + x * (6 + x))/(12 + x * (-6 + x)); return x * x;},
+            (x, y) -> {x = Math.max(-8, (x * x + y * y) * -0.5f); float t1 = x * 0.5f, t2 = t1 * t1 * 0.333333333f; x = (1f + t1 + t2) / (1f - t1 + t2); return x * x;},
+            (x, y) -> {x = (x * x + y * y) * -0.5f; float t1 = x * (1f / 2f), t2 = t1 * t1 * (1f / 3f); x = (1f + t1 + t2) / (1f - t1 + t2); return x * x;},
+            (x, y) -> {x = (x * x + y * y) * -0.25f; float t1 = x * (1f / 2f), t2 = t1 * t1 * (1f / 3f); x = (1f + t1 + t2) / (1f - t1 + t2); return (x *= x) * x;},
+            (x, y) -> {x = (-x * x - y * y); float t1 = x * (1f / 2f), t2 = t1 * x * (3f / 14f), t3 = t2 * x * (1f / 9f), t4 = t3 * x * (1f / 20f); x = (1f + t1 + t2 + t3 + t4) / (1f - t1 + t2 - t3 + t4); return x;},
             (x, y) -> {x = (-x * x - y * y) * 0.5f; x = (120 + x * (60 + x * (12 + x)))/(120 + x * (-60 + x * (12 - x))); return x * x;},
             (x, y) -> {x = (-x * x - y * y) * 0.25f; x = (6 + x * (6 + x * (3 + x))) / 6f; return (x *= x) * x;},
             (x, y) -> {x = -(x * x + y * y); return (2 + x * (2 + x)) * BitConversion.intBitsToFloat(0x3f000000 + (int)(12102203 * x));},
@@ -60,14 +92,13 @@ public class MathComparison extends ApplicationAdapter {
             (x, y) -> BitConversion.intBitsToFloat(1065353216 - (int)((12102203 + 0x5.8p17 / (x = x * x + y * y)) * x)),
     };
     private int index0 = 0;
-    private int index1 = 1;
+    private int index1 = 4;
 
     private ImmediateModeRenderer20 renderer;
     private boolean hue = false;
     private float freq = 0x1p-6f;
 
     private static final int width = 256, height = 256;
-    private static final float iWidth = 1f/width, iHeight = 1f/height;
     private static final float LIGHT_YELLOW = Color.toFloatBits(1f, 1f, 0.4f, 1f);
 
     private Viewport view;
@@ -79,21 +110,11 @@ public class MathComparison extends ApplicationAdapter {
 
     public float prepare0(float n) {
         n = (n + 1) - (int)(n + 1);
-//        if(hue){
-//            n = (n + 1) - (int)(n + 1);
-//        } else {
-//            n = n * 0.5f + 0.5f;
-//        }
         freq0[Math.min(Math.max((int)(n * 256), 0), freq0.length-1)]++;
         return n;
     }
     public float prepare1(float n) {
         n = (n + 1) - (int)(n + 1);
-//        if(hue){
-//            n = (n + 1) - (int)(n + 1);
-//        } else {
-//            n = n * 0.5f + 0.5f;
-//        }
         freq1[Math.min(Math.max((int)(n * 256), 0), freq1.length-1)]++;
         return n;
     }
@@ -114,11 +135,13 @@ public class MathComparison extends ApplicationAdapter {
                     case NUM_0:
                     case NUMPAD_0:
                         index0 = (index0 + (UIUtils.shift() ? functions.length - 1 : 1)) % functions.length;
+                        System.out.println("Left side: index " + index0 + ", right side: index " + index1);
                         break;
                     case MINUS:
                     case NUM_1:
                     case NUMPAD_1:
                         index1 = (index1 + (UIUtils.shift() ? functions.length - 1 : 1)) % functions.length;
+                        System.out.println("Left side: index " + index0 + ", right side: index " + index1);
                         break;
                     case C:
                         if (UIUtils.shift()) ctr--;
