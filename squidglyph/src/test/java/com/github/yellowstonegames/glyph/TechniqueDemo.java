@@ -1,14 +1,15 @@
 package com.github.yellowstonegames.glyph;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -20,7 +21,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.textra.KnownFonts;
-import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.FullPaletteRgb;
 import com.github.yellowstonegames.grid.*;
@@ -32,10 +32,6 @@ import com.github.yellowstonegames.path.technique.Technique;
 import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.place.DungeonTools;
 import com.github.yellowstonegames.place.tileset.TilesetType;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 public class TechniqueDemo extends ApplicationAdapter {
     private enum Phase {MOVE_ANIM, ATTACK_ANIM}
@@ -49,12 +45,11 @@ public class TechniqueDemo extends ApplicationAdapter {
     private float[][] res;
     private int[][] colorGrid;
     private BresenhamLine los;
-    public static final int gridWidth = 40, gridHeight = 40, cellWidth = 6, cellHeight = 17;
+    public static final int gridWidth = 40, gridHeight = 40, cellWidth = 16, cellHeight = 24;
     private int numMonsters = 16;
 
     private static final int bgColor = FullPaletteRgb.DB_INK;
     private CoordObjectOrderedMap<GlyphActor> teamRed, teamBlue;
-    private FloatList redHealth, blueHealth;
     private CoordOrderedSet redPlaces, bluePlaces;
     private Technique redCone, redCloud, blueBlast, blueBeam;
     private DijkstraMap getToRed, getToBlue;
@@ -67,7 +62,8 @@ public class TechniqueDemo extends ApplicationAdapter {
     @Override
     public void create () {
         batch = new SpriteBatch();
-        display = new GlyphGrid(KnownFonts.getCozette(), gridWidth * 2, gridHeight, false);
+        display = new GlyphGrid(KnownFonts.getAStarry().scaleTo(cellWidth, cellHeight), gridWidth, gridHeight, false);
+        display.backgrounds = ArrayTools.fill(FullPaletteRgb.AURORA_CHINCHILLA, gridWidth, gridHeight);
         stage = new Stage(new ScreenViewport(), batch);
 
         rng = new AceRandom(0x1337BEEF);
@@ -165,7 +161,6 @@ public class TechniqueDemo extends ApplicationAdapter {
         });
         // ABSOLUTELY NEEDED TO HANDLE INPUT
         // and then add display, our one visual component, to the list of things that act in Stage.
-        display.setPosition(0, 0);
         stage.addActor(display);
     }
 
@@ -211,31 +206,9 @@ public class TechniqueDemo extends ApplicationAdapter {
             user = ae.getLocation();
         }
         whichAllies.remove(user);
-        /*for(Coord p : whichFoes)
-        {
-            AnimatedEntity foe = display.getAnimatedEntityByCell(p.x, p.y);
-            if(los.isReachable(res, user.x, user.y, p.x, p.y) && foe != null && whichEnemyTeam.get(foe) != null && whichEnemyTeam.get(foe) > 0)
-            {
-                visibleTargets.add(p);
-            }
-        }*/
         ObjectDeque<Coord> path = whichDijkstra.findTechniquePath(moveLength, whichTech, res, null, whichFoes, whichAllies, user, whichFoes);
         if(path.isEmpty())
             path = whichDijkstra.findPath(moveLength, whichFoes, whichAllies, user, whichFoes.toArray(new Coord[0]));
-        /*
-        System.out.println("User at (" + user.x + "," + user.y + ") using " +
-                whichTech.name);
-        */
-        /*
-        boolean anyFound = false;
-
-        for (int yy = 0; yy < height; yy++) {
-            for (int xx = 0; xx < width; xx++) {
-                System.out.print((whichDijkstra.targetMap[xx][yy] == null) ? "." : "@");
-                anyFound = (whichDijkstra.targetMap[xx][yy] != null) ? true : anyFound;
-            }
-            System.out.println();
-        }*/
         awaitedMoves.clear();
         awaitedMoves.addAll(path);
     }
@@ -267,7 +240,6 @@ public class TechniqueDemo extends ApplicationAdapter {
             whichAllies = bluePlaces;
             whichTint = DescriptiveColorRgb.CYAN;
             whichEnemyTeam = teamRed;
-            whichEnemyHealth = redHealth;
             ae = teamBlue.getAt(idx);
             health = (Float) ae.getUserObject();
             if (health <= 0) {
@@ -281,7 +253,6 @@ public class TechniqueDemo extends ApplicationAdapter {
             whichAllies = redPlaces;
             whichTint = DescriptiveColorRgb.RED;
             whichEnemyTeam = teamBlue;
-            whichEnemyHealth = blueHealth;
             ae = teamRed.getAt(idx);
             health = (Float)ae.getUserObject();
             if (health <= 0) {
@@ -322,7 +293,7 @@ public class TechniqueDemo extends ApplicationAdapter {
                     tgt = whichEnemyTeam.getAt(tgtIdx);
                     if(tgt.getLocation().equals(power.getKey()))
                     {
-                        float currentHealth = Math.max((Float)tgt.getUserObject() - (1.5f * strength), 0);
+                        float currentHealth = Math.max((Float)tgt.getUserObject() - (1.5f * strength) - 1, 0);
                         whichEnemyTeam.setAt(tgtIdx, tgt);
                         tgt.setChar((char)('0' + MathTools.roundPositive(currentHealth)));
                     }
@@ -355,6 +326,9 @@ public class TechniqueDemo extends ApplicationAdapter {
         // not sure if this is always needed...
         Gdx.gl.glEnable(GL20.GL_BLEND);
 
+        Camera camera = display.viewport.getCamera();
+        camera.position.set(display.gridWidth * 0.5f, display.gridHeight * 0.5f, 0f);
+        camera.update();
         stage.act();
         boolean blueWins = false, redWins = false;
         for(int bh = 0; bh < teamBlue.size(); bh++)
@@ -453,10 +427,15 @@ public class TechniqueDemo extends ApplicationAdapter {
         {
             framesWithoutAnimation = 0;
         }
-
-        // stage has its own batch and must be explicitly told to draw(). this also causes it to act().
         stage.draw();
     }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        display.resize(width, height);
+    }
+
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Technique Demo");
