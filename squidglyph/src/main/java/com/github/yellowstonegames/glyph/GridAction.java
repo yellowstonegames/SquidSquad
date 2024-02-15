@@ -19,8 +19,8 @@ package com.github.yellowstonegames.glyph;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.PouchRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
 
@@ -746,4 +746,57 @@ public abstract class GridAction extends TemporalAction {
         }
     }
 
+    public static class TintAction extends GridAction {
+        /**
+         * A 2D array of what RGBA8888 colors to tint what cells; alpha is used to determine how much each cell is
+         * affected. If an int color is 0, then it is fully transparent, and that cell won't change.
+         */
+        public int[][] colorMap;
+        /**
+         * The raw list of Coords that might be affected by the action. You can edit this if you need to, but it isn't
+         * recommended.
+         */
+        public List<Coord> affected;
+
+        /**
+         * Constructs an TintAction with explicit settings for most fields.
+         * @param targeting the GlyphGrid to affect
+         * @param duration the duration of this GridAction in seconds, as a float
+         * @param valid the valid cells that can be changed by this GridAction, as a Region
+         * @param colorMap a 2D array of RGBA8888 int colors that will be used to determine how to tint cells; alpha affects how strong the tint will be
+         */
+        public TintAction(GlyphGrid targeting, float duration, Region valid, int[][] colorMap)
+        {
+            super(targeting, duration, valid);
+            this.colorMap = ArrayTools.copy(colorMap);
+            valid.not().writeIntsInto(this.colorMap, 0);
+            valid.not();
+            affected = new ObjectList<>(valid.size());
+            for (int x = 0; x < colorMap.length; x++) {
+                for (int y = 0; y < colorMap[x].length; y++) {
+                    if((this.colorMap[x][y] & 255) != 0)
+                        affected.add(Coord.get(x, y));
+                }
+            }
+        }
+        /**
+         * Called each frame.
+         *
+         * @param percent The percentage of completion for this action, growing from 0 to 1 over the duration. If
+         *                {@link #setReverse(boolean) reversed}, this will shrink from 1 to 0.
+         */
+        @Override
+        protected void update(float percent) {
+            int len = affected.size();
+            Coord c;
+            float f = (percent < 0.5f) ? Interpolations.sineIn.apply(percent * 2f) : Interpolations.sineOut.apply(1f - percent * 2f);
+            int color;
+            for (int i = 0; i < len; i++) {
+                c = affected.get(i);
+                if(((color = colorMap[c.x][c.y]) & 255) == 0)
+                    continue;
+                grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColorsBlended(grid.backgrounds[c.x][c.y], color, f);
+            }
+        }
+    }
 }
