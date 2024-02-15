@@ -278,15 +278,12 @@ public class TechniqueDemo extends ApplicationAdapter {
         if(targetCell != null)
         {
             effects = whichTech.apply(user, targetCell);
-            GridAction.TintAction tint = new GridAction.TintAction(display, 0.35f, null, colorGrid);
-            ArrayTools.fill(tint.colorGrid, 0);
-            if(!effects.isEmpty())
-                display.addAction(tint);
+            ArrayTools.fill(colorGrid, 0);
             for(ObjectFloatMap.Entry<Coord> power : effects.entrySet())
             {
                 float strength = ((idx & 1) == 0) ? rng.nextFloat() : power.getValue();
                 whichTint = DescriptiveColorRgb.setAlpha(whichTint, strength);
-                tint.colorGrid[power.getKey().x][power.getKey().y] = whichTint;
+                colorGrid[power.getKey().x][power.getKey().y] = whichTint;
                 GlyphActor tgt;
                 for(int tgtIdx = 0; tgtIdx < whichEnemyTeam.size(); tgtIdx++)
                 {
@@ -298,6 +295,10 @@ public class TechniqueDemo extends ApplicationAdapter {
                         tgt.setChar((char)('0' + MathTools.roundPositive(currentHealth)));
                     }
                 }
+            }
+            if(!effects.isEmpty())
+            {
+                display.addAction(new GridAction.TintAction(display, 0.5f, null, colorGrid));
             }
         }
         else
@@ -317,6 +318,7 @@ public class TechniqueDemo extends ApplicationAdapter {
         for (int i = 0; i < gridWidth; i++) {
             for (int j = 0; j < gridHeight; j++) {
                 display.put(i, j, lineDungeon[i][j], FullPaletteRgb.AURORA_STYGIAN_BLUE);
+                display.backgrounds[i][j] = FullPaletteRgb.AURORA_CHINCHILLA;
             }
         }
     }
@@ -325,6 +327,8 @@ public class TechniqueDemo extends ApplicationAdapter {
         ScreenUtils.clear(0.13333334f, 0.1254902f, 0.20392157f, 1f); // DB_INK
         // not sure if this is always needed...
         Gdx.gl.glEnable(GL20.GL_BLEND);
+
+        putMap();
 
         Camera camera = display.viewport.getCamera();
         camera.position.set(display.gridWidth * 0.5f, display.gridHeight * 0.5f, 0f);
@@ -349,7 +353,6 @@ public class TechniqueDemo extends ApplicationAdapter {
         }
         if (blueWins) {
             // still need to display the map, then write over it with a message.
-            putMap();
             System.out.println("  BLUE TEAM WINS!  ");
 
             // because we return early, we still need to draw.
@@ -358,7 +361,6 @@ public class TechniqueDemo extends ApplicationAdapter {
         }
         else if(redWins)
         {
-            putMap();
             System.out.println("   RED TEAM WINS!  ");
 
             // because we return early, we still need to draw.
@@ -378,8 +380,6 @@ public class TechniqueDemo extends ApplicationAdapter {
             ae = teamRed.getAt(redIdx);
         }
 
-        // need to display the map every frame, since we clear the screen to avoid artifacts.
-        putMap();
         // if the user clicked, we have a list of moves to perform.
         if(!awaitedMoves.isEmpty())
         {
@@ -388,7 +388,7 @@ public class TechniqueDemo extends ApplicationAdapter {
             }
             // extremely similar to the block below that also checks if animations are done
             // this doesn't check for input, but instead processes and removes Points from awaitedMoves.
-            else if(!display.areChildrenActing()) {
+            else if(!display.isAnythingActing()) {
                 ++framesWithoutAnimation;
                 if (framesWithoutAnimation >= 2) {
                     framesWithoutAnimation = 0;
@@ -399,7 +399,7 @@ public class TechniqueDemo extends ApplicationAdapter {
         }
         // if the previous blocks didn't happen, and there are no active animations, then either change the phase
         // (because with no animations running the last phase must have ended), or start a new animation soon.
-        else if(!display.areChildrenActing()) {
+        else if(!display.isAnythingActing()) {
             ++framesWithoutAnimation;
             if (framesWithoutAnimation >= 2) {
                 framesWithoutAnimation = 0;

@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.PouchRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.List;
@@ -789,13 +790,13 @@ public abstract class GridAction extends TemporalAction {
         protected void update(float percent) {
             int len = affected.size();
             Coord c;
-            float f = (percent < 0.5f) ? Interpolations.sineIn.apply(percent * 2f) : Interpolations.sineOut.apply(1f - percent * 2f);
+            float f = (percent < 0.5f) ? Interpolations.sineIn.apply(percent * 2f) : Interpolations.sineOut.apply(2f - percent * 2f);
             int color;
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
                 if(((color = colorGrid[c.x][c.y]) & 255) == 0)
                     continue;
-                grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColorsBlended(grid.backgrounds[c.x][c.y], color, f);
+                grid.backgrounds[c.x][c.y] = DescriptiveColorRgb.lerpColorsBlended(grid.backgrounds[c.x][c.y], color, f);
             }
         }
     }

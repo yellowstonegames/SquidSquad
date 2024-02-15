@@ -374,6 +374,15 @@ public class GlyphGrid extends Group {
     }
 
     /**
+     * Returns true if this GlyphGrid or any of its children currently have Actions, or false if none do.
+     *
+     * @return whether this GlyphGrid or any of its children currently have Actions
+     */
+    public boolean isAnythingActing() {
+        return hasActions() || areChildrenActing();
+    }
+
+    /**
      * Returns true if any children of this GlyphGrid currently have Actions, or false if none do.
      *
      * @return whether any children of this GlyphGrid currently have Actions
