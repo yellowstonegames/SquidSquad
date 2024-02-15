@@ -769,9 +769,9 @@ public abstract class GridAction extends TemporalAction {
         {
             super(targeting, duration, valid);
             this.colorGrid = ArrayTools.copy(colorGrid);
-            valid.not().writeIntsInto(this.colorGrid, 0);
-            valid.not();
-            affected = new ObjectList<>(valid.size());
+            this.valid.not().writeIntsInto(this.colorGrid, 0);
+            this.valid.not();
+            affected = new ObjectList<>(this.valid.size());
             for (int x = 0; x < colorGrid.length; x++) {
                 for (int y = 0; y < colorGrid[x].length; y++) {
                     if((this.colorGrid[x][y] & 255) != 0)

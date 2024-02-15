@@ -357,65 +357,55 @@ public class TechniqueDemo extends ApplicationAdapter {
 
         stage.act();
         boolean blueWins = false, redWins = false;
-        for(int bh = 0; bh < blueHealth.size; bh++)
+        for(int bh = 0; bh < teamBlue.size(); bh++)
         {
-            if(blueHealth.get(bh) > 0) {
+            if((Float)teamBlue.getAt(bh).getUserObject() > 0) {
                 redWins = false;
                 break;
-            }redWins = true;
+            }
+            redWins = true;
         }
-        for(int rh = 0; rh < redHealth.size; rh++)
+        for(int rh = 0; rh < teamRed.size(); rh++)
         {
-            if(redHealth.get(rh) > 0) {
+            if((Float)teamRed.getAt(rh).getUserObject() > 0) {
                 blueWins = false;
                 break;
-            }blueWins = true;
+            }
+            blueWins = true;
         }
         if (blueWins) {
             // still need to display the map, then write over it with a message.
             putMap();
-            display.putBoxedString(gridWidth / 2 - 11, gridHeight / 2 - 1, "  BLUE TEAM WINS!  ");
-            display.putBoxedString(gridWidth / 2 - 11, gridHeight / 2 + 5, "     q to quit.    ");
+            System.out.println("  BLUE TEAM WINS!  ");
 
             // because we return early, we still need to draw.
             stage.draw();
-            // q still needs to quit.
-            if(input.hasNext())
-                input.next();
             return;
         }
         else if(redWins)
         {
             putMap();
-            display.putBoxedString(gridWidth / 2 - 11, gridHeight / 2 - 1, "   RED TEAM WINS!  ");
-            display.putBoxedString(gridWidth / 2 - 11, gridHeight / 2 + 5, "     q to quit.    ");
+            System.out.println("   RED TEAM WINS!  ");
 
             // because we return early, we still need to draw.
             stage.draw();
-            // q still needs to quit.
-            if(input.hasNext())
-                input.next();
             return;
         }
         int i = 0;
-        AnimatedEntity ae = null;
+        GlyphActor ae = null;
         int whichIdx = 0;
         if(blueTurn) {
             whichIdx = blueIdx;
-            ae = teamBlue.get(blueIdx);
+            ae = teamBlue.getAt(blueIdx);
         }
         else
         {
             whichIdx = redIdx;
-            ae = teamRed.get(redIdx);
+            ae = teamRed.getAt(redIdx);
         }
 
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         putMap();
-        // if we are waiting for the player's input and get input, process it.
-        if(input.hasNext()) {
-            input.next();
-        }
         // if the user clicked, we have a list of moves to perform.
         if(!awaitedMoves.isEmpty())
         {
@@ -424,18 +414,18 @@ public class TechniqueDemo extends ApplicationAdapter {
             }
             // extremely similar to the block below that also checks if animations are done
             // this doesn't check for input, but instead processes and removes Points from awaitedMoves.
-            else if(!display.hasActiveAnimations()) {
+            else if(!display.areChildrenActing()) {
                 ++framesWithoutAnimation;
                 if (framesWithoutAnimation >= 2) {
                     framesWithoutAnimation = 0;
-                    Coord m = awaitedMoves.remove(0);
+                    Coord m = awaitedMoves.removeFirst();
                     move(ae, m.x, m.y);
                 }
             }
         }
         // if the previous blocks didn't happen, and there are no active animations, then either change the phase
         // (because with no animations running the last phase must have ended), or start a new animation soon.
-        else if(!display.hasActiveAnimations()) {
+        else if(!display.areChildrenActing()) {
             ++framesWithoutAnimation;
             if (framesWithoutAnimation >= 2) {
                 framesWithoutAnimation = 0;
@@ -449,7 +439,6 @@ public class TechniqueDemo extends ApplicationAdapter {
                             redIdx = (redIdx + 1) % numMonsters;
                             blueIdx = (blueIdx + 1) % numMonsters;
                         }
-                        dijkstraAlert();
                         startMove(whichIdx);
                     }
                     break;
@@ -467,31 +456,13 @@ public class TechniqueDemo extends ApplicationAdapter {
 
         // stage has its own batch and must be explicitly told to draw(). this also causes it to act().
         stage.draw();
-
-        OrderedSet<AnimatedEntity> entities = display.getAnimatedEntities(0);
-        // display does not draw all AnimatedEntities by default.
-        batch.begin();
-        for (int j = 0; j < entities.size(); j++) {
-            display.drawActor(batch, 1.0f, entities.getAt(j), 0);
-        }
-        entities = display.getAnimatedEntities(2);
-        for (int j = 0; j < entities.size(); j++) {
-            display.drawActor(batch, 1.0f, entities.getAt(j), 2);
-        }
-        /*
-        for(AnimatedEntity mon : teamBlue.keySet()) {
-                display.drawActor(batch, 1.0f, mon);
-        }*/
-        // batch must end if it began.
-        batch.end();
     }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidLib GDX AI Demo");
-        config.setWindowedMode(gridWidth * cellWidth * 2, gridHeight * cellHeight);
+        config.setTitle("SquidSquad Technique Demo");
+        config.setWindowedMode(gridWidth * cellWidth, gridHeight * cellHeight);
         config.useVsync(true);
-        config.setWindowIcon(Files.FileType.Internal, "Tentacle-128.png", "Tentacle-64.png", "Tentacle-32.png", "Tentacle-16.png");
-        new Lwjgl3Application(new SquidAIDemo(), config);
+        new Lwjgl3Application(new TechniqueDemo(), config);
     }
 }
 
