@@ -19,6 +19,7 @@ package com.github.yellowstonegames.glyph;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.random.PouchRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
@@ -29,12 +30,12 @@ public abstract class GridAction extends TemporalAction {
     /**
      * A randomly-seeded random number generator that is meant to be used only for visual effects that don't change
      * gameplay or other logic. This uses the fastest pseudo-random number generator in Juniper right now,
-     * {@link WhiskerRandom}, but because the output of a randomly-seeded generator can't be relied upon, the
+     * {@link PouchRandom}, but because the output of a randomly-seeded generator can't be relied upon, the
      * implementation could change in a future version.
      * <br>
      * The main thing this is used for currently is to assign seeds to actions with a pseudo-random component.
      */
-    public static final WhiskerRandom GUI_RANDOM = new WhiskerRandom();
+    public static final PouchRandom GUI_RANDOM = new PouchRandom();
     public GlyphGrid grid;
     public Region valid;
 
@@ -280,15 +281,15 @@ public abstract class GridAction extends TemporalAction {
                 c = affected.get(i);
                 if((light = lightMap[c.x][c.y]) <= 0.0f)
                     continue;
-                f = Noise.instance.singleSimplex(seed, c.x * 1.5f, c.y * 1.5f, percent * 5f)
+                f = SimplexNoise.noise(c.x * 1.5f, c.y * 1.5f, percent * 5f, seed)
                         * 0.17f + percent * 1.2f;
                 if(f < 0f || 0.5 * light + f < 0.4)
                     continue;
                 idx = (int) (f * colors.length);
                 if(idx >= colors.length - 1)
-                    color = DescriptiveColor.lerpColors(colors[colors.length-1], grid.backgrounds[c.x][c.y], (Math.min(0.99f, f) * colors.length) % 1f);
+                    color = DescriptiveColor.lerpColors(colors[colors.length-1], grid.backgrounds[c.x][c.y], MathTools.fract(Math.min(0.99f, f) * colors.length));
                 else
-                    color = DescriptiveColor.lerpColors(colors[idx], colors[idx+1], (f * colors.length) % 1f);
+                    color = DescriptiveColor.lerpColors(colors[idx], colors[idx+1], MathTools.fract(f * colors.length));
                 grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y], color, DescriptiveColor.alpha(color) * light * 0.25f + 0.75f);
             }
         }
@@ -373,6 +374,11 @@ public abstract class GridAction extends TemporalAction {
         }
     }
 
+    /**
+     * An effect that acts like an {@link ExplosionAction}, but instead of changing the background colors, this changes
+     * the foreground glyph to a randomly-selected character from {@link #choices}. The colors used for the foreground
+     * glyphs can be modified using the same methods that ExplosionAction has, such as {@link #useAcridColors()}.
+     */
     public static class GibberishAction extends ExplosionAction
     {
         /**
@@ -385,14 +391,21 @@ public abstract class GridAction extends TemporalAction {
          */
         public char[] choices = "`~!@#$%^&*()-_=+\\|][}{'\";:/?.>,<".toCharArray();
 
+        /**
+         * Constructs an GibberishAction with explicit settings for some fields.
+         * {@link #useElectricColors() Uses electric colors}. Has a duration of 1 second.
+         * @param targeting the GlyphGrid to affect
+         * @param center the center of the explosion
+         * @param radius the radius of the explosion, in cells
+         */
         public GibberishAction(GlyphGrid targeting, Coord center, int radius)
         {
             super(targeting, 1f, center, radius);
             useElectricColors();
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for some fields. The valid cells this can affect will be
-         * the full expanse of the GlyphGrid.
+         * Constructs an GibberishAction with explicit settings for some fields.
+         * {@link #useElectricColors() Uses electric colors}.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
          * @param center the center of the explosion
@@ -403,12 +416,13 @@ public abstract class GridAction extends TemporalAction {
             useElectricColors();
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for some fields. The valid cells this can affect will be
-         * the full expanse of the GlyphGrid.
+         * Constructs an GibberishAction with explicit settings for some fields.
+         * {@link #useElectricColors() Uses electric colors}.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
          * @param center the center of the explosion
          * @param radius the radius of the explosion, in cells
+         * @param choices all characters that can be used in the foreground of this effect
          */
         public GibberishAction(GlyphGrid targeting, float duration, Coord center, int radius, char[] choices) {
             super(targeting, duration, center, radius);
@@ -416,7 +430,8 @@ public abstract class GridAction extends TemporalAction {
             useElectricColors();
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields.
+         * Constructs an GibberishAction with explicit settings for most fields.
+         * {@link #useElectricColors() Uses electric colors}.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
          * @param valid the valid cells that can be changed by this GridAction, as a Region
@@ -429,7 +444,8 @@ public abstract class GridAction extends TemporalAction {
             useElectricColors();
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields.
+         * Constructs an GibberishAction with explicit settings for most fields.
+         * {@link #useElectricColors() Uses electric colors}.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
          * @param valid the valid cells that can be changed by this GridAction, as a Region
@@ -444,7 +460,7 @@ public abstract class GridAction extends TemporalAction {
         }
 
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
@@ -458,7 +474,7 @@ public abstract class GridAction extends TemporalAction {
             super(targeting, duration, valid, center, radius, coloring);
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
@@ -474,7 +490,7 @@ public abstract class GridAction extends TemporalAction {
         }
 
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
@@ -488,7 +504,7 @@ public abstract class GridAction extends TemporalAction {
             super(targeting, duration, valid, center, radius, coloring);
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors.
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
@@ -503,7 +519,7 @@ public abstract class GridAction extends TemporalAction {
             this.choices = choices;
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields; this constructor allows
+         * Constructs an GibberishAction with explicit settings for most fields; this constructor allows
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
          * @param targeting the GlyphGrid to affect
@@ -522,7 +538,7 @@ public abstract class GridAction extends TemporalAction {
         }
 
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
@@ -540,7 +556,7 @@ public abstract class GridAction extends TemporalAction {
             super(targeting, duration, valid, center, radius, angle, span, coloring);
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
@@ -560,7 +576,7 @@ public abstract class GridAction extends TemporalAction {
         }
 
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
@@ -578,7 +594,7 @@ public abstract class GridAction extends TemporalAction {
             super(targeting, duration, valid, center, radius, angle, span, coloring);
         }
         /**
-         * Constructs an ExplosionEffect with explicit settings for most fields but also an alternate group of Color
+         * Constructs an GibberishAction with explicit settings for most fields but also an alternate group of Color
          * objects that it will use to color the explosion instead of using purple spark colors; this constructor allows
          * the case where an explosion is directed in a cone or sector shape. It will center the sector on {@code angle}
          * (in degrees) and will cover an amount of the circular area (in degrees) equal to {@code span}.
@@ -609,21 +625,21 @@ public abstract class GridAction extends TemporalAction {
             float f;
             int color;
             int idx;
-            int clen = choices.length;
+            final int clen = choices.length;
             final long tick = Hasher.randomize1(BitConversion.doubleToLongBits(percent) + seed);
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
-                if(lightMap[c.x][c.y] <= 0.0)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
+                if(lightMap[c.x][c.y] <= 0.0)
                     continue;
-                f = Noise.instance.singleSimplex(seed, c.x * 1.5f, c.y * 1.5f, percent * 5)
+                f = SimplexNoise.noise(c.x * 1.5f, c.y * 1.5f, percent * 5, seed)
                         * 0.17f + percent * 1.2f;
                 if(f < 0f || 0.5 * lightMap[c.x][c.y] + f < 0.4)
                     continue;
                 idx = (int) (f * colors.length);
                 if(idx >= colors.length - 1)
-                    color = DescriptiveColor.lerpColors(colors[colors.length-1], (colors[colors.length-1] & 0xFFFFFF00), (Math.min(0.99f, f) * colors.length) % 1f);
+                    color = DescriptiveColor.lerpColors(colors[colors.length-1], (colors[colors.length-1] & 0xFFFFFF00), MathTools.fract(Math.min(0.99f, f) * colors.length));
                 else
-                    color = DescriptiveColor.lerpColors(colors[idx], colors[idx+1], (f * colors.length) % 1f);
+                    color = DescriptiveColor.lerpColors(colors[idx], colors[idx+1], MathTools.fract(f * colors.length));
                 grid.put(c.x, c.y, choices[Hasher.randomize1Bounded(tick + i, clen)], color);
             }
         }
@@ -670,12 +686,12 @@ public abstract class GridAction extends TemporalAction {
                 c = affected.get(i);
                 if((light = lightMap[c.x][c.y]) <= 0f)// || 0.6 * (lightMap[c.x][c.y] + percent) < 0.25)
                     continue;
-                f = Noise.instance.singleSimplex(seed, c.x * 0.3f, c.y * 0.3f, percent * 1.3f)
+                f = SimplexNoise.noise(c.x * 0.3f, c.y * 0.3f, percent * 1.3f, seed)
                         * 0.498f + 0.4999f;
                 grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y],
                         DescriptiveColor.lerpColors(colors[(int) (f * colors.length)],
                                 colors[((int) (f * colors.length) + 1) % colors.length],
-                                (f * colors.length) % 1f), MathTools.swayTight(percent * 2f) * light);
+                                MathTools.fract(f * colors.length)), MathTools.swayTight(percent * 2f) * light);
             }
         }
     }
@@ -725,7 +741,7 @@ public abstract class GridAction extends TemporalAction {
                 grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColors(grid.backgrounds[c.x][c.y],
                         DescriptiveColor.lerpColors(colors[(int) (f * colors.length)],
                                 colors[((int) (f * colors.length) + 1) % colors.length],
-                                (f * colors.length) % 1f), MathTools.swayTight(percent * 2f) * light);
+                                MathTools.fract(f * colors.length)), MathTools.swayTight(percent * 2f) * light);
             }
         }
     }

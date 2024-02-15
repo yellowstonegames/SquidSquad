@@ -286,7 +286,7 @@ public class ConeAOE implements AOE {
                         if((bits & (1L << i)) != 0)
                             ap.add(ts[i]);
                     }
-                    if(ap.size() > 0) {
+                    if(!ap.isEmpty()) {
                         bestQuality = qualityMap[x][y];
                         bestPoints.clear();
                         bestPoints.put(Coord.get(x, y), ap);
@@ -299,7 +299,7 @@ public class ConeAOE implements AOE {
                         if ((bits & (1L << i)) != 0)
                             ap.add(ts[i]);
                     }
-                    if (ap.size() > 0) {
+                    if (!ap.isEmpty()) {
                         bestPoints.put(Coord.get(x, y), ap);
                     }
                 }
@@ -453,7 +453,7 @@ public class ConeAOE implements AOE {
                             ap.add(lts[i - pts.length]);
                     }
 
-                    if(ap.size() > 0) {
+                    if(!ap.isEmpty()) {
                         bestQuality = qualityMap[x][y];
                         bestPoints.clear();
                         bestPoints.put(Coord.get(x, y), ap);
@@ -475,7 +475,7 @@ public class ConeAOE implements AOE {
                         if ((lbits & (1L << i)) != 0)
                             ap.add(lts[i - pts.length]);
                     }
-                    if (ap.size() > 0) {
+                    if (!ap.isEmpty()) {
                         bestPoints.put(Coord.get(x, y), ap);
                     }
                 }

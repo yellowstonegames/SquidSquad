@@ -398,7 +398,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	/**
 	 * Creates a 1D char array (which can be passed to {@link String#valueOf(char[])}) filled with a grid made of the
 	 * vertices in this Graph and their estimated costs, if this has done an estimate. Each estimate is rounded to the
-	 * nearest int and only printed if it is 4 digits or less; otherwise this puts '####' in the grid cell. This is a
+	 * nearest int and only printed if it is 4 digits or fewer; otherwise this puts '####' in the grid cell. This is a
 	 * building-block for toString() implementations that may have debugging uses as well.
 	 * @return a 1D char array containing newline-separated rows of space-separated grid cells that contain estimated costs or '####' for unexplored
 	 */

@@ -17,13 +17,14 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.PouchRandom;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 public class DungeonProcessorDemo {
 
     public static void main(String[] args) {
-        AceRandom random = new AceRandom(0xB0BAFE77BA77L);
-        DungeonProcessor gen = new DungeonProcessor(60, 32, random);
+        PouchRandom random = new PouchRandom(0xB0BAFE77BA77L);
+        DungeonProcessor gen = new DungeonProcessor(25, 40, random);
 
 //        gen.addGrass(0, 10);
 //        gen.addWater(0, 6);

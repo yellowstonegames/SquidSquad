@@ -36,7 +36,7 @@ public class Node<V> extends BinaryHeap.Node {
 
     protected final Graph<V> graph;
     protected final V object;
-    protected ObjectObjectMap<Node<V>, Connection<V>> neighbors = new ObjectObjectMap<>(4);
+    protected ObjectObjectMap<Node<V>, Connection<V>> neighbors = new ObjectObjectMap<>(8, 0.5f);
     protected ObjectList<Connection<V>> outEdges = new ObjectList<>(4); // ObjectList reuses its iterator, should be fast
     protected ObjectList<Connection<V>> inEdges;
 
