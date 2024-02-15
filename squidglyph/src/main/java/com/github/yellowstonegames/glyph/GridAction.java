@@ -751,7 +751,7 @@ public abstract class GridAction extends TemporalAction {
          * A 2D array of what RGBA8888 colors to tint what cells; alpha is used to determine how much each cell is
          * affected. If an int color is 0, then it is fully transparent, and that cell won't change.
          */
-        public int[][] colorMap;
+        public int[][] colorGrid;
         /**
          * The raw list of Coords that might be affected by the action. You can edit this if you need to, but it isn't
          * recommended.
@@ -763,18 +763,18 @@ public abstract class GridAction extends TemporalAction {
          * @param targeting the GlyphGrid to affect
          * @param duration the duration of this GridAction in seconds, as a float
          * @param valid the valid cells that can be changed by this GridAction, as a Region
-         * @param colorMap a 2D array of RGBA8888 int colors that will be used to determine how to tint cells; alpha affects how strong the tint will be
+         * @param colorGrid a 2D array of RGBA8888 int colors that will be used to determine how to tint cells; alpha affects how strong the tint will be
          */
-        public TintAction(GlyphGrid targeting, float duration, Region valid, int[][] colorMap)
+        public TintAction(GlyphGrid targeting, float duration, Region valid, int[][] colorGrid)
         {
             super(targeting, duration, valid);
-            this.colorMap = ArrayTools.copy(colorMap);
-            valid.not().writeIntsInto(this.colorMap, 0);
+            this.colorGrid = ArrayTools.copy(colorGrid);
+            valid.not().writeIntsInto(this.colorGrid, 0);
             valid.not();
             affected = new ObjectList<>(valid.size());
-            for (int x = 0; x < colorMap.length; x++) {
-                for (int y = 0; y < colorMap[x].length; y++) {
-                    if((this.colorMap[x][y] & 255) != 0)
+            for (int x = 0; x < colorGrid.length; x++) {
+                for (int y = 0; y < colorGrid[x].length; y++) {
+                    if((this.colorGrid[x][y] & 255) != 0)
                         affected.add(Coord.get(x, y));
                 }
             }
@@ -793,7 +793,7 @@ public abstract class GridAction extends TemporalAction {
             int color;
             for (int i = 0; i < len; i++) {
                 c = affected.get(i);
-                if(((color = colorMap[c.x][c.y]) & 255) == 0)
+                if(((color = colorGrid[c.x][c.y]) & 255) == 0)
                     continue;
                 grid.backgrounds[c.x][c.y] = DescriptiveColor.lerpColorsBlended(grid.backgrounds[c.x][c.y], color, f);
             }
