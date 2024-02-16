@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.ObjectList;
@@ -50,7 +49,9 @@ public class TechniqueDemo extends ApplicationAdapter {
 
     private static final int bgColor = FullPaletteRgb.DB_INK;
     private CoordObjectOrderedMap<GlyphActor> teamRed, teamBlue;
-    private CoordOrderedSet redPlaces, bluePlaces;
+    private CoordOrderedSet foes = new CoordOrderedSet(16);
+    private CoordOrderedSet allies = new CoordOrderedSet(16);
+    private CoordOrderedSet visibleTargets = new CoordOrderedSet(8);
     private Technique redCone, redCloud, blueBlast, blueBeam;
     private DijkstraMap getToRed, getToBlue;
     private Stage stage;
@@ -81,8 +82,6 @@ public class TechniqueDemo extends ApplicationAdapter {
         teamRed = new CoordObjectOrderedMap<>(numMonsters);
         teamBlue = new CoordObjectOrderedMap<>(numMonsters);
 
-        redPlaces = new CoordOrderedSet(numMonsters);
-        bluePlaces = new CoordOrderedSet(numMonsters);
         for(int i = 0; i < numMonsters; i++)
         {
             Coord monPos = placement.singleRandom(rng);
@@ -92,7 +91,6 @@ public class TechniqueDemo extends ApplicationAdapter {
             ga.setLocation(monPos);
             ga.setUserObject(9f);
             teamRed.put(monPos, ga);
-            redPlaces.add(monPos);
             display.addActor(ga);
 
             monPos = placement.singleRandom(rng);
@@ -102,7 +100,6 @@ public class TechniqueDemo extends ApplicationAdapter {
             ga.setLocation(monPos);
             ga.setUserObject(9f);
             teamBlue.put(monPos, ga);
-            bluePlaces.add(monPos);
             display.addActor(ga);
         }
         // your choice of FOV matters here.
@@ -173,7 +170,8 @@ public class TechniqueDemo extends ApplicationAdapter {
         int i = 0;
         DijkstraMap whichDijkstra;
         Technique whichTech;
-        CoordOrderedSet whichFoes, whichAllies;
+        foes.clear();
+        allies.clear();
         GlyphActor ae = null;
         float health = 0;
         Coord user = null;
@@ -181,8 +179,8 @@ public class TechniqueDemo extends ApplicationAdapter {
         {
             whichDijkstra = getToRed;
             whichTech = ((idx & 1) == 0) ? blueBeam : blueBlast;
-            whichFoes = redPlaces;
-            whichAllies = bluePlaces;
+            foes.addAll(teamRed.order());
+            allies.addAll(teamBlue.order());
             ae = teamBlue.getAt(idx);
             health = (Float) ae.getUserObject();
             if(health <= 0) {
@@ -195,8 +193,8 @@ public class TechniqueDemo extends ApplicationAdapter {
         {
             whichDijkstra = getToBlue;
             whichTech = ((idx & 1) == 0) ? redCloud : redCone;
-            whichFoes = bluePlaces;
-            whichAllies = redPlaces;
+            foes.addAll(teamBlue.order());
+            allies.addAll(teamRed.order());
             ae = teamRed.getAt(idx);
             health = (Float) ae.getUserObject();
             if(health <= 0) {
@@ -205,18 +203,26 @@ public class TechniqueDemo extends ApplicationAdapter {
             }
             user = ae.getLocation();
         }
-        whichAllies.remove(user);
-        ObjectDeque<Coord> path = whichDijkstra.findTechniquePath(moveLength, whichTech, res, null, whichFoes, whichAllies, user, whichFoes);
+        allies.remove(user);
+        ObjectDeque<Coord> path = whichDijkstra.findTechniquePath(moveLength, whichTech, res, null, foes, allies, user, foes);
         if(path.isEmpty())
-            path = whichDijkstra.findPath(moveLength, whichFoes, whichAllies, user, whichFoes.toArray(new Coord[0]));
+            path = whichDijkstra.findPath(moveLength, foes, allies, user, foes.toArray(new Coord[0]));
         awaitedMoves.clear();
         awaitedMoves.addAll(path);
     }
 
-    public void move(GlyphActor ae, int newX, int newY) {
-        Coord n = Coord.get(newX, newY);
-        if(!bluePlaces.contains(n) && !redPlaces.contains(n)) {
-            ae.addAction(MoreActions.slideTo(newX, newY, 0.075f));
+    public void move(GlyphActor ae, Coord n) {
+        if(!teamBlue.containsKey(n) && !teamRed.containsKey(n)) {
+            Coord old = ae.getLocation();
+            ae.addAction(MoreActions.slideTo(n.x, n.y, 0.075f));
+            if(teamBlue.containsKey(old))
+            {
+                teamBlue.alter(old, n);
+            }
+            else if(teamRed.containsKey(old))
+            {
+                teamRed.alter(old, n);
+            }
         }
         phase = Phase.MOVE_ANIM;
 
@@ -224,20 +230,20 @@ public class TechniqueDemo extends ApplicationAdapter {
     
     private void postMove(int idx) {
 
-        int i = 0;
         Technique whichTech;
-        CoordOrderedSet whichFoes, whichAllies, visibleTargets = new CoordOrderedSet(8);
+        visibleTargets.clear();
+        foes.clear();
+        allies.clear();
         GlyphActor ae = null;
         float health = 0;
         Coord user = null;
         int whichTint = DescriptiveColorRgb.WHITE;
         CoordObjectOrderedMap<GlyphActor> whichEnemyTeam;
-        FloatList whichEnemyHealth;
         CoordFloatOrderedMap effects;
         if (blueTurn) {
             whichTech = ((idx & 1) == 0) ? blueBeam : blueBlast;
-            whichFoes = redPlaces;
-            whichAllies = bluePlaces;
+            foes.addAll(teamRed.order());
+            allies.addAll(teamBlue.order());
             whichTint = DescriptiveColorRgb.CYAN;
             whichEnemyTeam = teamRed;
             ae = teamBlue.getAt(idx);
@@ -249,8 +255,8 @@ public class TechniqueDemo extends ApplicationAdapter {
             user = ae.getLocation();
         } else {
             whichTech = ((idx & 1) == 0) ? redCloud : redCone;
-            whichFoes = bluePlaces;
-            whichAllies = redPlaces;
+            foes.addAll(teamBlue.order());
+            allies.addAll(teamRed.order());
             whichTint = DescriptiveColorRgb.RED;
             whichEnemyTeam = teamBlue;
             ae = teamRed.getAt(idx);
@@ -261,7 +267,7 @@ public class TechniqueDemo extends ApplicationAdapter {
             }
             user = ae.getLocation();
         }
-        for(Coord p : whichFoes)
+        for(Coord p : foes)
         {
             GlyphActor foe = whichEnemyTeam.get(p);
             if(los.isReachable(user.x, user.y, p.x, p.y, res) && foe != null && (Float)foe.getUserObject() > 0)
@@ -270,7 +276,7 @@ public class TechniqueDemo extends ApplicationAdapter {
             }
         }
 
-        CoordObjectOrderedMap<ObjectList<Coord>> ideal = whichTech.idealLocations(user, visibleTargets, whichAllies);
+        CoordObjectOrderedMap<ObjectList<Coord>> ideal = whichTech.idealLocations(user, visibleTargets, allies);
         Coord targetCell = null;
         if(!ideal.isEmpty())
             targetCell = ideal.keyAt(0);
@@ -310,7 +316,7 @@ public class TechniqueDemo extends ApplicationAdapter {
 //            display.tint(user.x * 2 + 1, user.y, SColor.GOLDEN_YELLOW, 0, display.getAnimationDuration() * 3);
         }
         
-        whichAllies.add(user);
+        allies.add(user);
         phase = Phase.ATTACK_ANIM;
     }
     public void putMap()
@@ -380,7 +386,7 @@ public class TechniqueDemo extends ApplicationAdapter {
             ae = teamRed.getAt(redIdx);
         }
 
-        // if the user clicked, we have a list of moves to perform.
+        // there is a list of moves to perform.
         if(!awaitedMoves.isEmpty())
         {
             if(ae == null) {
@@ -393,7 +399,7 @@ public class TechniqueDemo extends ApplicationAdapter {
                 if (framesWithoutAnimation >= 2) {
                     framesWithoutAnimation = 0;
                     Coord m = awaitedMoves.removeFirst();
-                    move(ae, m.x, m.y);
+                    move(ae, m);
                 }
             }
         }
