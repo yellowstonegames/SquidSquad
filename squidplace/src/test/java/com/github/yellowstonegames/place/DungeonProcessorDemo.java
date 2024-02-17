@@ -24,7 +24,7 @@ public class DungeonProcessorDemo {
 
     public static void main(String[] args) {
         PouchRandom random = new PouchRandom(0xB0BAFE77BA77L);
-        DungeonProcessor gen = new DungeonProcessor(25, 40, random);
+        DungeonProcessor gen = new DungeonProcessor(75, 125, random);
 
 //        gen.addGrass(0, 10);
 //        gen.addWater(0, 6);

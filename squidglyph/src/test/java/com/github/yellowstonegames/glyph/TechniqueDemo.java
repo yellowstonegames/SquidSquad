@@ -33,6 +33,11 @@ import com.github.yellowstonegames.place.DungeonTools;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 public class TechniqueDemo extends ApplicationAdapter {
+    private static final float MOVE_DURATION = 0.1f;
+    private static final float TINT_DURATION = 0.5f;
+//    private static final float MOVE_DURATION = 0.05f;
+//    private static final float TINT_DURATION = 0.15f;
+
     private enum Phase {MOVE_ANIM, ATTACK_ANIM}
     private SpriteBatch batch;
 
@@ -47,7 +52,6 @@ public class TechniqueDemo extends ApplicationAdapter {
     public static final int gridWidth = 40, gridHeight = 40, cellWidth = 16, cellHeight = 24;
     private int numMonsters = 16;
 
-    private static final int bgColor = FullPaletteRgb.DB_INK;
     private CoordObjectOrderedMap<GlyphActor> teamRed, teamBlue;
     private CoordOrderedSet foes = new CoordOrderedSet(16);
     private CoordOrderedSet allies = new CoordOrderedSet(16);
@@ -214,7 +218,7 @@ public class TechniqueDemo extends ApplicationAdapter {
     public void move(GlyphActor ae, Coord n) {
         if(!teamBlue.containsKey(n) && !teamRed.containsKey(n)) {
             Coord old = ae.getLocation();
-            ae.addAction(MoreActions.slideTo(n.x, n.y, 0.075f));
+            ae.addAction(MoreActions.slideTo(n.x, n.y, MOVE_DURATION));
             if(teamBlue.containsKey(old))
             {
                 teamBlue.alter(old, n);
@@ -296,15 +300,20 @@ public class TechniqueDemo extends ApplicationAdapter {
                     tgt = whichEnemyTeam.getAt(tgtIdx);
                     if(tgt.getLocation().equals(power.getKey()))
                     {
-                        float currentHealth = Math.max((Float)tgt.getUserObject() - (1.5f * strength) - 1, 0);
-                        whichEnemyTeam.setAt(tgtIdx, tgt);
+                        float currentHealth = Math.max((Float)tgt.getUserObject() - (3.5f * strength) - 1, 0);
+                        tgt.setUserObject(currentHealth);
                         tgt.setChar((char)('0' + MathTools.roundPositive(currentHealth)));
                     }
                 }
             }
+            for (int i = whichEnemyTeam.size()-1; i >= 0; i--) {
+                if((Float)whichEnemyTeam.getAt(i).getUserObject() <= 0f)
+                    display.removeActor(whichEnemyTeam.removeAt(i));
+
+            }
             if(!effects.isEmpty())
             {
-                display.addAction(new GridAction.TintAction(display, 0.5f, null, colorGrid));
+                display.addAction(new GridAction.TintAction(display, TINT_DURATION, null, colorGrid));
             }
         }
         else
@@ -340,23 +349,7 @@ public class TechniqueDemo extends ApplicationAdapter {
         camera.position.set(display.gridWidth * 0.5f, display.gridHeight * 0.5f, 0f);
         camera.update();
         stage.act();
-        boolean blueWins = false, redWins = false;
-        for(int bh = 0; bh < teamBlue.size(); bh++)
-        {
-            if((Float)teamBlue.getAt(bh).getUserObject() > 0) {
-                redWins = false;
-                break;
-            }
-            redWins = true;
-        }
-        for(int rh = 0; rh < teamRed.size(); rh++)
-        {
-            if((Float)teamRed.getAt(rh).getUserObject() > 0) {
-                blueWins = false;
-                break;
-            }
-            blueWins = true;
-        }
+        boolean blueWins = teamRed.isEmpty(), redWins = teamBlue.isEmpty();
         if (blueWins) {
             // still need to display the map, then write over it with a message.
             System.out.println("  BLUE TEAM WINS!  ");
@@ -413,11 +406,12 @@ public class TechniqueDemo extends ApplicationAdapter {
                     case ATTACK_ANIM: {
                         phase = Phase.MOVE_ANIM;
                         blueTurn = !blueTurn;
-                        if(!blueTurn)
-                        {
-                            whichIdx = (whichIdx + 1) % numMonsters;
-                            redIdx = (redIdx + 1) % numMonsters;
-                            blueIdx = (blueIdx + 1) % numMonsters;
+                        if(blueTurn) {
+                            blueIdx = (blueIdx + 1) % teamBlue.size();
+                            whichIdx = blueIdx;
+                        } else {
+                            redIdx = (redIdx + 1) % teamRed.size();
+                            whichIdx = redIdx;
                         }
                         startMove(whichIdx);
                     }
