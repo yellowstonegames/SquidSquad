@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.function.IntIntPredicate;
 import com.github.tommyettinger.random.EnhancedRandom;
@@ -35,7 +35,7 @@ public class LOSTest {
         float[][] res = new float[21][21], floors = new float[19][19];
         ArrayTools.fill(res, 1f);
         ArrayTools.insert(floors, res, 1, 1);
-        ObjectList<Coord> buffer = new ObjectList<>(40);
+        ObjectDeque<Coord> buffer = new ObjectDeque<>(40);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);
             ArrayTools.insert(interior, grid, 1, 1);
@@ -62,7 +62,7 @@ public class LOSTest {
         ArrayTools.fill(res, 1f);
         ArrayTools.fill(floors, 0f);
         ArrayTools.insert(floors, res, 1, 1);
-        ObjectList<Coord> buffer = new ObjectList<>(40);
+        ObjectDeque<Coord> buffer = new ObjectDeque<>(40);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);
             ArrayTools.insert(interior, grid, 1, 1);
@@ -88,7 +88,7 @@ public class LOSTest {
         float[][] res = new float[21][21], floors = new float[19][19];
         ArrayTools.fill(res, 1f);
         ArrayTools.insert(floors, res, 1, 1);
-        ObjectList<Coord> buffer = new ObjectList<>(40);
+        ObjectDeque<Coord> buffer = new ObjectDeque<>(40);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);
             ArrayTools.insert(interior, grid, 1, 1);
@@ -171,7 +171,7 @@ public class LOSTest {
         float[][] res = new float[21][21], floors = new float[19][19];
         ArrayTools.fill(res, 1f);
         ArrayTools.insert(floors, res, 1, 1);
-        final ObjectList<Coord> buffer = new ObjectList<>(40);
+        final ObjectDeque<Coord> buffer = new ObjectDeque<>(40);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);
             ArrayTools.insert(interior, grid, 1, 1);
@@ -200,7 +200,7 @@ public class LOSTest {
         float[][] res = new float[21][21], floors = new float[19][19];
         ArrayTools.fill(res, 1f);
         ArrayTools.insert(floors, res, 1, 1);
-        final ObjectList<Coord> buffer = new ObjectList<>(40);
+        final ObjectDeque<Coord> buffer = new ObjectDeque<>(40);
         final EnhancedRandom random = new WhiskerRandom(123);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);
@@ -233,7 +233,7 @@ public class LOSTest {
         float[][] res = new float[21][21], floors = new float[19][19];
         ArrayTools.fill(res, 1f);
         ArrayTools.insert(floors, res, 1, 1);
-        final ObjectList<Coord> buffer = new ObjectList<>(40);
+        final ObjectDeque<Coord> buffer = new ObjectDeque<>(40);
         final EnhancedRandom random = new WhiskerRandom(123);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);
@@ -266,7 +266,7 @@ public class LOSTest {
         float[][] res = new float[21][21], floors = new float[19][19];
         ArrayTools.fill(res, 1f);
         ArrayTools.insert(floors, res, 1, 1);
-        final ObjectList<Coord> buffer = new ObjectList<>(40);
+        final ObjectDeque<Coord> buffer = new ObjectDeque<>(40);
         final EnhancedRandom random = new WhiskerRandom(123);
         for (int length = 0; length < 10; length++) {
             System.out.println("\n" + length);

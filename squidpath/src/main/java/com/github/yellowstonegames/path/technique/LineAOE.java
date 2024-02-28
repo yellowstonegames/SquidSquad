@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.path.technique;
 
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
@@ -118,7 +119,7 @@ public class LineAOE implements AOE {
     private float[][] initDijkstra()
     {
         los.isReachable(origin.x, origin.y, end.x, end.y, dungeon, los.lastLine);
-        ObjectList<Coord> lit = los.lastLine;
+        ObjectDeque<Coord> lit = los.lastLine;
 
         dijkstra.initializeByResistance(dungeon);
         for(Coord p : lit)
@@ -250,7 +251,7 @@ public class LineAOE implements AOE {
             dt.clearGoals();
 
             los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
-            ObjectList<Coord> lit = los.lastLine;
+            ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
             {
@@ -275,7 +276,7 @@ public class LineAOE implements AOE {
             dt.resetMap();
             dt.clearGoals();
             los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
-            ObjectList<Coord> lit = los.lastLine;
+            ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
             {
@@ -392,7 +393,7 @@ public class LineAOE implements AOE {
             dt.resetMap();
             dt.clearGoals();
             los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
-            ObjectList<Coord> lit = los.lastLine;
+            ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
             {
@@ -416,7 +417,7 @@ public class LineAOE implements AOE {
             dt.resetMap();
             dt.clearGoals();
             los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
-            ObjectList<Coord> lit = los.lastLine;
+            ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
             {
@@ -468,7 +469,7 @@ public class LineAOE implements AOE {
             dt.resetMap();
             dt.clearGoals();
             los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
-            ObjectList<Coord> lit = los.lastLine;
+            ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
             {

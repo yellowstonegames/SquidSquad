@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -35,7 +35,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class EliasWuLine implements LineDrawer {
     
-    private final ObjectList<Coord> path;
+    private final ObjectDeque<Coord> path;
     private float[][] lightMap;
     private int width = 1, height = 1;
     private transient float threshold = 0;
@@ -45,7 +45,7 @@ public class EliasWuLine implements LineDrawer {
     }
 
     public EliasWuLine(int width, int height) {
-        path = new ObjectList<>();
+        path = new ObjectDeque<>();
         this.width = Math.max(1, width);
         this.height = Math.max(1, height);
         lightMap = new float[this.width][this.height];
@@ -97,7 +97,7 @@ public class EliasWuLine implements LineDrawer {
      * @param endy
      * @return
      */
-    public ObjectList<Coord> floatLine(float startx, float starty, float endx, float endy) {
+    public ObjectDeque<Coord> floatLine(float startx, float starty, float endx, float endy) {
         return floatLine(startx, starty, endx, endy, path, Integer.MAX_VALUE);
     }
 
@@ -110,8 +110,8 @@ public class EliasWuLine implements LineDrawer {
      * @param endy
      * @return
      */
-    public ObjectList<Coord> floatLine(float startx, float starty, float endx, float endy,
-                                       ObjectList<Coord> buffer, int maxLength) {
+    public ObjectDeque<Coord> floatLine(float startx, float starty, float endx, float endy,
+                                       ObjectDeque<Coord> buffer, int maxLength) {
         buffer.clear();
         ArrayTools.fill(lightMap, 0f);
         runLine(startx, starty, endx, endy, buffer, maxLength);
@@ -128,8 +128,8 @@ public class EliasWuLine implements LineDrawer {
      * @param brightnessThreshold between 0.0 (default) and 1.0; only Coords with higher brightness will be included
      * @return
      */
-    public ObjectList<Coord> floatLine(float startx, float starty, float endx, float endy,
-                                       ObjectList<Coord> buffer, int maxLength, float brightnessThreshold) {
+    public ObjectDeque<Coord> floatLine(float startx, float starty, float endx, float endy,
+                                       ObjectDeque<Coord> buffer, int maxLength, float brightnessThreshold) {
         threshold = brightnessThreshold;
         buffer.clear();
         ArrayTools.fill(lightMap, 0f);
@@ -137,38 +137,38 @@ public class EliasWuLine implements LineDrawer {
         return buffer;
     }
     @Override
-    public ObjectList<Coord> drawLine(Coord start, Coord end) {
+    public ObjectDeque<Coord> drawLine(Coord start, Coord end) {
         return drawLine(start.x, start.y, end.x, end.y);
     }
-    public ObjectList<Coord> drawLine(Coord start, Coord end, float brightnessThreshold) {
+    public ObjectDeque<Coord> drawLine(Coord start, Coord end, float brightnessThreshold) {
         return floatLine(start.x, start.y, end.x, end.y, path, Integer.MAX_VALUE, brightnessThreshold);
     }
 
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY) {
         return floatLine(startX, startY, targetX, targetY);
     }
 
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength) {
         return floatLine(startX, startY, targetX, targetY, path, Integer.MAX_VALUE);
     }
 
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, ObjectList<Coord> buffer) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY, ObjectDeque<Coord> buffer) {
         return floatLine(startX, startY, targetX, targetY, buffer, Integer.MAX_VALUE);
     }
 
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectDeque<Coord> buffer) {
         return floatLine(startX, startY, targetX, targetY, buffer, maxLength);
     }
 
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer, float brightnessThreshold) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectDeque<Coord> buffer, float brightnessThreshold) {
         return floatLine(startX, startY, targetX, targetY, buffer, maxLength, brightnessThreshold);
     }
 
-    public ObjectList<Coord> getLastPath()
+    public ObjectDeque<Coord> getLastPath()
     {
         return path;
     }
@@ -180,7 +180,7 @@ public class EliasWuLine implements LineDrawer {
      * @param y
      * @param c
      */
-    private void mark(float x, float y, float c, ObjectList<Coord> buffer, int maxLength) {
+    private void mark(float x, float y, float c, ObjectDeque<Coord> buffer, int maxLength) {
         //check bounds overflow from antialiasing
         if (buffer.size() < maxLength && x > -1 && x < width && y > -1 && y < height && c > threshold) {
             buffer.add(Coord.get((int) x, (int) y));
@@ -196,7 +196,7 @@ public class EliasWuLine implements LineDrawer {
         return 1 - x + (int) (x);
     }
 
-    private void runLine(float startx, float starty, float endx, float endy, ObjectList<Coord> buffer, int maxLength) {
+    private void runLine(float startx, float starty, float endx, float endy, ObjectDeque<Coord> buffer, int maxLength) {
         float x1 = startx, y1 = starty, x2 = endx, y2 = endy;
         float grad, xd, yd, xgap, xend, yend, yf, brightness1, brightness2;
         int x, ix1, ix2, iy1, iy2;
@@ -293,22 +293,22 @@ public class EliasWuLine implements LineDrawer {
     }
 
     @Override
-    public ObjectList<Coord> getLastLine() {
+    public ObjectDeque<Coord> getLastLine() {
         return path;
     }
 
     @Override
-    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap, ObjectList<Coord> buffer) {
+    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap, ObjectDeque<Coord> buffer) {
         return false;
     }
 
     @Override
-    public boolean isReachable(int startX, int startY, int targetX, int targetY, float[][] resistanceMap, ObjectList<Coord> buffer) {
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, float[][] resistanceMap, ObjectDeque<Coord> buffer) {
         return false;
     }
 
     @Override
-    public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength, float[][] resistanceMap, ObjectList<Coord> buffer) {
+    public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength, float[][] resistanceMap, ObjectDeque<Coord> buffer) {
         return false;
     }
 

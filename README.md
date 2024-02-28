@@ -52,8 +52,11 @@ dependency will usually pull in a few others. The full list is:
      to represent walls, which can be useful in graphical games as well as text-based ones). These are all grouped into
      one place in `VisionFramework`, which does a lot of the work that would otherwise be repeated in different
      codebases. `squidgrid` also provides the `Noise` class, which is a large and highly-configurable way of producing
-     continuous noise, such as Perlin noise. On top of this, there are `Coord`-based collections, such as
-     `CoordObjectMap`, based on the `jdkgdxds` collections but specialized for Coord keys.
+     continuous noise, such as Perlin noise, plus many single-purpose noise classes that implement `INoise`. On top of
+     this, there are `Coord`-based collections, such as `CoordObjectMap`, based on the `jdkgdxds` collections but
+     specialized for Coord keys.
+     - This module depends on [crux](https://github.com/tommyettinger/crux), allowing other libraries to share the same
+       point interfaces.
  - squidtext
    - This only uses `squidcore`, and has various tools for procedurally-generating text. This text could be readable, as
     `Thesaurus` produces, or could be complete gibberish, as `Language` produces. `Translator` offers a middle ground,
@@ -78,9 +81,12 @@ dependency will usually pull in a few others. The full list is:
    - On platforms other than GWT, this module can load [REXPaint](https://www.gridsagegames.com/rexpaint/) .xp files. It
      can also save a `GlyphGrid` to a new .xp file. These use the small `XPIO` class.
  - squidpath
-   - Pathfinding, mostly using a modified version of [simple-graphs](https://github.com/earlygrey/simple-graphs). There
+   - Pathfinding, mostly using a modified older version of [simple-graphs](https://github.com/earlygrey/simple-graphs). There
      is also `DijkstraMap` here, which is good for some types of pathfinding that simple-graphs' `A*` algorithm can't
-     do as easily. This depends on `squidgrid`.
+     do as easily. If you're using `A*`, you might want to consider [gand](https://github.com/tommyettinger/gand),
+     which is based on the current simple-graphs release instead of an older one, has most relevant classes marked
+     as `Json.Serializable` using libGDX `Json`, and also has path smoothing compatible with SquidGrid's `Coord`
+     class. This depends on `squidgrid`.
  - squidplace
    - Dungeon generation, mostly, with some code for other type of person-scale map generation as well. Most of the maps
      are produced as `char[][]` grids, and `DungeonTools` provides various utilities for handling such grids. The large
@@ -113,7 +119,7 @@ able to only use part of the library instead of needing the monolithic squidlib-
 problematic during development, like how squidlib-util defined its own (elaborate) data structures based on
 heavily-altered code from an older version of [fastutil](https://github.com/vigna/fastutil), and needed a lot of effort
 to add new types of those data structures. All of SquidLib depended and still (sort-of) depends on Java 7; now with
-virtually all targets permitting at least some of Java 8 or even Java 11, there's not much reason to reach back 11 years
+virtually all targets permitting at least some of Java 8 or even Java 11, there's not much reason to reach back 12 years
 to July 2011, when Java 7 came out.
 
 # How?

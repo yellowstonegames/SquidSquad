@@ -17,13 +17,13 @@
 package com.github.yellowstonegames.grid;
 
 
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.PouchRandom;
 
 /**
  * A drunkard's-walk-like algorithm for line-drawing "wobbly" paths.
- * This produces lines as {@link ObjectList} of {@link Coord}, where Coords that are adjacent in the ObjectList are
+ * This produces lines as {@link ObjectDeque} of {@link Coord}, where Coords that are adjacent in the ObjectDeque are
  * guaranteed to be orthogonally adjacent, but the path as a whole is not guaranteed to have all unique Coords (that is,
  * the line may cross over its previous path). This doesn't implement {@link LineDrawer} because it has the restriction
  * that the line can't extend off the bounds of some rectangular grid (usually the map).
@@ -53,7 +53,7 @@ public final class DrunkenWalk {
      * @param height maximum map height
      * @return List of Coord, including (startX, startY) and (endX, endY) and all points walked between
      */
-    public static ObjectList<Coord> line(int startX, int startY, int endX, int endY, int width, int height) {
+    public static ObjectDeque<Coord> line(int startX, int startY, int endX, int endY, int width, int height) {
         return line(startX, startY, endX, endY, width, height, 0.75f, new PouchRandom());
     }
     /**
@@ -69,14 +69,14 @@ public final class DrunkenWalk {
      * @param rng the random number generator to use
      * @return List of Coord, including (startX, startY) and (endX, endY) and all points walked between
      */
-    public static ObjectList<Coord> line(int startX, int startY, int endX, int endY,
+    public static ObjectDeque<Coord> line(int startX, int startY, int endX, int endY,
                                    int width, int height, float weight, EnhancedRandom rng) {
         return line(startX, startY, endX, endY, width, height, weight, rng,
-                new ObjectList<>(Math.abs(startX - endX) + Math.abs(startY - endY)));
+                new ObjectDeque<>(Math.abs(startX - endX) + Math.abs(startY - endY)));
     }
     /**
      * Draws a line from (startX, startY) to (endX, endY) using the Drunkard's Walk algorithm. Returns a List of Coord
-     * in order. Modifies buffer if it is non-null, or creates an ObjectList if buffer is null.
+     * in order. Modifies buffer if it is non-null, or creates an ObjectDeque if buffer is null.
      * @param startX x of starting point
      * @param startY y of starting point
      * @param endX   x of ending point
@@ -85,12 +85,12 @@ public final class DrunkenWalk {
      * @param height maximum map height
      * @param weight between 0.5 and 1.0, usually. 0.6 makes very random walks, 0.9 is almost a straight line.
      * @param rng the random number generator to use
-     * @param buffer an ObjectList of Coord that will be appended to if non-null or created if null
+     * @param buffer an ObjectDeque of Coord that will be appended to if non-null or created if null
      * @return buffer, after changes, including (startX, startY) and (endX, endY) and all points walked between
      */
-    public static ObjectList<Coord> line(int startX, int startY, int endX, int endY,
-                                   int width, int height, float weight, EnhancedRandom rng, ObjectList<Coord> buffer) {
-        if(buffer == null) buffer = new ObjectList<>(Math.abs(startX - endX) + Math.abs(startY - endY));
+    public static ObjectDeque<Coord> line(int startX, int startY, int endX, int endY,
+                                   int width, int height, float weight, EnhancedRandom rng, ObjectDeque<Coord> buffer) {
+        if(buffer == null) buffer = new ObjectDeque<>(Math.abs(startX - endX) + Math.abs(startY - endY));
         Coord start = Coord.get(startX, startY);
         Direction dir;
         do {
@@ -198,7 +198,7 @@ public final class DrunkenWalk {
      * @param height maximum map height
      * @return List of Coord, including start and end and all points walked between
      */
-    public static ObjectList<Coord> line(Coord start, Coord end, int width, int height)
+    public static ObjectDeque<Coord> line(Coord start, Coord end, int width, int height)
     {
         return line(start.x, start.y, end.x, end.y, width, height);
     }

@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.ObjectDeque;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -36,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class BresenhamLine implements LineDrawer {
 
-    public final ObjectList<Coord> lastLine = new ObjectList<>();
+    public final ObjectDeque<Coord> lastLine = new ObjectDeque<>();
 
     /**
      * Makes a new BresenhamLine and initializes its only state, {@link #lastLine}.
@@ -47,8 +47,8 @@ public class BresenhamLine implements LineDrawer {
     /**
      * Generates a 2D Bresenham line between two points. If you want
      * to save some memory, you can use
-     * {@link #line(int, int, int, int, ObjectList)}, which reuses
-     * an ObjectList of Coord as a buffer. You can also use
+     * {@link #line(int, int, int, int, ObjectDeque)}, which reuses
+     * an ObjectDeque of Coord as a buffer. You can also use
      * {@link #lineArray(int, int, int, int)}; although that allocates
      * a new array each time, having an array may be useful for some APIs.
      *
@@ -56,7 +56,7 @@ public class BresenhamLine implements LineDrawer {
      * @param b the ending point
      * @return The path between {@code a} and {@code b}.
      */
-    public static ObjectList<Coord> line(Coord a, Coord b) {
+    public static ObjectDeque<Coord> line(Coord a, Coord b) {
         return line(a.x, a.y, b.x, b.y, 0x7fffffff, null);
     }
 
@@ -77,8 +77,8 @@ public class BresenhamLine implements LineDrawer {
     /**
      * Generates a 2D Bresenham line between two points. If you want
      * to save some memory, you can use
-     * {@link #line(int, int, int, int, ObjectList)}, which reuses
-     * an ObjectList of Coord as a buffer. You can also use
+     * {@link #line(int, int, int, int, ObjectDeque)}, which reuses
+     * an ObjectDeque of Coord as a buffer. You can also use
      * {@link #lineArray(int, int, int, int)}; although that allocates
      * a new array each time, having an array may be useful for some APIs.
      * <br>
@@ -93,10 +93,10 @@ public class BresenhamLine implements LineDrawer {
      * @param startY the y coordinate of the starting point
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
-     * @return a ObjectList of Coord points along the line
+     * @return a ObjectDeque of Coord points along the line
      */
-    public static ObjectList<Coord> line(int startX, int startY, int targetX, int targetY) {
-        // largest positive int for maxLength; a ObjectList cannot actually be given that many elements on the JVM
+    public static ObjectDeque<Coord> line(int startX, int startY, int targetX, int targetY) {
+        // largest positive int for maxLength; a ObjectDeque cannot actually be given that many elements on the JVM
         return line(startX, startY, targetX, targetY, 0x7fffffff, null);
     }
 
@@ -106,8 +106,8 @@ public class BresenhamLine implements LineDrawer {
      * Chebyshev distance, where diagonally adjacent cells are considered
      * exactly as distant as orthogonally-adjacent cells). If you want to
      * save some memory, you can use
-     * {@link #line(int, int, int, int, int, ObjectList)}, which reuses an
-     * ObjectList of Coord as a buffer. You can also use
+     * {@link #line(int, int, int, int, int, ObjectDeque)}, which reuses an
+     * ObjectDeque of Coord as a buffer. You can also use
      * {@link #lineArray(int, int, int, int, int)}; although that allocates
      * a new array each time, having an array may be useful for some APIs.
      * <br>
@@ -123,17 +123,17 @@ public class BresenhamLine implements LineDrawer {
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
      * @param maxLength the largest count of Coord points this can return; will stop early if reached
-     * @return an ObjectList of Coord points along the line
+     * @return an ObjectDeque of Coord points along the line
      */
-    public static ObjectList<Coord> line(int startX, int startY, int targetX, int targetY, int maxLength) {
+    public static ObjectDeque<Coord> line(int startX, int startY, int targetX, int targetY, int maxLength) {
         return line(startX, startY, targetX, targetY, maxLength, null);
     }
 
     /**
      * Generates a 2D Bresenham line between two points. If you want to save
-     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * some memory, you can reuse an ObjectDeque of Coord, {@code buffer},
      * which will be cleared and filled with the resulting line of Coord.
-     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * If {@code buffer} is null, this will create a new ObjectDeque of Coord
      * and return that.
      * <br>
      * Uses ordinary Coord values for points, and these can be pooled
@@ -147,10 +147,10 @@ public class BresenhamLine implements LineDrawer {
      * @param startY the y coordinate of the starting point
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
-     * @return an ObjectList of Coord points along the line
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectDeque of Coord points along the line
      */
-    public static ObjectList<Coord> line(int startX, int startY, int targetX, int targetY, ObjectList<Coord> buffer) {
+    public static ObjectDeque<Coord> line(int startX, int startY, int targetX, int targetY, ObjectDeque<Coord> buffer) {
         return line(startX, startY, targetX, targetY, 0x7FFFFFFF, buffer);
     }
 
@@ -159,9 +159,9 @@ public class BresenhamLine implements LineDrawer {
      * the number of Coords returned reaches maxLength (measured using
      * Chebyshev distance, where diagonally adjacent cells are considered
      * exactly as distant as orthogonally-adjacent cells). If you want to save
-     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * some memory, you can reuse an ObjectDeque of Coord, {@code buffer},
      * which will be cleared and filled with the resulting line of Coord.
-     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * If {@code buffer} is null, this will create a new ObjectDeque of Coord
      * and return that.
      * <br>
      * Uses ordinary Coord values for points, and these can be pooled
@@ -176,10 +176,10 @@ public class BresenhamLine implements LineDrawer {
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
      * @param maxLength the largest count of Coord points this can return; will stop early if reached
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
-     * @return an ObjectList of Coord points along the line
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectDeque of Coord points along the line
      */
-    public static ObjectList<Coord> line(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
+    public static ObjectDeque<Coord> line(int startX, int startY, int targetX, int targetY, int maxLength, ObjectDeque<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -187,7 +187,7 @@ public class BresenhamLine implements LineDrawer {
         int ay = Math.abs(dy);
 
         if(buffer == null) {
-            buffer = new ObjectList<>(Math.max(ax, ay) + 1);
+            buffer = new ObjectDeque<>(Math.max(ax, ay) + 1);
         }
         else {
             buffer.clear();
@@ -245,9 +245,9 @@ public class BresenhamLine implements LineDrawer {
      * Generates a 2D Bresenham line between two points, stopping early if
      * the number of Coords returned reaches maxLength (measured using
      * Euclidean distance, or "as the crow flies"). If you want to save
-     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * some memory, you can reuse an ObjectDeque of Coord, {@code buffer},
      * which will be cleared and filled with the resulting line of Coord.
-     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * If {@code buffer} is null, this will create a new ObjectDeque of Coord
      * and return that.
      * <br>
      * Uses ordinary Coord values for points, and these can be pooled
@@ -262,15 +262,15 @@ public class BresenhamLine implements LineDrawer {
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
      * @param maxLength the largest count of Coord points this can return; will stop early if reached
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
-     * @return an ObjectList of Coord points along the line
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectDeque of Coord points along the line
      */
-    public static ObjectList<Coord> lineEuclidean(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
+    public static ObjectDeque<Coord> lineEuclidean(int startX, int startY, int targetX, int targetY, int maxLength, ObjectDeque<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
         if(buffer == null) {
-            buffer = new ObjectList<>(Math.min((int)Math.sqrt(dx * dx + dy * dy) + 1, maxLength));
+            buffer = new ObjectDeque<>(Math.min((int)Math.sqrt(dx * dx + dy * dy) + 1, maxLength));
         }
         else {
             buffer.clear();
@@ -336,18 +336,18 @@ public class BresenhamLine implements LineDrawer {
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
      * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectDeque of Coord (which will
      * be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
      * @param start the starting point
      * @param target the target point
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; if null, will be ignored
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
-                                    @Nullable ObjectList<Coord> buffer){
+                                    @Nullable ObjectDeque<Coord> buffer){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
@@ -356,7 +356,7 @@ public class BresenhamLine implements LineDrawer {
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
      * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectDeque of Coord (which will
      * be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
@@ -365,11 +365,11 @@ public class BresenhamLine implements LineDrawer {
      * @param targetX the x-coordinate of the target point
      * @param targetY  the y-coordinate of the target point
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; if null, will be ignored
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY,
-                                    float[][] resistanceMap, @Nullable ObjectList<Coord> buffer){
+                                    float[][] resistanceMap, @Nullable ObjectDeque<Coord> buffer){
         return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
@@ -380,7 +380,7 @@ public class BresenhamLine implements LineDrawer {
      * considered exactly as distant as orthogonally-adjacent cells.
      * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectDeque of Coord (which will
      * be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
@@ -390,11 +390,11 @@ public class BresenhamLine implements LineDrawer {
      * @param targetY  the y-coordinate of the target point
      * @param maxLength the maximum permitted length of a line of sight
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; if null, will be ignored
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                    float[][] resistanceMap, @Nullable ObjectList<Coord> buffer) {
+                                    float[][] resistanceMap, @Nullable ObjectDeque<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -494,7 +494,7 @@ public class BresenhamLine implements LineDrawer {
      * considered about 1.4 times as distant as orthogonally-adjacent cells; this is the natural way in the real world.
      * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectList of Coord (which will
+     * {@code buffer} may be null (in which case it is ignored), or may be an existing ObjectDeque of Coord (which will
      * be cleared if it has any contents, and filled with the line's Coord points). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
@@ -504,11 +504,11 @@ public class BresenhamLine implements LineDrawer {
      * @param targetY  the y-coordinate of the target point
      * @param maxLength the maximum permitted length of a line of sight
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; if null, will be ignored
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; if null, will be ignored
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachableEuclidean(int startX, int startY, int targetX, int targetY, int maxLength,
-                                             float[][] resistanceMap, @Nullable ObjectList<Coord> buffer) {
+                                             float[][] resistanceMap, @Nullable ObjectDeque<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -733,7 +733,7 @@ public class BresenhamLine implements LineDrawer {
 
     /**
      * Generates a 2D Bresenham line between two points. Returns an array
-     * of Coord instead of a ObjectList.
+     * of Coord instead of a ObjectDeque.
      * This allocates a new array with each call, sized to fit the
      * line exactly.
      * <br>
@@ -758,7 +758,7 @@ public class BresenhamLine implements LineDrawer {
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
      * the number of Coords returned reaches maxLength.. Returns an array
-     * of Coord instead of an ObjectList.
+     * of Coord instead of an ObjectDeque.
      * This allocates a new array with each call, sized to fit the
      * line exactly.
      * <br>
@@ -827,24 +827,24 @@ public class BresenhamLine implements LineDrawer {
     /**
      * Gets the last line drawn using the internal buffer this carries, rather than an explicitly-specified buffer.
      *
-     * @return an ObjectList of Coord that contains the last line drawn with this BresenhamLine's internal buffer
+     * @return an ObjectDeque of Coord that contains the last line drawn with this BresenhamLine's internal buffer
      */
     @Override
-    public ObjectList<Coord> getLastLine() {
+    public ObjectDeque<Coord> getLastLine() {
         return lastLine;
     }
 
     /**
      * Generates a 2D Bresenham line between two points. Reuses {@link #lastLine}
      * and returns it as the buffer; later calls to drawLine() without a buffer
-     * will probably clear lastLine (which is the same ObjectList this returns)
+     * will probably clear lastLine (which is the same ObjectDeque this returns)
      * as they are run.
      * @param a the starting point
      * @param b the ending point
      * @return The path between {@code a} and {@code b}.
      */
     @Override
-    public ObjectList<Coord> drawLine(Coord a, Coord b) {
+    public ObjectDeque<Coord> drawLine(Coord a, Coord b) {
         lastLine.clear();
         return line(a.x, a.y, b.x, b.y, 0x7FFFFFFF, lastLine);
     }
@@ -852,7 +852,7 @@ public class BresenhamLine implements LineDrawer {
     /**
      * Generates a 2D Bresenham line between two points. Reuses {@link #lastLine}
      * and returns it as the buffer; later calls to drawLine() without a buffer
-     * will probably clear lastLine (which is the same ObjectList this returns)
+     * will probably clear lastLine (which is the same ObjectDeque this returns)
      * as they are run.
      * <br>
      * Uses ordinary Coord values for points, and these can be pooled
@@ -866,12 +866,12 @@ public class BresenhamLine implements LineDrawer {
      * @param startY the y coordinate of the starting point
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
-     * @return a ObjectList of Coord points along the line
+     * @return a ObjectDeque of Coord points along the line
      */
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY) {
         lastLine.clear();
-        // largest positive int for maxLength; a ObjectList cannot actually be given that many elements on the JVM
+        // largest positive int for maxLength; a ObjectDeque cannot actually be given that many elements on the JVM
         return line(startX, startY, targetX, targetY, 0x7fffffff, lastLine);
     }
 
@@ -881,7 +881,7 @@ public class BresenhamLine implements LineDrawer {
      * Chebyshev distance, where diagonally adjacent cells are considered
      * exactly as distant as orthogonally-adjacent cells). Reuses {@link #lastLine}
      * and returns it as the buffer; later calls to drawLine() without a buffer
-     * will probably clear lastLine (which is the same ObjectList this returns)
+     * will probably clear lastLine (which is the same ObjectDeque this returns)
      * as they are run.
      * <br>
      * Uses ordinary Coord values for points, and these can be pooled
@@ -895,19 +895,19 @@ public class BresenhamLine implements LineDrawer {
      * @param startY the y coordinate of the starting point
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
-     * @return a ObjectList of Coord points along the line
+     * @return a ObjectDeque of Coord points along the line
      */
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength) {
         lastLine.clear();
         return line(startX, startY, targetX, targetY, maxLength, lastLine);
     }
 
     /**
      * Generates a 2D Bresenham line between two points. If you want to save
-     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * some memory, you can reuse an ObjectDeque of Coord, {@code buffer},
      * which will be cleared and filled with the resulting line of Coord.
-     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * If {@code buffer} is null, this will create a new ObjectDeque of Coord
      * and return that.
      * <br>
      * Uses ordinary Coord values for points, and these can be pooled
@@ -921,11 +921,11 @@ public class BresenhamLine implements LineDrawer {
      * @param startY the y coordinate of the starting point
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
-     * @return an ObjectList of Coord points along the line
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectDeque of Coord points along the line
      */
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, ObjectList<Coord> buffer) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY, ObjectDeque<Coord> buffer) {
         return line(startX, startY, targetX, targetY, 0x7FFFFFFF, buffer);
     }
 
@@ -934,19 +934,19 @@ public class BresenhamLine implements LineDrawer {
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
      * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
-     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * {@code buffer} may be null (in which case a temporary ObjectDeque is allocated, which can be wasteful), or may be
+     * an existing ObjectDeque of Coord (which will be cleared if it has any contents). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
      * @param start the starting point
      * @param target the target point
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
     @Override
     public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap,
-                               ObjectList<Coord> buffer){
+                               ObjectDeque<Coord> buffer){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
@@ -955,9 +955,9 @@ public class BresenhamLine implements LineDrawer {
      * the number of Coords returned reaches maxLength (measured using
      * Chebyshev distance, where diagonally adjacent cells are considered
      * exactly as distant as orthogonally-adjacent cells). If you want to save
-     * some memory, you can reuse an ObjectList of Coord, {@code buffer},
+     * some memory, you can reuse an ObjectDeque of Coord, {@code buffer},
      * which will be cleared and filled with the resulting line of Coord.
-     * If {@code buffer} is null, this will create a new ObjectList of Coord
+     * If {@code buffer} is null, this will create a new ObjectDeque of Coord
      * and return that.
      * <br>
      * Uses ordinary Coord values for points, and these can be pooled
@@ -972,11 +972,11 @@ public class BresenhamLine implements LineDrawer {
      * @param targetX the x coordinate of the target point
      * @param targetY the y coordinate of the target point
      * @param maxLength the largest count of Coord points this can return; will stop early if reached
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
-     * @return an ObjectList of Coord points along the line
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
+     * @return an ObjectDeque of Coord points along the line
      */
     @Override
-    public ObjectList<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectList<Coord> buffer) {
+    public ObjectDeque<Coord> drawLine(int startX, int startY, int targetX, int targetY, int maxLength, ObjectDeque<Coord> buffer) {
         return line(startX, startY, targetX, targetY, maxLength, buffer);
     }
 
@@ -985,8 +985,8 @@ public class BresenhamLine implements LineDrawer {
      * to determine whether the line of sight is obstructed, and filling the list of cells along the line of sight into
      * {@code buffer}. {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
-     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * {@code buffer} may be null (in which case a temporary ObjectDeque is allocated, which can be wasteful), or may be
+     * an existing ObjectDeque of Coord (which will be cleared if it has any contents). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
      * @param startX the x-coordinate of the starting point
@@ -994,12 +994,12 @@ public class BresenhamLine implements LineDrawer {
      * @param targetX the x-coordinate of the target point
      * @param targetY  the y-coordinate of the target point
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
     @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY,
-                               float[][] resistanceMap, ObjectList<Coord> buffer){
+                               float[][] resistanceMap, ObjectDeque<Coord> buffer){
         return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
@@ -1010,8 +1010,8 @@ public class BresenhamLine implements LineDrawer {
      * considered exactly as distant as orthogonally-adjacent cells.
      * {@code resistanceMap} must not be null; it can be initialized in the same way as FOV's resistance
      * maps can with {@link FOV#generateResistances(char[][])} or {@link FOV#generateSimpleResistances(char[][])}.
-     * {@code buffer} may be null (in which case a temporary ObjectList is allocated, which can be wasteful), or may be
-     * an existing ObjectList of Coord (which will be cleared if it has any contents). If the starting point can see the
+     * {@code buffer} may be null (in which case a temporary ObjectDeque is allocated, which can be wasteful), or may be
+     * an existing ObjectDeque of Coord (which will be cleared if it has any contents). If the starting point can see the
      * target point, this returns true and buffer will contain all Coord points along the line of sight; otherwise this
      * returns false and buffer will only contain up to and including the point that blocked the line of sight.
      * @param startX the x-coordinate of the starting point
@@ -1020,12 +1020,12 @@ public class BresenhamLine implements LineDrawer {
      * @param targetY  the y-coordinate of the target point
      * @param maxLength the maximum permitted length of a line of sight
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
-     * @param buffer an ObjectList of Coord that will be reused and cleared if not null; will be modified
+     * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
     @Override
     public boolean isReachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                               float[][] resistanceMap, ObjectList<Coord> buffer) {
+                               float[][] resistanceMap, ObjectDeque<Coord> buffer) {
         return reachable(startX, startY, targetX, targetY, maxLength, resistanceMap, buffer);
     }
 
@@ -1099,7 +1099,7 @@ public class BresenhamLine implements LineDrawer {
 
     /**
      * Generates a 2D Bresenham line between two points. Returns an array
-     * of Coord instead of a ObjectList.
+     * of Coord instead of a ObjectDeque.
      * This allocates a new array with each call, sized to fit the
      * line exactly.
      * <br>
@@ -1125,7 +1125,7 @@ public class BresenhamLine implements LineDrawer {
     /**
      * Generates a 2D Bresenham line between two points, stopping early if
      * the number of Coords returned reaches maxLength.. Returns an array
-     * of Coord instead of an ObjectList.
+     * of Coord instead of an ObjectDeque.
      * This allocates a new array with each call, sized to fit the
      * line exactly.
      * <br>
