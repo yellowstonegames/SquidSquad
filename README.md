@@ -16,7 +16,9 @@ depend on the modules you need. All the modules depend on `squidcore`, which alw
 but checker-qual is rarely needed by user code, and the rest mostly have roles that were moved out of squidlib-util in
 earlier versions.
 
-Some modules (`squidglyph`, `squidsmooth`, `squidpress`, and all the `squidstore` modules) depend on
+The important `squidgrid` module has an extra dependency on [crux](https://github.com/tommyettinger/crux), which
+mostly provides interfaces that other libraries can use without needing `squidgrid` (instead needing `crux`). Some
+modules (`squidglyph`, `squidsmooth`, `squidpress`, and all the `squidstore` modules) depend on
 [libGDX](https://libgdx.com/), which is recommended for use with SquidSquad but not always required. That means if you
 don't use `squidglyph`, `squidsmooth`, `squidpress`, or `squidstore`, you can use SquidSquad in purely-server-side code,
 in tests, or otherwise outside the application lifecycle libGDX expects. The `squidfreeze` modules all depend on
@@ -150,8 +152,20 @@ they will probably all be in the dependencies, but this ensures all the versions
 projects are present.
 
 Liftoff fetches SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.0-alpha3`. For anything else, you'll need JitPack, where you should use a recent commit from
-[its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property. The group is
+such release is `4.0.0-alpha3`. This release is currently broken if you use it without changes, because Liftoff will
+use a much newer dependency (by default) on `digital` than what SquidSquad 4.0.0-alpha3 was built with. The quickest
+fix is to change the dependencies on four libraries to match what they were in alpha3. These changes replace the
+corresponding lines in `gradle.properties`:
+
+```
+digitalVersion=0.3.3
+juniperVersion=0.3.5
+jdkgdxdsVersion=1.3.2
+jdkgdxdsInteropVersion=1.3.2.0
+```
+
+A probably-better option is to use a more recent build of SquidSquad, using JitPack to build a recent commit.
+You should use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property. The group is
 different for JitPack builds of SquidSquad; change `com.squidpony` to `com.github.yellowstonegames.squidsquad` when
 using JitPack. JitPack is generally recommended over the Maven Central alpha releases, because you can (and really
 should) specify an exact commit to use on the Commits tab (click "Get It" on any commit except -SNAPSHOT; this will
@@ -160,11 +174,12 @@ because they can change without warning and don't tell you what commit you are a
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.4.6
-  - `funderbyVersion`=0.1.1
-  - `jdkgdxdsVersion`=1.4.6
+  - `digitalVersion`=0.4.7
+  - `jdkgdxdsVersion`=1.4.8
   - `juniperVersion`=0.5.0
   - `regExodusVersion`=0.1.15
+  - `cruxVersion`=0.0.1
+  - `textraTypistVersion`=0.10.0
 
 # License
 
