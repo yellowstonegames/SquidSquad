@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.crux.Point2;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 
@@ -48,7 +49,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * {@link Short#MAX_VALUE}. Larger ranges than a 8192x8192 grid of Coord items tend to exhaust all of Java's heap
  * (using only Coord items), so supporting larger sizes isn't at all a priority.
  */
-public class Coord {
+public class Coord implements Point2<Coord> {
     /**
      * The x-coordinate.
      */
@@ -203,6 +204,41 @@ public class Coord {
         return get(Math.min(Math.max(0, this.x + x), width - 1), Math.min(Math.max(0, this.y + y), height - 1));
     }
 
+    @Override
+    public boolean floatingPoint() {
+        return false;
+    }
+
+    @Override
+    public boolean mutable() {
+        return false;
+    }
+
+    @Override
+    public Coord cpy() {
+        return this;
+    }
+
+    @Override
+    public float len2() {
+        return (x * x + y * y);
+    }
+
+    @Override
+    public Coord set(Coord coord) {
+        return coord;
+    }
+
+    @Override
+    public Coord setZero() {
+        return get(0, 0);
+    }
+
+    @Override
+    public Coord sub(final Coord coord) {
+        return subtract(coord);
+    }
+
     /**
      * Separately combines the x and y positions of this Coord and other, producing a different Coord as their "sum."
      *
@@ -211,6 +247,16 @@ public class Coord {
      */
     public Coord add(final Coord other) {
         return get(x + other.x, y + other.y);
+    }
+
+    @Override
+    public Coord scl(Coord coord) {
+        return multiply(coord);
+    }
+
+    @Override
+    public float dst2(Coord coord) {
+        return distanceSq(coord);
     }
 
     /**
@@ -959,17 +1005,28 @@ public class Coord {
                 y + Math.round((end.y - y) * amountTraveled));
     }
 
-    /**
-     * The x-coordinate.
-     */
-    public int x() {
+    @Override
+    public float x() {
         return x;
     }
 
-    /**
-     * The y-coordinate (the ordinate)
-     */
-    public int y() {
+    @Override
+    public Coord x(float nextX) {
+        return get((short)nextX, y);
+    }
+
+    @Override
+    public float y() {
         return y;
+    }
+
+    @Override
+    public Coord y(float nextY) {
+        return get(x, (short)nextY);
+    }
+
+    @Override
+    public Coord set(float nextX, float nextY) {
+        return get((short)nextX, (short)nextY);
     }
 }

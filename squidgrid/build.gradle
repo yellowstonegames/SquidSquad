@@ -7,6 +7,7 @@ javadoc.exclude("emu")
 
 dependencies {
     api project(':squidcore')
+    api "com.github.tommyettinger:crux:$cruxVersion"
     testImplementation project(':squidplace')
     testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     testImplementation "junit:junit:$junitVersion"
