@@ -48,8 +48,14 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * hash for any other Coord as long as all Coord values have x and y each in the range from {@link Short#MIN_VALUE} to
  * {@link Short#MAX_VALUE}. Larger ranges than a 8192x8192 grid of Coord items tend to exhaust all of Java's heap
  * (using only Coord items), so supporting larger sizes isn't at all a priority.
+ * <br>
+ * This implements {@link Point2}, allowing it to interoperate with some other libraries that also use the interfaces
+ * from the library <a href="https://github.com/tommyettinger/crux">crux</a>. A side effect of this is that using the
+ * field {@link #x} gets a {@code short} value, while calling {@link #x()} uses the interface and gets a {@code float}.
+ * If this causes problems in, for instance, Kotlin code, you could create an extension method that gets the type you
+ * want and has the name you want.
  */
-public class Coord implements Point2<Coord> {
+public final class Coord implements Point2<Coord> {
     /**
      * The x-coordinate.
      */

@@ -20,6 +20,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.github.tommyettinger.crux.PointPair;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.digital.Interpolations;
@@ -855,6 +856,23 @@ public class GridTest {
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testPointPair() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(PointPair.class, new PointPairSerializer());
+        PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            PointPair<?> data2 = kryo.readObject(input, PointPair.class);
             Assert.assertEquals(data, data2);
         }
     }
