@@ -18,6 +18,7 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.crux.PointPair;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.digital.Interpolations;
@@ -717,4 +718,32 @@ public class JsonGridTest {
         System.out.println(vf2);
         Assert.assertEquals(vf, vf2);
     }
+
+    @Test
+    public void testPointPair() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoord(json);
+        JsonGrid.registerPointPair(json);
+        Coord coordA, coordB;
+        PointPair<Coord> pair, pair2;
+        coordA = Coord.get(0, 0);
+        coordB = Coord.get(1, 2);
+        pair = new PointPair<>(coordA, coordB);
+        String data = json.toJson(pair);
+        System.out.println(data);
+        pair2 = json.fromJson(PointPair.class, data);
+        Assert.assertEquals(pair, pair2);
+
+        coordA = Coord.get(0, 100);
+        coordB = Coord.get(10, 40);
+        pair.a = coordA;
+        pair.b = coordB;
+        data = json.toJson(pair);
+        System.out.println(data);
+        pair2 = json.fromJson(PointPair.class, data);
+        Assert.assertEquals(pair, pair2);
+
+        System.out.println();
+    }
+
 }

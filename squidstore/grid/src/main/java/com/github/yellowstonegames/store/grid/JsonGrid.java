@@ -18,6 +18,8 @@ package com.github.yellowstonegames.store.grid;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.crux.PointN;
+import com.github.tommyettinger.crux.PointPair;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
@@ -1423,4 +1425,31 @@ public final class JsonGrid {
             }
         });
     }
+
+    /**
+     * Registers PointPair with the given Json object, so PointPair can be written to and read from JSON.
+     * This does not automatically register the type of {@link PointN} used for each member of the PointPair.
+     * You may need to call {@link #registerCoord(Json)} or use the default serializer for a point type.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPointPair(@NonNull Json json) {
+        json.addClassTag("PntP", PointPair.class);
+        json.setSerializer(PointPair.class, new Json.Serializer<PointPair>() {
+            @Override
+            public void write(Json json, PointPair object, Class knownType) {
+                json.writeObjectStart(PointPair.class, knownType);
+                json.writeValue("a", object.a, null);
+                json.writeValue("b", object.b, null);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public PointPair<?> read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new PointPair(json.readValue("a", null, jsonData), json.readValue("b", null, jsonData));
+            }
+        });
+    }
+
 }
