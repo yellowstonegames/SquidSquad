@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.ds.ObjectIntMap;
+import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
@@ -199,6 +201,87 @@ public class JsonGridTest {
         System.out.println();
     }
 
+
+    @Test
+    public void testCoordLongMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordLongMap(json);
+        CoordLongMap points = new CoordLongMap(
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
+                new long[]{4242, 2323, 6666});
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordLongMap points2 = json.fromJson(CoordLongMap.class, data);
+        Assert.assertEquals(points, points2);
+        for(ObjectLongMap.Entry<Coord> pair : points2) {
+            System.out.print(pair.getKey());
+            System.out.print("=");
+            System.out.print(pair.getValue());
+            System.out.print("; ");
+        }
+        System.out.println();
+    }
+
+    @Test
+    public void testCoordLongOrderedMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordLongOrderedMap(json);
+        CoordLongOrderedMap points = new CoordLongOrderedMap(
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
+                new long[]{4242, 2323, 6666});
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordLongOrderedMap points2 = json.fromJson(CoordLongOrderedMap.class, data);
+        Assert.assertEquals(points, points2);
+        for(ObjectLongMap.Entry<Coord> pair : points2) {
+            System.out.print(pair.getKey());
+            System.out.print("=");
+            System.out.print(pair.getValue());
+            System.out.print("; ");
+        }
+        System.out.println();
+    }
+
+    @Test
+    public void testCoordIntMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordIntMap(json);
+        CoordIntMap points = new CoordIntMap(
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
+                new int[]{4242, 2323, 6666});
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordIntMap points2 = json.fromJson(CoordIntMap.class, data);
+        Assert.assertEquals(points, points2);
+        for(ObjectIntMap.Entry<Coord> pair : points2) {
+            System.out.print(pair.getKey());
+            System.out.print("=");
+            System.out.print(pair.getValue());
+            System.out.print("; ");
+        }
+        System.out.println();
+    }
+
+    @Test
+    public void testCoordIntOrderedMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCoordIntOrderedMap(json);
+        CoordIntOrderedMap points = new CoordIntOrderedMap(
+                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
+                new int[]{4242, 2323, 6666});
+        String data = json.toJson(points);
+        System.out.println(data);
+        CoordIntOrderedMap points2 = json.fromJson(CoordIntOrderedMap.class, data);
+        Assert.assertEquals(points, points2);
+        for(ObjectIntMap.Entry<Coord> pair : points2) {
+            System.out.print(pair.getKey());
+            System.out.print("=");
+            System.out.print(pair.getValue());
+            System.out.print("; ");
+        }
+        System.out.println();
+    }
+
     @Test
     public void testCoordSet() {
         Json json = new Json(JsonWriter.OutputType.minimal);
@@ -284,6 +367,34 @@ public class JsonGridTest {
         noise2 = json.fromJson(NoiseAdjustment.class, data);
         Assert.assertEquals(noise, noise2);
         Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
+    public void testFoamNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerFoamNoise(json);
+        FoamNoise noise, noise2;
+        noise = new FoamNoise(-9876543210L);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(FoamNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
+    public void testFoamplexNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerFoamplexNoise(json);
+        FoamplexNoise noise, noise2;
+        noise = new FoamplexNoise(-9876543210L);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(FoamplexNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
         System.out.println();
     }
 
@@ -454,6 +565,20 @@ public class JsonGridTest {
         String data = json.toJson(noise);
         System.out.println(data);
         noise2 = json.fromJson(BadgerNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
+    public void testSnakeNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerSnakeNoise(json);
+        SnakeNoise noise, noise2;
+        noise = new SnakeNoise(-987654321);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(SnakeNoise.class, data);
         Assert.assertEquals(noise, noise2);
         Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
         System.out.println();

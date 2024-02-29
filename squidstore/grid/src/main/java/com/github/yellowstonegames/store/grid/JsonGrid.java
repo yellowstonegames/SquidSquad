@@ -48,16 +48,22 @@ public final class JsonGrid {
         registerCoordObjectOrderedMap(json);
         registerCoordFloatMap(json);
         registerCoordFloatOrderedMap(json);
+        registerCoordIntMap(json);
+        registerCoordIntOrderedMap(json);
         registerCoordLongMap(json);
         registerCoordLongOrderedMap(json);
         registerSpatialMap(json);
         registerRadiance(json);
         registerLightingManager(json);
+        registerLightingManagerRgb(json);
+        registerVisionFramework(json);
+        registerVisionFrameworkRgb(json);
 //        registerBasicHashNoise(json); // Cannot be serialized to JSON without IPointHash being serializable, too.
         registerBadgerNoise(json);
         registerCyclicNoise(json);
         registerFlanNoise(json);
         registerFoamNoise(json);
+        registerFoamplexNoise(json);
         registerHighDimensionalValueNoise(json);
         registerNoiseAdjustment(json);
         registerNoise(json);
@@ -70,9 +76,11 @@ public final class JsonGrid {
         registerSimplexNoise(json);
         registerSimplexNoiseHard(json);
         registerSimplexNoiseScaled(json);
+        registerSnakeNoise(json);
         registerSorbetNoise(json);
         registerTaffyNoise(json);
         registerValueNoise(json);
+        registerWhiteNoise(json);
     }
 
     /**
@@ -719,6 +727,31 @@ public final class JsonGrid {
             public BadgerNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return BadgerNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers SnakeNoise with the given Json object, so SnakeNoise can be written to and read from JSON.
+     * This is a simple wrapper around SnakeNoise's built-in {@link SnakeNoise#stringSerialize()} and
+     * {@link SnakeNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSnakeNoise(@NonNull Json json) {
+        json.addClassTag("SnkN", SnakeNoise.class);
+        json.setSerializer(SnakeNoise.class, new Json.Serializer<SnakeNoise>() {
+            @Override
+            public void write(Json json, SnakeNoise object, Class knownType) {
+                json.writeObjectStart(SnakeNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public SnakeNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return SnakeNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
