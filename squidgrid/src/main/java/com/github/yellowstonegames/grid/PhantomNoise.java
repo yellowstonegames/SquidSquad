@@ -357,7 +357,7 @@ public class PhantomNoise implements INoise {
     }
 
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return false;
     }
 

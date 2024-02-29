@@ -34,11 +34,16 @@ public interface INoise {
     int getMaxDimension();
 
     /**
-     * Returns true if this generator can be seeded with {@link #setSeed(long)} (and if so, retrieved with
-     * {@link #getSeed()}).
-     * @return true if {@link #setSeed(long)} and {@link #getSeed()} are supported, false if either isn't supported
+     * Returns true if this generator can be seeded with {@link #setSeed(long)} during each call to obtain noise, or
+     * false if calling setSeed() is slow enough or allocates enough that alternative approaches should be used. You
+     * can always call setSeed() on your own, but generators that don't have any seed won't do anything, and generators
+     * that return false for this method will generally behave differently when comparing how
+     * {@link #getNoiseWithSeed(float, float, long)} changes the seed and how setSeed() does.
+     *
+     * @return whether {@link #setSeed(long)} should be safe to call in every {@link #getNoiseWithSeed} call
      */
-    boolean canUseSeed();
+    boolean hasEfficientSetSeed();
+
     /**
      * Gets 2D noise with a default or pre-set seed.
      * @param x x position; can be any finite float
@@ -96,29 +101,24 @@ public interface INoise {
 
     /**
      * Sets the seed to the given long, if long seeds are supported, or {@code (int)seed} if only int seeds are
-     * supported. If {@link #canUseSeed()} returns true, this must be implemented and must set the seed given a long
-     * input. If this generator cannot be seeded, this is permitted to either do nothing or throw an
-     * {@link UnsupportedOperationException}. If this operation allocates or is time-intensive, then that performance
-     * cost will be passed along to {@link #getNoiseWithSeed}, since that calls this twice unless overridden. In the
-     * case where seeding is expensive to perform, setSeed() can still be implemented while {@link #canUseSeed()}
-     * returns false. This makes the {@link #getNoiseWithSeed} methods avoid reseeding, and instead move their inputs
-     * around in space.
+     * supported.
+     * If this generator cannot be seeded, this should do nothing, and should not throw an exception. If this operation
+     * allocates or is time-intensive, then {@link #hasEfficientSetSeed()} should return false. That method is checked
+     * in {@link #getNoiseWithSeed}, and if it returns false, the noise call will avoid calling setSeed(). You can
+     * always at least try to set the seed, even if it does nothing or is heavy on performance, and doing it a few times
+     * each frame should typically be fine for any generator. In the case this is called thousands of times each frame,
+     * check {@link #hasEfficientSetSeed()}.
      * @param seed a long or int seed, with no restrictions unless otherwise documented
      */
-    default void setSeed(long seed) {
-        throw new UnsupportedOperationException("setSeed() is not supported.");
-    }
+    void setSeed(long seed);
 
     /**
-     * Gets the current seed of the generator, as a long even if the seed is stored internally as an int.
-     * If {@link #canUseSeed()} returns true, this must be implemented, but if canUseSeed() returns false, this is
-     * permitted to either still be implemented (but typically only if it is time- or space-intensive to call getSeed())
-     * or to throw an {@link UnsupportedOperationException}.
+     * Gets the current seed of the generator, as a long even if the seed is stored internally as an int. This must be
+     * implemented, but if the generator doesn't have a seed that can be expressed as a long (potentially using
+     * {@link com.github.tommyettinger.digital.BitConversion#floatToIntBits(float)}), this can just return {@code 0}.
      * @return the current seed, as a long
      */
-    default long getSeed() {
-        throw new UnsupportedOperationException("getSeed() is not supported.");
-    }
+    long getSeed();
 
     /**
      * Returns a typically-four-character String constant that should uniquely identify this INoise as well as possible.
@@ -178,14 +178,14 @@ public interface INoise {
 
     /**
      * Gets 2D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @return a noise value between -1.0f and 1.0f, both inclusive
      * @throws UnsupportedOperationException if 2D noise cannot be produced by this generator
      */
     default float getNoiseWithSeed(float x, float y, long seed) {
-        if(!canUseSeed()) {
+        if(!hasEfficientSetSeed()) {
             float s = seed * 0x1p-48f;
             return getNoise(x + s, y + s);
         }
@@ -198,7 +198,7 @@ public interface INoise {
 
     /**
      * Gets 3D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
@@ -206,7 +206,7 @@ public interface INoise {
      * @throws UnsupportedOperationException if 3D noise cannot be produced by this generator
      */
     default float getNoiseWithSeed(float x, float y, float z, long seed) {
-        if(!canUseSeed()) {
+        if(!hasEfficientSetSeed()) {
             float s = seed * 0x1p-48f;
             return getNoise(x + s, y + s, z + s);
         }
@@ -219,7 +219,7 @@ public interface INoise {
 
     /**
      * Gets 4D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
@@ -228,7 +228,7 @@ public interface INoise {
      * @throws UnsupportedOperationException if 4D noise cannot be produced by this generator
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-        if(!canUseSeed()) {
+        if(!hasEfficientSetSeed()) {
             float s = seed * 0x1p-48f;
             return getNoise(x + s, y + s, z + s, w + s);
         }
@@ -241,7 +241,7 @@ public interface INoise {
 
     /**
      * Gets 5D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
@@ -251,7 +251,7 @@ public interface INoise {
      * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        if(!canUseSeed()) {
+        if(!hasEfficientSetSeed()) {
             float s = seed * 0x1p-48f;
             return getNoise(x + s, y + s, z + s, w + s, u + s);
         }
@@ -264,7 +264,7 @@ public interface INoise {
 
     /**
      * Gets 6D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
@@ -275,7 +275,7 @@ public interface INoise {
      * @throws UnsupportedOperationException if 6D noise cannot be produced by this generator
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        if(!canUseSeed()) {
+        if(!hasEfficientSetSeed()) {
             float s = seed * 0x1p-48f;
             return getNoise(x + s, y + s, z + s, w + s, u + s, v + s);
         }

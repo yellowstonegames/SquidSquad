@@ -98,17 +98,20 @@ float cyclicNoise(vec3 p){
         this(3);
     }
     public CyclicNoise(int octaves) {
-        setOctaves(octaves);
-        setSeed(0xBEEF1E57CA77L);
+        this(0xBEEF1E57, octaves, 2f);
     }
 
     public CyclicNoise(long seed, int octaves) {
-        setOctaves(octaves);
-        setSeed(seed);
+        this(seed, octaves, 2f);
     }
 
     public CyclicNoise(long seed, int octaves, float frequency) {
         setOctaves(octaves);
+        for (int i = 0, s = 2; i < 6; i++, s++) {
+            for (int j = 0; j < 4; j++) {
+                rotations[i][j] = new float[s * s];
+            }
+        }
         setSeed(seed, frequency);
     }
 
@@ -129,7 +132,7 @@ float cyclicNoise(vec3 p){
     }
 
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return false;
     }
 

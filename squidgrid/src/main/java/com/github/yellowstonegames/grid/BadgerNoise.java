@@ -45,7 +45,7 @@ public class BadgerNoise implements INoise {
     }
 
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return true;
     }
 

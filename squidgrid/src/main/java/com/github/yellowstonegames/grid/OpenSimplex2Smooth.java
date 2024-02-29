@@ -72,7 +72,7 @@ public class OpenSimplex2Smooth implements INoise {
      * @return true, because {@link #setSeed(long)} and {@link #getSeed()} are supported
      */
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return true;
     }
 
@@ -163,7 +163,7 @@ public class OpenSimplex2Smooth implements INoise {
 
     /**
      * Gets 2D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * {@link #getNoise}; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float
@@ -178,7 +178,7 @@ public class OpenSimplex2Smooth implements INoise {
 
     /**
      * Gets 3D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * {@link #getNoise}; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float
@@ -194,7 +194,7 @@ public class OpenSimplex2Smooth implements INoise {
 
     /**
      * Gets 4D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * {@link #getNoise}; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float
@@ -211,7 +211,7 @@ public class OpenSimplex2Smooth implements INoise {
 
     /**
      * Gets 5D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * {@link #getNoise}; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float
@@ -230,7 +230,7 @@ public class OpenSimplex2Smooth implements INoise {
 
     /**
      * Gets 6D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #canUseSeed()}.
+     * {@link #getNoise}; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float

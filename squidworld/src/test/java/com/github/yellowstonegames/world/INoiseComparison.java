@@ -509,7 +509,7 @@ public class INoiseComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 
@@ -588,7 +588,7 @@ public class INoiseComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 
@@ -667,7 +667,7 @@ public class INoiseComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 
@@ -746,7 +746,7 @@ public class INoiseComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 

@@ -35,11 +35,11 @@ public class NoiseWrapper implements INoise {
     }
 
     public NoiseWrapper(INoise toWrap){
-        this(toWrap, toWrap.canUseSeed() ? toWrap.getSeed() : 123L, 0.03125f, FBM, 1, false);
+        this(toWrap, toWrap.getSeed(), 0.03125f, FBM, 1, false);
     }
 
     public NoiseWrapper(INoise toWrap, float frequency, int mode, int octaves){
-        this(toWrap, toWrap.canUseSeed() ? toWrap.getSeed() : 123L, frequency, mode, octaves, false);
+        this(toWrap, toWrap.getSeed(), frequency, mode, octaves, false);
     }
     public NoiseWrapper(INoise toWrap, long seed, float frequency, int mode, int octaves){
         this(toWrap, seed, frequency, mode, octaves, false);
@@ -151,8 +151,8 @@ public class NoiseWrapper implements INoise {
     }
 
     @Override
-    public boolean canUseSeed() {
-        return wrapped.canUseSeed();
+    public boolean hasEfficientSetSeed() {
+        return wrapped.hasEfficientSetSeed();
     }
 
     @Override
@@ -285,8 +285,7 @@ public class NoiseWrapper implements INoise {
     @Override
     public void setSeed(long seed) {
         this.seed = seed;
-        if(wrapped.canUseSeed())
-            wrapped.setSeed(seed);
+        wrapped.setSeed(seed);
     }
 
     @Override

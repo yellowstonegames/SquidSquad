@@ -774,7 +774,7 @@ public class FoamNoise implements INoise {
      * @return true
      */
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return true;
     }
     

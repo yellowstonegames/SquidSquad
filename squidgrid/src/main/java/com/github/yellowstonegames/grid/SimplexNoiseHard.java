@@ -762,7 +762,7 @@ public class SimplexNoiseHard implements INoise {
     }
 
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return true;
     }
 

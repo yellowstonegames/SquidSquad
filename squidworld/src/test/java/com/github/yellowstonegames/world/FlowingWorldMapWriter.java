@@ -120,8 +120,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
 
         @Override
-        public boolean canUseSeed() {
-            return noise.canUseSeed();
+        public boolean hasEfficientSetSeed() {
+            return noise.hasEfficientSetSeed();
         }
 
         @Override

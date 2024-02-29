@@ -289,7 +289,7 @@ public class MathComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 
@@ -368,7 +368,7 @@ public class MathComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 
@@ -447,7 +447,7 @@ public class MathComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 
@@ -526,7 +526,7 @@ public class MathComparison extends ApplicationAdapter {
                 }
 
                 @Override
-                public boolean canUseSeed() {
+                public boolean hasEfficientSetSeed() {
                     return true;
                 }
 

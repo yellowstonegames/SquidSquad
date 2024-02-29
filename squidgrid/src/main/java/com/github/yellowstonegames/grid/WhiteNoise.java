@@ -65,17 +65,17 @@ public class WhiteNoise implements INoise {
      * @return true
      */
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return true;
     }
 
     /**
      * Sets the seed to the given long, if long seeds are supported, or {@code (int)seed} if only int seeds are
-     * supported. If {@link #canUseSeed()} returns true, this must be implemented and must set the seed given a long
+     * supported. If {@link #hasEfficientSetSeed()} returns true, this must be implemented and must set the seed given a long
      * input. If this generator cannot be seeded, this is permitted to either do nothing or throw an
      * {@link UnsupportedOperationException}. If this operation allocates or is time-intensive, then that performance
      * cost will be passed along to {@link #getNoiseWithSeed}, since that calls this twice unless overridden. In the
-     * case where seeding is expensive to perform, setSeed() can still be implemented while {@link #canUseSeed()}
+     * case where seeding is expensive to perform, setSeed() can still be implemented while {@link #hasEfficientSetSeed()}
      * returns false. This makes the {@link #getNoiseWithSeed} methods avoid reseeding, and instead move their inputs
      * around in space.
      *

@@ -327,7 +327,7 @@ public class FlanNoise implements INoise {
     }
 
     @Override
-    public boolean canUseSeed() {
+    public boolean hasEfficientSetSeed() {
         return false;
     }
 

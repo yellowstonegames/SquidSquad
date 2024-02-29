@@ -96,8 +96,8 @@ public class NoiseAdjustment implements INoise {
     }
 
     @Override
-    public boolean canUseSeed() {
-        return wrapped.canUseSeed();
+    public boolean hasEfficientSetSeed() {
+        return wrapped.hasEfficientSetSeed();
     }
 
     @Override
