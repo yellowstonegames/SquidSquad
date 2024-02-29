@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
@@ -83,14 +82,18 @@ float cyclicNoise(vec3 p){
 }
      */
 
+    protected static final float LACUNARITY = 1.6f;
+    protected static final float GAIN = 0.625f;
+
     protected int octaves;
-    protected float total = 1f, start = 1f, frequency = 2f;
-    protected final float lacunarity = 1.6f;
-    protected final float gain = 0.625f;
+    protected float total = 1f;
+    protected float start = 1f;
+    protected float frequency = 2f;
     protected long seed;
     protected transient float[][][] rotations = new float[6][4][];
     protected transient float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6], new float[7]};
     protected transient float[][] outputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6], new float[7]};
+    protected transient float[] gauss = new float[7], house = new float[49], large = new float[49], temp = new float[49];
     public CyclicNoise() {
         this(3);
     }
@@ -116,10 +119,10 @@ float cyclicNoise(vec3 p){
     public void setOctaves(int octaves) {
         this.octaves = Math.max(1, octaves);
 
-        start = gain;
+        start = GAIN;
         total = 0f;
         for (int i = 0; i < this.octaves; i++) {
-            start /= gain;
+            start /= GAIN;
             total += start;
         }
         total = 1f / total;
@@ -136,8 +139,8 @@ float cyclicNoise(vec3 p){
     }
 
     /**
-     * Sets the seed, and in doing so creates 20 new rotation matrices for different dimensions to use. Note that this
-     * may be considerably more expensive than a typical setter, because of how much it allocates.
+     * Sets the seed, and in doing so edits 24 rotation matrices for different dimensions to use. Note that this
+     * may be considerably more expensive than a typical setter, because all matrices are set whenever the seed changes.
      * @param seed any long
      */
     @Override
@@ -145,8 +148,9 @@ float cyclicNoise(vec3 p){
         setSeed(seed, frequency);
     }
     /**
-     * Sets the seed, and in doing so creates 24 new rotation matrices for different dimensions to use. Note that this
-     * may be considerably more expensive than a typical setter, because of how much it allocates.
+     * Sets the seed, and in doing so edits 24 rotation matrices for different dimensions to use. Note that this
+     * may be considerably more expensive than a typical setter, because all matrices are set whenever the seed changes.
+     * Also sets the frequency; the default is 2.
      * @param seed any long
      * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
      */
@@ -154,12 +158,13 @@ float cyclicNoise(vec3 p){
         this.seed = seed;
         this.frequency = frequency;
         for (int i = 0; i < 4; i++) {
-            rotations[0][i] = RotationTools.randomRotation2D(seed);
-            rotations[1][i] = RotationTools.randomRotation3D(seed, rotations[0][i]);
-            rotations[2][i] = RotationTools.randomRotation4D(seed, rotations[1][i]);
-            rotations[3][i] = RotationTools.randomRotation5D(seed, rotations[2][i]);
-            rotations[4][i] = RotationTools.randomRotation6D(seed, rotations[3][i]);
-            rotations[5][i] = RotationTools.randomRotation7D(seed, rotations[4][i]);
+            seed = this.seed ^ i;
+            RotationTools.fillRandomRotation2D(seed, rotations[0][i]);
+            System.arraycopy(RotationTools.rotateStep(seed, rotations[0][i], 3, gauss, house, large, temp), 0, rotations[1][i], 0, 9);
+            System.arraycopy(RotationTools.rotateStep(seed, rotations[1][i], 4, gauss, house, large, temp), 0, rotations[2][i], 0, 16);
+            System.arraycopy(RotationTools.rotateStep(seed, rotations[2][i], 5, gauss, house, large, temp), 0, rotations[3][i], 0, 25);
+            System.arraycopy(RotationTools.rotateStep(seed, rotations[3][i], 6, gauss, house, large, temp), 0, rotations[4][i], 0, 36);
+            System.arraycopy(RotationTools.rotateStep(seed, rotations[4][i], 7, gauss, house, large, temp), 0, rotations[5][i], 0, 49);
         }
     }
 
@@ -168,12 +173,11 @@ float cyclicNoise(vec3 p){
     }
 
     /**
-     * Sets the frequency; note that this works by setting the seed with {@link #setSeed(long, float)}, so if you want
-     * to change both seed and frequency, use that method instead.
+     * Sets the frequency; the default is 2. Higher frequencies produce output that changes more quickly.
      * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
      */
     public void setFrequency(float frequency) {
-        setSeed(seed, frequency);
+        this.frequency = frequency;
     }
 
     @Override
@@ -242,15 +246,14 @@ float cyclicNoise(vec3 p){
 
             noise += TrigTools.sinTurns((
                             COS_TABLE[xs] * SIN_TABLE[ys] + COS_TABLE[ys] * SIN_TABLE[xs]
-//                            + LineWobble.wobble(123, x) + LineWobble.wobble(456, y) + LineWobble.wobble(789, z)
                     ) * (0.5f/2f)
             ) * amp;
 
-            x = xx * lacunarity;
-            y = yy * lacunarity;
+            x = xx * LACUNARITY;
+            y = yy * LACUNARITY;
 
             warpTrk *= warpTrkGain;
-            amp *= gain;
+            amp *= GAIN;
         }
         return noise * total;
     }
@@ -295,12 +298,12 @@ float cyclicNoise(vec3 p){
                     ) * (0.5f/3f)
             ) * amp;
 
-            x = xx * lacunarity;
-            y = yy * lacunarity;
-            z = zz * lacunarity;
+            x = xx * LACUNARITY;
+            y = yy * LACUNARITY;
+            z = zz * LACUNARITY;
 
             warpTrk *= warpTrkGain;
-            amp *= gain;
+            amp *= GAIN;
         }
         return noise * total;
     }
@@ -351,13 +354,13 @@ float cyclicNoise(vec3 p){
                     ) * (0.5f/4f)
             ) * amp;
 
-            x = xx * lacunarity;
-            y = yy * lacunarity;
-            z = zz * lacunarity;
-            w = ww * lacunarity;
+            x = xx * LACUNARITY;
+            y = yy * LACUNARITY;
+            z = zz * LACUNARITY;
+            w = ww * LACUNARITY;
 
             warpTrk *= warpTrkGain;
-            amp *= gain;
+            amp *= GAIN;
         }
         return noise * total;
     }
@@ -414,14 +417,14 @@ float cyclicNoise(vec3 p){
                     ) * (0.5f/5f)
             ) * amp;
 
-            x = xx * lacunarity;
-            y = yy * lacunarity;
-            z = zz * lacunarity;
-            w = ww * lacunarity;
-            u = uu * lacunarity;
+            x = xx * LACUNARITY;
+            y = yy * LACUNARITY;
+            z = zz * LACUNARITY;
+            w = ww * LACUNARITY;
+            u = uu * LACUNARITY;
 
             warpTrk *= warpTrkGain;
-            amp *= gain;
+            amp *= GAIN;
         }
         return noise * total;
     }
@@ -484,15 +487,15 @@ float cyclicNoise(vec3 p){
                     ) * (0.5f/6f)
             ) * amp;
 
-            x = xx * lacunarity;
-            y = yy * lacunarity;
-            z = zz * lacunarity;
-            w = ww * lacunarity;
-            u = uu * lacunarity;
-            v = vv * lacunarity;
+            x = xx * LACUNARITY;
+            y = yy * LACUNARITY;
+            z = zz * LACUNARITY;
+            w = ww * LACUNARITY;
+            u = uu * LACUNARITY;
+            v = vv * LACUNARITY;
 
             warpTrk *= warpTrkGain;
-            amp *= gain;
+            amp *= GAIN;
         }
         return noise * total;
     }
@@ -560,16 +563,16 @@ float cyclicNoise(vec3 p){
                     ) * (0.5f/7f)
             ) * amp;
 
-            x = xx * lacunarity;
-            y = yy * lacunarity;
-            z = zz * lacunarity;
-            w = ww * lacunarity;
-            u = uu * lacunarity;
-            v = vv * lacunarity;
-            m = mm * lacunarity;
+            x = xx * LACUNARITY;
+            y = yy * LACUNARITY;
+            z = zz * LACUNARITY;
+            w = ww * LACUNARITY;
+            u = uu * LACUNARITY;
+            v = vv * LACUNARITY;
+            m = mm * LACUNARITY;
 
             warpTrk *= warpTrkGain;
-            amp *= gain;
+            amp *= GAIN;
         }
         return noise * total;
     }

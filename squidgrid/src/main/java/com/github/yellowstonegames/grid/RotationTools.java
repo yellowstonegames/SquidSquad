@@ -24,6 +24,8 @@ import com.github.tommyettinger.random.Ziggurat;
 
 import java.util.Arrays;
 
+import static com.github.tommyettinger.digital.MathTools.ROOT2;
+
 /**
  * This has tools for generating and applying matrix rotations, potentially in higher dimensions than the typical 2 or
  * 3. You can use {@link #randomRotation2D(long)} to very quickly generate a single 2D rotation matrix, and to get a 3D
@@ -196,7 +198,7 @@ public final class RotationTools {
             sum += t * t;
             t = 0f;
         }
-        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
+        sum = ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
         t = 1f;
         for (int i = 0; i < targetSize; i++) {
             gauss[i] = (t - gauss[i]) * sum;
@@ -215,6 +217,73 @@ public final class RotationTools {
     }
 
     /**
+     * This is just part of a larger rotation generator; it takes a target size (the side length of the matrix this will
+     * return), another matrix {@code small} (with a side length 1 less than {@code targetSize}), and a random number
+     * seed, and uses the seed and some matrix operations to generate a random rotation based on {@code small}. To avoid
+     * allocating arrays on each call to this, this method also takes four float arrays that this will clear and modify,
+     * to be used as temporary workspace. As long as the last four arguments have enough length, their contents don't
+     * matter. While {@code gauss} must have length of at least {@code targetSize}, the last three must have length of
+     * at least {@code targetSize * targetSize}.
+     * <br>
+     * This is not meant for usage outside this class, but if you are copying or modifying parts of the code in here,
+     * then you will probably need at least one of the rotateStep() methods.
+     * <br>
+     * See <a href="https://math.stackexchange.com/a/442489">Stack Exchange's links here</a>, and Graphics Gems III
+     * (specifically, the part about fast random rotation matrices, not the part about the subgroup algorithm).
+     *
+     * @param seed random number generator seed; may be a long or an int
+     * @param small a smaller square matrix than the result should be; must have side length {@code targetSize - 1}, and will not be modified
+     * @param targetSize the side length of the square matrix to be returned
+     * @param gauss a temporary float array that will be cleared; must have length of at least {@code targetSize}
+     * @param house a temporary float array that will be cleared; must have length of at least {@code targetSize * targetSize}
+     * @param large a temporary float array that will be cleared; must have length of at least {@code targetSize * targetSize}
+     * @param out the float array that will be cleared and returned; must have length of at least {@code targetSize * targetSize}
+     * @return {@code out}, which can be treated as a rotation matrix for inputs of size {@code targetSize}
+     */
+    public static float[] rotateStep(long seed, final float[] small, int targetSize, float[] gauss, float[] house,
+                                     float[] large, float[] out) {
+        final int smallSize = targetSize - 1, squareSize = targetSize * targetSize;
+        for (int i = 0; i < smallSize; i++) {
+            // copy the small matrix into the bottom right corner of the large matrix
+            System.arraycopy(small, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
+            large[i + 1] = 0f;
+            large[i * targetSize + targetSize] = 0f;
+        }
+        large[0] = 1f;
+        long sd = randomize(seed + squareSize);
+        float sum = 0f, t;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = t = (float) Ziggurat.normal(randomize((sd += 0x9E3779B97F4A7C15L)));
+            sum += t * t;
+        }
+        final float inv = 1f / (float) Math.sqrt(sum);
+        sum = 0f;
+        t = 1f;
+        for (int i = 0; i < targetSize; i++) {
+            t -= gauss[i] *= inv;
+            sum += t * t;
+            t = 0f;
+        }
+        sum = ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
+        t = 1f;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = (t - gauss[i]) * sum;
+            t = 0f;
+        }
+        for (int row = 0, h = 0; row < targetSize; row++) {
+            for (int col = 0; col < targetSize; col++, h++) {
+                house[h] = gauss[row] * gauss[col];
+            }
+        }
+        for (int i = 0; i < targetSize; i++) {
+            house[targetSize * i + i]--;
+        }
+        Arrays.fill(out, 0, squareSize, 0f);
+        matrixMultiply(house, large, out, targetSize);
+        return out;
+    }
+
+    /**
      * Creates a new 1D float array that can be used as a 2D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given seed to get an angle using
      * {@link TrigTools#SIN_TABLE}.
@@ -226,6 +295,23 @@ public final class RotationTools {
         final float s = TrigTools.SIN_TABLE[index];
         final float c = TrigTools.COS_TABLE[index];
         return new float[]{c, s, -s, c};
+    }
+
+    /**
+     * Fills {@code out} with a 1D float array that can be used as a 2D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Scrambles the given seed with {@link #randomize(long)},
+     * then gets an angle using {@link TrigTools#SIN_TABLE} and {@link TrigTools#COS_TABLE}.
+     * @param seed any long; will be scrambled
+     * @param out a float array that must have at least 4 elements; will be cleared and returned
+     * @return {@code out}, meant as effectively a 2D rotation matrix
+     */
+    public static float[] fillRandomRotation2D(long seed, float[] out) {
+        final int index = (int)(randomize(seed * 0x9E3779B97F4A7C15L) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
+        final float s = TrigTools.SIN_TABLE[index];
+        final float c = TrigTools.COS_TABLE[index];
+        out[0] = out[3] = c;
+        out[2] = -(out[1] = s);
+        return out;
     }
 
     /**
@@ -398,7 +484,7 @@ public final class RotationTools {
             sum += t * t;
             t = 0f;
         }
-        sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
+        sum = ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
         t = 1f;
         for (int i = 0; i < targetSize; i++) {
             gauss[i] = (t - gauss[i]) * sum;
@@ -1056,7 +1142,7 @@ public final class RotationTools {
                     sum += t * t;
                     t = 0f;
                 }
-                sum = MathTools.ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
+                sum = ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
                 t = 1f;
                 for (int i = 0; i < targetSize; i++) {
                     gauss[i] = (t - gauss[i]) * sum;
