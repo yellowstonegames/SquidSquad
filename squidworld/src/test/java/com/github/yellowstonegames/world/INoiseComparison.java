@@ -40,6 +40,41 @@ import static com.badlogic.gdx.Input.Keys.*;
 /**
  */
 public class INoiseComparison extends ApplicationAdapter {
+    /**
+     * A decent approximation of {@link Math#exp(double)} for small float arguments, meant to be faster than Math's
+     * version for floats at the expense of accuracy. This uses the 2/2 Padé
+     * approximant to {@code Math.exp(power)}, but halves the argument to exp() before approximating, and squares it
+     * before returning.The halving/squaring keeps the calculation in a more precise span for a larger domain. You
+     * should not use this if your {@code power} inputs will be much higher than about 3 or lower than -3 .
+     * <br>
+     * Pretty much all the work for this was done by Wolfram Alpha.
+     *
+     * @param power what exponent to raise {@link com.github.tommyettinger.digital.MathTools#E} to
+     * @return a rough approximation of E raised to the given power
+     */
+    public static float exp(float power) {
+        power *= 0.5f;
+        power = (12 + power * (6 + power)) / (12 + power * (-6 + power));
+        return power * power;
+    }
+
+    /**
+     * The cumulative distribution function for the normal distribution, with the range expanded to {@code [-1,1]}
+     * instead of the usual {@code [0,1]} . This might be useful to bring noise functions (which sometimes have a range
+     * of {@code -1,1}) from a very-centrally-biased form to a more uniformly-distributed form. The math here doesn't
+     * exactly match the normal distribution's CDF because the goal was to handle inputs between -1 and 1, not the full
+     * range of a normal-distributed variate (which is infinite). The distribution is very slightly different here from
+     * the double-based overload, because this clamps inputs that would produce incorrect results from its approximation
+     * of {@link Math#exp(double)} otherwise, whereas the double-based method uses the actual Math.exp().
+     *
+     * @param x a float between -1 and 1; will be clamped if outside that domain
+     * @return a more-uniformly distributed value between -1 and 1
+     */
+    public static float redistributeNormal(float x) {
+        final float xx = Math.min(x * x * 6.03435f, 6.03435f), axx = 0.1400122886866665f * xx;
+        return Math.copySign((float) Math.sqrt(1.0051551f - exp(xx * (-1.2732395447351628f - axx) / (0.9952389057917015f + axx))), x);
+    }
+
 
     private final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1L);
     private static final Interpolations.Interpolator watcher = new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
@@ -50,6 +85,14 @@ public class INoiseComparison extends ApplicationAdapter {
             return super.apply(alpha);
         }
     };
+    private static final Interpolations.Interpolator redistributor = new Interpolations.Interpolator("REDISTRIBUTOR",
+            alpha -> redistributeNormal((alpha - 0.5f) * 2f) * 0.5f + 0.5f);
+
+    private static final Interpolations.Interpolator[] PREPARATIONS = {Interpolations.linear, Interpolations.smooth,
+            Interpolations.smoother, redistributor};
+    private int prep0 = 0;
+    private int prep1 = 0;
+
     private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
             new FoamNoise(1L),
@@ -84,8 +127,10 @@ public class INoiseComparison extends ApplicationAdapter {
     };
     private int index0 = 0;
     private int index1 = noises.length - 1;
-    private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
-    private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
+    private final NoiseAdjustment adj0 = new NoiseAdjustment(noises[index0], Interpolations.linear);
+    private final NoiseAdjustment adj1 = new NoiseAdjustment(noises[index1], Interpolations.linear);
+    private final NoiseWrapper wrap0 = new NoiseWrapper(adj0, 1, 0.0625f, Noise.FBM, 1);
+    private final NoiseWrapper wrap1 = new NoiseWrapper(adj1, 1, 0.0625f, Noise.FBM, 1);
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
@@ -145,12 +190,21 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     case NUM_0:
                     case NUMPAD_0:
-                        wrap0.setWrapped(noises[index0 = (index0 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
+                        adj0.setWrapped(noises[index0 = (index0 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
                         break;
                     case MINUS:
                     case NUM_1:
                     case NUMPAD_1:
-                        wrap1.setWrapped(noises[index1 = (index1 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
+                        adj1.setWrapped(noises[index1 = (index1 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
+                        break;
+                    case NUM_9:
+                    case NUMPAD_9:
+                        adj0.setAdjustment(PREPARATIONS[prep0 = (prep0 + (UIUtils.shift() ? PREPARATIONS.length - 1 : 1)) % PREPARATIONS.length]);
+                        break;
+                    case EQUALS:
+                    case NUM_2:
+                    case NUMPAD_2:
+                        adj1.setAdjustment(PREPARATIONS[prep1 = (prep1 + (UIUtils.shift() ? PREPARATIONS.length - 1 : 1)) % PREPARATIONS.length]);
                         break;
                     case C:
                         if (UIUtils.shift()) ctr--;
