@@ -75,10 +75,17 @@ public class INoiseComparison extends ApplicationAdapter {
         final float xx = Math.min(x * x * 6.03435f, 6.03435f), axx = 0.1400122886866665f * xx;
         return Math.copySign((float) Math.sqrt(1.0051551f - exp(xx * (-1.2732395447351628f - axx) / (0.9952389057917015f + axx))), x);
     }
-    public static float mul =  6.03435f;
+    public static float mul =  6.03435f, gamma = 1f;
     public static float redistributeNormalPrecise(float x) {
         final double xx = x * x * mul, axx = 0.1400122886866665 * xx;
         return Math.copySign((float) Math.sqrt(1.0 - Math.exp(xx * (-1.2732395447351628 - axx) / (1.0 + axx))), x);
+    }
+
+    public static float redistributeCauchy(float x) {
+        return TrigTools.atan((x-0.5f)/gamma)*TrigTools.PI_INVERSE + 0.5f;
+    }
+    public static float redistributeCauchyPrecise(float x) {
+        return (float)(Math.atan((x-0.5)/gamma)/Math.PI+0.5);
     }
 
 
@@ -95,9 +102,15 @@ public class INoiseComparison extends ApplicationAdapter {
             alpha -> redistributeNormal((alpha - 0.5f) * 2f) * 0.5f + 0.5f);
     private static final Interpolations.Interpolator redistributor2 = new Interpolations.Interpolator("REDISTRIBUTOR2",
             alpha -> redistributeNormalPrecise((alpha - 0.5f) * 2f) * 0.5f + 0.5f);
+    private static final Interpolations.Interpolator redistributorC = new Interpolations.Interpolator("REDISTRIBUTORC",
+            INoiseComparison::redistributeCauchy);
+    private static final Interpolations.Interpolator redistributorC2 = new Interpolations.Interpolator("REDISTRIBUTORC2",
+            INoiseComparison::redistributeCauchyPrecise);
+    private static final Interpolations.Interpolator redistributorCC = new Interpolations.Interpolator("REDISTRIBUTORCC",
+            x -> redistributeCauchy(redistributeCauchy(x)));
 
     private static final Interpolations.Interpolator[] PREPARATIONS = {Interpolations.linear, Interpolations.smooth,
-            Interpolations.smoother, redistributor, redistributor2};
+            Interpolations.smoother, redistributor, redistributor2, redistributorC, redistributorC2, redistributorCC};
     private int prep0 = 0;
     private int prep1 = 0;
 
@@ -278,6 +291,10 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     case K: // sKip
                         ctr += 1000;
+                        break;
+                    case V: // view
+                        System.out.println("mul = " + mul);
+                        System.out.println("gamma = " + mul);
                         break;
                     case Q:
                     case ESCAPE: {
@@ -504,6 +521,8 @@ public class INoiseComparison extends ApplicationAdapter {
     public void render() {
         if(Gdx.input.isKeyPressed(M)) // multiplier for redistributor2
              mul *= (UIUtils.shift() ? 1.03125f : 1f/1.03125f);
+        if(Gdx.input.isKeyPressed(G)) // multiplier for redistributorC
+             gamma *= (UIUtils.shift() ? 1.03125f : 1f/1.03125f);
         // standard clear the background routine for libGDX
         ScreenUtils.clear(0f, 0f, 0f, 1f);
         Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
