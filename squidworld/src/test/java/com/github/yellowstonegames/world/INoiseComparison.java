@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
 
@@ -75,8 +76,16 @@ public class INoiseComparison extends ApplicationAdapter {
         final float xx = Math.min(x * x * 6.03435f, 6.03435f), axx = 0.1400122886866665f * xx;
         return Math.copySign((float) Math.sqrt(1.0051551f - exp(xx * (-1.2732395447351628f - axx) / (0.9952389057917015f + axx))), x);
     }
-    public static float mul =  6.03435f, gamma = 1f;
+    public static float redistributeNormal(float x, float mul) {
+        final float xx = Math.min(x * x * mul, 6.03435f), axx = 0.1400122886866665f * xx;
+        return Math.copySign((float) Math.sqrt(1.0051551f - exp(xx * (-1.2732395447351628f - axx) / (0.9952389057917015f + axx))), x);
+    }
+    public static float mul =  6.03435f, gamma = 1f, mix = 0.5f, mixRaw = 0;
     public static float redistributeNormalPrecise(float x) {
+        final double xx = x * x * mul, axx = 0.1400122886866665 * xx;
+        return Math.copySign((float) Math.sqrt(1.0 - Math.exp(xx * (-1.2732395447351628 - axx) / (1.0 + axx))), x);
+    }
+    public static float redistributeNormalPrecise(float x, double mul) {
         final double xx = x * x * mul, axx = 0.1400122886866665 * xx;
         return Math.copySign((float) Math.sqrt(1.0 - Math.exp(xx * (-1.2732395447351628 - axx) / (1.0 + axx))), x);
     }
@@ -108,9 +117,14 @@ public class INoiseComparison extends ApplicationAdapter {
             INoiseComparison::redistributeCauchyPrecise);
     private static final Interpolations.Interpolator redistributorCC = new Interpolations.Interpolator("REDISTRIBUTORCC",
             x -> redistributeCauchy(redistributeCauchy(x)));
+    private static final Interpolations.Interpolator redistributorL = new Interpolations.Interpolator("REDISTRIBUTORL",
+            alpha -> MathTools.lerp(alpha, redistributeNormal((alpha - 0.5f) * 2f, mul) * 0.5f + 0.5f, mix));
+    private static final Interpolations.Interpolator redistributorL2 = new Interpolations.Interpolator("REDISTRIBUTORL2",
+            alpha -> MathTools.lerp(alpha, redistributeNormalPrecise((alpha - 0.5f) * 2f, mul) * 0.5f + 0.5f, mix));
 
     private static final Interpolations.Interpolator[] PREPARATIONS = {Interpolations.linear, Interpolations.smooth,
-            Interpolations.smoother, redistributor, redistributor2, redistributorC, redistributorC2, redistributorCC};
+            Interpolations.smoother, redistributor, redistributor2, redistributorC, redistributorC2, redistributorCC,
+            redistributorL, redistributorL2, };
     private int prep0 = 0;
     private int prep1 = 0;
 
@@ -147,7 +161,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new SnakeNoise(1L),
     };
     private int index0 = 0;
-    private int index1 = noises.length - 1;
+    private int index1 = 0;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, Interpolations.linear);
@@ -294,7 +308,8 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     case V: // view
                         System.out.println("mul = " + mul);
-                        System.out.println("gamma = " + mul);
+                        System.out.println("gamma = " + gamma);
+                        System.out.println("mix = " + mix);
                         break;
                     case Q:
                     case ESCAPE: {
@@ -523,6 +538,8 @@ public class INoiseComparison extends ApplicationAdapter {
              mul *= (UIUtils.shift() ? 1.03125f : 1f/1.03125f);
         if(Gdx.input.isKeyPressed(G)) // multiplier for redistributorC
              gamma *= (UIUtils.shift() ? 1.03125f : 1f/1.03125f);
+        if(Gdx.input.isKeyPressed(X)) // mixer for redistributorL
+             mix = (float)Math.tanh(mixRaw += (UIUtils.shift() ? 0.03125f : -0.03125f)) * 0.5f + 0.5f;
         // standard clear the background routine for libGDX
         ScreenUtils.clear(0f, 0f, 0f, 1f);
         Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
