@@ -18,7 +18,6 @@ package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -97,6 +96,42 @@ public class INoiseComparison extends ApplicationAdapter {
         return (float)(Math.atan((x-0.5)/gamma)/Math.PI+0.5);
     }
 
+    /**
+     * Redistributes a noise value {@code n} using the given {@code mul} and {@code mix} parameters. This is meant to
+     * push high-octave noise results from being centrally biased to being closer to uniform. Getting the values right
+     * probably requires tweaking them; for {@link SimplexNoise}, mul=2.3f and mix=0.75f works well with 2 or more
+     * octaves (and not at all well for one octave, which can use mix=0.0f to avoid redistributing at all). This
+     * variation takes n in the 0f to 1f range, inclusive, and returns a value in the same range.
+     *
+     * @param n a prepared noise value, between 0f and 1f inclusive
+     * @param mul a positive multiplier where higher values make extreme results more likely; often around 2.3f
+     * @param mix a blending amount between 0f and 1f where lower values keep {@code n} more; often around 0.75f
+     * @return a noise value between 0f and 1f, inclusive
+     */
+    public static float redistributeConfigurable(float n, float mul, float mix) {
+        final float x = (n - 0.5f) * 2f, xx = x * x * mul, axx = 0.1400122886866665f * xx;
+        final float denormal = Math.copySign((float) Math.sqrt(1.0f - Math.exp(xx * (-1.2732395447351628f - axx) / (1.0f + axx))), x);
+        return MathTools.lerp(n, denormal * 0.5f + 0.5f, mix);
+    }
+    public static float redistributeRough(float n, float mul, float mix) {
+        final float x = (n - 0.5f) * 2f, xx = x * x * mul, axx = 0.1400122886866665f * xx;
+        final float denormal = Math.copySign((float) Math.sqrt(1.0f - RoughMath.expRough(xx * (-1.2732395447351628f - axx) / (1.0f + axx))), x);
+        return MathTools.lerp(n, denormal * 0.5f + 0.5f, mix);
+    }
+
+    /**
+     *
+     * @param n
+     * @param mul often 3.3
+     * @param mix often 0.91
+     * @return
+     */
+    public static float redistributeTumble(float n, float mul, float mix) {
+        final float x = (n - 0.5f) * 2f, xx = x * x * mul, axx = 0.1400122886866665f * xx;
+        final float denormal = Math.copySign((float) Math.sqrt(1.0f - RoughMath.pow2Rough(xx * (-1.2732395447351628f - axx) / (1.0f + axx))), x);
+        return MathTools.lerp(n, denormal * 0.5f + 0.5f, mix);
+    }
+
 
     private final PerlinNoiseAnalysis analysis = new PerlinNoiseAnalysis(1L);
     private static final Interpolations.Interpolator watcher = new Interpolations.Interpolator("WATCHER", Interpolations.linearFunction){
@@ -121,10 +156,16 @@ public class INoiseComparison extends ApplicationAdapter {
             alpha -> MathTools.lerp(alpha, redistributeNormal((alpha - 0.5f) * 2f, mul) * 0.5f + 0.5f, mix));
     private static final Interpolations.Interpolator redistributorL2 = new Interpolations.Interpolator("REDISTRIBUTORL2",
             alpha -> MathTools.lerp(alpha, redistributeNormalPrecise((alpha - 0.5f) * 2f, mul) * 0.5f + 0.5f, mix));
+    private static final Interpolations.Interpolator redistributorX = new Interpolations.Interpolator("REDISTRIBUTORX",
+            x -> redistributeConfigurable(x, mul, mix));
+    private static final Interpolations.Interpolator redistributorR = new Interpolations.Interpolator("REDISTRIBUTORR",
+            x -> redistributeRough(x, mul, mix));
+    private static final Interpolations.Interpolator redistributorT = new Interpolations.Interpolator("REDISTRIBUTORT",
+            x -> redistributeTumble(x, mul, mix));
 
     private static final Interpolations.Interpolator[] PREPARATIONS = {Interpolations.linear, Interpolations.smooth,
             Interpolations.smoother, redistributor, redistributor2, redistributorC, redistributorC2, redistributorCC,
-            redistributorL, redistributorL2, };
+            redistributorL, redistributorL2, redistributorX, redistributorR, redistributorT};
     private int prep0 = 0;
     private int prep1 = 0;
 
@@ -310,6 +351,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         System.out.println("mul = " + mul);
                         System.out.println("gamma = " + gamma);
                         System.out.println("mix = " + mix);
+                        System.out.println("Using " + PREPARATIONS[prep0].tag + " and " + PREPARATIONS[prep1].tag);
                         break;
                     case Q:
                     case ESCAPE: {
