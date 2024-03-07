@@ -40,6 +40,9 @@
 
 package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.TrigTools;
+
 /**
  * Fast approximations of math methods that reach roughly the right answer most of the time.
  * Ported from <a href="https://code.google.com/archive/p/fastapprox/">fastapprox</a>, which is open source
@@ -49,26 +52,182 @@ public final class RoughMath {
     private RoughMath() {
     }
 
+    // EXPONENTIAL AND LOGARITHMIC FUNCTIONS
+
+    /**
+     * Approximates {@code Math.pow(2.0, p)} with single-precision, somewhat roughly.
+     * @param p the power to raise 2 to; can be any float
+     * @return an approximation of 2 raised to the p power; can be any float greater than 0
+     */
     public static float pow2Rough (float p)
     {
-        final float clipp = Math.max(-126.0f, p);
-        final float z = clipp - (int)(clipp + 126.0f) + 126.0f;
-        return Float.intBitsToFloat((int) ( (1 << 23) * (clipp + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z)));
+        final float clip = Math.max(-126.0f, p);
+        final float z = clip - (int)(clip + 126.0f) + 126.0f;
+        return BitConversion.intBitsToFloat((int) ( (1 << 23) * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z)));
     }
-
+    /**
+     * Approximates {@code Math.pow(2.0, p)} with single-precision, very roughly.
+     * @param p the power to raise 2 to; can be any float
+     * @return an approximation of 2 raised to the p power; can be any float greater than 0
+     */
     public static float pow2Rougher (float p)
     {
-        return Float.intBitsToFloat( (int)((1 << 23) * (Math.max(-126.0f, p) + 126.94269504f)));
+        return BitConversion.intBitsToFloat( (int)((1 << 23) * (Math.max(-126.0f, p) + 126.94269504f)));
     }
 
+    /**
+     * Approximates {@code Math.pow(Math.E, p)} with single-precision, somewhat roughly.
+     * @param p the power to raise E to; can be any float
+     * @return an approximation of E raised to the p power; can be any float greater than 0
+     */
     public static float expRough (float p)
     {
-        return pow2Rough (1.442695040f * p);
+        final float clip = Math.max(-126.0f, p * 1.442695040f);
+        final float z = clip - (int)(clip + 126.0f) + 126.0f;
+        return BitConversion.intBitsToFloat((int) ( (1 << 23) * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z)));
     }
 
+    /**
+     * Approximates {@code Math.pow(Math.E, p)} with single-precision, very roughly.
+     * @param p the power to raise E to; can be any float
+     * @return an approximation of E raised to the p power; can be any float greater than 0
+     */
     public static float expRougher (float p)
     {
-        return pow2Rougher (1.442695040f * p);
+        return BitConversion.intBitsToFloat( (int)((1 << 23) * (Math.max(-126.0f, 1.442695040f * p) + 126.94269504f)));
     }
 
+    /**
+     * Approximates the logarithm of {@code x} with base 2, using single-precision, somewhat roughly.
+     * @param x the argument to the logarithm; must be greater than 0
+     * @return an approximation of the logarithm of x with base 2; can be any float
+     */
+    public static float log2Rough (float x)
+    {
+        final int vx = BitConversion.floatToIntBits(x);
+        final float mx = BitConversion.intBitsToFloat((vx & 0x007FFFFF) | 0x3f000000);
+        return vx * 1.1920928955078125e-7f - 124.22551499f - 1.498030302f * mx - 1.72587999f / (0.3520887068f + mx);
+    }
+
+    /**
+     * Approximates the natural logarithm of {@code x} (that is, with base E), using single-precision, somewhat roughly.
+     * @param x the argument to the logarithm; must be greater than 0
+     * @return an approximation of the logarithm of x with base E; can be any float
+     */
+    public static float logRough (float x)
+    {
+        final int vx = BitConversion.floatToIntBits(x);
+        final float mx = BitConversion.intBitsToFloat((vx & 0x007FFFFF) | 0x3f000000);
+        return (vx * 1.1920928955078125e-7f - 124.22551499f - 1.498030302f * mx - 1.72587999f / (0.3520887068f + mx)) * 0.69314718f;
+    }
+
+    /**
+     * Approximates the logarithm of {@code x} with base 2, using single-precision, very roughly.
+     * @param x the argument to the logarithm; must be greater than 0
+     * @return an approximation of the logarithm of x with base 2; can be any float
+     */
+    public static float log2Rougher (float x){
+        return BitConversion.floatToIntBits(x) * 1.1920928955078125e-7f - 126.94269504f;
+    }
+
+    /**
+     * Approximates the natural logarithm of {@code x} (that is, with base E), using single-precision, very roughly.
+     * @param x the argument to the logarithm; must be greater than 0
+     * @return an approximation of the logarithm of x with base E; can be any float
+     */
+    public static float logRougher (float x){
+        return BitConversion.floatToIntBits(x) * 8.2629582881927490e-8f - 87.989971088f;
+    }
+
+    // HYPERBOLIC TRIGONOMETRIC FUNCTIONS
+
+    /**
+     * Approximates {@code Math.sinh(p)}, somewhat roughly.
+     * <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions">Wikipedia's page on hyperbolic functions</a> may be useful.
+     * @param p the argument to sinh; can be any float
+     * @return an approximation of the hyperbolic sine of p; can be any float
+     */
+    public static float sinhRough (float p)
+    {
+        return 0.5f * (expRough (p) - expRough (-p));
+    }
+
+    /**
+     * Approximates {@code Math.sinh(p)}, very roughly.
+     * <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions">Wikipedia's page on hyperbolic functions</a> may be useful.
+     * @param p the argument to sinh; can be any float
+     * @return an approximation of the hyperbolic sine of p; can be any float
+     */
+    public static float sinhRougher (float p)
+    {
+        return 0.5f * (expRougher (p) - expRougher (-p));
+    }
+
+    /**
+     * Approximates {@code Math.cosh(p)}, somewhat roughly.
+     * <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions">Wikipedia's page on hyperbolic functions</a> may be useful.
+     * @param p the argument to cosh; can be any float
+     * @return an approximation of the hyperbolic cosine of p; can be any float greater than or equal to 1
+     */
+    public static float coshRough (float p)
+    {
+        return 0.5f * (expRough (p) + expRough (-p));
+    }
+
+    /**
+     * Approximates {@code Math.cosh(p)}, very roughly.
+     * <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions">Wikipedia's page on hyperbolic functions</a> may be useful.
+     * @param p the argument to cosh; can be any float
+     * @return an approximation of the hyperbolic cosine of p; can be any float greater than or equal to 1
+     */
+    public static float coshRougher (float p)
+    {
+        return 0.5f * (expRougher (p) + expRougher (-p));
+    }
+
+    /**
+     * Approximates {@code Math.tanh(p)}, somewhat roughly.
+     * <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions">Wikipedia's page on hyperbolic functions</a> may be useful.
+     * @param p the argument to tanh; can be any float
+     * @return an approximation of the hyperbolic tangent of p; between -1 and 1 inclusive
+     */
+    public static float tanhRough (float p)
+    {
+        return -1.0f + 2.0f / (1.0f + expRough (-2.0f * p));
+    }
+
+    /**
+     * Approximates {@code Math.tanh(p)}, very roughly.
+     * <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions">Wikipedia's page on hyperbolic functions</a> may be useful.
+     * @param p the argument to tanh; can be any float
+     * @return an approximation of the hyperbolic tangent of p; between -1 and 1 inclusive
+     */
+    public static float tanhRougher (float p)
+    {
+        return -1.0f + 2.0f / (1.0f + expRougher (-2.0f * p));
+    }
+
+    // LOGISTIC FUNCTION
+
+    /**
+     * Approximates the <a href="https://en.wikipedia.org/wiki/Logistic_function">standard logistic function</a>, somewhat roughly.
+     * This is also called the sigmoid function, or expit. It is the same as {@link #tanhRough(float)}, scaled, with an offset.
+     * @param x the parameter to the standard logistic function; can be any float
+     * @return an approximation of the logistic function of x; between 0 and 1 inclusive
+     */
+    public static float logisticRough (float x)
+    {
+        return 1.0f / (1.0f + expRough (-x));
+    }
+
+    /**
+     * Approximates the <a href="https://en.wikipedia.org/wiki/Logistic_function">standard logistic function</a>, very roughly.
+     * This is also called the sigmoid function, or expit. It is the same as {@link #tanhRough(float)}, scaled, with an offset.
+     * @param x the parameter to the standard logistic function; can be any float
+     * @return an approximation of the logistic function of x; between 0 and 1 inclusive
+     */
+    public static float logisticRougher (float x)
+    {
+        return 1.0f / (1.0f + expRougher (-x));
+    }
 }

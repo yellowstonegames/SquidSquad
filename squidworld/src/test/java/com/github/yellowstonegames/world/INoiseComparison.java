@@ -41,6 +41,7 @@ import static com.badlogic.gdx.Input.Keys.*;
 /**
  */
 public class INoiseComparison extends ApplicationAdapter {
+    public static float mul =  6.03435f, gamma = 1f, mix = 0.5f, mixRaw = 0, bias = 0.5f, favor = 0f;
     /**
      * A decent approximation of {@link Math#exp(double)} for small float arguments, meant to be faster than Math's
      * version for floats at the expense of accuracy. This uses the 2/2 Padé
@@ -79,7 +80,6 @@ public class INoiseComparison extends ApplicationAdapter {
         final float xx = Math.min(x * x * mul, 6.03435f), axx = 0.1400122886866665f * xx;
         return Math.copySign((float) Math.sqrt(1.0051551f - exp(xx * (-1.2732395447351628f - axx) / (0.9952389057917015f + axx))), x);
     }
-    public static float mul =  6.03435f, gamma = 1f, mix = 0.5f, mixRaw = 0;
     public static float redistributeNormalPrecise(float x) {
         final double xx = x * x * mul, axx = 0.1400122886866665 * xx;
         return Math.copySign((float) Math.sqrt(1.0 - Math.exp(xx * (-1.2732395447351628 - axx) / (1.0 + axx))), x);
@@ -113,9 +113,39 @@ public class INoiseComparison extends ApplicationAdapter {
         final float denormal = Math.copySign((float) Math.sqrt(1.0f - Math.exp(xx * (-1.2732395447351628f - axx) / (1.0f + axx))), x);
         return MathTools.lerp(n, denormal * 0.5f + 0.5f, mix);
     }
+
+    /**
+     * Redistributes a noise value {@code n} using the given {@code mul}, {@code mix}, and {@code bias} parameters. This
+     * is meant to push high-octave noise results from being centrally biased to being closer to uniform. Getting the
+     * values right probably requires tweaking them manually; for {@link SimplexNoise}, using mul=2.3f, mix=0.75f, and
+     * bias=1f works well with 2 or more octaves (and not at all well for one octave, which can use mix=0.0f to avoid
+     * redistributing at all). This variation takes n in the 0f to 1f range, inclusive, and returns a value in the same
+     * range. You can give different bias values at different times to make noise that is more often high (when bias is
+     * above 1) or low (when bias is between 0 and 1). Using negative bias has undefined results. Bias should typically
+     * be calculated only when its value needs to change. If you have a variable {@code favor} that can have
+     * any float value and high values for favor should produce higher results from this function, you can get bias with
+     * {@code bias = (float)Math.exp(-favor);} .
+     *
+     * @param n a prepared noise value, between 0f and 1f inclusive
+     * @param mul a positive multiplier where higher values make extreme results more likely; often around 2.3f
+     * @param mix a blending amount between 0f and 1f where lower values keep {@code n} more; often around 0.75f
+     * @param bias should be 1 to have no bias, between 0 and 1 for lower results, and above 1 for higher results
+     * @return a noise value between 0f and 1f, inclusive
+     */
+    public static float redistributeConfigurable(float n, float mul, float mix, float bias) {
+        final float x = (n - 0.5f) * 2f, xx = x * x * mul, axx = 0.1400122886866665f * xx;
+        final float denormal = Math.copySign((float) Math.sqrt(1.0f - Math.exp(xx * (-1.2732395447351628f - axx) / (1.0f + axx))), x);
+        return (float) Math.pow(MathTools.lerp(n, denormal * 0.5f + 0.5f, mix), bias);
+    }
+
     public static float redistributeRough(float n, float mul, float mix) {
         final float x = (n - 0.5f) * 2f, xx = x * x * mul, axx = 0.1400122886866665f * xx;
         final float denormal = Math.copySign((float) Math.sqrt(1.0f - RoughMath.expRough(xx * (-1.2732395447351628f - axx) / (1.0f + axx))), x);
+        return MathTools.lerp(n, denormal * 0.5f + 0.5f, mix);
+    }
+    public static float redistributeRougher(float n, float mul, float mix) {
+        final float x = (n - 0.5f) * 2f, xx = x * x * mul, axx = 0.1400122886866665f * xx;
+        final float denormal = Math.copySign((float) Math.sqrt(1.0f - RoughMath.expRougher(xx * (-1.2732395447351628f - axx) / (1.0f + axx))), x);
         return MathTools.lerp(n, denormal * 0.5f + 0.5f, mix);
     }
 
@@ -162,12 +192,17 @@ public class INoiseComparison extends ApplicationAdapter {
             x -> redistributeRough(x, mul, mix));
     private static final Interpolations.Interpolator redistributorT = new Interpolations.Interpolator("REDISTRIBUTORT",
             x -> redistributeTumble(x, mul, mix));
+    private static final Interpolations.Interpolator redistributorRR = new Interpolations.Interpolator("REDISTRIBUTORRR",
+            x -> redistributeRougher(x, mul, mix));
+    private static final Interpolations.Interpolator redistributorXB = new Interpolations.Interpolator("REDISTRIBUTORXB",
+            x -> redistributeConfigurable(x, mul, mix, bias));
 
     private static final Interpolations.Interpolator[] PREPARATIONS = {Interpolations.linear, Interpolations.smooth,
             Interpolations.smoother, redistributor, redistributor2, redistributorC, redistributorC2, redistributorCC,
-            redistributorL, redistributorL2, redistributorX, redistributorR, redistributorT};
+            redistributorL, redistributorL2, redistributorX, redistributorR, redistributorT, redistributorRR,
+            redistributorXB};
     private int prep0 = 0;
-    private int prep1 = 0;
+    private int prep1 = PREPARATIONS.length - 1;
 
     private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
@@ -205,8 +240,8 @@ public class INoiseComparison extends ApplicationAdapter {
     private int index1 = 0;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
-    private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, Interpolations.linear);
-    private final NoiseAdjustment adj1 = new NoiseAdjustment(wrap1, Interpolations.linear);
+    private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
+    private final NoiseAdjustment adj1 = new NoiseAdjustment(wrap1, PREPARATIONS[prep1]);
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
@@ -351,6 +386,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         System.out.println("mul = " + mul);
                         System.out.println("gamma = " + gamma);
                         System.out.println("mix = " + mix);
+                        System.out.println("bias = " + bias);
                         System.out.println("Using " + PREPARATIONS[prep0].tag + " and " + PREPARATIONS[prep1].tag);
                         break;
                     case Q:
@@ -582,6 +618,8 @@ public class INoiseComparison extends ApplicationAdapter {
              gamma *= (UIUtils.shift() ? 1.03125f : 1f/1.03125f);
         if(Gdx.input.isKeyPressed(X)) // mixer for redistributorL
              mix = (float)Math.tanh(mixRaw += (UIUtils.shift() ? 0.03125f : -0.03125f)) * 0.5f + 0.5f;
+        if(Gdx.input.isKeyPressed(B)) // bias
+            bias = RoughMath.pow2Rougher(-(favor += (UIUtils.shift() ? 0.03125f : -0.03125f)));
         // standard clear the background routine for libGDX
         ScreenUtils.clear(0f, 0f, 0f, 1f);
         Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
