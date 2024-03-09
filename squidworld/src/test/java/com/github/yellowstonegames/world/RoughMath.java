@@ -41,10 +41,14 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.TrigTools;
 
 /**
  * Fast approximations of math methods that reach roughly the right answer most of the time.
+ * The math methods this covers include exponential ({@link #expRough(float)}, {@link #pow2Rough(float)}), logarithmic
+ * ({@link #logRough(float)}, {@link #log2Rough(float)}), hyperbolic ({@link #sinhRough(float)},
+ * {@link #coshRough(float)}), {@link #tanhRough(float)}), and logistic ({@link #logisticRough(float)}) functions, as
+ * well as less-precise but usually-faster versions with the suffix "Rougher" instead of "Rough".
+ * <br>
  * Ported from <a href="https://code.google.com/archive/p/fastapprox/">fastapprox</a>, which is open source
  * under the New BSD License.
  */
@@ -63,7 +67,7 @@ public final class RoughMath {
     {
         final float clip = Math.max(-126.0f, p);
         final float z = clip - (int)(clip + 126.0f) + 126.0f;
-        return BitConversion.intBitsToFloat((int) ( (1 << 23) * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z)));
+        return BitConversion.intBitsToFloat((int) (0x800000 * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z)));
     }
     /**
      * Approximates {@code Math.pow(2.0, p)} with single-precision, very roughly.
@@ -72,7 +76,7 @@ public final class RoughMath {
      */
     public static float pow2Rougher (float p)
     {
-        return BitConversion.intBitsToFloat( (int)((1 << 23) * (Math.max(-126.0f, p) + 126.94269504f)));
+        return BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, p) + 126.94269504f)));
     }
 
     /**
@@ -84,7 +88,7 @@ public final class RoughMath {
     {
         final float clip = Math.max(-126.0f, p * 1.442695040f);
         final float z = clip - (int)(clip + 126.0f) + 126.0f;
-        return BitConversion.intBitsToFloat((int) ( (1 << 23) * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z)));
+        return BitConversion.intBitsToFloat((int) (0x800000 * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z)));
     }
 
     /**
@@ -94,7 +98,7 @@ public final class RoughMath {
      */
     public static float expRougher (float p)
     {
-        return BitConversion.intBitsToFloat( (int)((1 << 23) * (Math.max(-126.0f, 1.442695040f * p) + 126.94269504f)));
+        return BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, 1.442695040f * p) + 126.94269504f)));
     }
 
     /**
@@ -193,7 +197,10 @@ public final class RoughMath {
      */
     public static float tanhRough (float p)
     {
-        return -1.0f + 2.0f / (1.0f + expRough (-2.0f * p));
+        // -1f + 2f / (1f + exp(-2f * x))
+        final float clip = Math.max(-126.0f, -2.885390043258667f * p);
+        final float z = clip - (int)(clip + 126.0f) + 126.0f;
+        return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat((int) (0x800000 * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z))));
     }
 
     /**
@@ -204,7 +211,8 @@ public final class RoughMath {
      */
     public static float tanhRougher (float p)
     {
-        return -1.0f + 2.0f / (1.0f + expRougher (-2.0f * p));
+        // -1f + 2f / (1f + exp(-2f * x))
+        return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * p) + 126.94269504f))));
     }
 
     // LOGISTIC FUNCTION
@@ -217,7 +225,10 @@ public final class RoughMath {
      */
     public static float logisticRough (float x)
     {
-        return 1.0f / (1.0f + expRough (-x));
+        // 1f / (1f + exp(-x))
+        final float clip = Math.max(-126.0f, x * -1.442695040f);
+        final float z = clip - (int)(clip + 126.0f) + 126.0f;
+        return 1.0f / (1.0f + BitConversion.intBitsToFloat((int) (0x800000 * (clip + 121.2740575f + 27.7280233f / (4.84252568f - z) - 1.49012907f * z))));
     }
 
     /**
@@ -228,6 +239,7 @@ public final class RoughMath {
      */
     public static float logisticRougher (float x)
     {
-        return 1.0f / (1.0f + expRougher (-x));
+        // 1f / (1f + exp(-x))
+        return 1.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -1.442695040f * x) + 126.94269504f))));
     }
 }
