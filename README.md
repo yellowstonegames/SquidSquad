@@ -147,7 +147,23 @@ changes to those files to keep things like scene2d.ui from libGDX.
 
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
-on the SquidSquad module(s) you want, and the rest will be obtained by Gradle.
+on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
+released version such as the current `4.0.0-beta1`, which can be obtained from the main source for dependencies on the
+JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
+dependencies [can be seen for each version here](https://search.maven.org/search?q=g:com.squidpony), and look like
+`implementation 'com.squidpony:squidcore:4.0.0-beta1'`.
+
+As an alternative, [the JitPack page is here](https://jitpack.io/#yellowstonegames/squidsquad); go to the Commits tab, choose any commit
+except for `-SNAPSHOT`, click "Get It", and wait to see if it built successfully. Maybe get yourself some of your
+beverage of choice during this time. If it built successfully, "Get It" will be green; if it failed, it will have
+changed to "Report" in red. You probably don't have to report a build failure; these often are caused by the build
+timing out, rather than any glitch on JitPack's side. If you refresh the page (you might have to click "Get It" again,
+though this time it won't take any time at all) and scroll down, all the dependencies will be in a drop-down for you
+to select as you see fit. The first Gradle code section isn't needed here; even year-old gdx-setup and gdx-liftoff
+projects can download from JitPack like they can from anywhere else, without extra configuration. Dependencies using
+JitPack look like `implementation 'com.github.yellowstonegames.squidsquad:squidcore:0123456789'`, where `0123456789`
+is a commit version (usually 10 hex digits). Older versions use PascalCase for the names of modules, such as `SquidCore`
+instead of `squidcore`.
 
 For GWT... OK. Deep breaths. Please use [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff). Do not use
 gdx-setup. Use Maven only if you are an absolute wizard. Select SquidSquad dependencies here, and gdx-liftoff will take
@@ -159,22 +175,14 @@ they will probably all be in the dependencies, but this ensures all the versions
 projects are present.
 
 Liftoff fetches SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.0-alpha3`. This release is currently broken if you use it without changes, because Liftoff will
-use a much newer dependency (by default) on `digital` than what SquidSquad 4.0.0-alpha3 was built with. The quickest,
-dirtiest fix is to change the dependencies on four libraries to match what they were in alpha3. These changes replace
-the corresponding lines in `gradle.properties`:
+such release is `4.0.0-beta1`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
+The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
+`com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are
+updating from before `4.0.0-beta1` to that release or later; now they are all lower-case to match conventions, so
+`SquidGrid` is now `squidgrid`. It's referred to as `squidgrid` in other places, so this simplifies things.
 
-```
-digitalVersion=0.3.3
-juniperVersion=0.3.5
-jdkgdxdsVersion=1.3.2
-jdkgdxdsInteropVersion=1.3.2.0
-```
-
-A probably-better option is to use a more recent build of SquidSquad, using JitPack to build a recent commit.
-You should use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property. The group is
-different for JitPack builds of SquidSquad; change `com.squidpony` to `com.github.yellowstonegames.squidsquad` when
-using JitPack. JitPack is generally recommended over the Maven Central alpha releases, because you can (and really
+JitPack is generally recommended over the Maven Central alpha or beta releases, because you can (and really
 should) specify an exact commit to use on the Commits tab (click "Get It" on any commit except -SNAPSHOT; this will
 provide useful info below once it... eventually... builds). I strongly discourage using JitPack's -SNAPSHOT versions,
 because they can change without warning and don't tell you what commit you are actually using; use a commit instead!
