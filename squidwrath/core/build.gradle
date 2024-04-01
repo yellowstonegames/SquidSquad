@@ -1,16 +1,17 @@
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-ext.projectName = 'SquidFreezeCore'
+ext.projectName = 'SquidWrathCore'
 eclipse.project.name = ext.projectName
 sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
-javadoc.destinationDir = file("../../docs/squidfreeze/$name/apidocs")
+javadoc.destinationDir = file("../../docs/squidwrath/$name/apidocs")
 
 dependencies {
     api project(':squidcore')
 
-	api("com.github.tommyettinger:kryo-digital:0.4.7.1")
-	api("com.github.tommyettinger:kryo-jdkgdxds:1.4.8.1")
-	api("com.github.tommyettinger:kryo-juniper:0.5.0.1")
+	api("com.github.tommyettinger:tantrum-digital:0.4.7.0")
+	api("com.github.tommyettinger:tantrum-jdkgdxds:1.4.8.0")
+	api("com.github.tommyettinger:tantrum-juniper:0.5.0.0")
 
+    testImplementation "org.slf4j:slf4j-nop:$slf4jVersion"
     testImplementation "junit:junit:$junitVersion"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }
