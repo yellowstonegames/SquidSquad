@@ -16,12 +16,22 @@
 
 package com.github.yellowstonegames.wrath.core;
 
+import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
+import com.github.tommyettinger.tantrum.juniper.AceRandomSerializer;
+import com.github.tommyettinger.tantrum.juniper.EnhancedRandomSerializer;
 import com.github.yellowstonegames.core.Dice;
+import com.github.yellowstonegames.core.GapShuffler;
+import com.github.yellowstonegames.core.IntShuffler;
+import com.github.yellowstonegames.core.WeightedTable;
 import io.fury.Fury;
 import io.fury.config.Language;
 import org.junit.Assert;
 import org.junit.Test;
 
+@SuppressWarnings("rawtypes")
 public class CoreTest {
     @Test
     public void testDiceRule() {
@@ -39,28 +49,23 @@ public class CoreTest {
             Assert.assertEquals(data, data2);
     }
 
-//    @Test
-//    public void testGapShuffler() {
-//        Kryo kryo = new Kryo();
-//        kryo.register(EnhancedRandom.class, new EnhancedRandomSerializer());
-//        kryo.register(WhiskerRandom.class, new WhiskerRandomSerializer());
-//        kryo.register(ObjectList.class, new CollectionSerializer<ObjectList<?>>());
-//        kryo.register(GapShuffler.class, new GapShufflerSerializer());
-//
-//        GapShuffler<String> data = new GapShuffler<>(new String[]{"Foo", "Bar", "Baz", "Quux"}, new WhiskerRandom(123));
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        kryo.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            GapShuffler data2 = kryo.readObject(input, GapShuffler.class);
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
+    @Test
+    public void testGapShuffler() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(EnhancedRandom.class, new EnhancedRandomSerializer(fury));
+        fury.registerSerializer(AceRandom.class, new AceRandomSerializer(fury));
+        fury.registerSerializer(ObjectList.class, new ObjectListSerializer(fury));
+        fury.register(GapShuffler.class);
+
+        GapShuffler<String> data = new GapShuffler<>(new String[]{"Foo", "Bar", "Baz", "Quux"}, new AceRandom(123));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        GapShuffler data2 = fury.deserializeJavaObject(bytes, GapShuffler.class);
+        Assert.assertEquals(data.next(), data2.next());
+        Assert.assertEquals(data.next(), data2.next());
+        Assert.assertEquals(data, data2);
+    }
+
 //    @Test
 //    public void testProbabilityTable() {
 //        Kryo kryo = new Kryo();
@@ -92,47 +97,39 @@ public class CoreTest {
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
-//
-//    @Test
-//    public void testWeightedTable() {
-//        Kryo kryo = new Kryo();
-//        kryo.register(WeightedTable.class, new WeightedTableSerializer());
-//
-//        WeightedTable data = new WeightedTable(1f, 2f, 3f, 4f, 0.5f, 5.5f);
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        kryo.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            WeightedTable data2 = kryo.readObject(input, WeightedTable.class);
-//            Assert.assertEquals(data.random(0L), data2.random(0L));
-//            Assert.assertEquals(data.random(1L), data2.random(1L));
-//            Assert.assertEquals(data.random(2L), data2.random(2L));
-//            Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testIntShuffler() {
-//        Kryo kryo = new Kryo();
-//        kryo.register(IntShuffler.class, new IntShufflerSerializer());
-//
-//        IntShuffler data = new IntShuffler(10, 123L);
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        kryo.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            IntShuffler data2 = kryo.readObject(input, IntShuffler.class);
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+
+    @Test
+    public void testWeightedTable() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(WeightedTable.class);
+
+        WeightedTable data = new WeightedTable(1f, 2f, 3f, 4f, 0.5f, 5.5f);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        WeightedTable data2 = fury.deserializeJavaObject(bytes, WeightedTable.class);
+        Assert.assertEquals(data.random(0L), data2.random(0L));
+        Assert.assertEquals(data.random(1L), data2.random(1L));
+        Assert.assertEquals(data.random(2L), data2.random(2L));
+        Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
+        Assert.assertEquals(data, data2);
+
+    }
+
+    @Test
+    public void testIntShuffler() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(IntShuffler.class);
+
+        IntShuffler data = new IntShuffler(10, 123L);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        IntShuffler data2 = fury.deserializeJavaObject(bytes, IntShuffler.class);
+        Assert.assertEquals(data.next(), data2.next());
+        Assert.assertEquals(data.next(), data2.next());
+        Assert.assertEquals(data.next(), data2.next());
+        Assert.assertEquals(data.next(), data2.next());
+        Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
+        Assert.assertEquals(data, data2);
+
+    }
 }
