@@ -20,9 +20,15 @@ import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import com.github.tommyettinger.digital.Hasher;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 import static com.github.tommyettinger.digital.Hasher.*;
 
@@ -51,8 +57,8 @@ import static com.github.tommyettinger.digital.Hasher.*;
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 @Beta
-public class IntShuffler {
-    public final int bound;
+public class IntShuffler implements Externalizable {
+    protected int bound;
     protected int index, pow4, halfBits, leftMask, rightMask;
     protected long key0, key1, key2, key3;
 
@@ -287,5 +293,64 @@ public class IntShuffler {
         result = 31 * result + (int) (key2 ^ (key2 >>> 32));
         result = 31 * result + (int) (key3 ^ (key3 >>> 32));
         return result;
+    }
+
+    public int getBound() {
+        return bound;
+    }
+
+    /**
+     * The object implements the writeExternal method to save its contents
+     * by calling the methods of DataOutput for its primitive values or
+     * calling the writeObject method of ObjectOutput for objects, strings,
+     * and arrays.
+     *
+     * @param out the stream to write the object to
+     * @throws IOException Includes any I/O exceptions that may occur
+     * @serialData Overriding methods should use this tag to describe
+     * the data layout of this Externalizable object.
+     * List the sequence of element types and, if possible,
+     * relate the element to a public/protected field and/or
+     * method of this Externalizable class.
+     */
+    @GwtIncompatible
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(bound);
+        out.writeInt(index);
+        out.writeInt(pow4);
+        out.writeInt(halfBits);
+        out.writeInt(leftMask);
+        out.writeInt(rightMask);
+        out.writeLong(key0);
+        out.writeLong(key1);
+        out.writeLong(key2);
+        out.writeLong(key3);
+    }
+
+    /**
+     * The object implements the readExternal method to restore its
+     * contents by calling the methods of DataInput for primitive
+     * types and readObject for objects, strings and arrays.  The
+     * readExternal method must read the values in the same sequence
+     * and with the same types as were written by writeExternal.
+     *
+     * @param in the stream to read data from in order to restore the object
+     * @throws IOException            if I/O errors occur
+     * @throws ClassNotFoundException If the class for an object being
+     *                                restored cannot be found.
+     */
+    @GwtIncompatible
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        bound = in.readInt();
+        index = in.readInt();
+        pow4 = in.readInt();
+        halfBits = in.readInt();
+        leftMask = in.readInt();
+        rightMask = in.readInt();
+        key0 = in.readLong();
+        key1 = in.readLong();
+        key2 = in.readLong();
+        key3 = in.readLong();
+
     }
 }
