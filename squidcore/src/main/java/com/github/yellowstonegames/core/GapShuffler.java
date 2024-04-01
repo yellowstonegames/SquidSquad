@@ -17,12 +17,18 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.digital.Hasher;
 
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -34,25 +40,25 @@ import java.util.Iterator;
  * a size that can be checked, but Iterables can be infinite (and in this case, this one is).
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
-public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
+public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Externalizable {
     public @NonNull EnhancedRandom random;
     protected @NonNull ObjectList<T> elements;
     protected int index;
-    protected GapShuffler() {
-        random = new TricycleRandom();
+    public GapShuffler() {
+        random = new AceRandom();
         elements = new ObjectList<>();
         index = 0;
     }
 
     public GapShuffler(T single)
     {
-        random = new TricycleRandom();
+        random = new AceRandom();
         elements = new ObjectList<>(1);
         elements.add(single);
         index = 0;
     }
     /**
-     * Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate
+     * Constructor that takes any Collection of T, shuffles it with an unseeded AceRandom, and can then iterate
      * infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a single
      * element should always have a large amount of "gap" in order between one appearance and the next. It helps to keep
      * the appearance of a gap if every item in elements is unique, but that is not necessary and does not affect how
@@ -61,12 +67,12 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public GapShuffler(Collection<T> elements)
     {
-        this(elements, new TricycleRandom());
+        this(elements, new AceRandom());
 
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded by {@code seed}, and can then
+     * Constructor that takes any Collection of T, shuffles it with an AceRandom seeded by {@code seed}, and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
      * to keep the appearance of a gap if every item in elements is unique, but that is not necessary and does not
@@ -75,11 +81,12 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public GapShuffler(Collection<T> elements, String seed)
     {
-        this(elements, new TricycleRandom(Hasher.gaap.hash64(seed), Hasher.furfur.hash64(seed), Hasher.raum.hash64(seed)));
+        this(elements, new AceRandom(Hasher.gaap.hash64(seed), Hasher.purson.hash64(seed), Hasher.furfur.hash64(seed),
+                Hasher.focalor.hash64(seed), Hasher.raum.hash64(seed)));
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as a {@link TricycleRandom},
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as an {@link AceRandom},
      * {@link WhiskerRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
@@ -87,7 +94,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      * how this works. The random parameter is copied so externally using it won't change the order this produces its
      * values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.
      * @param items a Collection of T that will not be modified
-     * @param random an EnhancedRandom, such as a WhiskerRandom or TricycleRandom; will be copied and not used directly
+     * @param random an EnhancedRandom, such as a WhiskerRandom or AceRandom; will be copied and not used directly
      */
     public GapShuffler(Collection<T> items, EnhancedRandom random)
     {
@@ -95,7 +102,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as a {@link TricycleRandom},
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as an {@link AceRandom},
      * {@link WhiskerRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
@@ -116,7 +123,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as a {@link TricycleRandom},
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as an {@link AceRandom},
      * {@link WhiskerRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have a large amount of "gap" in order between one appearance and the next. It helps
@@ -178,7 +185,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with an unseeded TricycleRandom, and can then iterate infinitely
+     * Constructor that takes any Collection of T, shuffles it with an unseeded AceRandom, and can then iterate infinitely
      * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
      * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
      * of a gap if every item in elements is unique, but that is not necessary and does not affect how this works.
@@ -186,11 +193,11 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public GapShuffler(T[] elements)
     {
-        this(elements, new TricycleRandom());
+        this(elements, new AceRandom());
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with a TricycleRandom seeded with the given CharSequence
+     * Constructor that takes any Collection of T, shuffles it with an AceRandom seeded with the given CharSequence
      * (hashed 3 different ways by {@link Hasher}), and can then iterate infinitely
      * through mostly-random shuffles of the given collection. These shuffles are spaced so that a single element should
      * always have a large amount of "gap" in order between one appearance and the next. It helps to keep the appearance
@@ -199,11 +206,11 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      */
     public GapShuffler(T[] elements, CharSequence seed)
     {
-        this(elements, new TricycleRandom(Hasher.gaap.hash64(seed), Hasher.furfur.hash64(seed), Hasher.raum.hash64(seed)));
+        this(elements, new AceRandom(Hasher.gaap.hash64(seed), Hasher.furfur.hash64(seed), Hasher.raum.hash64(seed)));
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as a TricycleRandom
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as an AceRandom
      * or WhiskerRandom), and can then iterate infinitely through mostly-random shuffles of the given collection.
      * These shuffles are spaced
      * so that a single element should always have a large amount of "gap" in order between one appearance and the next.
@@ -211,7 +218,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      * affect how this works. The random parameter is copied so externally using it won't change the order this produces
      * its values; the random field is used whenever the iterator needs to re-shuffle the internal ordering of items.
      * @param items an array of T that will not be modified
-     * @param random an EnhancedRandom, such as a TricycleRandom or WhiskerRandom; will be copied and not used directly
+     * @param random an EnhancedRandom, such as an AceRandom or WhiskerRandom; will be copied and not used directly
      */
     public GapShuffler(T[] items, EnhancedRandom random)
     {
@@ -222,7 +229,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     }
 
     /**
-     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as a {@link TricycleRandom},
+     * Constructor that takes any Collection of T, shuffles it with the given EnhancedRandom (such as an {@link AceRandom},
      * {@link WhiskerRandom} or, if you need compatibility with SquidLib 3.0.0, a SilkRNG from squidold), and can then
      * iterate infinitely through mostly-random shuffles of the given collection. These shuffles are spaced so that a
      * single element should always have at least one "gap" element between one appearance and the next. It helps to
@@ -367,4 +374,46 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
         if (!random.equals(that.random)) return false;
         return elements.equals(that.elements);
     }
+
+
+    /**
+     * Requires the deserializer to be able to read in an {@link ObjectList} of {@code T} items, as well as a
+     * {@link EnhancedRandom}. These typically need to be registered before a GapShuffler can be written.
+     * If you are using Apache Fury, the concrete subclass of EnhancedRandom is required to be registered (typically this is
+     * {@link AceRandom}), but EnhancedRandom itself does not need to be registered.
+     *
+     * @param out the stream to write the object to
+     * @throws IOException Includes any I/O exceptions that may occur
+     * @serialData Overriding methods should use this tag to describe
+     * the data layout of this Externalizable object.
+     * List the sequence of element types and, if possible,
+     * relate the element to a public/protected field and/or
+     * method of this Externalizable class.
+     */
+    @GwtIncompatible
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(elements);
+        out.writeObject(random);
+        out.writeInt(index);
+    }
+
+    /**
+     * Requires the deserializer to be able to read in an {@link ObjectList} of {@code T} items, as well as an
+     * {@link EnhancedRandom}. These typically need to be registered before a GapShuffler can be read in.
+     * If you are using Apache Fury, the concrete subclass of EnhancedRandom is required to be registered (typically
+     * this is {@link AceRandom}), but EnhancedRandom itself does not need to be registered.
+     *
+     * @param in the stream to read data from in order to restore the object
+     * @throws IOException            if I/O errors occur
+     * @throws ClassNotFoundException If the class for an object being
+     *                                restored cannot be found.
+     */
+    @GwtIncompatible
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        //noinspection unchecked
+        elements = (ObjectList<T>) in.readObject();
+        random = (EnhancedRandom) in.readObject();
+        index = in.readInt();
+    }
+
 }
