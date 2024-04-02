@@ -38,6 +38,13 @@ import java.util.Iterator;
  * T, not a Collection, because it can iterate without stopping, infinitely, unless you break out of a foreach loop that
  * iterates through one of these, or call the iterator's next() method only a limited number of times. Collections have
  * a size that can be checked, but Iterables can be infinite (and in this case, this one is).
+ * <br>
+ * You can serialize this with <a href="https://fury.apache.org">Fury</a> without needing a serializer because it
+ * implements Externalizable. To do so, it needs {@link ObjectList} registered
+ * (<a href="https://github.com/tommyettinger/tantrum/blob/main/tantrum-jdkgdxds/src/main/java/com/github/tommyettinger/tantrum/jdkgdxds/ObjectListSerializer.java">the tantrum library has code for this already</a>),
+ * as well as the concrete subclass of {@link EnhancedRandom} that this uses (which you can also use tantrum for). The
+ * default subclass of EnhancedRandom used here is {@link AceRandom}, unless otherwise provided.
+ *
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
 public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Externalizable {

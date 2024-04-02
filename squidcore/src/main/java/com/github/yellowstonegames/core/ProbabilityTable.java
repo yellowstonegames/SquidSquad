@@ -33,8 +33,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 /**
- * A generic method of holding a probability table to determine weighted random
- * outcomes.
+ * A generic method of holding a probability table to determine weighted random outcomes.
  * <br>
  * The weights do not need to add up to any particular value; they will be
  * normalized when choosing a random entry. This class allows adding {@code T} items and the weights for
@@ -45,6 +44,14 @@ import java.io.ObjectOutput;
  * item, except it makes its own random choice of its own {@code T} items; you can use the nested table
  * with {@link #add(ProbabilityTable, int)} and {@link #addAllNested(ObjectIntMap)}. Actually getting a
  * randomly-selected item is easy; just use {@link #random()}.
+ * <br>
+ * You can serialize a ProbabilityTable in various ways. The class is {@link Externalizable}, which mostly
+ * matters if you use <a href="https://fury.apache.org">Fury serialization</a>. It can also be written and
+ * read with a specialized serializer from SquidStore or SquidFreeze, for JSON or Kryo respectively. All
+ * these options require having other types registered, which always includes {@code T}. Kryo and Fury
+ * also require {@link ObjectList}, {@link NumberedSet}, and {@link IntList} to be registered, plus the
+ * concrete subclass of {@link EnhancedRandom} used by the ProbabilityTable (which defaults to
+ * {@link WhiskerRandom}). Kryo also needs {@link EnhancedRandom} itself registered.
  *
  * @see WeightedTable An alternative for when you want to track the items separately from their weights, and don't need nested tables.
  *
