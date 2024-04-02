@@ -16,16 +16,19 @@
 
 package com.github.yellowstonegames.wrath.core;
 
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.tantrum.jdkgdxds.IntListSerializer;
+import com.github.tommyettinger.tantrum.jdkgdxds.NumberedSetSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.tommyettinger.tantrum.juniper.AceRandomSerializer;
 import com.github.tommyettinger.tantrum.juniper.EnhancedRandomSerializer;
-import com.github.yellowstonegames.core.Dice;
-import com.github.yellowstonegames.core.GapShuffler;
-import com.github.yellowstonegames.core.IntShuffler;
-import com.github.yellowstonegames.core.WeightedTable;
+import com.github.tommyettinger.tantrum.juniper.WhiskerRandomSerializer;
+import com.github.yellowstonegames.core.*;
 import io.fury.Fury;
 import io.fury.config.Language;
 import org.junit.Assert;
@@ -66,37 +69,33 @@ public class CoreTest {
         Assert.assertEquals(data, data2);
     }
 
-//    @Test
-//    public void testProbabilityTable() {
-//        Kryo kryo = new Kryo();
-//        kryo.register(EnhancedRandom.class, new EnhancedRandomSerializer());
-//        kryo.register(WhiskerRandom.class, new WhiskerRandomSerializer());
-//        kryo.register(ObjectList.class, new CollectionSerializer<ObjectList<?>>());
-//        kryo.register(NumberedSet.class, new CollectionSerializer<NumberedSet<?>>());
-//        kryo.register(IntList.class, new IntListSerializer());
-//        kryo.register(ProbabilityTable.class, new ProbabilityTableSerializer());
-//
-//        ProbabilityTable<String> data = new ProbabilityTable<>(new WhiskerRandom(123));
-//        data.add("Foo", 5);
-//        data.add("Bar", 4);
-//        data.add("Baz", 3);
-//        data.add("Quux", 1);
-//        ProbabilityTable<String> bonus = new ProbabilityTable<>(new WhiskerRandom(456));
-//        bonus.add("Magic", 1);
-//        bonus.add("Normality", 10);
-//        data.add(bonus, 6);
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        kryo.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            ProbabilityTable data2 = kryo.readObject(input, ProbabilityTable.class);
-//            Assert.assertEquals(data.random(), data2.random());
-//            Assert.assertEquals(data.random(), data2.random());
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+    @Test
+    public void testProbabilityTable() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(EnhancedRandom.class, new EnhancedRandomSerializer(fury));
+        fury.registerSerializer(WhiskerRandom.class, new WhiskerRandomSerializer(fury));
+        fury.registerSerializer(ObjectList.class, new ObjectListSerializer(fury));
+        fury.registerSerializer(NumberedSet.class, new NumberedSetSerializer(fury));
+        fury.registerSerializer(IntList.class, new IntListSerializer(fury));
+        fury.register(ProbabilityTable.class);
+
+        ProbabilityTable<String> data = new ProbabilityTable<>(new WhiskerRandom(123));
+        data.add("Foo", 5);
+        data.add("Bar", 4);
+        data.add("Baz", 3);
+        data.add("Quux", 1);
+        ProbabilityTable<String> bonus = new ProbabilityTable<>(new WhiskerRandom(456));
+        bonus.add("Magic", 1);
+        bonus.add("Normality", 10);
+        data.add(bonus, 6);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        ProbabilityTable data2 = fury.deserializeJavaObject(bytes, ProbabilityTable.class);
+        Assert.assertEquals(data.random(), data2.random());
+        Assert.assertEquals(data.random(), data2.random());
+        Assert.assertEquals(data, data2);
+    }
+
 
     @Test
     public void testWeightedTable() {

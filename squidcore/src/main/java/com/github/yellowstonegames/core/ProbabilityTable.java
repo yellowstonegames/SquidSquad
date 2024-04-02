@@ -25,6 +25,12 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 /**
  * A generic method of holding a probability table to determine weighted random
@@ -46,7 +52,7 @@ import com.github.tommyettinger.random.WhiskerRandom;
  *
  * @param <T> The type of object to be held in the table
  */
-public class ProbabilityTable<T> {
+public class ProbabilityTable<T> implements Externalizable {
     /**
      * The set of items that can be produced directly from {@link #random()} (without additional lookups).
      */
@@ -446,5 +452,54 @@ public class ProbabilityTable<T> {
         result = 421 * result + extraTable.hashCode();
         result = 83 * result + weights.hashCode();
         return result;
+    }
+
+    /**
+     * The object implements the writeExternal method to save its contents
+     * by calling the methods of DataOutput for its primitive values or
+     * calling the writeObject method of ObjectOutput for objects, strings,
+     * and arrays.
+     *
+     * @param out the stream to write the object to
+     * @throws IOException Includes any I/O exceptions that may occur
+     * @serialData Overriding methods should use this tag to describe
+     * the data layout of this Externalizable object.
+     * List the sequence of element types and, if possible,
+     * relate the element to a public/protected field and/or
+     * method of this Externalizable class.
+     */
+    @GwtIncompatible
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(rng);
+        out.writeObject(table);
+        out.writeObject(extraTable);
+        out.writeObject(weights);
+        out.writeInt(total);
+
+    }
+
+    /**
+     * The object implements the readExternal method to restore its
+     * contents by calling the methods of DataInput for primitive
+     * types and readObject for objects, strings and arrays.  The
+     * readExternal method must read the values in the same sequence
+     * and with the same types as were written by writeExternal.
+     *
+     * @param in the stream to read data from in order to restore the object
+     * @throws IOException            if I/O errors occur
+     * @throws ClassNotFoundException If the class for an object being
+     *                                restored cannot be found.
+     */
+    @GwtIncompatible
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        rng = (EnhancedRandom) in.readObject();
+        table.clear();
+        table.addAll((NumberedSet<T>)in.readObject());
+        extraTable.clear();
+        extraTable.addAll((ObjectList<ProbabilityTable<T>>)in.readObject());
+        weights.clear();
+        weights.addAll((IntList)in.readObject());
+        total = in.readInt();
+
     }
 }
