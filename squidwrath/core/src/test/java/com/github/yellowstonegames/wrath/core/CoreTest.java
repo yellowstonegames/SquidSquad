@@ -45,11 +45,11 @@ public class CoreTest {
 
         byte[] bytes = fury.serializeJavaObject(data);
         Dice.Rule data2 = fury.deserializeJavaObject(bytes, Dice.Rule.class);
-            Dice d1 = new Dice(123L);
-            Dice d2 = new Dice(123L);
-            Assert.assertEquals(d1.runRollRule(data), d2.runRollRule(data2));
-            Assert.assertEquals(d1.runRollRule(data), d2.runRollRule(data2));
-            Assert.assertEquals(data, data2);
+        Dice d1 = new Dice(123L);
+        Dice d2 = new Dice(123L);
+        Assert.assertEquals(d1.runRollRule(data), d2.runRollRule(data2));
+        Assert.assertEquals(d1.runRollRule(data), d2.runRollRule(data2));
+        Assert.assertEquals(data, data2);
     }
 
     @Test
