@@ -39,7 +39,7 @@ public class CoreTest {
     @Test
     public void testDiceRule() {
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Dice.Rule.class, new DiceRuleSerializer(fury));
+        fury.register(Dice.Rule.class);
 
         Dice.Rule data = new Dice.Rule("3>4d6");
 

@@ -20,10 +20,16 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import regexodus.Matcher;
 import regexodus.Pattern;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 /**
  * Class for emulating various traditional RPG-style dice rolls.
@@ -615,11 +621,11 @@ public class Dice {
      * {@link #Rule(String)}, or {@link Dice#parseRollRule(String)}) and roll it potentially many times using
      * {@link Dice#runRollRule(Rule)}. This avoids overhead from repeated parsing.
      */
-    public static class Rule {
+    public static class Rule implements Externalizable {
         public @NonNull String rollCode;
         public @NonNull IntList instructions;
 
-        protected Rule(){
+        public Rule(){
             rollCode = "";
             instructions = new IntList(10);
         }
@@ -630,13 +636,13 @@ public class Dice {
          * @param rollCode a dice string using the notation described in {@link Dice#parseRollRule(String)}
          */
         public Rule(@NonNull String rollCode){
-            this.rollCode = rollCode;
+            this.rollCode = rollCode; // not strictly necessary because it is assigned later, but avoids a warning.
             instructions = new IntList(10);
             Dice.parseRollRuleInto(this, rollCode);
         }
 
         /**
-         * Resets this Rile to be empty, with "" as its rollCode and empty instructions.
+         * Resets this Rule to be empty, with "" as its rollCode and empty instructions.
          * @return this, for chaining
          */
         public Rule reset(){
@@ -679,6 +685,42 @@ public class Dice {
         @Override
         public int hashCode() {
             return instructions.hashCode();
+        }
+
+        /**
+         * The object implements the writeExternal method to save its contents
+         * by calling the methods of DataOutput for its primitive values or
+         * calling the writeObject method of ObjectOutput for objects, strings,
+         * and arrays.
+         *
+         * @param out the stream to write the object to
+         * @throws IOException Includes any I/O exceptions that may occur
+         * @serialData Overriding methods should use this tag to describe
+         * the data layout of this Externalizable object.
+         * List the sequence of element types and, if possible,
+         * relate the element to a public/protected field and/or
+         * method of this Externalizable class.
+         */
+        @GwtIncompatible
+        public void writeExternal(ObjectOutput out) throws IOException {
+            out.writeUTF(rollCode);
+        }
+
+        /**
+         * The object implements the readExternal method to restore its
+         * contents by calling the methods of DataInput for primitive
+         * types and readObject for objects, strings and arrays.  The
+         * readExternal method must read the values in the same sequence
+         * and with the same types as were written by writeExternal.
+         *
+         * @param in the stream to read data from in order to restore the object
+         * @throws IOException            if I/O errors occur
+         * @throws ClassNotFoundException If the class for an object being
+         *                                restored cannot be found.
+         */
+        @GwtIncompatible
+        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+            reset(in.readUTF());
         }
     }
 }

@@ -22,6 +22,9 @@ import io.fury.serializer.Serializer;
 
 import com.github.yellowstonegames.core.Dice;
 
+/**
+ * Can be safely removed; Dice.Rule is Externalizable and should be read that way.
+ */
 public class DiceRuleSerializer extends Serializer<Dice.Rule> {
     public DiceRuleSerializer(Fury fury) {
         super(fury, Dice.Rule.class);
