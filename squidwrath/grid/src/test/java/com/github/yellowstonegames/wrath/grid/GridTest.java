@@ -88,6 +88,19 @@ public class GridTest {
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
+
+    @Test
+    public void testCoordObjectMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fury));
+        CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        CoordObjectMap data2 = fury.deserializeJavaObject(bytes, CoordObjectMap.class);
+
+        Assert.assertEquals(data, data2);
+    }
 //
 //    @Test
 //    public void testCoordObjectOrderedMap() {

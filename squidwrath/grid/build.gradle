@@ -1,0 +1,21 @@
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+ext.projectName = 'SquidWrathGrid'
+eclipse.project.name = ext.projectName
+sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
+javadoc.destinationDir = file("../../docs/squidwrath/$name/apidocs")
+
+dependencies {
+    api project(':squidcore')
+    api project(':squidwrath:core')
+    api project(':squidgrid')
+
+    testImplementation "junit:junit:$junitVersion"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
+}
+
+jar {
+    archiveBaseName.set(project.name)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}
