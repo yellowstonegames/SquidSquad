@@ -131,7 +131,7 @@ public class PhantomNoise implements INoise {
      */
     public PhantomNoise reassign(long seed, int dimension, float sharpness) {
         this.sharpness = sharpness;
-        boolean unchanged = (dim == Math.max(2, dimension));
+        boolean unchanged = (dim == Math.max(2, dimension)) && hasher.seed == seed;
         if(!unchanged) {
             dim = Math.max(2, dimension);
             input = new float[dim];
@@ -159,12 +159,12 @@ public class PhantomNoise implements INoise {
             hashFloors = new int[dim+1];
             inverse = 1f / (dim + 1f);
         }
-        for (int v = 0; v <= dim; v++) {
-            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
-                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
-            vertices[v][0] = TrigTools.cos(theta) * dist;
-            vertices[v][1] = TrigTools.sin(theta) * dist;
-        }
+//        for (int v = 0; v <= dim; v++) {
+//            final float theta = TrigTools.atan2(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
+//                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
+//            vertices[v][0] = TrigTools.cos(theta) * dist;
+//            vertices[v][1] = TrigTools.sin(theta) * dist;
+//        }
         hasher = new Hasher(seed);
         return this;
     }

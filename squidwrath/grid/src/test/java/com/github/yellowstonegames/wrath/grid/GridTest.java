@@ -18,9 +18,7 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordObjectMap;
-import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.grid.*;
 import io.fury.Fury;
 import io.fury.config.Language;
 import org.junit.Assert;
@@ -328,140 +326,140 @@ public class GridTest {
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
-//
-//    @Test
-//    public void testNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Noise.class, new NoiseSerializer());
-//
-//        Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
-//        data.setFractalSpiral(true);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            Noise data2 = fury.deserializeJavaObject(bytes, Noise.class);
-//            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f), data2.getConfiguredNoise(1f, 1.5f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f), data2.getConfiguredNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testFoamNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(FoamNoise.class, new FoamNoiseSerializer());
-//
-//        FoamNoise data = new FoamNoise(-9876543210L);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            FoamNoise data2 = fury.deserializeJavaObject(bytes, FoamNoise.class);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testFoamplexNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(FoamplexNoise.class, new FoamplexNoiseSerializer());
-//
-//        FoamplexNoise data = new FoamplexNoise(-9876543210L);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            FoamplexNoise data2 = fury.deserializeJavaObject(bytes, FoamplexNoise.class);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testPhantomNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(PhantomNoise.class, new PhantomNoiseSerializer());
-//
-//        PhantomNoise data = new PhantomNoise(1234, 8, 7f);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            PhantomNoise data2 = fury.deserializeJavaObject(bytes, PhantomNoise.class);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testTaffyNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(TaffyNoise.class, new TaffyNoiseSerializer());
-//
-//        TaffyNoise data = new TaffyNoise(1234, 8, 7f);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            TaffyNoise data2 = fury.deserializeJavaObject(bytes, TaffyNoise.class);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testFlanNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(FlanNoise.class, new FlanNoiseSerializer());
-//
-//        FlanNoise data = new FlanNoise(1234, 8, 7f, 2);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            FlanNoise data2 = fury.deserializeJavaObject(bytes, FlanNoise.class);
-//            Assert.assertEquals(data.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), data2.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testCyclicNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(CyclicNoise.class, new CyclicNoiseSerializer());
-//
-//        CyclicNoise data = new CyclicNoise(-9876543210L, 8);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            CyclicNoise data2 = fury.deserializeJavaObject(bytes, CyclicNoise.class);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testSorbetNoise() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(SorbetNoise.class, new SorbetNoiseSerializer());
-//
-//        SorbetNoise data = new SorbetNoise(-9876543210L, 8);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            SorbetNoise data2 = fury.deserializeJavaObject(bytes, SorbetNoise.class);
-//            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+
+    @Test
+    public void testNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(Noise.class);
+
+        Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
+        data.setFractalSpiral(true);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            Noise data2 = fury.deserializeJavaObject(bytes, Noise.class);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f), data2.getConfiguredNoise(1f, 1.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f), data2.getConfiguredNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.stringSerialize(), data2.stringSerialize());
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testFoamNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(FoamNoise.class);
+
+        FoamNoise data = new FoamNoise(-9876543210L);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            FoamNoise data2 = fury.deserializeJavaObject(bytes, FoamNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testFoamplexNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(FoamplexNoise.class);
+
+        FoamplexNoise data = new FoamplexNoise(-9876543210L);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            FoamplexNoise data2 = fury.deserializeJavaObject(bytes, FoamplexNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testPhantomNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(PhantomNoise.class);
+
+        PhantomNoise data = new PhantomNoise(1234, 8, 7f);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            PhantomNoise data2 = fury.deserializeJavaObject(bytes, PhantomNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testTaffyNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(TaffyNoise.class);
+
+        TaffyNoise data = new TaffyNoise(1234, 8, 7f);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            TaffyNoise data2 = fury.deserializeJavaObject(bytes, TaffyNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testFlanNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(FlanNoise.class);
+
+        FlanNoise data = new FlanNoise(1234, 8, 7f, 2);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            FlanNoise data2 = fury.deserializeJavaObject(bytes, FlanNoise.class);
+            Assert.assertEquals(data.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), data2.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCyclicNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(CyclicNoise.class);
+
+        CyclicNoise data = new CyclicNoise(-9876543210L, 8);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CyclicNoise data2 = fury.deserializeJavaObject(bytes, CyclicNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testSorbetNoise() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(SorbetNoise.class);
+
+        SorbetNoise data = new SorbetNoise(-9876543210L, 8);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            SorbetNoise data2 = fury.deserializeJavaObject(bytes, SorbetNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
 //
 //    @Test
 //    public void testSimplexNoise() {
