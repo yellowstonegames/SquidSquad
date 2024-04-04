@@ -26,8 +26,13 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.LZSEncoding;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -127,7 +132,7 @@ import java.util.List;
  * of the overloads of refill(). These re-methods don't do as much work as a constructor does if the width and height
  * of their argument are identical to their current width and height, and don't create more garbage for the GC.
  */
-public class Region implements Collection<Coord> {
+public class Region implements Collection<Coord>, Externalizable {
     public long[] data;
     public int height;
     public int width;
@@ -151,17 +156,19 @@ public class Region implements Collection<Coord> {
     }
 
     /**
-     * Constructs an empty 64x64 Region.
+     * Constructs an empty 4x64 Region.
      * Regions are mutable, so you can add to this with insert() or insertSeveral(), among others.
+     * You can also resize this and clear it with {@link #resizeAndEmpty(int, int)}, or replace its
+     * contents with those of another Region with {@link #remake(Region)}.
      */
     public Region()
     {
-        width = 64;
+        width = 4;
         height = 64;
         ySections = 1;
         yEndMask = -1L;
-        data = new long[64];
-        counts = new int[64];
+        data = new long[4];
+        counts = new int[4];
         ct = 0;
         tallied = true;
     }
@@ -6208,6 +6215,44 @@ public class Region implements Collection<Coord> {
         return target;
     }
 
+    /**
+     * Decompresses a String returned by {@link #toCompressedString()}, and assigns into this region the
+     * width, height, and contents of the data before compression. This decompresses the {@link LZSEncoding}
+     * applied to the data, then decompresses the {@link HilbertCurve} RLE data to get the original
+     * Region's size and contents back.
+     * @param compressed a String that was compressed by {@link #toCompressedString()}, without changes
+     * @return this, for chaining
+     */
+    public Region decompressInto(String compressed) {
+        HilbertCurve.init2D();
+        compressed = LZSEncoding.decompressFromUTF16(compressed);
+        final int width = DigitTools.intFromHex(compressed), height = DigitTools.intFromHex(compressed, 8, 16);
+        resizeAndEmpty(width, height);
+        final int chunksX = width + 255 >> 8, chunksY = height + 127 >> 7;
+        int startPack = 16, endPack, idx;//, hy;
+        boolean on;
+        for (int bigX = 0, baseX = 0; bigX < chunksX; bigX++, baseX += 256) {
+            for (int bigY = 0, baseY = 0; bigY < chunksY; bigY++, baseY += 128) {
+                ++startPack;
+                endPack = compressed.indexOf(';', startPack);
+                if(endPack < 0) endPack = compressed.length();
+                on = false;
+                idx = 0;
+                for(int p = startPack; p < endPack; p++, on = !on) {
+                    if (on) {
+                        for (int toSkip = idx + (compressed.charAt(p) - 256); idx < toSkip && idx < 0x8000; idx++) {
+                            insert(HilbertCurve.hilbertX[idx] + baseX, HilbertCurve.hilbertY[idx] + baseY);
+                        }
+                    } else {
+                        idx += compressed.charAt(p) - 256;
+                    }
+                }
+                startPack = endPack;
+            }
+        }
+        return this;
+    }
+
     @Override
     public boolean contains(Object o) {
         if(o instanceof Coord)
@@ -6444,6 +6489,40 @@ public class Region implements Collection<Coord> {
             }
             return -1;
         }
+    }
+
+    /**
+     * The object implements the writeExternal method to save its contents
+     * by calling the methods of DataOutput for its primitive values or
+     * calling the writeObject method of ObjectOutput for objects, strings,
+     * and arrays.
+     *
+     * @param out the stream to write the object to
+     * @throws IOException Includes any I/O exceptions that may occur
+     * @serialData Overriding methods should use this tag to describe
+     * the data layout of this Externalizable object.
+     * List the sequence of element types and, if possible,
+     * relate the element to a public/protected field and/or
+     * method of this Externalizable class.
+     */
+    @GwtIncompatible
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeUTF(toCompressedString());
+    }
+
+    /**
+     * The object implements the readExternal method to restore its
+     * contents by calling the methods of DataInput for primitive
+     * types and readObject for objects, strings and arrays.  The
+     * readExternal method must read the values in the same sequence
+     * and with the same types as were written by writeExternal.
+     *
+     * @param in the stream to read data from in order to restore the object
+     * @throws IOException            if I/O errors occur
+     */
+    @GwtIncompatible
+    public void readExternal(ObjectInput in) throws IOException {
+        decompressInto(in.readUTF());
     }
 
     public class GRIterator implements Iterator<Coord>

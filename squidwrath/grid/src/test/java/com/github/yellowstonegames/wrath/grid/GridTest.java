@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectMap;
+import com.github.yellowstonegames.grid.Region;
 import io.fury.Fury;
 import io.fury.config.Language;
 import org.junit.Assert;
@@ -39,21 +40,18 @@ public class GridTest {
 
     }
 
-//    @Test
-//    public void testRegion() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Region.class, new RegionSerializer());
-//        Region data = new Region(120, 120, Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            Region data2 = fury.readObject(input, Region.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+    @Test
+    public void testRegion() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(Region.class);
+        Region data = new Region(120, 120, Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            Region data2 = fury.deserializeJavaObject(bytes, Region.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 //
 //    @Test
 //    public void testCoordSet() {
@@ -62,12 +60,9 @@ public class GridTest {
 //        fury.register(CoordSet.class, new CoordSetSerializer());
 //        CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            CoordSet data2 = fury.readObject(input, CoordSet.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            CoordSet data2 = fury.deserializeJavaObject(bytes, CoordSet.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -79,12 +74,9 @@ public class GridTest {
 //        fury.register(CoordOrderedSet.class, new CoordOrderedSetSerializer());
 //        CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            CoordOrderedSet data2 = fury.readObject(input, CoordOrderedSet.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            CoordOrderedSet data2 = fury.deserializeJavaObject(bytes, CoordOrderedSet.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -109,12 +101,9 @@ public class GridTest {
 //        fury.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
 //        CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            CoordObjectOrderedMap data2 = fury.readObject(input, CoordObjectOrderedMap.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            CoordObjectOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -126,12 +115,9 @@ public class GridTest {
 //        fury.register(CoordFloatMap.class, new CoordFloatMapSerializer());
 //        CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            CoordFloatMap data2 = fury.readObject(input, CoordFloatMap.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            CoordFloatMap data2 = fury.deserializeJavaObject(bytes, CoordFloatMap.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -143,12 +129,9 @@ public class GridTest {
 //        fury.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
 //        CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            CoordFloatOrderedMap data2 = fury.readObject(input, CoordFloatOrderedMap.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            CoordFloatOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordFloatOrderedMap.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -222,12 +205,9 @@ public class GridTest {
 //        data.add(new IGI(Coord.get(1, 3)));
 //        data.add(new IGI(Coord.get(2, 3)));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            SpatialMap data2 = fury.readObject(input, SpatialMap.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            SpatialMap data2 = fury.deserializeJavaObject(bytes, SpatialMap.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -239,12 +219,9 @@ public class GridTest {
 //
 //        Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            Radiance data2 = fury.readObject(input, Radiance.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            Radiance data2 = fury.deserializeJavaObject(bytes, Radiance.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -265,12 +242,9 @@ public class GridTest {
 //        LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
 //        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            LightingManager data2 = fury.readObject(input, LightingManager.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            LightingManager data2 = fury.deserializeJavaObject(bytes, LightingManager.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -291,12 +265,9 @@ public class GridTest {
 //        LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
 //        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            LightingManagerRgb data2 = fury.readObject(input, LightingManagerRgb.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            LightingManagerRgb data2 = fury.deserializeJavaObject(bytes, LightingManagerRgb.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -322,12 +293,9 @@ public class GridTest {
 //        data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColor.describeOklab("darker gray 9 yellow"));
 //        data.lighting.addLight(3, 3, new Radiance(3f, 0xFF9966AA, 0.2f, 0f, 0f, 0f));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            VisionFramework data2 = fury.readObject(input, VisionFramework.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            VisionFramework data2 = fury.deserializeJavaObject(bytes, VisionFramework.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -354,12 +322,9 @@ public class GridTest {
 //        data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
 //        data.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            VisionFrameworkRgb data2 = fury.readObject(input, VisionFrameworkRgb.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            VisionFrameworkRgb data2 = fury.deserializeJavaObject(bytes, VisionFrameworkRgb.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
@@ -372,12 +337,9 @@ public class GridTest {
 //        Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
 //        data.setFractalSpiral(true);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            Noise data2 = fury.readObject(input, Noise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            Noise data2 = fury.deserializeJavaObject(bytes, Noise.class);
 //            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f), data2.getConfiguredNoise(1f, 1.5f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f), data2.getConfiguredNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -395,12 +357,9 @@ public class GridTest {
 //
 //        FoamNoise data = new FoamNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            FoamNoise data2 = fury.readObject(input, FoamNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            FoamNoise data2 = fury.deserializeJavaObject(bytes, FoamNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -417,12 +376,9 @@ public class GridTest {
 //
 //        FoamplexNoise data = new FoamplexNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            FoamplexNoise data2 = fury.readObject(input, FoamplexNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            FoamplexNoise data2 = fury.deserializeJavaObject(bytes, FoamplexNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -439,12 +395,9 @@ public class GridTest {
 //
 //        PhantomNoise data = new PhantomNoise(1234, 8, 7f);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            PhantomNoise data2 = fury.readObject(input, PhantomNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            PhantomNoise data2 = fury.deserializeJavaObject(bytes, PhantomNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data, data2);
 //        }
@@ -457,12 +410,9 @@ public class GridTest {
 //
 //        TaffyNoise data = new TaffyNoise(1234, 8, 7f);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            TaffyNoise data2 = fury.readObject(input, TaffyNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            TaffyNoise data2 = fury.deserializeJavaObject(bytes, TaffyNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data, data2);
 //        }
@@ -475,12 +425,9 @@ public class GridTest {
 //
 //        FlanNoise data = new FlanNoise(1234, 8, 7f, 2);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            FlanNoise data2 = fury.readObject(input, FlanNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            FlanNoise data2 = fury.deserializeJavaObject(bytes, FlanNoise.class);
 //            Assert.assertEquals(data.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), data2.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), Float.MIN_NORMAL);
 //            Assert.assertEquals(data, data2);
 //        }
@@ -493,12 +440,9 @@ public class GridTest {
 //
 //        CyclicNoise data = new CyclicNoise(-9876543210L, 8);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            CyclicNoise data2 = fury.readObject(input, CyclicNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            CyclicNoise data2 = fury.deserializeJavaObject(bytes, CyclicNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data, data2);
 //        }
@@ -511,12 +455,9 @@ public class GridTest {
 //
 //        SorbetNoise data = new SorbetNoise(-9876543210L, 8);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            SorbetNoise data2 = fury.readObject(input, SorbetNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            SorbetNoise data2 = fury.deserializeJavaObject(bytes, SorbetNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data, data2);
 //        }
@@ -529,12 +470,9 @@ public class GridTest {
 //
 //        SimplexNoise data = new SimplexNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            SimplexNoise data2 = fury.readObject(input, SimplexNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            SimplexNoise data2 = fury.deserializeJavaObject(bytes, SimplexNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -551,12 +489,9 @@ public class GridTest {
 //
 //        SimplexNoiseScaled data = new SimplexNoiseScaled(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            SimplexNoiseScaled data2 = fury.readObject(input, SimplexNoiseScaled.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            SimplexNoiseScaled data2 = fury.deserializeJavaObject(bytes, SimplexNoiseScaled.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -573,12 +508,9 @@ public class GridTest {
 //
 //        SimplexNoiseHard data = new SimplexNoiseHard(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            SimplexNoiseHard data2 = fury.readObject(input, SimplexNoiseHard.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            SimplexNoiseHard data2 = fury.deserializeJavaObject(bytes, SimplexNoiseHard.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -595,12 +527,9 @@ public class GridTest {
 //
 //        OpenSimplex2 data = new OpenSimplex2(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            OpenSimplex2 data2 = fury.readObject(input, OpenSimplex2.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            OpenSimplex2 data2 = fury.deserializeJavaObject(bytes, OpenSimplex2.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -615,12 +544,9 @@ public class GridTest {
 //
 //        OpenSimplex2Smooth data = new OpenSimplex2Smooth(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            OpenSimplex2Smooth data2 = fury.readObject(input, OpenSimplex2Smooth.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            OpenSimplex2Smooth data2 = fury.deserializeJavaObject(bytes, OpenSimplex2Smooth.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -635,12 +561,9 @@ public class GridTest {
 //
 //        PerlinNoise data = new PerlinNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            PerlinNoise data2 = fury.readObject(input, PerlinNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            PerlinNoise data2 = fury.deserializeJavaObject(bytes, PerlinNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -657,12 +580,9 @@ public class GridTest {
 //
 //        ValueNoise data = new ValueNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            ValueNoise data2 = fury.readObject(input, ValueNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            ValueNoise data2 = fury.deserializeJavaObject(bytes, ValueNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -680,12 +600,9 @@ public class GridTest {
 //
 //        BasicHashNoise data = new BasicHashNoise(-987654321, new FlawedPointHash.FlowerHash(123456789));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            BasicHashNoise data2 = fury.readObject(input, BasicHashNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            BasicHashNoise data2 = fury.deserializeJavaObject(bytes, BasicHashNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -702,12 +619,9 @@ public class GridTest {
 //
 //        HighDimensionalValueNoise data = new HighDimensionalValueNoise(1234, 8);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            HighDimensionalValueNoise data2 = fury.readObject(input, HighDimensionalValueNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            HighDimensionalValueNoise data2 = fury.deserializeJavaObject(bytes, HighDimensionalValueNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data, data2);
 //        }
@@ -720,12 +634,9 @@ public class GridTest {
 //
 //        WhiteNoise data = new WhiteNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            WhiteNoise data2 = fury.readObject(input, WhiteNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            WhiteNoise data2 = fury.deserializeJavaObject(bytes, WhiteNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -742,12 +653,9 @@ public class GridTest {
 //
 //        BadgerNoise data = new BadgerNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            BadgerNoise data2 = fury.readObject(input, BadgerNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            BadgerNoise data2 = fury.deserializeJavaObject(bytes, BadgerNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -764,12 +672,9 @@ public class GridTest {
 //
 //        SnakeNoise data = new SnakeNoise(-9876543210L);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            SnakeNoise data2 = fury.readObject(input, SnakeNoise.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            SnakeNoise data2 = fury.deserializeJavaObject(bytes, SnakeNoise.class);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -787,12 +692,9 @@ public class GridTest {
 //
 //        NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            NoiseWrapper data2 = fury.readObject(input, NoiseWrapper.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            NoiseWrapper data2 = fury.deserializeJavaObject(bytes, NoiseWrapper.class);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -810,12 +712,9 @@ public class GridTest {
 //
 //        RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 10f, 20.125f);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            RadialNoiseWrapper data2 = fury.readObject(input, RadialNoiseWrapper.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            RadialNoiseWrapper data2 = fury.deserializeJavaObject(bytes, RadialNoiseWrapper.class);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data, data2);
@@ -830,12 +729,9 @@ public class GridTest {
 //
 //        NoiseAdjustment data = new NoiseAdjustment(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), Interpolations.exp5In);
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            NoiseAdjustment data2 = fury.readObject(input, NoiseAdjustment.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            NoiseAdjustment data2 = fury.deserializeJavaObject(bytes, NoiseAdjustment.class);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
 //            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -852,12 +748,9 @@ public class GridTest {
 //        fury.register(PointPair.class, new PointPairSerializer());
 //        PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
 //
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        fury.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            PointPair<?> data2 = fury.readObject(input, PointPair.class);
+//        byte[] bytes = fury.serializeJavaObject(data);
+//        {
+//            PointPair<?> data2 = fury.deserializeJavaObject(bytes, PointPair.class);
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
