@@ -268,7 +268,7 @@ public class OpenSimplex2Smooth implements INoise {
     public OpenSimplex2Smooth stringDeserialize(String data) {
         if(data == null || data.length() < 3)
             return this;
-        this.seed = DigitTools.intFromDec(data, 1, data.indexOf('`', 2));
+        this.seed = DigitTools.longFromDec(data, 1, data.indexOf('`', 2));
         return this;
     }
 
