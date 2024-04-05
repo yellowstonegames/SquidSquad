@@ -66,9 +66,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     // World #1, GrayLarch, completed in           111201 ms
 
 
-//    private static final int width = 256, height = 256;
-
-    private static final int width = 300, height = 300;
+    private static final int width = 256, height = 256;
+//    private static final int width = 300, height = 300;
 
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
@@ -93,8 +92,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapView wmv;
     private AnimatedGif writer;
-    private AnimatedPNG apng;
-    private PixmapIO.PNG pngWriter;
+//    private AnimatedPNG apng;
+//    private PixmapIO.PNG pngWriter;
 
     private String date, path;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
@@ -246,11 +245,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.WREN);
         writer.setDitherStrength(1f);
         writer.setFlipY(false);
-        apng = new AnimatedPNG();
-        apng.setFlipY(false);
-        apng.setCompression(7);
-        pngWriter = new PixmapIO.PNG();
-        pngWriter.setFlipY(false);
+//        apng = new AnimatedPNG();
+//        apng.setFlipY(false);
+//        apng.setCompression(7);
+//        pngWriter = new PixmapIO.PNG();
+//        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         seed = rng.getSelectedState(0);
@@ -268,7 +267,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        fn.setInterpolation(Noise.HERMITE); // the default
 
-        INoise fn = new CyclicNoise(seed, 3, 2.3f);
+//        INoise fn = new CyclicNoise(seed, 3, 2.3f);
+        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.3f), seed, 1f, NoiseWrapper.EXO, 2, true);
         iNoise = new Noise3DFrom5D(fn);
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
@@ -282,7 +282,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 
-        world = new GlobeMap(seed, width, height, iNoise, 1f);
+        world = new GlobeMap(seed, width, height, iNoise, 0.35f);
 
 
         wmv = new BlendedWorldMapView(world);
@@ -362,9 +362,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette = new FastPalette(pms);
+        writer.palette = new QualityPalette(pms);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
-        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
+//        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);
 //        } catch (IOException e) {
 //            e.printStackTrace();
