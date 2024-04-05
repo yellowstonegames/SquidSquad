@@ -30,6 +30,54 @@ public class NoiseWrapper implements INoise {
     protected int octaves;
     public boolean fractalSpiral = false;
 
+    /**
+     * "Standard" layered octaves of noise, where each octave has a different frequency and weight.
+     * Tends to look cloudy with more octaves, and generally like a natural process.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int FBM = 0;
+    /**
+     * A less common way to layer octaves of noise, where most results are biased toward higher values,
+     * but "valleys" show up filled with much lower values.
+     * This probably has some good uses in 3D or higher noise, but it isn't used too frequently.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int BILLOW = 1;
+    /**
+     * A way to layer octaves of noise so most values are biased toward low values but "ridges" of high
+     * values run across the noise. This can be a good way of highlighting the least-natural aspects of
+     * some kinds of noise; {@link PerlinNoise} has mostly ridges along 45-degree angles,
+     * {@link SimplexNoise} has many ridges along a triangular grid, and so on. {@link FoamNoise}
+     * and {@link HoneyNoise} do well with this mode, though, and look something like lightning or
+     * bubbling fluids, respectively. Using FOAM or HONEY will have this look natural, but PERLIN in
+     * particular will look unnatural if the grid is visible.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int RIDGED_MULTI = 2;
+    /**
+     * Layered octaves of noise, where each octave has a different frequency and weight, and the results of
+     * earlier octaves affect the inputs to later octave calculations. Tends to look cloudy but with swirling
+     * distortions, and generally like a natural process.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int DOMAIN_WARP = 3;
+    /**
+     * Layered octaves of noise with several noise calls per octave, and a complex set of connections between noise in
+     * the same octave. Tends to have whorls and loops like a fingerprint, and looks reasonably natural (but more
+     * natural if the noise it uses has fewer artifacts). This is significantly slower than other modes, but looks more
+     * like high-octave noise even with few octaves. Some properties in this only appear with 2 or more octaves.
+     * <br>
+     * See <a href="https://thingonitsown.blogspot.com/2019/02/exo-terrain.html">this blog post</a> for more info.
+     * That post is also the namesake of this mode.
+     * <br>
+     * Meant to be used with {@link #setFractalType(int)}.
+     */
+    public static final int EXO = 4;
+
     public NoiseWrapper() {
         this(new SimplexNoise(123L), 123L, 0.03125f, FBM, 1, false);
 
@@ -81,7 +129,7 @@ public class NoiseWrapper implements INoise {
 
     /**
      * Wraps {@link #getFractalType()}.
-     * @return an int between 0 and 3, corresponding to {@link Noise#FBM}, {@link Noise#BILLOW}, {@link Noise#RIDGED_MULTI}, or {@link Noise#DOMAIN_WARP}
+     * @return an int between 0 and 4, corresponding to {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, or {@link #EXO}
      */
     public int getMode() {
         return getFractalType();
@@ -89,7 +137,7 @@ public class NoiseWrapper implements INoise {
 
     /**
      * Wraps {@link #setFractalType(int)}
-     * @param mode an int between 0 and 3, corresponding to {@link Noise#FBM}, {@link Noise#BILLOW}, {@link Noise#RIDGED_MULTI}, or {@link Noise#DOMAIN_WARP}
+     * @param mode an int between 0 and 4, corresponding to {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, or {@link #EXO}
      */
     public void setMode(int mode) {
         setFractalType(mode);
@@ -100,7 +148,7 @@ public class NoiseWrapper implements INoise {
     }
 
     /**
-     * @param mode an int between 0 and 3, corresponding to {@link Noise#FBM}, {@link Noise#BILLOW}, {@link Noise#RIDGED_MULTI}, or {@link Noise#DOMAIN_WARP}
+     * @param mode an int between 0 and 4, corresponding to {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, or {@link #EXO}
      */
     public void setFractalType(int mode) {
         this.mode = mode;
@@ -236,6 +284,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, seed);
         }
     }
 
@@ -247,6 +296,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, seed);
         }
     }
 
@@ -258,6 +308,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, seed);
         }
     }
 
@@ -269,6 +320,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
         }
     }
 
@@ -280,6 +332,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
         }
     }
 
@@ -302,6 +355,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, seed);
         }
     }
 
@@ -313,6 +367,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, seed);
         }
     }
 
@@ -324,6 +379,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, seed);
         }
     }
 
@@ -335,6 +391,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
         }
     }
 
@@ -346,6 +403,7 @@ public class NoiseWrapper implements INoise {
             case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
             case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
         }
     }
 
@@ -431,13 +489,18 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, int seed) {
+    protected float exo(float x, float y, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, seed + 1111) * 8f;
         float distort1 = wrapped.getNoiseWithSeed(x * 2.5f, y * 2.5f, seed + 2222);
         float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, seed) * power;
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, seed + i + 3333) * 8f;
             float distort2 = wrapped.getNoiseWithSeed(x * 1.25f, y * 1.25f, seed + i + 4444);
             float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, seed + i) * 1.5f;
@@ -548,13 +611,19 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, float z, int seed) {
+    protected float exo(float x, float y, float z, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, seed + 1111) * 8f;
         float distort1 = wrapped.getNoiseWithSeed(x * 2.5f, y * 2.5f, z * 2.5f, seed + 2222);
         float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, z, seed) * power;
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, seed + i + 3333) * 8f;
             float distort2 = wrapped.getNoiseWithSeed(x * 1.25f, y * 1.25f, z * 1.25f, seed + i + 4444);
             float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, z * 0.5f, seed + i) * 1.5f;
@@ -675,13 +744,20 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, float z, float w, int seed) {
+    protected float exo(float x, float y, float z, float w, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, seed + 1111) * 8f;
         float distort1 = wrapped.getNoiseWithSeed(x * 2.5f, y * 2.5f, z * 2.5f, w * 2.5f, seed + 2222);
         float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, z, w, seed) * power;
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, w * 0.125f, seed + i + 3333) * 8f;
             float distort2 = wrapped.getNoiseWithSeed(x * 1.25f, y * 1.25f, z * 1.25f, w * 1.25f, seed + i + 4444);
             float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, z * 0.5f, w * 0.5f, seed + i) * 1.5f;
@@ -812,13 +888,21 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, float z, float w, float u, int seed) {
+    protected float exo(float x, float y, float z, float w, float u, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, u * 0.25f, seed + 1111) * 8f;
         float distort1 = wrapped.getNoiseWithSeed(x * 2.5f, y * 2.5f, z * 2.5f, w * 2.5f, u * 2.5f, seed + 2222);
         float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, z, w, u, seed) * power;
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX5D(x, y, z, w, u);
+                final float y2 = rotateY5D(x, y, z, w, u);
+                final float z2 = rotateZ5D(x, y, z, w, u);
+                final float w2 = rotateW5D(x, y, z, w, u);
+                final float u2 = rotateU5D(x, y, z, w, u);
+                x = x2; y = y2; z = z2; w = w2; u = u2;
+            }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, w * 0.125f, u * 0.125f, seed + i + 3333) * 8f;
             float distort2 = wrapped.getNoiseWithSeed(x * 1.25f, y * 1.25f, z * 1.25f, w * 1.25f, u * 1.25f, seed + i + 4444);
             float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, z * 0.5f, w * 0.5f, u * 0.5f, seed + i) * 1.5f;
@@ -958,13 +1042,22 @@ public class NoiseWrapper implements INoise {
 
         return sum / (amp * ((1 << octaves) - 1));
     }
-    protected float exo(float x, float y, float z, float w, float u, float v, int seed) {
+    protected float exo(float x, float y, float z, float w, float u, float v, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, u * 0.25f, v * 0.25f, seed + 1111) * 8f;
         float distort1 = wrapped.getNoiseWithSeed(x * 2.5f, y * 2.5f, z * 2.5f, w * 2.5f, u * 2.5f, v * 2.5f, seed + 2222);
         float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, z, w, u, v, seed) * power;
         for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX6D(x, y, z, w, u, v);
+                final float y2 = rotateY6D(x, y, z, w, u, v);
+                final float z2 = rotateZ6D(x, y, z, w, u, v);
+                final float w2 = rotateW6D(x, y, z, w, u, v);
+                final float u2 = rotateU6D(x, y, z, w, u, v);
+                final float v2 = rotateV6D(x, y, z, w, u, v);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
+            }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, w * 0.125f, u * 0.125f, v * 0.125f, seed + i + 3333) * 8f;
             float distort2 = wrapped.getNoiseWithSeed(x * 1.25f, y * 1.25f, z * 1.25f, w * 1.25f, u * 1.25f, v * 1.25f, seed + i + 4444);
             float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, z * 0.5f, w * 0.5f, u * 0.5f, v * 0.5f, seed + i) * 1.5f;
