@@ -243,7 +243,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.WREN);
-        writer.setDitherStrength(1f);
+        writer.setDitherStrength(0.6f);
         writer.setFlipY(false);
 //        apng = new AnimatedPNG();
 //        apng.setFlipY(false);
@@ -268,7 +268,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        fn.setInterpolation(Noise.HERMITE); // the default
 
 //        INoise fn = new CyclicNoise(seed, 3, 2.3f);
-        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.3f), seed, 1f, NoiseWrapper.EXO, 2, true);
+        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.4f), seed, 1.2f, NoiseWrapper.EXO, 2, false);
         iNoise = new Noise3DFrom5D(fn);
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
@@ -282,7 +282,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 
-        world = new GlobeMap(seed, width, height, iNoise, 0.35f);
+        world = new GlobeMap(seed, width, height, iNoise, 0.45f);
 
 
         wmv = new BlendedWorldMapView(world);
