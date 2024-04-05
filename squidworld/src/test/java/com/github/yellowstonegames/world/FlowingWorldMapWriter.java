@@ -69,6 +69,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private static final int width = 256, height = 256;
 //    private static final int width = 300, height = 300;
 
+//    private static final int FRAMES = 100;
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
     private static final float SPEED = 0.35f;
@@ -268,7 +269,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        fn.setInterpolation(Noise.HERMITE); // the default
 
 //        INoise fn = new CyclicNoise(seed, 3, 2.3f);
-        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.4f), seed, 1.2f, NoiseWrapper.EXO, 2, false);
+        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.4f), seed, 1.6f, NoiseWrapper.EXO, 2, false);
         iNoise = new Noise3DFrom5D(fn);
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
