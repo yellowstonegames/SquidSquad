@@ -225,16 +225,13 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
 //        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSorbet/";
-        path = "out/worldsAnimated/" + date + "/FlowingCyclic/";
+//        path = "out/worldsAnimated/" + date + "/FlowingCyclic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplexCentral/";
 //        path = "out/worldsAnimated/" + date + "/FlowingSimplexOuter/";
 //        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
 //        path = "out/worldsAnimated/" + date + "/FlowingValue/";
 //        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
-
-        if(!Gdx.files.local(path).exists())
-            Gdx.files.local(path).mkdirs();
 
         pm = new Pixmap[FRAMES];
         for (int i = 0; i < FRAMES; i++) {
@@ -269,8 +266,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        fn.setInterpolation(Noise.HERMITE); // the default
 
 //        INoise fn = new CyclicNoise(seed, 3, 2.3f);
-        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.4f), seed, 1.6f, NoiseWrapper.EXO, 2, false);
+        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.6f, NoiseWrapper.EXO, 2, false);
         iNoise = new Noise3DFrom5D(fn);
+
+        path = "out/worldsAnimated/" + date + "/Flowing"+fn.getTag()+"/";
+
+        if(!Gdx.files.local(path).exists())
+            Gdx.files.local(path).mkdirs();
+
+
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
 //        iNoise = new Noise3DFrom5D(new FlanNoise(seed, 5)); // between 53757ms and 59479ms
