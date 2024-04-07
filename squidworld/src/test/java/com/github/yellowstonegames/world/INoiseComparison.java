@@ -197,10 +197,16 @@ public class INoiseComparison extends ApplicationAdapter {
     private static final Interpolations.Interpolator redistributorXB = new Interpolations.Interpolator("REDISTRIBUTORXB",
             x -> redistributeConfigurable(x, mul, mix, bias));
 
+    private static final Interpolations.Interpolator siney = new Interpolations.Interpolator("SINEY",
+            x -> 0.5f + 0.5f * TrigTools.sinTurns(x));
+
+    private static final Interpolations.Interpolator siney2 = new Interpolations.Interpolator("SINEY2",
+            x -> 0.5f + Math.abs(x - 0.5f) * TrigTools.sinTurns(x - 0.5f));
+
     private static final Interpolations.Interpolator[] PREPARATIONS = {Interpolations.linear, Interpolations.smooth,
             Interpolations.smoother, redistributor, redistributor2, redistributorC, redistributorC2, redistributorCC,
             redistributorL, redistributorL2, redistributorX, redistributorR, redistributorT, redistributorRR,
-            redistributorXB};
+            redistributorXB, siney, siney2};
     private int prep0 = 0;
     private int prep1 = PREPARATIONS.length - 1;
 
@@ -361,9 +367,9 @@ public class INoiseComparison extends ApplicationAdapter {
                         wrap1.setFractalSpiral(!wrap1.isFractalSpiral());
                         break;
                     case R: // fRactal type
-                        wrap0.setFractalType((wrap0.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
+                        wrap0.setFractalType((wrap0.getFractalType() + (UIUtils.shift() ? 4 : 1)) % 5);
                         if(!UIUtils.ctrl())
-                            wrap1.setFractalType((wrap1.getFractalType() + (UIUtils.shift() ? 3 : 1)) % 4);
+                            wrap1.setFractalType((wrap1.getFractalType() + (UIUtils.shift() ? 4 : 1)) % 5);
                         break;
                     case H: // higher octaves
                         wrap0.setFractalOctaves((octaves = octaves + 1 & 7) + 1);

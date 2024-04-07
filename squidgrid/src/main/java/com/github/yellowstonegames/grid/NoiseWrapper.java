@@ -494,7 +494,7 @@ public class NoiseWrapper implements INoise {
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, seed + 1111);
         float distort1 = wrapped.getNoiseWithSeed(x * 0.3f, y * 0.3f, seed + 2222);
-        float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, seed) * power;
+        float noise1 = wrapped.getNoiseWithSeed(x + striation1 - distort1, y + striation1 + distort1, seed) * power;
         for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX2D(x, y);
@@ -617,7 +617,7 @@ public class NoiseWrapper implements INoise {
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, seed + 1111);
         float distort1 = wrapped.getNoiseWithSeed(x * 0.3f, y * 0.3f, z * 0.3f, seed + 2222);
-        float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, z, seed) * power;
+        float noise1 = wrapped.getNoiseWithSeed(x + striation1 - distort1, y + striation1 + distort1, z, seed) * power;
         for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX3D(x, y, z);
@@ -751,7 +751,7 @@ public class NoiseWrapper implements INoise {
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, seed + 1111);
         float distort1 = wrapped.getNoiseWithSeed(x * 0.3f, y * 0.3f, z * 0.3f, w * 0.3f, seed + 2222);
-        float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, z, w, seed) * power;
+        float noise1 = wrapped.getNoiseWithSeed(x + striation1 - distort1, y + striation1 + distort1, z, w, seed) * power;
         for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX4D(x, y, z, w);
@@ -1051,7 +1051,7 @@ public class NoiseWrapper implements INoise {
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, u * 0.25f, v * 0.25f, seed + 1111);
         float distort1 = wrapped.getNoiseWithSeed(x * 0.3f, y * 0.3f, z * 0.3f, w * 0.3f, u * 0.3f, v * 0.3f, seed + 2222);
-        float noise1 = wrapped.getNoiseWithSeed(x + striation1, y + distort1, z, w, u, v, seed) * power;
+        float noise1 = wrapped.getNoiseWithSeed(x + striation1 - distort1, y + striation1 + distort1, z, w, u, v, seed) * power;
         for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX6D(x, y, z, w, u, v);
