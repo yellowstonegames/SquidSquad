@@ -503,7 +503,7 @@ public class NoiseWrapper implements INoise {
             }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, seed + i + 3333);
             float distort2 = wrapped.getNoiseWithSeed(x * 0.15f, y * 0.15f, seed + i + 4444);
-            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, seed + i) * 1.5f;
+            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2 - distort2, y * 0.5f + striation2 + distort2, seed + i) * 1.5f;
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, seed + i + 7777);
@@ -627,7 +627,7 @@ public class NoiseWrapper implements INoise {
             }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, seed + i + 3333);
             float distort2 = wrapped.getNoiseWithSeed(x * 0.15f, y * 0.15f, z * 0.15f, seed + i + 4444);
-            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, z * 0.5f, seed + i) * 1.5f;
+            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2 - distort2, y * 0.5f + striation2 + distort2, z * 0.5f, seed + i) * 1.5f;
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, seed + i + 7777);
@@ -762,7 +762,7 @@ public class NoiseWrapper implements INoise {
             }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, w * 0.125f, seed + i + 3333);
             float distort2 = wrapped.getNoiseWithSeed(x * 0.15f, y * 0.15f, z * 0.15f, w * 0.15f, seed + i + 4444);
-            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, z * 0.5f, w * 0.5f, seed + i) * 1.5f;
+            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2 - distort2, y * 0.5f + striation2 + distort2, z * 0.5f, w * 0.5f, seed + i) * 1.5f;
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, w * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, w * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, w * 2f, seed + i + 7777);
@@ -1064,7 +1064,7 @@ public class NoiseWrapper implements INoise {
             }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, w * 0.125f, u * 0.125f, v * 0.125f, seed + i + 3333);
             float distort2 = wrapped.getNoiseWithSeed(x * 0.15f, y * 0.15f, z * 0.15f, w * 0.15f, u * 0.15f, v * 0.15f, seed + i + 4444);
-            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2, y * 0.5f + distort2, z * 0.5f, w * 0.5f, u * 0.5f, v * 0.5f, seed + i) * 1.5f;
+            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2 - distort2, y * 0.5f + striation2 + distort2, z * 0.5f, w * 0.5f, u * 0.5f, v * 0.5f, seed + i) * 1.5f;
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, w * 0.166f, u * 0.166f, v * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, w * 5f, u * 5f, v * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, w * 2f, u * 2f, v * 2f, seed + i + 7777);
