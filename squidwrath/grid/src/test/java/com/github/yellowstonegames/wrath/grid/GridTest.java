@@ -54,8 +54,8 @@ public class GridTest {
 //    @Test
 //    public void testCoordSet() {
 //        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Coord.class, new CoordSerializer());
-//        fury.register(CoordSet.class, new CoordSetSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(CoordSet.class, new CoordSetSerializer());
 //        CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 //
 //        byte[] bytes = fury.serializeJavaObject(data);
@@ -68,8 +68,8 @@ public class GridTest {
 //    @Test
 //    public void testCoordOrderedSet() {
 //        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Coord.class, new CoordSerializer());
-//        fury.register(CoordOrderedSet.class, new CoordOrderedSetSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer());
 //        CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 //
 //        byte[] bytes = fury.serializeJavaObject(data);
@@ -91,49 +91,49 @@ public class GridTest {
 
         Assert.assertEquals(data, data2);
     }
-//
-//    @Test
-//    public void testCoordObjectOrderedMap() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Coord.class, new CoordSerializer());
-//        fury.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
-//        CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            CoordObjectOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testCoordFloatMap() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Coord.class, new CoordSerializer());
-//        fury.register(CoordFloatMap.class, new CoordFloatMapSerializer());
-//        CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            CoordFloatMap data2 = fury.deserializeJavaObject(bytes, CoordFloatMap.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testCoordFloatOrderedMap() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Coord.class, new CoordSerializer());
-//        fury.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
-//        CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            CoordFloatOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordFloatOrderedMap.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
+
+    @Test
+    public void testCoordObjectOrderedMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordObjectOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordFloatMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordFloatMap.class, new CoordFloatMapSerializer(fury));
+        CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordFloatMap data2 = fury.deserializeJavaObject(bytes, CoordFloatMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordFloatOrderedMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
+        CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordFloatOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordFloatOrderedMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
 //    public static class IGI implements IGridIdentified {
 //        public final int id;
 //        public Coord position;
@@ -194,7 +194,7 @@ public class GridTest {
 //    @Test
 //    public void testSpatialMap() {
 //        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
 //        fury.register(IGI.class);
 //        fury.register(SpatialMap.class, new SpatialMapSerializer());
 //        SpatialMap<IGI> data = new SpatialMap<>(8);
@@ -231,10 +231,10 @@ public class GridTest {
 //        fury.register(int[][].class);
 //        fury.register(float[].class);
 //        fury.register(float[][].class);
-//        fury.register(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
 //        fury.register(Radiance.class, new RadianceSerializer());
 //        fury.register(Region.class, new RegionSerializer());
-//        fury.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+//        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
 //        fury.register(LightingManager.class, new LightingManagerSerializer());
 //
 //        LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
@@ -254,10 +254,10 @@ public class GridTest {
 //        fury.register(int[][].class);
 //        fury.register(float[].class);
 //        fury.register(float[][].class);
-//        fury.register(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
 //        fury.register(Radiance.class, new RadianceSerializer());
 //        fury.register(Region.class, new RegionSerializer());
-//        fury.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+//        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
 //        fury.register(LightingManagerRgb.class, new LightingManagerRgbSerializer());
 //
 //        LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
@@ -279,11 +279,11 @@ public class GridTest {
 //        fury.register(float[][].class);
 //        fury.register(char[].class);
 //        fury.register(char[][].class);
-//        fury.register(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
 //        fury.register(Radiance.class, new RadianceSerializer());
 //        fury.register(Region.class, new RegionSerializer());
-//        fury.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
-//        fury.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
+//        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+//        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
 //        fury.register(LightingManager.class, new LightingManagerSerializer());
 //        fury.register(VisionFramework.class, new VisionFrameworkSerializer());
 //
@@ -308,11 +308,11 @@ public class GridTest {
 //        fury.register(float[][].class);
 //        fury.register(char[].class);
 //        fury.register(char[][].class);
-//        fury.register(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
 //        fury.register(Radiance.class, new RadianceSerializer());
 //        fury.register(Region.class, new RegionSerializer());
-//        fury.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
-//        fury.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
+//        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+//        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
 //        fury.register(LightingManagerRgb.class, new LightingManagerRgbSerializer());
 //        fury.register(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer());
 //
@@ -742,7 +742,7 @@ public class GridTest {
 //    @Test
 //    public void testPointPair() {
 //        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Coord.class, new CoordSerializer());
+//        fury.registerSerializer(Coord.class, new CoordSerializer());
 //        fury.register(PointPair.class, new PointPairSerializer());
 //        PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
 //
