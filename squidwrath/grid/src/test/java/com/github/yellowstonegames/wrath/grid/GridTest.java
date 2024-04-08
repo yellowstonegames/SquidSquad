@@ -134,6 +134,62 @@ public class GridTest {
         }
     }
 
+    @Test
+    public void testCoordLongMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordLongMap.class, new CoordLongMapSerializer(fury));
+        CoordLongMap data = CoordLongMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordLongMap data2 = fury.deserializeJavaObject(bytes, CoordLongMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordLongOrderedMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer(fury));
+        CoordLongOrderedMap data = CoordLongOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordLongOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordLongOrderedMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordIntMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordIntMap.class, new CoordIntMapSerializer(fury));
+        CoordIntMap data = CoordIntMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordIntMap data2 = fury.deserializeJavaObject(bytes, CoordIntMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordIntOrderedMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer(fury));
+        CoordIntOrderedMap data = CoordIntOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordIntOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordIntOrderedMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
 //    public static class IGI implements IGridIdentified {
 //        public final int id;
 //        public Coord position;

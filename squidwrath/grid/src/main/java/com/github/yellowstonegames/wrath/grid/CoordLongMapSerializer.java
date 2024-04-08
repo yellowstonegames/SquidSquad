@@ -17,47 +17,47 @@
 
 package com.github.yellowstonegames.wrath.grid;
 
-import com.github.tommyettinger.ds.support.util.FloatIterator;
+import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
+import com.github.yellowstonegames.grid.CoordLongMap;
 import io.fury.Fury;
 import io.fury.memory.MemoryBuffer;
 import io.fury.serializer.Serializer;
 
 /**
- * Fury {@link Serializer} for jdkgdxds {@link CoordFloatOrderedMap}s.
+ * Fury {@link Serializer} for jdkgdxds {@link CoordLongMap}s.
  */
-public class CoordFloatOrderedMapSerializer extends Serializer<CoordFloatOrderedMap> {
+public class CoordLongMapSerializer extends Serializer<CoordLongMap> {
 
-    public CoordFloatOrderedMapSerializer(Fury fury) {
-        super(fury, CoordFloatOrderedMap.class);
+    public CoordLongMapSerializer(Fury fury) {
+        super(fury, CoordLongMap.class);
     }
 
     @Override
-    public void write(final MemoryBuffer output, final CoordFloatOrderedMap data) {
+    public void write(final MemoryBuffer output, final CoordLongMap data) {
         output.writePositiveVarInt(data.size());
-        for(Coord k : data.order()){
+        for(Coord k : data.keySet()){
             output.writeShort(k.x);
             output.writeShort(k.y);
         }
-        FloatIterator it = data.values().iterator();
+        LongIterator it = data.values().iterator();
         while (it.hasNext()) {
-            output.writeFloat(it.nextFloat());
+            output.writeLong(it.nextLong());
         }
     }
 
     @Override
-    public CoordFloatOrderedMap read(MemoryBuffer input) {
+    public CoordLongMap read(MemoryBuffer input) {
         final int len = input.readPositiveVarInt();
         Coord[] ks = new Coord[len];
-        float[] vs = new float[len];
+        long[] vs = new long[len];
         for (int i = 0; i < len; i++) {
             ks[i] = Coord.get(input.readShort(), input.readShort());
         }
         for (int i = 0; i < len; i++) {
-            vs[i] = input.readFloat();
+            vs[i] = input.readLong();
         }
 
-        return new CoordFloatOrderedMap(ks, vs);
+        return new CoordLongMap(ks, vs);
     }
 }

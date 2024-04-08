@@ -27,7 +27,6 @@ import io.fury.serializer.Serializer;
 /**
  * Fury {@link Serializer} for jdkgdxds {@link CoordFloatMap}s.
  */
-@SuppressWarnings("rawtypes")
 public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
 
     public CoordFloatMapSerializer(Fury fury) {
@@ -37,12 +36,12 @@ public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
     @Override
     public void write(final MemoryBuffer output, final CoordFloatMap data) {
         output.writePositiveVarInt(data.size());
-        for(Object k : data.keySet()){
-            output.writeShort(((Coord)k).x);
-            output.writeShort(((Coord)k).y);
+        for(Coord k : data.keySet()){
+            output.writeShort(k.x);
+            output.writeShort(k.y);
         }
         FloatIterator it = data.values().iterator();
-        for(; it.hasNext(); ){
+        while (it.hasNext()) {
             output.writeFloat(it.nextFloat());
         }
     }
