@@ -455,6 +455,11 @@ public final class RotationTools {
      * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
      * such as {@link #randomRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this only
      * allocates the array it returns.
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(float[], float[], float[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
      * @param seed any long; will be scrambled
      * @param dimension will be clamped to at minimum 2, but there is technically no maximum
      * @return a newly-allocated {@code dimension * dimension}-element float array, meant as effectively a
@@ -480,6 +485,11 @@ public final class RotationTools {
      * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
      * such as {@link #randomRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this doesn't
      * allocate at all if {@code out} has at least length 4 (so it can store the resulting matrix).
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(float[], float[], float[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
      * @param seed any long; will be scrambled
      * @param dimension will be clamped to at minimum 2, but there is technically no maximum
      * @param out a float array that should have at least {@code dimension * dimension} elements; will be modified
@@ -644,6 +654,23 @@ public final class RotationTools {
     }
 
     /**
+     * Fills {@code out} with a 1D float array that can be used as a 2D rotation matrix by
+     * {@link #rotate(float[], float[], float[])}. Scrambles the given seed with {@link #randomize(long)},
+     * then gets an angle using {@link TrigTools#SIN_TABLE_D} and {@link TrigTools#COS_TABLE_D}.
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @param out a float array that must have at least 4 elements; will be cleared and returned
+     * @return {@code out}, meant as effectively a 2D rotation matrix
+     */
+    public static float[] fillRandomRotation2D(Random random, float[] out) {
+        final int index = random.nextInt() & TrigTools.TABLE_MASK; // 50 == 64 - TrigTools.SIN_BITS
+        final float s = TrigTools.SIN_TABLE[index];
+        final float c = TrigTools.COS_TABLE[index];
+        out[0] = out[3] = c;
+        out[2] = -(out[1] = s);
+        return out;
+    }
+
+    /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
      * {@link #rotate(float[], float[], float[])}.
      * Uses the given {@link Random} to get an angle using
@@ -763,6 +790,69 @@ public final class RotationTools {
     public static float[] randomRotation7D(Random random, float[] rotation6D) {
         return rotateStep(random, rotation6D, 7);
     }
+
+    /**
+     * Iteratively calculates a rotation matrix for the given {@code dimension}, randomly generating it with the given
+     * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
+     * such as {@link #randomRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this only
+     * allocates the array it returns.
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(float[], float[], float[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @param dimension will be clamped to at minimum 2, but there is technically no maximum
+     * @return a newly-allocated {@code dimension * dimension}-element float array, meant as effectively a
+     * {@code dimension}-D rotation matrix
+     */
+    public static float[] randomRotation(Random random, int dimension) {
+        dimension = Math.max(2, dimension);
+        final int dimensionSq = dimension * dimension;
+        final float[] base = fillRandomRotation2D(random, new float[dimensionSq]);
+        if(dimension > 2) {
+            final float[] gauss = new float[dimension], house = new float[dimensionSq],
+                    large = new float[dimensionSq], temp = new float[dimensionSq];
+            for (int d = 3; d <= dimension; d++) {
+                rotateStep(random, base, d, gauss, house, large, temp);
+                System.arraycopy(temp, 0, base, 0, d * d);
+            }
+        }
+        return base;
+    }
+
+    /**
+     * Iteratively calculates a rotation matrix for the given {@code dimension}, randomly generating it with the given
+     * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
+     * such as {@link #randomRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this doesn't
+     * allocate at all if {@code out} has at least length 4 (so it can store the resulting matrix).
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(float[], float[], float[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @param dimension will be clamped to at minimum 2, but there is technically no maximum
+     * @param out a float array that should have at least {@code dimension * dimension} elements; will be modified
+     * @return {@code out}, after modifications, unless it was too small or null (then this returns a new array)
+     */
+    public static float[] fillRandomRotation(Random random, int dimension, float[] out) {
+        dimension = Math.max(2, dimension);
+        final int dimensionSq = dimension * dimension;
+        if(out == null || out.length < dimensionSq) out = new float[dimensionSq];
+        fillRandomRotation2D(random, out);
+        if(dimension > 2) {
+            final float[] gauss = new float[dimension], house = new float[dimensionSq],
+                    large = new float[dimensionSq], temp = new float[dimensionSq];
+            for (int d = 3; d <= dimension; d++) {
+                rotateStep(random, out, d, gauss, house, large, temp);
+                System.arraycopy(temp, 0, out, 0, d * d);
+            }
+        }
+        return out;
+    }
+
+    // double code
 
     /**
      * A "raw" rotation method that takes a rotation matrix (as a row-major 1D double array), an input vector to rotate
@@ -1147,13 +1237,17 @@ public final class RotationTools {
     public static double[] randomDoubleRotation7D(long seed, double[] rotation6D) {
         return rotateStep(seed, rotation6D, 7);
     }
-
-
+    
     /**
      * Iteratively calculates a rotation matrix for the given {@code dimension}, randomly generating it with the given
      * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
      * such as {@link #randomDoubleRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this only
      * allocates the array it returns.
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(double[], double[], double[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
      * @param seed any long; will be scrambled
      * @param dimension will be clamped to at minimum 2, but there is technically no maximum
      * @return a newly-allocated {@code dimension * dimension}-element double array, meant as effectively a
@@ -1179,6 +1273,11 @@ public final class RotationTools {
      * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
      * such as {@link #randomRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this doesn't
      * allocate at all if {@code out} has at least length 4 (so it can store the resulting matrix).
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(double[], double[], double[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
      * @param seed any long; will be scrambled
      * @param dimension will be clamped to at minimum 2, but there is technically no maximum
      * @param out a float array that should have at least {@code dimension * dimension} elements; will be modified
@@ -1263,6 +1362,72 @@ public final class RotationTools {
     }
 
     /**
+     * This is just part of a larger rotation generator; it takes a target size (the side length of the matrix this will
+     * return), another matrix {@code small} (with a side length 1 less than {@code targetSize}), and a random number
+     * seed, and uses the seed and some matrix operations to generate a random rotation based on {@code small}. To avoid
+     * allocating arrays on each call to this, this method also takes four double arrays that this will clear and modify,
+     * to be used as temporary workspace. As long as the last four arguments have enough length, their contents don't
+     * matter. While {@code gauss} must have length of at least {@code targetSize}, the last three must have length of
+     * at least {@code targetSize * targetSize}.
+     * <br>
+     * This is not meant for usage outside this class, but if you are copying or modifying parts of the code in here,
+     * then you will probably need at least one of the rotateStep() methods.
+     * <br>
+     * See <a href="https://math.stackexchange.com/a/442489">Stack Exchange's links here</a>, and Graphics Gems III
+     * (specifically, the part about fast random rotation matrices, not the part about the subgroup algorithm).
+     *
+     * @param random random number generator; any {@link Random} from the JDK or from the juniper library works
+     * @param small a smaller square matrix than the result should be; must have side length {@code targetSize - 1}, and will not be modified
+     * @param targetSize the side length of the square matrix to be returned
+     * @param gauss a temporary double array that will be cleared; must have length of at least {@code targetSize}
+     * @param house a temporary double array that will be cleared; must have length of at least {@code targetSize * targetSize}
+     * @param large a temporary double array that will be cleared; must have length of at least {@code targetSize * targetSize}
+     * @param out the double array that will be cleared and returned; must have length of at least {@code targetSize * targetSize}
+     * @return {@code out}, which can be treated as a rotation matrix for inputs of size {@code targetSize}
+     */
+    public static double[] rotateStep(Random random, final double[] small, int targetSize, double[] gauss, double[] house,
+                                     double[] large, double[] out) {
+        final int smallSize = targetSize - 1, squareSize = targetSize * targetSize;
+        for (int i = 0; i < smallSize; i++) {
+            // copy the small matrix into the bottom right corner of the large matrix
+            System.arraycopy(small, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
+            large[i + 1] = 0.0;
+            large[i * targetSize + targetSize] = 0.0;
+        }
+        large[0] = 1.0;
+        double sum = 0.0, t;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = t = random.nextGaussian();
+            sum += t * t;
+        }
+        final double inv = 1.0 / Math.sqrt(sum);
+        sum = 0.0;
+        t = 1.0;
+        for (int i = 0; i < targetSize; i++) {
+            t -= gauss[i] *= inv;
+            sum += t * t;
+            t = 0.0;
+        }
+        sum = ROOT2_D / Math.sqrt(sum); // reused as what the subgroup paper calls c
+        t = 1.0;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = (t - gauss[i]) * sum;
+            t = 0.0;
+        }
+        for (int row = 0, h = 0; row < targetSize; row++) {
+            for (int col = 0; col < targetSize; col++, h++) {
+                house[h] = gauss[row] * gauss[col];
+            }
+        }
+        for (int i = 0; i < targetSize; i++) {
+            house[targetSize * i + i]--;
+        }
+        Arrays.fill(out, 0, squareSize, 0.0);
+        matrixMultiply(house, large, out, targetSize);
+        return out;
+    }
+
+    /**
      * Creates a new 1D double array that can be used as a 2D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given {@link Random} to get an angle using
      * {@link TrigTools#SIN_TABLE_D}.
@@ -1274,6 +1439,23 @@ public final class RotationTools {
         final double s = TrigTools.SIN_TABLE_D[index];
         final double c = TrigTools.COS_TABLE_D[index];
         return new double[]{c, s, -s, c};
+    }
+
+    /**
+     * Fills {@code out} with a 1D double array that can be used as a 2D rotation matrix by
+     * {@link #rotate(double[], double[], double[])}. Scrambles the given seed with {@link #randomize(long)},
+     * then gets an angle using {@link TrigTools#SIN_TABLE_D} and {@link TrigTools#COS_TABLE_D}.
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @param out a double array that must have at least 4 elements; will be cleared and returned
+     * @return {@code out}, meant as effectively a 2D rotation matrix
+     */
+    public static double[] fillRandomDoubleRotation2D(Random random, double[] out) {
+        final int index = random.nextInt() & TrigTools.TABLE_MASK; // 50 == 64 - TrigTools.SIN_BITS
+        final double s = TrigTools.COS_TABLE_D[index];
+        final double c = TrigTools.COS_TABLE_D[index];
+        out[0] = out[3] = c;
+        out[2] = -(out[1] = s);
+        return out;
     }
 
     /**
@@ -1370,6 +1552,91 @@ public final class RotationTools {
      */
     public static double[] randomDoubleRotation6D(Random random, double[] rotation5D) {
         return rotateStep(random, rotation5D, 6);
+    }
+
+    /**
+     * Creates a new 1D double array that can be used as a 7D rotation matrix by
+     * {@link #rotate(double[], double[], double[])}.
+     * Uses the given {@link Random} to get an angle using
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link Random#nextGaussian()}.
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @return a newly-allocated 49-element double array, meant as effectively a 7D rotation matrix
+     */
+    public static double[] randomDoubleRotation7D(Random random) {
+        return rotateStep(random, randomDoubleRotation6D(random), 7);
+    }
+
+    /**
+     * Creates a new 1D double array that can be used as a 7D rotation matrix by
+     * {@link #rotate(double[], double[], double[])}.
+     * Uses the given {@link Random} to get an angle using
+     * {@link TrigTools#SIN_TABLE_D}, and also calls {@link Random#nextGaussian()}.
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @return a newly-allocated 49-element double array, meant as effectively a 7D rotation matrix
+     */
+    public static double[] randomDoubleRotation7D(Random random, double[] rotation6D) {
+        return rotateStep(random, rotation6D, 7);
+    }
+
+    /**
+     * Iteratively calculates a rotation matrix for the given {@code dimension}, randomly generating it with the given
+     * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
+     * such as {@link #randomDoubleRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this only
+     * allocates the array it returns.
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(double[], double[], double[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @param dimension will be clamped to at minimum 2, but there is technically no maximum
+     * @return a newly-allocated {@code dimension * dimension}-element double array, meant as effectively a
+     * {@code dimension}-D rotation matrix
+     */
+    public static double[] randomDoubleRotation(Random random, int dimension) {
+        dimension = Math.max(2, dimension);
+        final int dimensionSq = dimension * dimension;
+        final double[] base = fillRandomDoubleRotation2D(random, new double[dimensionSq]);
+        if(dimension > 2) {
+            final double[] gauss = new double[dimension], house = new double[dimensionSq],
+                    large = new double[dimensionSq], temp = new double[dimensionSq];
+            for (int d = 3; d <= dimension; d++) {
+                rotateStep(random, base, d, gauss, house, large, temp);
+                System.arraycopy(temp, 0, base, 0, d * d);
+            }
+        }
+        return base;
+    }
+
+    /**
+     * Iteratively calculates a rotation matrix for the given {@code dimension}, randomly generating it with the given
+     * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
+     * such as {@link #randomRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this doesn't
+     * allocate at all if {@code out} has at least length 4 (so it can store the resulting matrix).
+     * <br>
+     * If allocation is a concern because you are making many random rotations, you may want to consider creating a
+     * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(double[], double[], double[])}
+     * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
+     *
+     * @param random any {@link Random} from the JDK or from the juniper library
+     * @param dimension will be clamped to at minimum 2, but there is technically no maximum
+     * @param out a float array that should have at least {@code dimension * dimension} elements; will be modified
+     * @return {@code out}, after modifications, unless it was too small or null (then this returns a new array)
+     */
+    public static double[] fillRandomDoubleRotation(Random random, int dimension, double[] out) {
+        dimension = Math.max(2, dimension);
+        final int dimensionSq = dimension * dimension;
+        if(out == null || out.length < dimensionSq) out = new double[dimensionSq];
+        fillRandomDoubleRotation2D(random, out);
+        if(dimension > 2) {
+            final double[] gauss = new double[dimension], house = new double[dimensionSq],
+                    large = new double[dimensionSq], temp = new double[dimensionSq];
+            for (int d = 3; d <= dimension; d++) {
+                rotateStep(random, out, d, gauss, house, large, temp);
+                System.arraycopy(temp, 0, out, 0, d * d);
+            }
+        }
+        return out;
     }
 
     /**
