@@ -20,11 +20,13 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.Ziggurat;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Arrays;
 import java.util.Random;
 
 import static com.github.tommyettinger.digital.MathTools.ROOT2;
+import static com.github.tommyettinger.digital.MathTools.ROOT2_D;
 
 /**
  * This has tools for generating and applying matrix rotations, potentially in higher dimensions than the typical 2 or
@@ -57,14 +59,16 @@ public final class RotationTools {
      * @param input an input vector of length {@code n}
      * @param rotation a rotation matrix of length {@code n*m} or greater
      * @param output the output vector of length {@code m}
+     * @return output, potentially after modification
      */
-    public static void rotate(float[] input, float[] rotation, float[] output) {
+    public static float[] rotate(float[] input, float[] rotation, float[] output) {
         int m = 0;
         for (int r = 0; r < input.length; r++) {
             for (int c = 0; m < rotation.length && c < output.length; c++) {
                 output[c] += rotation[m++] * input[r];
             }
         }
+        return output;
     }
 
     /**
@@ -82,8 +86,9 @@ public final class RotationTools {
      * @param rotation a rotation matrix of length {@code n*m}
      * @param output the output vector of length {@code m} or greater; only {@code rotation.length / input.length} items will be written to
      * @param offsetOut the index in {@code output} to start writing the rotated output
+     * @return output, potentially after modification
      */
-    public static void rotate(float[] input, float[] rotation, float[] output, int offsetOut) {
+    public static float[] rotate(float[] input, float[] rotation, float[] output, int offsetOut) {
         int m = 0;
         final int outEnd = offsetOut + rotation.length / input.length;
         for (int r = 0; r < input.length; r++) {
@@ -91,6 +96,7 @@ public final class RotationTools {
                 output[c] += rotation[m++] * input[r];
             }
         }
+        return output;
     }
 
     /**
@@ -110,8 +116,9 @@ public final class RotationTools {
      * @param rotation a rotation matrix of length {@code sizeIn * m}, where {@code m} is the length of an output vector
      * @param output the output vector of length {@code m} or greater; only {@code rotation.length / sizeIn} items will be written to
      * @param offsetOut the index in {@code output} to start writing the rotated output
+     * @return output, potentially after modification
      */
-    public static void rotate(float[] input, int offsetIn, int sizeIn, float[] rotation, float[] output, int offsetOut) {
+    public static float[] rotate(float[] input, int offsetIn, int sizeIn, float[] rotation, float[] output, int offsetOut) {
         int m = 0;
         final int outEnd = offsetOut + rotation.length / sizeIn, inEnd = offsetIn + sizeIn;
         for (int r = offsetIn; r < inEnd; r++) {
@@ -119,6 +126,7 @@ public final class RotationTools {
                 output[c] += rotation[m++] * input[r];
             }
         }
+        return output;
     }
 
     /**
@@ -128,8 +136,9 @@ public final class RotationTools {
      * @param rt the right input matrix, as row-major
      * @param out will be modified; this is where the output is summed into, and it is not cleared beforehand
      * @param side side length of each input matrix and the output matrix
+     * @return out, potentially after modification
      */
-    public static void matrixMultiply(float[] lf, float[] rt, float[] out, int side) {
+    public static float[] matrixMultiply(float[] lf, float[] rt, float[] out, int side) {
         int o = 0;
         for (int r = 0; r < side; r++) {
             for (int c = 0; c < side; c++) {
@@ -139,6 +148,7 @@ public final class RotationTools {
                 ++o;
             }
         }
+        return out;
     }
 
     // Section using a long seed and randomize()
@@ -768,13 +778,14 @@ public final class RotationTools {
      * @param rotation a rotation matrix of length {@code n*m} or greater
      * @param output the output vector of length {@code m}
      */
-    public static void rotate(double[] input, double[] rotation, double[] output) {
+    public static double[] rotate(double[] input, double[] rotation, double[] output) {
         int m = 0;
         for (int r = 0; r < input.length; r++) {
             for (int c = 0; m < rotation.length && c < output.length; c++) {
                 output[c] += rotation[m++] * input[r];
             }
         }
+        return output;
     }
 
     /**
@@ -793,7 +804,7 @@ public final class RotationTools {
      * @param output the output vector of length {@code m} or greater; only {@code rotation.length / input.length} items will be written to
      * @param offsetOut the index in {@code output} to start writing the rotated output
      */
-    public static void rotate(double[] input, double[] rotation, double[] output, int offsetOut) {
+    public static double[] rotate(double[] input, double[] rotation, double[] output, int offsetOut) {
         int m = 0;
         final int outEnd = offsetOut + rotation.length / input.length;
         for (int r = 0; r < input.length; r++) {
@@ -801,6 +812,7 @@ public final class RotationTools {
                 output[c] += rotation[m++] * input[r];
             }
         }
+        return output;
     }
     /**
      * A "raw" rotation method that takes a rotation matrix (as a row-major 1D double array), an input vector to rotate
@@ -820,7 +832,7 @@ public final class RotationTools {
      * @param output the output vector of length {@code m} or greater; only {@code rotation.length / sizeIn} items will be written to
      * @param offsetOut the index in {@code output} to start writing the rotated output
      */
-    public static void rotate(double[] input, int offsetIn, int sizeIn, double[] rotation, double[] output, int offsetOut) {
+    public static double[] rotate(double[] input, int offsetIn, int sizeIn, double[] rotation, double[] output, int offsetOut) {
         int m = 0;
         final int outEnd = offsetOut + rotation.length / sizeIn, inEnd = offsetIn + sizeIn;
         for (int r = offsetIn; r < inEnd; r++) {
@@ -828,6 +840,7 @@ public final class RotationTools {
                 output[c] += rotation[m++] * input[r];
             }
         }
+        return output;
     }
 
     /**
@@ -838,7 +851,7 @@ public final class RotationTools {
      * @param out will be modified; this is where the output is summed into, and it is not cleared beforehand
      * @param side side length of each input matrix and the output matrix
      */
-    public static void matrixMultiply(double[] lf, double[] rt, double[] out, int side) {
+    public static double[] matrixMultiply(double[] lf, double[] rt, double[] out, int side) {
         int o = 0;
         for (int r = 0; r < side; r++) {
             for (int c = 0; c < side; c++) {
@@ -848,6 +861,7 @@ public final class RotationTools {
                 ++o;
             }
         }
+        return out;
     }
 
     /**
@@ -912,6 +926,73 @@ public final class RotationTools {
     }
 
     /**
+     * This is just part of a larger rotation generator; it takes a target size (the side length of the matrix this will
+     * return), another matrix {@code small} (with a side length 1 less than {@code targetSize}), and a random number
+     * seed, and uses the seed and some matrix operations to generate a random rotation based on {@code small}. To avoid
+     * allocating arrays on each call to this, this method also takes four double arrays that this will clear and modify,
+     * to be used as temporary workspace. As long as the last four arguments have enough length, their contents don't
+     * matter. While {@code gauss} must have length of at least {@code targetSize}, the last three must have length of
+     * at least {@code targetSize * targetSize}.
+     * <br>
+     * This is not meant for usage outside this class, but if you are copying or modifying parts of the code in here,
+     * then you will probably need at least one of the rotateStep() methods.
+     * <br>
+     * See <a href="https://math.stackexchange.com/a/442489">Stack Exchange's links here</a>, and Graphics Gems III
+     * (specifically, the part about fast random rotation matrices, not the part about the subgroup algorithm).
+     *
+     * @param seed random number generator seed; may be a long or an int
+     * @param small a smaller square matrix than the result should be; must have side length {@code targetSize - 1}, and will not be modified
+     * @param targetSize the side length of the square matrix to be returned
+     * @param gauss a temporary double array that will be cleared; must have length of at least {@code targetSize}
+     * @param house a temporary double array that will be cleared; must have length of at least {@code targetSize * targetSize}
+     * @param large a temporary double array that will be cleared; must have length of at least {@code targetSize * targetSize}
+     * @param out the double array that will be cleared and returned; must have length of at least {@code targetSize * targetSize}
+     * @return {@code out}, which can be treated as a rotation matrix for inputs of size {@code targetSize}
+     */
+    public static double[] rotateStep(long seed, final double[] small, int targetSize, double[] gauss, double[] house,
+                                     double[] large, double[] out) {
+        final int smallSize = targetSize - 1, squareSize = targetSize * targetSize;
+        for (int i = 0; i < smallSize; i++) {
+            // copy the small matrix into the bottom right corner of the large matrix
+            System.arraycopy(small, i * smallSize, large, i * targetSize + targetSize + 1, smallSize);
+            large[i + 1] = 0.0;
+            large[i * targetSize + targetSize] = 0.0;
+        }
+        large[0] = 1.0;
+        long sd = randomize(seed + squareSize);
+        double sum = 0.0, t;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = t = Ziggurat.normal(randomize((sd += 0x9E3779B97F4A7C15L)));
+            sum += t * t;
+        }
+        final double inv = 1.0 / Math.sqrt(sum);
+        sum = 0.0;
+        t = 1.0;
+        for (int i = 0; i < targetSize; i++) {
+            t -= gauss[i] *= inv;
+            sum += t * t;
+            t = 0.0;
+        }
+        sum = ROOT2_D / Math.sqrt(sum); // reused as what the subgroup paper calls c
+        t = 1.0;
+        for (int i = 0; i < targetSize; i++) {
+            gauss[i] = (t - gauss[i]) * sum;
+            t = 0.0;
+        }
+        for (int row = 0, h = 0; row < targetSize; row++) {
+            for (int col = 0; col < targetSize; col++, h++) {
+                house[h] = gauss[row] * gauss[col];
+            }
+        }
+        for (int i = 0; i < targetSize; i++) {
+            house[targetSize * i + i]--;
+        }
+        Arrays.fill(out, 0, squareSize, 0.0);
+        matrixMultiply(house, large, out, targetSize);
+        return out;
+    }
+
+    /**
      * Creates a new 1D double array that can be used as a 2D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given seed to get an angle using
      * {@link TrigTools#SIN_TABLE_D}.
@@ -923,6 +1004,23 @@ public final class RotationTools {
         final double s = TrigTools.SIN_TABLE_D[index];
         final double c = TrigTools.COS_TABLE_D[index];
         return new double[]{c, s, -s, c};
+    }
+
+    /**
+     * Fills {@code out} with a 1D double array that can be used as a 2D rotation matrix by
+     * {@link #rotate(double[], double[], double[])}. Scrambles the given seed with {@link #randomize(long)},
+     * then gets an angle using {@link TrigTools#SIN_TABLE_D} and {@link TrigTools#COS_TABLE_D}.
+     * @param seed any long; will be scrambled
+     * @param out a double array that must have at least 4 elements; will be cleared and returned
+     * @return {@code out}, meant as effectively a 2D rotation matrix
+     */
+    public static double[] fillRandomDoubleRotation2D(long seed, double[] out) {
+        final int index = (int)(randomize(seed * 0x9E3779B97F4A7C15L) >>> 50); // 50 == 64 - TrigTools.SIN_BITS
+        final double s = TrigTools.SIN_TABLE_D[index];
+        final double c = TrigTools.COS_TABLE_D[index];
+        out[0] = out[3] = c;
+        out[2] = -(out[1] = s);
+        return out;
     }
 
     /**
@@ -1023,6 +1121,83 @@ public final class RotationTools {
      */
     public static double[] randomDoubleRotation6D(long seed, double[] rotation5D) {
         return rotateStep(seed, rotation5D, 6);
+    }
+
+    /**
+     * Creates a new 1D double array that can be used as a 7D rotation matrix by
+     * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
+     * @param seed any long; will be scrambled
+     * @return a newly-allocated 49-element double array, meant as effectively a 7D rotation matrix
+     */
+    public static double[] randomDoubleRotation7D(long seed) {
+        return rotateStep(seed, randomDoubleRotation6D(seed - 7), 7);
+    }
+
+    /**
+     * Creates a new 1D double array that can be used as a 7D rotation matrix by
+     * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get Gaussian doubles using
+     * {@link Ziggurat}, and uses an existing 6D rotation matrix to avoid redoing
+     * any generation work already done for 6D. There will probably be some correlation between the appearance of the 6D
+     * rotation this will build upon and the 7D rotation this produces, but other factors may make this irrelevant when
+     * used for noise.
+     * @param seed any long; will be scrambled
+     * @return a newly-allocated 49-element double array, meant as effectively a 7D rotation matrix
+     */
+    public static double[] randomDoubleRotation7D(long seed, double[] rotation6D) {
+        return rotateStep(seed, rotation6D, 7);
+    }
+
+
+    /**
+     * Iteratively calculates a rotation matrix for the given {@code dimension}, randomly generating it with the given
+     * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
+     * such as {@link #randomDoubleRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this only
+     * allocates the array it returns.
+     * @param seed any long; will be scrambled
+     * @param dimension will be clamped to at minimum 2, but there is technically no maximum
+     * @return a newly-allocated {@code dimension * dimension}-element double array, meant as effectively a
+     * {@code dimension}-D rotation matrix
+     */
+    public static double[] randomDoubleRotation(long seed, int dimension) {
+        dimension = Math.max(2, dimension);
+        final int dimensionSq = dimension * dimension;
+        final double[] base = fillRandomDoubleRotation2D(seed, new double[dimensionSq]);
+        if(dimension > 2) {
+            final double[] gauss = new double[dimension], house = new double[dimensionSq],
+                    large = new double[dimensionSq], temp = new double[dimensionSq];
+            for (int d = 3; d <= dimension; d++) {
+                rotateStep(seed += d, base, d, gauss, house, large, temp);
+                System.arraycopy(temp, 0, base, 0, d * d);
+            }
+        }
+        return base;
+    }
+
+    /**
+     * Iteratively calculates a rotation matrix for the given {@code dimension}, randomly generating it with the given
+     * {@code seed}. For dimensions 3 and higher, this allocates some temporary arrays once per call, but unlike methods
+     * such as {@link #randomRotation4D(long)}, this doesn't allocate per dimension. For dimension 2, this doesn't
+     * allocate at all if {@code out} has at least length 4 (so it can store the resulting matrix).
+     * @param seed any long; will be scrambled
+     * @param dimension will be clamped to at minimum 2, but there is technically no maximum
+     * @param out a float array that should have at least {@code dimension * dimension} elements; will be modified
+     * @return {@code out}, after modifications, unless it was too small or null (then this returns a new array)
+     */
+    public static double[] fillRandomDoubleRotation(long seed, int dimension, double[] out) {
+        dimension = Math.max(2, dimension);
+        final int dimensionSq = dimension * dimension;
+        if(out == null || out.length < dimensionSq) out = new double[dimensionSq];
+        fillRandomDoubleRotation2D(seed, out);
+        if(dimension > 2) {
+            final double[] gauss = new double[dimension], house = new double[dimensionSq],
+                    large = new double[dimensionSq], temp = new double[dimensionSq];
+            for (int d = 3; d <= dimension; d++) {
+                rotateStep(seed += d, out, d, gauss, house, large, temp);
+                System.arraycopy(temp, 0, out, 0, d * d);
+            }
+        }
+        return out;
     }
 
     // Section using a Random generator
@@ -1204,7 +1379,7 @@ public final class RotationTools {
      */
     public static class Rotator {
         public final int dimension;
-        public Random random;
+        public @NonNull Random random;
         // size is dimension
         private final float[] gauss;
         // size of each is dimension*dimension
@@ -1323,6 +1498,5 @@ public final class RotationTools {
                 }
             }
         }
-
     }
 }
