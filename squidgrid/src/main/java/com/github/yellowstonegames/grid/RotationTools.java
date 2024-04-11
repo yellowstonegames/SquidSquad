@@ -130,6 +130,40 @@ public final class RotationTools {
     }
 
     /**
+     * A "raw" rotation method that takes a rotation matrix (as a row-major 1D float array), an input vector to rotate
+     * (as a 1D float array), an output vector to write to (as a 1D float array), and offsets/sizes for those arrays to
+     * use only part of each one, and does the math to rotate {@code input} using {@code rotation}, and add the results
+     * into {@code output} starting at {@code offsetOut}. This does not erase output
+     * before writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
+     * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means this
+     * affects {@code sizeRotation / input.length} items in output. Typically, if input has length {@code n} and
+     * output should receive {@code m} changes, sizeRotation is {@code n*m}. This does no validation
+     * on {@code rotation}, hence why it is "raw" (also because it takes its inputs as unadorned 1D arrays).
+     *
+     * @param input an input vector that has length at least equal to {@code offsetIn + sizeIn}
+     * @param offsetIn the index in {@code input} to start reading
+     * @param sizeIn how many items to read from {@code input}
+     * @param rotation a rotation matrix of length {@code sizeIn * m}, where {@code m} is the length of an output vector
+     * @param offsetRotation the first index in {@code rotation} to start reading a rotation matrix from
+     * @param sizeRotation how many items to read from {@code rotation} to use as a rotation matrix
+     * @param output the output vector of length {@code m} or greater; only {@code sizeRotation / sizeIn} items will be written to
+     * @param offsetOut the index in {@code output} to start writing the rotated output
+     * @return output, potentially after modification
+     */
+    public static float[] rotate(float[] input, int offsetIn, int sizeIn, float[] rotation, int offsetRotation,
+                                 int sizeRotation, float[] output, int offsetOut) {
+        int m = offsetRotation;
+        final int outEnd = offsetOut + sizeRotation / sizeIn, inEnd = offsetIn + sizeIn,
+                rotEnd = offsetRotation + sizeRotation;
+        for (int r = offsetIn; r < inEnd; r++) {
+            for (int c = offsetOut; m < rotEnd && c < outEnd && c < output.length; c++) {
+                output[c] += rotation[m++] * input[r];
+            }
+        }
+        return output;
+    }
+
+    /**
      * Multiplies two square matrices with side length {@code side}, and stores the result in {@code out}. The inputs
      * {@code lf} and {@code rt} are 1D float arrays treated as row-major matrices.
      * @param lf the left input matrix, as row-major
@@ -911,7 +945,7 @@ public final class RotationTools {
      * into {@code output} starting at {@code offsetOut}. This does not erase output
      * before writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
      * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means this
-     * affects {@code rotation.length / input.length} items in output. Typically, if input has length {@code n} and
+     * affects {@code rotation.length / input.length} items in output. If input has length {@code n} and
      * output should receive {@code m} changes, rotation has length {@code n*m}. This does no validation
      * on {@code rotation}, hence why it is "raw" (also because it takes its inputs as unadorned 1D arrays).
      *
@@ -932,6 +966,41 @@ public final class RotationTools {
         }
         return output;
     }
+
+    /**
+     * A "raw" rotation method that takes a rotation matrix (as a row-major 1D double array), an input vector to rotate
+     * (as a 1D double array), an output vector to write to (as a 1D double array), and offsets/sizes for those arrays to
+     * use only part of each one, and does the math to rotate {@code input} using {@code rotation}, and add the results
+     * into {@code output} starting at {@code offsetOut}. This does not erase output
+     * before writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
+     * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means this
+     * affects {@code sizeRotation / input.length} items in output. Typically, if input has length {@code n} and
+     * output should receive {@code m} changes, sizeRotation is {@code n*m}. This does no validation
+     * on {@code rotation}, hence why it is "raw" (also because it takes its inputs as unadorned 1D arrays).
+     *
+     * @param input an input vector that has length at least equal to {@code offsetIn + sizeIn}
+     * @param offsetIn the index in {@code input} to start reading
+     * @param sizeIn how many items to read from {@code input}
+     * @param rotation a rotation matrix of length {@code sizeIn * m}, where {@code m} is the length of an output vector
+     * @param offsetRotation the first index in {@code rotation} to start reading a rotation matrix from
+     * @param sizeRotation how many items to read from {@code rotation} to use as a rotation matrix
+     * @param output the output vector of length {@code m} or greater; only {@code sizeRotation / sizeIn} items will be written to
+     * @param offsetOut the index in {@code output} to start writing the rotated output
+     * @return output, potentially after modification
+     */
+    public static double[] rotate(double[] input, int offsetIn, int sizeIn, double[] rotation, int offsetRotation,
+                                 int sizeRotation, double[] output, int offsetOut) {
+        int m = offsetRotation;
+        final int outEnd = offsetOut + sizeRotation / sizeIn, inEnd = offsetIn + sizeIn,
+                rotEnd = offsetRotation + sizeRotation;
+        for (int r = offsetIn; r < inEnd; r++) {
+            for (int c = offsetOut; m < rotEnd && c < outEnd && c < output.length; c++) {
+                output[c] += rotation[m++] * input[r];
+            }
+        }
+        return output;
+    }
+
 
     /**
      * Multiplies two square matrices with side length {@code side}, and stores the result in {@code out}. The inputs
