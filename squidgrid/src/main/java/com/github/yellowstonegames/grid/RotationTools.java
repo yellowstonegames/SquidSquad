@@ -164,6 +164,48 @@ public final class RotationTools {
     }
 
     /**
+     * A geometric "slerp" (spherical linear interpolation) from the input n-dimensional point {@code start} to the
+     * point in the same dimension {@code end}, moving a fraction of the distance equal to {@code alpha}, and placing
+     * the result in {@code output} (modifying it in-place). This does not allocate. This has undefined behavior if
+     * start and end are polar opposites; that is, points where for any coordinate {@code a} in start, that coordinate
+     * in end is {@code -a} or any positive linear scale of the point where that is true. This also has undefined
+     * behavior if either start or end is the origin. Otherwise, this can smoothly move points that aren't already on
+     * the unit sphere towards the distance of the other point from the origin.
+     * <br>
+     * Based on the non-approximation code from
+     * <a href="https://observablehq.com/@mourner/approximating-geometric-slerp">an article by Volodymyr Agafonkin</a>.
+     *
+     * @param start an n-dimensional point, where {@code start.length} is n
+     * @param end another n-dimensional point, where {@code end.length} is also the same n
+     * @param alpha between 0 and 1, inclusive; how much to travel from start towards end
+     * @param output the first n items in this will receive the interpolated position, modifying it in-place
+     * @return output, after modifications.
+     */
+    public static float[] slerp(float[] start, float[] end, float alpha, float[] output) {
+        float magS = 0f, magE = 0f;
+        for (int i = 0; i < start.length; i++) {
+            magS += start[i] * start[i];
+            magE += end[i] * end[i];
+        }
+        magS = (float) Math.sqrt(magS);
+        magE = (float) Math.sqrt(magE);
+
+        float k = 0, invDistance = 1f / (magS * (1 - alpha) + magE * alpha);
+        for (int i = 0; i < start.length; i++) {
+            k += (start[i] / magS) * (end[i] / magE);
+        }
+        k = TrigTools.acos(k);
+        float s = TrigTools.sin(k * (1f - alpha));
+        float e = TrigTools.sin(k * alpha);
+
+        for (int i = 0; i < start.length; i++) {
+            output[i] = (start[i] * s + end[i] * e) * invDistance;
+        }
+
+        return output;
+    }
+
+    /**
      * Multiplies two square matrices with side length {@code side}, and stores the result in {@code out}. The inputs
      * {@code lf} and {@code rt} are 1D float arrays treated as row-major matrices.
      * @param lf the left input matrix, as row-major
@@ -1001,6 +1043,51 @@ public final class RotationTools {
         return output;
     }
 
+    /**
+     * A geometric "slerp" (spherical linear interpolation) from the input n-dimensional point {@code start} to the
+     * point in the same dimension {@code end}, moving a fraction of the distance equal to {@code alpha}, and placing
+     * the result in {@code output} (modifying it in-place). This does not allocate. This has undefined behavior if
+     * start and end are polar opposites; that is, points where for any coordinate {@code a} in start, that coordinate
+     * in end is {@code -a} or any positive linear scale of the point where that is true. This also has undefined
+     * behavior if either start or end is the origin. Otherwise, this can smoothly move points that aren't already on
+     * the unit sphere towards the distance of the other point from the origin.
+     * <br>
+     * Unlike the {@code float} version of this method, this calls {@link Math#acos(double)} and
+     * {@link Math#sin(double)} for higher precision. This is expected to be somewhat slower than using the
+     * approximations from {@link TrigTools}.
+     * <br>
+     * Based on the non-approximation code from
+     * <a href="https://observablehq.com/@mourner/approximating-geometric-slerp">an article by Volodymyr Agafonkin</a>.
+     *
+     * @param start an n-dimensional point, where {@code start.length} is n
+     * @param end another n-dimensional point, where {@code end.length} is also the same n
+     * @param alpha between 0 and 1, inclusive; how much to travel from start towards end
+     * @param output the first n items in this will receive the interpolated position, modifying it in-place
+     * @return output, after modifications.
+     */
+    public static double[] slerp(double[] start, double[] end, double alpha, double[] output) {
+        double magS = 0.0, magE = 0.0;
+        for (int i = 0; i < start.length; i++) {
+            magS += start[i] * start[i];
+            magE += end[i] * end[i];
+        }
+        magS = Math.sqrt(magS);
+        magE = Math.sqrt(magE);
+
+        double k = 0.0, invDistance = 1.0 / (magS * (1.0 - alpha) + magE * alpha);
+        for (int i = 0; i < start.length; i++) {
+            k += (start[i] / magS) * (end[i] / magE);
+        }
+        k = Math.acos(k);
+        double s = Math.sin(k * (1.0 - alpha));
+        double e = Math.sin(k * alpha);
+
+        for (int i = 0; i < start.length; i++) {
+            output[i] = (start[i] * s + end[i] * e) * invDistance;
+        }
+
+        return output;
+    }
 
     /**
      * Multiplies two square matrices with side length {@code side}, and stores the result in {@code out}. The inputs
