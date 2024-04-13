@@ -168,12 +168,15 @@ public final class RotationTools {
      * point in the same dimension {@code end}, moving a fraction of the distance equal to {@code alpha}, and placing
      * the result in {@code output} (modifying it in-place). This does not allocate. This has undefined behavior if
      * start and end are polar opposites; that is, points where for any coordinate {@code a} in start, that coordinate
-     * in end is {@code -a} or any positive linear scale of the point where that is true. This also has undefined
-     * behavior if either start or end is the origin. Otherwise, this can smoothly move points that aren't already on
-     * the unit sphere towards the distance of the other point from the origin.
+     * in end is {@code -a} or any positive linear scale of the point where that is true. This degenerates to a linear
+     * interpolation if either start or end is the origin, and simply returns the start if both are the origin.
+     * Otherwise, this can smoothly move points that aren't already on the unit sphere towards the distance of the other
+     * point from the origin.
      * <br>
      * Based on the non-approximation code from
      * <a href="https://observablehq.com/@mourner/approximating-geometric-slerp">an article by Volodymyr Agafonkin</a>.
+     * Note that this is the "geometric slerp" rather than the version using quaternions in 3D (or rotors in other
+     * dimensions). It has been augmented slightly to handle start and end vectors that don't have unit length.
      *
      * @param start an n-dimensional point, where {@code start.length} is n
      * @param end another n-dimensional point, where {@code end.length} is also the same n
@@ -187,21 +190,38 @@ public final class RotationTools {
             magS += start[i] * start[i];
             magE += end[i] * end[i];
         }
-        magS = (float) Math.sqrt(magS);
-        magE = (float) Math.sqrt(magE);
-
-        float k = 0, invDistance = 1f / (magS * (1 - alpha) + magE * alpha);
-        for (int i = 0; i < start.length; i++) {
-            k += (start[i] / magS) * (end[i] / magE);
+        // if both start and end are the origin
+        if(MathTools.isZero(magS + magE)) {
+            System.arraycopy(start, 0, output, 0, start.length);
         }
-        k = TrigTools.acos(k);
-        float s = TrigTools.sin(k * (1f - alpha));
-        float e = TrigTools.sin(k * alpha);
-
-        for (int i = 0; i < start.length; i++) {
-            output[i] = (start[i] * s + end[i] * e) * invDistance;
+        // if only the start is the origin
+        else if(MathTools.isZero(magS)){
+            for (int i = 0; i < start.length; i++) {
+                output[i] = end[i] * alpha;
+            }
         }
+        // if only the end is the origin
+        else if(MathTools.isZero(magE)){
+            for (int i = 0; i < start.length; i++) {
+                output[i] = start[i] * (1f - alpha);
+            }
+        }
+        else {
+            magS = (float) Math.sqrt(magS);
+            magE = (float) Math.sqrt(magE);
 
+            float k = 0, invDistance = 1f / (magS * (1f - alpha) + magE * alpha);
+            for (int i = 0; i < start.length; i++) {
+                k += (start[i] / magS) * (end[i] / magE);
+            }
+            k = TrigTools.acos(k);
+            float s = TrigTools.sin(k * (1f - alpha));
+            float e = TrigTools.sin(k * alpha);
+
+            for (int i = 0; i < start.length; i++) {
+                output[i] = (start[i] * s + end[i] * e) * invDistance;
+            }
+        }
         return output;
     }
 
@@ -1048,9 +1068,10 @@ public final class RotationTools {
      * point in the same dimension {@code end}, moving a fraction of the distance equal to {@code alpha}, and placing
      * the result in {@code output} (modifying it in-place). This does not allocate. This has undefined behavior if
      * start and end are polar opposites; that is, points where for any coordinate {@code a} in start, that coordinate
-     * in end is {@code -a} or any positive linear scale of the point where that is true. This also has undefined
-     * behavior if either start or end is the origin. Otherwise, this can smoothly move points that aren't already on
-     * the unit sphere towards the distance of the other point from the origin.
+     * in end is {@code -a} or any positive linear scale of the point where that is true. This degenerates to a linear
+     * interpolation if either start or end is the origin, and simply returns the start if both are the origin.
+     * Otherwise, this can smoothly move points that aren't already on the unit sphere towards the distance of the other
+     * point from the origin.
      * <br>
      * Unlike the {@code float} version of this method, this calls {@link Math#acos(double)} and
      * {@link Math#sin(double)} for higher precision. This is expected to be somewhat slower than using the
@@ -1058,6 +1079,8 @@ public final class RotationTools {
      * <br>
      * Based on the non-approximation code from
      * <a href="https://observablehq.com/@mourner/approximating-geometric-slerp">an article by Volodymyr Agafonkin</a>.
+     * Note that this is the "geometric slerp" rather than the version using quaternions in 3D (or rotors in other
+     * dimensions). It has been augmented slightly to handle start and end vectors that don't have unit length.
      *
      * @param start an n-dimensional point, where {@code start.length} is n
      * @param end another n-dimensional point, where {@code end.length} is also the same n
@@ -1071,21 +1094,38 @@ public final class RotationTools {
             magS += start[i] * start[i];
             magE += end[i] * end[i];
         }
-        magS = Math.sqrt(magS);
-        magE = Math.sqrt(magE);
-
-        double k = 0.0, invDistance = 1.0 / (magS * (1.0 - alpha) + magE * alpha);
-        for (int i = 0; i < start.length; i++) {
-            k += (start[i] / magS) * (end[i] / magE);
+        // if both start and end are the origin
+        if(MathTools.isZero(magS + magE, 1E-9)) {
+            System.arraycopy(start, 0, output, 0, start.length);
         }
-        k = Math.acos(k);
-        double s = Math.sin(k * (1.0 - alpha));
-        double e = Math.sin(k * alpha);
-
-        for (int i = 0; i < start.length; i++) {
-            output[i] = (start[i] * s + end[i] * e) * invDistance;
+        // if only the start is the origin
+        else if(MathTools.isZero(magS, 1E-9)){
+            for (int i = 0; i < start.length; i++) {
+                output[i] = end[i] * alpha;
+            }
         }
+        // if only the end is the origin
+        else if(MathTools.isZero(magE, 1E-9)){
+            for (int i = 0; i < start.length; i++) {
+                output[i] = start[i] * (1.0 - alpha);
+            }
+        }
+        else {
+            magS = Math.sqrt(magS);
+            magE = Math.sqrt(magE);
 
+            double k = 0.0, invDistance = 1.0 / (magS * (1.0 - alpha) + magE * alpha);
+            for (int i = 0; i < start.length; i++) {
+                k += (start[i] / magS) * (end[i] / magE);
+            }
+            k = Math.acos(k);
+            double s = Math.sin(k * (1.0 - alpha));
+            double e = Math.sin(k * alpha);
+
+            for (int i = 0; i < start.length; i++) {
+                output[i] = (start[i] * s + end[i] * e) * invDistance;
+            }
+        }
         return output;
     }
 
