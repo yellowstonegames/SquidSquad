@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
@@ -184,7 +185,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
 
     private Color bgColor;
     private BitmapFont font;
-    private Viewport mainViewport;
+    private ScreenViewport mainViewport;
     private Camera camera;
 
     private CoordObjectOrderedMap<AnimatedGlidingSprite> monsters;
@@ -400,7 +401,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
 
         rng = new ChopRandom(123, -456, 789, 987654321);
 
-        mainViewport = new ScalingViewport(Scaling.fill, shownWidth, shownHeight);
+//        mainViewport = new ScalingViewport(Scaling.fill, shownWidth, shownHeight);
+        mainViewport = new ScreenViewport();
+        mainViewport.setUnitsPerPixel(1f/32f);
         mainViewport.setScreenBounds(0, 0, shownWidth * cellWidth, shownHeight * cellHeight);
         camera = mainViewport.getCamera();
         camera.update();
@@ -731,21 +734,21 @@ public class DawnlikeDemo extends ApplicationAdapter {
                     if(newlyVisible.contains(i, j)){
                         int idx = toCursor.indexOf(Coord.get(i, j));
                         // if a cell just became visible in the last frame, we fade it in over a short animation.
-                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
-                                DescriptiveColor.fade(
+                        batch.setPackedColor(
                                         idx != -1
-                                                ? DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f)
-                                                : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
+                                                ? DescriptiveColorRgb.toFloat(DescriptiveColorRgb.hsb2rgb(time * 0.5f + i * 0.0625f, 0.9f, 1f, 1f))
+                                                : DescriptiveColor.oklabIntToFloat(DescriptiveColor.fade(
+                                                        DescriptiveColor.addColors(backgroundColors[i][j],
+                                                                DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)), 1f - change)));
                     } else if(justSeen.contains(i, j)){
                         batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
                                 DescriptiveColor.lerpColors(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f)),
                                         DescriptiveColor.lerpColors(backgroundColors[i][j], INT_GRAY, 0.6f), 1f - change)));
                     } else {
                         int idx = toCursor.indexOf(Coord.get(i, j));
-                        batch.setPackedColor(DescriptiveColor.oklabIntToFloat(
-                                idx != -1
-                                ? DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f)
-                                : DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
+                        batch.setPackedColor(idx != -1
+                                ? DescriptiveColorRgb.toFloat(DescriptiveColorRgb.hsb2rgb(time * 0.5f + i * 0.0625f, 0.9f, 1f, 1f))
+                                : DescriptiveColor.oklabIntToFloat(DescriptiveColor.addColors(backgroundColors[i][j], DescriptiveColor.lerpColors(INT_GRAY, INT_LIGHTING, lightLevels[i][j] * 0.7f + 0.15f))));
                     }
                     if(lineDungeon[i][j] == '/' || lineDungeon[i][j] == '+') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), i, j, 1f, 1f);
@@ -829,13 +832,14 @@ public class DawnlikeDemo extends ApplicationAdapter {
 
         // standard clear the background routine for libGDX
         ScreenUtils.clear(bgColor);
+        // make sure the viewport is in use
+        mainViewport.apply(true);
         // center the camera on the player's position
         camera.position.x = playerSprite.getX();
         camera.position.y =  playerSprite.getY();
         camera.update();
 
-
-        mainViewport.apply(false);
+        // required to have the camera do anything we want
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
