@@ -8809,7 +8809,7 @@ public class Noise implements INoise {
 
         switch (cellularReturnType) {
             case CELL_VALUE:
-                return valCoord2D(0, xc, yc);
+                return valCoord2D(seed, xc, yc);
 
             case NOISE_LOOKUP:
                 Float2 vec = CELL_2D[hash256(xc, yc, seed)];
@@ -9174,7 +9174,6 @@ public class Noise implements INoise {
         }
     }
 
-
     protected float singleCellularMerging(int seed, float x, float y, float z) {
         int xr = fastRound(x);
         int yr = fastRound(y);
@@ -9430,154 +9429,6 @@ public class Noise implements INoise {
         }
         return sum * 2f / correction - 1f;
     }
-
-    public void gradientPerturb3(float[] v3) {
-        singleGradientPerturb3(seed, gradientPerturbAmp, frequency, v3);
-    }
-
-    public void gradientPerturbFractal3(float[] v3) {
-        int seed = this.seed;
-        float amp = gradientPerturbAmp * fractalBounding;
-        float freq = frequency;
-
-        singleGradientPerturb3(seed, amp, frequency, v3);
-
-        for (int i = 1; i < octaves; i++) {
-            freq *= lacunarity;
-            amp *= gain;
-            singleGradientPerturb3(++seed, amp, freq, v3);
-        }
-    }
-
-    private void singleGradientPerturb3(int seed, float perturbAmp, float frequency, float[] v3) {
-        float xf = v3[0] * frequency;
-        float yf = v3[1] * frequency;
-        float zf = v3[2] * frequency;
-
-        int x0 = fastFloor(xf);
-        int y0 = fastFloor(yf);
-        int z0 = fastFloor(zf);
-        int x1 = x0 + 1;
-        int y1 = y0 + 1;
-        int z1 = z0 + 1;
-
-        float xs, ys, zs;
-        switch (interpolation) {
-            default:
-            case LINEAR:
-                xs = xf - x0;
-                ys = yf - y0;
-                zs = zf - z0;
-                break;
-            case HERMITE:
-                xs = hermiteInterpolator(xf - x0);
-                ys = hermiteInterpolator(yf - y0);
-                zs = hermiteInterpolator(zf - z0);
-                break;
-            case QUINTIC:
-                xs = quinticInterpolator(xf - x0);
-                ys = quinticInterpolator(yf - y0);
-                zs = quinticInterpolator(zf - z0);
-                break;
-        }
-
-        Float3 vec0 = CELL_3D[hash256(x0, y0, z0, seed)];
-        Float3 vec1 = CELL_3D[hash256(x1, y0, z0, seed)];
-
-        float lx0x = lerp(vec0.x, vec1.x, xs);
-        float ly0x = lerp(vec0.y, vec1.y, xs);
-        float lz0x = lerp(vec0.z, vec1.z, xs);
-
-        vec0 = CELL_3D[hash256(x0, y1, z0, seed)];
-        vec1 = CELL_3D[hash256(x1, y1, z0, seed)];
-
-        float lx1x = lerp(vec0.x, vec1.x, xs);
-        float ly1x = lerp(vec0.y, vec1.y, xs);
-        float lz1x = lerp(vec0.z, vec1.z, xs);
-
-        float lx0y = lerp(lx0x, lx1x, ys);
-        float ly0y = lerp(ly0x, ly1x, ys);
-        float lz0y = lerp(lz0x, lz1x, ys);
-
-        vec0 = CELL_3D[hash256(x0, y0, z1, seed)];
-        vec1 = CELL_3D[hash256(x1, y0, z1, seed)];
-
-        lx0x = lerp(vec0.x, vec1.x, xs);
-        ly0x = lerp(vec0.y, vec1.y, xs);
-        lz0x = lerp(vec0.z, vec1.z, xs);
-
-        vec0 = CELL_3D[hash256(x0, y1, z1, seed)];
-        vec1 = CELL_3D[hash256(x1, y1, z1, seed)];
-
-        lx1x = lerp(vec0.x, vec1.x, xs);
-        ly1x = lerp(vec0.y, vec1.y, xs);
-        lz1x = lerp(vec0.z, vec1.z, xs);
-
-        v3[0] += lerp(lx0y, lerp(lx0x, lx1x, ys), zs) * perturbAmp;
-        v3[1] += lerp(ly0y, lerp(ly0x, ly1x, ys), zs) * perturbAmp;
-        v3[2] += lerp(lz0y, lerp(lz0x, lz1x, ys), zs) * perturbAmp;
-    }
-
-    public void gradientPerturb2(float[] v2) {
-        singleGradientPerturb2(seed, gradientPerturbAmp, frequency, v2);
-    }
-
-    public void gradientPerturbFractal2(float[] v2) {
-        int seed = this.seed;
-        float amp = gradientPerturbAmp * fractalBounding;
-        float freq = frequency;
-
-        singleGradientPerturb2(seed, amp, frequency, v2);
-
-        for (int i = 1; i < octaves; i++) {
-            freq *= lacunarity;
-            amp *= gain;
-            singleGradientPerturb2(++seed, amp, freq, v2);
-        }
-    }
-
-    private void singleGradientPerturb2(int seed, float perturbAmp, float frequency, float[] v2) {
-        float xf = v2[0] * frequency;
-        float yf = v2[1] * frequency;
-
-        int x0 = fastFloor(xf);
-        int y0 = fastFloor(yf);
-        int x1 = x0 + 1;
-        int y1 = y0 + 1;
-
-        float xs, ys;
-        switch (interpolation) {
-            default:
-            case LINEAR:
-                xs = xf - x0;
-                ys = yf - y0;
-                break;
-            case HERMITE:
-                xs = hermiteInterpolator(xf - x0);
-                ys = hermiteInterpolator(yf - y0);
-                break;
-            case QUINTIC:
-                xs = quinticInterpolator(xf - x0);
-                ys = quinticInterpolator(yf - y0);
-                break;
-        }
-
-        Float2 vec0 = CELL_2D[hash256(x0, y0, seed)];
-        Float2 vec1 = CELL_2D[hash256(x1, y0, seed)];
-
-        float lx0x = lerp(vec0.x, vec1.x, xs);
-        float ly0x = lerp(vec0.y, vec1.y, xs);
-
-        vec0 = CELL_2D[hash256(x0, y1, seed)];
-        vec1 = CELL_2D[hash256(x1, y1, seed)];
-
-        float lx1x = lerp(vec0.x, vec1.x, xs);
-        float ly1x = lerp(vec0.y, vec1.y, xs);
-
-        v2[0] += lerp(lx0x, lx1x, ys) * perturbAmp;
-        v2[1] += lerp(ly0x, ly1x, ys) * perturbAmp;
-    }
-
 
     public float getHoney(float x, float y) {
         return singleHoney(seed, x * frequency, y * frequency);
@@ -10222,6 +10073,157 @@ public class Noise implements INoise {
         return (result <= 1f) ? result * result - 1f : (result - 2f) * -(result - 2f) + 1f;
     }
 
+    // Gradient Perturb (currently unused)
+
+    public void gradientPerturb2(float[] v2) {
+        singleGradientPerturb2(seed, gradientPerturbAmp, frequency, v2);
+    }
+
+    public void gradientPerturbFractal2(float[] v2) {
+        int seed = this.seed;
+        float amp = gradientPerturbAmp * fractalBounding;
+        float freq = frequency;
+
+        singleGradientPerturb2(seed, amp, frequency, v2);
+
+        for (int i = 1; i < octaves; i++) {
+            freq *= lacunarity;
+            amp *= gain;
+            singleGradientPerturb2(++seed, amp, freq, v2);
+        }
+    }
+
+    private void singleGradientPerturb2(int seed, float perturbAmp, float frequency, float[] v2) {
+        float xf = v2[0] * frequency;
+        float yf = v2[1] * frequency;
+
+        int x0 = fastFloor(xf);
+        int y0 = fastFloor(yf);
+        int x1 = x0 + 1;
+        int y1 = y0 + 1;
+
+        float xs, ys;
+        switch (interpolation) {
+            default:
+            case LINEAR:
+                xs = xf - x0;
+                ys = yf - y0;
+                break;
+            case HERMITE:
+                xs = hermiteInterpolator(xf - x0);
+                ys = hermiteInterpolator(yf - y0);
+                break;
+            case QUINTIC:
+                xs = quinticInterpolator(xf - x0);
+                ys = quinticInterpolator(yf - y0);
+                break;
+        }
+
+        Float2 vec0 = CELL_2D[hash256(x0, y0, seed)];
+        Float2 vec1 = CELL_2D[hash256(x1, y0, seed)];
+
+        float lx0x = lerp(vec0.x, vec1.x, xs);
+        float ly0x = lerp(vec0.y, vec1.y, xs);
+
+        vec0 = CELL_2D[hash256(x0, y1, seed)];
+        vec1 = CELL_2D[hash256(x1, y1, seed)];
+
+        float lx1x = lerp(vec0.x, vec1.x, xs);
+        float ly1x = lerp(vec0.y, vec1.y, xs);
+
+        v2[0] += lerp(lx0x, lx1x, ys) * perturbAmp;
+        v2[1] += lerp(ly0x, ly1x, ys) * perturbAmp;
+    }
+
+    public void gradientPerturb3(float[] v3) {
+        singleGradientPerturb3(seed, gradientPerturbAmp, frequency, v3);
+    }
+
+    public void gradientPerturbFractal3(float[] v3) {
+        int seed = this.seed;
+        float amp = gradientPerturbAmp * fractalBounding;
+        float freq = frequency;
+
+        singleGradientPerturb3(seed, amp, frequency, v3);
+
+        for (int i = 1; i < octaves; i++) {
+            freq *= lacunarity;
+            amp *= gain;
+            singleGradientPerturb3(++seed, amp, freq, v3);
+        }
+    }
+
+    private void singleGradientPerturb3(int seed, float perturbAmp, float frequency, float[] v3) {
+        float xf = v3[0] * frequency;
+        float yf = v3[1] * frequency;
+        float zf = v3[2] * frequency;
+
+        int x0 = fastFloor(xf);
+        int y0 = fastFloor(yf);
+        int z0 = fastFloor(zf);
+        int x1 = x0 + 1;
+        int y1 = y0 + 1;
+        int z1 = z0 + 1;
+
+        float xs, ys, zs;
+        switch (interpolation) {
+            default:
+            case LINEAR:
+                xs = xf - x0;
+                ys = yf - y0;
+                zs = zf - z0;
+                break;
+            case HERMITE:
+                xs = hermiteInterpolator(xf - x0);
+                ys = hermiteInterpolator(yf - y0);
+                zs = hermiteInterpolator(zf - z0);
+                break;
+            case QUINTIC:
+                xs = quinticInterpolator(xf - x0);
+                ys = quinticInterpolator(yf - y0);
+                zs = quinticInterpolator(zf - z0);
+                break;
+        }
+
+        Float3 vec0 = CELL_3D[hash256(x0, y0, z0, seed)];
+        Float3 vec1 = CELL_3D[hash256(x1, y0, z0, seed)];
+
+        float lx0x = lerp(vec0.x, vec1.x, xs);
+        float ly0x = lerp(vec0.y, vec1.y, xs);
+        float lz0x = lerp(vec0.z, vec1.z, xs);
+
+        vec0 = CELL_3D[hash256(x0, y1, z0, seed)];
+        vec1 = CELL_3D[hash256(x1, y1, z0, seed)];
+
+        float lx1x = lerp(vec0.x, vec1.x, xs);
+        float ly1x = lerp(vec0.y, vec1.y, xs);
+        float lz1x = lerp(vec0.z, vec1.z, xs);
+
+        float lx0y = lerp(lx0x, lx1x, ys);
+        float ly0y = lerp(ly0x, ly1x, ys);
+        float lz0y = lerp(lz0x, lz1x, ys);
+
+        vec0 = CELL_3D[hash256(x0, y0, z1, seed)];
+        vec1 = CELL_3D[hash256(x1, y0, z1, seed)];
+
+        lx0x = lerp(vec0.x, vec1.x, xs);
+        ly0x = lerp(vec0.y, vec1.y, xs);
+        lz0x = lerp(vec0.z, vec1.z, xs);
+
+        vec0 = CELL_3D[hash256(x0, y1, z1, seed)];
+        vec1 = CELL_3D[hash256(x1, y1, z1, seed)];
+
+        lx1x = lerp(vec0.x, vec1.x, xs);
+        ly1x = lerp(vec0.y, vec1.y, xs);
+        lz1x = lerp(vec0.z, vec1.z, xs);
+
+        v3[0] += lerp(lx0y, lerp(lx0x, lx1x, ys), zs) * perturbAmp;
+        v3[1] += lerp(ly0y, lerp(ly0x, ly1x, ys), zs) * perturbAmp;
+        v3[2] += lerp(lz0y, lerp(lz0x, lz1x, ys), zs) * perturbAmp;
+    }
+
+    // Basic Java Code
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -10263,6 +10265,8 @@ public class Noise implements INoise {
                 ", fractalSpiral=" + fractalSpiral +
                 '}';
     }
+    
+    // Constants
 
     // These are used for Perlin noise.
     public static final float SCALE2 = 1.4142133f,  ADD2 = 1.0f/1.75f, MUL2 = 1.2535664f;
@@ -10298,12 +10302,35 @@ public class Noise implements INoise {
      * Takes slightly less storage than an array of float[2] and may avoid array index bounds check speed penalty.
      * Used by cellular noise.
      */
-    public static class Float2 {
+    public static final class Float2 {
         public final float x, y;
 
         public Float2(float x, float y) {
             this.x = x;
             this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Float2)) return false;
+
+            Float2 float2 = (Float2) o;
+            return Float.compare(x, float2.x) == 0 && Float.compare(y, float2.y) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = BitConversion.floatToRawIntBits(x);
+            result = 31 * result + BitConversion.floatToRawIntBits(y);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Float2(" + x +
+                   "f, " + y +
+                   "f)";
         }
     }
 
@@ -10312,7 +10339,7 @@ public class Noise implements INoise {
      * Takes slightly less storage than an array of float[3] and may avoid array index bounds check speed penalty.
      * Used by cellular noise.
      */
-    public static class Float3 {
+    public static final class Float3 {
         public final float x, y, z;
 
         public Float3(float x, float y, float z) {
@@ -10320,8 +10347,36 @@ public class Noise implements INoise {
             this.y = y;
             this.z = z;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Float3)) return false;
+
+            Float3 float3 = (Float3) o;
+            return Float.compare(x, float3.x) == 0 && Float.compare(y, float3.y) == 0 && Float.compare(z, float3.z) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = BitConversion.floatToRawIntBits(x);
+            result = 31 * result + BitConversion.floatToRawIntBits(y);
+            result = 31 * result + BitConversion.floatToRawIntBits(z);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Float3(" + x +
+                   "f, " + y +
+                   "f, " + z +
+                   "f)";
+        }
     }
 
+    /**
+     * Each of these seems to have a magnitude of about 0.45, but I'm not sure why.
+     */
     private static final Float2[] CELL_2D =
             {
                     new Float2(-0.4313539279f, 0.1281943404f), new Float2(-0.1733316799f, 0.415278375f), new Float2(-0.2821957395f, -0.3505218461f), new Float2(-0.2806473808f, 0.3517627718f), new Float2(0.3125508975f, -0.3237467165f), new Float2(0.3383018443f, -0.2967353402f), new Float2(-0.4393982022f, -0.09710417025f), new Float2(-0.4460443703f, -0.05953502905f),
@@ -10357,7 +10412,9 @@ public class Noise implements INoise {
                     new Float2(0.1475103971f, -0.4251360756f), new Float2(0.09258030352f, 0.4403735771f), new Float2(-0.1589664637f, -0.4209865359f), new Float2(0.2482445008f, 0.3753327428f), new Float2(0.4383624232f, -0.1016778537f), new Float2(0.06242802956f, 0.4456486745f), new Float2(0.2846591015f, -0.3485243118f), new Float2(-0.344202744f, -0.2898697484f),
                     new Float2(0.1198188883f, -0.4337550392f), new Float2(-0.243590703f, 0.3783696201f), new Float2(0.2958191174f, -0.3391033025f), new Float2(-0.1164007991f, 0.4346847754f), new Float2(0.1274037151f, -0.4315881062f), new Float2(0.368047306f, 0.2589231171f), new Float2(0.2451436949f, 0.3773652989f), new Float2(-0.4314509715f, 0.12786735f),
             };
-
+    /**
+     * Each of these seems to have a magnitude of about 0.45, but I'm not sure why here, either.
+     */
     private static final Float3[] CELL_3D =
             {
                     new Float3(0.1453787434f, -0.4149781685f, -0.0956981749f), new Float3(-0.01242829687f, -0.1457918398f, -0.4255470325f), new Float3(0.2877979582f, -0.02606483451f, -0.3449535616f), new Float3(-0.07732986802f, 0.2377094325f, 0.3741848704f), new Float3(0.1107205875f, -0.3552302079f, -0.2530858567f), new Float3(0.2755209141f, 0.2640521179f, -0.238463215f), new Float3(0.294168941f, 0.1526064594f, 0.3044271714f), new Float3(0.4000921098f, -0.2034056362f, 0.03244149937f),
