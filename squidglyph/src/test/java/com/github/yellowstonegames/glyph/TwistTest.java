@@ -38,10 +38,7 @@ import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
-import com.github.yellowstonegames.core.FullPalette;
-import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.*;
-import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.path.TwistedLine;
 import com.github.yellowstonegames.place.DungeonProcessor;
 
@@ -55,7 +52,7 @@ public class TwistTest extends ApplicationAdapter {
     private GlyphGrid gg;
     private DungeonProcessor dungeonProcessor;
     private char[][] bare, dungeon, prunedDungeon;
-    private float[][] res, light;
+    private float[][] res;
     private Region seen, inView, blockage;
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
     private GlyphActor playerGlyph;
@@ -121,7 +118,6 @@ public class TwistTest extends ApplicationAdapter {
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
         dungeonProcessor.addBoulders(DungeonProcessor.ALL, 3);
         waves.setFractalType(Noise.RIDGED_MULTI);
-        light = new float[GRID_WIDTH][GRID_HEIGHT];
         seen = new Region(GRID_WIDTH, GRID_HEIGHT);
         blockage = new Region(GRID_WIDTH, GRID_HEIGHT);
         prunedDungeon = new char[GRID_WIDTH][GRID_HEIGHT];

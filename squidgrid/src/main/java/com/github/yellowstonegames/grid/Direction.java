@@ -21,8 +21,8 @@ import com.github.tommyettinger.digital.TrigTools;
 /**
  * Represents the eight grid directions and the deltaX, deltaY values associated
  * with those directions.
- *
- * The grid referenced has x positive to the right and y positive downwards on
+ * <br>
+ * The grid referenced has x positive to the right and y positive upwards on
  * screen.
  *
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com

@@ -17,14 +17,24 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.ds.*;
-import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.ds.IntDeque;
+import com.github.tommyettinger.ds.IntList;
+import com.github.tommyettinger.ds.ObjectDeque;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.FlowRandom;
-import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
+import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
+import com.github.yellowstonegames.grid.CoordSet;
+import com.github.yellowstonegames.grid.Direction;
+import com.github.yellowstonegames.grid.LineDrawer;
+import com.github.yellowstonegames.grid.Measurement;
+import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.path.technique.Technique;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Random;
 
 /**
  * A group of pathfinding algorithms that explore in all directions equally, and are commonly used when there is more
@@ -41,7 +51,7 @@ import java.util.Collection;
  * One unique optimization made possible by Dijkstra Maps is for when only one endpoint of a path can change in some
  * section of a game, such as when you want to draw a path from the (stationary) player's current cell to the cell the
  * mouse is over, and the mouse can move quickly. This can be done very efficiently by setting the player as a goal with
- * {@link #setGoal(Coord)}, scanning the map to find distances with {@link #scan(Collection)}, and then as long as the
+ * {@link #setGoal(Coord)}, scanning the map to find distances with {@link #scan(Iterable)}, and then as long as the
  * player's position is unchanged (and no obstacles are added/moved), you can get the path by calling
  * {@link #findPathPreScanned(Coord)} and giving it the mouse position as a Coord. If various parts of the path can
  * change instead of just one (such as other NPCs moving around), then you should set a goal or goals and call
@@ -138,7 +148,7 @@ public class DijkstraMap {
      */
     public ObjectDeque<Coord> path;
 
-    private CoordOrderedSet impassable2;
+    private CoordSet impassable2;
 
     private CoordSet friends;
 
@@ -156,7 +166,7 @@ public class DijkstraMap {
     protected IntDeque fresh = new IntDeque(256);
 
     /**
-     * The MizuchiRandom used to decide which one of multiple equally-short paths to take; this has its state set
+     * The FlowRandom used to decide which one of multiple equally-short paths to take; this has its state set
      * deterministically before any usage. There will only be one path produced for a given set of parameters, and it
      * will be returned again and again if the same parameters are requested.
      */
@@ -173,7 +183,7 @@ public class DijkstraMap {
     private int blockingRequirement = 2;
 
     private float cachedLongerPaths = 1.2f;
-    private final CoordOrderedSet cachedImpassable = new CoordOrderedSet(32);
+    private final CoordSet cachedImpassable = new CoordSet(32);
     private Coord[] cachedFearSources;
     private float[][] cachedFleeMap;
     private int cachedSize = 1;
@@ -295,7 +305,7 @@ public class DijkstraMap {
             Arrays.fill(costMap[x], 1f);
         }
         if (impassable2 == null)
-            impassable2 = new CoordOrderedSet(32);
+            impassable2 = new CoordSet(32);
         else
             impassable2.clear();
         if (friends == null)
@@ -336,7 +346,7 @@ public class DijkstraMap {
             }
         }
         if (impassable2 == null)
-            impassable2 = new CoordOrderedSet(32);
+            impassable2 = new CoordSet(32);
         else
             impassable2.clear();
         if (friends == null)
@@ -379,7 +389,7 @@ public class DijkstraMap {
             }
         }
         if (impassable2 == null)
-            impassable2 = new CoordOrderedSet(32);
+            impassable2 = new CoordSet(32);
         else
             impassable2.clear();
         if (friends == null)
@@ -424,7 +434,7 @@ public class DijkstraMap {
             }
         }
         if (impassable2 == null)
-            impassable2 = new CoordOrderedSet(32);
+            impassable2 = new CoordSet(32);
         else
             impassable2.clear();
         if (friends == null)
@@ -790,11 +800,11 @@ public class DijkstraMap {
      * these areas should not be used to place NPCs or items and should be filled with walls). This uses the
      * current measurement. The result is stored in the {@link #gradientMap} field and a copy is returned.
      *
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      * @return A 2D float[width][height] using the width and height of what this knows about the physical map.
      */
-    public float[][] scan(final Collection<Coord> impassable) {
+    public float[][] scan(final Iterable<Coord> impassable) {
         scan(null, impassable);
         float[][] gradientClone = new float[width][height];
         for (int x = 0; x < width; x++) {
@@ -817,7 +827,7 @@ public class DijkstraMap {
      * unable to reach, which will have a value defined by the DARK constant in this class (typically,
      * these areas should not be used to place NPCs or items and should be filled with walls). This uses the
      * current measurement. The result is stored in the {@link #gradientMap} field, and nothing is returned.
-     * If you want the data returned, you can use {@link #scan(Collection)} (which calls this method with
+     * If you want the data returned, you can use {@link #scan(Iterable)} (which calls this method with
      * null for the start parameter, then modifies the gradientMap field and returns a copy), or you can
      * just retrieve the gradientMap (maybe copying it; {@link ArrayTools#copy(float[][])} is a
      * convenient option for copying a 2D float array). If start is non-null, which is usually used when
@@ -828,10 +838,10 @@ public class DijkstraMap {
      * arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to {@link #WALL}.
      *
      * @param start      a Coord representing the location of the pathfinder; may be null, which has this scan the whole map
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      */
-    public void scan(final Coord start, final Collection<Coord> impassable) {
+    public void scan(final Coord start, final Iterable<Coord> impassable) {
         scan(start, impassable, false);
     }
 
@@ -845,7 +855,7 @@ public class DijkstraMap {
      * value defined by the {@link #DARK} constant in this class (typically, these areas should not be used to
      * place NPCs or items and should be filled with walls). This uses the current {@link #measurement}. The
      * result is stored in the {@link #gradientMap} field, and nothing is returned. If you want the data
-     * returned, you can use {@link #scan(Collection)} (which calls this method with null for the start
+     * returned, you can use {@link #scan(Iterable)} (which calls this method with null for the start
      * parameter, then modifies the gradientMap field and returns a copy), or you can
      * just retrieve the gradientMap (maybe copying it; {@link ArrayTools#copy(float[][])} is a
      * convenient option for copying a 2D float array). If start is non-null, which is usually used when
@@ -856,15 +866,15 @@ public class DijkstraMap {
      * arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to {@link #WALL}.
      *
      * @param start          a Coord representing the location of the pathfinder; may be null, which has this scan the whole map
-     * @param impassable     A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable     An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                       path that cannot be moved through; this can be null if there are no such obstacles.
      * @param nonZeroOptimum if the cell to pathfind toward should have a value of {@link #GOAL} (0f), this should be
      *                       false; if it should have a different value or if you don't know, it should be true
      */
-    public void scan(final Coord start, final Collection<Coord> impassable, final boolean nonZeroOptimum) {
+    public void scan(final Coord start, final Iterable<Coord> impassable, final boolean nonZeroOptimum) {
 
         if (!initialized) return;
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
@@ -928,7 +938,7 @@ public class DijkstraMap {
                         ++numAssigned;
                         ++mappedCount;
                         if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
-                            if (impassable != null && !impassable.isEmpty()) {
+                            if (impassable != null) {
                                 for (Coord pt : impassable) {
                                     if (pt != null && pt.isWithin(width, height))
                                         gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
@@ -940,7 +950,7 @@ public class DijkstraMap {
                 }
             }
         }
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
@@ -978,7 +988,7 @@ public class DijkstraMap {
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      * @return A 2D float[width][height] using the width and height of what this knows about the physical map.
      */
-    public float[][] partialScan(final int limit, final Collection<Coord> impassable) {
+    public float[][] partialScan(final int limit, final Iterable<Coord> impassable) {
         partialScan(null, limit, impassable);
         float[][] gradientClone = new float[width][height];
         for (int x = 0; x < width; x++) {
@@ -1001,7 +1011,7 @@ public class DijkstraMap {
      * if it was passable instead of the distance. The exceptions are walls, which will have a value defined by the
      * {@link #WALL} constant in this class. This uses the current {@link #measurement}. The result is stored in the
      * {@link #gradientMap} field, and nothing is returned.If you want the data returned, you can use
-     * {@link #partialScan(int, Collection)} (which calls this method with null for the start parameter, then modifies
+     * {@link #partialScan(int, Iterable)} (which calls this method with null for the start parameter, then modifies
      * the gradientMap field and returns a copy), or you can just retrieve the gradientMap (maybe copying it;
      * {@link ArrayTools#copy(float[][])} is a convenient option for copying a 2D float array).
      * <br>
@@ -1014,10 +1024,10 @@ public class DijkstraMap {
      *
      * @param start      a Coord representing the location of the pathfinder; may be null to have this scan more of the map
      * @param limit      The maximum number of steps to scan outward from a goal.
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      */
-    public void partialScan(final Coord start, final int limit, final Collection<Coord> impassable) {
+    public void partialScan(final Coord start, final int limit, final Iterable<Coord> impassable) {
         partialScan(start, limit, impassable, false);
     }
 
@@ -1029,7 +1039,7 @@ public class DijkstraMap {
      * greater if it was passable instead of the distance. The exceptions are walls, which will have a value defined by
      * the {@link #WALL} constant in this class. This uses the current {@link #measurement}. The result is stored in the
      * {@link #gradientMap} field, and nothing is returned.If you want the data returned, you can use
-     * {@link #partialScan(int, Collection)} (which calls this method with null for the start parameter, then modifies
+     * {@link #partialScan(int, Iterable)} (which calls this method with null for the start parameter, then modifies
      * the gradientMap field and returns a copy), or you can just retrieve the gradientMap (maybe copying it;
      * {@link ArrayTools#copy(float[][])} is a convenient option for copying a 2D float array).
      * <br>
@@ -1042,15 +1052,15 @@ public class DijkstraMap {
      *
      * @param start          a Coord representing the location of the pathfinder; may be null to have this scan more of the map
      * @param limit          The maximum number of steps to scan outward from a goal.
-     * @param impassable     A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable     An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                       path that cannot be moved through; this can be null if there are no such obstacles.
      * @param nonZeroOptimum if the cell to pathfind toward should have a value of {@link #GOAL} (0f), this should be
      *                       false; if it should have a different value or if you don't know, it should be true
      */
-    public void partialScan(final Coord start, final int limit, final Collection<Coord> impassable, final boolean nonZeroOptimum) {
+    public void partialScan(final Coord start, final int limit, final Iterable<Coord> impassable, final boolean nonZeroOptimum) {
 
         if (!initialized || limit <= 0) return;
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
@@ -1133,7 +1143,7 @@ public class DijkstraMap {
                         ++numAssigned;
                         ++mappedCount;
                         if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
-                            if (impassable != null && !impassable.isEmpty()) {
+                            if (impassable != null) {
                                 for (Coord pt : impassable) {
                                     if (pt != null && pt.isWithin(width, height))
                                         gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
@@ -1145,7 +1155,7 @@ public class DijkstraMap {
                 }
             }
         }
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = physicalMap[pt.x][pt.y];
@@ -1388,13 +1398,13 @@ public class DijkstraMap {
      * these areas should not be used to place NPCs or items and should be filled with walls). This uses the
      * current measurement.  The result is stored in the {@link #gradientMap} field and a copy is returned.
      *
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      * @param size       The length of one side of a square creature using this to find a path, i.e. 2 for a 2x2 cell
      *                   creature. Non-square creatures are not supported because turning is really hard.
      * @return A 2D float[width][height] using the width and height of what this knows about the physical map.
      */
-    public float[][] scan(final Collection<Coord> impassable, final int size) {
+    public float[][] scan(final Iterable<Coord> impassable, final int size) {
         scan(null, impassable, size);
         float[][] gradientClone = new float[width][height];
         for (int x = 0; x < width; x++) {
@@ -1422,7 +1432,7 @@ public class DijkstraMap {
      * unable to reach, which will have a value defined by the DARK constant in this class. (typically,
      * these areas should not be used to place NPCs or items and should be filled with walls). This uses the
      * current measurement.  The result is stored in the {@link #gradientMap} field, and nothing is returned.
-     * If you want the data returned, you can use {@link #scan(Collection, int)} (which calls this method with
+     * If you want the data returned, you can use {@link #scan(Iterable, int)} (which calls this method with
      * null for the start parameter, then modifies the gradientMap field and returns a copy), or you can
      * just retrieve the gradientMap (maybe copying it; {@link ArrayTools#copy(float[][])} is a
      * convenient option for copying a 2D float array). If start is non-null, which is usually used when
@@ -1432,16 +1442,16 @@ public class DijkstraMap {
      * are still FLOOR could not be reached from any goal), and the overloads of scan that return 2D float
      * arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to {@link #WALL}.
      *
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      * @param size       The length of one side of a square creature using this to find a path, i.e. 2 for a 2x2 cell
      *                   creature. Non-square creatures are not supported because turning is really hard.
      */
-    public void scan(final Coord start, final Collection<Coord> impassable, final int size) {
+    public void scan(final Coord start, final Iterable<Coord> impassable, final int size) {
 
         if (!initialized) return;
         float[][] gradientClone = ArrayTools.copy(gradientMap);
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
@@ -1520,7 +1530,7 @@ public class DijkstraMap {
                         ++numAssigned;
                         ++mappedCount;
                         if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
-                            if (impassable != null && !impassable.isEmpty()) {
+                            if (impassable != null) {
                                 for (Coord pt : impassable) {
                                     if (pt != null && pt.isWithin(width, height)) {
                                         for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
@@ -1538,7 +1548,7 @@ public class DijkstraMap {
                 }
             }
         }
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height)) {
                     for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
@@ -1567,13 +1577,13 @@ public class DijkstraMap {
      * these areas should not be used to place NPCs or items and should be filled with walls). This uses the
      * current measurement.  The result is stored in the {@link #gradientMap} field and a copy is returned.
      *
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      * @param size       The length of one side of a square creature using this to find a path, i.e. 2 for a 2x2 cell
      *                   creature. Non-square creatures are not supported because turning is really hard.
      * @return A 2D float[width][height] using the width and height of what this knows about the physical map.
      */
-    public float[][] partialScan(final int limit, final Collection<Coord> impassable, final int size) {
+    public float[][] partialScan(final int limit, final Iterable<Coord> impassable, final int size) {
         partialScan(limit, null, impassable, size);
         float[][] gradientClone = new float[width][height];
         for (int x = 0; x < width; x++) {
@@ -1601,7 +1611,7 @@ public class DijkstraMap {
      * unable to reach, which will have a value defined by the DARK constant in this class. (typically,
      * these areas should not be used to place NPCs or items and should be filled with walls). This uses the
      * current measurement.  The result is stored in the {@link #gradientMap} field, and nothing is returned.
-     * If you want the data returned, you can use {@link #partialScan(int, Collection, int)} (which calls this method
+     * If you want the data returned, you can use {@link #partialScan(int, Iterable, int)} (which calls this method
      * with null for the start parameter, then modifies the gradientMap field and returns a copy), or you can
      * just retrieve the gradientMap (maybe copying it; {@link ArrayTools#copy(float[][])} is a
      * convenient option for copying a 2D float array). If start is non-null, which is usually used when
@@ -1611,16 +1621,16 @@ public class DijkstraMap {
      * are still FLOOR could not be reached from any goal), and the overloads of partialScan that return 2D float
      * arrays do change FLOOR to {@link #DARK}, which is usually treated similarly to {@link #WALL}.
      *
-     * @param impassable A Collection of Coord keys representing the locations of enemies or other moving obstacles to a
+     * @param impassable An Iterable of Coord keys representing the locations of enemies or other moving obstacles to a
      *                   path that cannot be moved through; this can be null if there are no such obstacles.
      * @param size       The length of one side of a square creature using this to find a path, i.e. 2 for a 2x2 cell
      *                   creature. Non-square creatures are not supported because turning is really hard.
      */
-    public void partialScan(final int limit, final Coord start, final Collection<Coord> impassable, final int size) {
+    public void partialScan(final int limit, final Coord start, final Iterable<Coord> impassable, final int size) {
 
         if (!initialized || limit <= 0) return;
         float[][] gradientClone = ArrayTools.copy(gradientMap);
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height))
                     gradientMap[pt.x][pt.y] = WALL;
@@ -1700,7 +1710,7 @@ public class DijkstraMap {
                         ++numAssigned;
                         ++mappedCount;
                         if (start != null && start.x == adjX && start.y == adjY && standardCosts) {
-                            if (impassable != null && !impassable.isEmpty()) {
+                            if (impassable != null) {
                                 for (Coord pt : impassable) {
                                     if (pt != null && pt.isWithin(width, height)) {
                                         for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
@@ -1718,7 +1728,7 @@ public class DijkstraMap {
                 }
             }
         }
-        if (impassable != null && !impassable.isEmpty()) {
+        if (impassable != null) {
             for (Coord pt : impassable) {
                 if (pt != null && pt.isWithin(width, height)) {
                     for (int xs = pt.x, xi = 0; xi < size && xs >= 0; xs--, xi++) {
@@ -2292,7 +2302,7 @@ public class DijkstraMap {
         ArrayTools.fill(targetMap, null);
 
         path.clear();
-        if (targets == null || targets.size() == 0) {
+        if (targets == null || targets.isEmpty()) {
             cutShort = true;
             if (buffer == null)
                 return new ObjectDeque<>();
@@ -3213,7 +3223,7 @@ public class DijkstraMap {
             }
             currentPos = currentPos.translate(dirs[choice].deltaX, dirs[choice].deltaY);
 
-            if (path.size() > 0) {
+            if (!path.isEmpty()) {
                 Coord last = path.peekLast();
                 if (gradientMap[last.x][last.y] <= gradientMap[currentPos.x][currentPos.y])
                     break;
@@ -3346,9 +3356,9 @@ public class DijkstraMap {
      * @param starts a vararg group of Points to step outward from; this often will only need to be one Coord.
      * @return An ObjectFloatOrderedMap, with Coord keys and float values; the starts are included in this with the value 0f .
      */
-    public ObjectFloatOrderedMap<Coord> floodFill(int radius, Coord... starts) {
+    public CoordFloatOrderedMap floodFill(int radius, Coord... starts) {
         if (!initialized) return null;
-        ObjectFloatOrderedMap<Coord> fill = new ObjectFloatOrderedMap<>();
+        CoordFloatOrderedMap fill = new CoordFloatOrderedMap();
 
         resetMap();
         for (Coord goal : starts) {
@@ -3419,7 +3429,7 @@ public class DijkstraMap {
         this.blockingRequirement = Math.min(Math.max(blockingRequirement, 0), 2);
     }
 
-    private void appendDirToShuffle(EnhancedRandom rng) {
+    private void appendDirToShuffle(Random rng) {
         final Direction[] src = measurement == Measurement.MANHATTAN
                 ? Direction.CARDINALS : Direction.OUTWARDS;
         final int n = measurement.directionCount();
