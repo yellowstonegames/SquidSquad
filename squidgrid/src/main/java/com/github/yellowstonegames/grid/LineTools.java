@@ -41,14 +41,14 @@ public final class LineTools {
      */
     private LineTools(){
     }
-    public static final char[] lightA0  = " ╴╵┘╶─└┴╷┐│┤┌┬├┼".toCharArray(),
-                               lightAlt = " ╴╷┐╶─┌┬╵┘│┤└┴├┼".toCharArray(),
-                               heavyA0  = " ╸╹┛╺━┗┻╻┓┃┫┏┳┣╋".toCharArray(),
-                               heavyAlt = " ╸╻┓╺━┏┳╹┛┃┫┗┻┣╋".toCharArray(),
-                               light0   = " ─│┘──└┴│┐│┤┌┬├┼".toCharArray(),
-                               light    = " ─│┐──┌┬│┘│┤└┴├┼".toCharArray(),
-                               heavy0   = " ━┃┛━━┗┻┃┓┃┫┏┳┣╋".toCharArray(),
-                               heavy    = " ━┃┓━━┏┳┃┛┃┫┗┻┣╋".toCharArray();
+    public static final char[] lightA0  = "#╴╵┘╶─└┴╷┐│┤┌┬├┼".toCharArray(),
+                               lightAlt = "#╴╷┐╶─┌┬╵┘│┤└┴├┼".toCharArray(),
+                               heavyA0  = "#╸╹┛╺━┗┻╻┓┃┫┏┳┣╋".toCharArray(),
+                               heavyAlt = "#╸╻┓╺━┏┳╹┛┃┫┗┻┣╋".toCharArray(),
+                               light0   = "#─│┘──└┴│┐│┤┌┬├┼".toCharArray(),
+                               light    = "#─│┐──┌┬│┘│┤└┴├┼".toCharArray(),
+                               heavy0   = "#━┃┛━━┗┻┃┓┃┫┏┳┣╋".toCharArray(),
+                               heavy    = "#━┃┓━━┏┳┃┛┃┫┗┻┣╋".toCharArray();
     //                                     0123456789ABCDEF
 
     /**
