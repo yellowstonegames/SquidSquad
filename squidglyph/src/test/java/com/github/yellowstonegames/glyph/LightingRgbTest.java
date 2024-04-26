@@ -112,7 +112,7 @@ public class LightingRgbTest extends ApplicationAdapter {
             blockage.remake(seen).not().fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
         };
-
+//        System.out.println(random.stringSerialize());
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
         dungeonProcessor.addBoulders(DungeonProcessor.ALL, 3);
         waves.setFractalType(Noise.RIDGED_MULTI);

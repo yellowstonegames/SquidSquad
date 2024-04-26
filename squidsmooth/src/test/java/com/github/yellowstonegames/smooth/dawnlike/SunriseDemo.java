@@ -34,11 +34,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.ChopRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.FullPalette;
 import com.github.yellowstonegames.grid.*;
@@ -61,7 +61,8 @@ public class SunriseDemo extends ApplicationAdapter {
     private Phase phase = Phase.WAIT;
 
     // random number generator; this one is more efficient on GWT, but less-so on desktop.
-    private ChopRandom rng;
+//    private ChopRandom rng;
+    private WhiskerRandom rng;
 
     // Stores all images we use here efficiently, as well as the font image
     private TextureAtlas atlas;
@@ -97,9 +98,11 @@ public class SunriseDemo extends ApplicationAdapter {
     public static final int shownHeight = 24;
 
     /** In number of cells */
-    public static final int placeWidth = shownWidth * 2;
+    public static final int placeWidth = 75;
+//    public static final int placeWidth = shownWidth * 2;
     /** In number of cells */
-    public static final int placeHeight = shownHeight * 2;
+    public static final int placeHeight = 40;
+//    public static final int placeHeight = shownHeight * 2;
 
     /** The pixel width of a cell */
     public static final int cellWidth = 32;
@@ -159,6 +162,9 @@ public class SunriseDemo extends ApplicationAdapter {
         // Using this would give a different dungeon every time.
 //        rng = new ChopRandom(startTime);
 
+        // TODO: debugging, this loads the same seed used by LightingRgbTest.
+        rng.stringDeserialize("WhiR`-3943D8696D4A3CA8~3943D8696D4A3CA7~6D40888DA2E5D6B8~-6D40888DA2E5D6B9`");
+
         //This uses the seeded RNG we made earlier to build a procedural dungeon using a method that takes rectangular
         //sections of pre-drawn dungeon and drops them into place in a tiling pattern. It makes good winding dungeons
         //with rooms by default, but in the later call to dungeonGen.generate(), you can use a TilesetType such as
@@ -166,14 +172,18 @@ public class SunriseDemo extends ApplicationAdapter {
         //this will use, or just pass in a full 2D char array produced from some other generator, such as
         //SerpentMapGenerator, OrganicMapGenerator, or DenseRoomMapGenerator.
         DungeonProcessor dungeonGen = new DungeonProcessor(placeWidth, placeHeight, rng);
-        //this next line randomly adds water to the dungeon in pools.
-        dungeonGen.addWater(DungeonProcessor.ALL, 12);
-        //this next line makes 10% of valid door positions into complete doors.
-        dungeonGen.addDoors(10, true);
-        //this next line randomly adds water to the cave parts of the dungeon in patches.
-        dungeonGen.addGrass(DungeonProcessor.ALL, 10);
-        //some boulders make the map a little more tactically interesting, and show how the FOV works.
-        dungeonGen.addBoulders(DungeonProcessor.ALL, 5);
+
+        // TODO: debugging, same as LightingRgbTest
+        dungeonGen.addBoulders(DungeonProcessor.ALL, 3);
+
+//        //this next line randomly adds water to the dungeon in pools.
+//        dungeonGen.addWater(DungeonProcessor.ALL, 12);
+//        //this next line makes 10% of valid door positions into complete doors.
+//        dungeonGen.addDoors(10, true);
+//        //this next line randomly adds water to the cave parts of the dungeon in patches.
+//        dungeonGen.addGrass(DungeonProcessor.ALL, 10);
+//        //some boulders make the map a little more tactically interesting, and show how the FOV works.
+//        dungeonGen.addBoulders(DungeonProcessor.ALL, 5);
         //When we draw, we may want to use a nicer representation of walls. DungeonUtility has lots of useful methods
         //for modifying char[][] dungeon grids, and this one takes each '#' and replaces it with a box-drawing char.
         //The end result looks something like this, for a smaller 60x30 map:
@@ -250,7 +260,8 @@ public class SunriseDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         vision.restart(linePlaceMap, player, 8);
-        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f));
+//        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0f, 0f)); // constant light
+        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f)); // flickers
         floors.remove(player);
         int numMonsters = 100;
         monsters = new CoordObjectOrderedMap<>(numMonsters);
@@ -298,7 +309,8 @@ public class SunriseDemo extends ApplicationAdapter {
         // We need access to a batch to render most things.
         batch = new SpriteBatch();
 
-        rng = new ChopRandom(123, -456, 789, 987654321);
+//        rng = new ChopRandom(123, -456, 789, 987654321);
+        rng = new WhiskerRandom(123, -456, 789, 987654321);
 
         mainViewport = new ScalingViewport(Scaling.fill, shownWidth, shownHeight);
         mainViewport.setScreenBounds(0, 0, shownWidth * cellWidth, shownHeight * cellHeight);

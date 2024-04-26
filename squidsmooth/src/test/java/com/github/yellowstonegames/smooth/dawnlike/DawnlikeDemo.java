@@ -30,18 +30,15 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.ChopRandom;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
@@ -64,7 +61,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
     private Phase phase = Phase.WAIT;
 
     // random number generator; this one is more efficient on GWT, but less-so on desktop.
-    private ChopRandom rng;
+//    private ChopRandom rng;
+    private WhiskerRandom rng;
 
     // Stores all images we use here efficiently, as well as the font image
     private TextureAtlas atlas;
@@ -169,9 +167,11 @@ public class DawnlikeDemo extends ApplicationAdapter {
     public static final int shownHeight = 24;
 
     /** In number of cells */
-    public static final int dungeonWidth = shownWidth * 2;
+    public static final int dungeonWidth = 75;
+//    public static final int dungeonWidth = shownWidth * 2;
     /** In number of cells */
-    public static final int dungeonHeight = shownHeight * 2;
+    public static final int dungeonHeight = 40;
+//    public static final int dungeonHeight = shownHeight * 2;
 
     /** The pixel width of a cell */
     public static final int cellWidth = 32;
@@ -231,6 +231,9 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // Using this would give a different dungeon every time.
 //        rng = new ChopRandom(startTime);
 
+        // TODO: debugging, this loads the same seed used by LightingRgbTest.
+        rng.stringDeserialize("WhiR`-3943D8696D4A3CA8~3943D8696D4A3CA7~6D40888DA2E5D6B8~-6D40888DA2E5D6B9`");
+
         //This uses the seeded RNG we made earlier to build a procedural dungeon using a method that takes rectangular
         //sections of pre-drawn dungeon and drops them into place in a tiling pattern. It makes good winding dungeons
         //with rooms by default, but in the later call to dungeonGen.generate(), you can use a TilesetType such as
@@ -238,14 +241,17 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //this will use, or just pass in a full 2D char array produced from some other generator, such as
         //SerpentMapGenerator, OrganicMapGenerator, or DenseRoomMapGenerator.
         DungeonProcessor dungeonGen = new DungeonProcessor(dungeonWidth, dungeonHeight, rng);
-        //this next line randomly adds water to the dungeon in pools.
-        dungeonGen.addWater(DungeonProcessor.ALL, 12);
-        //this next line makes 10% of valid door positions into complete doors.
-        dungeonGen.addDoors(10, true);
-        //this next line randomly adds water to the cave parts of the dungeon in patches.
-        dungeonGen.addGrass(DungeonProcessor.ALL, 10);
-        //some boulders make the map a little more tactically interesting, and show how the FOV works.
-        dungeonGen.addBoulders(DungeonProcessor.ALL, 5);
+        // TODO: debugging, same as LightingRgbTest
+        dungeonGen.addBoulders(DungeonProcessor.ALL, 3);
+
+//        //this next line randomly adds water to the dungeon in pools.
+//        dungeonGen.addWater(DungeonProcessor.ALL, 12);
+//        //this next line makes 10% of valid door positions into complete doors.
+//        dungeonGen.addDoors(10, true);
+//        //this next line randomly adds water to the cave parts of the dungeon in patches.
+//        dungeonGen.addGrass(DungeonProcessor.ALL, 10);
+//        //some boulders make the map a little more tactically interesting, and show how the FOV works.
+//        dungeonGen.addBoulders(DungeonProcessor.ALL, 5);
         //When we draw, we may want to use a nicer representation of walls. DungeonUtility has lots of useful methods
         //for modifying char[][] dungeon grids, and this one takes each '#' and replaces it with a box-drawing char.
         //The end result looks something like this, for a smaller 60x30 map:
@@ -399,7 +405,8 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // We need access to a batch to render most things.
         batch = new SpriteBatch();
 
-        rng = new ChopRandom(123, -456, 789, 987654321);
+//        rng = new ChopRandom(123, -456, 789, 987654321);
+        rng = new WhiskerRandom(123, -456, 789, 987654321);
 
 //        mainViewport = new ScalingViewport(Scaling.fill, shownWidth, shownHeight);
         mainViewport = new ScreenViewport();
