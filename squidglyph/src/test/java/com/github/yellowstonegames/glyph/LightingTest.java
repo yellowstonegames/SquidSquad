@@ -110,8 +110,14 @@ public class LightingTest extends ApplicationAdapter {
         post = () -> {
             Coord player = playerGlyph.getLocation();
             lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
-            seen.or(inView.refill(lighting.fovResult, 0.001f, 2f));
-            blockage.remake(seen).not().fringe8way();
+            blockage.refill(lighting.fovResult, 0f);
+            // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+            inView.remake(blockage.not());
+            // then, seen has all of those cells that have been visible (ever) included in with its cells.
+            seen.or(inView);
+            // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+            // adjacent to those cells.
+            blockage.fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
         };
 
@@ -239,8 +245,10 @@ public class LightingTest extends ApplicationAdapter {
                     FullPalette.COLOR_WHEEL_PALETTE_BRIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_BRIGHT.length)], 0.5f, 0f));
         }
         lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
-        seen.remake(inView.refill(lighting.fovResult, 0.001f, 2f));
-        blockage.remake(seen).not().fringe8way();
+        inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
+        seen = seen == null ? inView.copy() : seen.remake(inView);
+        blockage = blockage == null ? new Region(seen).fringe8way() : blockage.remake(seen).fringe8way();
+        inView.remake(seen);
         LineTools.pruneLines(dungeon, seen, prunedDungeon);
         gg.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gg.map.clear();

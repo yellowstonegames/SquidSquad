@@ -264,9 +264,6 @@ public class LightingRgbTest extends ApplicationAdapter {
 
         LineTools.pruneLines(dungeon, seen, prunedDungeon);
 
-        // TODO: debug code
-        DungeonTools.debugPrint(prunedDungeon);
-
         gg.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gg.map.clear();
         if(playerToCursor == null)

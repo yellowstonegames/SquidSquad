@@ -163,7 +163,7 @@ public class SunriseDemo extends ApplicationAdapter {
         // Using this would give a different dungeon every time.
 //        rng = new ChopRandom(startTime);
 
-        // TODO: debugging, this loads the same seed used by LightingRgbTest.
+        // this loads the same seed used by LightingRgbTest.
         rng.stringDeserialize("WhiR`-3943D8696D4A3CA8~3943D8696D4A3CA7~6D40888DA2E5D6B8~-6D40888DA2E5D6B9`");
 
         //This uses the seeded RNG we made earlier to build a procedural dungeon using a method that takes rectangular
@@ -174,7 +174,7 @@ public class SunriseDemo extends ApplicationAdapter {
         //SerpentMapGenerator, OrganicMapGenerator, or DenseRoomMapGenerator.
         DungeonProcessor dungeonGen = new DungeonProcessor(placeWidth, placeHeight, rng);
 
-        // TODO: debugging, same as LightingRgbTest
+        // the same setting used by LightingRgbTest.
         dungeonGen.addBoulders(DungeonProcessor.ALL, 3);
 
 //        //this next line randomly adds water to the dungeon in pools.
@@ -261,9 +261,6 @@ public class SunriseDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         vision.restart(linePlaceMap, player, 8);
-
-        // TODO: debug code
-        DungeonTools.debugPrint(vision.prunedPlaceMap);
 
 //        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0f, 0f)); // constant light
         vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f)); // flickers

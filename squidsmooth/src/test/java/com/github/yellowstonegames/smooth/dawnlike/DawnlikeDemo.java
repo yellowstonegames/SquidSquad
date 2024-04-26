@@ -231,7 +231,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         // Using this would give a different dungeon every time.
 //        rng = new ChopRandom(startTime);
 
-        // TODO: debugging, this loads the same seed used by LightingRgbTest.
+        // this loads the same seed used by LightingRgbTest.
         rng.stringDeserialize("WhiR`-3943D8696D4A3CA8~3943D8696D4A3CA7~6D40888DA2E5D6B8~-6D40888DA2E5D6B9`");
 
         //This uses the seeded RNG we made earlier to build a procedural dungeon using a method that takes rectangular
@@ -241,7 +241,7 @@ public class DawnlikeDemo extends ApplicationAdapter {
         //this will use, or just pass in a full 2D char array produced from some other generator, such as
         //SerpentMapGenerator, OrganicMapGenerator, or DenseRoomMapGenerator.
         DungeonProcessor dungeonGen = new DungeonProcessor(dungeonWidth, dungeonHeight, rng);
-        // TODO: debugging, same as LightingRgbTest
+        // the same setting used by LightingRgbTest.
         dungeonGen.addBoulders(DungeonProcessor.ALL, 3);
 
 //        //this next line randomly adds water to the dungeon in pools.
