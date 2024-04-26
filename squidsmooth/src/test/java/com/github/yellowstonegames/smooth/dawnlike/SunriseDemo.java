@@ -44,6 +44,7 @@ import com.github.yellowstonegames.core.FullPalette;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
+import com.github.yellowstonegames.place.DungeonTools;
 import com.github.yellowstonegames.smooth.AnimatedGlidingSprite;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.Director;
@@ -260,6 +261,10 @@ public class SunriseDemo extends ApplicationAdapter {
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
         vision.restart(linePlaceMap, player, 8);
+
+        // TODO: debug code
+        DungeonTools.debugPrint(vision.prunedPlaceMap);
+
 //        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0f, 0f)); // constant light
         vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f)); // flickers
         floors.remove(player);

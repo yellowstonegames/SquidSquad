@@ -266,7 +266,7 @@ public class VisionFramework {
         inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
         seen = seen == null ? inView.copy() : seen.remake(inView);
         blockage = blockage == null ? new Region(seen).not() : blockage.remake(seen).not();
-        inView = inView == null ? seen.copy() : inView.remake(seen);
+        inView.remake(seen);
         justSeen = justSeen == null ? seen.copy() : justSeen.remake(seen);
         justHidden = justHidden == null ? new Region(placeWidth, placeHeight) : justHidden.resizeAndEmpty(placeWidth, placeHeight);
         newlyVisible = newlyVisible == null ? seen.copy() : newlyVisible.remake(seen);

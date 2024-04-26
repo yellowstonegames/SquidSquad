@@ -41,6 +41,7 @@ import com.github.yellowstonegames.core.FullPaletteRgb;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
+import com.github.yellowstonegames.place.DungeonTools;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
@@ -52,7 +53,6 @@ public class LightingRgbTest extends ApplicationAdapter {
     private GlyphGrid gg;
     private DungeonProcessor dungeonProcessor;
     private char[][] bare, dungeon, prunedDungeon;
-    private float[][] res, light;
     private Region seen, inView, blockage;
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
     private GlyphActor playerGlyph;
@@ -108,15 +108,23 @@ public class LightingRgbTest extends ApplicationAdapter {
         post = () -> {
             Coord player = playerGlyph.getLocation();
             lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
-            seen.or(inView.refill(lighting.fovResult, 0.001f, 2f));
-            blockage.remake(seen).not().fringe8way();
+//            seen.or(inView.refill(lighting.fovResult, 0.001f, 2f));
+//            blockage.remake(seen).not().fringe8way();
+
+            blockage.refill(lighting.fovResult, 0f);
+            // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+            inView.remake(blockage.not());
+            // then, seen has all of those cells that have been visible (ever) included in with its cells.
+            seen.or(inView);
+            // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+            // adjacent to those cells.
+            blockage.fringe8way();
             LineTools.pruneLines(dungeon, seen, prunedDungeon);
         };
 //        System.out.println(random.stringSerialize());
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
         dungeonProcessor.addBoulders(DungeonProcessor.ALL, 3);
         waves.setFractalType(Noise.RIDGED_MULTI);
-        light = new float[GRID_WIDTH][GRID_HEIGHT];
         seen = new Region(GRID_WIDTH, GRID_HEIGHT);
         blockage = new Region(GRID_WIDTH, GRID_HEIGHT);
         prunedDungeon = new char[GRID_WIDTH][GRID_HEIGHT];
@@ -224,7 +232,7 @@ public class LightingRgbTest extends ApplicationAdapter {
         dungeonProcessor.setPlaceGrid(dungeon = LineTools.hashesToLines(dungeonProcessor.generate(), true));
         bare = dungeonProcessor.getBarePlaceGrid();
         ArrayTools.insert(dungeon, prunedDungeon, 0, 0);
-        res = FOV.generateSimpleResistances(bare);
+        float[][] res = FOV.generateSimpleResistances(bare);
         Region floors = new Region(bare, '.');
         EnhancedRandom rng = dungeonProcessor.rng;
         Coord player = floors.singleRandom(rng);
@@ -237,9 +245,28 @@ public class LightingRgbTest extends ApplicationAdapter {
                     FullPaletteRgb.COLOR_WHEEL_PALETTE_BRIGHT[rng.nextInt(FullPaletteRgb.COLOR_WHEEL_PALETTE_BRIGHT.length)], 0.5f, 0f));
         }
         lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
-        seen.remake(inView.refill(lighting.fovResult, 0.001f, 2f));
-        blockage.remake(seen).not().fringe8way();
+//        seen.remake(inView.refill(lighting.fovResult, 0.001f, 2f));
+//        blockage.remake(seen).not().fringe8way();
+
+//        blockage.refill(lighting.fovResult, 0f);
+//        // blockage.not() flips its values so now it stores all cells that ARE visible in the latest lightLevels calc.
+//        inView.remake(blockage.not());
+//        // then, seen has all of those cells that have been visible (ever) included in with its cells.
+//        seen.remake(inView);
+//        // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
+//        // adjacent to those cells.
+//        blockage.fringe8way();
+
+        inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
+        seen = seen == null ? inView.copy() : seen.remake(inView);
+        blockage = blockage == null ? new Region(seen).fringe8way() : blockage.remake(seen).fringe8way();
+        inView.remake(seen);
+
         LineTools.pruneLines(dungeon, seen, prunedDungeon);
+
+        // TODO: debug code
+        DungeonTools.debugPrint(prunedDungeon);
+
         gg.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gg.map.clear();
         if(playerToCursor == null)

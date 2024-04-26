@@ -39,7 +39,14 @@ import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.glyph.rexpaint.XPIO;
-import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.Coord;
+import com.github.yellowstonegames.grid.Direction;
+import com.github.yellowstonegames.grid.FOV;
+import com.github.yellowstonegames.grid.LineTools;
+import com.github.yellowstonegames.grid.Measurement;
+import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.Radius;
+import com.github.yellowstonegames.grid.Region;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
 
