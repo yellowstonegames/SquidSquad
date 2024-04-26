@@ -98,13 +98,7 @@ public class MarkovChar {
 
             if('\'' != c && !Category.L.contains(c))
                 c = END;
-//            current = body.addOrIndex(c);
-            current = body.indexOfOrDefault(c, -1);
-            if(current == -1) {
-                current = body.size();
-                body.add(c);
-            }
-
+            current = body.addOrIndex(c);
             pair = pair << 16 | (current & 0xFFFF);
             if(pair == 1)
                 continue;

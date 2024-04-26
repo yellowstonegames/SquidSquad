@@ -99,13 +99,7 @@ public class MarkovText {
         int current, pair = 0, pre = 0, post;
         while (matcher.find())
         {
-            String group = matcher.group();
-//            body.addOrIndex(group); // TODO: this is buggy in jdkgdxds; it currently only does map.putIfAbsent();
-            current = body.indexOfOrDefault(group, -1);
-            if(current == -1) {
-                current = body.size();
-                body.add(group);
-            }
+            current = body.addOrIndex(matcher.group());
             pair = pair << 16 | (current & 0xFFFF);
             pairs.putIfAbsent(pair, pairs.size());
             post = pairs.get(pair);
