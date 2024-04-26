@@ -43,6 +43,12 @@ public enum Measurement {
 	 */
 	EUCLIDEAN;
 
+	/**
+	 * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Measurement[]} objects.
+	 * DO NOT MODIFY THIS ARRAY.
+	 */
+	public static final Measurement[] ALL = values();
+
 	public float heuristic(Direction target) {
 		if (this == Measurement.EUCLIDEAN && (target == Direction.DOWN_LEFT || target == Direction.DOWN_RIGHT || target == Direction.UP_LEFT || target == Direction.UP_RIGHT)) {
 			return 1.4142135623730951f; //Math.sqrt(2.0);

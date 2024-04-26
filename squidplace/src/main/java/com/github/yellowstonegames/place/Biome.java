@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.yellowstonegames.grid.Direction;
 
 import static com.github.yellowstonegames.place.Biome.Heat.*;
 import static com.github.yellowstonegames.place.Biome.Moisture.*;
@@ -39,6 +40,12 @@ public class Biome {
      */
     public enum Heat {
         COLDEST("coldest"), COLDER("colder"), COLD("cold"), HOT("hot"), HOTTER("hotter"), HOTTEST("hottest");
+        /**
+         * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Heat[]} objects.
+         * DO NOT MODIFY THIS ARRAY.
+         */
+        public static final Heat[] ALL = values();
+
         public final String name;
         Heat(final String n){
             name = n;
@@ -56,6 +63,12 @@ public class Biome {
     public enum Moisture {
         DRIEST("driest"), DRIER("drier"), DRY("dry"), WET("wet"), WETTER("wetter"), WETTEST("wettest"),
         COAST("coast"), RIVER("river"), LAKE("lake"), OCEAN("ocean"), STRANGE("strange");
+        /**
+         * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Moisture[]} objects.
+         * DO NOT MODIFY THIS ARRAY.
+         */
+        public static final Moisture[] ALL = values();
+
         public final String name;
         Moisture(final String n) {
             name = n;

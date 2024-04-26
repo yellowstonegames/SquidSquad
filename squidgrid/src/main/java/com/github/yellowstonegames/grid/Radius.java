@@ -53,8 +53,8 @@ public enum Radius {
     CIRCLE;
 
     /**
-     * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Radius[]} objects. DO NOT
-     * MODIFY THIS ARRAY.
+     * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Radius[]} objects.
+     * DO NOT MODIFY THIS ARRAY.
      */
     public static final Radius[] ALL = values();
 

@@ -169,6 +169,12 @@ public enum Pronoun {
      */
     GROUP;
 
+    /**
+     * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Pronoun[]} objects.
+     * DO NOT MODIFY THIS ARRAY.
+     */
+    public static final Pronoun[] ALL = values();
+
     public String nameText(String term) {
         switch (this) {
             case FIRST_PERSON_SINGULAR:

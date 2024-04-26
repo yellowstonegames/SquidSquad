@@ -22,10 +22,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.yellowstonegames.grid.Coord;
-import com.github.yellowstonegames.grid.CoordOrderedSet;
-import com.github.yellowstonegames.grid.PoissonDisk;
-import com.github.yellowstonegames.grid.Region;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
@@ -98,7 +95,12 @@ public class DungeonProcessor implements PlaceGenerator{
         /**
          * Islands of ground, '.', surrounded by shallow water, ',', to place in water at evenly spaced points
          */
-        ISLANDS
+        ISLANDS;
+        /**
+         * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code FillEffect[]} objects.
+         * DO NOT MODIFY THIS ARRAY.
+         */
+        public static final FillEffect[] ALL = values();
     }
 
     /**

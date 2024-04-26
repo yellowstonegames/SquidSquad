@@ -59,6 +59,11 @@ public enum Direction {
      */
     public static final Direction[] COUNTERCLOCKWISE = {UP, UP_LEFT, LEFT, DOWN_LEFT, DOWN, DOWN_RIGHT, RIGHT, UP_RIGHT};
     /**
+     * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code Direction[]} objects.
+     * DO NOT MODIFY THIS ARRAY.
+     */
+    public static final Direction[] ALL = values();
+    /**
      * The x coordinate difference for this direction.
      */
     public final int deltaX;

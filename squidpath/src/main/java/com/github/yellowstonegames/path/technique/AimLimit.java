@@ -16,6 +16,8 @@
 
 package com.github.yellowstonegames.path.technique;
 
+import com.github.yellowstonegames.grid.Direction;
+
 /**
  * Enum used for common targeting limitations (or lack thereof, in the case of AimLimit.FREE ). AimLimit.ORTHOGONAL will
  * limit single targets or the centers/aimed-at-cells of AOE effects to cells directly, north, south, east or west of
@@ -27,5 +29,12 @@ public enum AimLimit {
     FREE,
     ORTHOGONAL,
     DIAGONAL,
-    EIGHT_WAY
+    EIGHT_WAY;
+
+    /**
+     * The cached result of {@link #values()}, so you can avoid repeatedly allocating {@code AimLimit[]} objects.
+     * DO NOT MODIFY THIS ARRAY.
+     */
+    public static final AimLimit[] ALL = values();
+
 }
