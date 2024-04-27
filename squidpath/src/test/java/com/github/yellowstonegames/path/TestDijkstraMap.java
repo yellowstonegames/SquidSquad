@@ -19,17 +19,24 @@ package com.github.yellowstonegames.path;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Measurement;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TestDijkstraMap {
+    /**
+     * Prints with y pointing down, matching how 2D arrays are entered in source code.
+     * @param level a 2D char array that will be printed to stdout with y-down
+     */
     public static void print(char[][] level) {
-        for (int y = level[0].length - 1; y >= 0; y--) {
+        for (int y = 0; y < level[0].length; y++) {
             for (int x = 0; x < level.length; x++) {
                 System.out.print(level[x][y]);
             }
             System.out.println();
         }
     }
-    public static void main(String[] args) {
+    @Test
+    public void testMultipleGoals() {
         char[][] map = {
                 "#########".toCharArray(),
                 "#.......#".toCharArray(),
@@ -44,16 +51,23 @@ public class TestDijkstraMap {
         DijkstraMap dm = new DijkstraMap(map, Measurement.EUCLIDEAN);
         dm.setBlockingRequirement(2);
         ObjectDeque<Coord> path = new ObjectDeque<>(16);
-//        dm.setGoal(3, 3);
+
+        Coord start = Coord.get(4, 4), goal0 = Coord.get(5, 5), goal1 = Coord.get(5, 6);
+
+//        dm.setGoal(goal0);
+//        dm.setGoal(goal1);
 //        dm.partialScan(10, null);
-//        dm.findPathPreScanned(path, Coord.get(5, 5));
+//        dm.findPathPreScanned(path, start);
 
-        dm.findPath(path, 10, 10, null, null, Coord.get(4, 4), Coord.get(5, 5));
+        dm.findPath(path, 10, 10, null, null, start, goal0, goal1);
 
-        char ch = '0';
+        char ch = '1';
         for(Coord c : path) {
             map[c.x][c.y] = ch++;
         }
+        map[start.x][start.y] = '0';
         print(map);
+        // currently fails even though goal1 is the shortest path
+//        Assert.assertEquals(goal1, path.last());
     }
 }
