@@ -3430,17 +3430,47 @@ public class DijkstraMap {
     }
 
     private void appendDirToShuffle(Random rng) {
-        final Direction[] src = measurement == Measurement.MANHATTAN
-                ? Direction.CARDINALS : Direction.OUTWARDS;
-        final int n = measurement.directionCount();
-        System.arraycopy(src, 0, dirs, 0, n);
-        for (int i = n - 1; i > 0; i--) {
-            // equivalent to rng.nextInt(i+1), but here it can omit an unnecessary check and be inlined.
-            final int r = (int) ((i + 1) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
-            Direction t = dirs[r];
-            dirs[r] = dirs[i];
-            dirs[i] = t;
+        switch (measurement){
+            case MANHATTAN:
+                System.arraycopy(Direction.CARDINALS, 0, dirs, 0, 4);
+                for (int i = 3; i > 0; i--) {
+                    // equivalent to rng.nextInt(i+1), but here it can omit an unnecessary check and be inlined.
+                    final int r = (int) ((i + 1) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
+                    Direction t = dirs[r];
+                    dirs[r] = dirs[i];
+                    dirs[i] = t;
+                }
+
+                dirs[4] = Direction.NONE;
+            break;
+            case CHEBYSHEV:
+                System.arraycopy(Direction.OUTWARDS, 0, dirs, 0, 8);
+                for (int i = 7; i > 0; i--) {
+                    // equivalent to rng.nextInt(i+1), but here it can omit an unnecessary check and be inlined.
+                    final int r = (int) ((i + 1) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
+                    Direction t = dirs[r];
+                    dirs[r] = dirs[i];
+                    dirs[i] = t;
+                }
+                dirs[8] = Direction.NONE;
+            break;
+            default:
+                System.arraycopy(Direction.OUTWARDS, 0, dirs, 0, 8);
+                for (int i = 3; i > 0; i--) {
+                    // equivalent to rng.nextInt(i+1), but here it can omit an unnecessary check and be inlined.
+                    final int r = (int) ((i + 1) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
+                    Direction t = dirs[r];
+                    dirs[r] = dirs[i];
+                    dirs[i] = t;
+                }
+                for (int j = 7; j > 4; j--) {
+                    // equivalent to 4+rng.nextInt(j-3), but here it can omit an unnecessary check and be inlined.
+                    final int r = 4 + (int) ((j - 3) * (rng.nextLong() & 0xFFFFFFFFL) >>> 32);
+                    Direction t = dirs[r];
+                    dirs[r] = dirs[j];
+                    dirs[j] = t;
+                }
+                dirs[8] = Direction.NONE;
         }
-        dirs[n] = Direction.NONE;
     }
 }
