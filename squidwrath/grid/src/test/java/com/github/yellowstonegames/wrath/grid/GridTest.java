@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.wrath.grid;
 
+import com.github.tommyettinger.crux.PointPair;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.grid.*;
@@ -261,24 +262,24 @@ public class GridTest {
 
         byte[] bytes = fury.serializeJavaObject(data);
         {
-            SpatialMap data2 = fury.deserializeJavaObject(bytes, SpatialMap.class);
+            SpatialMap<?> data2 = fury.deserializeJavaObject(bytes, SpatialMap.class);
             Assert.assertEquals(data, data2);
         }
     }
-//
-//    @Test
-//    public void testRadiance() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Radiance.class, new RadianceSerializer());
-//
-//        Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            Radiance data2 = fury.deserializeJavaObject(bytes, Radiance.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+
+    @Test
+    public void testRadiance() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
+
+        Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            Radiance data2 = fury.deserializeJavaObject(bytes, Radiance.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 //
 //    @Test
 //    public void testLightingManager() {
@@ -794,18 +795,18 @@ public class GridTest {
 //            Assert.assertEquals(data, data2);
 //        }
 //    }
-//
-//    @Test
-//    public void testPointPair() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.registerSerializer(Coord.class, new CoordSerializer());
-//        fury.register(PointPair.class, new PointPairSerializer());
-//        PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            PointPair<?> data2 = fury.deserializeJavaObject(bytes, PointPair.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+
+    @Test
+    public void testPointPair() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(PointPair.class, new PointPairSerializer(fury));
+        PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            PointPair<?> data2 = fury.deserializeJavaObject(bytes, PointPair.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }

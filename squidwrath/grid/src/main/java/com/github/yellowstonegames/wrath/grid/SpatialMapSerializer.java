@@ -23,7 +23,8 @@ import io.fury.memory.MemoryBuffer;
 import io.fury.serializer.Serializer;
 
 /**  
- * Fury {@link Serializer} for jdkgdxds {@link SpatialMap}s.
+ * Fury {@link Serializer} for jdkgdxds {@link SpatialMap}s. Needs the value type of the SpatialMap to be registered
+ * (the class that implements IGridIdentified).
  */
 @SuppressWarnings({"rawtypes", "unchecked"}) 
 public class SpatialMapSerializer extends Serializer<SpatialMap> {
