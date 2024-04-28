@@ -50,34 +50,34 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
-//
-//    @Test
-//    public void testCoordSet() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.registerSerializer(Coord.class, new CoordSerializer());
-//        fury.registerSerializer(CoordSet.class, new CoordSetSerializer());
-//        CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            CoordSet data2 = fury.deserializeJavaObject(bytes, CoordSet.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testCoordOrderedSet() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.registerSerializer(Coord.class, new CoordSerializer());
-//        fury.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer());
-//        CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            CoordOrderedSet data2 = fury.deserializeJavaObject(bytes, CoordOrderedSet.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+
+    @Test
+    public void testCoordSet() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordSet.class, new CoordSetSerializer(fury));
+        CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordSet data2 = fury.deserializeJavaObject(bytes, CoordSet.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testCoordOrderedSet() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer(fury));
+        CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            CoordOrderedSet data2 = fury.deserializeJavaObject(bytes, CoordOrderedSet.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 
     @Test
     public void testCoordObjectMap() {

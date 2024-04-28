@@ -67,7 +67,6 @@ public class TestDijkstraMap {
         }
         map[start.x][start.y] = '0';
         print(map);
-        // currently fails even though goal1 is the shortest path
         Assert.assertEquals(goal1, path.last());
     }
 }
