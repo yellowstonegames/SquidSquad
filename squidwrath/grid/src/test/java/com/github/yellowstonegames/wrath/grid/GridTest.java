@@ -280,52 +280,52 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
-//
-//    @Test
-//    public void testLightingManager() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(int[].class);
-//        fury.register(int[][].class);
-//        fury.register(float[].class);
-//        fury.register(float[][].class);
-//        fury.registerSerializer(Coord.class, new CoordSerializer());
-//        fury.register(Radiance.class, new RadianceSerializer());
-//        fury.register(Region.class, new RegionSerializer());
-//        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
-//        fury.register(LightingManager.class, new LightingManagerSerializer());
-//
-//        LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
-//        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            LightingManager data2 = fury.deserializeJavaObject(bytes, LightingManager.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testLightingManagerRgb() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(int[].class);
-//        fury.register(int[][].class);
-//        fury.register(float[].class);
-//        fury.register(float[][].class);
-//        fury.registerSerializer(Coord.class, new CoordSerializer());
-//        fury.register(Radiance.class, new RadianceSerializer());
-//        fury.register(Region.class, new RegionSerializer());
-//        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
-//        fury.register(LightingManagerRgb.class, new LightingManagerRgbSerializer());
-//
-//        LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
-//        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            LightingManagerRgb data2 = fury.deserializeJavaObject(bytes, LightingManagerRgb.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+
+    @Test
+    public void testLightingManager() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(int[].class);
+        fury.register(int[][].class);
+        fury.register(float[].class);
+        fury.register(float[][].class);
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.register(Region.class);
+        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
+        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(LightingManager.class, new LightingManagerSerializer(fury));
+
+        LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
+        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            LightingManager data2 = fury.deserializeJavaObject(bytes, LightingManager.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testLightingManagerRgb() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(int[].class);
+        fury.register(int[][].class);
+        fury.register(float[].class);
+        fury.register(float[][].class);
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.register(Region.class);
+        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
+        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fury));
+
+        LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
+        data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            LightingManagerRgb data2 = fury.deserializeJavaObject(bytes, LightingManagerRgb.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 //
 //    @Test
 //    public void testVisionFramework() {
