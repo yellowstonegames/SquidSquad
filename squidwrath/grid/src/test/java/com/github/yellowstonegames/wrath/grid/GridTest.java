@@ -87,7 +87,7 @@ public class GridTest {
         CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
         byte[] bytes = fury.serializeJavaObject(data);
-        CoordObjectMap data2 = fury.deserializeJavaObject(bytes, CoordObjectMap.class);
+        CoordObjectMap<?> data2 = fury.deserializeJavaObject(bytes, CoordObjectMap.class);
 
         Assert.assertEquals(data, data2);
     }
@@ -101,7 +101,7 @@ public class GridTest {
 
         byte[] bytes = fury.serializeJavaObject(data);
         {
-            CoordObjectOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
+            CoordObjectOrderedMap<?> data2 = fury.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -190,81 +190,81 @@ public class GridTest {
         }
     }
 
-//    public static class IGI implements IGridIdentified {
-//        public final int id;
-//        public Coord position;
-//        private static int COUNTER = 0;
-//
-//        public IGI(){
-//            id = COUNTER++;
-//            position = Coord.get(0, 0);
-//        }
-//        public IGI(Coord pos){
-//            id = COUNTER++;
-//            position = pos;
-//        }
-//        public IGI(int id, Coord pos){
-//            this.id = id;
-//            position = pos;
-//        }
-//
-//        @Override
-//        public int getIdentifier() {
-//            return id;
-//        }
-//
-//        @Override
-//        public Coord getCoordPosition() {
-//            return position;
-//        }
-//
-//        @Override
-//        public void setCoordPosition(Coord position) {
-//            this.position = position;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return "IGI{" +
-//                    "id=" + id +
-//                    ", position=" + position +
-//                    '}';
-//        }
-//
-//        @Override
-//        public boolean equals(Object o) {
-//            if (this == o) return true;
-//            if (o == null || getClass() != o.getClass()) return false;
-//
-//            IGI igi = (IGI) o;
-//
-//            if (id != igi.id) return false;
-//            return position != null ? position.equals(igi.position) : igi.position == null;
-//        }
-//
-//        @Override
-//        public int hashCode() {
-//            return id;
-//        }
-//    }
-//    @Test
-//    public void testSpatialMap() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.registerSerializer(Coord.class, new CoordSerializer());
-//        fury.register(IGI.class);
-//        fury.register(SpatialMap.class, new SpatialMapSerializer());
-//        SpatialMap<IGI> data = new SpatialMap<>(8);
-//        data.add(new IGI(Coord.get(1, 2)));
-//        data.add(new IGI(Coord.get(2, 2)));
-//        data.add(new IGI(Coord.get(1, 3)));
-//        data.add(new IGI(Coord.get(2, 3)));
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            SpatialMap data2 = fury.deserializeJavaObject(bytes, SpatialMap.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+    public static class IGI implements IGridIdentified {
+        public final int id;
+        public Coord position;
+        private static int COUNTER = 0;
+
+        public IGI(){
+            id = COUNTER++;
+            position = Coord.get(0, 0);
+        }
+        public IGI(Coord pos){
+            id = COUNTER++;
+            position = pos;
+        }
+        public IGI(int id, Coord pos){
+            this.id = id;
+            position = pos;
+        }
+
+        @Override
+        public int getIdentifier() {
+            return id;
+        }
+
+        @Override
+        public Coord getCoordPosition() {
+            return position;
+        }
+
+        @Override
+        public void setCoordPosition(Coord position) {
+            this.position = position;
+        }
+
+        @Override
+        public String toString() {
+            return "IGI{" +
+                    "id=" + id +
+                    ", position=" + position +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            IGI igi = (IGI) o;
+
+            if (id != igi.id) return false;
+            return position != null ? position.equals(igi.position) : igi.position == null;
+        }
+
+        @Override
+        public int hashCode() {
+            return id;
+        }
+    }
+    @Test
+    public void testSpatialMap() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.register(IGI.class);
+        fury.registerSerializer(SpatialMap.class, new SpatialMapSerializer(fury));
+        SpatialMap<IGI> data = new SpatialMap<>(8);
+        data.add(new IGI(Coord.get(1, 2)));
+        data.add(new IGI(Coord.get(2, 2)));
+        data.add(new IGI(Coord.get(1, 3)));
+        data.add(new IGI(Coord.get(2, 3)));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            SpatialMap data2 = fury.deserializeJavaObject(bytes, SpatialMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 //
 //    @Test
 //    public void testRadiance() {
