@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.wrath.text;
 
 import com.github.yellowstonegames.text.Language;
+import com.github.yellowstonegames.text.Translator;
 import io.fury.Fury;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,25 +63,21 @@ public class TextTest {
             Assert.assertEquals(data, data2);
         }
     }
-//
-//    @Test
-//    public void testTranslator() {
-//        Kryo kryo = new Kryo();
-//        kryo.register(Language.class, new LanguageSerializer());
-//        kryo.register(ObjectObjectMap.class, new ObjectObjectMapSerializer());
-//        kryo.register(Translator.class, new TranslatorSerializer());
-//
-//        String sentence = "For you, I can translate; I will lower my steep rate; to something more affordable; since you are so adorable.";
-//        Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L), t2;
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        kryo.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            Translator data2 = kryo.readObject(input, Translator.class);
-//            Assert.assertEquals(data, data2);
-//            Assert.assertEquals(data.cipher(sentence), data2.cipher(sentence));
-//        }
-//    }
+
+    @Test
+    public void testTranslator() {
+        Fury fury = Fury.builder().withLanguage(io.fury.config.Language.JAVA).build();
+        fury.registerSerializer(Language.class, new LanguageSerializer(fury));
+        fury.registerSerializer(Translator.class, new TranslatorSerializer(fury));
+
+        String sentence = "For you, I can translate; I will lower my steep rate; to something more affordable; since you are so adorable.";
+        Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            Translator data2 = fury.deserializeJavaObject(bytes, Translator.class);
+            Assert.assertEquals(data, data2);
+            Assert.assertEquals(data.cipher(sentence), data2.cipher(sentence));
+        }
+    }
 }
