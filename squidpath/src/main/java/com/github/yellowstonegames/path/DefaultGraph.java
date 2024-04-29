@@ -19,6 +19,7 @@ package com.github.yellowstonegames.path;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
@@ -260,7 +261,7 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 *     </li>
 	 * </ul>
 	 */
-	@Override
+	@GwtIncompatible
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeInt(width);
 		out.writeInt(height);
@@ -277,7 +278,7 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 * @throws ClassNotFoundException If the class for an object being
 	 *                                restored cannot be found.
 	 */
-	@Override
+	@GwtIncompatible
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		width = in.readInt();
 		height = in.readInt();
