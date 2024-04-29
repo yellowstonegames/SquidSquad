@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.tommyettinger.crux.PointPair;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.grid.*;
@@ -739,62 +740,62 @@ public class GridTest {
         }
     }
 
-//    @Test
-//    public void testNoiseWrapper() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Noise.class, new NoiseSerializer());
-//        fury.register(NoiseWrapper.class, new NoiseWrapperSerializer());
-//
-//        NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            NoiseWrapper data2 = fury.deserializeJavaObject(bytes, NoiseWrapper.class);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testRadialNoiseWrapper() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Noise.class, new NoiseSerializer());
-//        fury.register(RadialNoiseWrapper.class, new RadialNoiseWrapperSerializer());
-//
-//        RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 10f, 20.125f);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            RadialNoiseWrapper data2 = fury.deserializeJavaObject(bytes, RadialNoiseWrapper.class);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
-//    @Test
-//    public void testNoiseAdjustment() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(Noise.class, new NoiseSerializer());
-//        fury.register(NoiseAdjustment.class, new NoiseAdjustmentSerializer());
-//
-//        NoiseAdjustment data = new NoiseAdjustment(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), Interpolations.exp5In);
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            NoiseAdjustment data2 = fury.deserializeJavaObject(bytes, NoiseAdjustment.class);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+    @Test
+    public void testNoiseWrapper() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(Noise.class);
+        fury.register(NoiseWrapper.class);
+
+        NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            NoiseWrapper data2 = fury.deserializeJavaObject(bytes, NoiseWrapper.class);
+            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testRadialNoiseWrapper() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(Noise.class);
+        fury.register(RadialNoiseWrapper.class);
+
+        RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 10f, 20.125f);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            RadialNoiseWrapper data2 = fury.deserializeJavaObject(bytes, RadialNoiseWrapper.class);
+            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testNoiseAdjustment() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(Noise.class);
+        fury.register(NoiseAdjustment.class);
+
+        NoiseAdjustment data = new NoiseAdjustment(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), Interpolations.exp5In);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            NoiseAdjustment data2 = fury.deserializeJavaObject(bytes, NoiseAdjustment.class);
+            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
 
     @Test
     public void testPointPair() {
