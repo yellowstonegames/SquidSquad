@@ -20,8 +20,13 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.function.ObjPredicate;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import com.github.yellowstonegames.grid.Coord;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -30,7 +35,7 @@ import java.util.function.Predicate;
  * @param <V> the vertex type; often {@link Coord}
  * @author earlygrey
  */
-public abstract class Graph<V> {
+public abstract class Graph<V> implements Externalizable {
 
     //================================================================================
     // Members
@@ -372,6 +377,65 @@ public abstract class Graph<V> {
         return edgeSet.size();
     }
 
+
+    /**
+     * Meant for serialization using <a href="https://fury.apache.org">Fury</a>.
+     * If a class overrides this with different behavior, {@link #readExternal(ObjectInput)}
+     * must also be overridden to match that behavior.
+     *
+     * @param out the stream to write the object to
+     * @throws IOException Includes any I/O exceptions that may occur
+     * @serialData <ul>
+     *     <li>int nv: the number of vertices</li>
+     *     <li>object[nv] vertices: a sequence of vertex objects, with count equal to nv</li>
+     *     <li>int ne: the number of edges</li>
+     *     <li>triple[ne] edges: interleaved in a flat sequence; for each triple:
+     *     <ul>
+     *         <li>object vertexA</li>
+     *         <li>object vertexB</li>
+     *         <li>float weight</li>
+     *     </ul>
+     *     </li>
+     * </ul>
+     */
+    @GwtIncompatible
+    public void writeExternal(ObjectOutput out) throws IOException {
+        Set<?> vertices = getVertices();
+        out.writeInt(vertices.size());
+        for(Object vertex : vertices) {
+            out.writeObject(vertex);
+        }
+        Collection<? extends Edge<?>> edges = getEdges();
+        out.writeInt(edges.size());
+        for(Edge<?> edge : edges) {
+            out.writeObject(edge.getA());
+            out.writeObject(edge.getB());
+            out.writeFloat(edge.getWeight());
+        }
+    }
+
+    /**
+     * Meant for deserialization using <a href="https://fury.apache.org">Fury</a>.
+     * If a class overrides this with different behavior, {@link #writeExternal(ObjectOutput)}
+     * must also be overridden to match that behavior.
+     *
+     * @param in the stream to read data from in order to restore the object
+     * @throws IOException            if I/O errors occur
+     * @throws ClassNotFoundException If the class for an object being
+     *                                restored cannot be found.
+     */
+    @GwtIncompatible
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        this.removeAllVertices();
+        int count = in.readInt();
+        for (int i = 0; i < count; i++) {
+            addVertex((V) in.readObject());
+        }
+        count = in.readInt();
+        for (int i = 0; i < count; i++) {
+            addEdge((V) in.readObject(), (V) in.readObject(), in.readFloat());
+        }
+    }
 
     //--------------------
     //  Internal Getters
