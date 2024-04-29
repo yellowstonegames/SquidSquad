@@ -22,6 +22,7 @@ import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
 import io.fury.Fury;
 import io.fury.config.Language;
@@ -37,9 +38,8 @@ public class GridTest {
         ObjectList<Coord> data = ObjectList.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(-2, -3), Coord.get(100, 100));
 
         byte[] bytes = fury.serializeJavaObject(data);
-        ObjectList data2 = fury.deserializeJavaObject(bytes, ObjectList.class);
+        ObjectList<?> data2 = fury.deserializeJavaObject(bytes, ObjectList.class);
         Assert.assertEquals(data, data2);
-
     }
 
     @Test
@@ -358,34 +358,33 @@ public class GridTest {
         }
     }
 
+    @Test
+    public void testVisionFrameworkRgb() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(int[].class);
+        fury.register(int[][].class);
+        fury.register(float[].class);
+        fury.register(float[][].class);
+        fury.register(char[].class);
+        fury.register(char[][].class);
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
+        fury.register(Region.class);
+        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
+        fury.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fury));
+        fury.registerSerializer(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer(fury));
 
-//    @Test
-//    public void testVisionFrameworkRgb() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(int[].class);
-//        fury.register(int[][].class);
-//        fury.register(float[].class);
-//        fury.register(float[][].class);
-//        fury.register(char[].class);
-//        fury.register(char[][].class);
-//        fury.registerSerializer(Coord.class, new CoordSerializer());
-//        fury.register(Radiance.class, new RadianceSerializer());
-//        fury.register(Region.class, new RegionSerializer());
-//        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
-//        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
-//        fury.register(LightingManagerRgb.class, new LightingManagerRgbSerializer());
-//        fury.register(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer());
-//
-//        VisionFrameworkRgb data = new VisionFrameworkRgb();
-//        data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
-//        data.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
-//
-//        byte[] bytes = fury.serializeJavaObject(data);
-//        {
-//            VisionFrameworkRgb data2 = fury.deserializeJavaObject(bytes, VisionFrameworkRgb.class);
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
+        VisionFrameworkRgb data = new VisionFrameworkRgb();
+        data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
+        data.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            VisionFrameworkRgb data2 = fury.deserializeJavaObject(bytes, VisionFrameworkRgb.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 
     @Test
     public void testNoise() {
