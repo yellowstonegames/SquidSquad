@@ -23,6 +23,9 @@ import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Arrays;
 
 /**
@@ -233,6 +236,52 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	 */
 	public boolean containsCycle() {
 		return algorithms.containsCycle();
+	}
+
+	/**
+	 * Meant for serialization using <a href="https://fury.apache.org">Fury</a>.
+	 * If a class overrides this with different behavior, {@link #readExternal(ObjectInput)}
+	 * must also be overridden to match that behavior.
+	 *
+	 * @param out the stream to write the object to
+	 * @throws IOException Includes any I/O exceptions that may occur
+	 * @serialData <ul>
+	 * <li>int width: the x-size of the grid the graph uses</li>
+	 * <li>int height: the y-size of the grid the graph uses</li>
+	 * <li>int nv: the number of vertices</li>
+	 * <li>object[nv] vertices: a sequence of vertex objects, with count equal to nv</li>
+	 * <li>int ne: the number of edges</li>
+	 * <li>triple[ne] edges: interleaved in a flat sequence; for each triple:
+	 *     <ul>
+	 *         <li>object vertexA</li>
+	 *         <li>object vertexB</li>
+	 *         <li>float weight</li>
+	 *     </ul>
+	 *     </li>
+	 * </ul>
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeInt(width);
+		out.writeInt(height);
+		super.writeExternal(out);
+	}
+
+	/**
+	 * Meant for deserialization using <a href="https://fury.apache.org">Fury</a>.
+	 * If a class overrides this with different behavior, {@link #writeExternal(ObjectOutput)}
+	 * must also be overridden to match that behavior.
+	 *
+	 * @param in the stream to read data from in order to restore the object
+	 * @throws IOException            if I/O errors occur
+	 * @throws ClassNotFoundException If the class for an object being
+	 *                                restored cannot be found.
+	 */
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		width = in.readInt();
+		height = in.readInt();
+		super.readExternal(in);
 	}
 
 	/**

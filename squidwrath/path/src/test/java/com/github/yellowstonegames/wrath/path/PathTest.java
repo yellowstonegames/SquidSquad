@@ -99,36 +99,33 @@ public class PathTest {
         }
     }
 
-//    @Test
-//    public void testDefaultGraph() {
-//        Kryo kryo = new Kryo();
-//        kryo.register(Coord.class, new CoordSerializer());
-//        kryo.register(DefaultGraph.class, new DefaultGraphSerializer());
-//
-//        Graph<Coord> data = new DefaultGraph(new char[][]{
-//                "######".toCharArray(),
-//                "#....#".toCharArray(),
-//                "#....#".toCharArray(),
-//                "#..#.#".toCharArray(),
-//                "#....#".toCharArray(),
-//                "######".toCharArray(),
-//        }, true);
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        kryo.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        System.out.println("Default byte length: " + bytes.length);
-//        try (Input input = new Input(bytes)) {
-//            DefaultGraph data2 = kryo.readObject(input, DefaultGraph.class);
-//            Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
-//            Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
-//            Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
-//                    data2.getEdges().stream().map(Object::toString).collect(Collectors.toList()));
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//
+    @Test
+    public void testDefaultGraph() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.register(DefaultGraph.class);
+
+        Graph<Coord> data = new DefaultGraph(new char[][]{
+                "######".toCharArray(),
+                "#....#".toCharArray(),
+                "#....#".toCharArray(),
+                "#..#.#".toCharArray(),
+                "#....#".toCharArray(),
+                "######".toCharArray(),
+        }, true);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        System.out.println("Default byte length: " + bytes.length);
+        {
+            DefaultGraph data2 = fury.deserializeJavaObject(bytes, DefaultGraph.class);
+            Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
+            Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
+            Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
+                    data2.getEdges().stream().map(Object::toString).collect(Collectors.toList()));
+            Assert.assertEquals(data, data2);
+        }
+    }
+
 //    @Test
 //    public void testCostlyGraph() {
 //        Kryo kryo = new Kryo();
