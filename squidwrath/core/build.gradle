@@ -9,7 +9,6 @@ dependencies {
 
 	api("com.github.tommyettinger:tantrum-digital:0.4.8.0")
 	api("com.github.tommyettinger:tantrum-jdkgdxds:1.5.3.0")
-	api("com.github.tommyettinger:tantrum-juniper:0.6.0.0")
 
     testImplementation "org.slf4j:slf4j-nop:$slf4jVersion"
     testImplementation "junit:junit:$junitVersion"

@@ -25,9 +25,6 @@ import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.tantrum.jdkgdxds.IntListSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.NumberedSetSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
-import com.github.tommyettinger.tantrum.juniper.AceRandomSerializer;
-import com.github.tommyettinger.tantrum.juniper.EnhancedRandomSerializer;
-import com.github.tommyettinger.tantrum.juniper.WhiskerRandomSerializer;
 import com.github.yellowstonegames.core.*;
 import io.fury.Fury;
 import io.fury.config.Language;
@@ -55,8 +52,8 @@ public class CoreTest {
     @Test
     public void testGapShuffler() {
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(EnhancedRandom.class, new EnhancedRandomSerializer(fury));
-        fury.registerSerializer(AceRandom.class, new AceRandomSerializer(fury));
+        fury.register(EnhancedRandom.class);
+        fury.register(AceRandom.class);
         fury.registerSerializer(ObjectList.class, new ObjectListSerializer(fury));
         fury.register(GapShuffler.class);
 
@@ -72,8 +69,8 @@ public class CoreTest {
     @Test
     public void testProbabilityTable() {
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(EnhancedRandom.class, new EnhancedRandomSerializer(fury));
-        fury.registerSerializer(WhiskerRandom.class, new WhiskerRandomSerializer(fury));
+        fury.register(EnhancedRandom.class);
+        fury.register(WhiskerRandom.class);
         fury.registerSerializer(ObjectList.class, new ObjectListSerializer(fury));
         fury.registerSerializer(NumberedSet.class, new NumberedSetSerializer(fury));
         fury.registerSerializer(IntList.class, new IntListSerializer(fury));
