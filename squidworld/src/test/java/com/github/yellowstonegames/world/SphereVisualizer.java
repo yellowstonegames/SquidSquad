@@ -273,6 +273,9 @@ public class SphereVisualizer extends ApplicationAdapter {
                 } else if (keycode == Input.Keys.P || keycode == Input.Keys.S) {
                     showStats();
                 } else if(keycode == Input.Keys.NUM_4) {
+                    Arrays.fill(GRADIENTS_4D_FIB, 0f);
+                    superFibonacci4D(0.5f, GRADIENTS_4D_FIB);
+                    System.out.printf("Super-Fibonacci spiral has min dist %f \n", Math.sqrt(evaluateMinDistance2_4(GRADIENTS_4D_FIB, 64)));
                     startTime = TimeUtils.millis();
                     long bestSeed = seed;
                     double bestMinDist = -Double.MAX_VALUE;
@@ -1426,6 +1429,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private static final int STANDARD_COUNT = 256;
     private final float[] GRADIENTS_4D_TEMP = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_ACE = new float[STANDARD_COUNT<<2];
+    private final float[] GRADIENTS_4D_FIB = new float[STANDARD_COUNT<<2];
 
     private final float[] GRADIENTS_5D_HALTON = new float[STANDARD_COUNT<<3];
     private final float[] GRADIENTS_5D_R5 = new float[STANDARD_COUNT<<3];
@@ -1440,6 +1444,30 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float[] GRADIENTS_6D_U = new float[STANDARD_COUNT<<3];
 
     private final float[] GRADIENTS_6D_TEMP = new float[STANDARD_COUNT<<3];
+
+    /**
+     * <a href="https://marcalexa.github.io/superfibonacci/">Based on the algorithm from here</a>.
+     * @param epsilon     typically either 0.5f or 0.36f
+     * @param gradients4D the gradient vector array to write to, in groups of 4 floats per vector
+     */
+    private void superFibonacci4D(final float epsilon, final float[] gradients4D) {
+        for (int i = 0; i < STANDARD_COUNT - 1; i++) {
+            float s = i + epsilon;
+            float t = s / (STANDARD_COUNT - 1 + epsilon + epsilon);
+            float r = (float)Math.sqrt(t);
+            float c = (float)Math.sqrt(1f-t);
+            float alpha = s * 0.7548776662466927f, beta = s * 0.5698402909980532f;
+//            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
+//            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
+//            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
+//            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
+            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
+            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
+            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
+            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+            ++i;
+        }
+    }
 
     private void roll4D(final RotationTools.Rotator rotator, final float[] gradients4D) {
         for (int i = 0; i < STANDARD_COUNT; i++) {
