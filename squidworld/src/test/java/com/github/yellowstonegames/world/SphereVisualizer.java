@@ -271,6 +271,33 @@ public class SphereVisualizer extends ApplicationAdapter {
                     return true;
                 } else if (keycode == Input.Keys.P || keycode == Input.Keys.S) {
                     showStats();
+                } else if(keycode == Input.Keys.NUM_4) {
+                    startTime = TimeUtils.millis();
+                    long bestSeed = seed;
+                    double bestMinDist = -Double.MAX_VALUE;
+                    RotationTools.Rotator rotator = new RotationTools.Rotator(4, random);
+                    for (int i = 0; i < 100000; i++) {
+                        random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
+                        Arrays.fill(GRADIENTS_4D_TEMP, 0f);
+                        roll4D(rotator, GRADIENTS_4D_TEMP);
+                        float dist = evaluateMinDistance2_4(GRADIENTS_4D_TEMP, 64);
+                        if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
+                            bestSeed = seed;
+                        }
+                        seed += 0xDB4F0B9175AE2165L;// 0x9E3779B97F4A7C15L;
+                    }
+                    System.out.printf("Best seed: 0x%016XL with best min dist %f\n", bestSeed, Math.sqrt(bestMinDist));
+                    System.out.println("Processing took " + TimeUtils.timeSinceMillis(startTime) * 1E-3 + " seconds.");
+                    random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
+                    Arrays.fill(GRADIENTS_4D_ACE, 0f);
+                    roll4D(rotator, GRADIENTS_4D_ACE);
+                    shuffleBlocks(random, GRADIENTS_4D_ACE, 4);
+                    System.out.println("public static final float[] GRADIENTS_4D = {");
+                    for (int i = 0; i < GRADIENTS_4D_ACE.length; i += 4) {
+                        System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff,\n",
+                                GRADIENTS_4D_ACE[i], GRADIENTS_4D_ACE[i+1], GRADIENTS_4D_ACE[i+2], GRADIENTS_4D_ACE[i+3]);
+                    }
+                    System.out.println("};");
                 } else if(keycode == Input.Keys.NUM_5) {
                     long bestSeed = seed;
                     double bestMinDist = -Double.MAX_VALUE;
