@@ -85,19 +85,16 @@ public class SphereVisualizer extends ApplicationAdapter {
 //    private final EnhancedRandom random = new DistinctRandom(seed);
 //    private final EnhancedRandom random = new RandomRandom(seed);
     private static final float[] POLE_3 = new float[]{1f, 0f, 0f};
-    private static final float[] POLE_REVERSE_3 = new float[]{-1f, 0f, 0f};
     private static final double[] POLE_3_D = new double[]{1.0, 0., 0.};
-    private static final double[] POLE_REVERSE_3_D = new double[]{-1.0, 0., 0.};
+
+    private static final float[] POLE_4 = new float[]{1f, 0f, 0f, 0f};
+    private static final double[] POLE_4_D = new double[]{1.0, 0., 0., 0.};
 
     private static final float[] POLE_5 = new float[]{1f, 0f, 0f, 0f, 0f};
-    private static final float[] POLE_REVERSE_5 = new float[]{-1f, 0f, 0f, 0f, 0f};
     private static final double[] POLE_5_D = new double[]{1.0, 0., 0., 0., 0.};
-    private static final double[] POLE_REVERSE_5_D = new double[]{-1.0, 0., 0., 0., 0.};
 
     private static final float[] POLE_6 = new float[]{1f, 0f, 0f, 0f, 0f, 0f};
-    private static final float[] POLE_REVERSE_6 = new float[]{-1f, 0f, 0f, 0f, 0f, 0f};
     private static final double[] POLE_6_D = new double[]{1.0, 0., 0., 0., 0., 0.};
-    private static final double[] POLE_REVERSE_6_D = new double[]{-1.0, 0., 0., 0., 0., 0.};
 
 
     private final float black = Color.BLACK.toFloatBits();
@@ -274,7 +271,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                     return true;
                 } else if (keycode == Input.Keys.P || keycode == Input.Keys.S) {
                     showStats();
-                } else if(keycode == Input.Keys.R) {
+                } else if(keycode == Input.Keys.NUM_5) {
                     long bestSeed = seed;
                     double bestMinDist = -Double.MAX_VALUE;
                     for (int i = 0; i < 100000; i++) {
@@ -293,6 +290,10 @@ public class SphereVisualizer extends ApplicationAdapter {
                     roll5D(random, GRADIENTS_5D_ACE);
                     random.setSeed(seed);
                 } else if(keycode == Input.Keys.NUM_6) {
+
+                    // I don't remember why I had this in to debug...
+                    //                            random.stringDeserialize("AceR`-B57A320CFBEF3~-57080C1D00C9E1A0~-7A9B48DF183E4A73~76CC474918D335C1~3DDF1B8EC95CBC49`");
+
                     if(UIUtils.shift()) {
                         startTime = TimeUtils.millis();
                         long bestSeed = seed;
@@ -300,7 +301,6 @@ public class SphereVisualizer extends ApplicationAdapter {
                         RotationTools.Rotator rotator = new RotationTools.Rotator(6, random);
                         for (int i = 0; i < 100000; i++) {
                             random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
-//                            random.stringDeserialize("AceR`-B57A320CFBEF3~-57080C1D00C9E1A0~-7A9B48DF183E4A73~76CC474918D335C1~3DDF1B8EC95CBC49`");
                             Arrays.fill(GRADIENTS_6D_TEMP, 0f);
                             roll6D(rotator, GRADIENTS_6D_TEMP);
                             float dist = evaluateMinDistance2_6(GRADIENTS_6D_TEMP);
@@ -1358,73 +1358,117 @@ public class SphereVisualizer extends ApplicationAdapter {
             +1.5421515027f, +0.1809242613f, +0.6454387145f, +0.2020302919f, +1.0637799497f, 0f, 0f, 0f,
     };
 
-    private final float[] GRADIENTS_5D_HALTON = new float[POINT_COUNT<<3];
-    private final float[] GRADIENTS_5D_R5 = new float[POINT_COUNT<<3];
-    private final float[] GRADIENTS_5D_ACE = new float[POINT_COUNT<<3];
-    private final float[] GRADIENTS_5D_GOLDEN = new float[POINT_COUNT<<3];
-    private final float[] GRADIENTS_5D_VDC = new float[POINT_COUNT<<3];
-    private final float[] GRADIENTS_5D_U = new float[POINT_COUNT<<3];
+    private static final int STANDARD_COUNT = 256;
+    private final float[] GRADIENTS_4D_TEMP = new float[STANDARD_COUNT<<2];
+    private final float[] GRADIENTS_4D_ACE = new float[STANDARD_COUNT<<2];
 
-    private final float[] GRADIENTS_5D_TEMP = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_HALTON = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_5D_R5 = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_5D_ACE = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_5D_GOLDEN = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_5D_VDC = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_5D_U = new float[STANDARD_COUNT<<3];
 
-    private final float[] GRADIENTS_6D_ACE = new float[POINT_COUNT<<3];
-    private final float[] GRADIENTS_6D_U = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_5D_TEMP = new float[STANDARD_COUNT<<3];
 
-    private final float[] GRADIENTS_6D_TEMP = new float[POINT_COUNT<<3];
+    private final float[] GRADIENTS_6D_ACE = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_6D_U = new float[STANDARD_COUNT<<3];
+
+    private final float[] GRADIENTS_6D_TEMP = new float[STANDARD_COUNT<<3];
+
+    private void roll4D(final RotationTools.Rotator rotator, final float[] gradients4D) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
+            rotator.randomize();
+            rotator.rotate(SphereVisualizer.POLE_4, gradients4D, i++ << 2);
+            for (int r = 0; r < 4; r++) {
+                gradients4D[i << 2 | r] = -gradients4D[i - 1 << 2 | r];
+            }
+        }
+    }
 
     private void roll5D(final EnhancedRandom random, final float[] gradients5D) {
-        for (int i = 0; i < POINT_COUNT; i++) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
             float[] rot = RotationTools.randomRotation5D(random);
-            RotationTools.rotate(SphereVisualizer.POLE_5, rot, gradients5D, i << 3);
-            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5, rot, gradients5D, ++i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_5, rot, gradients5D, i++ << 3);
+//            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5, rot, gradients5D, ++i << 3);
+            for (int r = 0; r < 5; r++) {
+                gradients5D[i << 3 | r] = -gradients5D[i - 1 << 3 | r];
+            }
         }
     }
 
     private static void roll5D(final EnhancedRandom random, final double[] gradients5D) {
-        for (int i = 0; i < POINT_COUNT; i++) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
             double[] rot = RotationTools.randomDoubleRotation5D(random);
-            RotationTools.rotate(SphereVisualizer.POLE_5_D, rot, gradients5D, i << 3);
-            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5_D, rot, gradients5D, ++i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_5_D, rot, gradients5D, i++ << 3);
+//            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5_D, rot, gradients5D, ++i << 3);
+            for (int r = 0; r < 5; r++) {
+                gradients5D[i << 3 | r] = -gradients5D[i - 1 << 3 | r];
+            }
         }
     }
 
     private static void roll5D(long seed, final float[] gradients5D) {
-        for (int i = 0; i < POINT_COUNT; i++) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
             float[] rot = RotationTools.randomRotation5D(seed + i);
-            RotationTools.rotate(SphereVisualizer.POLE_5, rot, gradients5D, i << 3);
-            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5, rot, gradients5D, ++i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_5, rot, gradients5D, i++ << 3);
+//            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_5, rot, gradients5D, ++i << 3);
+            for (int r = 0; r < 5; r++) {
+                gradients5D[i << 3 | r] = -gradients5D[i - 1 << 3 | r];
+            }
+        }
+    }
+
+    private void roll5D(final RotationTools.Rotator rotator, final float[] gradients5D) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
+            rotator.randomize();
+            rotator.rotate(SphereVisualizer.POLE_5, gradients5D, i++ << 3);
+//            rotator.rotate(SphereVisualizer.POLE_REVERSE_5, gradients5D, ++i << 3);
+            for (int r = 0; r < 5; r++) {
+                gradients5D[i << 3 | r] = -gradients5D[i - 1 << 3 | r];
+            }
         }
     }
 
     private void roll6D(final EnhancedRandom random, final float[] gradients6D) {
-        for (int i = 0; i < POINT_COUNT; i++) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
             float[] rot = RotationTools.randomRotation6D(random);
-            RotationTools.rotate(SphereVisualizer.POLE_6, rot, gradients6D, i << 3);
-            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6, rot, gradients6D, ++i << 3);
+            RotationTools.rotate(SphereVisualizer.POLE_6, rot, gradients6D, i++ << 3);
+//            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6, rot, gradients6D, ++i << 3);
+            for (int r = 0; r < 6; r++) {
+                gradients6D[i << 3 | r] = -gradients6D[i - 1 << 3 | r];
+            }
         }
     }
 
     private static void roll6D(final EnhancedRandom random, final double[] gradients6D) {
-        for (int i = 0; i < POINT_COUNT; i++) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
             double[] rot = RotationTools.randomDoubleRotation6D(random);
-            RotationTools.rotate(SphereVisualizer.POLE_6_D, rot, gradients6D, i << 3);
-            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6_D, rot, gradients6D, ++i << 3);
-        }
+            RotationTools.rotate(SphereVisualizer.POLE_6_D, rot, gradients6D, i++ << 3);
+//            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6_D, rot, gradients6D, ++i << 3);
+            for (int r = 0; r < 6; r++) {
+                gradients6D[i << 3 | r] = -gradients6D[i - 1 << 3 | r];
+            }        }
     }
 
     private static void roll6D(long seed, final float[] gradients6D) {
-        for (int i = 0; i < POINT_COUNT; i++) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
             float[] rot = RotationTools.randomRotation6D(seed + i);
-            RotationTools.rotate(SphereVisualizer.POLE_6, rot, gradients6D, i << 3);
-            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6, rot, gradients6D, ++i << 3);
-        }
+            RotationTools.rotate(SphereVisualizer.POLE_6, rot, gradients6D, i++ << 3);
+//            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6, rot, gradients6D, ++i << 3);
+            for (int r = 0; r < 6; r++) {
+                gradients6D[i << 3 | r] = -gradients6D[i - 1 << 3 | r];
+            }        }
     }
 
     private void roll6D(final RotationTools.Rotator rotator, final float[] gradients6D) {
-        for (int i = 0; i < POINT_COUNT; i++) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
             rotator.randomize();
-            rotator.rotate(SphereVisualizer.POLE_6, gradients6D, i << 3);
-            rotator.rotate(SphereVisualizer.POLE_REVERSE_6, gradients6D, ++i << 3);
+            rotator.rotate(SphereVisualizer.POLE_6, gradients6D, i++ << 3);
+//            rotator.rotate(SphereVisualizer.POLE_REVERSE_6, gradients6D, ++i << 3);
+            for (int r = 0; r < 6; r++) {
+                gradients6D[i << 3 | r] = -gradients6D[i - 1 << 3 | r];
+            }
         }
     }
 
