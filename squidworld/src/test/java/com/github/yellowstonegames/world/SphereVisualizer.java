@@ -56,6 +56,7 @@ import static com.github.tommyettinger.digital.TrigTools.cosSmoother;
 import static com.github.tommyettinger.digital.TrigTools.cosSmootherTurns;
 import static com.github.tommyettinger.digital.TrigTools.sinSmoother;
 import static com.github.tommyettinger.digital.TrigTools.sinSmootherTurns;
+import static com.github.yellowstonegames.grid.GradientVectors.GRADIENTS_4D;
 
 /**
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
@@ -280,7 +281,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                         random.setState(seed, seed + 0x9E3779B97F4A7C15L, seed - 0x9E3779B97F4A7C15L, ~seed + 0x9E3779B97F4A7C15L, ~seed - 0x9E3779B97F4A7C15L);
                         Arrays.fill(GRADIENTS_5D_TEMP, 0f);
                         roll5D(random, GRADIENTS_5D_TEMP);
-                        float dist = evaluateMinDistance2(GRADIENTS_5D_TEMP);
+                        float dist = evaluateMinDistance2_5(GRADIENTS_5D_TEMP);
                         if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
                             bestSeed = seed;
                         }
@@ -979,8 +980,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     {
         float lat = (index + 0.36f) / (POINT_COUNT - 0.28f);
         float lon = (index * 0x9E3779B97F4A7C15L >>> 41) * 0x1p-23f;
-        float u = 1f - 2f * lat;
-//        float u = (lat - 0.5f) * 2f; // may be a tiny bit more precise, but not the same as onSphereFibonacci().
+//        float u = 1f - 2f * lat;
+        float u = 2f * (0.5f - lat);
         float root = (float) Math.sqrt(1f - u * u);
         float[] vector = points[index];
 
@@ -1493,7 +1494,24 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
     }
 
-    private float evaluateMinDistance2(final float[] gradients5D) {
+    private float evaluateMinDistance2_4(final float[] gradients4D, int limit) {
+        float minDist2 = Float.MAX_VALUE;
+        limit = Math.min(limit, gradients4D.length);
+        for (int i = 0; i < limit; i += 4) {
+            float xi = gradients4D[i  ], yi = gradients4D[i+1], zi = gradients4D[i+2], wi = gradients4D[i+3];
+            for (int j = i + 1; j < limit; j += 4) {
+                float x = xi - gradients4D[j  ], y = yi - gradients4D[j+1], z = zi - gradients4D[j+2],
+                        w = wi - gradients4D[j+3];
+                minDist2 = Math.min(minDist2, x * x + y * y + z * z + w * w);
+            }
+        }
+        return minDist2;
+    }
+    private void printMinDistance_4(final String name, final float[] gradients4D) {
+        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2_4(gradients4D, 64)));
+    }
+
+    private float evaluateMinDistance2_5(final float[] gradients5D) {
         float minDist2 = Float.MAX_VALUE;
         for (int i = 0; i < gradients5D.length; i += 8) {
             float xi = gradients5D[i  ], yi = gradients5D[i+1], zi = gradients5D[i+2], wi = gradients5D[i+3], ui = gradients5D[i+4];
@@ -1505,8 +1523,8 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
         return minDist2;
     }
-    private void printMinDistance(final String name, final float[] gradients5D) {
-        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2(gradients5D)));
+    private void printMinDistance_5(final String name, final float[] gradients5D) {
+        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2_5(gradients5D)));
     }
 
     private float evaluateMinDistance2_6(final float[] gradients6D) {
@@ -1563,7 +1581,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         }
     }
 
-    private void printDeviation(final String name, final float[] gradients5D) {
+    private void printDeviation_5(final String name, final float[] gradients5D) {
         double x = 0, y = 0, z = 0, w = 0, u = 0;
         for (int i = 0; i < gradients5D.length; i += 8) {
             x += gradients5D[i  ];
@@ -1578,94 +1596,102 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     {
-        for (int i = 0; i < GRADIENTS_5D.length; i++) {
-            GRADIENTS_5D[i] *= 0.5f;
+        if(true){
+            System.out.println("4D STUFF\n");
+            printMinDistance_4("Noise", GRADIENTS_4D);
+
         }
-        for (int i = 1; i <= POINT_COUNT; i++) {
-            float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
-            float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
-            float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
-            float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
-            float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(2, i));
+
+        if(false) {
+            System.out.println("5D STUFF:\n");
+
+            for (int i = 0; i < GRADIENTS_5D.length; i++) {
+                GRADIENTS_5D[i] *= 0.5f;
+            }
+            for (int i = 1; i <= POINT_COUNT; i++) {
+                float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
+                float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
+                float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
+                float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
+                float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(2, i));
 
 //            float r = (float) Math.pow(QuasiRandomTools.vanDerCorput(2, i), 0.2);
-            final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z + w * w + u * u);
-            int index = i - 1 << 3;
-            GRADIENTS_5D_HALTON[index + 0] = x * mag;
-            GRADIENTS_5D_HALTON[index + 1] = y * mag;
-            GRADIENTS_5D_HALTON[index + 2] = z * mag;
-            GRADIENTS_5D_HALTON[index + 3] = w * mag;
-            GRADIENTS_5D_HALTON[index + 4] = u * mag;
-        }
+                final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
+                int index = i - 1 << 3;
+                GRADIENTS_5D_HALTON[index + 0] = x * mag;
+                GRADIENTS_5D_HALTON[index + 1] = y * mag;
+                GRADIENTS_5D_HALTON[index + 2] = z * mag;
+                GRADIENTS_5D_HALTON[index + 3] = w * mag;
+                GRADIENTS_5D_HALTON[index + 4] = u * mag;
+            }
 
-        for (int i = 1; i <= POINT_COUNT; i++) {
-            float x = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][0] * i >>> 12) * 0x1p-52);
-            float y = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][1] * i >>> 12) * 0x1p-52);
-            float z = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][2] * i >>> 12) * 0x1p-52);
-            float w = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][3] * i >>> 12) * 0x1p-52);
-            float u = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][4] * i >>> 12) * 0x1p-52);
+            for (int i = 1; i <= POINT_COUNT; i++) {
+                float x = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][0] * i >>> 12) * 0x1p-52);
+                float y = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][1] * i >>> 12) * 0x1p-52);
+                float z = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][2] * i >>> 12) * 0x1p-52);
+                float w = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][3] * i >>> 12) * 0x1p-52);
+                float u = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][4] * i >>> 12) * 0x1p-52);
 
 //            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
-            final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z + w * w + u * u);
-            int index = i - 1 << 3;
-            GRADIENTS_5D_R5[index + 0] = x * mag;
-            GRADIENTS_5D_R5[index + 1] = y * mag;
-            GRADIENTS_5D_R5[index + 2] = z * mag;
-            GRADIENTS_5D_R5[index + 3] = w * mag;
-            GRADIENTS_5D_R5[index + 4] = u * mag;
-        }
+                final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
+                int index = i - 1 << 3;
+                GRADIENTS_5D_R5[index + 0] = x * mag;
+                GRADIENTS_5D_R5[index + 1] = y * mag;
+                GRADIENTS_5D_R5[index + 2] = z * mag;
+                GRADIENTS_5D_R5[index + 3] = w * mag;
+                GRADIENTS_5D_R5[index + 4] = u * mag;
+            }
 
-        EnhancedRandom random;
-        random = new AceRandom(123456789L);
-        uniformND(5, GRADIENTS_5D_TEMP, 8);
-        float[] rot5 = RotationTools.randomRotation5D(123456789L);
+            EnhancedRandom random;
+            random = new AceRandom(123456789L);
+            uniformND(5, GRADIENTS_5D_TEMP, 8);
+            float[] rot5 = RotationTools.randomRotation5D(123456789L);
 
-        for (int i = 0, p = 0; i < 256; i++, p += 8) {
-            RotationTools.rotate(GRADIENTS_5D_TEMP, p, 5, rot5, GRADIENTS_5D_U, p);
-        }
-        Arrays.fill(GRADIENTS_5D_TEMP, 0f);
-        shuffleBlocks(random, GRADIENTS_5D_U, 8);
+            for (int i = 0, p = 0; i < 256; i++, p += 8) {
+                RotationTools.rotate(GRADIENTS_5D_TEMP, p, 5, rot5, GRADIENTS_5D_U, p);
+            }
+            Arrays.fill(GRADIENTS_5D_TEMP, 0f);
+            shuffleBlocks(random, GRADIENTS_5D_U, 8);
 
-        uniformND(6, GRADIENTS_6D_U, 8);
-        float[] rot6 = RotationTools.randomRotation6D(123456789L);
+            uniformND(6, GRADIENTS_6D_U, 8);
+            float[] rot6 = RotationTools.randomRotation6D(123456789L);
 
-        for (int i = 0, p = 0; i < 256; i++, p += 8) {
-            RotationTools.rotate(GRADIENTS_6D_TEMP, p, 6, rot6, GRADIENTS_6D_U, p);
-        }
-        Arrays.fill(GRADIENTS_6D_TEMP, 0f);
-        shuffleBlocks(random, GRADIENTS_6D_U, 8);
+            for (int i = 0, p = 0; i < 256; i++, p += 8) {
+                RotationTools.rotate(GRADIENTS_6D_TEMP, p, 6, rot6, GRADIENTS_6D_U, p);
+            }
+            Arrays.fill(GRADIENTS_6D_TEMP, 0f);
+            shuffleBlocks(random, GRADIENTS_6D_U, 8);
 
-        random = new AceRandom(0xEE36A34B8BEC3EFEL);
-        roll5D(random, GRADIENTS_5D_ACE);
-        shuffleBlocks(random, GRADIENTS_5D_ACE, 8);
+            random = new AceRandom(0xEE36A34B8BEC3EFEL);
+            roll5D(random, GRADIENTS_5D_ACE);
+            shuffleBlocks(random, GRADIENTS_5D_ACE, 8);
 
-        double[] GRADIENTS_5D_ACE_D = new double[POINT_COUNT<<3];
-        random.setSeed(0xEE36A34B8BEC3EFEL);
-        roll5D(random, GRADIENTS_5D_ACE_D);
-        shuffleBlocks(random, GRADIENTS_5D_ACE_D, 8);
+            double[] GRADIENTS_5D_ACE_D = new double[POINT_COUNT << 3];
+            random.setSeed(0xEE36A34B8BEC3EFEL);
+            roll5D(random, GRADIENTS_5D_ACE_D);
+            shuffleBlocks(random, GRADIENTS_5D_ACE_D, 8);
 
-        random = new GoldenQuasiRandom(-1234567890L);
-        roll5D(random, GRADIENTS_5D_GOLDEN);
+            random = new GoldenQuasiRandom(-1234567890L);
+            roll5D(random, GRADIENTS_5D_GOLDEN);
 
-        random = new VanDerCorputQuasiRandom(1L);
-        roll5D(random, GRADIENTS_5D_VDC);
+            random = new VanDerCorputQuasiRandom(1L);
+            roll5D(random, GRADIENTS_5D_VDC);
 
-        printMinDistance("Noise", GRADIENTS_5D);
-        printMinDistance("Halton", GRADIENTS_5D_HALTON);
-        printMinDistance("R5", GRADIENTS_5D_R5);
-        printMinDistance("Ace", GRADIENTS_5D_ACE);
-        printMinDistance("Golden", GRADIENTS_5D_GOLDEN);
-        printMinDistance("VDC", GRADIENTS_5D_VDC);
-        printMinDistance("Uniform", GRADIENTS_5D_U);
+            printMinDistance_5("Noise", GRADIENTS_5D);
+            printMinDistance_5("Halton", GRADIENTS_5D_HALTON);
+            printMinDistance_5("R5", GRADIENTS_5D_R5);
+            printMinDistance_5("Ace", GRADIENTS_5D_ACE);
+            printMinDistance_5("Golden", GRADIENTS_5D_GOLDEN);
+            printMinDistance_5("VDC", GRADIENTS_5D_VDC);
+            printMinDistance_5("Uniform", GRADIENTS_5D_U);
 
 
-        System.out.println("private static final float[] GRADIENTS_5D = {");
-        for (int i = 0; i < GRADIENTS_5D_U.length; i += 8) {
-            System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
-                    GRADIENTS_5D_U[i], GRADIENTS_5D_U[i+1], GRADIENTS_5D_U[i+2], GRADIENTS_5D_U[i+3], GRADIENTS_5D_U[i+4]);
-        }
-        System.out.println("};\n");
-
+            System.out.println("private static final float[] GRADIENTS_5D = {");
+            for (int i = 0; i < GRADIENTS_5D_U.length; i += 8) {
+                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
+                        GRADIENTS_5D_U[i], GRADIENTS_5D_U[i + 1], GRADIENTS_5D_U[i + 2], GRADIENTS_5D_U[i + 3], GRADIENTS_5D_U[i + 4]);
+            }
+            System.out.println("};\n");
 
 //        System.out.println("private static final float[] GRADIENTS_5D = {");
 //        for (int i = 0; i < GRADIENTS_5D_ACE_D.length; i += 8) {
@@ -1673,146 +1699,150 @@ public class SphereVisualizer extends ApplicationAdapter {
 //                    GRADIENTS_5D_ACE_D[i], GRADIENTS_5D_ACE_D[i+1], GRADIENTS_5D_ACE_D[i+2], GRADIENTS_5D_ACE_D[i+3], GRADIENTS_5D_ACE_D[i+4]);
 //        }
 //        System.out.println("};\n");
+        }
 
-        random = new AceRandom(0xEE36A34B8BEC3EFEL);
-        double[] rot3 = RotationTools.randomDoubleRotation3D(random);
-        double[] GRADIENTS_3D_SHAPE_D = new double[32 << 2];
-        double[] rot4 = RotationTools.randomDoubleRotation4D(0xEE36A34B8BEC3EFEL);
-        double[] GRADIENTS_4D_SHAPE_D = new double[64 << 2];
-        double[] rot2 = RotationTools.randomDoubleRotation2D(-0xEE36A34B8BEC3EFEL);
-        double[] GRADIENTS_2D_SHAPE_D = new double[256 << 1];
-
-        double[] items = new double[4];
-        // the next block was used to generate GRADIENTS_4D_D, just below it.
         if(false) {
-            double big = Math.sqrt(2) + 1,
-                    b = big / Math.sqrt(1.0 + big * big * 3.0),
-                    s = 1.0 / Math.sqrt(1.0 + big * big * 3.0);
-            System.out.println("private static final double[] GRADIENTS_4D_D = {");
-            for (int i = 0; i < 64; i++) {
-                Arrays.fill(items, b);
-                items[i >>> 4] = s;
-                for (int j = 0; j < 4; j++)
-                    items[j] *= -(i >>> j & 1) | 1;
-                System.out.printf("    %0+13.10f, %0+13.10f, %0+13.10f, %0+13.10f,\n", items[0], items[1], items[2], items[3]);
+            System.out.println("SHAPE_D STUFF\n");
+            random.setSeed(0xEE36A34B8BEC3EFEL);
+            double[] rot3 = RotationTools.randomDoubleRotation3D(random);
+            double[] GRADIENTS_3D_SHAPE_D = new double[32 << 2];
+            double[] rot4 = RotationTools.randomDoubleRotation4D(0xEE36A34B8BEC3EFEL);
+            double[] GRADIENTS_4D_SHAPE_D = new double[64 << 2];
+            double[] rot2 = RotationTools.randomDoubleRotation2D(-0xEE36A34B8BEC3EFEL);
+            double[] GRADIENTS_2D_SHAPE_D = new double[256 << 1];
+
+            double[] items = new double[4];
+            // the next block was used to generate GRADIENTS_4D_D, just below it.
+            if (false) {
+                double big = Math.sqrt(2) + 1,
+                        b = big / Math.sqrt(1.0 + big * big * 3.0),
+                        s = 1.0 / Math.sqrt(1.0 + big * big * 3.0);
+                System.out.println("private static final double[] GRADIENTS_4D_D = {");
+                for (int i = 0; i < 64; i++) {
+                    Arrays.fill(items, b);
+                    items[i >>> 4] = s;
+                    for (int j = 0; j < 4; j++)
+                        items[j] *= -(i >>> j & 1) | 1;
+                    System.out.printf("    %0+13.10f, %0+13.10f, %0+13.10f, %0+13.10f,\n", items[0], items[1], items[2], items[3]);
+                }
+                System.out.println("};\n");
+            }
+            double[] GRADIENTS_4D_D = {
+                    +0.2325878195, +0.5615166683, +0.5615166683, +0.5615166683,
+                    -0.2325878195, +0.5615166683, +0.5615166683, +0.5615166683,
+                    +0.2325878195, -0.5615166683, +0.5615166683, +0.5615166683,
+                    -0.2325878195, -0.5615166683, +0.5615166683, +0.5615166683,
+                    +0.2325878195, +0.5615166683, -0.5615166683, +0.5615166683,
+                    -0.2325878195, +0.5615166683, -0.5615166683, +0.5615166683,
+                    +0.2325878195, -0.5615166683, -0.5615166683, +0.5615166683,
+                    -0.2325878195, -0.5615166683, -0.5615166683, +0.5615166683,
+                    +0.2325878195, +0.5615166683, +0.5615166683, -0.5615166683,
+                    -0.2325878195, +0.5615166683, +0.5615166683, -0.5615166683,
+                    +0.2325878195, -0.5615166683, +0.5615166683, -0.5615166683,
+                    -0.2325878195, -0.5615166683, +0.5615166683, -0.5615166683,
+                    +0.2325878195, +0.5615166683, -0.5615166683, -0.5615166683,
+                    -0.2325878195, +0.5615166683, -0.5615166683, -0.5615166683,
+                    +0.2325878195, -0.5615166683, -0.5615166683, -0.5615166683,
+                    -0.2325878195, -0.5615166683, -0.5615166683, -0.5615166683,
+                    +0.5615166683, +0.2325878195, +0.5615166683, +0.5615166683,
+                    -0.5615166683, +0.2325878195, +0.5615166683, +0.5615166683,
+                    +0.5615166683, -0.2325878195, +0.5615166683, +0.5615166683,
+                    -0.5615166683, -0.2325878195, +0.5615166683, +0.5615166683,
+                    +0.5615166683, +0.2325878195, -0.5615166683, +0.5615166683,
+                    -0.5615166683, +0.2325878195, -0.5615166683, +0.5615166683,
+                    +0.5615166683, -0.2325878195, -0.5615166683, +0.5615166683,
+                    -0.5615166683, -0.2325878195, -0.5615166683, +0.5615166683,
+                    +0.5615166683, +0.2325878195, +0.5615166683, -0.5615166683,
+                    -0.5615166683, +0.2325878195, +0.5615166683, -0.5615166683,
+                    +0.5615166683, -0.2325878195, +0.5615166683, -0.5615166683,
+                    -0.5615166683, -0.2325878195, +0.5615166683, -0.5615166683,
+                    +0.5615166683, +0.2325878195, -0.5615166683, -0.5615166683,
+                    -0.5615166683, +0.2325878195, -0.5615166683, -0.5615166683,
+                    +0.5615166683, -0.2325878195, -0.5615166683, -0.5615166683,
+                    -0.5615166683, -0.2325878195, -0.5615166683, -0.5615166683,
+                    +0.5615166683, +0.5615166683, +0.2325878195, +0.5615166683,
+                    -0.5615166683, +0.5615166683, +0.2325878195, +0.5615166683,
+                    +0.5615166683, -0.5615166683, +0.2325878195, +0.5615166683,
+                    -0.5615166683, -0.5615166683, +0.2325878195, +0.5615166683,
+                    +0.5615166683, +0.5615166683, -0.2325878195, +0.5615166683,
+                    -0.5615166683, +0.5615166683, -0.2325878195, +0.5615166683,
+                    +0.5615166683, -0.5615166683, -0.2325878195, +0.5615166683,
+                    -0.5615166683, -0.5615166683, -0.2325878195, +0.5615166683,
+                    +0.5615166683, +0.5615166683, +0.2325878195, -0.5615166683,
+                    -0.5615166683, +0.5615166683, +0.2325878195, -0.5615166683,
+                    +0.5615166683, -0.5615166683, +0.2325878195, -0.5615166683,
+                    -0.5615166683, -0.5615166683, +0.2325878195, -0.5615166683,
+                    +0.5615166683, +0.5615166683, -0.2325878195, -0.5615166683,
+                    -0.5615166683, +0.5615166683, -0.2325878195, -0.5615166683,
+                    +0.5615166683, -0.5615166683, -0.2325878195, -0.5615166683,
+                    -0.5615166683, -0.5615166683, -0.2325878195, -0.5615166683,
+                    +0.5615166683, +0.5615166683, +0.5615166683, +0.2325878195,
+                    -0.5615166683, +0.5615166683, +0.5615166683, +0.2325878195,
+                    +0.5615166683, -0.5615166683, +0.5615166683, +0.2325878195,
+                    -0.5615166683, -0.5615166683, +0.5615166683, +0.2325878195,
+                    +0.5615166683, +0.5615166683, -0.5615166683, +0.2325878195,
+                    -0.5615166683, +0.5615166683, -0.5615166683, +0.2325878195,
+                    +0.5615166683, -0.5615166683, -0.5615166683, +0.2325878195,
+                    -0.5615166683, -0.5615166683, -0.5615166683, +0.2325878195,
+                    +0.5615166683, +0.5615166683, +0.5615166683, -0.2325878195,
+                    -0.5615166683, +0.5615166683, +0.5615166683, -0.2325878195,
+                    +0.5615166683, -0.5615166683, +0.5615166683, -0.2325878195,
+                    -0.5615166683, -0.5615166683, +0.5615166683, -0.2325878195,
+                    +0.5615166683, +0.5615166683, -0.5615166683, -0.2325878195,
+                    -0.5615166683, +0.5615166683, -0.5615166683, -0.2325878195,
+                    +0.5615166683, -0.5615166683, -0.5615166683, -0.2325878195,
+                    -0.5615166683, -0.5615166683, -0.5615166683, -0.2325878195,
+            };
+
+            int p = 0;
+
+            for (int i = 0; i < ShapeTools.UNIT_DODECAHEDRON_VERTICES_D.length; i++, p += 4) {
+                RotationTools.rotate(ShapeTools.UNIT_DODECAHEDRON_VERTICES_D[i], rot3, GRADIENTS_3D_SHAPE_D, p);
+            }
+            for (int i = 0; i < ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D.length; i++, p += 4) {
+                RotationTools.rotate(ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D[i], rot3, GRADIENTS_3D_SHAPE_D, p);
+            }
+
+            p = 0;
+
+            for (; p < GRADIENTS_4D_D.length; p += 4) {
+                RotationTools.rotate(GRADIENTS_4D_D, p, 4, rot4, GRADIENTS_4D_SHAPE_D, p);
+            }
+
+            p = 0;
+
+            for (; p < GRADIENTS_2D_SHAPE_D.length; p += 2) {
+                items[0] = SIN_TABLE_D[p << 5];
+                items[1] = SIN_TABLE_D[(p << 5) + SIN_TO_COS & TABLE_MASK];
+                RotationTools.rotate(items, 0, 2, rot2, GRADIENTS_2D_SHAPE_D, p);
+            }
+            System.out.println("private static final float[] GRADIENTS_2D = {");
+            for (int i = 0; i < GRADIENTS_2D_SHAPE_D.length; i += 2) {
+                System.out.printf("    %0+13.10ff, %0+13.10ff,\n",
+                        GRADIENTS_2D_SHAPE_D[i], GRADIENTS_2D_SHAPE_D[i + 1]);
+            }
+            System.out.println("};\n");
+
+            System.out.println("private static final float[] GRADIENTS_3D = {");
+            for (int b = 0; b < 8; b++) {
+                shuffleBlocks(random, GRADIENTS_3D_SHAPE_D, 4);
+                for (int i = 0; i < GRADIENTS_3D_SHAPE_D.length; i += 4) {
+                    System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f,\n",
+                            GRADIENTS_3D_SHAPE_D[i], GRADIENTS_3D_SHAPE_D[i + 1], GRADIENTS_3D_SHAPE_D[i + 2]);
+                }
+            }
+            System.out.println("};\n");
+
+            System.out.println("private static final float[] GRADIENTS_4D = {");
+            for (int b = 0; b < 4; b++) {
+                shuffleBlocks(random, GRADIENTS_4D_SHAPE_D, 4);
+                for (int i = 0; i < GRADIENTS_4D_SHAPE_D.length; i += 4) {
+                    System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff,\n",
+                            GRADIENTS_4D_SHAPE_D[i], GRADIENTS_4D_SHAPE_D[i + 1], GRADIENTS_4D_SHAPE_D[i + 2], GRADIENTS_4D_SHAPE_D[i + 3]);
+                }
             }
             System.out.println("};\n");
         }
-        double[] GRADIENTS_4D_D = {
-                +0.2325878195, +0.5615166683, +0.5615166683, +0.5615166683,
-                -0.2325878195, +0.5615166683, +0.5615166683, +0.5615166683,
-                +0.2325878195, -0.5615166683, +0.5615166683, +0.5615166683,
-                -0.2325878195, -0.5615166683, +0.5615166683, +0.5615166683,
-                +0.2325878195, +0.5615166683, -0.5615166683, +0.5615166683,
-                -0.2325878195, +0.5615166683, -0.5615166683, +0.5615166683,
-                +0.2325878195, -0.5615166683, -0.5615166683, +0.5615166683,
-                -0.2325878195, -0.5615166683, -0.5615166683, +0.5615166683,
-                +0.2325878195, +0.5615166683, +0.5615166683, -0.5615166683,
-                -0.2325878195, +0.5615166683, +0.5615166683, -0.5615166683,
-                +0.2325878195, -0.5615166683, +0.5615166683, -0.5615166683,
-                -0.2325878195, -0.5615166683, +0.5615166683, -0.5615166683,
-                +0.2325878195, +0.5615166683, -0.5615166683, -0.5615166683,
-                -0.2325878195, +0.5615166683, -0.5615166683, -0.5615166683,
-                +0.2325878195, -0.5615166683, -0.5615166683, -0.5615166683,
-                -0.2325878195, -0.5615166683, -0.5615166683, -0.5615166683,
-                +0.5615166683, +0.2325878195, +0.5615166683, +0.5615166683,
-                -0.5615166683, +0.2325878195, +0.5615166683, +0.5615166683,
-                +0.5615166683, -0.2325878195, +0.5615166683, +0.5615166683,
-                -0.5615166683, -0.2325878195, +0.5615166683, +0.5615166683,
-                +0.5615166683, +0.2325878195, -0.5615166683, +0.5615166683,
-                -0.5615166683, +0.2325878195, -0.5615166683, +0.5615166683,
-                +0.5615166683, -0.2325878195, -0.5615166683, +0.5615166683,
-                -0.5615166683, -0.2325878195, -0.5615166683, +0.5615166683,
-                +0.5615166683, +0.2325878195, +0.5615166683, -0.5615166683,
-                -0.5615166683, +0.2325878195, +0.5615166683, -0.5615166683,
-                +0.5615166683, -0.2325878195, +0.5615166683, -0.5615166683,
-                -0.5615166683, -0.2325878195, +0.5615166683, -0.5615166683,
-                +0.5615166683, +0.2325878195, -0.5615166683, -0.5615166683,
-                -0.5615166683, +0.2325878195, -0.5615166683, -0.5615166683,
-                +0.5615166683, -0.2325878195, -0.5615166683, -0.5615166683,
-                -0.5615166683, -0.2325878195, -0.5615166683, -0.5615166683,
-                +0.5615166683, +0.5615166683, +0.2325878195, +0.5615166683,
-                -0.5615166683, +0.5615166683, +0.2325878195, +0.5615166683,
-                +0.5615166683, -0.5615166683, +0.2325878195, +0.5615166683,
-                -0.5615166683, -0.5615166683, +0.2325878195, +0.5615166683,
-                +0.5615166683, +0.5615166683, -0.2325878195, +0.5615166683,
-                -0.5615166683, +0.5615166683, -0.2325878195, +0.5615166683,
-                +0.5615166683, -0.5615166683, -0.2325878195, +0.5615166683,
-                -0.5615166683, -0.5615166683, -0.2325878195, +0.5615166683,
-                +0.5615166683, +0.5615166683, +0.2325878195, -0.5615166683,
-                -0.5615166683, +0.5615166683, +0.2325878195, -0.5615166683,
-                +0.5615166683, -0.5615166683, +0.2325878195, -0.5615166683,
-                -0.5615166683, -0.5615166683, +0.2325878195, -0.5615166683,
-                +0.5615166683, +0.5615166683, -0.2325878195, -0.5615166683,
-                -0.5615166683, +0.5615166683, -0.2325878195, -0.5615166683,
-                +0.5615166683, -0.5615166683, -0.2325878195, -0.5615166683,
-                -0.5615166683, -0.5615166683, -0.2325878195, -0.5615166683,
-                +0.5615166683, +0.5615166683, +0.5615166683, +0.2325878195,
-                -0.5615166683, +0.5615166683, +0.5615166683, +0.2325878195,
-                +0.5615166683, -0.5615166683, +0.5615166683, +0.2325878195,
-                -0.5615166683, -0.5615166683, +0.5615166683, +0.2325878195,
-                +0.5615166683, +0.5615166683, -0.5615166683, +0.2325878195,
-                -0.5615166683, +0.5615166683, -0.5615166683, +0.2325878195,
-                +0.5615166683, -0.5615166683, -0.5615166683, +0.2325878195,
-                -0.5615166683, -0.5615166683, -0.5615166683, +0.2325878195,
-                +0.5615166683, +0.5615166683, +0.5615166683, -0.2325878195,
-                -0.5615166683, +0.5615166683, +0.5615166683, -0.2325878195,
-                +0.5615166683, -0.5615166683, +0.5615166683, -0.2325878195,
-                -0.5615166683, -0.5615166683, +0.5615166683, -0.2325878195,
-                +0.5615166683, +0.5615166683, -0.5615166683, -0.2325878195,
-                -0.5615166683, +0.5615166683, -0.5615166683, -0.2325878195,
-                +0.5615166683, -0.5615166683, -0.5615166683, -0.2325878195,
-                -0.5615166683, -0.5615166683, -0.5615166683, -0.2325878195,
-        };
-
-        int p = 0;
-
-        for (int i = 0; i < ShapeTools.UNIT_DODECAHEDRON_VERTICES_D.length; i++, p += 4) {
-            RotationTools.rotate(ShapeTools.UNIT_DODECAHEDRON_VERTICES_D[i], rot3, GRADIENTS_3D_SHAPE_D, p);
-        }
-        for (int i = 0; i < ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D.length; i++, p += 4) {
-            RotationTools.rotate(ShapeTools.UNIT_ICOSAHEDRON_VERTICES_D[i], rot3, GRADIENTS_3D_SHAPE_D, p);
-        }
-
-        p = 0;
-
-        for (; p < GRADIENTS_4D_D.length; p += 4) {
-            RotationTools.rotate(GRADIENTS_4D_D, p, 4, rot4, GRADIENTS_4D_SHAPE_D, p);
-        }
-
-        p = 0;
-
-        for (; p < GRADIENTS_2D_SHAPE_D.length; p += 2) {
-            items[0] = SIN_TABLE_D[p << 5];
-            items[1] = SIN_TABLE_D[(p << 5) + SIN_TO_COS & TABLE_MASK];
-            RotationTools.rotate(items, 0, 2, rot2, GRADIENTS_2D_SHAPE_D, p);
-        }
-        System.out.println("private static final float[] GRADIENTS_2D = {");
-        for (int i = 0; i < GRADIENTS_2D_SHAPE_D.length; i += 2) {
-            System.out.printf("    %0+13.10ff, %0+13.10ff,\n",
-                    GRADIENTS_2D_SHAPE_D[i], GRADIENTS_2D_SHAPE_D[i + 1]);
-        }
-        System.out.println("};\n");
-
-        System.out.println("private static final float[] GRADIENTS_3D = {");
-        for (int b = 0; b < 8; b++) {
-            shuffleBlocks(random, GRADIENTS_3D_SHAPE_D, 4);
-            for (int i = 0; i < GRADIENTS_3D_SHAPE_D.length; i += 4) {
-                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f,\n",
-                        GRADIENTS_3D_SHAPE_D[i], GRADIENTS_3D_SHAPE_D[i + 1], GRADIENTS_3D_SHAPE_D[i + 2]);
-            }
-        }
-        System.out.println("};\n");
-
-        System.out.println("private static final float[] GRADIENTS_4D = {");
-        for (int b = 0; b < 4; b++) {
-            shuffleBlocks(random, GRADIENTS_4D_SHAPE_D, 4);
-            for (int i = 0; i < GRADIENTS_4D_SHAPE_D.length; i += 4) {
-                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff,\n",
-                        GRADIENTS_4D_SHAPE_D[i], GRADIENTS_4D_SHAPE_D[i + 1], GRADIENTS_4D_SHAPE_D[i + 2], GRADIENTS_4D_SHAPE_D[i + 3]);
-            }
-        }
-        System.out.println("};\n");
     }
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
