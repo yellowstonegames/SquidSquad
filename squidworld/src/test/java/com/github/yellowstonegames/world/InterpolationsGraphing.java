@@ -43,7 +43,7 @@ import static com.github.tommyettinger.digital.TrigTools.*;
 import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
-    static final boolean WRITE = true;
+    static final boolean WRITE = false;
 
     private static final int width = 300, height = 420;
 
