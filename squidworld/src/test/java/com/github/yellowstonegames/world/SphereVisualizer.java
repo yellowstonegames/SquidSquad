@@ -303,6 +303,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                                 }
                             }
                         }
+                        // all of these measurements are wrong!
                         //Super-Fibonacci spiral (epsilon 0.5000000) with a  0.5073087215, b  0.7468562126 has min dist 0.789509
                         //Super-Fibonacci spiral (epsilon 0.5000000) with a  0.5054997206, b  0.0035336695 has min dist 1.199869
                         //Super-Fibonacci spiral (epsilon 0.5000000) with a  0.7480831742, b  0.5001007318 has min dist 1.269073
@@ -310,10 +311,14 @@ public class SphereVisualizer extends ApplicationAdapter {
                         //Super-Fibonacci spiral (epsilon 0.3300000) with a  0.7502086163, b  0.7500240207 has min dist 1.385216
                         //Super-Fibonacci spiral (epsilon 0.3400000) with a  0.7499438524, b  0.7498646975 has min dist 1.390733
                         //Super-Fibonacci spiral (epsilon 0.0000000) with a  0.7500000000, b  0.5000000000 has min dist 1.414213
+
+                        // these measurements should be right:
+                        //Super-Fibonacci spiral (epsilon 0.9899999) with a  1.9469840527, b  1.0291167498 has min dist 0.365202
                         System.out.printf("Super-Fibonacci spiral (epsilon %5.7f) with a %13.10f, b %13.10f has min dist %f \n", epsilonacci, bestA, bestB, Math.sqrt(bestScore));
                         seed = oldSeed;
                     }
                     superFibonacci4D(0f, GRADIENTS_4D_FIB, 0.75f, 0.5f);
+                    System.out.printf("Super-Fibonacci spiral (epsilon %5.7f) with a %13.10f, b %13.10f has min dist %f \n", 0.5f, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1], Math.sqrt(evaluateMinDistance2_4(GRADIENTS_4D_FIB, 256)));
                 } else if(keycode == Input.Keys.NUM_4) {
                     startTime = TimeUtils.millis();
                     long bestSeed = seed;
@@ -546,6 +551,9 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 22:
                 spherePrecalculatedMode();
                 break;
+            case 23:
+                diskSuperFibonacciMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -637,6 +645,15 @@ public class SphereVisualizer extends ApplicationAdapter {
         for (int i = 0; i < 256; i++) {
             renderer.color(black);
             renderer.vertex(((float)RANDOM_VECTORS[i<<2] * c + (float)RANDOM_VECTORS[i<<2|2] * s) * 250 + 260, (float)RANDOM_VECTORS[i<<2|1] * 250 + 260, 0);
+        }
+        renderer.end();
+    }
+
+    private void diskSuperFibonacciMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 256; i++) {
+            renderer.color(black);
+            renderer.vertex(GRADIENTS_4D_FIB[i<<2] * 250 + 260, GRADIENTS_4D_FIB[i<<2|1] * 250 + 260, 0f);
         }
         renderer.end();
     }
@@ -1777,6 +1794,19 @@ public class SphereVisualizer extends ApplicationAdapter {
         if(true){
             System.out.println("4D STUFF\n");
             printMinDistance_4("Noise", GRADIENTS_4D);
+            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
+//            superFibonacci4D(0.34f, GRADIENTS_4D_FIB, 0.7499438524f, 0.7498646975f);
+//            superFibonacci4D(0f, GRADIENTS_4D_FIB, 0.75f, 0.5f);
+            printMinDistance_4("Fib", GRADIENTS_4D_FIB);
+
+            System.out.println();
+            System.out.println("public static final float[] GRADIENTS_4D_FIB = {");
+            for (int i = 0; i < GRADIENTS_4D_FIB.length; i += 4) {
+                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff,\n",
+                        GRADIENTS_4D_FIB[i], GRADIENTS_4D_FIB[i+1], GRADIENTS_4D_FIB[i+2], GRADIENTS_4D_FIB[i+3]);
+            }
+            System.out.println("};");
+
 
         }
 
