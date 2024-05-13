@@ -18,7 +18,6 @@ package com.github.yellowstonegames.world;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
@@ -29,7 +28,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.tommyettinger.textra.Font;
@@ -42,6 +43,7 @@ public class BasicGraphing extends ApplicationAdapter {
     static final boolean WRITE = false;
 
     private static final int width = 800, height = 420;
+    private static final float SCALE_X = 4, SCALE_Y = 1f;
 
     Font font;
     ShapeDrawer sd;
@@ -61,13 +63,17 @@ public class BasicGraphing extends ApplicationAdapter {
         functions = new ObjectObjectOrderedMap<>(new String[] {
                 "logistic (Math.exp)",
                 "logisticRough",
-                "logisticRougher",
-                "logistic (MathTools.exp)"
+//                "logisticRougher",
+//                "logistic (MathTools.exp)",
+//                "logistic (MathTools.expHasty)",
+//                "scalb thing",
         }, new FloatToFloatFunction[]{
                 (float x) -> 1f / (1f + (float) Math.exp(-x)),
                 RoughMath::logisticRough,
-                RoughMath::logisticRougher,
-                (float x) -> 1f / (1f + MathTools.exp(-x))
+//                RoughMath::logisticRougher,
+//                (float x) -> 1f / (1f + MathTools.exp(-x)),
+//                (float x) -> 1f / (1f + MathTools.expHasty(-x)),
+//                (float x) -> 1.0f / (1.0f + BitConversion.intBitsToFloat( (int)(Math.scalb(Math.max(-126.0f, -1.442695040f * x) + 126.94269504f, 23)))),
         });
         hsl = new int[functions.size()];
         name = new Layout(font);
@@ -125,11 +131,12 @@ public class BasicGraphing extends ApplicationAdapter {
 
         for (int f = 0; f < functions.size(); f++) {
             float gradient = DescriptiveColor.oklabIntToFloat(hsl[f]);
-            float h0, h1 = functions.getAt(f).applyAsFloat(-2f) * 200 + 81;;
-            for (int i = -400 + f; i <= 400; i+= functions.size()) {
-                float pt = i / 200f;
+            float h0, h1 = functions.getAt(f).applyAsFloat(-2f * SCALE_X) * 200 * SCALE_Y + 81;
+            for (int i = -400; i <= 400; i++) {
+//            for (int i = -400 + f; i <= 400; i+= functions.size()) {
+                float pt = i * SCALE_X / 200f;
                 h0 = h1;
-                h1 = functions.getAt(f).applyAsFloat(pt) * 200 + 81;
+                h1 = functions.getAt(f).applyAsFloat(pt) * 200 * SCALE_Y + 81;
                 sd.setColor(gradient);
                 sd.line(399 + i, h0, 400 + i, h1, 1f);
             }
