@@ -1547,27 +1547,58 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float[] GRADIENTS_6D_TEMP = new float[STANDARD_COUNT<<3];
 
     /**
-     * <a href="https://marcalexa.github.io/superfibonacci/">Based on the algorithm from here</a>.
+     * Was <a href="https://marcalexa.github.io/superfibonacci/">based on the algorithm from here</a>, but not anymore.
+     * Now <a href="https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-43/issue-2/Choosing-a-Point-from-the-Surface-of-a-Sphere/10.1214/aoms/1177692644.full">Based on an algorithm by Marsaglia</a>.
      * @param epsilon     typically either 0.5f or 0.36f
      * @param gradients4D the gradient vector array to write to, in groups of 4 floats per vector
      */
     private void superFibonacci4D(final float epsilon, final float[] gradients4D, float a, float b) {
         for (int i = 0; i < STANDARD_COUNT; i++) {
-            float s = i + epsilon;
-            float t = s / (STANDARD_COUNT - 1 + epsilon + epsilon);
-            float r = (float)Math.sqrt(t);
-            float c = (float)Math.sqrt(1f-t);
-            float alpha = s * a, beta = s * b;
-//            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
-//            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
-//            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
-//            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
-            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
-            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
-            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
-            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
-            ++i;
+            float upped = i + epsilon;
+            float xn = upped / (STANDARD_COUNT - 1 + epsilon + epsilon);
+            float y0 = upped / a; y0 -= (int)y0;
+            float y1 = upped / b; y1 -= (int)y1;
+
+            // theta 0 and 1 is xn, in turns.
+            float radius0 = (float) Math.sqrt(y0);
+            float radius1 = (float) Math.sqrt(y1);
+            float c = TrigTools.cosTurns(xn);
+            float s = TrigTools.sinTurns(xn);
+            float x0, x1;
+            x0 = c * radius0;
+            y0 = s * radius0;
+            x1 = c * radius1;
+            y1 = s * radius1;
+
+            float dot0 = x0 * x0 + y0 * y0;
+            float dot1 = x1 * x1 + y1 * y1;
+            float mul = (float)Math.sqrt((1f - dot0)/dot1);
+            gradients4D[i << 2    ] = x0;
+            gradients4D[i << 2 | 1] = y0;
+            gradients4D[i << 2 | 2] = x1 * mul;
+            gradients4D[i << 2 | 3] = y1 * mul;
+//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
+//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+//            ++i;
         }
+//        for (int i = 0; i < STANDARD_COUNT; i++) {
+//            float s = i + epsilon;
+//            float t = s / (STANDARD_COUNT - 1 + epsilon + epsilon);
+//            float r = (float)Math.sqrt(t);
+//            float c = (float)Math.sqrt(1f-t);
+//            float alpha = s * a, beta = s * b;
+////            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
+////            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
+////            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
+////            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
+//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
+//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+//            ++i;
+//        }
     }
 
     private void roll4D(final RotationTools.Rotator rotator, final float[] gradients4D) {
@@ -1840,7 +1871,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             printMinDistance_4("Noise", GRADIENTS_4D);
 //            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
 //            superFibonacci4D(0.34f, GRADIENTS_4D_FIB, 0.7499438524f, 0.7498646975f);
-            superFibonacci4D(2.5f, GRADIENTS_4D_FIB, 0.6923295856f, 0.7171460986f);
+//            superFibonacci4D(2.5f, GRADIENTS_4D_FIB, 0.6923295856f, 0.7171460986f);
+            superFibonacci4D(3.5f, GRADIENTS_4D_FIB, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1]);
 //            superFibonacci4D(0f, GRADIENTS_4D_FIB, 0.75f, 0.5f);
             printMinDistance_4("Fib", GRADIENTS_4D_FIB);
 
