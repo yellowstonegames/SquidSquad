@@ -38,11 +38,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.ShapeTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatToFloatFunction;
-import com.github.tommyettinger.random.AceRandom;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.GoldenQuasiRandom;
-import com.github.tommyettinger.random.VanDerCorputQuasiRandom;
-import com.github.tommyettinger.random.Ziggurat;
+import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.grid.GradientVectors;
 import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.grid.RotationTools;
@@ -67,7 +63,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 24;
-    private int modes = 26;
+    private final int modes = 27;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -563,6 +559,9 @@ public class SphereVisualizer extends ApplicationAdapter {
                 diskSuperFibonacciMode();
                 break;
             case 25:
+                diskQuasiRandomMode();
+                break;
+            case 26:
                 diskAceRandomMode();
                 break;
         }
@@ -695,6 +694,20 @@ public class SphereVisualizer extends ApplicationAdapter {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
                     renderer.vertex(GRADIENTS_4D_ACE[i<<2|x] * 60 + 65 + x * 130, GRADIENTS_4D_ACE[i<<2|y] * 60 + 65 + y * 130, 0f);
+                }
+
+            }
+        }
+        renderer.end();
+    }
+
+    private void diskQuasiRandomMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                for (int i = 0; i < 256; i++) {
+                    renderer.color(black);
+                    renderer.vertex(GRADIENTS_4D_QUASI[i<<2|x] * 60 + 65 + x * 130, GRADIENTS_4D_QUASI[i<<2|y] * 60 + 65 + y * 130, 0f);
                 }
 
             }
@@ -1531,6 +1544,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float[] GRADIENTS_4D_TEMP = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_ACE = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_FIB = new float[STANDARD_COUNT<<2];
+    private final float[] GRADIENTS_4D_QUASI = new float[STANDARD_COUNT<<2];
 
     private final float[] GRADIENTS_5D_HALTON = new float[STANDARD_COUNT<<3];
     private final float[] GRADIENTS_5D_R5 = new float[STANDARD_COUNT<<3];
@@ -1548,7 +1562,7 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     /**
      * Was <a href="https://marcalexa.github.io/superfibonacci/">based on the algorithm from here</a>, but not anymore.
-     * Now <a href="https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-43/issue-2/Choosing-a-Point-from-the-Surface-of-a-Sphere/10.1214/aoms/1177692644.full">Based on an algorithm by Marsaglia</a>.
+     * Now <a href="https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-43/issue-2/Choosing-a-Point-from-the-Surface-of-a-Sphere/10.1214/aoms/1177692644.full">based on an algorithm by Marsaglia</a>.
      * @param epsilon     typically either 0.5f or 0.36f
      * @param gradients4D the gradient vector array to write to, in groups of 4 floats per vector
      */
@@ -1569,6 +1583,57 @@ public class SphereVisualizer extends ApplicationAdapter {
             y0 = s * radius0;
             x1 = c * radius1;
             y1 = s * radius1;
+
+            float dot0 = x0 * x0 + y0 * y0;
+            float dot1 = x1 * x1 + y1 * y1;
+            float mul = (float)Math.sqrt((1f - dot0)/dot1);
+            gradients4D[i << 2    ] = x0;
+            gradients4D[i << 2 | 1] = y0;
+            gradients4D[i << 2 | 2] = x1 * mul;
+            gradients4D[i << 2 | 3] = y1 * mul;
+//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
+//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+//            ++i;
+        }
+//        for (int i = 0; i < STANDARD_COUNT; i++) {
+//            float s = i + epsilon;
+//            float t = s / (STANDARD_COUNT - 1 + epsilon + epsilon);
+//            float r = (float)Math.sqrt(t);
+//            float c = (float)Math.sqrt(1f-t);
+//            float alpha = s * a, beta = s * b;
+////            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
+////            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
+////            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
+////            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
+//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
+//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+//            ++i;
+//        }
+    }
+
+
+    /**
+     * <a href="https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-43/issue-2/Choosing-a-Point-from-the-Surface-of-a-Sphere/10.1214/aoms/1177692644.full">Based on an algorithm by Marsaglia</a>.
+     * @param random      any non-null EnhancedRandom
+     * @param gradients4D the gradient vector array to write to, in groups of 4 floats per vector
+     */
+    private void marsagliaRandom4D(final EnhancedRandom random, final float[] gradients4D) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
+            // theta 0 and 1 is xn, in turns.
+            float theta0 = random.nextExclusiveFloat();
+            float radius0 = (float) Math.sqrt(random.nextExclusiveFloat());
+            float theta1 = random.nextExclusiveFloat();
+            float radius1 = (float) Math.sqrt(random.nextExclusiveFloat());
+
+            float x0, x1, y0, y1;
+            x0 = TrigTools.cosTurns(theta0) * radius0;
+            y0 = TrigTools.sinTurns(theta0) * radius0;
+            x1 = TrigTools.cosTurns(theta1) * radius1;
+            y1 = TrigTools.sinTurns(theta1) * radius1;
 
             float dot0 = x0 * x0 + y0 * y0;
             float dot1 = x1 * x1 + y1 * y1;
@@ -1869,22 +1934,25 @@ public class SphereVisualizer extends ApplicationAdapter {
         if(true){
             System.out.println("4D STUFF\n");
             printMinDistance_4("Noise", GRADIENTS_4D);
-//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
+            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
 //            superFibonacci4D(0.34f, GRADIENTS_4D_FIB, 0.7499438524f, 0.7498646975f);
 //            superFibonacci4D(2.5f, GRADIENTS_4D_FIB, 0.6923295856f, 0.7171460986f);
-            superFibonacci4D(3.5f, GRADIENTS_4D_FIB, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1]);
+//            superFibonacci4D(3.5f, GRADIENTS_4D_FIB, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1]);
 //            superFibonacci4D(0f, GRADIENTS_4D_FIB, 0.75f, 0.5f);
             printMinDistance_4("Fib", GRADIENTS_4D_FIB);
 
-            System.out.println();
-            System.out.println("public static final float[] GRADIENTS_4D_FIB = {");
-            for (int i = 0; i < GRADIENTS_4D_FIB.length; i += 4) {
-                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff,\n",
-                        GRADIENTS_4D_FIB[i], GRADIENTS_4D_FIB[i+1], GRADIENTS_4D_FIB[i+2], GRADIENTS_4D_FIB[i+3]);
-            }
-            System.out.println("};");
+            marsagliaRandom4D(new GoldenQuasiRandom(1234567890L), GRADIENTS_4D_QUASI);
+            printMinDistance_4("Quasi", GRADIENTS_4D_QUASI);
 
-
+            marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_ACE);
+            printMinDistance_4("Ace", GRADIENTS_4D_ACE);
+//            System.out.println();
+//            System.out.println("public static final float[] GRADIENTS_4D_FIB = {");
+//            for (int i = 0; i < GRADIENTS_4D_FIB.length; i += 4) {
+//                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff,\n",
+//                        GRADIENTS_4D_FIB[i], GRADIENTS_4D_FIB[i+1], GRADIENTS_4D_FIB[i+2], GRADIENTS_4D_FIB[i+3]);
+//            }
+//            System.out.println("};");
         }
 
         if(false) {
