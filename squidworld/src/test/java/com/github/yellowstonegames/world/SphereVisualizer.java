@@ -61,8 +61,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 28;
-    private final int modes = 29;
+    private int mode = 29;
+    private final int modes = 30;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -571,6 +571,9 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 28:
                 uniform3DTo4DMode();
                 break;
+            case 29:
+                inverseStereo3DTo4DMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -739,7 +742,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private void uniform3DTo4DMode() {
         final float[] golden = QuasiRandomTools.GOLDEN_FLOATS[2]; // 3 elements
         renderer.begin(camera.combined, GL20.GL_POINTS);
-        for (int i = 0; i < 256; i++) {
+        for (int i = 1; i <= 256; i++) {
             float angle0 = MathTools.fract(golden[0] * i);
             float angle1 = MathTools.fract(golden[1] * i);
             float angle2 = MathTools.fract(golden[2] * i);
@@ -755,7 +758,28 @@ public class SphereVisualizer extends ApplicationAdapter {
             }
         }
         renderer.end();
+    }
 
+    private void inverseStereo3DTo4DMode() {
+        final float[] golden = QuasiRandomTools.GOLDEN_FLOATS[2]; // 3 elements
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 1; i <= 256; i++) {
+            final float plane1 = 1f / (2f * MathTools.fract(golden[0] * i) - 1f);
+            final float plane2 = 1f / (2f * MathTools.fract(golden[1] * i) - 1f);
+            final float plane3 = 1f / (2f * MathTools.fract(golden[2] * i) - 1f);
+            final float mag = plane1 * plane1 + plane2 * plane2 + plane3 * plane3;
+            TMP_PT[0] = (mag - 1) / (mag + 1);
+            TMP_PT[1] = (plane1 + plane1) / (mag + 1);
+            TMP_PT[2] = (plane2 + plane2) / (mag + 1);
+            TMP_PT[3] = (plane3 + plane3) / (mag + 1);
+            for (int x = 0; x < 4; x++) {
+                for (int y = 0; y < 4; y++) {
+                    renderer.color(black);
+                    renderer.vertex(TMP_PT[x] * 60 + 62 + x * 124, TMP_PT[y] * 60 + 62 + y * 124, 0f);
+                }
+            }
+        }
+        renderer.end();
     }
 
     private void sphereRobertsMode() {
