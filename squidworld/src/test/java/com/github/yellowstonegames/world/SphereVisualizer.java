@@ -61,8 +61,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 24;
-    private final int modes = 28;
+    private int mode = 28;
+    private final int modes = 29;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -92,6 +92,8 @@ public class SphereVisualizer extends ApplicationAdapter {
 
     private static final float[] POLE_6 = new float[]{1f, 0f, 0f, 0f, 0f, 0f};
     private static final double[] POLE_6_D = new double[]{1.0, 0., 0., 0., 0., 0.};
+
+    private final float[] TMP_PT = new float[6];
 
     private static final float black = Color.BLACK.toFloatBits();
     private static final float blue = Color.BLUE.toFloatBits();
@@ -566,6 +568,9 @@ public class SphereVisualizer extends ApplicationAdapter {
             case 27:
                 diskShuffleRandomMode();
                 break;
+            case 28:
+                uniform3DTo4DMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -667,7 +672,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             for (int y = 0; y < 4; y++) {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
-                    renderer.vertex(GRADIENTS_4D[i<<2|x] * 60 + 65 + x * 130, GRADIENTS_4D[i<<2|y] * 60 + 65 + y * 130, 0f);
+                    renderer.vertex(GRADIENTS_4D[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D[i<<2|y] * 60 + 62 + y * 124, 0f);
                 }
 
             }
@@ -681,7 +686,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             for (int y = 0; y < 4; y++) {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
-                    renderer.vertex(GRADIENTS_4D_FIB[i<<2|x] * 60 + 65 + x * 130, GRADIENTS_4D_FIB[i<<2|y] * 60 + 65 + y * 130, 0f);
+                    renderer.vertex(GRADIENTS_4D_FIB[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_FIB[i<<2|y] * 60 + 62 + y * 124, 0f);
                 }
 
             }
@@ -695,7 +700,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             for (int y = 0; y < 4; y++) {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
-                    renderer.vertex(GRADIENTS_4D_ACE[i<<2|x] * 60 + 65 + x * 130, GRADIENTS_4D_ACE[i<<2|y] * 60 + 65 + y * 130, 0f);
+                    renderer.vertex(GRADIENTS_4D_ACE[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_ACE[i<<2|y] * 60 + 62 + y * 124, 0f);
                 }
 
             }
@@ -709,7 +714,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             for (int y = 0; y < 4; y++) {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
-                    renderer.vertex(GRADIENTS_4D_QUASI[i<<2|x] * 60 + 65 + x * 130, GRADIENTS_4D_QUASI[i<<2|y] * 60 + 65 + y * 130, 0f);
+                    renderer.vertex(GRADIENTS_4D_QUASI[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_QUASI[i<<2|y] * 60 + 62 + y * 124, 0f);
                 }
 
             }
@@ -723,12 +728,34 @@ public class SphereVisualizer extends ApplicationAdapter {
             for (int y = 0; y < 4; y++) {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
-                    renderer.vertex(GRADIENTS_4D_SHUFFLE[i<<2|x] * 60 + 65 + x * 130, GRADIENTS_4D_SHUFFLE[i<<2|y] * 60 + 65 + y * 130, 0f);
+                    renderer.vertex(GRADIENTS_4D_SHUFFLE[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_SHUFFLE[i<<2|y] * 60 + 62 + y * 124, 0f);
                 }
 
             }
         }
         renderer.end();
+    }
+
+    private void uniform3DTo4DMode() {
+        final float[] golden = QuasiRandomTools.GOLDEN_FLOATS[2]; // 3 elements
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 0; i < 256; i++) {
+            float angle0 = MathTools.fract(golden[0] * i);
+            float angle1 = MathTools.fract(golden[1] * i);
+            float angle2 = MathTools.fract(golden[2] * i);
+            TMP_PT[0] = TrigTools.cosSmootherTurns(angle0);
+            TMP_PT[1] = TrigTools.sinSmootherTurns(angle0) * TrigTools.cosSmootherTurns(angle1);
+            TMP_PT[2] = TrigTools.sinSmootherTurns(angle0) * TrigTools.sinSmootherTurns(angle1) * TrigTools.cosSmootherTurns(angle2);
+            TMP_PT[3] = TrigTools.sinSmootherTurns(angle0) * TrigTools.sinSmootherTurns(angle1) * TrigTools.sinSmootherTurns(angle2);
+            for (int x = 0; x < 4; x++) {
+                for (int y = 0; y < 4; y++) {
+                    renderer.color(black);
+                    renderer.vertex(TMP_PT[x] * 60 + 62 + x * 124, TMP_PT[y] * 60 + 62 + y * 124, 0f);
+                }
+            }
+        }
+        renderer.end();
+
     }
 
     private void sphereRobertsMode() {
