@@ -1900,11 +1900,16 @@ public class SphereVisualizer extends ApplicationAdapter {
                     v4[1] * v4[1] +
                     v4[2] * v4[2] +
                     v4[3] * v4[3]);
-            gradients4D[i << 2    ] = (float)(v4[0] / mag);
-            gradients4D[i << 2 | 1] = (float)(v4[1] / mag);
-            gradients4D[i << 2 | 2] = (float)(v4[2] / mag);
-            gradients4D[i << 2 | 3] = (float)(v4[3] / mag);
+//            gradients4D[i << 2    ] = (float)(v4[0] / mag);
+//            gradients4D[i << 2 | 1] = (float)(v4[1] / mag);
+//            gradients4D[i << 2 | 2] = (float)(v4[2] / mag);
+//            gradients4D[i << 2 | 3] = (float)(v4[3] / mag);
 
+            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = (float)(v4[0] / mag));
+            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = (float)(v4[1] / mag));
+            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = (float)(v4[2] / mag));
+            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = (float)(v4[3] / mag));
+            ++i;
         }
     }
 
@@ -1919,10 +1924,16 @@ public class SphereVisualizer extends ApplicationAdapter {
                     y * y +
                     z * z +
                     w * w);
-            gradients4D[i << 2    ] = (float)(x / mag);
-            gradients4D[i << 2 | 1] = (float)(y / mag);
-            gradients4D[i << 2 | 2] = (float)(z / mag);
-            gradients4D[i << 2 | 3] = (float)(w / mag);
+//            gradients4D[i << 2    ] = (float)(x / mag);
+//            gradients4D[i << 2 | 1] = (float)(y / mag);
+//            gradients4D[i << 2 | 2] = (float)(z / mag);
+//            gradients4D[i << 2 | 3] = (float)(w / mag);
+
+            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = (float)(x / mag));
+            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = (float)(y / mag));
+            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = (float)(z / mag));
+            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = (float)(w / mag));
+            ++i;
         }
     }
 
@@ -2219,14 +2230,18 @@ public class SphereVisualizer extends ApplicationAdapter {
 
 //            System.out.println(Base.joinReadable(", ", GRADIENTS_4D_HALTON));
 
+            float[] haltonSum = new float[4];
             System.out.println("new float[] {");
             for (int i = 0; i <= GRADIENTS_4D_HALTON.length - 4;) {
                 for (int j = 0; j < 4; j++, i++) {
                     System.out.printf("%+14.12ff, ", GRADIENTS_4D_HALTON[i]);
+                    haltonSum[j] += GRADIENTS_4D_HALTON[i];
                 }
                 System.out.println();
             }
-            System.out.println("};");
+            System.out.println("};\n");
+
+            System.out.printf("Sums: x=%14.12ff, y=%14.12ff, z=%14.12ff, w=%14.12ff\n", haltonSum[0], haltonSum[1], haltonSum[2], haltonSum[3]);
 
             printMinDistance_4("Noise", GRADIENTS_4D);
             printMinDistance_4("Fib", GRADIENTS_4D_FIB);
