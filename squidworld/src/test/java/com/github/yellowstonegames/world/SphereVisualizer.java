@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.ShapeTools;
 import com.github.tommyettinger.digital.TrigTools;
@@ -2206,34 +2207,33 @@ public class SphereVisualizer extends ApplicationAdapter {
     {
         if(true){
             System.out.println("4D STUFF\n");
-            printMinDistance_4("Noise", GRADIENTS_4D);
 
-//            superFibonacci4D(0.34f, GRADIENTS_4D_FIB, 0.7499438524f, 0.7498646975f);
-//            superFibonacci4D(2.5f, GRADIENTS_4D_FIB, 0.6923295856f, 0.7171460986f);
-//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, 1.533751168755204288118041f, 1f/ QuasiRandomTools.GOLDEN_FLOATS[2][0]);
-            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS[4][0], GOLDEN_FLOATS[8][4]);
-//            superFibonacci4D(6f, GRADIENTS_4D_FIB, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1]);
-//            superFibonacci4D(0f, GRADIENTS_4D_FIB, 0.75f, 0.5f);
-//
-//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
-            printMinDistance_4("Fib", GRADIENTS_4D_FIB);
-
+//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS[4][0], GOLDEN_FLOATS[8][4]);
+            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
             superFibonacciMarsaglia4D(0.5f, GRADIENTS_4D_SFM, MathTools.ROOT2, 1.533751168755204288118041f);
-            printMinDistance_4("SFM", GRADIENTS_4D_SFM);
-
-//            marsagliaRandom4D(new GoldenQuasiRandom(1234567890L), GRADIENTS_4D_QUASI);
             gaussianR4(GRADIENTS_4D_R4);
-            printMinDistance_4("R4", GRADIENTS_4D_R4);
-
             gaussianHalton(GRADIENTS_4D_HALTON);
-            printMinDistance_4("Halton", GRADIENTS_4D_HALTON);
-
             marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_ACE);
-            printMinDistance_4("Ace", GRADIENTS_4D_ACE);
-
             shuffleLanes(new AceRandom(1234567890L));
-
             marsagliaDetermined4D(GRADIENTS_4D_SHUFFLE);
+
+//            System.out.println(Base.joinReadable(", ", GRADIENTS_4D_HALTON));
+
+            System.out.println("new float[] {");
+            for (int i = 0; i <= GRADIENTS_4D_HALTON.length - 4;) {
+                for (int j = 0; j < 4; j++, i++) {
+                    System.out.printf("%+14.12ff, ", GRADIENTS_4D_HALTON[i]);
+                }
+                System.out.println();
+            }
+            System.out.println("};");
+
+            printMinDistance_4("Noise", GRADIENTS_4D);
+            printMinDistance_4("Fib", GRADIENTS_4D_FIB);
+            printMinDistance_4("SFM", GRADIENTS_4D_SFM);
+            printMinDistance_4("R4", GRADIENTS_4D_R4);
+            printMinDistance_4("Halton", GRADIENTS_4D_HALTON);
+            printMinDistance_4("Ace", GRADIENTS_4D_ACE);
             printMinDistance_4("Shuffle", GRADIENTS_4D_SHUFFLE);
 
 //            System.out.println();

@@ -241,6 +241,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new TriplexNoise(1L),
             new BadgerNoise(1L),
             new SnakeNoise(1L),
+            new Noise(1)
     };
     private int index0 = 0;
     private int index1 = 0;
