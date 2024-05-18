@@ -63,8 +63,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 30;
-    private final int modes = 31;
+    private int mode = 26;
+    private final int modes = 32;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -608,10 +608,10 @@ public class SphereVisualizer extends ApplicationAdapter {
                 diskShuffleRandomMode();
                 break;
             case 25:
-                diskQuasiRandomMode();
+                diskR4RandomMode();
                 break;
             case 26:
-                diskAceRandomMode();
+                diskHaltonRandomMode();
                 break;
             case 27:
                 diskSuperFibonacciMode();
@@ -620,13 +620,16 @@ public class SphereVisualizer extends ApplicationAdapter {
                 diskSuperFibonacciMarsagliaMode();
                 break;
             case 29:
-                uniform3DTo4DMode();
+                diskAceRandomMode();
                 break;
             case 30:
-                inverseStereo3DTo4DMode();
+                uniform3DTo4DMode();
                 break;
             case 31:
                 inverseStereo4DTo4DMode();
+                break;
+            case 32:
+                inverseStereo3DTo4DMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -779,13 +782,27 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
-    private void diskQuasiRandomMode() {
+    private void diskR4RandomMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 4; y++) {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
-                    renderer.vertex(GRADIENTS_4D_QUASI[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_QUASI[i<<2|y] * 60 + 62 + y * 124, 0f);
+                    renderer.vertex(GRADIENTS_4D_R4[i << 2 | x] * 60 + 62 + x * 124, GRADIENTS_4D_R4[i << 2 | y] * 60 + 62 + y * 124, 0f);
+                }
+
+            }
+        }
+        renderer.end();
+    }
+
+    private void diskHaltonRandomMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                for (int i = 0; i < 256; i++) {
+                    renderer.color(black);
+                    renderer.vertex(GRADIENTS_4D_HALTON[i << 2 | x] * 60 + 62 + x * 124, GRADIENTS_4D_HALTON[i << 2 | y] * 60 + 62 + y * 124, 0f);
                 }
 
             }
@@ -1709,7 +1726,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float[] GRADIENTS_4D_ACE = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_FIB = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_SFM = new float[STANDARD_COUNT<<2];
-    private final float[] GRADIENTS_4D_QUASI = new float[STANDARD_COUNT<<2];
+    private final float[] GRADIENTS_4D_R4 = new float[STANDARD_COUNT << 2];
+    private final float[] GRADIENTS_4D_HALTON = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_SHUFFLE = new float[STANDARD_COUNT << 2];
     private final float[] SHUFFLES = new float[STANDARD_COUNT << 2];
 
@@ -1886,6 +1904,24 @@ public class SphereVisualizer extends ApplicationAdapter {
             gradients4D[i << 2 | 2] = (float)(v4[2] / mag);
             gradients4D[i << 2 | 3] = (float)(v4[3] / mag);
 
+        }
+    }
+
+    private void gaussianHalton(float[] gradients4D) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
+            double x = MathTools.probit(QuasiRandomTools.vanDerCorputD(2, i + 1));
+            double y = MathTools.probit(QuasiRandomTools.vanDerCorputD(11, i + 1));
+            double z = MathTools.probit(QuasiRandomTools.vanDerCorputD(5, i + 1));
+            double w = MathTools.probit(QuasiRandomTools.vanDerCorputD(7, i + 1));
+            double mag = Math.sqrt(
+                    x * x +
+                    y * y +
+                    z * z +
+                    w * w);
+            gradients4D[i << 2    ] = (float)(x / mag);
+            gradients4D[i << 2 | 1] = (float)(y / mag);
+            gradients4D[i << 2 | 2] = (float)(z / mag);
+            gradients4D[i << 2 | 3] = (float)(w / mag);
         }
     }
 
@@ -2186,8 +2222,11 @@ public class SphereVisualizer extends ApplicationAdapter {
             printMinDistance_4("SFM", GRADIENTS_4D_SFM);
 
 //            marsagliaRandom4D(new GoldenQuasiRandom(1234567890L), GRADIENTS_4D_QUASI);
-            gaussianR4(GRADIENTS_4D_QUASI);
-            printMinDistance_4("Quasi", GRADIENTS_4D_QUASI);
+            gaussianR4(GRADIENTS_4D_R4);
+            printMinDistance_4("R4", GRADIENTS_4D_R4);
+
+            gaussianHalton(GRADIENTS_4D_HALTON);
+            printMinDistance_4("Halton", GRADIENTS_4D_HALTON);
 
             marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_ACE);
             printMinDistance_4("Ace", GRADIENTS_4D_ACE);

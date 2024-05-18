@@ -50,6 +50,29 @@ public final class QuasiRandomTools {
     }
 
     /**
+     * Gets the {@code index}-th element from the base-{@code base} van der Corput sequence. The base should usually be
+     * a prime number. The index must be greater than 0 and should be less than 16777216. The number this returns is a
+     * float between 0 (inclusive) and 1 (exclusive).
+     *
+     * @param base  a prime number to use as the base/radix of the van der Corput sequence
+     * @param index the position in the sequence of the requested base, as a positive int
+     * @return a quasi-random float between 0.0 (inclusive) and 1.0 (exclusive).
+     */
+    public static double vanDerCorputD(final long base, final long index) {
+        if (base <= 2) {
+            return (Long.reverse(index) >>> 11) * 0x1p-53;
+        }
+        double denominator = base, res = 0.0;
+        long n = (index & 0x1fffffffffffffL);
+        while (n > 0) {
+            res += (n % base) / denominator;
+            n /= base;
+            denominator *= base;
+        }
+        return res;
+    }
+
+    /**
      * Gets a 2D point from the Halton sequence with the bases 3 (for x) and 5 (for y).
      *
      * @param width  the exclusive upper bound on the possible values for x
