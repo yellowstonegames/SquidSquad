@@ -53,6 +53,7 @@ import static com.github.tommyettinger.digital.TrigTools.cosSmootherTurns;
 import static com.github.tommyettinger.digital.TrigTools.sinSmoother;
 import static com.github.tommyettinger.digital.TrigTools.sinSmootherTurns;
 import static com.github.yellowstonegames.grid.GradientVectors.GRADIENTS_4D;
+import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_FLOATS;
 
 /**
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
@@ -61,8 +62,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 29;
-    private final int modes = 30;
+    private int mode = 30;
+    private final int modes = 31;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -73,6 +74,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private double[] dAmounts = new double[512];
     private long seed = 123456789L;
     private long startTime;
+    private int goldenRowA = 1, goldenRowB = 1, goldenColA = 0, goldenColB = 1;
     private final EnhancedRandom random = new AceRandom(seed);
 //    private final EnhancedRandom random = new WhiskerRandom(seed);
 //    private final EnhancedRandom random = new ScruffRandom(seed);
@@ -282,8 +284,8 @@ public class SphereVisualizer extends ApplicationAdapter {
 
                         long oldSeed = seed;
                         random.setSeed(seed);
-                        for (int i = 0; i < QuasiRandomTools.GOLDEN_FLOATS.length; i++) {
-                            float[] row = QuasiRandomTools.GOLDEN_FLOATS[i];
+                        for (int i = 0; i < GOLDEN_FLOATS.length; i++) {
+                            float[] row = GOLDEN_FLOATS[i];
                             for (int j = 0; j < row.length; j++) {
                                 float a = row[j];
 //                                float a = row[j] + 1f;
@@ -319,8 +321,8 @@ public class SphereVisualizer extends ApplicationAdapter {
                         System.out.printf("Super-Fibonacci spiral (epsilon %5.7f) with a %13.10f, b %13.10f has min dist %f \n", epsilonacci, bestA, bestB, Math.sqrt(bestScore));
                         seed = oldSeed;
                     }
-                    superFibonacci4D(0.5f, GRADIENTS_4D_FIB, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1]);
-                    System.out.printf("Super-Fibonacci spiral (epsilon %5.7f) with a %13.10f, b %13.10f has min dist %f \n", 0.5f, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1], Math.sqrt(evaluateMinDistance2_4(GRADIENTS_4D_FIB, 256)));
+                    superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS[1][0], GOLDEN_FLOATS[1][1]);
+                    System.out.printf("Super-Fibonacci spiral (epsilon %5.7f) with a %13.10f, b %13.10f has min dist %f \n", 0.5f, GOLDEN_FLOATS[1][0], GOLDEN_FLOATS[1][1], Math.sqrt(evaluateMinDistance2_4(GRADIENTS_4D_FIB, 256)));
                 } else if(keycode == Input.Keys.NUM_4) {
                     startTime = TimeUtils.millis();
                     long bestSeed = seed;
@@ -395,7 +397,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                     // I don't remember why I had this in to debug...
                     //                            random.stringDeserialize("AceR`-B57A320CFBEF3~-57080C1D00C9E1A0~-7A9B48DF183E4A73~76CC474918D335C1~3DDF1B8EC95CBC49`");
 
-                    if(UIUtils.shift()) {
+                    if (UIUtils.shift()) {
                         startTime = TimeUtils.millis();
                         long bestSeed = seed;
                         double bestMinDist = -Double.MAX_VALUE;
@@ -406,7 +408,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                             Arrays.fill(GRADIENTS_6D_TEMP, 0f);
                             roll6D(rotator, GRADIENTS_6D_TEMP);
                             float dist = evaluateMinDistance2_6(GRADIENTS_6D_TEMP);
-                            if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
+                            if (bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))) {
                                 bestSeed = seed;
                                 bestVerify = GRADIENTS_6D_TEMP[44];
                             }
@@ -417,8 +419,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                         random.setState(bestSeed, bestSeed + 0x9E3779B97F4A7C15L, bestSeed - 0x9E3779B97F4A7C15L, ~bestSeed + 0x9E3779B97F4A7C15L, ~bestSeed - 0x9E3779B97F4A7C15L);
                         Arrays.fill(GRADIENTS_6D_ACE, 0f);
                         roll6D(rotator, GRADIENTS_6D_ACE);
-                        if(bestVerify != GRADIENTS_6D_ACE[44])
-                        {
+                        if (bestVerify != GRADIENTS_6D_ACE[44]) {
                             System.out.printf("INCORRECT RECREATION FROM SEED: %13.10f == %13.10f\n", bestVerify, GRADIENTS_6D_ACE[44]);
                             return false;
                         }
@@ -426,11 +427,10 @@ public class SphereVisualizer extends ApplicationAdapter {
                         System.out.println("public static final float[] GRADIENTS_6D = {");
                         for (int i = 0; i < GRADIENTS_6D_ACE.length; i += 8) {
                             System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
-                                    GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i+1], GRADIENTS_6D_ACE[i+2], GRADIENTS_6D_ACE[i+3], GRADIENTS_6D_ACE[i+4], GRADIENTS_6D_ACE[i+5]);
+                                    GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i + 1], GRADIENTS_6D_ACE[i + 2], GRADIENTS_6D_ACE[i + 3], GRADIENTS_6D_ACE[i + 4], GRADIENTS_6D_ACE[i + 5]);
                         }
                         System.out.println("};");
-                    }
-                    else {
+                    } else {
                         startTime = TimeUtils.millis();
                         long bestSeed = seed;
                         double bestMinDist = -Double.MAX_VALUE;
@@ -440,7 +440,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                             Arrays.fill(GRADIENTS_6D_TEMP, 0f);
                             roll6D(random, GRADIENTS_6D_TEMP);
                             float dist = evaluateMinDistance2_6(GRADIENTS_6D_TEMP);
-                            if(bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))){
+                            if (bestMinDist < (bestMinDist = Math.max(bestMinDist, dist))) {
                                 bestSeed = seed;
                                 bestVerify = GRADIENTS_6D_TEMP[44];
                             }
@@ -451,8 +451,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                         random.setState(bestSeed, bestSeed + 0x9E3779B97F4A7C15L, bestSeed - 0x9E3779B97F4A7C15L, ~bestSeed + 0x9E3779B97F4A7C15L, ~bestSeed - 0x9E3779B97F4A7C15L);
                         Arrays.fill(GRADIENTS_6D_ACE, 0f);
                         roll6D(random, GRADIENTS_6D_ACE);
-                        if(bestVerify != GRADIENTS_6D_ACE[44])
-                        {
+                        if (bestVerify != GRADIENTS_6D_ACE[44]) {
                             System.out.printf("INCORRECT RECREATION FROM SEED: %13.10f == %13.10f\n", bestVerify, GRADIENTS_6D_ACE[44]);
                             return false;
                         }
@@ -460,11 +459,59 @@ public class SphereVisualizer extends ApplicationAdapter {
                         System.out.println("public static final float[] GRADIENTS_6D = {");
                         for (int i = 0; i < GRADIENTS_6D_ACE.length; i += 8) {
                             System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
-                                    GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i+1], GRADIENTS_6D_ACE[i+2], GRADIENTS_6D_ACE[i+3], GRADIENTS_6D_ACE[i+4], GRADIENTS_6D_ACE[i+5]);
+                                    GRADIENTS_6D_ACE[i], GRADIENTS_6D_ACE[i + 1], GRADIENTS_6D_ACE[i + 2], GRADIENTS_6D_ACE[i + 3], GRADIENTS_6D_ACE[i + 4], GRADIENTS_6D_ACE[i + 5]);
                         }
                         System.out.println("};");
                     }
                     random.setSeed(seed);
+                } else if(keycode == Input.Keys.LEFT){
+                    if(UIUtils.shift())
+                        goldenColA--;
+                    else
+                        goldenColB--;
+                    superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS
+                                    [goldenRowA = Math.max(goldenRowA, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColA = Math.max(goldenColA, 0) % GOLDEN_FLOATS[goldenRowA].length],
+                            GOLDEN_FLOATS
+                                    [goldenRowB = Math.max(goldenRowB, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColB = Math.max(goldenColB, 0) % GOLDEN_FLOATS[goldenRowB].length]);
+                    System.out.printf("float a = GOLDEN_FLOATS[%d][%d], b = GOLDEN_FLOATS[%d][%d];\n", goldenRowA, goldenColA, goldenRowB, goldenColB);
+                } else if(keycode == Input.Keys.RIGHT){
+                    if(UIUtils.shift())
+                        goldenColA++;
+                    else
+                        goldenColB++;
+                    superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS
+                                    [goldenRowA = Math.max(goldenRowA, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColA = Math.max(goldenColA, 0) % GOLDEN_FLOATS[goldenRowA].length],
+                            GOLDEN_FLOATS
+                                    [goldenRowB = Math.max(goldenRowB, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColB = Math.max(goldenColB, 0) % GOLDEN_FLOATS[goldenRowB].length]);
+                    System.out.printf("float a = GOLDEN_FLOATS[%d][%d], b = GOLDEN_FLOATS[%d][%d];\n", goldenRowA, goldenColA, goldenRowB, goldenColB);
+                } else if(keycode == Input.Keys.UP){
+                    if(UIUtils.shift())
+                        goldenRowA--;
+                    else
+                        goldenRowB--;
+                    superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS
+                                    [goldenRowA = Math.max(goldenRowA, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColA = Math.max(goldenColA, 0) % GOLDEN_FLOATS[goldenRowA].length],
+                            GOLDEN_FLOATS
+                                    [goldenRowB = Math.max(goldenRowB, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColB = Math.max(goldenColB, 0) % GOLDEN_FLOATS[goldenRowB].length]);
+                    System.out.printf("float a = GOLDEN_FLOATS[%d][%d], b = GOLDEN_FLOATS[%d][%d];\n", goldenRowA, goldenColA, goldenRowB, goldenColB);
+                } else if(keycode == Input.Keys.DOWN){
+                    if(UIUtils.shift())
+                        goldenRowA++;
+                    else
+                        goldenRowB++;
+                    superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS
+                                    [goldenRowA = Math.max(goldenRowA, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColA = Math.max(goldenColA, 0) % GOLDEN_FLOATS[goldenRowA].length],
+                            GOLDEN_FLOATS
+                                    [goldenRowB = Math.max(goldenRowB, 1) % GOLDEN_FLOATS.length]
+                                    [goldenColB = Math.max(goldenColB, 0) % GOLDEN_FLOATS[goldenRowB].length]);
+                    System.out.printf("float a = GOLDEN_FLOATS[%d][%d], b = GOLDEN_FLOATS[%d][%d];\n", goldenRowA, goldenColA, goldenRowB, goldenColB);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
 
@@ -557,7 +604,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                 diskPrecalculatedMode();
                 break;
             case 24:
-                diskSuperFibonacciMode();
+                diskShuffleRandomMode();
                 break;
             case 25:
                 diskQuasiRandomMode();
@@ -566,13 +613,19 @@ public class SphereVisualizer extends ApplicationAdapter {
                 diskAceRandomMode();
                 break;
             case 27:
-                diskShuffleRandomMode();
+                diskSuperFibonacciMode();
                 break;
             case 28:
-                uniform3DTo4DMode();
+                diskSuperFibonacciMarsagliaMode();
                 break;
             case 29:
+                uniform3DTo4DMode();
+                break;
+            case 30:
                 inverseStereo3DTo4DMode();
+                break;
+            case 31:
+                inverseStereo4DTo4DMode();
                 break;
         }
         batch.setProjectionMatrix(camera.combined);
@@ -697,6 +750,20 @@ public class SphereVisualizer extends ApplicationAdapter {
         renderer.end();
     }
 
+    private void diskSuperFibonacciMarsagliaMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                for (int i = 0; i < 256; i++) {
+                    renderer.color(black);
+                    renderer.vertex(GRADIENTS_4D_SFM[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_SFM[i<<2|y] * 60 + 62 + y * 124, 0f);
+                }
+
+            }
+        }
+        renderer.end();
+    }
+
     private void diskAceRandomMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int x = 0; x < 4; x++) {
@@ -740,7 +807,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void uniform3DTo4DMode() {
-        final float[] golden = QuasiRandomTools.GOLDEN_FLOATS[2]; // 3 elements
+        final float[] golden = GOLDEN_FLOATS[2]; // 3 elements
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 1; i <= 256; i++) {
             float angle0 = MathTools.fract(golden[0] * i);
@@ -761,14 +828,14 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void inverseStereo3DTo4DMode() {
-        final float[] golden = QuasiRandomTools.GOLDEN_FLOATS[2]; // 3 elements
+        final float[] golden = GOLDEN_FLOATS[2]; // 3 elements
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 1; i <= 256; i++) {
-            final float plane1 = 1f / (2f * MathTools.fract(golden[0] * i) - 1f);
-            final float plane2 = 1f / (2f * MathTools.fract(golden[1] * i) - 1f);
-            final float plane3 = 1f / (2f * MathTools.fract(golden[2] * i) - 1f);
+            final float plane1 = (2f * MathTools.fract(golden[0] * i) - 1f);
+            final float plane2 = (2f * MathTools.fract(golden[1] * i) - 1f);
+            final float plane3 = (2f * MathTools.fract(golden[2] * i) - 1f);
             final float mag = plane1 * plane1 + plane2 * plane2 + plane3 * plane3;
-            TMP_PT[0] = (mag - 1) / (mag + 1);
+            TMP_PT[0] = (mag - 1f) / (mag + 1f);
             TMP_PT[1] = (plane1 + plane1) / (mag + 1);
             TMP_PT[2] = (plane2 + plane2) / (mag + 1);
             TMP_PT[3] = (plane3 + plane3) / (mag + 1);
@@ -776,8 +843,37 @@ public class SphereVisualizer extends ApplicationAdapter {
                 for (int y = 0; y < 4; y++) {
                     renderer.color(black);
                     renderer.vertex(TMP_PT[x] * 60 + 62 + x * 124, TMP_PT[y] * 60 + 62 + y * 124, 0f);
+                    renderer.color(black);
+                    renderer.vertex(-TMP_PT[x] * 60 + 62 + x * 124, -TMP_PT[y] * 60 + 62 + y * 124, 0f);
                 }
             }
+            ++i;
+        }
+        renderer.end();
+    }
+
+    private void inverseStereo4DTo4DMode() {
+        final float[] golden = GOLDEN_FLOATS[3]; // 4 elements
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int i = 1; i <= 2048; i++) {
+            final float plane1 = (2f * MathTools.fract(golden[0] * i) - 1f);
+            final float plane2 = (2f * MathTools.fract(golden[1] * i) - 1f);
+            final float plane3 = (2f * MathTools.fract(golden[2] * i) - 1f);
+            final float plane4 = (2f * MathTools.fract(golden[3] * i) - 1f);
+            final float mag = plane1 * plane1 + plane2 * plane2 + plane3 * plane3 + plane4 * plane4;
+            TMP_PT[0] = (plane1 + plane1) / (mag + 1);
+            TMP_PT[1] = (plane2 + plane2) / (mag + 1);
+            TMP_PT[2] = (plane3 + plane3) / (mag + 1);
+            TMP_PT[3] = (plane4 + plane4) / (mag + 1);
+            for (int x = 0; x < 4; x++) {
+                for (int y = 0; y < 4; y++) {
+                    renderer.color(black);
+                    renderer.vertex(TMP_PT[x] * 60 + 62 + x * 124, TMP_PT[y] * 60 + 62 + y * 124, 0f);
+                    renderer.color(black);
+                    renderer.vertex(-TMP_PT[x] * 60 + 62 + x * 124, -TMP_PT[y] * 60 + 62 + y * 124, 0f);
+                }
+            }
+            ++i;
         }
         renderer.end();
     }
@@ -1611,6 +1707,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float[] GRADIENTS_4D_TEMP = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_ACE = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_FIB = new float[STANDARD_COUNT<<2];
+    private final float[] GRADIENTS_4D_SFM = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_QUASI = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_SHUFFLE = new float[STANDARD_COUNT << 2];
     private final float[] SHUFFLES = new float[STANDARD_COUNT << 2];
@@ -1630,12 +1727,36 @@ public class SphereVisualizer extends ApplicationAdapter {
     private final float[] GRADIENTS_6D_TEMP = new float[STANDARD_COUNT<<3];
 
     /**
+     * <a href="https://marcalexa.github.io/superfibonacci/">Based on the algorithm from here</a>.
+     * @param epsilon     typically either 0.5f or 0.36f
+     * @param gradients4D the gradient vector array to write to, in groups of 4 floats per vector
+     */
+    private void superFibonacci4D(final float epsilon, final float[] gradients4D, float a, float b) {
+        for (int i = 0; i < STANDARD_COUNT; i++) {
+            float s = i + epsilon;
+            float t = s / (STANDARD_COUNT - 1 + epsilon + epsilon);
+            float r = (float)Math.sqrt(t);
+            float c = (float)Math.sqrt(1f-t);
+            float alpha = s * a, beta = s * b;
+            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
+            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
+            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
+            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
+//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
+//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
+//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+//            ++i;
+        }
+    }
+
+    /**
      * Was <a href="https://marcalexa.github.io/superfibonacci/">based on the algorithm from here</a>, but not anymore.
      * Now <a href="https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-43/issue-2/Choosing-a-Point-from-the-Surface-of-a-Sphere/10.1214/aoms/1177692644.full">based on an algorithm by Marsaglia</a>.
      * @param epsilon     typically either 0.5f or 0.36f
      * @param gradients4D the gradient vector array to write to, in groups of 4 floats per vector
      */
-    private void superFibonacci4D(final float epsilon, final float[] gradients4D, float a, float b) {
+    private void superFibonacciMarsaglia4D(final float epsilon, final float[] gradients4D, float a, float b) {
         for (int i = 0; i < STANDARD_COUNT; i++) {
             float upped = i + epsilon;
             float xn = upped / (STANDARD_COUNT - 1 + epsilon + epsilon);
@@ -1660,28 +1781,12 @@ public class SphereVisualizer extends ApplicationAdapter {
             gradients4D[i << 2 | 1] = y0;
             gradients4D[i << 2 | 2] = x1 * mul;
             gradients4D[i << 2 | 3] = y1 * mul;
-//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
-//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
-//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
-//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = x0);
+//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = y0);
+//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = x1 * mul);
+//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = y1 * mul);
 //            ++i;
         }
-//        for (int i = 0; i < STANDARD_COUNT; i++) {
-//            float s = i + epsilon;
-//            float t = s / (STANDARD_COUNT - 1 + epsilon + epsilon);
-//            float r = (float)Math.sqrt(t);
-//            float c = (float)Math.sqrt(1f-t);
-//            float alpha = s * a, beta = s * b;
-////            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
-////            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
-////            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
-////            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
-//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
-//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
-//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
-//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
-//            ++i;
-//        }
     }
 
 
@@ -2040,12 +2145,19 @@ public class SphereVisualizer extends ApplicationAdapter {
         if(true){
             System.out.println("4D STUFF\n");
             printMinDistance_4("Noise", GRADIENTS_4D);
-            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
+
 //            superFibonacci4D(0.34f, GRADIENTS_4D_FIB, 0.7499438524f, 0.7498646975f);
 //            superFibonacci4D(2.5f, GRADIENTS_4D_FIB, 0.6923295856f, 0.7171460986f);
-//            superFibonacci4D(3.5f, GRADIENTS_4D_FIB, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1]);
+//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, 1.533751168755204288118041f, 1f/ QuasiRandomTools.GOLDEN_FLOATS[2][0]);
+            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS[4][0], GOLDEN_FLOATS[8][4]);
+//            superFibonacci4D(6f, GRADIENTS_4D_FIB, QuasiRandomTools.GOLDEN_FLOATS[1][0], QuasiRandomTools.GOLDEN_FLOATS[1][1]);
 //            superFibonacci4D(0f, GRADIENTS_4D_FIB, 0.75f, 0.5f);
+//
+//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
             printMinDistance_4("Fib", GRADIENTS_4D_FIB);
+
+            superFibonacciMarsaglia4D(0.5f, GRADIENTS_4D_SFM, MathTools.ROOT2, 1.533751168755204288118041f);
+            printMinDistance_4("SFM", GRADIENTS_4D_SFM);
 
             marsagliaRandom4D(new GoldenQuasiRandom(1234567890L), GRADIENTS_4D_QUASI);
             printMinDistance_4("Quasi", GRADIENTS_4D_QUASI);
