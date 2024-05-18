@@ -54,6 +54,7 @@ import static com.github.tommyettinger.digital.TrigTools.sinSmoother;
 import static com.github.tommyettinger.digital.TrigTools.sinSmootherTurns;
 import static com.github.yellowstonegames.grid.GradientVectors.GRADIENTS_4D;
 import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_FLOATS;
+import static com.github.yellowstonegames.grid.QuasiRandomTools.GOLDEN_LONGS;
 
 /**
  * Adapted from SquidLib's MathVisualizer, but stripped down to only include sphere-related math.
@@ -1861,7 +1862,32 @@ public class SphereVisualizer extends ApplicationAdapter {
             gradients4D[i << 2 | 2] = x1 * mul;
             gradients4D[i << 2 | 3] = y1 * mul;
         }
+    }
+
+    private void gaussianR4(float[] gradients4D) {
+        long x = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
+        long y = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
+        long z = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
+        long w = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
+        double[] v4 = new double[4];
+
+        for (int i = 0; i < STANDARD_COUNT; i++) {
+            v4[0] = MathTools.probit(((x = x + GOLDEN_LONGS[3][0]) >>> 11) * 0x1p-53);
+            v4[1] = MathTools.probit(((y = y + GOLDEN_LONGS[3][1]) >>> 11) * 0x1p-53);
+            v4[2] = MathTools.probit(((z = z + GOLDEN_LONGS[3][2]) >>> 11) * 0x1p-53);
+            v4[3] = MathTools.probit(((w = w + GOLDEN_LONGS[3][3]) >>> 11) * 0x1p-53);
+            double mag = Math.sqrt(
+                    v4[0] * v4[0] +
+                    v4[1] * v4[1] +
+                    v4[2] * v4[2] +
+                    v4[3] * v4[3]);
+            gradients4D[i << 2    ] = (float)(v4[0] / mag);
+            gradients4D[i << 2 | 1] = (float)(v4[1] / mag);
+            gradients4D[i << 2 | 2] = (float)(v4[2] / mag);
+            gradients4D[i << 2 | 3] = (float)(v4[3] / mag);
+
         }
+    }
 
     private void roll4D(final RotationTools.Rotator rotator, final float[] gradients4D) {
         for (int i = 0; i < STANDARD_COUNT; i++) {
@@ -2159,7 +2185,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             superFibonacciMarsaglia4D(0.5f, GRADIENTS_4D_SFM, MathTools.ROOT2, 1.533751168755204288118041f);
             printMinDistance_4("SFM", GRADIENTS_4D_SFM);
 
-            marsagliaRandom4D(new GoldenQuasiRandom(1234567890L), GRADIENTS_4D_QUASI);
+//            marsagliaRandom4D(new GoldenQuasiRandom(1234567890L), GRADIENTS_4D_QUASI);
+            gaussianR4(GRADIENTS_4D_QUASI);
             printMinDistance_4("Quasi", GRADIENTS_4D_QUASI);
 
             marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_ACE);
@@ -2421,6 +2448,8 @@ public class SphereVisualizer extends ApplicationAdapter {
             System.out.println("};\n");
         }
     }
+
+
     public static void main (String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
