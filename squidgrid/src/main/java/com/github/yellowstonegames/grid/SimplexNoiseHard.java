@@ -341,31 +341,31 @@ public class SimplexNoiseHard implements INoise {
         float n = 0f;
         float t0 = LIMIT4 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
         if(t0 > 0) {
-            final int h0 = (hash256(i, j, k, l, seed) & 0xFC);
+            final int h0 = (hash256(i, j, k, l, seed) << 2);
             t0 *= t0;
             n += t0 * t0 * (x0 * GRADIENTS_4D[h0] + y0 * GRADIENTS_4D[h0 + 1] + z0 * GRADIENTS_4D[h0 + 2] + w0 * GRADIENTS_4D[h0 + 3]);
         }
         float t1 = LIMIT4 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
         if (t1 > 0) {
-            final int h1 = (hash256(i + i1, j + j1, k + k1, l + l1, seed) & 0xFC);
+            final int h1 = (hash256(i + i1, j + j1, k + k1, l + l1, seed) << 2);
             t1 *= t1;
             n += t1 * t1 * (x1 * GRADIENTS_4D[h1] + y1 * GRADIENTS_4D[h1 + 1] + z1 * GRADIENTS_4D[h1 + 2] + w1 * GRADIENTS_4D[h1 + 3]);
         }
         float t2 = LIMIT4 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
         if (t2 > 0) {
-            final int h2 = (hash256(i + i2, j + j2, k + k2, l + l2, seed) & 0xFC);
+            final int h2 = (hash256(i + i2, j + j2, k + k2, l + l2, seed) << 2);
             t2 *= t2;
             n += t2 * t2 * (x2 * GRADIENTS_4D[h2] + y2 * GRADIENTS_4D[h2 + 1] + z2 * GRADIENTS_4D[h2 + 2] + w2 * GRADIENTS_4D[h2 + 3]);
         }
         float t3 = LIMIT4 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
         if (t3 > 0) {
-            final int h3 = (hash256(i + i3, j + j3, k + k3, l + l3, seed) & 0xFC);
+            final int h3 = (hash256(i + i3, j + j3, k + k3, l + l3, seed) << 2);
             t3 *= t3;
             n += t3 * t3 * (x3 * GRADIENTS_4D[h3] + y3 * GRADIENTS_4D[h3 + 1] + z3 * GRADIENTS_4D[h3 + 2] + w3 * GRADIENTS_4D[h3 + 3]);
         }
         float t4 = LIMIT4 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
         if (t4 > 0) {
-            final int h4 = (hash256(i + 1, j + 1, k + 1, l + 1, seed) & 0xFC);
+            final int h4 = (hash256(i + 1, j + 1, k + 1, l + 1, seed) << 2);
             t4 *= t4;
             n += t4 * t4 * (x4 * GRADIENTS_4D[h4] + y4 * GRADIENTS_4D[h4 + 1] + z4 * GRADIENTS_4D[h4 + 2] + w4 * GRADIENTS_4D[h4 + 3]);
         }

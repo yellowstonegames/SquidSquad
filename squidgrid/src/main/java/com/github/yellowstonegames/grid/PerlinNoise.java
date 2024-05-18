@@ -285,7 +285,7 @@ public class PerlinNoise implements INoise {
                                         float xd, float yd, float zd, float wd) {
         final int hash =
                 (int) ((seed ^= 0xE60E2B722B53AEEBL * x ^ 0xCEBD76D9EDB6A8EFL * y ^ 0xB9C9AA3A51D00B65L * z ^ 0xA6F5777F6F88983FL * w)
-                        * (seed) >>> 56) & -4;
+                        * (seed) >>> 56) << 2;
         return xd * GRADIENTS_4D[hash] + yd * GRADIENTS_4D[hash + 1] + zd * GRADIENTS_4D[hash + 2] + wd * GRADIENTS_4D[hash + 3];
     }
     protected static float gradCoord5D(long seed, int x, int y, int z, int w, int u,

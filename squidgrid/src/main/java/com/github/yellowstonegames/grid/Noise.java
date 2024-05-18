@@ -1377,7 +1377,7 @@ public class Noise implements INoise {
     }
 
     protected float gradCoord4D(int seed, int x, int y, int z, int w, float xd, float yd, float zd, float wd) {
-        final int hash = hash256(x, y, z, w, seed) & 0xFC;
+        final int hash = hash256(x, y, z, w, seed) << 2;
         return xd * GRADIENTS_4D[hash] + yd * GRADIENTS_4D[hash + 1] + zd * GRADIENTS_4D[hash + 2] + wd * GRADIENTS_4D[hash + 3];
     }
 
