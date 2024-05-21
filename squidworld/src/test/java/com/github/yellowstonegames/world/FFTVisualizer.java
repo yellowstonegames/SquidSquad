@@ -55,7 +55,14 @@ public class FFTVisualizer extends ApplicationAdapter {
 
     private final Noise noise = new Noise(322420472, 0.25f);
     private final IntPointHash iph = new IntPointHash();
-    private final FlawedPointHash.RugHash rug = new FlawedPointHash.RugHash(1);
+    private final FlawedPointHash.RugHash rug = new FlawedPointHash.RugHash(1)
+    {
+        @Override
+        public int hashWithState(int x, int y, int s) {
+            return (int) ((s + 0x9E3779B97F4A7C15L ^ s) * ((x + 0x9E3779B97F4A7C15L ^ x) * (s + y) + (y + 0x9E3779B97F4A7C15L ^ y) * (x + s)) >>> 32);
+        }
+    }
+    ;
     private final FlawedPointHash.QuiltHash quilt = new FlawedPointHash.QuiltHash(1, 32);
     private final FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 64);
     private final FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
@@ -83,8 +90,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 5;
     private static final int MODE_LIMIT = 29;
-    private int mode = 7;
-    private int dim = 4; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private int mode = 2;
+    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
     private float threshold = 0.5f;
@@ -549,12 +556,46 @@ public class FFTVisualizer extends ApplicationAdapter {
             int ct = (int)(paused ? startTime : TimeUtils.timeSinceMillis(startTime) >>> 5);
             switch (dim) {
                 case 0:
-                    for (int x = 0; x < width; x++) {
-                        for (int y = 0; y < height; y++) {
-                            bright = (float) (db = 0x1p-32 * (0xFFFFFFFFL & rug.hash(x + ct, y + ct)));
-                            real[x][y] = db;
-                            renderer.color(bright, bright, bright, 1f);
-                            renderer.vertex(x, y, 0);
+                    if(!UIUtils.shift()) {
+                        int ctSmall = ct >>> 6;
+                        if (!UIUtils.ctrl()) {
+                            for (int x = 0; x < width; x++) {
+                                for (int y = 0; y < height; y++) {
+                                    bright = (float) (db = 0x1p-32 * (0xFFFFFFFFL & (rug.hashWithState(x, y, ctSmall) ^ rug.hashWithState(y, x, ~ctSmall))));
+                                    real[x][y] = db;
+                                    renderer.color(bright, bright, bright, 1f);
+                                    renderer.vertex(x, y, 0);
+                                }
+                            }
+                        } else {
+                            for (int x = 0; x < width; x++) {
+                                for (int y = 0; y < height; y++) {
+                                    bright = (float) (db = 0x1p-32 * (0xFFFFFFFFL & (rug.hash(x + ctSmall, y + ctSmall) ^ rug.hash(y + ~ctSmall, x + ~ctSmall))));
+                                    real[x][y] = db;
+                                    renderer.color(bright, bright, bright, 1f);
+                                    renderer.vertex(x, y, 0);
+                                }
+                            }
+                        }
+                    } else {
+                        if (!UIUtils.ctrl()) {
+                            for (int x = 0; x < width; x++) {
+                                for (int y = 0; y < height; y++) {
+                                    bright = (float) (db = 0x1p-32 * (0xFFFFFFFFL & rug.hashWithState(x, y, ct >>> 6)));
+                                    real[x][y] = db;
+                                    renderer.color(bright, bright, bright, 1f);
+                                    renderer.vertex(x, y, 0);
+                                }
+                            }
+                        } else {
+                            for (int x = 0; x < width; x++) {
+                                for (int y = 0; y < height; y++) {
+                                    bright = (float) (db = 0x1p-32 * (0xFFFFFFFFL & rug.hash(x + ct, y + ct)));
+                                    real[x][y] = db;
+                                    renderer.color(bright, bright, bright, 1f);
+                                    renderer.vertex(x, y, 0);
+                                }
+                            }
                         }
                     }
                     break;
