@@ -46,11 +46,12 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
  */
 public class NoiseVisualizer extends ApplicationAdapter {
 
-    private int dim = 1; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
-    private int octaves = 2;
+    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private int octaves = 1;
     private float freq = 0x1p-4f;
     private boolean inverse;
-    private Noise noise = new Noise(1, freq, Noise.CUBIC_FRACTAL, octaves);
+//    private Noise noise = new Noise(1, freq, Noise.CUBIC_FRACTAL, octaves);
+    private Noise noise = new Noise(1, freq, Noise.CELLULAR_FRACTAL, octaves);
     private ImmediateModeRenderer20 renderer;
     
     private LongPointHash ph = new LongPointHash();
@@ -95,6 +96,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
         noise.setPointHash(pointHashes[hashIndex]);
         noise.setFractalType(Noise.RIDGED_MULTI);
         noise.setInterpolation(Noise.QUINTIC);
+
+        noise.setFractalType(Noise.FBM);
+        noise.setCellularReturnType(Noise.DISTANCE_VALUE);
 //        int[] palette = new int[]
 //                {
 //                0x000000FF, 0x120e14FF, 0x312b30FF, 0x504347FF, 0x726361FF, 0x9a877eFF, 0xc2b1a9FF, 0xe2d3cfFF,
@@ -135,8 +139,8 @@ public class NoiseVisualizer extends ApplicationAdapter {
         }
 
         gif = new AnimatedGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.WREN);
-        gif.setDitherStrength(0.2f);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.NONE);
+        gif.setDitherStrength(0.5f);
         gif.palette = new PaletteReducer(gray256);
 
 //                0x00000000, 0x000000FF, 0x081820FF, 0x132C2DFF, 0x1E403BFF, 0x295447FF, 0x346856FF, 0x497E5BFF,
@@ -264,7 +268,9 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                                , DescriptiveColor.oklabByHSL(0.5f, 0.9f, 0.72f, 1f)
 
                         ));
-                        g.toArray(gif.palette.paletteArray);
+//                        g.toArray(gif.palette.paletteArray);
+
+
 //                        for (int i = 0; i < 256; i++) {
 //                            int hiLo = Math.round(
 ////                                    MathTools.square(
@@ -325,6 +331,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                             noise.setCellularDistanceFunction((noise.getCellularDistanceFunction() + (UIUtils.shift() ? 2 : 1)) % 3);
                         else
                             noise.setCellularReturnType((noise.getCellularReturnType() + (UIUtils.shift() ? 8: 1)) % 9);
+                        noise.prettyPrint();
                         break;
                     case E: //earlier seed
                         noise.setSeed((int) noise.getSeed() - 1);
@@ -335,7 +342,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
                     case SLASH:
                         noise.setSeed((int) Hasher.randomize3(noise.getSeed()));
                         break;
-                    case SEMICOLON: //seed
+                    case SEMICOLON: //fractal spiral, why not
                         noise.setFractalSpiral(!noise.isFractalSpiral());
                         break;
                     case N: // noise type

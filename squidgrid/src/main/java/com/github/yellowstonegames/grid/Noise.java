@@ -16,10 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DigitTools;
@@ -448,7 +445,7 @@ public class Noise implements INoise {
     public static final int DISTANCE_VALUE = 8;
 
     public static final IntObjectMap<String> CELLULAR_RETURN_TYPES = IntObjectMap.with(
-            CELL_VALUE, "CellValue", NOISE_LOOKUP, "NoiseLookup",
+            CELL_VALUE, "CellValue", NOISE_LOOKUP, "NoiseLookup", DISTANCE, "Distance",
             DISTANCE_2, "Distance2", DISTANCE_2_ADD, "Distance2Add", DISTANCE_2_SUB, "Distance2Sub",
             DISTANCE_2_MUL, "Distance2Mul", DISTANCE_2_DIV, "Distance2Div", DISTANCE_VALUE, "DistanceValue"
     );
@@ -8832,6 +8829,7 @@ public class Noise implements INoise {
         int hash;
 
         switch (cellularDistanceFunction) {
+            default:
             case EUCLIDEAN:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
@@ -8888,6 +8886,7 @@ public class Noise implements INoise {
                 break;
         }
         return sum / (64f + Math.abs(sum));
+//        return RoughMath.tanhRougher(0x1p-6f * sum);
     }
 
     protected float singleCellular2Edge(int seed, float x, float y) {
@@ -9183,6 +9182,7 @@ public class Noise implements INoise {
         int hash;
 
         switch (cellularDistanceFunction) {
+            default:
             case EUCLIDEAN:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
@@ -9248,6 +9248,7 @@ public class Noise implements INoise {
                 break;
         }
         return sum / (64f + Math.abs(sum));
+//        return RoughMath.tanhRougher(0x1p-6f * sum);
     }
 
     protected float singleCellular2Edge(int seed, float x, float y, float z) {
@@ -9259,6 +9260,7 @@ public class Noise implements INoise {
         float distance2 = 999999;
 
         switch (cellularDistanceFunction) {
+            default:
             case EUCLIDEAN:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
