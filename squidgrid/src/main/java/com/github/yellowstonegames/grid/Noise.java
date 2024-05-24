@@ -9087,6 +9087,7 @@ public class Noise implements INoise {
         int xc = 0, yc = 0, zc = 0;
 
         switch (cellularDistanceFunction) {
+            default:
             case EUCLIDEAN:
                 for (int xi = xr - 1; xi <= xr + 1; xi++) {
                     for (int yi = yr - 1; yi <= yr + 1; yi++) {
@@ -9318,8 +9319,6 @@ public class Noise implements INoise {
                 }
                 distance *= 0.5f;
                 distance2 *= 0.5f;
-                break;
-            default:
                 break;
         }
 
