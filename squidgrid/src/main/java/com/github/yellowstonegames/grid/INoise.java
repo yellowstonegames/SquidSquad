@@ -355,6 +355,7 @@ public interface INoise extends Externalizable {
             NOISE_BY_TAG.put("(NO)", null); // for classes that cannot be serialized
             register(new BadgerNoise());
             register(new BasicHashNoise());
+            register(new CellularNoise());
             register(new CyclicNoise());
             register(new FlanNoise());
             register(new FoamNoise());
