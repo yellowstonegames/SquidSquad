@@ -2288,13 +2288,13 @@ public class SphereVisualizer extends ApplicationAdapter {
 //            System.out.println("};");
         }
 
-        if(false) {
+        if(true) {
             System.out.println("5D STUFF:\n");
 
             for (int i = 0; i < GRADIENTS_5D.length; i++) {
                 GRADIENTS_5D[i] *= 0.5f;
             }
-            for (int i = 1; i <= POINT_COUNT; i++) {
+            for (int i = 1; i <= STANDARD_COUNT; i++) {
                 float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
                 float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
                 float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
@@ -2310,13 +2310,17 @@ public class SphereVisualizer extends ApplicationAdapter {
                 GRADIENTS_5D_HALTON[index + 3] = w * mag;
                 GRADIENTS_5D_HALTON[index + 4] = u * mag;
             }
-
-            for (int i = 1; i <= POINT_COUNT; i++) {
-                float x = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][0] * i >>> 12) * 0x1p-52);
-                float y = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][1] * i >>> 12) * 0x1p-52);
-                float z = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][2] * i >>> 12) * 0x1p-52);
-                float w = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][3] * i >>> 12) * 0x1p-52);
-                float u = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[4][4] * i >>> 12) * 0x1p-52);
+            long xl = GOLDEN_LONGS[5][0] - 0x4000000000000000L;
+            long yl = GOLDEN_LONGS[5][1] - 0x4000000000000000L;
+            long zl = GOLDEN_LONGS[5][2] - 0x4000000000000000L;
+            long wl = GOLDEN_LONGS[5][3] - 0x4000000000000000L;
+            long ul = GOLDEN_LONGS[5][4] - 0x4000000000000000L;
+            for (int i = 1; i <= STANDARD_COUNT; i++) {
+                float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[4][0]) >>> 11) * 0x1p-53);
+                float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[4][1]) >>> 11) * 0x1p-53);
+                float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[4][2]) >>> 11) * 0x1p-53);
+                float w = (float) MathTools.probit(((wl += QuasiRandomTools.GOLDEN_LONGS[4][3]) >>> 11) * 0x1p-53);
+                float u = (float) MathTools.probit(((ul += QuasiRandomTools.GOLDEN_LONGS[4][4]) >>> 11) * 0x1p-53);
 
 //            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
                 final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
@@ -2352,7 +2356,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             roll5D(random, GRADIENTS_5D_ACE);
             shuffleBlocks(random, GRADIENTS_5D_ACE, 8);
 
-            double[] GRADIENTS_5D_ACE_D = new double[POINT_COUNT << 3];
+            double[] GRADIENTS_5D_ACE_D = new double[STANDARD_COUNT << 3];
             random.setSeed(0xEE36A34B8BEC3EFEL);
             roll5D(random, GRADIENTS_5D_ACE_D);
             shuffleBlocks(random, GRADIENTS_5D_ACE_D, 8);
@@ -2371,11 +2375,11 @@ public class SphereVisualizer extends ApplicationAdapter {
             printMinDistance_5("VDC", GRADIENTS_5D_VDC);
             printMinDistance_5("Uniform", GRADIENTS_5D_U);
 
-
+            float[] chosen = GRADIENTS_5D_ACE;
             System.out.println("private static final float[] GRADIENTS_5D = {");
-            for (int i = 0; i < GRADIENTS_5D_U.length; i += 8) {
+            for (int i = 0; i < chosen.length; i += 8) {
                 System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
-                        GRADIENTS_5D_U[i], GRADIENTS_5D_U[i + 1], GRADIENTS_5D_U[i + 2], GRADIENTS_5D_U[i + 3], GRADIENTS_5D_U[i + 4]);
+                        chosen[i], chosen[i + 1], chosen[i + 2], chosen[i + 3], chosen[i + 4]);
             }
             System.out.println("};\n");
 
