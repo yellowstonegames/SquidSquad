@@ -174,29 +174,25 @@ public class OldTest {
         }
     }
 
-//    @Test
-//    public void testLowStorageShuffler() {
-//        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-//        fury.register(LowStorageShuffler.class, new LowStorageShufflerSerializer());
-//
-//        LowStorageShuffler data = new LowStorageShuffler(5, 12345, 67890);
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-//        Output output = new Output(baos);
-//        kryo.writeObject(output, data);
-//        byte[] bytes = output.toBytes();
-//        try (Input input = new Input(bytes)) {
-//            LowStorageShuffler data2 = kryo.readObject(input, LowStorageShuffler.class);
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data.next(), data2.next());
-//            Assert.assertEquals(data, data2);
-//        }
-//    }
-//    
+    @Test
+    public void testLowStorageShuffler() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(LowStorageShuffler.class, new LowStorageShufflerSerializer(fury));
+
+        LowStorageShuffler data = new LowStorageShuffler(5, 12345, 67890);
+
+        byte[] bytes = fury.serializeJavaObject(data);{
+            LowStorageShuffler data2 = fury.deserializeJavaObject(bytes, LowStorageShuffler.class);
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data.next(), data2.next());
+            Assert.assertEquals(data, data2);
+        }
+    }
+
 //    @Test
 //    public void testCrossHashYolk() {
 //        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
