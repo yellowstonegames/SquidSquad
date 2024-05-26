@@ -1884,10 +1884,36 @@ public class SphereVisualizer extends ApplicationAdapter {
     }
 
     private void gaussianR4(float[] gradients4D) {
-        long x = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
-        long y = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
-        long z = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
-        long w = 0x8000000000000000L; //GOLDEN_LONGS[0][0];
+        //R4:  Min distance 0.26545448
+        long x = GOLDEN_LONGS[4][0] - 0x4000000000000000L;
+        long y = GOLDEN_LONGS[4][1] - 0x4000000000000000L;
+        long z = GOLDEN_LONGS[4][2] - 0x4000000000000000L;
+        long w = GOLDEN_LONGS[4][3] - 0x4000000000000000L;
+        //R4:  Min distance 0.20926196
+//        long x = GOLDEN_LONGS[4][0];
+//        long y = GOLDEN_LONGS[4][1];
+//        long z = GOLDEN_LONGS[4][2];
+//        long w = GOLDEN_LONGS[4][3];
+        //R4:  Min distance 0.14316198
+//        long x = GOLDEN_LONGS[0][0];
+//        long y = GOLDEN_LONGS[0][0];
+//        long z = GOLDEN_LONGS[0][0];
+//        long w = GOLDEN_LONGS[0][0];
+        //R4:  Min distance 0.21568021
+//        long x = 0x8000000000000000L;
+//        long y = 0x8000000000000000L;
+//        long z = 0x8000000000000000L;
+//        long w = 0x8000000000000000L;
+        //R4:  Min distance 0.19834335
+//        long x = 0L;
+//        long y = 0L;
+//        long z = 0L;
+//        long w = 0L;
+        //R4:  Min distance 0.21798963
+//        long x = 0x4000000000000000L;
+//        long y = 0x4000000000000000L;
+//        long z = 0x4000000000000000L;
+//        long w = 0x4000000000000000L;
         double[] v4 = new double[4];
 
         for (int i = 0; i < STANDARD_COUNT; i++) {
@@ -1916,7 +1942,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     private void gaussianHalton(float[] gradients4D) {
         for (int i = 0; i < STANDARD_COUNT; i++) {
             double x = MathTools.probit(QuasiRandomTools.vanDerCorputD(2, i + 1));
-            double y = MathTools.probit(QuasiRandomTools.vanDerCorputD(11, i + 1));
+            double y = MathTools.probit(QuasiRandomTools.vanDerCorputD(3, i + 1));
             double z = MathTools.probit(QuasiRandomTools.vanDerCorputD(5, i + 1));
             double w = MathTools.probit(QuasiRandomTools.vanDerCorputD(7, i + 1));
             double mag = Math.sqrt(
@@ -2114,7 +2140,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         return minDist2;
     }
     private void printMinDistance_4(final String name, final float[] gradients4D) {
-        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2_4(gradients4D, 64)));
+        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2_4(gradients4D, 256)));
     }
 
     private float evaluateMinDistance2_5(final float[] gradients5D) {
@@ -2220,7 +2246,9 @@ public class SphereVisualizer extends ApplicationAdapter {
             System.out.println("4D STUFF\n");
 
 //            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS[4][0], GOLDEN_FLOATS[8][4]);
-            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
+//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
+            //Super-Fibonacci spiral (epsilon 2.0000000) with a  0.5557308793, b  0.5798825026 has min dist 0.384070
+            superFibonacci4D(2f, GRADIENTS_4D_FIB, 0.5557308793f, 0.5798825026f);
             superFibonacciMarsaglia4D(0.5f, GRADIENTS_4D_SFM, MathTools.ROOT2, 1.533751168755204288118041f);
             gaussianR4(GRADIENTS_4D_R4);
             gaussianHalton(GRADIENTS_4D_HALTON);
@@ -2229,13 +2257,13 @@ public class SphereVisualizer extends ApplicationAdapter {
             marsagliaDetermined4D(GRADIENTS_4D_SHUFFLE);
 
 //            System.out.println(Base.joinReadable(", ", GRADIENTS_4D_HALTON));
-
+            float[] chosen = GRADIENTS_4D_R4;
             float[] haltonSum = new float[4];
             System.out.println("new float[] {");
-            for (int i = 0; i <= GRADIENTS_4D_HALTON.length - 4;) {
+            for (int i = 0; i <= chosen.length - 4;) {
                 for (int j = 0; j < 4; j++, i++) {
-                    System.out.printf("%+14.12ff, ", GRADIENTS_4D_HALTON[i]);
-                    haltonSum[j] += GRADIENTS_4D_HALTON[i];
+                    System.out.printf("%+14.12ff, ", chosen[i]);
+                    haltonSum[j] += chosen[i];
                 }
                 System.out.println();
             }
