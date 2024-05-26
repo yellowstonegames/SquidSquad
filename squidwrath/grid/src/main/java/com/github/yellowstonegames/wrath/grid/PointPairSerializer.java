@@ -18,9 +18,9 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.tommyettinger.crux.PointN;
 import com.github.tommyettinger.crux.PointPair;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**
  * Needs the type of the points to be registered, such as with

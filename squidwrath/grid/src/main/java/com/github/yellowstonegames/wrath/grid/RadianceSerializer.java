@@ -17,9 +17,9 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Radiance;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 public class RadianceSerializer extends Serializer<Radiance> {
     public RadianceSerializer(Fury fury) {
@@ -28,19 +28,19 @@ public class RadianceSerializer extends Serializer<Radiance> {
 
     @Override
     public void write(MemoryBuffer buffer, Radiance data) {
-        buffer.writeFloat(data.range);
-        buffer.writeInt(data.color);
-        buffer.writeFloat(data.flicker);
-        buffer.writeFloat(data.strobe);
-        buffer.writeFloat(data.delay);
-        buffer.writeFloat(data.flare);
-        buffer.writeInt(data.seed);
+        buffer.writeFloat32(data.range);
+        buffer.writeInt32(data.color);
+        buffer.writeFloat32(data.flicker);
+        buffer.writeFloat32(data.strobe);
+        buffer.writeFloat32(data.delay);
+        buffer.writeFloat32(data.flare);
+        buffer.writeInt32(data.seed);
 
     }
 
     @Override
     public Radiance read(MemoryBuffer buffer) {
-        return new Radiance(buffer.readFloat(), buffer.readInt(),
-                buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readInt());
+        return new Radiance(buffer.readFloat32(), buffer.readInt32(),
+                buffer.readFloat32(), buffer.readFloat32(), buffer.readFloat32(), buffer.readFloat32(), buffer.readInt32());
     }
 }

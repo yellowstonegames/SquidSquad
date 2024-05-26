@@ -19,9 +19,9 @@ package com.github.yellowstonegames.wrath.text;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Translator;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 public class TranslatorSerializer extends Serializer<Translator> {
     public TranslatorSerializer(Fury fury) {
@@ -31,9 +31,9 @@ public class TranslatorSerializer extends Serializer<Translator> {
     @Override
     public void write(MemoryBuffer buffer, Translator data) {
         fury.writeString(buffer, data.language.stringSerialize());
-        buffer.writeLong(data.shift);
-        buffer.writePositiveVarInt(data.cacheLevel);
-        buffer.writePositiveVarInt(data.table.size());
+        buffer.writeInt64(data.shift);
+        buffer.writeVarUint32(data.cacheLevel);
+        buffer.writeVarUint32(data.table.size());
         for(String k : data.table.keySet()){
             fury.writeString(buffer, k);
         }
@@ -46,9 +46,9 @@ public class TranslatorSerializer extends Serializer<Translator> {
     @Override
     public Translator read(MemoryBuffer buffer) {
         Language lang = Language.stringDeserialize(fury.readJavaString(buffer));
-        long shift = buffer.readLong();
-        int cacheLevel = buffer.readPositiveVarInt();
-        int tableSize = buffer.readPositiveVarInt();
+        long shift = buffer.readInt64();
+        int cacheLevel = buffer.readVarUint32();
+        int tableSize = buffer.readVarUint32();
         String[] ks = new String[tableSize];
         String[] vs = new String[tableSize];
 

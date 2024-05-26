@@ -26,8 +26,8 @@ import com.github.tommyettinger.tantrum.jdkgdxds.IntListSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.NumberedSetSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.core.*;
-import io.fury.Fury;
-import io.fury.config.Language;
+import org.apache.fury.Fury;
+import org.apache.fury.config.Language;
 import org.junit.Assert;
 import org.junit.Test;
 

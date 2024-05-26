@@ -19,8 +19,8 @@ package com.github.yellowstonegames.wrath.path;
 import com.github.yellowstonegames.wrath.grid.CoordSerializer;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.path.*;
-import io.fury.Fury;
-import io.fury.config.Language;
+import org.apache.fury.Fury;
+import org.apache.fury.config.Language;
 import org.junit.Assert;
 import org.junit.Test;
 

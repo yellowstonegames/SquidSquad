@@ -18,9 +18,9 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.IGridIdentified;
 import com.github.yellowstonegames.grid.SpatialMap;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**  
  * Fury {@link Serializer} for jdkgdxds {@link SpatialMap}s. Needs the value type of the SpatialMap to be registered
@@ -36,7 +36,7 @@ public class SpatialMapSerializer extends Serializer<SpatialMap> {
     @Override
     public void write(final MemoryBuffer output, final SpatialMap data) {
         final int len = data.size();
-        output.writePositiveVarInt(len);
+        output.writeVarUint32(len);
         for (Object item : data) {
             fury.writeRef(output, item);
         }
@@ -44,7 +44,7 @@ public class SpatialMapSerializer extends Serializer<SpatialMap> {
 
     @Override
     public SpatialMap<? extends IGridIdentified> read(MemoryBuffer input) {
-        final int len = input.readPositiveVarInt();
+        final int len = input.readVarUint32();
         SpatialMap data = new SpatialMap(len);
         for (int i = 0; i < len; i++) {
             data.add((IGridIdentified) fury.readRef(input));

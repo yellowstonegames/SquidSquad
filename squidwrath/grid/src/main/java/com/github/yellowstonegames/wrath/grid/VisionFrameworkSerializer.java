@@ -17,9 +17,9 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.*;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**
  * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@code char[]}, {@code char[][]},
@@ -36,9 +36,9 @@ public class VisionFrameworkSerializer extends Serializer<VisionFramework> {
 
     @Override
     public void write(MemoryBuffer buffer, VisionFramework data) {
-        buffer.writePositiveVarInt(data.placeWidth);
-        buffer.writePositiveVarInt(data.placeHeight);
-        buffer.writeInt(data.rememberedColor);
+        buffer.writeVarUint32(data.placeWidth);
+        buffer.writeVarUint32(data.placeHeight);
+        buffer.writeInt32(data.rememberedColor);
         fury.writeRef(buffer, data.linePlaceMap);
         fury.writeRef(buffer, data.prunedPlaceMap);
         fury.writeRef(buffer, data.backgroundColors);
@@ -56,9 +56,9 @@ public class VisionFrameworkSerializer extends Serializer<VisionFramework> {
     @Override
     public VisionFramework read(MemoryBuffer input) {
         VisionFramework vf = new VisionFramework();
-        vf.placeWidth = input.readPositiveVarInt();
-        vf.placeHeight = input.readPositiveVarInt();
-        vf.rememberedColor = input.readInt();
+        vf.placeWidth = input.readVarUint32();
+        vf.placeHeight = input.readVarUint32();
+        vf.rememberedColor = input.readInt32();
         vf.linePlaceMap = (char[][])fury.readRef(input);
         vf.prunedPlaceMap = (char[][])fury.readRef(input);
         vf.backgroundColors = (int[][])fury.readRef(input);

@@ -17,8 +17,8 @@
 package com.github.yellowstonegames.wrath.old.v300;
 
 import com.github.yellowstonegames.old.v300.*;
-import io.fury.Fury;
-import io.fury.config.Language;
+import org.apache.fury.Fury;
+import org.apache.fury.config.Language;
 import org.junit.Assert;
 import org.junit.Test;
 

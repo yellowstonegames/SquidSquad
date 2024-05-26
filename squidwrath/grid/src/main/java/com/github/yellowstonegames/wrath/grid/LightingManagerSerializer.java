@@ -17,9 +17,9 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.*;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**
  * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@link Region}, {@link CoordSerializer}
@@ -35,9 +35,9 @@ public class LightingManagerSerializer extends Serializer<LightingManager> {
     @Override
     public void write(MemoryBuffer buffer, LightingManager data) {
         fury.writeRef(buffer, data.resistances);
-        buffer.writeInt(data.backgroundColor);
-        buffer.writePositiveVarInt(data.radiusStrategy.ordinal());
-        buffer.writeFloat(data.viewerRange);
+        buffer.writeInt32(data.backgroundColor);
+        buffer.writeVarUint32(data.radiusStrategy.ordinal());
+        buffer.writeFloat32(data.viewerRange);
         fury.writeRef(buffer, data.noticeable);
         fury.writeRef(buffer, data.lights);
         fury.writeRef(buffer, data.colorLighting);
@@ -49,7 +49,7 @@ public class LightingManagerSerializer extends Serializer<LightingManager> {
 
     @Override
     public LightingManager read(MemoryBuffer buffer) {
-        LightingManager lm = new LightingManager((float[][]) fury.readRef(buffer), buffer.readInt(), Radius.ALL[buffer.readPositiveVarInt()], buffer.readFloat());
+        LightingManager lm = new LightingManager((float[][]) fury.readRef(buffer), buffer.readInt32(), Radius.ALL[buffer.readVarUint32()], buffer.readFloat32());
         lm.noticeable = (Region) fury.readRef(buffer);
         lm.lights = (CoordObjectOrderedMap) fury.readRef(buffer);
         lm.colorLighting = (int[][]) fury.readRef(buffer);

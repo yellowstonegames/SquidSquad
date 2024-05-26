@@ -20,9 +20,9 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordLongOrderedMap;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**
  * Fury {@link Serializer} for jdkgdxds {@link CoordLongOrderedMap}s.
@@ -35,27 +35,27 @@ public class CoordLongOrderedMapSerializer extends Serializer<CoordLongOrderedMa
 
     @Override
     public void write(final MemoryBuffer output, final CoordLongOrderedMap data) {
-        output.writePositiveVarInt(data.size());
+        output.writeVarUint32(data.size());
         for(Coord k : data.order()){
-            output.writeShort(k.x);
-            output.writeShort(k.y);
+            output.writeInt16(k.x);
+            output.writeInt16(k.y);
         }
         LongIterator it = data.values().iterator();
         while (it.hasNext()) {
-            output.writeLong(it.nextLong());
+            output.writeInt64(it.nextLong());
         }
     }
 
     @Override
     public CoordLongOrderedMap read(MemoryBuffer input) {
-        final int len = input.readPositiveVarInt();
+        final int len = input.readVarUint32();
         Coord[] ks = new Coord[len];
         long[] vs = new long[len];
         for (int i = 0; i < len; i++) {
-            ks[i] = Coord.get(input.readShort(), input.readShort());
+            ks[i] = Coord.get(input.readInt16(), input.readInt16());
         }
         for (int i = 0; i < len; i++) {
-            vs[i] = input.readLong();
+            vs[i] = input.readInt64();
         }
 
         return new CoordLongOrderedMap(ks, vs);

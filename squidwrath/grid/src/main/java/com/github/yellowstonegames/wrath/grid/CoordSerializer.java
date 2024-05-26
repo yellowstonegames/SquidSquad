@@ -17,9 +17,9 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Coord;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**
  * Fury {@link Serializer} for digital {@link Coord}s.
@@ -34,12 +34,12 @@ public class CoordSerializer extends Serializer<Coord> {
 
     @Override
     public void write(MemoryBuffer buffer, final Coord data) {
-        buffer.writeShort(data.x);
-        buffer.writeShort(data.y);
+        buffer.writeInt16(data.x);
+        buffer.writeInt16(data.y);
     }
 
     @Override
     public Coord read(MemoryBuffer buffer) {
-        return Coord.get(buffer.readShort(), buffer.readShort());
+        return Coord.get(buffer.readInt16(), buffer.readInt16());
     }
 }

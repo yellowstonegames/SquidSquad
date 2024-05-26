@@ -18,16 +18,14 @@ package com.github.yellowstonegames.wrath.text;
 
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Translator;
-import io.fury.Fury;
+import org.apache.fury.Fury;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.ByteArrayOutputStream;
 
 public class TextTest {
     @Test
     public void testLanguage() {
-        Fury fury = Fury.builder().withLanguage(io.fury.config.Language.JAVA).build();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(Language.class, new LanguageSerializer(fury));
 
         Language data = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
@@ -53,7 +51,7 @@ public class TextTest {
 
     @Test
     public void testLanguageSentenceForm() {
-        Fury fury = Fury.builder().withLanguage(io.fury.config.Language.JAVA).build();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(Language.SentenceForm.class, new LanguageSentenceFormSerializer(fury));
 
         Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8), sf2;
@@ -66,7 +64,7 @@ public class TextTest {
 
     @Test
     public void testTranslator() {
-        Fury fury = Fury.builder().withLanguage(io.fury.config.Language.JAVA).build();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(Language.class, new LanguageSerializer(fury));
         fury.registerSerializer(Translator.class, new TranslatorSerializer(fury));
 

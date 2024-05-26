@@ -19,9 +19,9 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectMap;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**
  * Fury {@link Serializer} for jdkgdxds {@link CoordObjectMap}s.
@@ -35,10 +35,10 @@ public class CoordObjectMapSerializer extends Serializer<CoordObjectMap> {
 
     @Override
     public void write(final MemoryBuffer output, final CoordObjectMap data) {
-        output.writePositiveVarInt(data.size());
+        output.writeVarUint32(data.size());
         for(Object k : data.keySet()){
-            output.writeShort(((Coord)k).x);
-            output.writeShort(((Coord)k).y);
+            output.writeInt16(((Coord)k).x);
+            output.writeInt16(((Coord)k).y);
         }
         for(Object v : data.values()){
             fury.writeRef(output, v);
@@ -47,11 +47,11 @@ public class CoordObjectMapSerializer extends Serializer<CoordObjectMap> {
 
     @Override
     public CoordObjectMap<?> read(MemoryBuffer input) {
-        final int len = input.readPositiveVarInt();
+        final int len = input.readVarUint32();
         Coord[] ks = new Coord[len];
         Object[] vs = new Object[len];
         for (int i = 0; i < len; i++) {
-            ks[i] = Coord.get(input.readShort(), input.readShort());
+            ks[i] = Coord.get(input.readInt16(), input.readInt16());
         }
         for (int i = 0; i < len; i++) {
             vs[i] = fury.readRef(input);

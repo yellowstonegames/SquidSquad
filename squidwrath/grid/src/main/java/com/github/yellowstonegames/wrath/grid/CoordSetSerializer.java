@@ -18,9 +18,9 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordSet;
-import io.fury.Fury;
-import io.fury.memory.MemoryBuffer;
-import io.fury.serializer.Serializer;
+import org.apache.fury.Fury;
+import org.apache.fury.memory.MemoryBuffer;
+import org.apache.fury.serializer.Serializer;
 
 /**
  * Fury {@link Serializer} for jdkgdxds {@link CoordSet}s.
@@ -34,19 +34,19 @@ public class CoordSetSerializer extends Serializer<CoordSet> {
     @Override
     public void write(final MemoryBuffer output, final CoordSet data) {
         final int len = data.size();
-        output.writePositiveVarInt(len);
+        output.writeVarUint32(len);
         for (Coord item : data) {
-            output.writeShort(item.x);
-            output.writeShort(item.y);
+            output.writeInt16(item.x);
+            output.writeInt16(item.y);
         }
     }
 
     @Override
     public CoordSet read(MemoryBuffer input) {
-        final int len = input.readPositiveVarInt();
+        final int len = input.readVarUint32();
         CoordSet data = new CoordSet(len);
         for (int i = 0; i < len; i++) {
-            data.add(Coord.get(input.readShort(), input.readShort()));
+            data.add(Coord.get(input.readInt16(), input.readInt16()));
         }
         return data;
     }
