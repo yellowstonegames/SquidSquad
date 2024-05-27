@@ -36,6 +36,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.digital.ShapeTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatToFloatFunction;
@@ -65,8 +66,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 26;
-    private final int modes = 32;
+    private int mode = 33;
+    private final int modes = 34;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -896,6 +897,9 @@ public static final float[] GRADIENTS_6D = {
             case 32:
                 inverseStereo3DTo4DMode();
                 break;
+            case 33:
+                optimize4DMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -1040,6 +1044,22 @@ public static final float[] GRADIENTS_6D = {
                 for (int i = 0; i < 256; i++) {
                     renderer.color(black);
                     renderer.vertex(GRADIENTS_4D_ACE[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_ACE[i<<2|y] * 60 + 62 + y * 124, 0f);
+                }
+
+            }
+        }
+        renderer.end();
+    }
+
+    private void optimize4DMode() {
+        nudgeAll(GRADIENTS_4D_CURRENT, GRADIENTS_4D_TEMP, 0x1p-4f, 4, 4);
+        printMinDistance_4("Current", GRADIENTS_4D_CURRENT);
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                for (int i = 0; i < 256; i++) {
+                    renderer.color(black);
+                    renderer.vertex(GRADIENTS_4D_CURRENT[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_CURRENT[i<<2|y] * 60 + 62 + y * 124, 0f);
                 }
 
             }
@@ -2249,10 +2269,11 @@ public static final float[] GRADIENTS_6D = {
     private final float[] GRADIENTS_4D_ACE = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_FIB = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_SFM = new float[STANDARD_COUNT<<2];
-    private final float[] GRADIENTS_4D_R4 = new float[STANDARD_COUNT << 2];
+    private final float[] GRADIENTS_4D_R4 = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_HALTON = new float[STANDARD_COUNT<<2];
-    private final float[] GRADIENTS_4D_SHUFFLE = new float[STANDARD_COUNT << 2];
+    private final float[] GRADIENTS_4D_SHUFFLE = new float[STANDARD_COUNT<<2];
     private final float[] SHUFFLES = new float[STANDARD_COUNT << 2];
+    private final float[] GRADIENTS_4D_CURRENT = Arrays.copyOf(GradientVectors.GRADIENTS_4D, STANDARD_COUNT<<2);
 
     private final float[] GRADIENTS_5D_HALTON = new float[STANDARD_COUNT<<3];
     private final float[] GRADIENTS_5D_R5 = new float[STANDARD_COUNT<<3];
@@ -2725,6 +2746,7 @@ public static final float[] GRADIENTS_6D = {
             items[j] = temp;
         }
     }
+
     private static void shuffleBlocks(final EnhancedRandom random, final float[] items, final int blockSize) {
         final int length = items.length / blockSize;
         for (int i = length - 1; i > 0; i--) {
@@ -2763,6 +2785,43 @@ public static final float[] GRADIENTS_6D = {
         double rmsError = Math.sqrt((x * x + y * y + z * z + w * w + u * u) / 5.0); // Root Mean Squared Error
         System.out.printf("%s:  x: %.8f, y: %.8f, z: %.8f, w: %.8f, u: %.8f, rms error: %.8f\n",
                 name, x, y, z, w, u, rmsError);
+    }
+
+    private static void normalizeAllInPlace(final float[] items, final int dim, final int blockSize) {
+        final int length = items.length;
+        for (int a = 0; a < length; a += blockSize) {
+            float mag = 0f;
+            for (int c = 0; c < dim; c++) {
+                mag += items[a+c] * items[a+c];
+            }
+            for (int c = 0; c < dim; c++) {
+                items[a+c] /= (float) Math.sqrt(mag);
+            }
+        }
+    }
+
+    private static void nudgeAll(final float[] source, final float[] temp, final float strength,
+                                 final int dim, final int blockSize){
+        Arrays.fill(temp, 0f);
+        final int length = source.length;
+        for (int a = 0; a < length; a += blockSize) {
+            System.arraycopy(source, a, temp, a, dim);
+            for (int b = 0; b < length; b += blockSize) {
+                if(a == b) continue;
+                float mag = 0f, diff;
+                for (int c = 0; c < dim; c++) {
+                    diff = source[a+c] - source[b+c];
+                    mag += diff * diff;
+                }
+                mag = strength * RoughMath.expRough(-mag);
+                for (int c = 0; c < dim; c++) {
+                    diff = source[a+c] - source[b+c];
+                    temp[a+c] += diff * mag;
+                }
+            }
+        }
+        normalizeAllInPlace(temp, dim, blockSize);
+        System.arraycopy(temp, 0, source, 0, length);
     }
 
     {
