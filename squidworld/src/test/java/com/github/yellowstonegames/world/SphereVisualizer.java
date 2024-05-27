@@ -34,11 +34,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.digital.RoughMath;
-import com.github.tommyettinger.digital.ShapeTools;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.grid.GradientVectors;
@@ -179,6 +176,7 @@ public class SphereVisualizer extends ApplicationAdapter {
             -0.786182, -0.583814, 0.202678, 0.0, -0.565191, 0.821858, -0.0714658, 0.0, 0.437895, 0.152598, -0.885981, 0.0, -0.92394, 0.353436, -0.14635, 0.0,
             0.212189, -0.815162, -0.538969, 0.0, -0.859262, 0.143405, -0.491024, 0.0, 0.991353, 0.112814, 0.0670273, 0.0, 0.0337884, -0.979891, -0.196654, 0.0
     };
+    private float optimizeStrength = 1f;
 
 
     /**
@@ -1052,7 +1050,7 @@ public static final float[] GRADIENTS_6D = {
     }
 
     private void optimize4DMode() {
-        nudgeAll(GRADIENTS_4D_CURRENT, GRADIENTS_4D_TEMP, 0x1p-4f, 4, 4);
+        optimizeStrength = nudgeAll(GRADIENTS_4D_CURRENT, GRADIENTS_4D_TEMP, optimizeStrength, 4, 4);
         printMinDistance_4("Current", GRADIENTS_4D_CURRENT);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int x = 0; x < 4; x++) {
@@ -2273,7 +2271,15 @@ public static final float[] GRADIENTS_6D = {
     private final float[] GRADIENTS_4D_HALTON = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_SHUFFLE = new float[STANDARD_COUNT<<2];
     private final float[] SHUFFLES = new float[STANDARD_COUNT << 2];
-    private final float[] GRADIENTS_4D_CURRENT = Arrays.copyOf(GradientVectors.GRADIENTS_4D, STANDARD_COUNT<<2);
+    private final float[] GRADIENTS_4D_CURRENT = new float[STANDARD_COUNT << 2];
+    {
+        gaussianHalton(GRADIENTS_4D_CURRENT);
+//        marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_CURRENT);
+//        superFibonacci4D(2.5f, GRADIENTS_4D_CURRENT, 0.6923295856f, 0.7171460986f);
+//        superFibonacci4D(0.5f, GRADIENTS_4D_CURRENT, MathTools.ROOT2, 1.533751168755204288118041f);
+
+    }
+//    private final float[] GRADIENTS_4D_CURRENT = Arrays.copyOf(GradientVectors.GRADIENTS_4D, STANDARD_COUNT<<2);
 
     private final float[] GRADIENTS_5D_HALTON = new float[STANDARD_COUNT<<3];
     private final float[] GRADIENTS_5D_R5 = new float[STANDARD_COUNT<<3];
@@ -2668,9 +2674,25 @@ public static final float[] GRADIENTS_6D = {
         }
     }
 
+    private float evaluateMinDistance2(final float[] gradients, int dim, int blockSize) {
+        float minDist2 = Float.MAX_VALUE;
+        int limit = gradients.length;
+        for (int i = 0; i < limit; i += blockSize) {
+            for (int j = 0; j < limit; j += blockSize) {
+                if(i == j) continue;
+                float mag = 0f;
+                for (int c = 0; c < dim; c++) {
+                    float diff = gradients[i+c] - gradients[j+c];
+                    mag += diff * diff;
+                }
+                minDist2 = Math.min(minDist2, mag);
+            }
+        }
+        return minDist2;
+    }
     private float evaluateMinDistance2_4(final float[] gradients4D, int limit) {
         float minDist2 = Float.MAX_VALUE;
-        limit = Math.min(limit, gradients4D.length);
+        limit = Math.min(limit << 2, gradients4D.length);
         for (int i = 0; i < limit; i += 4) {
             float xi = gradients4D[i  ], yi = gradients4D[i+1], zi = gradients4D[i+2], wi = gradients4D[i+3];
             for (int j = 0; j < limit; j += 4) {
@@ -2683,7 +2705,7 @@ public static final float[] GRADIENTS_6D = {
         return minDist2;
     }
     private void printMinDistance_4(final String name, final float[] gradients4D) {
-        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2_4(gradients4D, 256)));
+        System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2(gradients4D, 4, 4)));
     }
 
     private float evaluateMinDistance2_5(final float[] gradients5D) {
@@ -2800,28 +2822,34 @@ public static final float[] GRADIENTS_6D = {
         }
     }
 
-    private static void nudgeAll(final float[] source, final float[] temp, final float strength,
-                                 final int dim, final int blockSize){
+    private float nudgeAll(final float[] source, final float[] temp, final float strength,
+                                 final int dim, final int blockSize) {
+        float oldMinDist = evaluateMinDistance2(source, dim, blockSize);
         Arrays.fill(temp, 0f);
         final int length = source.length;
         for (int a = 0; a < length; a += blockSize) {
             System.arraycopy(source, a, temp, a, dim);
             for (int b = 0; b < length; b += blockSize) {
-                if(a == b) continue;
+                if (a == b) continue;
                 float mag = 0f, diff;
                 for (int c = 0; c < dim; c++) {
-                    diff = source[a+c] - source[b+c];
+                    diff = source[a + c] - source[b + c];
                     mag += diff * diff;
                 }
                 mag = strength * RoughMath.expRough(-mag);
                 for (int c = 0; c < dim; c++) {
-                    diff = source[a+c] - source[b+c];
-                    temp[a+c] += diff * mag;
+                    diff = source[a + c] - source[b + c];
+                    temp[a + c] += diff * mag;
                 }
             }
         }
         normalizeAllInPlace(temp, dim, blockSize);
-        System.arraycopy(temp, 0, source, 0, length);
+        float nextMinDist = evaluateMinDistance2(temp, dim, blockSize);
+        if (nextMinDist > oldMinDist) {
+            System.arraycopy(temp, 0, source, 0, length);
+            return strength * 1.125f;
+        }
+        return strength * MathTools.GOLDEN_RATIO_INVERSE;
     }
 
     {
@@ -3137,7 +3165,7 @@ public static final float[] GRADIENTS_6D = {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Visualizer for Math Testing/Checking");
         config.setResizable(false);
-        config.useVsync(true);
+        config.useVsync(false);
         config.setForegroundFPS(0);
         config.setWindowedMode(512, 530);
         new Lwjgl3Application(new SphereVisualizer(), config);
