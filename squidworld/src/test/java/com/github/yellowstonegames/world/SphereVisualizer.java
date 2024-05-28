@@ -63,7 +63,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 33;
+    private int mode = 27;
     private final int modes = 34;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
@@ -307,18 +307,11 @@ public class SphereVisualizer extends ApplicationAdapter {
                                 }
                             }
                         }
-                        // all of these measurements are wrong!
-                        //Super-Fibonacci spiral (epsilon 0.5000000) with a  0.5073087215, b  0.7468562126 has min dist 0.789509
-                        //Super-Fibonacci spiral (epsilon 0.5000000) with a  0.5054997206, b  0.0035336695 has min dist 1.199869
-                        //Super-Fibonacci spiral (epsilon 0.5000000) with a  0.7480831742, b  0.5001007318 has min dist 1.269073
-                        //Super-Fibonacci spiral (epsilon 0.3600000) with a  0.7502086163, b  0.7495415807 has min dist 1.309218
-                        //Super-Fibonacci spiral (epsilon 0.3300000) with a  0.7502086163, b  0.7500240207 has min dist 1.385216
-                        //Super-Fibonacci spiral (epsilon 0.3400000) with a  0.7499438524, b  0.7498646975 has min dist 1.390733
-                        //Super-Fibonacci spiral (epsilon 0.0000000) with a  0.7500000000, b  0.5000000000 has min dist 1.414213
-
-                        // these measurements should be right:
+                        //Super-Fibonacci spiral (epsilon 1.0000000) with a  0.5866990089, b  0.3876041770 has min dist 0.352996
+                        //Super-Fibonacci spiral (epsilon 1.2941177) with a  0.5866990089, b  0.6119842529 has min dist 0.355762
                         //Super-Fibonacci spiral (epsilon 1.0000000) with a  0.9469839931, b  0.5291057229 has min dist 0.365039
                         //Super-Fibonacci spiral (epsilon 0.9899999) with a  1.9469840527, b  1.0291167498 has min dist 0.365202
+                        //Super-Fibonacci spiral (epsilon 1.7692308) with a  0.5866990089, b  0.6119842529 has min dist 0.369163
                         //Super-Fibonacci spiral (epsilon 2.5000000) with a  0.6923295856, b  0.7171460986 has min dist 0.389756
                         System.out.printf("Super-Fibonacci spiral (epsilon %5.7f) with a %13.10f, b %13.10f has min dist %f \n", epsilonacci, bestA, bestB, Math.sqrt(bestScore));
                         seed = oldSeed;
@@ -2299,7 +2292,8 @@ public static final float[] GRADIENTS_6D = {
     private final float[] GRADIENTS_4D_CURRENT = new float[STANDARD_COUNT << 2];
     {
 //        gaussianHalton(GRADIENTS_4D_CURRENT);
-        gaussianR4(GRADIENTS_4D_CURRENT);
+//        gaussianR4(GRADIENTS_4D_CURRENT);
+        superFibonacci4D(1.7692308f, GRADIENTS_4D_CURRENT, 0.5866990089f, 0.6119842529f);
 //        marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_CURRENT);
 //        superFibonacci4D(2.5f, GRADIENTS_4D_CURRENT, 0.6923295856f, 0.7171460986f);
 //        superFibonacci4D(0.5f, GRADIENTS_4D_CURRENT, MathTools.ROOT2, 1.533751168755204288118041f);
@@ -2884,10 +2878,26 @@ public static final float[] GRADIENTS_6D = {
             System.out.println("4D STUFF\n");
 
 //            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, GOLDEN_FLOATS[4][0], GOLDEN_FLOATS[8][4]);
-//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f);
-            //Super-Fibonacci spiral (epsilon 2.0000000) with a  0.5557308793, b  0.5798825026 has min dist 0.384070
-            superFibonacci4D(2f, GRADIENTS_4D_FIB, 0.5557308793f, 0.5798825026f);
-            superFibonacciMarsaglia4D(0.5f, GRADIENTS_4D_SFM, MathTools.ROOT2, 1.533751168755204288118041f);
+//            superFibonacci4D(0.5f, GRADIENTS_4D_FIB, MathTools.ROOT2, 1.533751168755204288118041f); //Min distance 0.24475130
+            //Super-Fibonacci spiral (epsilon 2.0000000) with a  0.5557308793, b  0.5798825026 has min dist 0.20874050
+
+            //Super-Fibonacci spiral (epsilon 1.0000000) with a  0.5866990089, b  0.3876041770 has min dist 0.352996
+            //Super-Fibonacci spiral (epsilon 1.2941177) with a  0.5866990089, b  0.6119842529 has min dist 0.355762
+            //Super-Fibonacci spiral (epsilon 1.0000000) with a  0.9469839931, b  0.5291057229 has min dist 0.365039
+            //Super-Fibonacci spiral (epsilon 0.9899999) with a  1.9469840527, b  1.0291167498 has min dist 0.365202
+            //Super-Fibonacci spiral (epsilon 1.7692308) with a  0.5866990089, b  0.6119842529 has min dist 0.369163
+            //Super-Fibonacci spiral (epsilon 2.5000000) with a  0.6923295856, b  0.7171460986 has min dist 0.389756
+
+//            superFibonacci4D(2f, GRADIENTS_4D_FIB, 0.5557308793f, 0.5798825026f); //Min distance 0.20874050
+//            superFibonacci4D(2f, GRADIENTS_4D_FIB, 0.5557308793f, 0.5798825026f); //Min distance 0.20874050
+//            superFibonacci4D(1.0000000f, GRADIENTS_4D_FIB, 0.9469839931f, 0.5291057229f); //Min distance 0.16605810
+//            superFibonacci4D(0.9899999f, GRADIENTS_4D_FIB, 1.9469840527f, 1.0291167498f); //Min distance 0.18563157
+//            superFibonacci4D(2.5000000f, GRADIENTS_4D_FIB, 0.6923295856f, 0.7171460986f); //Min distance 0.19518112
+//            superFibonacci4D(1.0000000f, GRADIENTS_4D_FIB, 0.5557308793f, 0.5798825026f); //Min distance 0.20874050
+//            superFibonacci4D(1.2941177f, GRADIENTS_4D_FIB, 0.5866990089f, 0.6119842529f); //Min distance 0.35576184
+            superFibonacci4D(1.7692308f, GRADIENTS_4D_FIB, 0.5866990089f, 0.6119842529f); //Min distance 0.36916307
+//            superFibonacciMarsaglia4D(0.5f, GRADIENTS_4D_SFM, MathTools.ROOT2, 1.533751168755204288118041f);
+            superFibonacciMarsaglia4D(1.7692308f, GRADIENTS_4D_SFM, 0.5866990089f, 0.6119842529f);
             gaussianR4(GRADIENTS_4D_R4);
             gaussianHalton(GRADIENTS_4D_HALTON);
             marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_ACE);
