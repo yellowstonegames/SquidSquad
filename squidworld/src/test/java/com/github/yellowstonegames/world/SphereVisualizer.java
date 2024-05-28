@@ -313,6 +313,19 @@ public class SphereVisualizer extends ApplicationAdapter {
                         //Super-Fibonacci spiral (epsilon 0.9899999) with a  1.9469840527, b  1.0291167498 has min dist 0.365202
                         //Super-Fibonacci spiral (epsilon 1.7692308) with a  0.5866990089, b  0.6119842529 has min dist 0.369163
                         //Super-Fibonacci spiral (epsilon 2.5000000) with a  0.6923295856, b  0.7171460986 has min dist 0.389756
+
+                        // POLAR OPPOSITE MODE
+                        //Super-Fibonacci spiral (epsilon 1.0000000) with a  0.9043024778, b  0.4258859158 has min dist 0.355767
+                        //Super-Fibonacci spiral (epsilon 1.0847458) with a  0.9319309592, b  0.9044592977 has min dist 0.356069
+                        //Super-Fibonacci spiral (epsilon 1.1612903) with a  0.9319309592, b  0.9044592977 has min dist 0.356929
+                        //Super-Fibonacci spiral (epsilon 1.2307693) with a  0.9319309592, b  0.9044592977 has min dist 0.357706
+                        //Super-Fibonacci spiral (epsilon 1.4054054) with a  0.9319309592, b  0.9044592977 has min dist 0.359645
+                        //Super-Fibonacci spiral (epsilon 1.4545455) with a  0.9319309592, b  0.9044592977 has min dist 0.360188
+                        //Super-Fibonacci spiral (epsilon 1.7058823) with a  0.8444285393, b  0.6815647483 has min dist 0.363134
+                        //Super-Fibonacci spiral (epsilon 1.9152542) with a  0.6556250453, b  0.8184294105 has min dist 0.364910
+                        //Super-Fibonacci spiral (epsilon 2.0847459) with a  0.6556250453, b  0.8184294105 has min dist 0.366613
+                        //Super-Fibonacci spiral (epsilon 2.4054055) with a  0.6556078792, b  0.3184083104 has min dist 0.369022
+                        //Super-Fibonacci spiral (epsilon 2.4545455) with a  0.6556078792, b  0.3184083104 has min dist 0.369142
                         System.out.printf("Super-Fibonacci spiral (epsilon %5.7f) with a %13.10f, b %13.10f has min dist %f \n", epsilonacci, bestA, bestB, Math.sqrt(bestScore));
                         seed = oldSeed;
                     }
@@ -503,6 +516,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                     System.out.printf("float a = GOLDEN_FLOATS[%d][%d], b = GOLDEN_FLOATS[%d][%d];\n", goldenRowA, goldenColA, goldenRowB, goldenColB);
                 }else if(keycode == Input.Keys.G){
                     // show Gradient Vectors
+                    shuffleBlocks(new AceRandom(12345), GRADIENTS_4D_CURRENT, 4);
                     printGradients4D(GRADIENTS_4D_CURRENT);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
@@ -530,12 +544,12 @@ public class SphereVisualizer extends ApplicationAdapter {
                 System.out.printf(" %0+13.10ff,", chosen[i+c]);
             }
             System.out.println();
-            System.out.print("   ");
-            for (int c = 0; c < dim; c++) {
-                System.out.printf(" %0+13.10ff,", -chosen[i+c]);
-            }
-            System.out.println();
-            i += blockSize;
+//            System.out.print("   ");
+//            for (int c = 0; c < dim; c++) {
+//                System.out.printf(" %0+13.10ff,", -chosen[i+c]);
+//            }
+//            System.out.println();
+//            i += blockSize;
         }
         System.out.println("};");
     }
@@ -2293,7 +2307,9 @@ public static final float[] GRADIENTS_6D = {
     {
 //        gaussianHalton(GRADIENTS_4D_CURRENT);
 //        gaussianR4(GRADIENTS_4D_CURRENT);
-        superFibonacci4D(1.7692308f, GRADIENTS_4D_CURRENT, 0.5866990089f, 0.6119842529f);
+        //Super-Fibonacci spiral (epsilon 2.4545455) with a  0.6556078792, b  0.3184083104 has min dist 0.369142
+        superFibonacci4D(2.4545455f, GRADIENTS_4D_CURRENT, 0.6556078792f, 0.3184083104f);
+//        superFibonacci4D(1.7692308f, GRADIENTS_4D_CURRENT, 0.5866990089f, 0.6119842529f);
 //        marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_CURRENT);
 //        superFibonacci4D(2.5f, GRADIENTS_4D_CURRENT, 0.6923295856f, 0.7171460986f);
 //        superFibonacci4D(0.5f, GRADIENTS_4D_CURRENT, MathTools.ROOT2, 1.533751168755204288118041f);
@@ -2327,15 +2343,15 @@ public static final float[] GRADIENTS_6D = {
             float r = (float)Math.sqrt(t);
             float c = (float)Math.sqrt(1f-t);
             float alpha = s * a, beta = s * b;
-            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
-            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
-            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
-            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
-//            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
-//            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
-//            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
-//            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
-//            ++i;
+//            gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha);
+//            gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha);
+//            gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta);
+//            gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta);
+            gradients4D[i + 1 << 2    ] = -(gradients4D[i << 2    ] = r * TrigTools.sinSmootherTurns(alpha));
+            gradients4D[i + 1 << 2 | 1] = -(gradients4D[i << 2 | 1] = r * TrigTools.cosSmootherTurns(alpha));
+            gradients4D[i + 1 << 2 | 2] = -(gradients4D[i << 2 | 2] = c * TrigTools.sinSmootherTurns(beta));
+            gradients4D[i + 1 << 2 | 3] = -(gradients4D[i << 2 | 3] = c * TrigTools.cosSmootherTurns(beta));
+            ++i;
         }
     }
 
