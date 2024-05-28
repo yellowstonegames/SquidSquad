@@ -353,13 +353,7 @@ public class SphereVisualizer extends ApplicationAdapter {
                         return false;
                     }
 //                    shuffleBlocks(random, GRADIENTS_4D_ACE, 4); // I don't think this is needed for random points
-
-                    System.out.println("public static final float[] GRADIENTS_4D = {");
-                    for (int i = 0; i < GRADIENTS_4D_ACE.length; i += 4) {
-                        System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff,\n",
-                                GRADIENTS_4D_ACE[i], GRADIENTS_4D_ACE[i+1], GRADIENTS_4D_ACE[i+2], GRADIENTS_4D_ACE[i+3]);
-                    }
-                    System.out.println("};");
+                    printGradients4D(GRADIENTS_4D_ACE);
                 } else if(keycode == Input.Keys.NUM_5) {
                     startTime = TimeUtils.millis();
                     long bestSeed = seed;
@@ -514,6 +508,9 @@ public class SphereVisualizer extends ApplicationAdapter {
                                     [goldenRowB = Math.max(goldenRowB, 1) % GOLDEN_FLOATS.length]
                                     [goldenColB = Math.max(goldenColB, 0) % GOLDEN_FLOATS[goldenRowB].length]);
                     System.out.printf("float a = GOLDEN_FLOATS[%d][%d], b = GOLDEN_FLOATS[%d][%d];\n", goldenRowA, goldenColA, goldenRowB, goldenColB);
+                }else if(keycode == Input.Keys.G){
+                    // show Gradient Vectors
+                    printGradients4D(GRADIENTS_4D_CURRENT);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
 
@@ -521,6 +518,33 @@ public class SphereVisualizer extends ApplicationAdapter {
             }
         };
         Gdx.input.setInputProcessor(input);
+    }
+
+    private void printGradients4D(final float[] chosen) {
+        printGradients(chosen, 4, 4);
+    }
+    private void printGradients5D(final float[] chosen) {
+        printGradients(chosen, 5, 8);
+    }
+    private void printGradients6D(final float[] chosen) {
+        printGradients(chosen, 6, 8);
+    }
+    private void printGradients(final float[] chosen, final int dim, final int blockSize) {
+        System.out.println("public static final float[] GRADIENTS_4D = {");
+        for (int i = 0; i < chosen.length; i += blockSize) {
+            System.out.print("   ");
+            for (int c = 0; c < dim; c++) {
+                System.out.printf(" %0+13.10ff,", chosen[i+c]);
+            }
+            System.out.println();
+            System.out.print("   ");
+            for (int c = 0; c < dim; c++) {
+                System.out.printf(" %0+13.10ff,", -chosen[i+c]);
+            }
+            System.out.println();
+            i += blockSize;
+        }
+        System.out.println("};");
     }
 
     /*
@@ -1050,8 +1074,9 @@ public static final float[] GRADIENTS_6D = {
     }
 
     private void optimize4DMode() {
-        optimizeStrength = nudgeAll(GRADIENTS_4D_CURRENT, GRADIENTS_4D_TEMP, optimizeStrength, 4, 4);
-        printMinDistance_4("Current", GRADIENTS_4D_CURRENT);
+        for (int i = 0; i < 8; i++) {
+            optimizeStrength = nudgeAll(GRADIENTS_4D_CURRENT, GRADIENTS_4D_TEMP, optimizeStrength, 4, 4);
+        }
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 4; y++) {
@@ -2273,7 +2298,8 @@ public static final float[] GRADIENTS_6D = {
     private final float[] SHUFFLES = new float[STANDARD_COUNT << 2];
     private final float[] GRADIENTS_4D_CURRENT = new float[STANDARD_COUNT << 2];
     {
-        gaussianHalton(GRADIENTS_4D_CURRENT);
+//        gaussianHalton(GRADIENTS_4D_CURRENT);
+        gaussianR4(GRADIENTS_4D_CURRENT);
 //        marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_CURRENT);
 //        superFibonacci4D(2.5f, GRADIENTS_4D_CURRENT, 0.6923295856f, 0.7171460986f);
 //        superFibonacci4D(0.5f, GRADIENTS_4D_CURRENT, MathTools.ROOT2, 1.533751168755204288118041f);
@@ -2847,6 +2873,7 @@ public static final float[] GRADIENTS_6D = {
         float nextMinDist = evaluateMinDistance2(temp, dim, blockSize);
         if (nextMinDist > oldMinDist) {
             System.arraycopy(temp, 0, source, 0, length);
+            System.out.println("Current min dist: " + Math.sqrt(nextMinDist));
             return strength * 1.125f;
         }
         return strength * MathTools.GOLDEN_RATIO_INVERSE;
@@ -2899,7 +2926,7 @@ public static final float[] GRADIENTS_6D = {
 //            System.out.println("};");
         }
 
-        if(true) {
+        if(false) {
             System.out.println("5D STUFF:\n");
 
             for (int i = 0; i < GRADIENTS_5D.length; i++) {
