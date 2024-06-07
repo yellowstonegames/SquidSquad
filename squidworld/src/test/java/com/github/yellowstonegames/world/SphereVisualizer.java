@@ -64,7 +64,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 27;
-    private final int modes = 34;
+    private final int modes = 35;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -516,8 +516,12 @@ public class SphereVisualizer extends ApplicationAdapter {
                     System.out.printf("float a = GOLDEN_FLOATS[%d][%d], b = GOLDEN_FLOATS[%d][%d];\n", goldenRowA, goldenColA, goldenRowB, goldenColB);
                 }else if(keycode == Input.Keys.G){
                     // show Gradient Vectors
+                    System.out.println("\n4D:\n");
                     shuffleBlocks(new AceRandom(12345), GRADIENTS_4D_CURRENT, 4);
                     printGradients4D(GRADIENTS_4D_CURRENT);
+                    System.out.println("\n5D:\n");
+                    shuffleBlocks(new AceRandom(12345), GRADIENTS_5D_CURRENT, 8);
+                    printGradients5D(GRADIENTS_5D_CURRENT);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
 
@@ -537,7 +541,7 @@ public class SphereVisualizer extends ApplicationAdapter {
         printGradients(chosen, 6, 8);
     }
     private void printGradients(final float[] chosen, final int dim, final int blockSize) {
-        System.out.println("public static final float[] GRADIENTS_4D = {");
+        System.out.println("public static final float[] GRADIENTS_"+dim+"D = {");
         for (int i = 0; i < chosen.length; i += blockSize) {
             System.out.print("   ");
             for (int c = 0; c < dim; c++) {
@@ -929,6 +933,9 @@ public static final float[] GRADIENTS_6D = {
             case 33:
                 optimize4DMode();
                 break;
+            case 34:
+                optimize5DMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -1092,6 +1099,33 @@ public static final float[] GRADIENTS_6D = {
                     renderer.vertex(GRADIENTS_4D_CURRENT[i<<2|x] * 60 + 62 + x * 124, GRADIENTS_4D_CURRENT[i<<2|y] * 60 + 62 + y * 124, 0f);
                 }
 
+            }
+        }
+        renderer.end();
+    }
+
+
+    private void optimize5DMode() {
+        for (int i = 0; i < 8; i++) {
+            optimizeStrength = nudgeAll(GRADIENTS_5D_CURRENT, GRADIENTS_5D_TEMP, optimizeStrength, 5, 8);
+        }
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        int zone = 0, xZone = 0, yZone = 0;
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
+                c = TrigTools.sinSmootherTurns(theta) * 36,
+                s = TrigTools.cosSmootherTurns(theta) * 36;
+        ALL:
+        for (int x = 0; x < 5; x++) {
+            for (int y = x + 1; y < 5; y++) {
+                for (int z = y + 1; z < 5; z++) {
+                    for (int i = 0; i < 256; i++) {
+                        renderer.color(black);
+                        renderer.vertex(GRADIENTS_5D_CURRENT[i << 3 | x] * c + GRADIENTS_5D_CURRENT[i << 2 | z] * s + 40 + xZone * 80, GRADIENTS_5D_CURRENT[i << 2 | y] * 36 + 40 + yZone * 80, 0f);
+                    }
+                    if(++zone > 36) break ALL;
+                    xZone = zone % 6;
+                    yZone = zone / 6;
+                }
             }
         }
         renderer.end();
@@ -2324,6 +2358,7 @@ public static final float[] GRADIENTS_6D = {
     private final float[] GRADIENTS_5D_VDC = new float[STANDARD_COUNT<<3];
     private final float[] GRADIENTS_5D_U = new float[STANDARD_COUNT<<3];
 
+    private final float[] GRADIENTS_5D_CURRENT = new float[STANDARD_COUNT<<3];
     private final float[] GRADIENTS_5D_TEMP = new float[STANDARD_COUNT<<3];
 
     private final float[] GRADIENTS_6D_ACE = new float[STANDARD_COUNT<<3];
@@ -2952,7 +2987,7 @@ public static final float[] GRADIENTS_6D = {
 //            System.out.println("};");
         }
 
-        if(false) {
+        if(true) {
             System.out.println("5D STUFF:\n");
 
             for (int i = 0; i < GRADIENTS_5D.length; i++) {
@@ -2974,6 +3009,9 @@ public static final float[] GRADIENTS_6D = {
                 GRADIENTS_5D_HALTON[index + 3] = w * mag;
                 GRADIENTS_5D_HALTON[index + 4] = u * mag;
             }
+
+            System.arraycopy(GRADIENTS_5D_HALTON, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_HALTON.length);
+
             long xl = GOLDEN_LONGS[5][0] - 0x4000000000000000L;
             long yl = GOLDEN_LONGS[5][1] - 0x4000000000000000L;
             long zl = GOLDEN_LONGS[5][2] - 0x4000000000000000L;
