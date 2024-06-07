@@ -64,7 +64,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
     private int mode = 0;
-    private final int modes = 36;
+    private final int modes = 37;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -945,6 +945,9 @@ public static final float[] GRADIENTS_6D = {
             case 35:
                 optimize6DMode();
                 break;
+            case 36:
+                showUniform5DMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -1144,6 +1147,30 @@ public static final float[] GRADIENTS_6D = {
             optimizeStrength = nudgeAll(GRADIENTS_6D_CURRENT, GRADIENTS_6D_TEMP, optimizeStrength, 6, 8);
         }
     }
+
+    private void showUniform5DMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        int zone = 0, xZone = 0, yZone = 0;
+        float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
+                c = TrigTools.sinSmootherTurns(theta) * 60,
+                s = TrigTools.cosSmootherTurns(theta) * 60;
+        ALL:
+        for (int x = 0; x < 5; x++) {
+            for (int y = x + 1; y < 5; y++) {
+                for (int z = y + 1; z < 5; z++) {
+                    for (int i = 0; i < 256; i++) {
+                        renderer.color(black);
+                        renderer.vertex(GRADIENTS_5D_U[i << 3 | x] * c + GRADIENTS_5D_U[i << 3 | z] * s + 62 + xZone * 124, GRADIENTS_5D_U[i << 3 | y] * 60 + 62 + yZone * 124, 0f);
+                    }
+                    if(++zone > 16) break ALL;
+                    xZone = zone & 3;
+                    yZone = zone >>> 2;
+                }
+            }
+        }
+        renderer.end();
+    }
+
 
     private void diskR4RandomMode() {
         renderer.begin(camera.combined, GL20.GL_POINTS);
@@ -3559,7 +3586,7 @@ public static final float[] GRADIENTS_5D = {
                 long zl = GOLDEN_LONGS[5][2] - 0x4000000000000000L;
                 long wl = GOLDEN_LONGS[5][3] - 0x4000000000000000L;
                 long ul = GOLDEN_LONGS[5][4] - 0x4000000000000000L;
-                for (int i = 1; i <= STANDARD_COUNT; i++) {
+                for (int i = 1; i <= STANDARD_COUNT; i += 2) {
                     float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[4][0]) >>> 11) * 0x1p-53);
                     float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[4][1]) >>> 11) * 0x1p-53);
                     float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[4][2]) >>> 11) * 0x1p-53);
@@ -3574,19 +3601,25 @@ public static final float[] GRADIENTS_5D = {
                     GRADIENTS_5D_R5[index + 2] = z * mag;
                     GRADIENTS_5D_R5[index + 3] = w * mag;
                     GRADIENTS_5D_R5[index + 4] = u * mag;
+                    index += 8;
+                    GRADIENTS_5D_R5[index + 0] = x * -mag;
+                    GRADIENTS_5D_R5[index + 1] = y * -mag;
+                    GRADIENTS_5D_R5[index + 2] = z * -mag;
+                    GRADIENTS_5D_R5[index + 3] = w * -mag;
+                    GRADIENTS_5D_R5[index + 4] = u * -mag;
                 }
             }
             EnhancedRandom random;
             random = new AceRandom(123456789L);
-            uniformND(5, GRADIENTS_5D_TEMP, 8);
+            uniformND(5, GRADIENTS_5D_U, 8);
 
-            float[] rot5 = RotationTools.randomRotation5D(123456789L);
-
-            for (int i = 0, p = 0; i < 256; i++, p += 8) {
-                RotationTools.rotate(GRADIENTS_5D_TEMP, p, 5, rot5, GRADIENTS_5D_U, p);
-            }
+//            float[] rot5 = RotationTools.randomRotation5D(123456789L);
+//
+//            for (int i = 0, p = 0; i < 256; i++, p += 8) {
+//                RotationTools.rotate(GRADIENTS_5D_TEMP, p, 5, rot5, GRADIENTS_5D_U, p);
+//            }
             shuffleBlocks(random, GRADIENTS_5D_U, 8);
-            Arrays.fill(GRADIENTS_5D_TEMP, 0f);
+//            Arrays.fill(GRADIENTS_5D_TEMP, 0f);
 
             random.setSeed(123456789L);
             RotationTools.Rotator rotator5 = new RotationTools.Rotator(5, random);
@@ -3675,8 +3708,8 @@ public static final float[] GRADIENTS_5D = {
                 long wl = GOLDEN_LONGS[6][3] - 0x4000000000000000L;
                 long ul = GOLDEN_LONGS[6][4] - 0x4000000000000000L;
                 long vl = GOLDEN_LONGS[6][5] - 0x4000000000000000L;
-                for (int i = 1; i <= STANDARD_COUNT; i++) {
-                    float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[5][0]) >>> 11) * 0x1p-53);
+                for (int i = 1; i <= STANDARD_COUNT; i += 2) {
+                    float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[5][0]) >>> 11) * 0x1p-53);// | 1L << 52
                     float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[5][1]) >>> 11) * 0x1p-53);
                     float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[5][2]) >>> 11) * 0x1p-53);
                     float w = (float) MathTools.probit(((wl += QuasiRandomTools.GOLDEN_LONGS[5][3]) >>> 11) * 0x1p-53);
@@ -3692,6 +3725,13 @@ public static final float[] GRADIENTS_5D = {
                     GRADIENTS_6D_R6[index + 3] = w * mag;
                     GRADIENTS_6D_R6[index + 4] = u * mag;
                     GRADIENTS_6D_R6[index + 5] = v * mag;
+                    index += 8;
+                    GRADIENTS_6D_R6[index + 0] = x * -mag;
+                    GRADIENTS_6D_R6[index + 1] = y * -mag;
+                    GRADIENTS_6D_R6[index + 2] = z * -mag;
+                    GRADIENTS_6D_R6[index + 3] = w * -mag;
+                    GRADIENTS_6D_R6[index + 4] = u * -mag;
+                    GRADIENTS_6D_R6[index + 5] = v * -mag;
                 }
             }
 
