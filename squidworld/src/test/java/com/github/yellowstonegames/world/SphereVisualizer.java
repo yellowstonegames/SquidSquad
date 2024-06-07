@@ -2733,7 +2733,7 @@ public static final float[] GRADIENTS_6D = {
     private static float int_sin_m(float x, int m) {
         if(m == 0) return x;
         if(m == 1) return 1 - cosSmoother(x);
-        return (m - 1f) / m * int_sin_m(x, m - 2) - cosSmoother(x) * (float)Math.pow(sinSmoother(x), (m - 1f) / m);
+        return (m - 1f) / m * int_sin_m(x, m - 2) - cosSmoother(x) * (float)Math.pow(sinSmoother(x), (m - 1f)) / m;
     }
 
     /**
