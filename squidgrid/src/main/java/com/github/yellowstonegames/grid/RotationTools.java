@@ -1953,11 +1953,30 @@ public final class RotationTools {
          * @param offsetOut the index in {@code output} to start writing the rotated output
          */
         public void rotate(float[] input, float[] output, int offsetOut) {
+            rotate(input, 0, output, offsetOut);
+        }
+        /**
+         * A rotation method that uses this Rotator's rotation matrix and takes an input vector to rotate (as a 1D
+         * float array), an output vector to write to (as a 1D float array), and offsets into the input and output
+         * vectors to start reading from and writing to, then does the math to rotate {@code input} using this Rotator,
+         * and adds the results into {@code output} starting at {@code offsetOut}. This does not erase output before
+         * writing to it, so it can be called more than once to sum multiple rotations if so desired. The length of
+         * output can be arbitrarily large, so this is complete when it has completely processed rotation. That means
+         * this affects {@link #dimension} items in output, and likewise reads the same amount from input. Both
+         * the part of {@code input} after {@code offsetIn} and the writeable part of {@code output} should have a
+         * length at least equal to {@link #dimension}.
+         *
+         * @param input an input vector of length {@link #dimension} or greater
+         * @param offsetIn the index in {@code input} to read {@link #dimension} items from
+         * @param output the output vector of length {@link #dimension} or greater
+         * @param offsetOut the index in {@code output} to start writing the rotated output
+         */
+        public void rotate(float[] input, int offsetIn, float[] output, int offsetOut) {
             int m = 0;
             final int outEnd = offsetOut + dimension, dim2 = rotation.length;
-            for (int r = 0; r < input.length; r++) {
+            for (int r = 0; r < dimension; r++) {
                 for (int c = offsetOut; m < dim2 && c < outEnd && c < output.length; c++) {
-                    output[c] += rotation[m++] * input[r];
+                    output[c] += rotation[m++] * input[offsetIn + r];
                 }
             }
         }
