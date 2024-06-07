@@ -2362,6 +2362,9 @@ public static final float[] GRADIENTS_6D = {
 
     private final float[] GRADIENTS_6D_ACE = new float[STANDARD_COUNT<<3];
     private final float[] GRADIENTS_6D_U = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_6D_R6 = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_6D_HALTON = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_6D_CURRENT = new float[STANDARD_COUNT<<3];
 
     private final float[] GRADIENTS_6D_TEMP = new float[STANDARD_COUNT<<3];
 
@@ -2999,7 +3002,6 @@ public static final float[] GRADIENTS_6D = {
                 float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
                 float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(2, i));
 
-//            float r = (float) Math.pow(QuasiRandomTools.vanDerCorput(2, i), 0.2);
                 final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
                 int index = i - 1 << 3;
                 GRADIENTS_5D_HALTON[index + 0] = x * mag;
@@ -3536,28 +3538,29 @@ public static final float[] GRADIENTS_5D = {
              */
 //            System.arraycopy(GRADIENTS_5D_HALTON, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_HALTON.length);
 
-            long xl = GOLDEN_LONGS[5][0] - 0x4000000000000000L;
-            long yl = GOLDEN_LONGS[5][1] - 0x4000000000000000L;
-            long zl = GOLDEN_LONGS[5][2] - 0x4000000000000000L;
-            long wl = GOLDEN_LONGS[5][3] - 0x4000000000000000L;
-            long ul = GOLDEN_LONGS[5][4] - 0x4000000000000000L;
-            for (int i = 1; i <= STANDARD_COUNT; i++) {
-                float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[4][0]) >>> 11) * 0x1p-53);
-                float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[4][1]) >>> 11) * 0x1p-53);
-                float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[4][2]) >>> 11) * 0x1p-53);
-                float w = (float) MathTools.probit(((wl += QuasiRandomTools.GOLDEN_LONGS[4][3]) >>> 11) * 0x1p-53);
-                float u = (float) MathTools.probit(((ul += QuasiRandomTools.GOLDEN_LONGS[4][4]) >>> 11) * 0x1p-53);
+            {
+                long xl = GOLDEN_LONGS[5][0] - 0x4000000000000000L;
+                long yl = GOLDEN_LONGS[5][1] - 0x4000000000000000L;
+                long zl = GOLDEN_LONGS[5][2] - 0x4000000000000000L;
+                long wl = GOLDEN_LONGS[5][3] - 0x4000000000000000L;
+                long ul = GOLDEN_LONGS[5][4] - 0x4000000000000000L;
+                for (int i = 1; i <= STANDARD_COUNT; i++) {
+                    float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[4][0]) >>> 11) * 0x1p-53);
+                    float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[4][1]) >>> 11) * 0x1p-53);
+                    float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[4][2]) >>> 11) * 0x1p-53);
+                    float w = (float) MathTools.probit(((wl += QuasiRandomTools.GOLDEN_LONGS[4][3]) >>> 11) * 0x1p-53);
+                    float u = (float) MathTools.probit(((ul += QuasiRandomTools.GOLDEN_LONGS[4][4]) >>> 11) * 0x1p-53);
 
 //            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
-                final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
-                int index = i - 1 << 3;
-                GRADIENTS_5D_R5[index + 0] = x * mag;
-                GRADIENTS_5D_R5[index + 1] = y * mag;
-                GRADIENTS_5D_R5[index + 2] = z * mag;
-                GRADIENTS_5D_R5[index + 3] = w * mag;
-                GRADIENTS_5D_R5[index + 4] = u * mag;
+                    final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
+                    int index = i - 1 << 3;
+                    GRADIENTS_5D_R5[index + 0] = x * mag;
+                    GRADIENTS_5D_R5[index + 1] = y * mag;
+                    GRADIENTS_5D_R5[index + 2] = z * mag;
+                    GRADIENTS_5D_R5[index + 3] = w * mag;
+                    GRADIENTS_5D_R5[index + 4] = u * mag;
+                }
             }
-
             EnhancedRandom random;
             random = new AceRandom(123456789L);
             uniformND(5, GRADIENTS_5D_TEMP, 8);
@@ -3570,6 +3573,7 @@ public static final float[] GRADIENTS_5D = {
             shuffleBlocks(random, GRADIENTS_5D_U, 8);
             Arrays.fill(GRADIENTS_5D_TEMP, 0f);
 
+            random.setSeed(123456789L);
             RotationTools.Rotator rotator5 = new RotationTools.Rotator(5, random);
             for (int i = 0, p = 0; i < 256; i++, p += 8) {
                 rotator5.rotate(GRADIENTS_5D_R5, p, GRADIENTS_5D_TEMP, p);
@@ -3611,14 +3615,15 @@ public static final float[] GRADIENTS_5D = {
             printMinDistance_5("Golden", GRADIENTS_5D_GOLDEN);
             printMinDistance_5("VDC", GRADIENTS_5D_VDC);
             printMinDistance_5("Uniform", GRADIENTS_5D_U);
+            printMinDistance_5("Current", GRADIENTS_5D_CURRENT);
 
-            float[] chosen = GRADIENTS_5D_ACE;
-            System.out.println("private static final float[] GRADIENTS_5D = {");
-            for (int i = 0; i < chosen.length; i += 8) {
-                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
-                        chosen[i], chosen[i + 1], chosen[i + 2], chosen[i + 3], chosen[i + 4]);
-            }
-            System.out.println("};\n");
+//            float[] chosen = GRADIENTS_5D_ACE;
+//            System.out.println("private static final float[] GRADIENTS_5D = {");
+//            for (int i = 0; i < chosen.length; i += 8) {
+//                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f, 0.0f,\n",
+//                        chosen[i], chosen[i + 1], chosen[i + 2], chosen[i + 3], chosen[i + 4]);
+//            }
+//            System.out.println("};\n");
 
 //        System.out.println("private static final float[] GRADIENTS_5D = {");
 //        for (int i = 0; i < GRADIENTS_5D_ACE_D.length; i += 8) {
@@ -3629,17 +3634,64 @@ public static final float[] GRADIENTS_5D = {
 
             System.out.println("6D STUFF");
 
-            shuffleBlocks(random, GRADIENTS_6D, 8);
-            chosen = GRADIENTS_6D;
-            System.out.println("public static final float[] GRADIENTS_6D = {");
-            for (int i = 0; i < chosen.length; i += 8) {
-                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
-                        chosen[i], chosen[i + 1], chosen[i + 2], chosen[i + 3], chosen[i + 4], chosen[i + 5]);
+
+            for (int i = 1; i <= STANDARD_COUNT; i++) {
+                float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
+                float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
+                float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
+                float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
+                float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(2, i));
+                float v = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(13, i));
+
+                final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v);
+                int index = i - 1 << 3;
+                GRADIENTS_6D_HALTON[index + 0] = x * mag;
+                GRADIENTS_6D_HALTON[index + 1] = y * mag;
+                GRADIENTS_6D_HALTON[index + 2] = z * mag;
+                GRADIENTS_6D_HALTON[index + 3] = w * mag;
+                GRADIENTS_6D_HALTON[index + 4] = u * mag;
+                GRADIENTS_6D_HALTON[index + 5] = v * mag;
             }
-            System.out.println("};");
+
+            {
+                long xl = GOLDEN_LONGS[6][0] - 0x4000000000000000L;
+                long yl = GOLDEN_LONGS[6][1] - 0x4000000000000000L;
+                long zl = GOLDEN_LONGS[6][2] - 0x4000000000000000L;
+                long wl = GOLDEN_LONGS[6][3] - 0x4000000000000000L;
+                long ul = GOLDEN_LONGS[6][4] - 0x4000000000000000L;
+                long vl = GOLDEN_LONGS[6][5] - 0x4000000000000000L;
+                for (int i = 1; i <= STANDARD_COUNT; i++) {
+                    float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[5][0]) >>> 11) * 0x1p-53);
+                    float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[5][1]) >>> 11) * 0x1p-53);
+                    float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[5][2]) >>> 11) * 0x1p-53);
+                    float w = (float) MathTools.probit(((wl += QuasiRandomTools.GOLDEN_LONGS[5][3]) >>> 11) * 0x1p-53);
+                    float u = (float) MathTools.probit(((ul += QuasiRandomTools.GOLDEN_LONGS[5][4]) >>> 11) * 0x1p-53);
+                    float v = (float) MathTools.probit(((vl += QuasiRandomTools.GOLDEN_LONGS[5][5]) >>> 11) * 0x1p-53);
+
+//            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
+                    final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v);
+                    int index = i - 1 << 3;
+                    GRADIENTS_6D_R6[index + 0] = x * mag;
+                    GRADIENTS_6D_R6[index + 1] = y * mag;
+                    GRADIENTS_6D_R6[index + 2] = z * mag;
+                    GRADIENTS_6D_R6[index + 3] = w * mag;
+                    GRADIENTS_6D_R6[index + 4] = u * mag;
+                    GRADIENTS_6D_R6[index + 5] = v * mag;
+                }
+            }
+            shuffleBlocks(random, GRADIENTS_6D, 8);
+//            chosen = GRADIENTS_6D;
+//            System.out.println("public static final float[] GRADIENTS_6D = {");
+//            for (int i = 0; i < chosen.length; i += 8) {
+//                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f, 0.0f,\n",
+//                        chosen[i], chosen[i + 1], chosen[i + 2], chosen[i + 3], chosen[i + 4], chosen[i + 5]);
+//            }
+//            System.out.println("};");
 
             printMinDistance_6("Noise", GradientVectors.GRADIENTS_6D);
             printMinDistance_6("Ace", GRADIENTS_6D);
+            printMinDistance_6("R6", GRADIENTS_6D_R6);
+            printMinDistance_6("Halton", GRADIENTS_6D_HALTON);
         }
 
         if(false) {
