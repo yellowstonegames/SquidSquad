@@ -8,7 +8,7 @@ dependencies {
     api project(':squidcore')
 
 	api("com.github.tommyettinger:tantrum-digital:0.4.8.1")
-	api("com.github.tommyettinger:tantrum-jdkgdxds:1.5.3.1")
+	api("com.github.tommyettinger:tantrum-jdkgdxds:1.6.0.0")
 
     testImplementation "org.slf4j:slf4j-nop:$slf4jVersion"
     testImplementation "junit:junit:$junitVersion"

@@ -1112,15 +1112,15 @@ public static final float[] GRADIENTS_6D = {
         renderer.begin(camera.combined, GL20.GL_POINTS);
         int zone = 0, xZone = 0, yZone = 0;
         float theta = (System.nanoTime() & 0xFFFFFF000000L) * INVERSE_SPEED * 8.0f,
-                c = TrigTools.sinSmootherTurns(theta) * 36,
-                s = TrigTools.cosSmootherTurns(theta) * 36;
+                c = TrigTools.sinSmootherTurns(theta) * 60,
+                s = TrigTools.cosSmootherTurns(theta) * 60;
         ALL:
         for (int x = 0; x < 5; x++) {
             for (int y = x + 1; y < 5; y++) {
                 for (int z = y + 1; z < 5; z++) {
                     for (int i = 0; i < 256; i++) {
                         renderer.color(black);
-                        renderer.vertex(GRADIENTS_5D_CURRENT[i << 3 | x] * c + GRADIENTS_5D_CURRENT[i << 2 | z] * s + 40 + xZone * 80, GRADIENTS_5D_CURRENT[i << 2 | y] * 36 + 40 + yZone * 80, 0f);
+                        renderer.vertex(GRADIENTS_5D_CURRENT[i << 3 | x] * c + GRADIENTS_5D_CURRENT[i << 3 | z] * s + 62 + xZone * 124, GRADIENTS_5D_CURRENT[i << 3 | y] * 60 + 62 + yZone * 124, 0f);
                     }
                     if(++zone > 36) break ALL;
                     xZone = zone % 6;
