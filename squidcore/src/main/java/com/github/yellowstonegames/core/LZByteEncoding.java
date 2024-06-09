@@ -29,6 +29,11 @@ import java.util.HashSet;
  * compatible with GWT, unlike many forms of compression, but where {@link LZSEncoding} can use a special alternate
  * version on GWT that is faster, this cannot. It makes up for it by producing less garbage on all platforms and
  * compressing with very little waste in terms of storage.
+ * <br>
+ * This is loosely based on LZ-String.
+ * The LZ-String algorithm was formulated by <a href="https://github.com/pieroxy/lz-string">pieroxy</a>.
+ * This was based on a port/optimization attempt on another port (to Java),
+ * <a href="https://github.com/rufushuang/lz-string4java">LZString4Java By Rufus Huang</a>.
  */
 public final class LZByteEncoding {
     private LZByteEncoding() {
@@ -60,9 +65,8 @@ public final class LZByteEncoding {
         int context_data_position = 0;
         int ii;
 
-        char[] uncompressed = uncompressedStr.toCharArray();
-        for (ii = 0; ii < uncompressed.length; ii++) {
-            context_c = String.valueOf(uncompressed[ii]);
+        for (ii = 0; ii < uncompressedStr.length(); ii++) {
+            context_c = String.valueOf(uncompressedStr.charAt(ii));
             if (!context_dictionary.containsKey(context_c)) {
                 context_dictionary.put(context_c, context_dictSize++);
                 context_dictionaryToCreate.add(context_c);

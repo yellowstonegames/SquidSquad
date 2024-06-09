@@ -40,6 +40,10 @@ import java.util.HashSet;
  * implementation on GWT for performance, and a main goal is to provide UTF-16 Strings that can be stored in a browser's
  * LocalStorage on GWT. This class is also sometimes used internally when a large compressed String in Java source code
  * makes more sense than an even larger resource file.
+ * <br>
+ * The LZ-String algorithm was formulated by <a href="https://github.com/pieroxy/lz-string">pieroxy</a>.
+ * This is a port/optimization attempt on another port (to Java),
+ * <a href="https://github.com/rufushuang/lz-string4java">LZString4Java By Rufus Huang</a>.
  */
 public final class LZSEncoding {
 
