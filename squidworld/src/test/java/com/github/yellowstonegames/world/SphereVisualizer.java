@@ -517,13 +517,13 @@ public class SphereVisualizer extends ApplicationAdapter {
                 }else if(keycode == Input.Keys.G){
                     // show Gradient Vectors
                     System.out.println("\n4D:\n");
-                    shuffleBlocks(new AceRandom(12345), GRADIENTS_4D_CURRENT, 4);
+//                    shuffleBlocks(new AceRandom(12345), GRADIENTS_4D_CURRENT, 4);
                     printGradients4D(GRADIENTS_4D_CURRENT);
                     System.out.println("\n5D:\n");
-                    shuffleBlocks(new AceRandom(12345), GRADIENTS_5D_CURRENT, 8);
+//                    shuffleBlocks(new AceRandom(12345), GRADIENTS_5D_CURRENT, 8);
                     printGradients5D(GRADIENTS_5D_CURRENT);
                     System.out.println("\n6D:\n");
-                    shuffleBlocks(new AceRandom(12345), GRADIENTS_6D_CURRENT, 8);
+//                    shuffleBlocks(new AceRandom(12345), GRADIENTS_6D_CURRENT, 8);
                     printGradients6D(GRADIENTS_6D_CURRENT);
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
@@ -2377,6 +2377,7 @@ public static final float[] GRADIENTS_6D = {
     private final float[] GRADIENTS_4D_R4 = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_HALTON = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_SHUFFLE = new float[STANDARD_COUNT<<2];
+    private final float[] GRADIENTS_4D_U = new float[STANDARD_COUNT<<2];
     private final float[] SHUFFLES = new float[STANDARD_COUNT << 2];
     private final float[] GRADIENTS_4D_CURRENT = new float[STANDARD_COUNT << 2];
     {
@@ -2699,7 +2700,8 @@ public static final float[] GRADIENTS_6D = {
 //            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6_D, rot, gradients6D, ++i << 3);
             for (int r = 0; r < 6; r++) {
                 gradients6D[i << 3 | r] = -gradients6D[i - 1 << 3 | r];
-            }        }
+            }
+        }
     }
 
     private static void roll6D(long seed, final float[] gradients6D) {
@@ -2709,7 +2711,8 @@ public static final float[] GRADIENTS_6D = {
 //            RotationTools.rotate(SphereVisualizer.POLE_REVERSE_6, rot, gradients6D, ++i << 3);
             for (int r = 0; r < 6; r++) {
                 gradients6D[i << 3 | r] = -gradients6D[i - 1 << 3 | r];
-            }        }
+            }
+        }
     }
 
     private void roll6D(final RotationTools.Rotator rotator, final float[] gradients6D) {
@@ -2998,21 +3001,21 @@ public static final float[] GRADIENTS_6D = {
             marsagliaRandom4D(new AceRandom(1234567890L), GRADIENTS_4D_ACE);
             shuffleLanes(new AceRandom(1234567890L));
             marsagliaDetermined4D(GRADIENTS_4D_SHUFFLE);
+            uniformND(4, GRADIENTS_4D_U, 4);
 
-//            System.out.println(Base.joinReadable(", ", GRADIENTS_4D_HALTON));
-            float[] chosen = GRADIENTS_4D_R4;
-            float[] haltonSum = new float[4];
-            System.out.println("new float[] {");
-            for (int i = 0; i <= chosen.length - 4;) {
-                for (int j = 0; j < 4; j++, i++) {
-                    System.out.printf("%+14.12ff, ", chosen[i]);
-                    haltonSum[j] += chosen[i];
-                }
-                System.out.println();
-            }
-            System.out.println("};\n");
-
-            System.out.printf("Sums: x=%14.12ff, y=%14.12ff, z=%14.12ff, w=%14.12ff\n", haltonSum[0], haltonSum[1], haltonSum[2], haltonSum[3]);
+//            float[] chosen = GRADIENTS_4D_R4;
+//            float[] haltonSum = new float[4];
+//            System.out.println("new float[] {");
+//            for (int i = 0; i <= chosen.length - 4;) {
+//                for (int j = 0; j < 4; j++, i++) {
+//                    System.out.printf("%+14.12ff, ", chosen[i]);
+//                    haltonSum[j] += chosen[i];
+//                }
+//                System.out.println();
+//            }
+//            System.out.println("};\n");
+//
+//            System.out.printf("Sums: x=%14.12ff, y=%14.12ff, z=%14.12ff, w=%14.12ff\n", haltonSum[0], haltonSum[1], haltonSum[2], haltonSum[3]);
 
             printMinDistance_4("Noise", GRADIENTS_4D);
             printMinDistance_4("Fib", GRADIENTS_4D_FIB);
@@ -3021,6 +3024,8 @@ public static final float[] GRADIENTS_6D = {
             printMinDistance_4("Halton", GRADIENTS_4D_HALTON);
             printMinDistance_4("Ace", GRADIENTS_4D_ACE);
             printMinDistance_4("Shuffle", GRADIENTS_4D_SHUFFLE);
+            printMinDistance_4("Uniform", GRADIENTS_4D_U);
+            printMinDistance_4("Current", GRADIENTS_4D_CURRENT);
 
 //            System.out.println();
 //            System.out.println("public static final float[] GRADIENTS_4D_FIB = {");
@@ -3618,28 +3623,19 @@ public static final float[] GRADIENTS_5D = {
 //            for (int i = 0, p = 0; i < 256; i++, p += 8) {
 //                RotationTools.rotate(GRADIENTS_5D_TEMP, p, 5, rot5, GRADIENTS_5D_U, p);
 //            }
-            shuffleBlocks(random, GRADIENTS_5D_U, 8);
+//            shuffleBlocks(random, GRADIENTS_5D_U, 8);
 //            Arrays.fill(GRADIENTS_5D_TEMP, 0f);
 
-            random.setSeed(123456789L);
-            RotationTools.Rotator rotator5 = new RotationTools.Rotator(5, random);
-            for (int i = 0, p = 0; i < 256; i++, p += 8) {
-                rotator5.rotate(GRADIENTS_5D_R5, p, GRADIENTS_5D_TEMP, p);
-            }
-            shuffleBlocks(random, GRADIENTS_5D_TEMP, 8);
+//            random.setSeed(123456789L);
+//            RotationTools.Rotator rotator5 = new RotationTools.Rotator(5, random);
+//            for (int i = 0, p = 0; i < 256; i++, p += 8) {
+//                rotator5.rotate(GRADIENTS_5D_R5, p, GRADIENTS_5D_TEMP, p);
+//            }
+//            shuffleBlocks(random, GRADIENTS_5D_TEMP, 8);
 
-            System.arraycopy(GRADIENTS_5D_TEMP, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
-            Arrays.fill(GRADIENTS_5D_TEMP, 0f);
-
-            random.setSeed(123456789L);
-            uniformND(6, GRADIENTS_6D_U, 8);
-            float[] rot6 = RotationTools.randomRotation6D(123456789L);
-
-            for (int i = 0, p = 0; i < 256; i++, p += 8) {
-                RotationTools.rotate(GRADIENTS_6D_TEMP, p, 6, rot6, GRADIENTS_6D_U, p);
-            }
-            Arrays.fill(GRADIENTS_6D_TEMP, 0f);
-            shuffleBlocks(random, GRADIENTS_6D_U, 8);
+//            System.arraycopy(GRADIENTS_5D_TEMP, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
+            System.arraycopy(GRADIENTS_5D_U, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
+//            Arrays.fill(GRADIENTS_5D_TEMP, 0f);
 
             random = new AceRandom(0xEE36A34B8BEC3EFEL);
             roll5D(random, GRADIENTS_5D_ACE);
@@ -3734,18 +3730,23 @@ public static final float[] GRADIENTS_5D = {
                     GRADIENTS_6D_R6[index + 5] = v * -mag;
                 }
             }
+            uniformND(6, GRADIENTS_6D_U, 8);
 
             random.setSeed(123456789L);
-            RotationTools.Rotator rotator6 = new RotationTools.Rotator(6, random);
-            for (int i = 0, p = 0; i < 256; i++, p += 8) {
-                rotator6.rotate(GRADIENTS_6D, p, GRADIENTS_6D_TEMP, p);
-            }
-            shuffleBlocks(random, GRADIENTS_6D_TEMP, 8);
+//            RotationTools.Rotator rotator6 = new RotationTools.Rotator(6, random);
+//            for (int i = 0, p = 0; i < 256; i++, p += 8) {
+//                rotator6.rotate(GRADIENTS_6D, p, GRADIENTS_6D_TEMP, p);
+//            }
+//            shuffleBlocks(random, GRADIENTS_6D_TEMP, 8);
 
-            System.arraycopy(GRADIENTS_6D_R6, 0, GRADIENTS_6D_CURRENT, 0, GRADIENTS_6D_CURRENT.length);
-            Arrays.fill(GRADIENTS_6D_TEMP, 0f);
+//            System.arraycopy(GRADIENTS_6D_R6, 0, GRADIENTS_6D_CURRENT, 0, GRADIENTS_6D_CURRENT.length);
+            System.arraycopy(GRADIENTS_6D_U, 0, GRADIENTS_6D_CURRENT, 0, GRADIENTS_6D_CURRENT.length);
+//            Arrays.fill(GRADIENTS_6D_TEMP, 0f);
 
+            random.setSeed(123456789L);
             shuffleBlocks(random, GRADIENTS_6D, 8);
+
+
 //            chosen = GRADIENTS_6D;
 //            System.out.println("public static final float[] GRADIENTS_6D = {");
 //            for (int i = 0; i < chosen.length; i += 8) {
@@ -3758,6 +3759,7 @@ public static final float[] GRADIENTS_5D = {
             printMinDistance_6("Ace", GRADIENTS_6D);
             printMinDistance_6("R6", GRADIENTS_6D_R6);
             printMinDistance_6("Halton", GRADIENTS_6D_HALTON);
+            printMinDistance_6("Uniform", GRADIENTS_6D_U);
             printMinDistance_6("Current", GRADIENTS_6D_CURRENT);
 
 /*
