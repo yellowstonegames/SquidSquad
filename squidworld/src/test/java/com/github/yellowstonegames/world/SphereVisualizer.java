@@ -266,11 +266,13 @@ public class SphereVisualizer extends ApplicationAdapter {
                     mode = (mode + 1) % modes;
                     if(!UIUtils.ctrl())
                         System.out.println("Changed to mode " + mode);
+                    optimizeStrength = 1f;
                     return true;
                 } else if (keycode == Input.Keys.MINUS || keycode == Input.Keys.BACKSPACE) {
                     mode = (mode + modes - 1) % modes;
                     if(!UIUtils.ctrl())
                         System.out.println("Changed to mode " + mode);
+                    optimizeStrength = 1f;
                     return true;
                 } else if (keycode == Input.Keys.P || keycode == Input.Keys.S) {
                     showStats();
@@ -525,6 +527,15 @@ public class SphereVisualizer extends ApplicationAdapter {
                     System.out.println("\n6D:\n");
 //                    shuffleBlocks(new AceRandom(12345), GRADIENTS_6D_CURRENT, 8);
                     printGradients6D(GRADIENTS_6D_CURRENT);
+
+                    printMinDistance_4("4D Current", GRADIENTS_4D_CURRENT);
+                    printMinDistance_5("5D Current", GRADIENTS_5D_CURRENT);
+                    printMinDistance_6("6D Current", GRADIENTS_6D_CURRENT);
+                    // with uniform and improved as far as it will go:
+                    //4D Current:  Min distance 0.36915633
+                    //5D Current:  Min distance 0.18730793
+                    //6D Current:  Min distance 0.40832414
+
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
 
@@ -2768,9 +2779,10 @@ public static final float[] GRADIENTS_6D = {
      * <a href="https://stackoverflow.com/a/59279721">Ported from this StackOverflow answer by user Erik</a>.
      */
     private void uniformND(int d, float[] data, int block) {
-        int n = data.length / block;
+        int block2 = block + block;
+        int n = data.length / block2;
 
-        for (int i = 0, b = 0; i < n; i++, b += block) {
+        for (int i = 0, b = 0; i < n; i++, b += block2) {
             Arrays.fill(data, b + 2, b + d, 1f);
             float t = i / (float)n;
             data[b] = sinSmootherTurns(t);
@@ -2781,13 +2793,18 @@ public static final float[] GRADIENTS_6D = {
 //            long offset = QuasiRandomTools.goldenLong[d-2][gold];
             float offset = (float)Math.sqrt(PRIMES[gold]);
             float mult = MathTools.gamma(dim * 0.5f + 0.5f) / MathTools.gamma(dim * 0.5f) / (float) Math.sqrt(Math.PI);
-            for (int i = 0, b = 0; i < n; i++, b += block) {
+            for (int i = 0, b = 0; i < n; i++, b += block2) {
                 int finalDim = dim;
                 float big = i * offset;
                 float degree = inverse_increasing((y -> mult * int_sin_m(y, finalDim - 1)), big - (long)big, 0, PI);
                 for (int j = 0; j < dim; j++)
                     data[b+j] *= sinSmoother(degree);
                 data[b+dim] *= cosSmoother(degree);
+            }
+        }
+        for (int b = block; b < data.length; b += block2) {
+            for (int dim = 0; dim < d; dim++) {
+                data[b+dim] = -data[b+dim-block];
             }
         }
     }
@@ -2944,20 +2961,21 @@ public static final float[] GRADIENTS_6D = {
                                  final int dim, final int blockSize) {
         float oldMinDist = evaluateMinDistance2(source, dim, blockSize);
         Arrays.fill(temp, 0f);
-        final int length = source.length;
-        for (int a = 0; a < length; a += blockSize) {
+        final int length = source.length, block2 = blockSize << 1;
+        for (int a = 0; a < length; a += block2) {
             System.arraycopy(source, a, temp, a, dim);
             for (int b = 0; b < length; b += blockSize) {
-                if (a == b) continue;
+                if ((a|1) == (b|1)) continue;
                 float mag = 0f, diff;
                 for (int c = 0; c < dim; c++) {
                     diff = source[a + c] - source[b + c];
                     mag += diff * diff;
                 }
-                mag = strength * RoughMath.expRough(-mag);
+                mag = strength / (1f + mag);
+//                mag = strength * RoughMath.expRough(-mag);
                 for (int c = 0; c < dim; c++) {
                     diff = source[a + c] - source[b + c];
-                    temp[a + c] += diff * mag;
+                    temp[a + c + blockSize] = -(temp[a + c] += diff * mag);
                 }
             }
         }
