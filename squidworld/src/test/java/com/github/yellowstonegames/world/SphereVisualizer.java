@@ -519,22 +519,34 @@ public class SphereVisualizer extends ApplicationAdapter {
                 }else if(keycode == Input.Keys.G){
                     // show Gradient Vectors
                     System.out.println("\n4D:\n");
-//                    shuffleBlocks(new AceRandom(12345), GRADIENTS_4D_CURRENT, 4);
+                    shuffleBlocks(new AceRandom(12345), GRADIENTS_4D_CURRENT, 4);
                     printGradients4D(GRADIENTS_4D_CURRENT);
                     System.out.println("\n5D:\n");
-//                    shuffleBlocks(new AceRandom(12345), GRADIENTS_5D_CURRENT, 8);
+                    shuffleBlocks(new AceRandom(12345), GRADIENTS_5D_CURRENT, 8);
                     printGradients5D(GRADIENTS_5D_CURRENT);
                     System.out.println("\n6D:\n");
-//                    shuffleBlocks(new AceRandom(12345), GRADIENTS_6D_CURRENT, 8);
+                    shuffleBlocks(new AceRandom(12345), GRADIENTS_6D_CURRENT, 8);
                     printGradients6D(GRADIENTS_6D_CURRENT);
 
                     printMinDistance_4("4D Current", GRADIENTS_4D_CURRENT);
                     printMinDistance_5("5D Current", GRADIENTS_5D_CURRENT);
                     printMinDistance_6("6D Current", GRADIENTS_6D_CURRENT);
-                    // with uniform and improved as far as it will go:
+                    // with super-Fibonacci and improved as far as it will go:
                     //4D Current:  Min distance 0.36915633
+                    // with uniform and improved as far as it will go:
+                    //4D Current:  Min distance 0.09049740
                     //5D Current:  Min distance 0.18730793
                     //6D Current:  Min distance 0.40832414
+
+                    // with RN and improved:
+                    //4D Current:  Min distance 0.12784693
+                    //5D Current:  Min distance 0.23002422
+                    //6D Current:  Min distance 0.56106692
+
+                    // with Halton and improved:
+                    //4D Current:  Min distance 0.09672153
+                    //5D Current:  Min distance 0.49289046
+                    //6D Current:  Min distance 0.63216372
 
                 } else if (keycode == Input.Keys.Q || keycode == Input.Keys.ESCAPE)
                     Gdx.app.exit();
@@ -3020,6 +3032,8 @@ public static final float[] GRADIENTS_6D = {
             shuffleLanes(new AceRandom(1234567890L));
             marsagliaDetermined4D(GRADIENTS_4D_SHUFFLE);
             uniformND(4, GRADIENTS_4D_U, 4);
+            System.arraycopy(GRADIENTS_4D_HALTON, 0, GRADIENTS_4D_CURRENT, 0, GRADIENTS_4D_CURRENT.length);
+//            System.arraycopy(GRADIENTS_4D_R4, 0, GRADIENTS_4D_CURRENT, 0, GRADIENTS_4D_CURRENT.length);
 
 //            float[] chosen = GRADIENTS_4D_R4;
 //            float[] haltonSum = new float[4];
@@ -3651,8 +3665,9 @@ public static final float[] GRADIENTS_5D = {
 //            }
 //            shuffleBlocks(random, GRADIENTS_5D_TEMP, 8);
 
-//            System.arraycopy(GRADIENTS_5D_TEMP, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
-            System.arraycopy(GRADIENTS_5D_U, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
+            System.arraycopy(GRADIENTS_5D_HALTON, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
+//            System.arraycopy(GRADIENTS_5D_R5, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
+//            System.arraycopy(GRADIENTS_5D_U, 0, GRADIENTS_5D_CURRENT, 0, GRADIENTS_5D_CURRENT.length);
 //            Arrays.fill(GRADIENTS_5D_TEMP, 0f);
 
             random = new AceRandom(0xEE36A34B8BEC3EFEL);
@@ -3757,8 +3772,9 @@ public static final float[] GRADIENTS_5D = {
 //            }
 //            shuffleBlocks(random, GRADIENTS_6D_TEMP, 8);
 
+            System.arraycopy(GRADIENTS_6D_HALTON, 0, GRADIENTS_6D_CURRENT, 0, GRADIENTS_6D_CURRENT.length);
 //            System.arraycopy(GRADIENTS_6D_R6, 0, GRADIENTS_6D_CURRENT, 0, GRADIENTS_6D_CURRENT.length);
-            System.arraycopy(GRADIENTS_6D_U, 0, GRADIENTS_6D_CURRENT, 0, GRADIENTS_6D_CURRENT.length);
+//            System.arraycopy(GRADIENTS_6D_U, 0, GRADIENTS_6D_CURRENT, 0, GRADIENTS_6D_CURRENT.length);
 //            Arrays.fill(GRADIENTS_6D_TEMP, 0f);
 
             random.setSeed(123456789L);
