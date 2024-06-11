@@ -30,7 +30,6 @@ import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
-import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.Noise;
@@ -105,8 +104,8 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.WREN);
-        writer.setDitherStrength(1f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
+        writer.setDitherStrength(1.5f);
 //        writer.fastAnalysis = true;
         writer.setFlipY(false);
         apng = new AnimatedPNG();
@@ -299,7 +298,6 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
             }
             Array<Pixmap> pms = new Array<>(pm);
-            writer.setDitherStrength(0.75f);
             writer.palette = new QualityPalette(pms);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
             apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
