@@ -26,10 +26,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.tommyettinger.anim8.AnimatedGif;
-import com.github.tommyettinger.anim8.AnimatedPNG;
-import com.github.tommyettinger.anim8.Dithered;
-import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
@@ -138,9 +135,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-//        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUE_NOISE);
-        writer.setDitherStrength(0.25f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
+        writer.setDitherStrength(1.5f);
+        writer.palette = new QualityPalette();
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
@@ -309,7 +306,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette = new PaletteReducer(pms);
+        writer.palette.analyze(pms);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 30);
         apng.write(Gdx.files.local(path + name + ".png"), pms, 30);
         temp.dispose();

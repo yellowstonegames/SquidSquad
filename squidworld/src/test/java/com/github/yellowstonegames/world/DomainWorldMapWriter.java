@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.anim8.QualityPalette;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
@@ -99,10 +100,10 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.palette = new PaletteReducer();
+        writer.palette = new QualityPalette();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.ROBERTS);
-        writer.setDitherStrength(0.5f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
+        writer.setDitherStrength(1.5f);
 //        writer.fastAnalysis = true;
         writer.setFlipY(false);
 //        apng = new AnimatedPNG();
@@ -348,7 +349,6 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
             }
             Array<Pixmap> pms = new Array<>(pm);
-            writer.setDitherStrength(0.35f);
             writer.palette.analyze(pms);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
 //            apng.write(Gdx.files.local(path + name + ".png"), pms, 16);

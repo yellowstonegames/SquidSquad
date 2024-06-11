@@ -66,13 +66,13 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     // World #1, GrayLarch, completed in           111201 ms
 
 
-    private static final int width = 256, height = 256;
-//    private static final int width = 300, height = 300;
+//    private static final int width = 256, height = 256;
+    private static final int width = 300, height = 300;
 
 //    private static final int FRAMES = 100;
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
-    private static final float SPEED = 0.35f;
+    private static final float SPEED = 0.25f;
     private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
@@ -242,6 +242,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         writer = new AnimatedGif();
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
         writer.setDitherStrength(1.5f);
+        writer.palette = new QualityPalette();
         writer.setFlipY(false);
 //        apng = new AnimatedPNG();
 //        apng.setFlipY(false);
@@ -267,7 +268,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        INoise fn = new CyclicNoise(seed, 3, 2.3f);
 //        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.6f, NoiseWrapper.EXO, 2, false);
-        INoise fn = new FoamNoise(seed);
+        INoise fn = new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 1);
         iNoise = new Noise3DFrom5D(fn);
 
         path = "out/worldsAnimated/" + date + "/Flowing"+fn.getTag()+"/";
@@ -368,7 +369,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette = new QualityPalette(pms);
+        writer.palette.analyze(pms);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);

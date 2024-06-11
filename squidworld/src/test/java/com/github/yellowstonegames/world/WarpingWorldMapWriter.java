@@ -103,10 +103,9 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-//        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
         writer.setDitherStrength(1.5f);
-//        writer.fastAnalysis = true;
+        writer.palette = new QualityPalette();
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
@@ -298,7 +297,7 @@ public class WarpingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
             }
             Array<Pixmap> pms = new Array<>(pm);
-            writer.palette = new QualityPalette(pms);
+            writer.palette.analyze(pms);
             writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
             apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);

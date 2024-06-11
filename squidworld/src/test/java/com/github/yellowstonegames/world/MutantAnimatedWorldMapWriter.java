@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.anim8.QualityPalette;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
@@ -121,8 +122,9 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-//        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.NEUE);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
+        writer.setDitherStrength(1.5f);
+        writer.palette = new QualityPalette();
         writer.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
@@ -233,8 +235,7 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
             if(i % 36 == 35) System.out.print(((i + 1) * 10 / 36) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette = new PaletteReducer(pms);
-        writer.palette.setDitherStrength(1f);
+        writer.palette.analyze(pms);
         writer.write(Gdx.files.local(path + name + String.format("-%1.5f.gif", noise.getMutation()).replaceFirst("\\.", "_")), pms, 30);
 
         System.out.println();
