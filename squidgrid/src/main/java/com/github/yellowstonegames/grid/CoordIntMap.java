@@ -27,10 +27,10 @@ import java.util.Collection;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
  * should use a normal {@link ObjectIntMap} instead, since some optimizations here require Coord keys to be in the
- * pool. This does much better if all Coord keys use non-negative x and y values.
+ * pool.
  * <br>
  * You can create a CoordIntMap with {@link #fromArray2D(int[][], int, int)} if you have a 2D int array and
- * want to get the positions within some range.
+ * want to get the positions within some range of values.
  */
 public class CoordIntMap extends ObjectIntMap<Coord> {
     public CoordIntMap() {

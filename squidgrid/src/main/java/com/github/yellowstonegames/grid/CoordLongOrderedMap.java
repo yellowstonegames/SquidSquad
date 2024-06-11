@@ -27,10 +27,10 @@ import java.util.Collection;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
  * should use a normal {@link ObjectLongOrderedMap} instead, since some optimizations here require Coord keys to be in
- * the pool. This does much better if all Coord keys use non-negative x and y values.
+ * the pool.
  * <br>
  * You can create a CoordLongOrderedMap with {@link #fromArray2D(long[][], long, long)} if you have a 2D long array and
- * want to get the positions within some range.
+ * want to get the positions within some range of values.
  */
 public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
     public CoordLongOrderedMap() {

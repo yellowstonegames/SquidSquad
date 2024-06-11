@@ -28,7 +28,7 @@ import java.util.Map;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
  * should use a normal {@link ObjectObjectOrderedMap} instead, since some optimizations here require Coord keys to be in
- * the pool. This does much better if all Coord keys use non-negative x and y values.
+ * the pool.
  */
 public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
     public CoordObjectOrderedMap() {

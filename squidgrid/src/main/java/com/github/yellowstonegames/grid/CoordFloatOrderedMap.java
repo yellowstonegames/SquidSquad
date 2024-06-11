@@ -29,7 +29,7 @@ import java.util.Collection;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold keys placed into here, you
  * should use a normal {@link ObjectFloatOrderedMap} instead, since some optimizations here require Coord keys to be in
- * the pool. This does much better if all Coord keys use non-negative x and y values.
+ * the pool.
  * <br>
  * A potential use for this class is to sort Coord positions by float values, such as the {@code float[][]} maps
  * produced by {@link FOV}. Since those have a logical start point for iteration wherever a light source is, and a light

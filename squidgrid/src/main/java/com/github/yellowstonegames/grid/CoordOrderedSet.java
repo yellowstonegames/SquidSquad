@@ -26,7 +26,7 @@ import java.util.Collection;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold items placed into here, you
  * should use a normal {@link ObjectOrderedSet} instead, since some optimizations here require Coord items to be in the
- * pool. This does much better if all Coord items use non-negative x and y values.
+ * pool.
  */
 public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     public CoordOrderedSet() {

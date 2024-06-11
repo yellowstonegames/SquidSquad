@@ -21,7 +21,13 @@ import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
+ * A "one-stop shop" for handling field-of-view, line-of-sight, (colorful) light sources, and more.
  * Encapsulates currently-visible and previously-seen cell data, and allows updating and modifying light levels/colors.
+ * This controls a {@link LightingManager}, which manages {@link Radiance} light sources. This tracks which cells on a
+ * place-map grid have been seen before, which are currently visible, which just became visible and which just became
+ * hidden, among other things. This tracks a map as a {@code char[][]}, typically but not always using box-drawing
+ * characters, but these chars can merely be used as abbreviations for what graphic to display in a non-text-based game.
+ * This modifies the box-drawing characters it is given based on which walls are actually visible.
  * <br>
  * After creating a VisionFramework, You can call {@link #restart(char[][], CoordFloatOrderedMap, int)} when you have a
  * 2D char array to use as the map and one or more viewer positions. After that, add light sources to {@link #lighting}.
@@ -55,7 +61,9 @@ import com.github.yellowstonegames.core.annotations.Beta;
  *     <li>You can get the current colors every frame from {@link #backgroundColors}, which update() changes.</li>
  * </ol>
  * <br>
- * This class uses the RGBA color space throughout. Use {@link VisionFramework} if you prefer Oklab colors.
+ * This class uses the RGBA color space throughout. Use {@link VisionFramework} if you prefer Oklab colors. This extends
+ * VisionFramework, as {@link LightingManagerRgb} extends LightingManager, which allows the {@link #lighting} field to
+ * be a LightingManager that happens to always be a LightingManagerRgb in this class.
  */
 @Beta
 public class VisionFrameworkRgb extends VisionFramework {
