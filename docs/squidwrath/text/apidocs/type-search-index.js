@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.github.yellowstonegames.wrath.text","l":"LanguageSentenceFormSerializer"},{"p":"com.github.yellowstonegames.wrath.text","l":"LanguageSerializer"},{"p":"com.github.yellowstonegames.wrath.text","l":"TranslatorSerializer"}];updateSearchResults();

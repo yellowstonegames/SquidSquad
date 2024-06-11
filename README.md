@@ -159,10 +159,10 @@ changes to those files to keep things like scene2d.ui from libGDX.
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
-released version such as the current `4.0.0-beta1`, which can be obtained from the main source for dependencies on the
+released version such as the current `4.0.0-beta2`, which can be obtained from the main source for dependencies on the
 JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
 dependencies [can be seen for each version here](https://search.maven.org/search?q=g:com.squidpony), and look like
-`implementation 'com.squidpony:squidcore:4.0.0-beta1'`.
+`implementation 'com.squidpony:squidcore:4.0.0-beta2'`.
 
 As an alternative, [the JitPack page is here](https://jitpack.io/#yellowstonegames/squidsquad); go to the Commits tab, choose any commit
 except for `-SNAPSHOT`, click "Get It", and wait to see if it built successfully. Maybe get yourself some of your
@@ -186,7 +186,7 @@ they will probably all be in the dependencies, but this ensures all the versions
 projects are present.
 
 Liftoff fetches SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.0-beta1`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+such release is `4.0.0-beta2`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
 commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
 The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
 `com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are
