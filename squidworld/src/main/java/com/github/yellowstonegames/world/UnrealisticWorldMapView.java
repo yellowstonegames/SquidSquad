@@ -18,19 +18,19 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.world.BiomeMapper.BlendedBiomeMapper;
+import com.github.yellowstonegames.world.BiomeMapper.UnrealisticBiomeMapper;
 
 /**
  * Takes a {@link WorldMapGenerator}, such as a {@link LocalMap}, {@link RotatingGlobeMap}, or {@link StretchWorldMap},
  * and wraps it so that you can call {@link #generate()} on this to coordinate calls to
- * {@link WorldMapGenerator#generate()} and {@link BlendedBiomeMapper#makeBiomes(WorldMapGenerator)}.
+ * {@link WorldMapGenerator#generate()} and {@link UnrealisticBiomeMapper#makeBiomes(WorldMapGenerator)}.
  * For extra convenience, you can get a possible interpretation of how the generated world would look by calling
  * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors.
  */
-public class BlendedWorldMapView implements WorldMapView {
+public class UnrealisticWorldMapView implements WorldMapView {
     protected int width, height;
     protected WorldMapGenerator world;
-    protected BlendedBiomeMapper biomeMapper;
+    protected UnrealisticBiomeMapper biomeMapper;
 
     @Override
     public int getWidth() {
@@ -53,14 +53,14 @@ public class BlendedWorldMapView implements WorldMapView {
     }
 
     @Override
-    public BlendedBiomeMapper getBiomeMapper() {
+    public UnrealisticBiomeMapper getBiomeMapper() {
         return biomeMapper;
     }
 
     @Override
     public void setBiomeMapper(BiomeMapper biomeMapper) {
-        if(biomeMapper instanceof BlendedBiomeMapper)
-            this.biomeMapper = (BlendedBiomeMapper) biomeMapper;
+        if(biomeMapper instanceof UnrealisticBiomeMapper)
+            this.biomeMapper = (UnrealisticBiomeMapper) biomeMapper;
     }
 
     @Override
@@ -77,19 +77,19 @@ public class BlendedWorldMapView implements WorldMapView {
             height = world.height;
         }
     }
-    public BlendedWorldMapView(){
+    public UnrealisticWorldMapView(){
         this(123, 10, 10);
     }
-    public BlendedWorldMapView(WorldMapGenerator worldMapGenerator)
+    public UnrealisticWorldMapView(WorldMapGenerator worldMapGenerator)
     {
         world = worldMapGenerator == null ? new LocalMap() : worldMapGenerator;
         width = world.width;
         height = world.height;
-        this.biomeMapper = new BlendedBiomeMapper();
+        this.biomeMapper = new UnrealisticBiomeMapper();
         initialize();
     }
 
-    public BlendedWorldMapView(long seed, int width, int height)
+    public UnrealisticWorldMapView(long seed, int width, int height)
     {
         this(new LocalMap(seed, width, height));
     }

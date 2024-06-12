@@ -642,7 +642,7 @@ public interface BiomeMapper {
                 warmerValueUpper = 0.85f,  // 4
                 warmestValueUpper = 1.0f,  // 5
 
-        driestValueUpper  = 0.27f, // 0
+                driestValueUpper  = 0.27f, // 0
                 drierValueUpper   = 0.4f,  // 1
                 dryValueUpper     = 0.6f,  // 2
                 wetValueUpper     = 0.8f,  // 3
@@ -952,6 +952,340 @@ public interface BiomeMapper {
                         }
                         colorDataOklab[x][y] = DescriptiveColor.adjustLightness(c, 0.02f - moist * con);
                     }
+                    colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
+                }
+            }
+        }
+    }
+    @Beta
+    class UnrealisticBiomeMapper implements BiomeMapper
+    {
+        /**
+         * The heat codes for the analyzed map, from 0 to 5 inclusive, with 0 coldest and 5 hottest.
+         */
+        public int[][] heatCodeData,
+        /**
+         * The moisture codes for the analyzed map, from 0 to 5 inclusive, with 0 driest and 5 wettest.
+         */
+        moistureCodeData,
+        /**
+         * The biome codes for the analyzed map, using one int to store the dominant biome only.
+         */
+        biomeCodeData,
+        /**
+         * Packed Oklab colors as ints, one for each cell in the analyzed map, representing a smooth blend between the
+         * biomes closest to the given cell.
+         */
+        colorDataOklab,
+        /**
+         * Packed RGBA8888 colors as ints, one for each cell in the analyzed map, representing a smooth blend between
+         * the biomes closest to the given cell. This is typically generated from {@link #colorDataOklab}.
+         */
+        colorDataRgba;
+
+        /**
+         * The colors for each biome, with each as a packed oklab int.
+         * Always has 66 items, corresponding to the biomes in {@link Biome#TABLE} in order.
+         */
+        public final int[] colorTable = new int[66];
+
+        public float contrast = 1f;
+
+        public static final float
+                coldestValueUpper = 0.15f, // 0
+                colderValueUpper = 0.31f,  // 1
+                coldValueUpper = 0.5f,     // 2
+                warmValueUpper = 0.69f,    // 3
+                warmerValueUpper = 0.85f,  // 4
+                warmestValueUpper = 1.0f,  // 5
+
+                driestValueUpper  = 0.27f, // 0
+                drierValueUpper   = 0.4f,  // 1
+                dryValueUpper     = 0.6f,  // 2
+                wetValueUpper     = 0.8f,  // 3
+                wetterValueUpper  = 0.9f,  // 4
+                wettestValueUpper = 1.0f;  // 5
+
+        public static final float[] HEAT_UPPER = new float[]{
+                coldestValueUpper,
+                colderValueUpper,
+                coldValueUpper,
+                warmValueUpper,
+                warmerValueUpper,
+                warmestValueUpper,
+        };
+        public static final float[] MOISTURE_UPPER = new float[]{
+                driestValueUpper,
+                drierValueUpper,
+                dryValueUpper,
+                wetValueUpper,
+                wetterValueUpper,
+                wettestValueUpper,
+        };
+        public static final float[] HEAT_MID = new float[]{
+                (coldestValueUpper) * 0.5f,
+                (colderValueUpper + coldestValueUpper) * 0.5f,
+                (coldValueUpper + colderValueUpper) * 0.5f,
+                (warmValueUpper + coldValueUpper) * 0.5f,
+                (warmerValueUpper + warmValueUpper) * 0.5f,
+                (warmestValueUpper + warmerValueUpper) * 0.5f,
+        };
+
+        public static final float[] MOISTURE_MID = new float[]{
+                (driestValueUpper) * 0.5f,
+                (drierValueUpper + driestValueUpper) * 0.5f,
+                (dryValueUpper + drierValueUpper) * 0.5f,
+                (wetValueUpper + dryValueUpper) * 0.5f,
+                (wetterValueUpper + wetValueUpper) * 0.5f,
+                (wettestValueUpper + wetterValueUpper) * 0.5f,
+        };
+
+        @Override
+        public int[][] getHeatCodeData() {
+            return heatCodeData;
+        }
+
+        @Override
+        public int[][] getMoistureCodeData() {
+            return moistureCodeData;
+        }
+
+        @Override
+        public int[][] getBiomeCodeData() {
+            return biomeCodeData;
+        }
+
+        /**
+         * Simple constructor; pretty much does nothing. Make sure to call {@link #makeBiomes(WorldMapGenerator)} before
+         * using fields like {@link #biomeCodeData}.
+         */
+        public UnrealisticBiomeMapper()
+        {
+            heatCodeData = null;
+            moistureCodeData = null;
+            biomeCodeData = null;
+            colorDataOklab = null;
+            initialize();
+        }
+
+        public void setColorTable(int[] oklabColors) {
+            if(oklabColors == null || oklabColors.length < 66)
+                throw new IllegalArgumentException("The array of colors must be non-null and have length of at least 66.");
+            System.arraycopy(oklabColors, 0, colorTable, 0, 66);
+        }
+
+        public void initialize()
+        {
+            for (int m = 0; m < 10; m++) {
+                for (int h = 0; h < 6; h++) {
+                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.12f + 0.66f, 1f, 0.375f + m * 0.05f, 1f);
+                }
+            }
+            for (int i = 60; i < 66; i++) {
+                colorTable[i] = Biome.TABLE[i].colorOklab;
+            }
+        }
+
+        /**
+         * Initializes the color tables this uses for all biomes, but allows rotating all hues and adjusting
+         * brightness/saturation/contrast to produce maps of non-Earth-like planets.
+         * @param hue hue rotation; 0.0 and 1.0 are no rotation, and 0.5 is maximum rotation
+         * @param saturation added to the saturation of a biome color; usually close to 0.0, always between -1 and 1
+         * @param brightness added to the lightness of a biome color; often close to 0.0, always between -1 and 1
+         * @param contrast multiplied with the soft shading that applies to all land biomes
+         */
+        public void initialize(float hue, float saturation, float brightness, float contrast)
+        {
+            for (int m = 0; m < 10; m++) {
+                for (int h = 0; h < 6; h++) {
+                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.12f + 0.66f + hue, 1f + saturation, 0.375f + m * 0.05f + brightness, 1f);
+                }
+            }
+            for (int i = 60; i < 66; i++) {
+                colorTable[i] = Biome.TABLE[i].colorOklab;
+            }
+            this.contrast = contrast;
+        }
+
+        /**
+         * Uses the current colors in {@link #colorTable} to partly-randomize themselves, and also incorporates three
+         * random floats from the given {@code rng}.
+         * This should map similar colors in the input color table, like varieties of dark green forest, into similar output
+         * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white
+         * ice will still map to white, and different shades of ocean blue will become different shades of some color (which
+         * could still be some sort of blue). This can be a useful alternative to
+         * {@link #initialize(float, float, float, float)}, because that method hue-rotates all colors by the same amount,
+         * while this method adjusts each input hue differently and based on their original value. You may want to call
+         * {@link #initialize()} (either with no arguments or with four) before each call to this, because changes this
+         * makes to the color table would be read back the second time this is called without reinitialization.
+         * @param rng any non-null EnhancedRandom
+         */
+        public void alter(EnhancedRandom rng)
+        {
+            int b;
+            float h = rng.nextFloat(0.5f) + 1f, s = rng.nextFloat(0.5f) + 1f, l = rng.nextFloat(0.5f) + 1f;
+            for (int i = 0; i < 66; i++) {
+                b = colorTable[i];
+                if (i != 60) {
+                    float hue = hue(b), saturation = saturation(b), lightness = channelL(b);
+                    colorTable[i] = oklabByHSL(
+                            zigzag((hue * h + saturation + lightness) * 0.5f),
+                            saturation + zigzag(lightness * s) * 0.1f,
+                            lightness + zigzag(saturation * l) * 0.1f, 1f);
+                }
+            }
+        }
+
+        /**
+         * Initializes the colors to use in some combination for all biomes, without regard for what the biome really is.
+         * There should be at least one packed int Oklab color given in similarColors, but there can be many of them. This
+         * type of color can be any of the color constants from {@link DescriptiveColor}, may be produced by
+         * {@link DescriptiveColor#describeOklab(String)}, or might be made manually, in advanced cases, with
+         * {@link DescriptiveColor#limitToGamut(int, int, int)} and specifying the L, A, and B channels.
+         * @param similarColors an array or vararg of packed int Oklab colors with at least one element
+         */
+        public void match(long seed, int... similarColors)
+        {
+            for (int i = 0; i < 66; i++) {
+                colorTable[i] = (similarColors[(Hasher.hash(seed, Biome.TABLE[i].name) >>> 1) % similarColors.length]);
+            }
+        }
+
+        /**
+         * Gets the biome code for the dominant biome at a given x,y position.
+         * @param x the x-coordinate on the map
+         * @param y the y-coordinate on the map
+         * @return the biome code for the dominant biome part at the given location
+         */
+        @Override
+        public int getBiomeCode(int x, int y) {
+            return biomeCodeData[x][y];
+        }
+
+        @Override
+        public int getHeatCode(int x, int y) {
+            return heatCodeData[x][y];
+        }
+
+        @Override
+        public int getMoistureCode(int x, int y) {
+            return moistureCodeData[x][y];
+        }
+
+        /**
+         * Gets a String array where biome codes can be used as indices to look up a name for the biome they refer to.
+         * This table uses 6 levels of heat and 6 levels of moisture, and tracks rivers, coastlines, lakes, and oceans
+         * as potentially different types of terrain. Biome codes can be obtained with {@link #getBiomeCode(int, int)}.
+         * This method returns a direct reference to {@link Biome#TABLE}, so modifying the returned array is discouraged
+         * (you should implement {@link BiomeMapper} using this class as a basis if you want to change its size).
+         * <br>
+         * Like with {@link SimpleBiomeMapper}, you can use a biome code directly from biomeCodeData as an index
+         * into this.
+         * @return a direct reference to {@link Biome#TABLE}, a Biome array with 66 items
+         */
+        @Override
+        public Biome[] getBiomeTable() {
+            return Biome.TABLE;
+        }
+
+        /**
+         * Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
+         * assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
+         * taken from {@link #biomeCodeData} and (packed Oklab int) colors from {@link #colorDataOklab}.
+         * @param world a WorldMapGenerator that should have generated at least one map; it may be at any zoom
+         */
+        @Override
+        public void makeBiomes(WorldMapGenerator world) {
+            if(world == null || world.width <= 0 || world.height <= 0)
+                return;
+            if(heatCodeData == null || (heatCodeData.length != world.width || heatCodeData[0].length != world.height))
+                heatCodeData = new int[world.width][world.height];
+            if(moistureCodeData == null || (moistureCodeData.length != world.width || moistureCodeData[0].length != world.height))
+                moistureCodeData = new int[world.width][world.height];
+            if(biomeCodeData == null || (biomeCodeData.length != world.width || biomeCodeData[0].length != world.height))
+                biomeCodeData = new int[world.width][world.height];
+            if(colorDataOklab == null || (colorDataOklab.length != world.width || colorDataOklab[0].length != world.height))
+                colorDataOklab = new int[world.width][world.height];
+            if(colorDataRgba == null || (colorDataRgba.length != world.width || colorDataRgba[0].length != world.height))
+                colorDataRgba = new int[world.width][world.height];
+            final int[][] heightCodeData = world.heightCodeData;
+            final float[][] heatData = world.heatData, moistureData = world.moistureData;
+            final float i_hot = 1f / world.maxHeat;
+            final float con = 0.2f * contrast;
+            int hc = 5, mc = 5, heightCode;
+            for (int x = 0; x < world.width; x++) {
+                for (int y = 0; y < world.height; y++) {
+
+                    heightCode = heightCodeData[x][y];
+                    if (heightCode == 1000) {
+                        biomeCodeData[x][y] = 60;
+                        colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y] = colorTable[60]);
+                        continue;
+                    }
+                    float hot, moist;
+                    float hotMix = 0.5f, moistMix = 0.5f;
+                    int wetLow = 0, wetHigh = 5, hotLow = 0, hotHigh = 5;
+                    hot = heatData[x][y] * i_hot;
+                    moist = moistureData[x][y];
+                    for (int i = 0; i < 6; i++) {
+                        if (moist <= MOISTURE_UPPER[i]) {
+                            mc = i;
+                            if (moist <= MOISTURE_MID[0]) {
+                                moistMix = 1f;
+                                wetLow = wetHigh = 0;
+                            } else if (moist > MOISTURE_MID[5]) {
+                                moistMix = 0f;
+                                wetLow = wetHigh = 5;
+                            } else if (moist <= MOISTURE_MID[i]) {
+                                moistMix = MathTools.norm(MOISTURE_MID[i - 1], MOISTURE_MID[i], moist);
+                                wetLow = i - 1;
+                                wetHigh = i;
+                            } else {
+                                moistMix = MathTools.norm(MOISTURE_MID[i], MOISTURE_MID[i + 1], moist);
+                                wetLow = i;
+                                wetHigh = i + 1;
+                            }
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < 6; i++) {
+                        if (hot <= HEAT_UPPER[i]) {
+                            hc = i;
+                            if (hot <= HEAT_MID[0]) {
+                                hotMix = 1f;
+                                hotLow = hotHigh = 0;
+                            } else if (hot > HEAT_MID[5]) {
+                                hotMix = 0f;
+                                hotLow = hotHigh = 5;
+                            } else if (hot <= HEAT_MID[i]) {
+                                hotMix = MathTools.norm(HEAT_MID[i - 1], HEAT_MID[i], hot);
+                                hotLow = i - 1;
+                                hotHigh = i;
+                            } else {
+                                hotMix = MathTools.norm(HEAT_MID[i], HEAT_MID[i + 1], hot);
+                                hotLow = i;
+                                hotHigh = i + 1;
+                            }
+                            break;
+                        }
+                    }
+
+                    heatCodeData[x][y] = hc;
+                    moistureCodeData[x][y] = mc;
+                    // 54 == 9 * 6, 9 is used for Ocean groups
+                    biomeCodeData[x][y] = hc + mc * 6;
+                    moistMix = Interpolations.smoother.apply(moistMix);
+                    hotMix = Interpolations.smoother.apply(hotMix);
+                    int c = lerpColors(
+                            lerpColors(
+                                    colorTable[hotLow + wetLow * 6],
+                                    colorTable[hotLow + wetHigh * 6], moistMix),
+                            lerpColors(
+                                    colorTable[hotHigh + wetLow * 6],
+                                    colorTable[hotHigh + wetHigh * 6], moistMix),
+                            hotMix
+                    );
+                    colorDataOklab[x][y] = DescriptiveColor.dullen(c, 0.3f * (world.heightData[x][y] + 1f));
                     colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
                 }
             }
