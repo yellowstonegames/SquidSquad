@@ -270,9 +270,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.6f, NoiseWrapper.EXO, 2, false);
 //        INoise fn = new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 1);
 //        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.5f, NoiseWrapper.FBM, 1);
-//        INoise fn = new CyclicNoise(seed, 5 , 0.8f);
+        INoise fn = new CyclicNoise(seed, 3 , 1f);
 //        INoise fn = new CyclicNoise(seed, 4 , 1f);
-        INoise fn = new PerlinNoise(seed);
+//        INoise fn = new PerlinNoise(seed);
         iNoise = new Noise3DFrom5D(fn);
 
         path = "out/worldsAnimated/" + date + "/Flowing"+fn.getTag()+"/";
@@ -297,8 +297,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 
 //        wmv = new UnrealisticWorldMapView(world);
-//        wmv = new BlendedWorldMapView(world);
-        wmv = new DetailedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
+//        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
         rng.setSeed(seed);

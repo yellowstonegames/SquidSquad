@@ -1078,7 +1078,10 @@ public interface BiomeMapper {
         {
             for (int m = 0; m < 10; m++) {
                 for (int h = 0; h < 6; h++) {
-                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.12f + 0.66f, 1f, 0.375f + m * 0.05f, 1f);
+                    // when showing only moisture changes, the noise is smooth and continuous.
+//                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(m * -0.42f + 0.66f, 1f, 0.5f, 1f);
+                    // when showing only heat, the noise has disjoined areas.
+                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.42f + 0.66f, 1f, 0.375f + m * 0.05f, 1f);
                 }
             }
             for (int i = 60; i < 66; i++) {

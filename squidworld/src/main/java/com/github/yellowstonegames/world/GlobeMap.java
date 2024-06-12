@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -365,8 +366,9 @@ public class GlobeMap extends WorldMapGenerator {
                 if (heightCodeData[x][y] == 10000) {
                     heightCodeData[x][y] = 1000;
                     continue;
-                } else
-                    heightCodeData[x][y] = (t = codeHeight(h));
+                } else {
+                    heightCodeData[x][y] = (t = codeHeight(th = h));
+                }
                 hMod = 1f;
                 switch (t) {
                     case 0:
@@ -377,7 +379,8 @@ public class GlobeMap extends WorldMapGenerator {
                         hMod = 0.2f;
                         break;
                     case 6:
-                        h = -0.1f * (h - forestLower - 0.08f);
+                        h *= -0.1f;
+//                        h = -0.1f * (h - forestLower - 0.08f);
                         break;
                     case 7:
                         h *= -0.25f;
@@ -388,6 +391,8 @@ public class GlobeMap extends WorldMapGenerator {
                     default:
                         h *= 0.05f;
                 }
+                hMod = (RoughMath.logisticRough(th*2.75f-1f)+0.18f);
+                h = 0.39f - RoughMath.logisticRough(th*4f) * (th+0.1f) * 0.82f;
                 heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                 if (fresh) {
                     ps = Math.min(ps, h); //minHeat0
