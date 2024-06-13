@@ -296,8 +296,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         world = new GlobeMap(seed, width, height, iNoise, 0.75f);
 
 
-        wmv = new UnrealisticWorldMapView(world);
-//        wmv = new BlendedWorldMapView(world);
+//        wmv = new UnrealisticWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
 //        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
@@ -358,6 +358,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             world.setCenterLongitude(angle * TrigTools.PI2);
             generate(hash);
             int[][] cm = wmv.show();
+            if(i == 0) {
+                System.out.println(name + " has minHeat "+ world.minHeat+", maxHeat " + world.maxHeat +",\n" +
+                        "            minWet " + world.minWet + ", maxWet " + world.maxWet);
+            }
             pm[i].setColor(INK);
             pm[i].fill();
 

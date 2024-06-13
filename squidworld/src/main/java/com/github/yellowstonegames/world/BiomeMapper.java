@@ -870,12 +870,14 @@ public interface BiomeMapper {
                         if(moist <= MOISTURE_UPPER[i]) {
                             mc = i;
                             if(moist <= MOISTURE_MID[0]) {
-                                moistMix = 1f;
-                                wetLow = wetHigh = 0;
+                                moistMix = MathTools.norm(world.minWet, MOISTURE_MID[1], moist);
+                                wetLow = 0;
+                                wetHigh = 1;
                             }
                             else if(moist > MOISTURE_MID[5]) {
-                                moistMix = 0f;
-                                wetLow = wetHigh = 5;
+                                moistMix = MathTools.norm(MOISTURE_MID[4], world.maxWet, moist);;
+                                wetLow = 4;
+                                wetHigh = 5;
                             }
                             else if(moist <= MOISTURE_MID[i]) {
                                 moistMix = MathTools.norm(MOISTURE_MID[i - 1], MOISTURE_MID[i], moist);
@@ -894,12 +896,14 @@ public interface BiomeMapper {
                         if(hot <= HEAT_UPPER[i]) {
                             hc = i;
                             if(hot <= HEAT_MID[0]) {
-                                hotMix = 1f;
-                                hotLow = hotHigh = 0;
+                                hotMix = MathTools.norm(world.minHeat, HEAT_MID[1], hot);
+                                hotLow = 0;
+                                hotHigh = 1;
                             }
                             else if(hot > HEAT_MID[5]) {
-                                hotMix = 0f;
-                                hotLow = hotHigh = 5;
+                                hotMix = MathTools.norm(HEAT_MID[4], world.maxHeat, hot);;
+                                hotLow = 4;
+                                hotHigh = 5;
                             }
                             else if(hot <= HEAT_MID[i]) {
                                 hotMix = MathTools.norm(HEAT_MID[i - 1], HEAT_MID[i], hot);
