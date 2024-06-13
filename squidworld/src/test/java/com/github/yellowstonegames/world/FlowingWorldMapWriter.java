@@ -93,7 +93,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapView wmv;
     private AnimatedGif writer;
-//    private AnimatedPNG apng;
+    private AnimatedPNG apng;
 //    private PixmapIO.PNG pngWriter;
 
     private String date, path;
@@ -239,14 +239,14 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             pm[i].setBlending(Pixmap.Blending.None);
         }
 
-        writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
-        writer.setDitherStrength(1.5f);
-        writer.palette = new QualityPalette();
-        writer.setFlipY(false);
-//        apng = new AnimatedPNG();
-//        apng.setFlipY(false);
-//        apng.setCompression(7);
+//        writer = new AnimatedGif();
+//        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
+//        writer.setDitherStrength(1.5f);
+//        writer.palette = new QualityPalette();
+//        writer.setFlipY(false);
+        apng = new AnimatedPNG();
+        apng.setFlipY(false);
+        apng.setCompression(2);
 //        pngWriter = new PixmapIO.PNG();
 //        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
@@ -296,8 +296,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         world = new GlobeMap(seed, width, height, iNoise, 0.75f);
 
 
-//        wmv = new UnrealisticWorldMapView(world);
-        wmv = new BlendedWorldMapView(world);
+        wmv = new UnrealisticWorldMapView(world);
+//        wmv = new BlendedWorldMapView(world);
 //        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
@@ -339,7 +339,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     public void putMap() {
         ++counter;
         String name = makeName(thesaurus);
-        while (Gdx.files.local(path + name + ".gif").exists())
+        while (Gdx.files.local(path + name + ".gif").exists() || Gdx.files.local(path + name + ".png").exists())
             name = makeName(thesaurus);
 //        Gdx.files.local(path + name + "_frames/").mkdirs();
         long hash;
@@ -374,10 +374,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
-//        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
-//            writer.write(Gdx.files.local(path + name + ".png"), pms, 20);
+//        writer.palette.analyze(pms);
+//        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
+        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }

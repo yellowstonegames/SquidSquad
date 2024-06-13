@@ -1081,7 +1081,10 @@ public interface BiomeMapper {
                     // when showing only moisture changes, the noise is smooth and continuous.
 //                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(m * -0.42f + 0.66f, 1f, 0.5f, 1f);
                     // when showing only heat, the noise has disjoined areas.
-                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.42f + 0.66f, 1f, 0.375f + m * 0.05f, 1f);
+//                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.42f + 0.66f, 1f, 0.5f, 1f);
+//                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.42f + 0.66f, 1f, m * 0.1f + 0.25f, 1f);
+                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(m * -0.42f + 0.66f, 1f, h * 0.1f + 0.25f, 1f);
+//                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.42f + 0.66f, 1f, 0.375f + m * 0.05f, 1f);
                 }
             }
             for (int i = 60; i < 66; i++) {
@@ -1277,8 +1280,8 @@ public interface BiomeMapper {
                     moistureCodeData[x][y] = mc;
                     // 54 == 9 * 6, 9 is used for Ocean groups
                     biomeCodeData[x][y] = hc + mc * 6;
-                    moistMix = Interpolations.smoother.apply(moistMix);
-                    hotMix = Interpolations.smoother.apply(hotMix);
+//                    moistMix = Interpolations.smoother.apply(moistMix);
+//                    hotMix = Interpolations.smoother.apply(hotMix);
                     int c = lerpColors(
                             lerpColors(
                                     colorTable[hotLow + wetLow * 6],
@@ -1288,8 +1291,8 @@ public interface BiomeMapper {
                                     colorTable[hotHigh + wetHigh * 6], moistMix),
                             hotMix
                     );
-                    colorDataOklab[x][y] = DescriptiveColor.dullen(c, 0.3f * (world.heightData[x][y] + 1f));
-                    colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);
+                    colorDataOklab[x][y] = c;//DescriptiveColor.dullen(c, 0.3f * (world.heightData[x][y] + 1f));
+                    colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(c);
                 }
             }
         }
