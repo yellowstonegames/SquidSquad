@@ -851,7 +851,7 @@ public interface BiomeMapper {
             final float[][] heatData = world.heatData, moistureData = world.moistureData;
             final float i_hot = 1f / world.maxHeat;
             final float con = 0.2f * contrast;
-            int hc = 5, mc = 5, heightCode;
+            int hc, mc, heightCode;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
 
@@ -862,21 +862,25 @@ public interface BiomeMapper {
                         continue;
                     }
                     float hot, moist;
-                    float hotMix = 0.5f, moistMix = 0.5f;
-                    int wetLow = 0, wetHigh = 5, hotLow = 0, hotHigh = 5;
+                    float hotMix = 1f, moistMix = 1f;
+                    int wetLow = 5, wetHigh = 5, hotLow = 5, hotHigh = 5;
                     hot = heatData[x][y] * i_hot;
                     moist = moistureData[x][y];
+                    hc = 5;
+                    mc = 5;
                     for (int i = 0; i < 6; i++) {
                         if(moist <= MOISTURE_UPPER[i]) {
                             mc = i;
                             if(moist <= MOISTURE_MID[0]) {
-                                moistMix = MathTools.norm(world.minWet, MOISTURE_MID[1], moist);
+                                moistMix = 0;
+//                                moistMix = MathTools.norm(world.minWet, MOISTURE_MID[0], moist);
                                 wetLow = 0;
-                                wetHigh = 1;
+                                wetHigh = 0;
                             }
                             else if(moist > MOISTURE_MID[5]) {
-                                moistMix = MathTools.norm(MOISTURE_MID[4], world.maxWet, moist);;
-                                wetLow = 4;
+                                moistMix = 1;
+//                                moistMix = MathTools.norm(MOISTURE_MID[5], world.maxWet, moist);;
+                                wetLow = 5;
                                 wetHigh = 5;
                             }
                             else if(moist <= MOISTURE_MID[i]) {
@@ -896,13 +900,13 @@ public interface BiomeMapper {
                         if(hot <= HEAT_UPPER[i]) {
                             hc = i;
                             if(hot <= HEAT_MID[0]) {
-                                hotMix = MathTools.norm(world.minHeat, HEAT_MID[1], hot);
+                                hotMix = MathTools.norm(world.minHeat, HEAT_MID[0], hot);
                                 hotLow = 0;
-                                hotHigh = 1;
+                                hotHigh = 0;
                             }
                             else if(hot > HEAT_MID[5]) {
-                                hotMix = MathTools.norm(HEAT_MID[4], world.maxHeat, hot);;
-                                hotLow = 4;
+                                hotMix = MathTools.norm(HEAT_MID[5], world.maxHeat, hot);;
+                                hotLow = 5;
                                 hotHigh = 5;
                             }
                             else if(hot <= HEAT_MID[i]) {
