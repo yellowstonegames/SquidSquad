@@ -45,8 +45,7 @@ import com.github.yellowstonegames.place.WildernessGenerator;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
-import static com.github.yellowstonegames.core.DescriptiveColor.differentiateLightness;
-import static com.github.yellowstonegames.core.DescriptiveColor.toRGBA8888;
+import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
 /**
  * Map generator that uses text to show features at a location as well as color.
@@ -73,7 +72,7 @@ public class WorldWildGridDemo extends ApplicationAdapter {
     private Vector3 position, previousPosition, nextPosition, temp;
 //    private WorldMapGenerator.MimicMap world;
     private HyperellipticalWorldMap world;
-    private DetailedWorldMapView wmv;
+    private BlendedWorldMapView wmv;
     private PoliticalMapper pm;
     private Thesaurus thesaurus;
     private ObjectList<PoliticalMapper.Faction> factions;
@@ -127,7 +126,7 @@ public class WorldWildGridDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.8); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seed, bigWidth, bigHeight, WorldMapGenerator.DEFAULT_NOISE, 0.8f);
         //world = new WorldMapGenerator.TilingMap(seed, bigWidth, bigHeight, WhirlingNoise.instance, 0.9);
-        wmv = new DetailedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
         pm = new PoliticalMapper();
         cities = new CoordObjectOrderedMap<>(96);
         factions = new ObjectList<>(80);
@@ -277,9 +276,10 @@ public class WorldWildGridDemo extends ApplicationAdapter {
         display.map.clear();
         display.backgrounds = wmv.getColorMap();
         int[][] oklab = wmv.getColorMapOklab();
-        BiomeMapper.DetailedBiomeMapper dbm = wmv.getBiomeMapper();
+        BiomeMapper.BlendedBiomeMapper bbm = wmv.getBiomeMapper();
         int hc, tc, codeA, codeB;
         float mix;
+        final int[] colorTable = wmv.biomeMapper.colorTable;
         int[][] heightCodeData = world.heightCodeData;
         for (int y = 0; y < bigHeight; y++) {
             PER_CELL:
@@ -287,16 +287,16 @@ public class WorldWildGridDemo extends ApplicationAdapter {
                 hc = heightCodeData[x][y];
                 if (hc == 1000)
                     continue;
-                tc = dbm.heatCodeData[x][y];
+                tc = bbm.heatCodeData[x][y];
                 if (tc == 0) {
                     switch (hc) {
                         case 0:
                         case 1:
                         case 2:
-                            display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[30], oklab[x][y])));
+                            display.put(x, y, '≈', toRGBA8888(differentiateLightness(darken(colorTable[30], 0.2f), oklab[x][y])));
                             continue PER_CELL;
                         case 3:
-                            display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[24], oklab[x][y])));
+                            display.put(x, y, '~', toRGBA8888(differentiateLightness(darken(colorTable[24], 0.2f), oklab[x][y])));
                             continue PER_CELL;
 //                        case 4:
 //                            display.put(x, y, '¤', toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[42], oklab[x][y])));
@@ -307,14 +307,14 @@ public class WorldWildGridDemo extends ApplicationAdapter {
                     case 0:
                     case 1:
                     case 2:
-                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
+                        display.put(x, y, '≈', toRGBA8888(differentiateLightness(darken(colorTable[43], 0.2f), oklab[x][y])));
                         break;
                     case 3:
-                        display.put(x, y, '~', toRGBA8888(differentiateLightness(wmv.BIOME_COLOR_TABLE[43], oklab[x][y])));
+                        display.put(x, y, '~', toRGBA8888(differentiateLightness(darken(colorTable[43], 0.2f), oklab[x][y])));
                         break;
                     default:
-                        int bc = dbm.getBiomeCode(x, y);
-                        display.put(x, y, BIOME_CHARS[bc], toRGBA8888(differentiateLightness(wmv.BIOME_DARK_COLOR_TABLE[bc], oklab[x][y])));
+                        int bc = bbm.getBiomeCode(x, y);
+                        display.put(x, y, BIOME_CHARS[bc], toRGBA8888(differentiateLightness(darken(colorTable[bc], 0.2f), oklab[x][y])));
                 }
             }
         }

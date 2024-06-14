@@ -598,9 +598,16 @@ public interface BiomeMapper {
 
 
     /**
-     * Does not currently blend! A work in progress.
+     * A very-smoothly-blending BiomeMapper. Unlike the more-complicated usage of {@link DetailedBiomeMapper}, this does
+     * not have fine-grained access to which two biomes are mixed at any given point. The reason for this is partly that
+     * more than two biomes can affect any given point, and partly that just accessing a mixed color may be much easier.
+     * After you call {@link #makeBiomes(WorldMapGenerator)}, the {@link #colorDataOklab} and {@link #colorDataRgba}
+     * fields will be usable, and will match points on the WorldMapGenerator's latest map with colors appropriate for a
+     * biome at that point. Calling makeBiomes() also assigns to {@link #biomeCodeData}, though this only stores small
+     * int values here (between 0 and 65, inclusive) that correspond to indices into {@link Biome#TABLE}.
+     * <br>
+     * This is often used via {@link BlendedWorldMapView}.
      */
-    @Beta
     class BlendedBiomeMapper implements BiomeMapper
     {
         /**
