@@ -929,16 +929,11 @@ public interface BiomeMapper {
                     biomeCodeData[x][y]
                             = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54
                             : heightCode == 4 ? hc + 36 : hc + mc * 6;
-                    moistMix = Interpolations.smoother.apply(moistMix);
-                    hotMix = Interpolations.smoother.apply(hotMix);
+//                    moistMix = Interpolations.smoother.apply(moistMix);
+//                    hotMix = Interpolations.smoother.apply(hotMix);
                     if(hc == 0 && heightCode <= 3){
                         colorDataOklab[x][y] = lerpColors(colorTable[50], colorTable[12],
                                 ((world.heightData[x][y] + 1f) / (WorldMapGenerator.sandLower + 1f)));
-                    }
-                    else if(hc == 0 && heightCode == 4){
-                        colorDataOklab[x][y] = lerpColors(colorTable[0], colorTable[12],
-                                ((world.heightData[x][y] - WorldMapGenerator.sandLower)
-                                        / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower)));
                     }
                     else if(heightCode <= 3) {
                         colorDataOklab[x][y] = lerpColors(colorTable[56], colorTable[43],
@@ -956,8 +951,26 @@ public interface BiomeMapper {
                                 hotMix
                         );
                         if(heightCode == 4) {
-                            c = lerpColors(colorTable[hc + 36], c, 1f - 10f * (WorldMapGenerator.sandUpper - world.heightData[x][y]));
+                            int beach =
+                                    lerpColors(
+                                    lerpColors(
+                                            colorTable[hotLow + 36],
+                                            colorTable[hotLow + 36], moistMix),
+                                    lerpColors(
+                                            colorTable[hotHigh + 36],
+                                            colorTable[hotHigh + 36], moistMix),
+                                    hotMix
+                                    );
+                            if(hot < coldestValueUpper)
+                                beach = lerpColors(beach, colorTable[0],
+                                    ((coldestValueUpper - hot)
+                                            / coldestValueUpper));
+                            c = lerpColors(beach, c,
+                                    ((world.heightData[x][y] - WorldMapGenerator.sandLower)
+                                            / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower)));
+                                    //1f - 10f * (WorldMapGenerator.sandUpper - world.heightData[x][y]));
                         }
+
                         colorDataOklab[x][y] = DescriptiveColor.adjustLightness(c, 0.02f - moist * con);
                     }
                     colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y]);

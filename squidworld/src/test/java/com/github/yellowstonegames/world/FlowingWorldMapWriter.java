@@ -239,11 +239,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             pm[i].setBlending(Pixmap.Blending.None);
         }
 
-//        writer = new AnimatedGif();
-//        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
-//        writer.setDitherStrength(1.5f);
-//        writer.palette = new QualityPalette();
-//        writer.setFlipY(false);
+        writer = new AnimatedGif();
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
+        writer.setDitherStrength(1.5f);
+        writer.palette = new QualityPalette();
+        writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
         apng.setCompression(2);
@@ -270,9 +270,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.6f, NoiseWrapper.EXO, 2, false);
 //        INoise fn = new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 1);
 //        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.5f, NoiseWrapper.FBM, 1);
-        INoise fn = new CyclicNoise(seed, 4 , 0.9f);
+//        INoise fn = new CyclicNoise(seed, 4 , 0.9f);
 //        INoise fn = new CyclicNoise(seed, 4 , 1f);
-//        INoise fn = new PerlinNoise(seed);
+        INoise fn = new PerlinNoise(seed);
         iNoise = new Noise3DFrom5D(fn);
 
         path = "out/worldsAnimated/" + date + "/Flowing"+fn.getTag()+"/";
@@ -378,8 +378,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-//        writer.palette.analyze(pms);
-//        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
+        writer.palette.analyze(pms);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
         apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //        } catch (IOException e) {
 //            e.printStackTrace();
