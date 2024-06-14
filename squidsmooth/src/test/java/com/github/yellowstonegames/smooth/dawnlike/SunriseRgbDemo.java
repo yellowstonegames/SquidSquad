@@ -51,7 +51,6 @@ import com.github.yellowstonegames.text.Language;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
-import static com.github.yellowstonegames.core.DescriptiveColorRgb.hsl2rgb;
 
 public class SunriseRgbDemo extends ApplicationAdapter {
     private static final float DURATION = 0.375f;

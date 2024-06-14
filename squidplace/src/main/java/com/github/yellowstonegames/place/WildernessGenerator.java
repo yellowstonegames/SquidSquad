@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.ObjectLongOrderedMap;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.MizuchiRandom;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Direction;
@@ -76,7 +76,7 @@ public class WildernessGenerator implements PlaceGenerator {
      * @param width the width of the 2D array to return
      * @param height the height of the 2D array to return
      * @param spillerLimit the upper exclusive bound for the values that will be present in toFill when this finishes
-     * @param rng an EnhancedRandom, such as a MizuchiRandom, to generate random values during expansion
+     * @param rng an EnhancedRandom, such as a FlowRandom, to generate random values during expansion
      * @return a 2D int array containing ints from 0 (inclusive) to {@code spillerLimit} (exclusive)
      */
     public static int[][] blueSpill(int width, int height, int spillerLimit, EnhancedRandom rng) {
@@ -89,7 +89,7 @@ public class WildernessGenerator implements PlaceGenerator {
      * points pseudo-randomly while keeping the same value for any expanded range as its original point.
      * @param toFill a 2D int array that will be modified in-place and entirely replaced; its contents don't matter
      * @param spillerLimit the upper exclusive bound for the values that will be present in toFill when this finishes
-     * @param rng an EnhancedRandom, such as a MizuchiRandom, to generate random values during expansion
+     * @param rng an EnhancedRandom, such as a FlowRandom, to generate random values during expansion
      * @return {@code toFill}, after modifications
      */
     public static int[][] blueSpill(int[][] toFill, int spillerLimit, EnhancedRandom rng) {
@@ -101,7 +101,7 @@ public class WildernessGenerator implements PlaceGenerator {
      * points pseudo-randomly while keeping the same value for any expanded range as its original point.
      * @param toFill a 2D int array that will be modified in-place and entirely replaced; its contents don't matter
      * @param spillerLimit the upper exclusive bound for the values that will be present in toFill when this finishes
-     * @param rng an EnhancedRandom, such as a MizuchiRandom, to generate random values during expansion
+     * @param rng an EnhancedRandom, such as a FlowRandom, to generate random values during expansion
      * @return {@code toFill}, after modifications
      */
     public static int[][] blueSpill(int[][] toFill, int spillerLimit, EnhancedRandom rng, boolean triangular) {
@@ -242,7 +242,7 @@ public class WildernessGenerator implements PlaceGenerator {
     /**
      * Gets a list of Strings that are really just the names of types of floor tile for wilderness areas.
      * @param biome an index into some biome table, WIP
-     * @param rng an EnhancedRandom, such as a MizuchiRandom, can be seeded
+     * @param rng an EnhancedRandom, such as a FlowRandom, can be seeded
      * @return a shuffled ObjectList that typically contains repeats of the kinds of floor that can appear here
      */
     public static ObjectList<String> floorsByBiome(Biome biome, EnhancedRandom rng) {
@@ -321,7 +321,7 @@ public class WildernessGenerator implements PlaceGenerator {
     /**
      * Gets a list of Strings that are really just the names of types of terrain feature for wilderness areas.
      * @param biome an index into some biome table, WIP
-     * @param rng an EnhancedRandom, such as a MizuchiRandom, can be seeded
+     * @param rng an EnhancedRandom, such as a FlowRandom, can be seeded
      * @return a shuffled ObjectList that typically contains repeats of the kinds of terrain feature that can appear here
      */
     public static ObjectList<String> contentByBiome(Biome biome, EnhancedRandom rng) {
@@ -548,11 +548,11 @@ public class WildernessGenerator implements PlaceGenerator {
     }
     public WildernessGenerator(int width, int height, Biome biome)
     {
-        this(width, height, biome, new MizuchiRandom());
+        this(width, height, biome, new FlowRandom());
     }
     public WildernessGenerator(int width, int height, Biome biome, long seedA, long seedB)
     {
-        this(width, height, biome, new MizuchiRandom(seedA, seedB));
+        this(width, height, biome, new FlowRandom(seedA, seedB));
     }
     public WildernessGenerator(int width, int height, Biome biome, EnhancedRandom rng)
     {
@@ -663,7 +663,7 @@ public class WildernessGenerator implements PlaceGenerator {
         protected final int[] minFloors, maxFloors, minContents, maxContents;
         
         public MixedWildernessGenerator() {
-            this(new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new MizuchiRandom());
+            this(new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new FlowRandom());
         }
         
         public MixedWildernessGenerator(WildernessGenerator northeast, WildernessGenerator southeast, WildernessGenerator southwest, WildernessGenerator northwest, EnhancedRandom rng) {

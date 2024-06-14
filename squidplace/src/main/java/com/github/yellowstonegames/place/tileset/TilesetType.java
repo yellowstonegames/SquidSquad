@@ -16,8 +16,6 @@
 
 package com.github.yellowstonegames.place.tileset;
 
-import com.github.yellowstonegames.grid.Direction;
-
 /**
  * An enumeration of all the kinds of dungeon that DungeonBoneGen
  * knows how to draw already. Each value has a Javadoc description.

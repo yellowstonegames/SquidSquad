@@ -32,7 +32,7 @@ import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.MizuchiRandom;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
@@ -99,7 +99,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
         camera = view.getCamera();
         seedA = 1234567890L;
         seedB = 0x12345L;
-        rng = new MizuchiRandom(seedA, seedB);
+        rng = new FlowRandom(seedA, seedB);
         Noise noise = new Noise(rng.nextInt(), 1.0f, Noise.FOAM, 1);
 //        world = new MimicWorldMap(seedA, noise, 0.8f); // uses a map of Australia for land
         world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, noise, 0.8f);
@@ -119,7 +119,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
                 switch (keycode) {
                     case Input.Keys.ENTER:
                         seedA = rng.nextLong();
-                        seedB = rng.nextLong() | 1L;
+                        seedB = rng.nextLong();
                         generate(seedA, seedB);
                         rng.setSelectedState(0, seedA);
                         rng.setSelectedState(1, seedB);

@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.yellowstonegames.grid.Direction;
 
 import static com.github.yellowstonegames.place.Biome.Heat.*;
 import static com.github.yellowstonegames.place.Biome.Moisture.*;

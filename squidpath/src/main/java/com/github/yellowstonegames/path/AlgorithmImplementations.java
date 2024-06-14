@@ -19,7 +19,6 @@ import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.digital.BitConversion;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Set;
 
 class AlgorithmImplementations<V> {

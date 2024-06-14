@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.path.sg.algorithms;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.github.yellowstonegames.path.sg.Connection;
 import com.github.yellowstonegames.path.sg.Edge;

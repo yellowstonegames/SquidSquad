@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
 
 /**
  * Arbitrary-dimensional continuous noise that maintains most of the same style even as the dimensionality gets fairly

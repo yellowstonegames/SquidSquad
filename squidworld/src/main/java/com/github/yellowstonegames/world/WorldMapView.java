@@ -60,7 +60,7 @@ public interface WorldMapView {
     void initialize(float hue, float saturation, float brightness, float contrast);
 
     /**
-     * Partly-randomizes the colors used for biomes. This may request random numbers from the MizuchiRandom in
+     * Partly-randomizes the colors used for biomes. This may request random numbers from the FlowRandom in
      * {@link #getWorld() the WorldMapGenerator}.
      * This should map similar colors in the input color table, like varieties of dark green forest, into similar output
      * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white

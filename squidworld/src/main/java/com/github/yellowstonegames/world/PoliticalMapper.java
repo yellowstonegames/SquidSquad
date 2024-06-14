@@ -20,8 +20,8 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.Region;
@@ -299,12 +299,12 @@ public class PoliticalMapper {
     public IntObjectOrderedMap<Faction> atlas;
 
     /**
-     * Constructs a FantasyPoliticalMapper, but doesn't do anything with a map; you need to call
+     * Constructs a FantasyPoliticalMapper with a random seed, but doesn't do anything with a map; you need to call
      * {@link #generate(long, WorldMapGenerator, BiomeMapper, Collection, int, float)} for results.
      */
     public PoliticalMapper()
     {
-        rng = new WhiskerRandom();
+        rng = new AceRandom();
     }
 
     /**

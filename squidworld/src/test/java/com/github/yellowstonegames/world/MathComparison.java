@@ -29,12 +29,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.DescriptiveColorRgb;
-import com.github.yellowstonegames.grid.*;
 
 import java.util.Arrays;
 

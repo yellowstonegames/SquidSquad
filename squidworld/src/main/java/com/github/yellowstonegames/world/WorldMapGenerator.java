@@ -20,7 +20,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.random.MizuchiRandom;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.Region;
@@ -59,7 +59,7 @@ public abstract class WorldMapGenerator {
     public long seedB;
     public long cacheA;
     public long cacheB;
-    public MizuchiRandom rng;
+    public FlowRandom rng;
     public final float[][] heightData, heatData, moistureData;
     public final Region landData;
     public final int[][] heightCodeData;
@@ -189,7 +189,7 @@ public abstract class WorldMapGenerator {
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      *
-     * @param initialSeed the seed for the MizuchiRandom this uses; this may also be set per-call to generate
+     * @param initialSeed the seed for the FlowRandom this uses; this may also be set per-call to generate
      * @param mapWidth the width of the map(s) to generate; cannot be changed later
      * @param mapHeight the height of the map(s) to generate; cannot be changed later
      */
@@ -200,10 +200,10 @@ public abstract class WorldMapGenerator {
         usedWidth = width;
         usedHeight = height;
         seedA = initialSeed;
-        seedB = initialSeed + 0xC6BC279692B5C323L | 1L;
+        seedB = initialSeed + 0xC6BC279692B5C323L;
         cacheA = ~seedA;
         cacheB = ~seedB;
-        rng = new MizuchiRandom(seedA, seedB);
+        rng = new FlowRandom(seedA, seedB);
         heightData = new float[width][height];
         heatData = new float[width][height];
         moistureData = new float[width][height];
@@ -225,7 +225,7 @@ public abstract class WorldMapGenerator {
      */
     public void generate()
     {
-        generate(rng.nextLong(), rng.nextLong() | 1L);
+        generate(rng.nextLong(), rng.nextLong());
     }
 
     /**
@@ -238,7 +238,7 @@ public abstract class WorldMapGenerator {
      * @param stateB the second part of state to give this generator's RNG; if the whole state is the same as the last call, this will reuse data
      */
     public void generate(long stateA, long stateB) {
-        generate(-1f, -1f, stateA, stateB | 1L);
+        generate(-1f, -1f, stateA, stateB);
     }
 
     /**
@@ -254,11 +254,11 @@ public abstract class WorldMapGenerator {
      */
     public void generate(float landMod, float heatMod, long stateA, long stateB)
     {
-        if(cacheA != stateA || cacheB != (stateB | 1L) ||
+        if(cacheA != stateA || cacheB != (stateB) ||
                 landMod != landModifier || heatMod != heatModifier)
         {
             seedA = stateA;
-            seedB = stateB | 1L;
+            seedB = stateB;
             zoom = 0;
             startCacheX.clear();
             startCacheY.clear();
@@ -307,7 +307,7 @@ public abstract class WorldMapGenerator {
         {
             if(cacheA != seedA || cacheB != seedB)
             {
-                generate(rng.nextLong(), rng.nextLong() | 1L);
+                generate(rng.nextLong(), rng.nextLong());
             }
             zoomStartX = Math.min(Math.max(
                     (zoomStartX + (zoomCenterX - (width >> 1))) >> zoomAmount,
@@ -369,7 +369,7 @@ public abstract class WorldMapGenerator {
         }
         if(seedA != cacheA || seedB != cacheB)
         {
-            generate(rng.nextLong(), rng.nextLong() | 1L);
+            generate(rng.nextLong(), rng.nextLong());
         }
         zoomStartX = Math.min(Math.max(
                 (zoomStartX + zoomCenterX - (width >> 1) << zoomAmount),

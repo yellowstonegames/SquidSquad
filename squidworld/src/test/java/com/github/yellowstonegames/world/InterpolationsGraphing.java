@@ -36,11 +36,7 @@ import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.tommyettinger.textra.Layout;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.StringTools;
 import space.earlygrey.shapedrawer.ShapeDrawer;
-
-import static com.github.tommyettinger.digital.TrigTools.*;
-import static com.github.tommyettinger.digital.TrigTools.TABLE_MASK;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
     static final boolean WRITE = false;

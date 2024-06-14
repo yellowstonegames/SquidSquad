@@ -85,7 +85,7 @@ public class GlobeMap extends WorldMapGenerator {
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
      *
-     * @param initialSeed the seed for the MizuchiRandom this uses; this may also be set per-call to generate
+     * @param initialSeed the seed for the FlowRandom this uses; this may also be set per-call to generate
      * @param mapWidth    the width of the map(s) to generate; cannot be changed later
      * @param mapHeight   the height of the map(s) to generate; cannot be changed later
      */
@@ -101,7 +101,7 @@ public class GlobeMap extends WorldMapGenerator {
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      * Uses Noise as its noise generator, with the given octave multiplier affecting detail.
      *
-     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the FlowRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param octaveMultiplier used to adjust the level of detail, with 0.5f at the bare-minimum detail and 1f normal
@@ -118,7 +118,7 @@ public class GlobeMap extends WorldMapGenerator {
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
      * Uses the given noise generator, with 1f as the octave multiplier affecting detail.
      *
-     * @param initialSeed    the seed for the MizuchiRandom this uses; this may also be set per-call to generate
+     * @param initialSeed    the seed for the FlowRandom this uses; this may also be set per-call to generate
      * @param mapWidth       the width of the map(s) to generate; cannot be changed later
      * @param mapHeight      the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator an instance of a noise generator capable of 3D noise, usually {@link Noise}
@@ -143,7 +143,7 @@ public class GlobeMap extends WorldMapGenerator {
      * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
      * that don't require zooming.
      *
-     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the FlowRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param noiseGenerator   an instance of a noise generator capable of 3D noise, usually {@link Noise}
@@ -184,7 +184,7 @@ public class GlobeMap extends WorldMapGenerator {
      * generating detail only noticeable at very high zoom; normally 1f is fine and may even be too high for maps
      * that don't require zooming.
      *
-     * @param initialSeed      the seed for the MizuchiRandom this uses; this may also be set per-call to generate
+     * @param initialSeed      the seed for the FlowRandom this uses; this may also be set per-call to generate
      * @param mapWidth         the width of the map(s) to generate; cannot be changed later
      * @param mapHeight        the height of the map(s) to generate; cannot be changed later
      * @param terrainRidgedNoise a Noise generator (or subclass) that will be used to generate ridged terrain

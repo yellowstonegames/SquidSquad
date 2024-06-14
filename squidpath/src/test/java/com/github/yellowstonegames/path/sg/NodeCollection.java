@@ -20,7 +20,6 @@ import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Objects;
 
 import com.github.yellowstonegames.path.sg.Errors;
 import com.github.yellowstonegames.path.sg.Node;

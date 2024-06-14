@@ -21,7 +21,6 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.grid.WhiteNoise;
-import com.github.yellowstonegames.grid.WhiteNoise;
 
 /**
  * Serializer for {@link WhiteNoise}; doesn't need anything else registered.

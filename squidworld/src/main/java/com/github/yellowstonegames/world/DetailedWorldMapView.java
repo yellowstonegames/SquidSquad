@@ -145,7 +145,7 @@ public class DetailedWorldMapView implements WorldMapView {
 
     /**
      * Uses the current colors in {@link #BIOME_COLOR_TABLE} to partly-randomize themselves, and also incorporates three
-     * random floats from the {@link com.github.tommyettinger.random.MizuchiRandom} stored in {@link #getWorld()}.
+     * random floats from the {@link com.github.tommyettinger.random.FlowRandom} stored in {@link #getWorld()}.
      * This should map similar colors in the input color table, like varieties of dark green forest, into similar output
      * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white
      * ice will still map to white, and different shades of ocean blue will become different shades of some color (which
@@ -223,7 +223,7 @@ public class DetailedWorldMapView implements WorldMapView {
     
     @Override
     public void generate(long seedA, long seedB, float landMod, float heatMod) {
-        world.generate(landMod, heatMod, seedA, seedB | 1L);
+        world.generate(landMod, heatMod, seedA, seedB);
         biomeMapper.makeBiomes(world);
     }
 

@@ -28,12 +28,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.PouchRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
-import com.github.tommyettinger.textra.utils.ColorUtils;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.place.WildernessGenerator;
 

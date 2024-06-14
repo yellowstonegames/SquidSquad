@@ -35,7 +35,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.digital.*;
-import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.grid.GradientVectors;

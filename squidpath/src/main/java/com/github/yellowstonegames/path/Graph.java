@@ -16,7 +16,6 @@
 package com.github.yellowstonegames.path;
 
 import com.github.tommyettinger.ds.ObjectBag;
-import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.function.ObjPredicate;
@@ -28,7 +27,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Abstract superclass of actual Graph types.

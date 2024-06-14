@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.place.Biome;
 
