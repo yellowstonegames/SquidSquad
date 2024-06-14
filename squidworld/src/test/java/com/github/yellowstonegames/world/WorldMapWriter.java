@@ -41,11 +41,12 @@ import java.util.Date;
  * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
-    private static final int AA = 1;
+    private static final int AA = 0;
 
-    private static final int width = 1920, height = 1080;
+//    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 400, height = 400;
+    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 128, height = 128; // space view, MimicLocal
@@ -91,6 +92,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
         png = new FastPNG();
+        png.setFlipY(false);
 
         pm = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
         pm.setBlending(Pixmap.Blending.None);
@@ -129,13 +131,13 @@ public class WorldMapWriter extends ApplicationAdapter {
 //            noise = new Noise.Adapted3DFrom5D(fn);
 //        else
 
-//        world = new MimicWorldMap(seed, noise, 2f);
+        world = new MimicWorldMap(seed, noise, 2f);
 //        world = new MimicLocalMap(seed, noise, 2f);
 //        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);

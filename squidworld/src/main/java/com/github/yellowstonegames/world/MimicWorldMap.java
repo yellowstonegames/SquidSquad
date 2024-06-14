@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -357,40 +358,17 @@ public class MimicWorldMap extends EllipticalWorldMap {
         pc = Float.NEGATIVE_INFINITY;
 
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            temp = (float) Math.pow(Math.abs(yPos - halfHeight) * i_half, 1.5f);
-            temp *= (2.4f - temp);
-            temp = 2.2f - temp;
+            temp = (yPos - halfHeight) * i_half;
+            temp = RoughMath.expRough(-temp*temp) * 2.2f;
             for (int x = 0; x < width; x++) {
-//                    heightData[x][y] = (h = (heightData[x][y] - minHeightActual) * heightDiff - 1f);
-//                    minHeightActual0 = Math.min(minHeightActual0, h);
-//                    maxHeightActual0 = Math.max(maxHeightActual0, h);
-                h = heightData[x][y];
                 if (heightCodeData[x][y] == 10000) {
                     heightCodeData[x][y] = 1000;
                     continue;
-                } else
-                    heightCodeData[x][y] = (t = codeHeight(h));
-                hMod = 1f;
-                switch (t) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        h = 0.4f;
-                        hMod = 0.2f;
-                        break;
-                    case 6:
-                        h = -0.1f * (h - forestLower - 0.08f);
-                        break;
-                    case 7:
-                        h *= -0.25f;
-                        break;
-                    case 8:
-                        h *= -0.4f;
-                        break;
-                    default:
-                        h *= 0.05f;
+                } else {
+                    heightCodeData[x][y] = codeHeight(h = heightData[x][y]);
                 }
+                hMod = (RoughMath.logisticRough(h*2.75f-1f)+0.18f);
+                h = 0.39f - RoughMath.logisticRough(h*4f) * (h+0.1f) * 0.82f;
                 heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
                 if (fresh) {
                     ps = Math.min(ps, h); //minHeat0
