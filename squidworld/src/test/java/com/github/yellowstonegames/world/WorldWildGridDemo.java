@@ -98,7 +98,7 @@ public class WorldWildGridDemo extends ApplicationAdapter {
     @Override
     public void create() {
         stage = new Stage();
-        display = new GlyphGrid(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight), bigWidth, bigHeight);
+        display = new GlyphGrid(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight).adjustLineHeight(1.25f), bigWidth, bigHeight, true);
         view = display.viewport = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
         seed = 1234567890L;

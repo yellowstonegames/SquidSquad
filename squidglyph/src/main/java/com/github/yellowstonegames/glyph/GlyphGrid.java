@@ -255,6 +255,8 @@ public class GlyphGrid extends Group {
      */
     public void draw(Batch batch) {
         getStage().setViewport(viewport);
+        float originalDescent = font.descent;
+        font.setDescent(0f);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
@@ -262,13 +264,14 @@ public class GlyphGrid extends Group {
             font.drawBlocks(batch, backgrounds, x, y);
         Coord pos;
         ObjectList<Coord> order = map.order();
-        y -= font.descent * font.scaleY;
-//        x += font.cellWidth * 0.5f;
+//        y -= font.descent * font.scaleY;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             font.drawGlyph(batch, map.getAt(i), x + pos.x, y + pos.y);
         }
         super.drawChildren(batch, 1f);
+        font.setDescent(originalDescent);
+
     }
 
     /**
@@ -280,6 +283,8 @@ public class GlyphGrid extends Group {
      */
     public void draw(Batch batch, Frustum limit) {
         getStage().setViewport(viewport);
+        float originalDescent = font.descent;
+        font.setDescent(0f);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
@@ -288,8 +293,7 @@ public class GlyphGrid extends Group {
         float xPos, yPos, boundsWidth = 2f, boundsHeight = 2f;
         Coord pos;
         ObjectList<Coord> order = map.order();
-        y -= font.descent * font.scaleY;
-//        x += font.cellWidth * 0.5f;
+//        y -= font.descent * font.scaleY;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             xPos = x + pos.x;
@@ -298,7 +302,7 @@ public class GlyphGrid extends Group {
                 font.drawGlyph(batch, map.getAt(i), xPos, yPos);
         }
         super.drawChildren(batch, 1f);
-
+        font.setDescent(originalDescent);
     }
 
     /**
@@ -317,6 +321,8 @@ public class GlyphGrid extends Group {
      */
     public void draw(Batch batch, int startCellX, int startCellY, int endCellX, int endCellY) {
         getStage().setViewport(viewport);
+        float originalDescent = font.descent;
+        font.setDescent(0f);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
@@ -324,8 +330,7 @@ public class GlyphGrid extends Group {
             font.drawBlocks(batch, backgrounds, x, y);
         Coord pos;
         long glyph;
-        y -= font.descent * font.scaleY;
-//        x += font.cellWidth * 0.5f;
+//        y -= font.descent * font.scaleY;
         for (int xx = startCellX; xx < endCellX; xx++) {
             for (int yy = startCellY; yy < endCellY; yy++) {
                 pos = Coord.get(xx, yy);
@@ -335,6 +340,7 @@ public class GlyphGrid extends Group {
             }
         }
         super.drawChildren(batch, 1f);
+        font.setDescent(originalDescent);
     }
 
     @Override
