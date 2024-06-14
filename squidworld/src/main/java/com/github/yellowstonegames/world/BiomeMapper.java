@@ -1125,7 +1125,7 @@ public interface BiomeMapper {
         {
             for (int m = 0; m < 10; m++) {
                 for (int h = 0; h < 6; h++) {
-                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(h * -0.12f + 0.66f + hue, 1f + saturation, 0.375f + m * 0.05f + brightness, 1f);
+                    colorTable[m * 6 + h] = DescriptiveColor.oklabByHSL(m * -0.42f + 0.66f + hue, 1f + saturation, h * 0.1f + 0.25f + brightness, 1f);
                 }
             }
             for (int i = 60; i < 66; i++) {
@@ -1238,60 +1238,73 @@ public interface BiomeMapper {
             final int[][] heightCodeData = world.heightCodeData;
             final float[][] heatData = world.heatData, moistureData = world.moistureData;
             final float i_hot = 1f / world.maxHeat;
-            final float con = 0.2f * contrast;
-            int hc = 5, mc = 5, heightCode;
+            int hc, mc, heightCode;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
 
                     heightCode = heightCodeData[x][y];
-                    if (heightCode == 1000) {
+                    if(heightCode == 1000) {
                         biomeCodeData[x][y] = 60;
                         colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(colorDataOklab[x][y] = colorTable[60]);
                         continue;
                     }
                     float hot, moist;
-                    float hotMix = 0.5f, moistMix = 0.5f;
-                    int wetLow = 0, wetHigh = 5, hotLow = 0, hotHigh = 5;
+                    float hotMix = 1f, moistMix = 1f;
+                    int wetLow = 5, wetHigh = 5, hotLow = 5, hotHigh = 5;
                     hot = heatData[x][y] * i_hot;
                     moist = moistureData[x][y];
+                    hc = 5;
+                    mc = 5;
                     for (int i = 0; i < 6; i++) {
-                        if (moist <= MOISTURE_UPPER[i]) {
+                        if(moist <= MOISTURE_UPPER[i]) {
                             mc = i;
-                            if (moist <= MOISTURE_MID[0]) {
-                                moistMix = 1f;
-                                wetLow = wetHigh = 0;
-                            } else if (moist > MOISTURE_MID[5]) {
-                                moistMix = 0f;
-                                wetLow = wetHigh = 5;
-                            } else if (moist <= MOISTURE_MID[i]) {
+                            if(moist <= MOISTURE_MID[0]) {
+                                moistMix = 0;
+//                                moistMix = MathTools.norm(world.minWet, MOISTURE_MID[0], moist);
+                                wetLow = 0;
+                                wetHigh = 0;
+                            }
+                            else if(moist > MOISTURE_MID[5]) {
+                                moistMix = 1;
+//                                moistMix = MathTools.norm(MOISTURE_MID[5], world.maxWet, moist);;
+                                wetLow = 5;
+                                wetHigh = 5;
+                            }
+                            else if(moist <= MOISTURE_MID[i]) {
                                 moistMix = MathTools.norm(MOISTURE_MID[i - 1], MOISTURE_MID[i], moist);
-                                wetLow = i - 1;
+                                wetLow = i-1;
                                 wetHigh = i;
-                            } else {
+                            }
+                            else {
                                 moistMix = MathTools.norm(MOISTURE_MID[i], MOISTURE_MID[i + 1], moist);
                                 wetLow = i;
-                                wetHigh = i + 1;
+                                wetHigh = i+1;
                             }
                             break;
                         }
                     }
                     for (int i = 0; i < 6; i++) {
-                        if (hot <= HEAT_UPPER[i]) {
+                        if(hot <= HEAT_UPPER[i]) {
                             hc = i;
-                            if (hot <= HEAT_MID[0]) {
-                                hotMix = 1f;
-                                hotLow = hotHigh = 0;
-                            } else if (hot > HEAT_MID[5]) {
-                                hotMix = 0f;
-                                hotLow = hotHigh = 5;
-                            } else if (hot <= HEAT_MID[i]) {
+                            if(hot <= HEAT_MID[0]) {
+                                hotMix = MathTools.norm(world.minHeat, HEAT_MID[0], hot);
+                                hotLow = 0;
+                                hotHigh = 0;
+                            }
+                            else if(hot > HEAT_MID[5]) {
+                                hotMix = MathTools.norm(HEAT_MID[5], world.maxHeat, hot);;
+                                hotLow = 5;
+                                hotHigh = 5;
+                            }
+                            else if(hot <= HEAT_MID[i]) {
                                 hotMix = MathTools.norm(HEAT_MID[i - 1], HEAT_MID[i], hot);
-                                hotLow = i - 1;
+                                hotLow = i-1;
                                 hotHigh = i;
-                            } else {
+                            }
+                            else {
                                 hotMix = MathTools.norm(HEAT_MID[i], HEAT_MID[i + 1], hot);
                                 hotLow = i;
-                                hotHigh = i + 1;
+                                hotHigh = i+1;
                             }
                             break;
                         }

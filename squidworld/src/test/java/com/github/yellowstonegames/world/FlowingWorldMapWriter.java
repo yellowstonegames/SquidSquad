@@ -296,8 +296,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         world = new GlobeMap(seed, width, height, iNoise, 0.75f);
 
 
-//        wmv = new UnrealisticWorldMapView(world);
-        wmv = new BlendedWorldMapView(world);
+        wmv = new UnrealisticWorldMapView(world);
+//        wmv = new BlendedWorldMapView(world);
 //        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
