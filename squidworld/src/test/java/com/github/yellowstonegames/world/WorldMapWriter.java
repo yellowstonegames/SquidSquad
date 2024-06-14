@@ -29,9 +29,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.grid.CyclicNoise;
-import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -121,11 +119,11 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 1f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 1f, 1f);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
-        fn.setFractalSpiral(true);
+        fn.setFractalSpiral(false);
 //        noise = fn;
 
-        noise = new CyclicNoise(seed, 4, 2.4f);
-//        noise.setInterpolation(Noise.QUINTIC);
+//        noise = new CyclicNoise(seed, 4, 1.9f);
+        noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
 
 //        if(FLOWING_LAND)
 //            noise = new Noise.Adapted3DFrom5D(fn);

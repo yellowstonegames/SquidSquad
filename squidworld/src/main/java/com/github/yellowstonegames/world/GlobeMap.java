@@ -360,16 +360,12 @@ public class GlobeMap extends WorldMapGenerator {
         for (int y = 0; y < height; y++, yPos += i_uh) {
             temp = (yPos - halfHeight) * i_half;
             temp = RoughMath.expRough(-temp*temp) * 2.2f;
-//            temp = Math.abs(yPos - halfHeight) * i_half;
-//            temp *= (2.4f - temp);
-//            temp = 2.2f - temp;
             for (int x = 0; x < width; x++) {
-                h = heightData[x][y];
                 if (heightCodeData[x][y] == 10000) {
                     heightCodeData[x][y] = 1000;
                     continue;
                 } else {
-                    heightCodeData[x][y] = codeHeight(th = h);
+                    heightCodeData[x][y] = codeHeight(th = heightData[x][y]);
                 }
                 hMod = (RoughMath.logisticRough(th*2.75f-1f)+0.18f);
                 h = 0.39f - RoughMath.logisticRough(th*4f) * (th+0.1f) * 0.82f;
