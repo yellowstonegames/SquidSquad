@@ -29,7 +29,10 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.FoamNoise;
+import com.github.yellowstonegames.grid.INoise;
+import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -40,7 +43,7 @@ import java.util.Date;
 /**
  * Writes one or more still globes to the out/ folder.
  */
-public class WorldMapWriter extends ApplicationAdapter {
+public class BulkWorldMapWriter extends ApplicationAdapter {
     private static final int AA = 1;
 
     private static final int width = 1920, height = 1080;
@@ -59,15 +62,12 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 256 >>> AA, height = 256 >>> AA; // mimic local
 //    private static final int width = 1024, height = 512; // elliptical
 
-    private static final int LIMIT = 5;
-//    private static final boolean FLOWING_LAND = true;
+//    private static final boolean FLOWING_LAND = false;
 //    private static final boolean ALIEN_COLORS = false;
-
-    private int baseSeed = 1234567890;
 
     private Thesaurus thesaurus;
 
-    private boolean classNameMode = false;
+    private boolean classNameMode = true;
     private String makeName(final Thesaurus thesaurus)
     {
         return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
@@ -104,12 +104,24 @@ public class WorldMapWriter extends ApplicationAdapter {
             rng = new DistinctRandom(Hasher.balam.hash64(date));
         //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         seed = rng.getSelectedState(0);
-        
-        thesaurus = new Thesaurus(rng);
+
+        noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.3f, NoiseWrapper.FBM, 1);
+        WorldMapGenerator[] generators = {
+                new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f),
+                new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f),
+                new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
+                new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
+                new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f),
+                new StretchWorldMap(seed, width << AA, height << AA, noise, 2f),
+                new TilingWorldMap(seed, width << AA, height << AA, noise, 2f),
+        };
+        for(WorldMapGenerator world : generators) {
+            this.world = world;
+            thesaurus = new Thesaurus(rng);
 
 //        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-        Noise fn = new Noise((int) seed, 1.35f, Noise.VALUE_FRACTAL, 3);
+//        Noise fn = new Noise((int) seed, 1.35f, Noise.VALUE_FRACTAL, 3);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
@@ -121,11 +133,9 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 1f);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 1f, 1f);
 //        fn.setFractalType(Noise.DOMAIN_WARP);
-        fn.setFractalSpiral(false);
 //        noise = fn;
 
 //        noise = new CyclicNoise(seed, 4, 1.9f);
-        noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
 
 //        if(FLOWING_LAND)
 //            noise = new Noise.Adapted3DFrom5D(fn);
@@ -134,13 +144,6 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new MimicWorldMap(seed, noise, 2f);
 //        world = new MimicLocalMap(seed, noise, 2f);
 //        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
@@ -153,51 +156,16 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
-//        wmv = new DetailedWorldMapView(world);
-        wmv = new BlendedWorldMapView(world);
 
-//        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
+            wmv = new BlendedWorldMapView(world);
+            rng.setSeed(seed);
 
-        //generate(seed);
-        rng.setSeed(seed);
-//        path = "out/worlds/" + date + "/EllipseFoam/";
-//        path = "out/worlds/" + date + "/EllipseTaffy/";
-//        path = "out/worlds/" + date + "/HyperellipseTaffy/";
-//        path = "out/worlds/" + date + "/HyperellipseSimplex/";
-//        path = "out/worlds/" + date + "/HyperellipseFoam/";
-//        path = "out/worlds/" + date + "/HyperellipseFoam/";
-//        path = "out/worlds/" + date + "/EllipseFoam/";
-//        path = "out/worlds/" + date + "/HexagonFoam/";
-//        path = "out/worlds/" + date + "/HexagonTaffy/";
-//        path = "out/worlds/" + date + "/HexagonSimplex2/";
-//        path = "out/worlds/" + date + "/LocalSimplex2/";
-//        path = "out/worlds/" + date + "/MimicLocalSimplex2/";
-//        path = "out/worlds/" + date + "/MimicSimplex2/";
-//        path = "out/worlds/" + date + "/RoundSideSimplex2/";
-//        path = "out/worlds/" + date + "/RoundSideFoam/";
-//        path = "out/worlds/" + date + "/TilingFoam/";
-//        path = "out/worlds/" + date + "/LocalFoam/";
-//        path = "out/worlds/" + date + "/StretchFoam/";
-//        path = "out/worlds/" + date + "/LatLonFoam/";
-//        path = "out/worlds/" + date + "/GlobePerlinNormal/";
+            path = "out/worlds/" + date + "/bulk/";
 
-        path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
-                    + (noise == fn ? (Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown")) : noise.getTag()) + "_"
-                    + wmv.getClass().getSimpleName() + "/";
+            if (!Gdx.files.local(path).exists())
+                Gdx.files.local(path).mkdirs();
 
-//        path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
-//                    + Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown") + "_"
-//                    + wmv.getClass().getSimpleName() + "AlternateFlat" + "/";
-//
-//        path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
-//                    + Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown") + "_"
-//                    + wmv.getClass().getSimpleName() + "AlternateFlatter" + "/";
-
-        if(!Gdx.files.local(path).exists())
-            Gdx.files.local(path).mkdirs();
-
-        Gdx.graphics.setContinuousRendering(false);
-        for (int i = 0; i < LIMIT; i++) {
+            Gdx.graphics.setContinuousRendering(false);
             putMap();
         }
         Gdx.app.exit();
@@ -208,13 +176,6 @@ public class WorldMapWriter extends ApplicationAdapter {
         long startTime = System.currentTimeMillis();
         //randomizeColors(seed);
 //        world.generate(1, 1.125, seed); // mimic of Earth favors too-cold planets
-//        dbm.makeBiomes(world);
-//        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, FastNoise.instance, octaveCounter * 0.001);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, PerlinNoise.instance, octaveCounter * 0.001, 0.0625, 2.5);
-//        world = new WorldMapGenerator.EllipticalMap(seed, width, height, PerlinNoise.instance, octaveCounter * 0.001);
-//        world.generate(0.95 + NumberTools.formCurvedDouble((seed ^ 0x123456789ABCDL) * 0x12345689ABL) * 0.15,
-//                DiverRNG.determineDouble(seed * 0x12345L + 0x54321L) * 0.2 + 1.0, seed);
-//        dbm.makeBiomes(world);
         world.rng.setSeed(seed);
         world.seedA = world.rng.getStateA();
         world.seedB = world.rng.getStateB();
@@ -275,10 +236,10 @@ public class WorldMapWriter extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidSquad Demo: World Map Writer");
+        config.setTitle("SquidSquad: Bulk World Map Writer");
         config.setWindowedMode(400, 200);
         config.setResizable(false);
         config.useVsync(true);
-        new Lwjgl3Application(new WorldMapWriter(), config);
+        new Lwjgl3Application(new BulkWorldMapWriter(), config);
     }
 }
