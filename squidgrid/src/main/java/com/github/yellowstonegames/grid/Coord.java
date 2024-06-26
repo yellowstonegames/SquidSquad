@@ -134,7 +134,7 @@ public final class Coord implements Point2<Coord> {
      *
      * @param from the starting Coord to measure from
      * @param to   the ending Coord to measure to
-     * @return the angle in radians from {@code from} to {@code to}; 0 is to the right
+     * @return the angle in counterclockwise radians from {@code from} to {@code to}; 0 is to the right
      */
     public static float radians(final Coord from, final Coord to) {
         return TrigTools.atan2(to.y - from.y, to.x - from.x);
@@ -152,7 +152,7 @@ public final class Coord implements Point2<Coord> {
      *
      * @param from the starting Coord to measure from
      * @param to   the ending Coord to measure to
-     * @return the angle in degrees from {@code from} to {@code to}; 0 is to the right
+     * @return the angle in counterclockwise degrees from {@code from} to {@code to}; 0 is to the right
      */
     public static float degrees(final Coord from, final Coord to) {
         return TrigTools.atan2Deg360(to.y - from.y, to.x - from.x);
@@ -170,7 +170,7 @@ public final class Coord implements Point2<Coord> {
      *
      * @param from the starting Coord to measure from
      * @param to   the ending Coord to measure to
-     * @return the angle in turns from {@code from} to {@code to}; 0 is to the right
+     * @return the angle in counterclockwise turns from {@code from} to {@code to}; 0 is to the right
      */
     public static float turns(final Coord from, final Coord to) {
         return TrigTools.atan2Turns(to.y - from.y, to.x - from.x);
