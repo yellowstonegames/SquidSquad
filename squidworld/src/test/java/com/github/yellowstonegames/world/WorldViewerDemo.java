@@ -85,7 +85,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
         view = new StretchViewport(width << AA, height << AA);
         seed = 42;
         rng = new DistinctRandom(seed);
-        //// NOTE: this FastNoise has a different frequency (1f) than the default (1/32f), and that
+        //// NOTE: this Noise has a different frequency (1f) than the default (1/32f), and that
         //// makes a huge difference on world map quality. It also uses extra octaves.
         //WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(3);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalLacunarity(0.625f);
@@ -219,7 +219,8 @@ public class WorldViewerDemo extends ApplicationAdapter {
     }
     public void zoomIn(int zoomX, int zoomY)
     {
-        if(world.heightCodeData[zoomX][zoomY] >= 100)
+        if(zoomX < 0 || zoomY < 0 || zoomX >= world.heightCodeData.length || zoomY >= world.heightCodeData[zoomX].length
+                || world.heightCodeData[zoomX][zoomY] >= 100)
             return;
         long startTime = System.currentTimeMillis();
 //        noiseCalls = 0;

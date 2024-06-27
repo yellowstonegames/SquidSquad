@@ -170,19 +170,22 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
             return;
         long startTime = System.nanoTime();
 //        noiseCalls = 0;
-//        world.zoomIn(1, zoomX, zoomY);
-        inner.rng.setState(LongPointHash.hashAll(zoomX, zoomY, world.rng.getStateA()), LongPointHash.hashAll(zoomX, zoomY, world.rng.getStateB()));
-        int[][] colors = wmv.getColorMapOklab();
-        wmv.match(colors[zoomX][zoomY],
-                colors[(zoomX + 2) % colors.length][zoomY],
-                colors[zoomX][(zoomY + 2) % colors[0].length],
-                colors[(zoomX + colors.length - 2) % colors.length][zoomY],
-                colors[zoomX][(zoomY + colors[0].length - 2) % colors[0].length]
-        );
-        wmv.setWorld(inner);
-        wmv.generate(inner.rng.getStateA(), inner.rng.getStateB(), world.heightCodeData[zoomX][zoomY] < 4 ? 0f : 4f +
-                        world.heightData[zoomX][zoomY],
-                world.heatData[zoomX][zoomY] + 0.5f);
+        world.zoomIn(1, zoomX, zoomY);
+        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
+
+
+//        inner.rng.setState(LongPointHash.hashAll(zoomX, zoomY, world.rng.getStateA()), LongPointHash.hashAll(zoomX, zoomY, world.rng.getStateB()));
+//        int[][] colors = wmv.getColorMapOklab();
+//        wmv.match(colors[zoomX][zoomY],
+//                colors[(zoomX + 2) % colors.length][zoomY],
+//                colors[zoomX][(zoomY + 2) % colors[0].length],
+//                colors[(zoomX + colors.length - 2) % colors.length][zoomY],
+//                colors[zoomX][(zoomY + colors[0].length - 2) % colors[0].length]
+//        );
+//        wmv.setWorld(inner);
+//        wmv.generate(inner.rng.getStateA(), inner.rng.getStateB(), world.heightCodeData[zoomX][zoomY] < 4 ? 0f : 4f +
+//                        world.heightData[zoomX][zoomY],
+//                world.heatData[zoomX][zoomY] + 0.5f);
         wmv.show();
         ttg = System.nanoTime() - startTime >> 20;
     }
@@ -199,10 +202,12 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
     {
         long startTime = System.nanoTime();
 //        noiseCalls = 0;
-//        world.zoomOut(1, zoomX, zoomY);
-        wmv.initialize();
-        wmv.setWorld(world);
+        world.zoomOut(1, zoomX, zoomY);
         wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
+
+//        wmv.initialize();
+//        wmv.setWorld(world);
+//        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
         wmv.show();
         ttg = System.nanoTime() - startTime >> 20;
     }

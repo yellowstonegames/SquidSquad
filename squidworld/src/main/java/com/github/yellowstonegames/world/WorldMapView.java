@@ -27,7 +27,9 @@ import com.github.yellowstonegames.world.BiomeMapper.*;
  * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors.
  * <br>
  * The main implementations of this so far are {@link DetailedWorldMapView} and {@link BlendedWorldMapView}, which use
- * a {@link DetailedBiomeMapper} and a {@link BlendedBiomeMapper}, respectively.
+ * a {@link DetailedBiomeMapper} and a {@link BlendedBiomeMapper}, respectively. The Blended types tend to be easier to
+ * use and produce smoother transitions between biomes; they are preferred. There is also
+ * {@link UnrealisticWorldMapView}, which is meant for debugging world maps to find any flaws in a particular generator.
  */
 public interface WorldMapView {
     int getWidth();
