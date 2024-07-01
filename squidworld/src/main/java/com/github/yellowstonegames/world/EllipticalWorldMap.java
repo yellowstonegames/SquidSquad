@@ -244,12 +244,12 @@ public class EllipticalWorldMap extends WorldMapGenerator {
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
             thx = TrigTools.asin((yPos) * iry);
-            lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cos(thx);
+            lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cosSmoother(thx);
             thy = thx * 2f;
-            lat = TrigTools.asin((thy + TrigTools.sin(thy)) * ipi);
+            lat = TrigTools.asin((thy + TrigTools.sinSmoother(thy)) * ipi);
 
-            qc = TrigTools.cos(lat);
-            qs = TrigTools.sin(lat);
+            qc = TrigTools.cosSmoother(lat);
+            qs = TrigTools.sinSmoother(lat);
 
             boolean inSpace = true;
             xPos = startX;
@@ -266,8 +266,8 @@ public class EllipticalWorldMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th += centerLongitude;
-                ps = TrigTools.sin(th) * qc;
-                pc = TrigTools.cos(th) * qc;
+                ps = TrigTools.sinSmoother(th) * qc;
+                pc = TrigTools.cosSmoother(th) * qc;
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;

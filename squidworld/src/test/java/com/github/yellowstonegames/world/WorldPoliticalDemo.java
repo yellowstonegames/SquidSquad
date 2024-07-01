@@ -59,7 +59,8 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
     private Viewport view;
     private DistinctRandom rng;
     private long seed;
-    private WorldMapGenerator world, inner;
+    private WorldMapGenerator world;
+    private WorldMapGenerator inner;
     private WorldMapView wmv;
     private PoliticalMapper fpm;
     private char[][] political;
@@ -93,8 +94,8 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.7);
 //        world = new WorldMapGenerator.RotatingSpaceMap(seed, width, height, new FastNoise(rng.nextInt(), 1f, FastNoise.SIMPLEX_FRACTAL, 2), 0.7);
         //world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
-        world = new HyperellipticalWorldMap(seed, width, height, noise, 1.2f, 0.0625f, 2.5f);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.2, 0.0, 2.0);
+//        world = new HyperellipticalWorldMap(seed, width, height, noise, 1.2f, 0.0625f, 2.5f);
+        world = new EllipticalWorldMap(seed, width, height, noise, 1.2f);
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.6);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.65);
 //        world = new WorldMapGenerator.LocalMimicMap(seed, ((WorldMapGenerator.LocalMimicMap) world).earth.not(), WorldMapGenerator.DEFAULT_NOISE, 0.9);
@@ -275,7 +276,7 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
         // standard clear the background routine for libGDX
         ScreenUtils.clear(INK);
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        nation = MathTools.swayTight((System.nanoTime() & 0xFFFFFFFFL) * 0x1p-31f);
+//        nation = MathTools.swayTight((System.nanoTime() & 0xFFFFFFFFL) * 0x1p-31f);
         if(spinning) 
             rotate();
         // need to display the map every frame, since we clear the screen to avoid artifacts.
