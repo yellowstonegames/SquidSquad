@@ -23,8 +23,6 @@ import com.github.yellowstonegames.grid.Noise;
 
 import java.util.Arrays;
 
-import static com.github.tommyettinger.digital.TrigTools.*;
-
 /**
  * A concrete implementation of {@link WorldMapGenerator} that imitates an infinite-distance perspective view of a
  * world, showing only one hemisphere, that should be as wide as it is tall (its outline is a circle). It should
@@ -205,7 +203,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, lon, lat, rho,
-                i_pi = 1f / PI,
+                i_pi = 1f / TrigTools.PI,
                 rx = width * 0.5f, irx = i_uw / rx,
                 ry = height * 0.5f, iry = i_uh / ry;
 
@@ -216,6 +214,25 @@ public class RotatingGlobeMap extends WorldMapGenerator {
             xPos = startX - rx;
             ixPos = xPos / rx;
             lat = TrigTools.asin(iyPos);
+
+            float radians, from, to;
+            int floor, masked;
+            radians = lat * TrigTools.radToIndex;
+            floor = (int)(radians + 16384f) - 16384;
+            radians -= floor;
+            masked = floor & TrigTools.TABLE_MASK;
+
+//            qs = TrigTools.SIN_TABLE[masked];
+//            qc = TrigTools.COS_TABLE[masked];
+
+            from = TrigTools.SIN_TABLE[masked];
+            to = TrigTools.SIN_TABLE[masked+1];
+            qs = from + (to - from) * (radians);
+
+            from = TrigTools.COS_TABLE[masked];
+            to = TrigTools.COS_TABLE[masked+1];
+            qc = from + (to - from) * (radians);
+
             for (int x = 0; x < width; x++, xPos += i_uw, ixPos += irx) {
                 rho = (ixPos * ixPos + iyPos * iyPos);
                 if (rho > 1f) {
@@ -230,22 +247,29 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th = TrigTools.asin(rho); // c
-                lon = removeExcess((centerLongitude + (atan2(ixPos * rho, rho * cos(th)))) * 0.5f);
+                lon = removeExcess((centerLongitude + (TrigTools.atan2(ixPos * rho, rho * TrigTools.cosSmoother(th)))) * 0.5f);
 
-                int sinIndex = (int) (lat * radToIndex) & TABLE_MASK;
-                qs = SIN_TABLE[sinIndex];
-                qc = SIN_TABLE[sinIndex + SIN_TO_COS & TABLE_MASK];
+                radians = lon * TrigTools.radToIndex;
+                floor = (int)(radians + 16384f) - 16384;
+                masked = floor & TrigTools.TABLE_MASK;
 
-                sinIndex = (int) (lon * radToIndex) & TABLE_MASK;
-                ps = SIN_TABLE[sinIndex];
-                pc = SIN_TABLE[sinIndex + SIN_TO_COS & TABLE_MASK];
+//                ps = TrigTools.SIN_TABLE[masked];
+//                pc = TrigTools.COS_TABLE[masked];
+//
+                from = TrigTools.SIN_TABLE[masked];
+                to = TrigTools.SIN_TABLE[masked+1];
+                ps = from + (to - from) * (radians);
+
+                from = TrigTools.COS_TABLE[masked];
+                to = TrigTools.COS_TABLE[masked+1];
+                pc = from + (to - from) * (radians);
 
                 ax = (int) ((lon * i_pi + 1f) * width);
                 ay = (int) ((qs + 1f) * ry);
 
 //                    // Hammer projection, not an inverse projection like we usually use
-//                    z = 1f / Math.sqrt(1 + qc * TrigTools.cos(lon * 0.5f));
-//                    ax = (int)((qc * TrigTools.sin(lon * 0.5f) * z + 1f) * width);
+//                    z = 1f / Math.sqrt(1 + qc * TrigTools.cosSmoother(lon * 0.5f));
+//                    ax = (int)((qc * TrigTools.sinSmoother(lon * 0.5f) * z + 1f) * width);
 //                    ay = (int)((qs * z + 1f) * height * 0.5f);
 
                 if (ax >= storedMap.width || ax < 0 || ay >= storedMap.height || ay < 0) {

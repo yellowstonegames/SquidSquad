@@ -248,15 +248,15 @@ public class RoundSideWorldMap extends WorldMapGenerator {
 
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            thy = yPos * iry;//TrigTools.sin(thb);
+            thy = yPos * iry;//TrigTools.sinSmoother(thb);
             thb = TrigTools.asin(thy);
-            thx = TrigTools.cos(thb);
+            thx = TrigTools.cosSmoother(thb);
             //1.3265004f 0.7538633073600218f  1.326500428177002f
             lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? 0x1.0p70f : irx / (0.42223820031577125f * (1f + thx));
             qs = (thb + (thx + 2f) * thy) * 0.2800495767557787f;
             lat = TrigTools.asin(qs);
 
-            qc = TrigTools.cos(lat);
+            qc = TrigTools.cosSmoother(lat);
 
             boolean inSpace = true;
             xPos = startX - hw;
@@ -273,8 +273,8 @@ public class RoundSideWorldMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th += centerLongitude;
-                ps = TrigTools.sin(th) * qc;
-                pc = TrigTools.cos(th) * qc;
+                ps = TrigTools.sinSmoother(th) * qc;
+                pc = TrigTools.cosSmoother(th) * qc;
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;

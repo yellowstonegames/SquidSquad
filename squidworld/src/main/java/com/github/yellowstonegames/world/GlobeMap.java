@@ -298,6 +298,12 @@ public class GlobeMap extends WorldMapGenerator {
             boolean inSpace = true;
             xPos = startX - rx;
             ixPos = xPos / rx;
+
+            lat = TrigTools.asin(iyPos);
+
+            qc = TrigTools.cosSmoother(lat);
+            qs = TrigTools.sinSmoother(lat);
+
             for (int x = 0; x < width; x++, xPos += i_uw, ixPos += irx) {
                 rho = (float) Math.sqrt(ixPos * ixPos + iyPos * iyPos);
                 if (rho > 1f) {
@@ -311,14 +317,11 @@ public class GlobeMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th = TrigTools.asin(rho); // c
-                lat = TrigTools.asin(iyPos);
-                lon = centerLongitude + TrigTools.atan2(ixPos * rho, rho * TrigTools.cos(th));
 
-                qc = TrigTools.cos(lat);
-                qs = TrigTools.sin(lat);
+                lon = centerLongitude + TrigTools.atan2(ixPos * rho, rho * TrigTools.cosSmoother(th));
 
-                pc = TrigTools.cos(lon) * qc;
-                ps = TrigTools.sin(lon) * qc;
+                pc = TrigTools.cosSmoother(lon) * qc;
+                ps = TrigTools.sinSmoother(lon) * qc;
 
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;

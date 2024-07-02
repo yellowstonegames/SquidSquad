@@ -192,16 +192,16 @@ public class TilingWorldMap extends WorldMapGenerator {
         float[] trigTable = new float[width << 1];
         for (int x = 0; x < width; x++, xPos += i_uw) {
             p = xPos * i_w;
-            trigTable[x << 1] = TrigTools.sin(p);
-            trigTable[x << 1 | 1] = TrigTools.cos(p);
+            trigTable[x << 1] = TrigTools.sinSmoother(p);
+            trigTable[x << 1 | 1] = TrigTools.cosSmoother(p);
         }
         for (int y = 0; y < height; y++, yPos += i_uh) {
             q = yPos * i_h;
-            qs = TrigTools.sin(q);
-            qc = TrigTools.cos(q);
+            qs = TrigTools.sinSmoother(q);
+            qc = TrigTools.cosSmoother(q);
             for (int x = 0, xt = 0; x < width; x++) {
-                ps = trigTable[xt++];//TrigTools.sin(p);
-                pc = trigTable[xt++];//TrigTools.cos(p);
+                ps = trigTable[xt++];//TrigTools.sinSmoother(p);
+                pc = trigTable[xt++];//TrigTools.cosSmoother(p);
                 heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc +
                                 terrainRidged.getNoiseWithSeed(pc, ps, qc, qs, seedB - seedA) * 0.25f,
                         ps, qc, qs, seedA) + landModifier - 1.0f);

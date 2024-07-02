@@ -195,7 +195,7 @@ public class StretchWorldMap extends WorldMapGenerator {
     @Override
     public Coord project(float latitude, float longitude) {
         int x = (int) ((((longitude - getCenterLongitude()) + TrigTools.PI2 + TrigTools.PI) % TrigTools.PI2) * TrigTools.PI_INVERSE * 0.5f * width),
-                y = (int) ((TrigTools.sin(latitude) * 0.5f + 0.5f) * height);
+                y = (int) ((TrigTools.sinSmoother(latitude) * 0.5f + 0.5f) * height);
         return Coord.get(
                 wrapX(x, y),
                 wrapY(x, y));
@@ -262,16 +262,16 @@ public class StretchWorldMap extends WorldMapGenerator {
         for (int x = 0; x < width; x++, xPos += i_uw) {
             p = xPos * i_w + centerLongitude + TrigTools.PI;
             // 0.7978845608028654f 1.2533141373155001f
-            trigTable[x << 1] = TrigTools.sin(p);// * 1.2533141373155001f;
-            trigTable[x << 1 | 1] = TrigTools.cos(p);// * 0.7978845608028654f;
+            trigTable[x << 1] = TrigTools.sinSmoother(p);// * 1.2533141373155001f;
+            trigTable[x << 1 | 1] = TrigTools.cosSmoother(p);// * 0.7978845608028654f;
         }
         yPos = startY * i_h + i_uh;
         for (int y = 0; y < height; y++, yPos += i_uh) {
             qs = -1 + yPos;//-1.5707963267948966f + yPos;
-            qc = TrigTools.cos(asin(qs));
+            qc = TrigTools.cosSmoother(asin(qs));
             for (int x = 0, xt = 0; x < width; x++) {
-                ps = trigTable[xt++] * qc;//TrigTools.sin(p);
-                pc = trigTable[xt++] * qc;//TrigTools.cos(p);
+                ps = trigTable[xt++] * qc;//TrigTools.sinSmoother(p);
+                pc = trigTable[xt++] * qc;//TrigTools.cosSmoother(p);
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;

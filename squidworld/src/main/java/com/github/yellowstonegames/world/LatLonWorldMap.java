@@ -258,19 +258,19 @@ public class LatLonWorldMap extends WorldMapGenerator {
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
             thx = ((yPos) * iry) * TrigTools.HALF_PI;
-//            lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cos(thx);
+//            lon = (thx == TrigTools.HALF_PI || thx == -TrigTools.HALF_PI) ? thx : TrigTools.HALF_PI * irx / TrigTools.cosSmoother(thx);
             thy = thx * 2f;
-            lat = ((thy + TrigTools.sin(thy)) * ipi) * TrigTools.HALF_PI;
+            lat = ((thy + TrigTools.sinSmoother(thy)) * ipi) * TrigTools.HALF_PI;
 
-            qc = TrigTools.cos(lat);
-            qs = TrigTools.sin(lat);
+            qc = TrigTools.cosSmoother(lat);
+            qs = TrigTools.sinSmoother(lat);
 
             xPos = startX;
             for (int x = 0; x < width; x++, xPos += i_uw) {
                 th = (TrigTools.HALF_PI * irx * (xPos - hw) + TrigTools.PI) % TrigTools.PI2 - TrigTools.PI;
                 th += centerLongitude;
-                ps = TrigTools.sin(th) * qc;
-                pc = TrigTools.cos(th) * qc;
+                ps = TrigTools.sinSmoother(th) * qc;
+                pc = TrigTools.cosSmoother(th) * qc;
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;

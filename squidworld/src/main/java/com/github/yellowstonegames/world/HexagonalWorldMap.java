@@ -255,7 +255,7 @@ public class HexagonalWorldMap extends WorldMapGenerator {
             qs = Math.signum(thy) * (4f - thb * thb) * (1f / 3f);
             lat = TrigTools.asin(qs);
 
-            qc = TrigTools.cos(lat);
+            qc = TrigTools.cosSmoother(lat);
 
             boolean inSpace = true;
             xPos = startX - hw;
@@ -272,8 +272,8 @@ public class HexagonalWorldMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th += centerLongitude;
-                ps = TrigTools.sin(th) * qc;
-                pc = TrigTools.cos(th) * qc;
+                ps = TrigTools.sinSmoother(th) * qc;
+                pc = TrigTools.cosSmoother(th) * qc;
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;
