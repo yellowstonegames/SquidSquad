@@ -19,7 +19,7 @@ package com.github.yellowstonegames.world;
 /**
  * Added to SquidLib by Tommy Ettinger on 7/4/2018, using MIT-licensed work by Justin Kunimune from
  * <a href="https://github.com/jkunimune15/Map-Projections/blob/9f820aba788ba0b37a1c67128a4c861d243b4a46/src/utils/NumericalAnalysis.java">his Map-Projections repo</a>.
- * There may have been some small changes made. Copied to SquidSquad with the rest of SquidWorld.
+ * There have been some small changes made. Copied to SquidSquad with the rest of SquidWorld.
  * @author jkunimune
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
@@ -46,21 +46,21 @@ public class ProjectionTools {
 
     /**
      * Solves a simple ODE using Simpson's rule and a constant step size; hard-coded to solve a hyperelliptical map
-     * projection task.
+     * projection task. Modifies the float array parameter {@code y} in-place.
+     *
      * @param maximum The maximum time value at which to sample (must be positive)
-     * @param y the double array to fill with samples; must not be null and must have length 1 or greater
-     * @param h The internal step size (must be positive)
-     * @param alpha part of the hyperelliptical projection's parameters 
-     * @param kappa part of the hyperelliptical projection's parameters
+     * @param y       the double array to fill with samples; must not be null and must have length 1 or greater
+     * @param h       The internal step size (must be positive)
+     * @param alpha   part of the hyperelliptical projection's parameters
+     * @param kappa   part of the hyperelliptical projection's parameters
      * @param epsilon calculated beforehand using {@link #simpsonIntegrateHyperellipse(double, double, double, double)}
-     * @return y, after modifications
      */
-    public static float[] simpsonODESolveHyperellipse(final double maximum, final float[] y, final double h, final double alpha, final double kappa, final double epsilon)
+    public static void simpsonODESolveHyperellipse(final double maximum, final float[] y, final double h, final double alpha, final double kappa, final double epsilon)
     {
-        final int m = y.length - 1, n = m + 1;
+        final int n = y.length;
         double t = 0;
         double sum = 0;
-        for (int i = 0; i <= m; i++) {
+        for (int i = 0; i < n; i++) {
             while (t < i * maximum / n) {
                 final double tph = Math.min(t + h, i * maximum / n);
                 sum += (tph - t) / 6.0 * (Math.abs((alpha + (1-alpha)*Math.pow(1 - Math.pow(Math.abs(t), kappa), 1.0/kappa)) / (alpha + (1-alpha)*epsilon))
@@ -70,7 +70,6 @@ public class ProjectionTools {
             }
             y[i] = (float) sum;
         }
-        return y;
     }
 
     /**

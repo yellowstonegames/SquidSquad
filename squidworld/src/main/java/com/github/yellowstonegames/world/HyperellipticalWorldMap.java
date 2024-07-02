@@ -53,7 +53,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
             zPositions;
     protected final int[] edges;
     public final float alpha, kappa, epsilon;
-    private final float[] buffer;
+    private float[] buffer;
 
 
     /**
@@ -311,6 +311,31 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         return Math.max(0, Math.min(y, height - 1));
     }
 
+    @Override
+    public void zoomOut(int zoomAmount, int zoomCenterX, int zoomCenterY) {
+        if(zoomAmount == 0) return;
+        if(zoomAmount < 0) {
+            this.zoomIn(-zoomAmount, zoomCenterX, zoomCenterY);
+            return;
+        }
+        if(zoom - zoomAmount < 0) zoomAmount = zoom;
+        this.buffer = new float[buffer.length >> zoomAmount];
+        ProjectionTools.simpsonODESolveHyperellipse(1, this.buffer, 0.25 / height, alpha, kappa, epsilon);
+        super.zoomOut(zoomAmount, zoomCenterX, zoomCenterY);
+    }
+
+    @Override
+    public void zoomIn(int zoomAmount, int zoomCenterX, int zoomCenterY) {
+        if(zoomAmount == 0) return;
+        if(zoomAmount < 0) {
+            this.zoomOut(-zoomAmount, zoomCenterX, zoomCenterY);
+            return;
+        }
+        this.buffer = new float[buffer.length << zoomAmount];
+        ProjectionTools.simpsonODESolveHyperellipse(1, this.buffer, 0.25 / height, alpha, kappa, epsilon);
+        super.zoomIn(zoomAmount, zoomCenterX, zoomCenterY);
+    }
+
     /**
      * Given a latitude and longitude in radians (the conventional way of describing points on a globe), this gets the
      * (x,y) Coord on the map projection this generator uses that corresponds to the given lat-lon coordinates. If this
@@ -326,7 +351,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      */
     @Override
     public Coord project(float latitude, float longitude) {
-        final float z0 = Math.abs(TrigTools.sin(latitude));
+        final float z0 = Math.abs(TrigTools.sinSmoother(latitude));
         final int i = Arrays.binarySearch(buffer, z0);
         final float y;
         if (i >= 0)
@@ -382,8 +407,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         yPos = startY - ry;
         for (int y = 0; y < height; y++, yPos += i_uh) {
             lat = TrigTools.asin(buffer[(int) (0.5f + Math.abs(yPos * iry) * (buffer.length - 1))]) * Math.signum(yPos);
-            qs = TrigTools.sin(lat);
-            qc = TrigTools.cos(lat);
+            qs = TrigTools.sinSmoother(lat);
+            qc = TrigTools.cosSmoother(lat);
 
             boolean inSpace = true;
             xPos = startX - rx;
@@ -400,8 +425,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th += centerLongitude;
-                ps = TrigTools.sin(th) * qc;
-                pc = TrigTools.cos(th) * qc;
+                ps = TrigTools.sinSmoother(th) * qc;
+                pc = TrigTools.cosSmoother(th) * qc;
                 xPositions[x][y] = pc;
                 yPositions[x][y] = ps;
                 zPositions[x][y] = qs;
