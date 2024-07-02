@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -290,16 +291,42 @@ float cyclicNoise(vec3 p){
             yy = outputs[1][1];
             zz = outputs[1][2];
 
+//            float xr = (xx * TrigTools.radToIndex); int xf = MathTools.fastFloor(xr); xr -= xf; int xs = xf & TABLE_MASK;
+//            float yr = (yy * TrigTools.radToIndex); int yf = MathTools.fastFloor(yr); yr -= yf; int ys = yf & TABLE_MASK;
+//            float zr = (zz * TrigTools.radToIndex); int zf = MathTools.fastFloor(zr); zr -= zf; int zs = zf & TABLE_MASK;
+
             int xs = radiansToTableIndex(xx);
             int ys = radiansToTableIndex(yy);
             int zs = radiansToTableIndex(zz);
-
+//
             noise += TrigTools.sinTurns((
-                    COS_TABLE[xs] * SIN_TABLE[zs] +
-                    COS_TABLE[ys] * SIN_TABLE[xs] +
-                    COS_TABLE[zs] * SIN_TABLE[ys]
+                            COS_TABLE[xs] * SIN_TABLE[zs] +
+                            COS_TABLE[ys] * SIN_TABLE[xs] +
+                            COS_TABLE[zs] * SIN_TABLE[ys]
                     ) * (0.5f/3f)
             ) * amp;
+
+//            noise += TrigTools.sinSmootherTurns((
+//                            TrigTools.cosSmoother(xx) * TrigTools.sinSmoother(zz) +
+//                            TrigTools.cosSmoother(yy) * TrigTools.sinSmoother(xx) +
+//                            TrigTools.cosSmoother(zz) * TrigTools.sinSmoother(yy)
+//                    ) * (0.5f/3f)
+//            ) * amp;
+
+//            noise += TrigTools.sinSmootherTurns((
+//                            MathTools.lerp(COS_TABLE[xs], COS_TABLE[xs+1], xr) * MathTools.lerp(SIN_TABLE[zs], SIN_TABLE[zs+1], zr) +
+//                            MathTools.lerp(COS_TABLE[ys], COS_TABLE[ys+1], yr) * MathTools.lerp(SIN_TABLE[xs], SIN_TABLE[xs+1], xr) +
+//                            MathTools.lerp(COS_TABLE[zs], COS_TABLE[zs+1], zr) * MathTools.lerp(SIN_TABLE[ys], SIN_TABLE[ys+1], yr)
+//                    ) * (0.5f/3f)
+//            ) * amp;
+
+//            noise += TrigTools.sinSmootherTurns((float) (
+//                            Math.cos(xx) * Math.sin(zz) +
+//                            Math.cos(yy) * Math.sin(xx) +
+//                            Math.cos(zz) * Math.sin(yy)
+//                    ) * (0.5f/3f)
+//            ) * amp;
+
 
             x = xx * LACUNARITY;
             y = yy * LACUNARITY;
