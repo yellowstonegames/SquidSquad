@@ -276,7 +276,6 @@ public class GlobeMap extends WorldMapGenerator {
         }
         rng.setState(stateA, stateB);
         long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
-        int t;
 
         landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
         heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat() - 0.5f) + 1.1f : heatMod;
@@ -329,6 +328,12 @@ public class GlobeMap extends WorldMapGenerator {
                 heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc +
                                 terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
                         ps, qs, seedA) + landModifier - 1f);
+//                if(Math.abs(h) < 0.01f) {
+//                    System.out.println("zoomStartX = " + zoomStartX + "; zoomStartY = " + zoomStartY + "; zoom = " + zoom + "; width = " + width + "; height = " + height + ";");
+//                    System.out.println("regenerate("+startX+", "+startY+", "+usedWidth+", "+usedHeight+", "+landMod+", "+heatMod+", "+stateA+", "+stateB+");");
+//
+////                    System.out.println("height value: " + h + " produced at x: " + pc + ", y: " + ps + ", z: " + qs);
+//                }
                 heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
                         , qs, seedB));

@@ -297,7 +297,7 @@ public abstract class WorldMapGenerator {
      */
     public void zoomOut(int zoomAmount, int zoomCenterX, int zoomCenterY)
     {
-        zoomAmount = Math.min(zoom, zoomAmount);
+//        zoomAmount = Math.min(zoom, zoomAmount);
         if(zoomAmount == 0) return;
         if(zoomAmount < 0) {
             zoomIn(-zoomAmount, zoomCenterX, zoomCenterY);

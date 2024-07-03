@@ -263,8 +263,7 @@ float cyclicNoise(vec3 p){
     }
 
     @Override
-    public float getNoise(float xIn, float yIn, float zIn) {
-        float x = xIn, y = yIn, z = zIn;
+    public float getNoise(float x, float y, float z) {
         float noise = 0f;
 
         float amp = start;
@@ -296,13 +295,9 @@ float cyclicNoise(vec3 p){
 //            float yr = (yy * TrigTools.radToIndex); int yf = MathTools.fastFloor(yr); yr -= yf; int ys = yf & TABLE_MASK;
 //            float zr = (zz * TrigTools.radToIndex); int zf = MathTools.fastFloor(zr); zr -= zf; int zs = zf & TABLE_MASK;
 
-//            int xs = radiansToTableIndex(xx);
-//            int ys = radiansToTableIndex(yy);
-//            int zs = radiansToTableIndex(zz);
-//
-            int xs = Math.round(xx * TrigTools.radToIndex) & TABLE_MASK;
-            int ys = Math.round(yy * TrigTools.radToIndex) & TABLE_MASK;
-            int zs = Math.round(zz * TrigTools.radToIndex) & TABLE_MASK;
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
 //
             noise += TrigTools.sinSmootherTurns((
                             COS_TABLE[xs] * SIN_TABLE[zs] +
@@ -340,10 +335,7 @@ float cyclicNoise(vec3 p){
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        noise *= total;
-        if(Math.abs(noise) < 0.01f)
-            System.out.println("Noise value " + noise + " was produced by point " + xIn + "," + yIn + "," + zIn);
-        return noise;
+        return noise * total;
     }
 
     @Override

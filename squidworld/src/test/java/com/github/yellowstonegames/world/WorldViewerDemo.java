@@ -180,6 +180,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
                     case Input.Keys.NUMPAD_SUBTRACT:
                         zoomOut();
                         break;
+                    case Input.Keys.D:
+                        debug();
+                        break;
                     case Input.Keys.P:
                     case Input.Keys.S:
                         spinning = !spinning;
@@ -262,6 +265,19 @@ public class WorldViewerDemo extends ApplicationAdapter {
         long startTime = System.currentTimeMillis();
 //        noiseCalls = 0;
         world.zoomOut(1, zoomX, zoomY);
+        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
+
+//        wmv.initialize();
+//        wmv.setWorld(world);
+//        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
+        wmv.show();
+        ttg = System.currentTimeMillis() - startTime;
+    }
+    public void debug()
+    {
+        long startTime = System.currentTimeMillis();
+//        noiseCalls = 0;
+        world.zoomStartX = 53328; world.zoomStartY = 45596; world.zoom = 7;
         wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
 
 //        wmv.initialize();
