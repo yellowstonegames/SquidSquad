@@ -362,7 +362,7 @@ public final class RotationTools {
             gauss[i] = t = (float) Ziggurat.normal(randomize((sd += 0x9E3779B97F4A7C15L)));
             sum += t * t;
         }
-        final float inv = 1f / (float) Math.sqrt(sum);
+        final float inv = (float) (1.0 / Math.sqrt(sum));
         sum = 0f;
         t = 1f;
         for (int i = 0; i < targetSize; i++) {
@@ -370,7 +370,7 @@ public final class RotationTools {
             sum += t * t;
             t = 0f;
         }
-        sum = ROOT2 / (float) Math.sqrt(sum); // reused as what the subgroup paper calls c
+        sum = (float) (ROOT2 / Math.sqrt(sum)); // reused as what the subgroup paper calls c
         t = 1f;
         for (int i = 0; i < targetSize; i++) {
             gauss[i] = (t - gauss[i]) * sum;
