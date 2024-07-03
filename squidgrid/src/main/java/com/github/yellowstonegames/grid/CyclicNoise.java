@@ -235,8 +235,8 @@ float cyclicNoise(vec3 p){
 
         float xx, yy;
         for (int i = 0; i < octaves; i++) {
-            xx = sin((x-2) * warpTrk) * warp;
-            yy = sin((y-2) * warpTrk) * warp;
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
 
             inputs[0][0] = x + yy;
             inputs[0][1] = y + xx;
@@ -262,12 +262,9 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
 
-    private static float sin(double angle) {
-        return (float) Math.sin(angle);
-    }
-
     @Override
-    public float getNoise(float x, float y, float z) {
+    public float getNoise(float xIn, float yIn, float zIn) {
+        float x = xIn, y = yIn, z = zIn;
         float noise = 0f;
 
         float amp = start;
@@ -282,9 +279,9 @@ float cyclicNoise(vec3 p){
 
         float xx, yy, zz;
         for (int i = 0; i < octaves; i++) {
-            xx = sin((x-2) * warpTrk) * warp;
-            yy = sin((y-2) * warpTrk) * warp;
-            zz = sin((z-2) * warpTrk) * warp;
+            xx = TrigTools.sinSmoother((x-2) * warpTrk) * warp;
+            yy = TrigTools.sinSmoother((y-2) * warpTrk) * warp;
+            zz = TrigTools.sinSmoother((z-2) * warpTrk) * warp;
 
             inputs[1][0] = x + zz;
             inputs[1][1] = y + xx;
@@ -303,12 +300,16 @@ float cyclicNoise(vec3 p){
 //            int ys = radiansToTableIndex(yy);
 //            int zs = radiansToTableIndex(zz);
 //
-//            noise += TrigTools.sinTurns((
-//                            COS_TABLE[xs] * SIN_TABLE[zs] +
-//                            COS_TABLE[ys] * SIN_TABLE[xs] +
-//                            COS_TABLE[zs] * SIN_TABLE[ys]
-//                    ) * (0.5f/3f)
-//            ) * amp;
+            int xs = Math.round(xx * TrigTools.radToIndex) & TABLE_MASK;
+            int ys = Math.round(yy * TrigTools.radToIndex) & TABLE_MASK;
+            int zs = Math.round(zz * TrigTools.radToIndex) & TABLE_MASK;
+//
+            noise += TrigTools.sinSmootherTurns((
+                            COS_TABLE[xs] * SIN_TABLE[zs] +
+                            COS_TABLE[ys] * SIN_TABLE[xs] +
+                            COS_TABLE[zs] * SIN_TABLE[ys]
+                    ) * (0.5f/3f)
+            ) * amp;
 
 //            noise += TrigTools.sinSmootherTurns((
 //                            TrigTools.cosSmoother(xx) * TrigTools.sinSmoother(zz) +
@@ -331,13 +332,6 @@ float cyclicNoise(vec3 p){
 //                    ) * (0.5f/3f)
 //            ) * amp;
 
-            noise += sin((
-                            Math.cos(xx) * Math.sin(zz) +
-                            Math.cos(yy) * Math.sin(xx) +
-                            Math.cos(zz) * Math.sin(yy)
-                    ) * (Math.PI/3.0)
-            ) * amp;
-
 
             x = xx * LACUNARITY;
             y = yy * LACUNARITY;
@@ -346,7 +340,10 @@ float cyclicNoise(vec3 p){
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return noise * total;
+        noise *= total;
+        if(Math.abs(noise) < 0.01f)
+            System.out.println("Noise value " + noise + " was produced by point " + xIn + "," + yIn + "," + zIn);
+        return noise;
     }
 
     @Override
@@ -366,10 +363,10 @@ float cyclicNoise(vec3 p){
 
         float xx, yy, zz, ww;
         for (int i = 0; i < octaves; i++) {
-            xx = sin((x-2) * warpTrk) * warp;
-            yy = sin((y-2) * warpTrk) * warp;
-            zz = sin((z-2) * warpTrk) * warp;
-            ww = sin((w-2) * warpTrk) * warp;
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
+            ww = TrigTools.sin((w-2) * warpTrk) * warp;
 
             inputs[2][0] = x + ww;
             inputs[2][1] = y + xx;
@@ -424,11 +421,11 @@ float cyclicNoise(vec3 p){
 
         float xx, yy, zz, ww, uu;
         for (int i = 0; i < octaves; i++) {
-            xx = sin((x-2) * warpTrk) * warp;
-            yy = sin((y-2) * warpTrk) * warp;
-            zz = sin((z-2) * warpTrk) * warp;
-            ww = sin((w-2) * warpTrk) * warp;
-            uu = sin((u-2) * warpTrk) * warp;
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
+            ww = TrigTools.sin((w-2) * warpTrk) * warp;
+            uu = TrigTools.sin((u-2) * warpTrk) * warp;
 
             inputs[3][0] = x + uu;
             inputs[3][1] = y + xx;
@@ -489,12 +486,12 @@ float cyclicNoise(vec3 p){
 
         float xx, yy, zz, ww, uu, vv;
         for (int i = 0; i < octaves; i++) {
-            xx = sin((x-2) * warpTrk) * warp;
-            yy = sin((y-2) * warpTrk) * warp;
-            zz = sin((z-2) * warpTrk) * warp;
-            ww = sin((w-2) * warpTrk) * warp;
-            uu = sin((u-2) * warpTrk) * warp;
-            vv = sin((v-2) * warpTrk) * warp;
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
+            ww = TrigTools.sin((w-2) * warpTrk) * warp;
+            uu = TrigTools.sin((u-2) * warpTrk) * warp;
+            vv = TrigTools.sin((v-2) * warpTrk) * warp;
 
             inputs[4][0] = x + vv;
             inputs[4][1] = y + xx;
@@ -560,13 +557,13 @@ float cyclicNoise(vec3 p){
 
         float xx, yy, zz, ww, uu, vv, mm;
         for (int i = 0; i < octaves; i++) {
-            xx = sin((x-2) * warpTrk) * warp;
-            yy = sin((y-2) * warpTrk) * warp;
-            zz = sin((z-2) * warpTrk) * warp;
-            ww = sin((w-2) * warpTrk) * warp;
-            uu = sin((u-2) * warpTrk) * warp;
-            vv = sin((v-2) * warpTrk) * warp;
-            mm = sin((m-2) * warpTrk) * warp;
+            xx = TrigTools.sin((x-2) * warpTrk) * warp;
+            yy = TrigTools.sin((y-2) * warpTrk) * warp;
+            zz = TrigTools.sin((z-2) * warpTrk) * warp;
+            ww = TrigTools.sin((w-2) * warpTrk) * warp;
+            uu = TrigTools.sin((u-2) * warpTrk) * warp;
+            vv = TrigTools.sin((v-2) * warpTrk) * warp;
+            mm = TrigTools.sin((m-2) * warpTrk) * warp;
 
             inputs[5][0] = x + mm;
             inputs[5][1] = y + xx;

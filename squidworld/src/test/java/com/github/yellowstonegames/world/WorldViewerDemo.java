@@ -131,6 +131,8 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        terrainNoise = new SorbetNoise(rng.nextLong(), 4);
         terrainNoise = new CyclicNoise(rng.nextLong(), 1);
 //        terrainNoise = new PerlinNoise(rng.nextLong());
+//        terrainNoise = new NoiseWrapper(new PerlinNoise(rng.nextLong()), 1.6f, NoiseWrapper.FBM, 1);
+
         terrainLayeredNoise = new Noise(rng.nextInt(), 1.6f, Noise.FOAM_FRACTAL, 1);
         heatNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
         moistureNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
