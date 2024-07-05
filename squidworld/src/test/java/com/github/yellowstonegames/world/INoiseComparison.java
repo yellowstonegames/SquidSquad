@@ -209,7 +209,7 @@ public class INoiseComparison extends ApplicationAdapter {
             redistributorL, redistributorL2, redistributorX, redistributorR, redistributorT, redistributorRR,
             redistributorXB, siney, siney2};
     private int prep0 = 0;
-    private int prep1 = PREPARATIONS.length - 1;
+    private int prep1 = 0;//PREPARATIONS.length - 1;
 
     private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
@@ -244,8 +244,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new SnakeNoise(1L),
             new Noise(1)
     };
-    private int index0 = 0;
-    private int index1 = 0;
+    private int index0 = 7;
+    private int index1 = 7;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
@@ -253,7 +253,7 @@ public class INoiseComparison extends ApplicationAdapter {
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
-    private boolean slice = true;
+    private boolean slice = false;
     private boolean hue = false;
 
     private ImmediateModeRenderer20 renderer;
@@ -422,7 +422,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(x + c, y + c, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(x, y, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(x + c, y + c, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(x + c, y + c, MathTools.GOLDEN_RATIO, MathTools.ROOT2, MathTools.ROOT3, MathTools.ROOT5, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }
@@ -434,7 +434,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(x, y, c, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(x, y, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, MathTools.GOLDEN_RATIO, MathTools.ROOT2, MathTools.ROOT3, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }
@@ -446,7 +446,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(x, y, c, 1, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(x, y, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, 1, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, 1, MathTools.GOLDEN_RATIO, MathTools.ROOT2, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }
@@ -458,7 +458,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(x, y, c, 1, 1, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(x, y, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, 1, 1, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, 1, 1, MathTools.GOLDEN_RATIO, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }
@@ -502,7 +502,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(x + c, y + c, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(x, y, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(x + c, y + c, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(x + c, y + c, MathTools.GOLDEN_RATIO, MathTools.ROOT2, MathTools.ROOT3, MathTools.ROOT5, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }
@@ -514,7 +514,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(x, y, c, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(a, b, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, MathTools.GOLDEN_RATIO, MathTools.ROOT2, MathTools.ROOT3, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(a + width, b, 0);
                         }
@@ -528,7 +528,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(xc, yc, xs, ys, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(x, y, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(xc, yc, xs, ys, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(xc, yc, xs, ys, MathTools.GOLDEN_RATIO, MathTools.ROOT2, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }
@@ -542,7 +542,7 @@ public class INoiseComparison extends ApplicationAdapter {
                             bright = prepare0(adj0.getNoiseWithSeed(xc, yc, xs, ys, c, wrap0.getSeed()));
                             colorize(bright);
                             renderer.vertex(x, y, 0);
-                            bright = prepare1(adj1.getNoiseWithSeed(xc, yc, xs, ys, c, wrap1.getSeed()));
+                            bright = prepare1(adj1.getNoiseWithSeed(xc, yc, xs, ys, c, MathTools.GOLDEN_RATIO, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }
