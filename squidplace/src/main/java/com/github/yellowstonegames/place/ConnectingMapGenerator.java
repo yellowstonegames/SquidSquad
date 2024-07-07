@@ -131,18 +131,63 @@ import com.github.yellowstonegames.grid.Region;
  * }</pre>
  */
 public class ConnectingMapGenerator implements PlaceGenerator {
-    
+
+    /**
+     * The width of the place grid to generate.
+     */
     public int width;
+    /**
+     * The height of the place grid to generate.
+     */
     public int height;
+    /**
+     * The width of each room in cells; 1 is the minimum.
+     */
     public int roomWidth;
+    /**
+     * The height of each room in cells; 1 is the minimum.
+     */
     public int roomHeight;
+    /**
+     * How thick a wall between two rooms should be, in cells; 1 is the minimum, and this usually
+     * shouldn't be much more than roomWidth or roomHeight.
+     */
     public int wallThickness;
+    /**
+     * The place grid as a 2D char array. Returned by {@link #getPlaceGrid()}.
+     */
     public char[][] dungeon;
+    /**
+     * The environment as a 2D int array, with each int a constant in {@link DungeonTools}.
+     * Returned by {@link #getEnvironment()}.
+     */
     public int[][] environment;
+    /**
+     * Reset on every call to {@link #generate()}. This can be reassigned, but it must not be null.
+     */
     public Region region;
+    /**
+     * If greater than 0, this is the chance that two connected rooms should only have a 1-cell-wide
+     * connection (which can be made into a door using {@link DungeonProcessor}).
+     */
     public double divideRooms;
     private final transient Region tempRegion;
+    /**
+     * Can be swapped out for another EnhancedRandom implementation, but must not be null.
+     */
     public EnhancedRandom rng;
+
+    /**
+     * This was set to 15 in the earliest version of the code, but it seems to be fine set to as low as 1.
+     * The default value is now 1.
+     */
+    public int initialAttempts = 1;
+
+    /**
+     * This was set to 5 in the earliest version of the code, but it seems to be fine set to as low as 1.
+     * The default value is now 1.
+     */
+    public int attempts = 1;
 
     /**
      * Calls {@link #ConnectingMapGenerator(int, int, int, int, EnhancedRandom, int)} with width 80, height 80, roomWidth 8,
@@ -237,7 +282,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
                 d = dy << 16 | dx;
         links.put(d, 0);
         surface.put(d, 0);
-        for (int i = 0; i < 15 && links.size() < gridMax && !surface.isEmpty(); i++) {
+        for (int i = 0; i < initialAttempts && links.size() < gridMax && !surface.isEmpty(); i++) {
             choices.clear();
             if (dx < gridWidth - 1 && !links.containsKey(d + 1)) choices.add(1);
             if (dy < gridHeight - 1 && !links.containsKey(d + 0x10000)) choices.add(2);
@@ -281,7 +326,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
             d = surface.random(rng);
             dx = d & 0xFFFF;
             dy = d >>> 16;
-            for (int i = 0; i < 5 && links.size() < gridMax && !surface.isEmpty(); i++) {
+            for (int i = 0; i < attempts && links.size() < gridMax && !surface.isEmpty(); i++) {
                 choices.clear();
                 if (dx < gridWidth - 1 && !links.containsKey(d + 1)) choices.add(1);
                 if (dy < gridHeight - 1 && !links.containsKey(d + 0x10000)) choices.add(2);

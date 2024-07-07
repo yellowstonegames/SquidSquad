@@ -24,7 +24,7 @@ public class PlaceGeneratorSampler {
 
     public static void main(String[] args) {
         AceRandom random = new AceRandom(0xB0BAFE77BA77L);
-        DungeonProcessor proc = new DungeonProcessor(42, 42, random);
+//        DungeonProcessor proc = new DungeonProcessor(42, 42, random);
 
         PlaceGenerator[] generators = {
                 new DungeonProcessor(42, 42, random),

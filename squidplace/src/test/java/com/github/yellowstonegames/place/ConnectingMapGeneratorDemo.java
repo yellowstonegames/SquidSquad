@@ -28,11 +28,11 @@ public class ConnectingMapGeneratorDemo {
         /*
         ConnectingMapGenerator gen = new ConnectingMapGenerator(101, 101, 1, 1, random, 1, 1.0);
          */
-        ConnectingMapGenerator gen = new ConnectingMapGenerator(41, 41, 4, 4, random, 1, 0.8f);
+        ConnectingMapGenerator gen = new ConnectingMapGenerator(41, 41, 1, 1, random, 1, 0);
         //// Use when you want '#' to indicate "no connection" and '.' to indicate a connection
 //        char[][] map = gen.generate();
         //// Use when you want box-drawing character lines to indicate "no connection"; '.' indicates a connection
-        char[][] map = LineTools.hashesToLines(gen.generate());
+//        char[][] map = LineTools.hashesToLines(gen.generate());
         //// SquidSquad uses the [x][y] convention to index 2D arrays. If you aren't using box-drawing, though, the map
         //// is indistinguishable when indexed with [y][x], it just will be transposed (left-right swaps with up-down).
         //// It uses y-up, like most of libGDX, even for 2D arrays.
@@ -56,6 +56,16 @@ public class ConnectingMapGeneratorDemo {
         //// The 1-4 neighbors each R room has are connected via a '.'; if there is anything else, they don't connect.
          */
         //// This just shows the map in the console.
-        DungeonTools.debugPrint(map);
+//        DungeonTools.debugPrint(map);
+        for (int i = 15; i > 0; i-= 7) {
+            gen.initialAttempts = i;
+            for (int j = 5; j > 0; j--) {
+                gen.attempts = j;
+                gen.rng.setSeed(0xB0BAFE77B077L);
+                char[][] map = LineTools.hashesToLines(gen.generate());
+                System.out.println("With " + i + ", " + j + ": ");
+                DungeonTools.debugPrint(map);
+            }
+        }
     }
 }
