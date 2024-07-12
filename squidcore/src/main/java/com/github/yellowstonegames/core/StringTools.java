@@ -960,7 +960,9 @@ public final class StringTools {
         }
         return sb.toString();
     }
-    private static final Replacer anReplacer = new Replacer(Pattern.compile("\\b(a)(\\p{G}+)(?=[àáâãäåæāăąǻǽaèéêëēĕėęěeìíîïĩīĭįıiòóôõöøōŏőœǿoùúûüũūŭůűųu])", Pattern.IGNORE_CASE | Pattern.UNICODE), "$1n$2");
+    private static final Replacer anReplacer = new Replacer(Pattern.compile("\\b(a)(\\p{G}+)(?=(?:({=brace}[\\[\\{])[^\\]\\}]*{\\:brace})*(?:\\p{G}*)[àáâãäåæāăąǻǽaèéêëēĕėęěeìíîïĩīĭįıiòóôõöøōŏőœǿoùúûüũūŭůűųu])", Pattern.IGNORE_CASE | Pattern.UNICODE), "$1n$2");
+
+    private static final Replacer unAnReplacer = new Replacer(Pattern.compile("\\b(a)n(\\p{G}+)(?=(?:({=brace}[\\[\\{])[^\\]\\}]*{\\:brace})*(?:\\p{G}*)[bcçćĉċčdþðďđfgĝğġģhĥħjĵȷkķlĺļľŀłmnñńņňŋpqrŕŗřsśŝşšștţťțvwŵẁẃẅxyýÿŷỳzźżž])", Pattern.IGNORE_CASE | Pattern.UNICODE), "$1$2");
 
     /**
      * A simple method that looks for any occurrences of the word 'a' followed by some non-zero amount of whitespace and
@@ -968,14 +970,18 @@ public final class StringTools {
      * (such as 'an item'). The regex used here isn't bulletproof, but it should be fairly robust, handling when you
      * have multiple whitespace chars, different whitespace chars (like carriage return and newline), accented vowels in
      * the following word (but not in the initial 'a', which is expected to use English spelling rules), and the case of
-     * the initial 'a' or 'A'.
+     * the initial 'a' or 'A'. This also changes improper uses of "an" back to "a", such as by changing "an dog" to "a
+     * dog", or "an malevolent force" to "a malevolent force".
      * <br>
      * Gotta love Regexodus; this is a two-liner that uses features specific to that regular expression library.
-     * @param text the (probably generated English) multi-word text to search for 'a' in and possibly replace with 'an'
-     * @return a new String with every improper 'a' replaced
+     * This only matches text in the Latin script because a/an is a feature of English, and doesn't have a direct
+     * equivalent I know of in the Greek or Cyrillic scripts. There could easily be one! I just couldn't verify it.
+     *
+     * @param text the (probably generated English) multi-word text to search for 'a'/'an' in and possibly replace
+     * @return a new String with every improper 'a' and 'an' replaced
      */
     public static String correctABeforeVowel(final CharSequence text){
-        return anReplacer.replace(text);
+        return unAnReplacer.replace(anReplacer.replace(text.toString()));
     }
 
     /**
