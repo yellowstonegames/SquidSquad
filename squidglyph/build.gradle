@@ -6,8 +6,10 @@ sourceSets.test.resources.srcDirs += [ file('../assets').path ]
 dependencies {
     api project(':squidcore')
     api project(':squidgrid')
-//    api "com.github.tommyettinger:textratypist:$typistVersion"
-    api "com.github.tommyettinger.textratypist:textratypist:$typistVersion"
+    // for Maven Central
+    api "com.github.tommyettinger:textratypist:$typistVersion"
+    // for JitPack
+//    api "com.github.tommyettinger.textratypist:textratypist:$typistVersion"
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
     testImplementation project(':squidplace')

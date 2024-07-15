@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.glyph;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Frustum;
@@ -257,6 +258,7 @@ public class GlyphGrid extends Group {
         getStage().setViewport(viewport);
         float originalDescent = font.descent;
         font.setDescent(0f);
+        font.resizeDistanceField(viewport.getScreenWidth(), viewport.getScreenHeight(), viewport);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
@@ -285,6 +287,7 @@ public class GlyphGrid extends Group {
         getStage().setViewport(viewport);
         float originalDescent = font.descent;
         font.setDescent(0f);
+        font.resizeDistanceField(viewport.getScreenWidth(), viewport.getScreenHeight(), viewport);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
@@ -310,7 +313,7 @@ public class GlyphGrid extends Group {
      * (inclusive) and endCellX (exclusive), and likewise for startCellY and endCellY, where those ints represent cell
      * positions and not screen or world positions. This only even considers keys that are in the given start-to-end
      * rectangle, and doesn't check keys or values outside it. This is probably the most efficient of the draw() methods
-     * here, but requires you to know what the start and end bounds are. All of the start and end cell coordinates must
+     * here, but requires you to know what the start and end bounds are. All the start and end cell coordinates must
      * be non-negative.
      *
      * @param batch      a SpriteBatch, usually; must at least be compatible with SpriteBatch's attributes
@@ -323,6 +326,7 @@ public class GlyphGrid extends Group {
         getStage().setViewport(viewport);
         float originalDescent = font.descent;
         font.setDescent(0f);
+        font.resizeDistanceField(viewport.getScreenWidth(), viewport.getScreenHeight(), viewport);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         float x = getX(), y = getY();
@@ -360,8 +364,7 @@ public class GlyphGrid extends Group {
      */
     public void resize(int screenWidth, int screenHeight) {
         viewport.update(screenWidth, screenHeight, false);
-        font.resizeDistanceField((int)(screenWidth * viewport.getScreenWidth() / viewport.getWorldWidth()),
-                (int)(screenHeight * viewport.getScreenHeight() / viewport.getWorldHeight()));
+        font.resizeDistanceField(screenWidth, screenHeight, viewport);
     }
 
     /**
