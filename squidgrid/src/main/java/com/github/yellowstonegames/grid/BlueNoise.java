@@ -48,7 +48,7 @@ public final class BlueNoise {
      * that you can place any of the 1D arrays here in a grid with any other 1D array from here next to it, and no seam
      * will be visible. This is used by {@link #getSeeded(int, int, int)}. This group of byte arrays is
      * static, which is probably OK even on Android as long as no one writes to it, and uses {@link StandardCharsets}
-     * to decode itself from a String, which only works on GWT 2.8.2 and newer (current is 2.10.0, libGDX uses 2.8.2
+     * to decode itself from a String, which only works on GWT 2.8.2 and newer (current is 2.11.0, libGDX uses 2.8.2
      * unless using a special backend).
      * Each byte array can be considered [x][y] indexed or [y][x] indexed; the original images were [y][x] indexed.
      */
