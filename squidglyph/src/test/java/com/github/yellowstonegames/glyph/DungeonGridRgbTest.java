@@ -93,7 +93,8 @@ public class DungeonGridRgbTest extends ApplicationAdapter {
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_INFO);
-        long seed = EnhancedRandom.seedFromMath();// random seed every time
+        long seed = 12345; // unchanging seed
+//        long seed = EnhancedRandom.seedFromMath();// random seed every time
 //        long seed = TimeUtils.millis() >>> 21; // use to keep each seed for about half an hour; useful for testing
         Gdx.app.log("SEED", "Initial seed is " + seed);
         EnhancedRandom random = new WhiskerRandom(seed);
@@ -284,15 +285,15 @@ public class DungeonGridRgbTest extends ApplicationAdapter {
                     else {
                         switch (prunedDungeon[x][y]) {
                             case '~':
-                                gg.backgrounds[x][y] = (lighten(DEEP_COLOR, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
+                                gg.backgrounds[x][y] = (lighten(DEEP_COLOR, Math.min(Math.max(0.4f * waves.getConfiguredNoise(x, y, modifiedTime), 0f), 1f)));
                                 gg.put(x, y, prunedDungeon[x][y], deepText);
                                 break;
                             case ',':
-                                gg.backgrounds[x][y] = (lighten(SHALLOW_COLOR, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))));
+                                gg.backgrounds[x][y] = (lighten(SHALLOW_COLOR, Math.min(Math.max(0.4f * waves.getConfiguredNoise(x, y, modifiedTime), 0f), 1f)));
                                 gg.put(x, y, prunedDungeon[x][y], shallowText);
                                 break;
                             case '"':
-                                gg.backgrounds[x][y] = (darken(lerpColors(GRASS_COLOR, DRY_COLOR, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), 0.4f * Math.min(1.1f, Math.max(0, 1f - light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime * 0.7f)))));
+                                gg.backgrounds[x][y] = (adjustLightness(lerpColors(GRASS_COLOR, DRY_COLOR, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), Math.min(Math.max(0.2f * waves.getConfiguredNoise(x, y, modifiedTime * 0.7f), -1f), 1f)));
                                 gg.put(x, y, prunedDungeon[x][y], grassText);
                                 break;
                             case ' ':
@@ -306,18 +307,18 @@ public class DungeonGridRgbTest extends ApplicationAdapter {
                 } else if (seen.contains(x, y)) {
                     switch (prunedDungeon[x][y]) {
                         case '~':
-                            gg.backgrounds[x][y] = (evaluateHsl(DEEP_COLOR, null, null, DungeonGridRgbTest::slightlyDarken));
+                            gg.backgrounds[x][y] = (darken(DEEP_COLOR, 0.3f));
                             gg.put(x, y, prunedDungeon[x][y], deepText);
                             break;
                         case ',':
-                            gg.backgrounds[x][y] = (evaluateHsl(SHALLOW_COLOR, null, null, DungeonGridRgbTest::slightlyDarken));
+                            gg.backgrounds[x][y] = (darken(SHALLOW_COLOR, 0.3f));
                             gg.put(x, y, prunedDungeon[x][y], shallowText);
                             break;
                         case ' ':
                             gg.backgrounds[x][y] = 0;
                             break;
                         default:
-                            gg.backgrounds[x][y] = (evaluateHsl(STONE_COLOR, null, null, DungeonGridRgbTest::slightlyDarken));
+                            gg.backgrounds[x][y] = (darken(STONE_COLOR, 0.3f));
                             gg.put(x, y, prunedDungeon[x][y], stoneText);
                     }
                 } else {
