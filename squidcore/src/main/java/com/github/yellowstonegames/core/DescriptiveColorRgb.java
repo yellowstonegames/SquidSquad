@@ -2384,10 +2384,9 @@ public final class DescriptiveColorRgb {
         }
 
         float chr = x - Math.min(w, y);
+        float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
         float lit = x * (1f - 0.5f * chr / (x + 1e-10f));
         lit = (MathTools.fract(lit + 0.5f) + lit) * 0.5f;
-        float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
-        float hue = Math.abs(z + (w - y) / (6f * chr + 1e-10f));
 
         x = Math.min(Math.max(Math.abs(hue * 6f - 3f) - 1f, 0f), 1f);
         y = hue + 2f / 3f;
@@ -2396,15 +2395,15 @@ public final class DescriptiveColorRgb {
         z -= (int) z;
         y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
         z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
-        float v = lit + sat * Math.min(lit, 1f - lit);
-        float d = 2f * (1f - lit / (v + 1e-10f));
+        float v = lit + chr * 0.5f;
+        float d = lit == 0f || lit > 254.1f / 255f ? 0f : 2 * (1f - lit / v);
         v *= 255.999f;
-        r = v * (1f + (x - 1f) * d);
-        g = v * (1f + (y - 1f) * d);
-        b = v * (1f + (z - 1f) * d);
-        return Math.min(Math.max((int) r, 0), 255) << 24
-                | Math.min(Math.max((int) g, 0), 255) << 16
-                | Math.min(Math.max((int) b, 0), 255) << 8
+        r = v*(1f+(x-1f)*d);
+        g = v*(1f+(y-1f)*d);
+        b = v*(1f+(z-1f)*d);
+        return    Math.min(Math.max((int)r, 0), 255) << 24
+                | Math.min(Math.max((int)g, 0), 255) << 16
+                | Math.min(Math.max((int)b, 0), 255) << 8
                 | (rgba & 255);
     }
 

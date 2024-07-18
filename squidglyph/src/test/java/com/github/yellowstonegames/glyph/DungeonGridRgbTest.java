@@ -76,9 +76,9 @@ public class DungeonGridRgbTest extends ApplicationAdapter {
     private static final int GRASS_COLOR = describeRgb("richmost darkest green");
     private static final int DRY_COLOR = describeRgb("dark rich sage 2");
     private static final int STONE_COLOR = describeRgb("darkmost gray dullest bronze");
-    private static final int deepText = (evaluateHcl(DEEP_COLOR, null, null, DungeonGridRgbTest::flip));//(offsetLightness(DEEP_COLOR));
-    private static final int shallowText = (evaluateHcl(SHALLOW_COLOR, null, null, DungeonGridRgbTest::flip));//(offsetLightness(SHALLOW_COLOR));
-    private static final int grassText = (evaluateHcl(GRASS_COLOR, null, null, DungeonGridRgbTest::flip));//(offsetLightness(GRASS_COLOR));
+    private static final int deepText    = (offsetLightness(DEEP_COLOR));     // (evaluateHcl(DEEP_COLOR, null, null, DungeonGridRgbTest::flip));    //
+    private static final int shallowText = (offsetLightness(SHALLOW_COLOR));  // (evaluateHcl(SHALLOW_COLOR, null, null, DungeonGridRgbTest::flip)); //
+    private static final int grassText   = (offsetLightness(GRASS_COLOR));    // (evaluateHcl(GRASS_COLOR, null, null, DungeonGridRgbTest::flip));   //
     private static final int stoneText = (describeRgb("gray dullmost butter bronze"));
 
     public static void main(String[] args){
@@ -328,13 +328,6 @@ public class DungeonGridRgbTest extends ApplicationAdapter {
             }
         }
         gg.map.remove(playerGlyph.getLocation());
-    }
-
-    private static float slightlyDarken(float lightness) {
-        return 0.7f * lightness;
-    }
-    private static float flip(float x) {
-        return (MathTools.fract(x + 0.5f) + x) * 0.5f;
     }
 
     /**
