@@ -501,4 +501,31 @@ public class ColorChecks {
         }
     }
 
+    @Test
+    public void testOffsetLightness() {
+        for(int i = 0; i < DescriptiveColor.LIST.size(); i++) {
+            String name = DescriptiveColor.NAMED.keyAt(i);
+            int color = DescriptiveColor.NAMED.getAt(i);
+            int offset = DescriptiveColor.offsetLightness(color);
+            float hueDifference = -(DescriptiveColor.hue(color) - DescriptiveColor.hue(offset));
+            float satDifference = -(DescriptiveColor.saturation(color) - DescriptiveColor.saturation(offset));
+            float litDifference = -(DescriptiveColor.lightness(color) - DescriptiveColor.lightness(offset));
+            System.out.printf("Color %s with code %08X offsets to %08X, which have differences: hue=%f, sat=%f, lit=%f\n",
+                    name, color, offset, hueDifference, satDifference, litDifference);
+        }
+    }
+
+    @Test
+    public void testOffsetLightnessRgb() {
+        for(int i = 0; i < DescriptiveColorRgb.LIST.size(); i++) {
+            String name = DescriptiveColorRgb.NAMED.keyAt(i);
+            int color = DescriptiveColorRgb.NAMED.getAt(i);
+            int offset = DescriptiveColorRgb.offsetLightness(color);
+            float hueDifference = -(DescriptiveColorRgb.hue(color) - DescriptiveColorRgb.hue(offset));
+            float satDifference = -(DescriptiveColorRgb.saturation(color) - DescriptiveColorRgb.saturation(offset));
+            float litDifference = -(DescriptiveColorRgb.lightness(color) - DescriptiveColorRgb.lightness(offset));
+            System.out.printf("Color %s with code %08X offsets to %08X, which have differences: hue=%f, sat=%f, lit=%f\n",
+                    name, color, offset, hueDifference, satDifference, litDifference);
+        }
+    }
 }
