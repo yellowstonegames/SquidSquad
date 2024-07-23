@@ -366,6 +366,7 @@ public interface INoise extends Externalizable {
             register(new OpenSimplex2());
             register(new OpenSimplex2Smooth());
             register(new PerlinNoise());
+            register(new PerlueNoise());
             register(new PhantomNoise());
             register(new SimplexNoise());
             register(new SimplexNoiseHard());

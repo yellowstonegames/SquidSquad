@@ -221,6 +221,7 @@ public class INoiseComparison extends ApplicationAdapter {
 //            new OpenSimplex2(1L),
 //            new OpenSimplex2Smooth(1L),
             new PerlinNoise(1L),
+            new PerlueNoise(1L),
             new NoiseAdjustment(new PerlinNoise(1L), watcher),
             new CyclicNoise(1L, 5, 4),
             new FlanNoise(1L, 6),
@@ -244,8 +245,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new SnakeNoise(1L),
             new Noise(1)
     };
-    private int index0 = 7;
-    private int index1 = 7;
+    private int index0 = 5;
+    private int index1 = 6;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
