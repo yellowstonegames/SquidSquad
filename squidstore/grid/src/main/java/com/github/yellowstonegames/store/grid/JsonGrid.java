@@ -73,6 +73,7 @@ public final class JsonGrid {
         registerOpenSimplex2(json);
         registerOpenSimplex2Smooth(json);
         registerPerlinNoise(json);
+        registerPerlueNoise(json);
         registerPhantomNoise(json);
         registerRadialNoiseWrapper(json);
         registerSimplexNoise(json);
@@ -1058,6 +1059,31 @@ public final class JsonGrid {
             public PerlinNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return PerlinNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers PerlueNoise with the given Json object, so PerlueNoise can be written to and read from JSON.
+     * This is a simple wrapper around PerlueNoise's built-in {@link PerlueNoise#stringSerialize()} and
+     * {@link PerlueNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPerlueNoise(@NonNull Json json) {
+        json.addClassTag("PluN", PerlueNoise.class);
+        json.setSerializer(PerlueNoise.class, new Json.Serializer<PerlueNoise>() {
+            @Override
+            public void write(Json json, PerlueNoise object, Class knownType) {
+                json.writeObjectStart(PerlueNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public PerlueNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return PerlueNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }

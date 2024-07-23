@@ -557,6 +557,21 @@ public class JsonGridTest {
         System.out.println();
     }
 
+
+    @Test
+    public void testPerlueNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPerlueNoise(json);
+        PerlueNoise noise, noise2;
+        noise = new PerlueNoise(-987654321);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(PerlueNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
     @Test
     public void testBadgerNoise() {
         Json json = new Json(JsonWriter.OutputType.minimal);
