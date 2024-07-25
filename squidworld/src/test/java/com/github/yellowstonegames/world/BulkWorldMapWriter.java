@@ -91,10 +91,6 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
         png = new FastPNG();
         png.setFlipY(false);
 
-        pm = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
-        pm.setBlending(Pixmap.Blending.None);
-
-
 //        if(classNameMode)
 //            rng = new DistinctRandom(0L);
 //        else
@@ -106,6 +102,7 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
         INoise[] noises = new INoise[]{
                 new NoiseWrapper(new FoamNoise(seed), seed, 1.3f, NoiseWrapper.FBM, 1),
                 new NoiseWrapper(new PerlinNoise(seed), seed, 0.6f, NoiseWrapper.FBM, 2),
+                new NoiseWrapper(new PerlueNoise(seed), seed, 0.6f, NoiseWrapper.FBM, 2),
                 new NoiseWrapper(new SimplexNoise(seed), seed, 0.3f, NoiseWrapper.FBM, 2),
                 new NoiseWrapper(new HoneyNoise(seed), seed, 0.3f, NoiseWrapper.FBM, 2),
                 new NoiseWrapper(new ValueNoise(seed), seed, 0.8f, NoiseWrapper.FBM, 3),
@@ -124,49 +121,13 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
                     // LatLonWorldMap isn't quite the same as the others here.
 //                    new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f),
                     new StretchWorldMap(seed, width << AA, height << AA, noise, 2f),
-                    new TilingWorldMap(seed, width << AA, height << AA, noise, 2f),
+                    // square, not rectangular
+                    new TilingWorldMap(seed, width << AA, width << AA, noise, 2f),
+                    new GlobeMap(seed, width << AA, width << AA, noise, 2f),
             };
             for (WorldMapGenerator world : generators) {
                 this.world = world;
                 thesaurus = new Thesaurus(rng);
-
-//        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1.35f, Noise.VALUE_FRACTAL, 3);
-//        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 0.9f, Noise.HONEY_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1f, Noise.SIMPLEX_FRACTAL, 5, 1.6f, 0.625f);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 0.5f);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 2f, 1f);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 5, 1f, 1f);
-//        fn.setFractalType(Noise.DOMAIN_WARP);
-//        noise = fn;
-
-//        noise = new CyclicNoise(seed, 4, 1.9f);
-
-//        if(FLOWING_LAND)
-//            noise = new Noise.Adapted3DFrom5D(fn);
-//        else
-
-//        world = new MimicWorldMap(seed, noise, 2f);
-//        world = new MimicLocalMap(seed, noise, 2f);
-//        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
-//        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
-//        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-//        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
-//        world = new WorldMapGenerator.EllipticalHammerMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
-//        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
 
                 wmv = new BlendedWorldMapView(world);
                 rng.setSeed(seed);
@@ -212,7 +173,7 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
         }
         long hash = Hasher.balam.hash64(genName);
         worldTime = System.currentTimeMillis();
-        Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
+        Pixmap temp = new Pixmap(world.width * cellWidth, world.height * cellHeight, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
         generate(hash);
         wmv.getBiomeMapper().makeBiomes(world);
@@ -220,17 +181,21 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
         temp.setColor(INK);
         temp.fill();
 
-        final int bw = width << AA, bh = height << AA;
+        final int bw = world.width, bh = world.height;
         for (int x = 0; x < bw; x++) {
             for (int y = 0; y < bh; y++) {
                 temp.drawPixel(x, y, cm[x][y]);
             }
         }
+        pm = new Pixmap(world.width * cellWidth, world.height * cellHeight, Pixmap.Format.RGBA8888);
+        pm.setBlending(Pixmap.Blending.None);
+
         pm.setFilter(Pixmap.Filter.BiLinear);
         pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
         png.write(Gdx.files.local(path + name + ".png"), pm);
 //        PixmapIO.writePNG(Gdx.files.local(path + name + ".png"), pm);
         temp.dispose();
+        pm.dispose();
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
