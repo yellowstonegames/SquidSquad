@@ -252,8 +252,7 @@ public class HexagonalWorldMap extends WorldMapGenerator {
             //1.4472025091165353 == Math.sqrt(2 * 3.14159265358979323846 / 3);
             lon = 4.3416075273496055f / (thx + thx);
             //4.3416075273496055 == Math.sqrt(6.0 * 3.14159265358979323846)
-            qs = Math.signum(thy) * (4f - thb * thb) * (1f / 3f);
-            lat = TrigTools.asin(qs);
+            lat = qs = (Math.signum(thy) * TrigTools.asin((4f - thb * thb) * (1f / 3f))) * (4f/3f);
 
             qc = TrigTools.cosSmoother(lat);
 

@@ -114,16 +114,16 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
             this.noise = noise;
 
             WorldMapGenerator[] generators = {
-                    new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f),
                     new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f),
-                    new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
-                    new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
-                    // LatLonWorldMap isn't quite the same as the others here.
+                    new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f),
+                    // LatLonWorldMap is... pretty bad.
 //                    new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f),
                     new StretchWorldMap(seed, width << AA, height << AA, noise, 2f),
+//                    new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
+//                    new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
                     // square, not rectangular
-                    new TilingWorldMap(seed, width << AA, width << AA, noise, 2f),
-                    new GlobeMap(seed, width << AA, width << AA, noise, 2f),
+//                    new TilingWorldMap(seed, width << AA, width << AA, noise, 2f),
+//                    new GlobeMap(seed, width << AA, width << AA, noise, 2f),
             };
             for (WorldMapGenerator world : generators) {
                 this.world = world;
