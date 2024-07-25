@@ -46,10 +46,11 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 400, height = 400;
-    private static final int width = 512, height = 256; // mimic, elliptical
+//    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 128, height = 128; // space view, MimicLocal
+    private static final int width = 1024, height = 512;
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
@@ -101,29 +102,37 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
 
         INoise[] noises = new INoise[]{
                 new NoiseWrapper(new FoamNoise(seed), seed, 1.3f, NoiseWrapper.FBM, 1),
-                new NoiseWrapper(new PerlinNoise(seed), seed, 0.6f, NoiseWrapper.FBM, 2),
-                new NoiseWrapper(new PerlueNoise(seed), seed, 0.6f, NoiseWrapper.FBM, 2),
-                new NoiseWrapper(new SimplexNoise(seed), seed, 0.3f, NoiseWrapper.FBM, 2),
+//                new NoiseWrapper(new PerlinNoise(seed), seed, 0.6f, NoiseWrapper.FBM, 2),
+                new NoiseWrapper(new PerlueNoise(seed), seed, 0.7f, NoiseWrapper.FBM, 2),
+//                new NoiseWrapper(new SimplexNoise(seed), seed, 0.3f, NoiseWrapper.FBM, 2),
                 new NoiseWrapper(new HoneyNoise(seed), seed, 0.3f, NoiseWrapper.FBM, 2),
-                new NoiseWrapper(new ValueNoise(seed), seed, 0.8f, NoiseWrapper.FBM, 3),
+//                new NoiseWrapper(new ValueNoise(seed), seed, 0.8f, NoiseWrapper.FBM, 3),
                 new NoiseWrapper(new CyclicNoise(seed, 4, 1.5f), seed, 1f, NoiseWrapper.FBM, 1),
                 new NoiseWrapper(new SorbetNoise(seed, 4, 1.4f), seed, 1f, NoiseWrapper.FBM, 1),
+
+//                new NoiseWrapper(new PerlueNoise(seed), seed, 0.6f, NoiseWrapper.RIDGED_MULTI, 2),
+//                new NoiseWrapper(new PerlueNoise(seed), seed, 0.6f, NoiseWrapper.DOMAIN_WARP, 2),
         };
 
         for(INoise noise : noises) {
             this.noise = noise;
 
             WorldMapGenerator[] generators = {
-                    new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f),
-                    new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f),
-                    // LatLonWorldMap is... pretty bad.
-//                    new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f),
-                    new StretchWorldMap(seed, width << AA, height << AA, noise, 2f),
+                    // fixed size
+//                    new MimicWorldMap(seed, noise, 2f),
+//                    new MimicLocalMap(seed, noise, 2f),
+//                    // rectangular
+//                    new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f),
+//                    new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f),
+//                    new StretchWorldMap(seed, width << AA, height << AA, noise, 2f),
 //                    new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
 //                    new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f),
+                    // LatLonWorldMap is... pretty bad.
+                    new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f),
                     // square, not rectangular
 //                    new TilingWorldMap(seed, width << AA, width << AA, noise, 2f),
 //                    new GlobeMap(seed, width << AA, width << AA, noise, 2f),
+                    new LocalMap(seed, width << AA, width << AA, noise, 2f),
             };
             for (WorldMapGenerator world : generators) {
                 this.world = world;
