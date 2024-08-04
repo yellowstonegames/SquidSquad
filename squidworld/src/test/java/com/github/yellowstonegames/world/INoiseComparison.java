@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.world;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -42,6 +44,8 @@ import static com.badlogic.gdx.Input.Keys.*;
 /**
  */
 public class INoiseComparison extends ApplicationAdapter {
+    public static final boolean PROFILING = true;
+    private GLProfiler profiler;
     public static float mul =  6.03435f, gamma = 1f, mix = 0.5f, mixRaw = 0, bias = 0.5f, favor = 0f;
     /**
      * A decent approximation of {@link Math#exp(double)} for small float arguments, meant to be faster than Math's
@@ -292,6 +296,11 @@ public class INoiseComparison extends ApplicationAdapter {
     @Override
     public void create() {
         renderer = new ImmediateModeRenderer20(width * height << 1, false, true, 0);
+        if(PROFILING) {
+            Gdx.app.setLogLevel(Application.LOG_INFO);
+            profiler = new GLProfiler(Gdx.graphics);
+        }
+
         view = new ScreenViewport();
 
         wrap0.setFractalOctaves(octaves);
@@ -408,6 +417,8 @@ public class INoiseComparison extends ApplicationAdapter {
         };
         Gdx.input.setInputProcessor(input);
         Gdx.gl.glDisable(GL20.GL_BLEND);
+        if(PROFILING)
+            profiler.enable();
     }
 
     public void putMap() {
@@ -636,6 +647,12 @@ public class INoiseComparison extends ApplicationAdapter {
             ctr++;
         }
         putMap();
+        if(PROFILING) {
+            if (Gdx.input.isKeyPressed(P))
+                Gdx.app.log("(PERFORMANCE)", "Calls: " + profiler.getCalls() + ", Draw Calls: " + profiler.getDrawCalls() +
+                        ", Shader Switches: " + profiler.getShaderSwitches() + ", Vertex Count: " + profiler.getVertexCount());
+            profiler.reset();
+        }
     }
 
     @Override
