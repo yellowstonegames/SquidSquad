@@ -25,7 +25,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -39,7 +38,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
-    static final boolean WRITE = false;
+    static final boolean WRITE = true;
 
     private static final int width = 300, height = 420;
 
@@ -52,44 +51,6 @@ public class InterpolationsGraphing extends ApplicationAdapter {
     Interpolator[] interpolators;
     int index;
     double[] k = new double[]{1.0, 1.0};
-    /**
-     * Converts the four HSLA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
-     * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
-     * from, but there's a strong chance it was written by cypherdare/cyphercove for their color space comparison.
-     * It also includes a change to the hue (the fractional part of {@code h}) so cyan is less frequent and orange is
-     * more frequent.
-     *
-     * @param h hue, usually from 0.0 to 1.0, but only the fractional part is used
-     * @param s saturation, from 0.0 to 1.0
-     * @param l lightness, from 0.0 to 1.0
-     * @param a alpha, from 0.0 to 1.0
-     * @return an RGBA8888-format int
-     */
-    public static float hsl2rgb(final float h, final float s, final float l, final float a) {
-        float x = Math.min(Math.max(Math.abs(h * 6f - 3f) - 1f, 0f), 1f);
-        float y = h + (2f / 3f);
-        float z = h + (1f / 3f);
-        y -= (int) y;
-        z -= (int) z;
-        y = Math.min(Math.max(Math.abs(y * 6f - 3f) - 1f, 0f), 1f);
-        z = Math.min(Math.max(Math.abs(z * 6f - 3f) - 1f, 0f), 1f);
-        float v = (l + s * Math.min(l, 1f - l));
-        float d = 2f * (1f - l / (v + 1e-10f));
-        return Color.toFloatBits(v * MathUtils.lerp(1f, x, d), v * MathUtils.lerp(1f, y, d), v * MathUtils.lerp(1f, z, d), a);
-    }
-
-    public static float forwardLightOttosson(float L) {
-        final float k1 = 0.206f, k3 = 1.17087f, k2 = 0.03f;
-        L = (L * (L + k1)) / (k3 * (L + k2));
-        return L * L * (256f/255f);
-    }
-
-    public static float reverseLightOttosson(float L) {
-        L = (float) Math.sqrt(L * 0x0.ffp0f);
-        final float k1 = 0.206f, k3 = 1.17087f; // k2 = 0.03, but that is already included.
-        final float t = (k3 * L - k1);
-        return (t + (float) Math.sqrt(t * t + 0.1405044f * L)) * 0.5f;
-    }
 //    /**
 //     * Moves like a sine wave does; starts slowly, rises quickly, then ends slowly.
 //     */
@@ -207,7 +168,6 @@ public class InterpolationsGraphing extends ApplicationAdapter {
             float f = i / 200f;
             h0 = h1;
             h1 = current.apply(101, 301, f);
-//            float gradient = hsl2rgb(current.apply(f), 1f, 0.5f, 1f);
             float gradient = DescriptiveColor.oklabIntToFloat(DescriptiveColor.oklabByHSL(0.75f + 0.25f * f, 1f, 0.5f, 1f));
             sd.setColor(gradient);
             sd.line(59 + i, h0, 60 + i, h1, 3f);

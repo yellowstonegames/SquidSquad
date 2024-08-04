@@ -12,6 +12,8 @@ dependencies {
 
     api("com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion"){
         exclude module: 'jdkgdxds'
+        exclude module: 'juniper'
+        exclude module: 'digital'
     }
 
     testImplementation "junit:junit:$junitVersion"
