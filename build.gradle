@@ -13,7 +13,6 @@ apply plugin: 'java-library'
 apply plugin: 'com.vanniktech.maven.publish'
 
 def projectName = 'SquidSquad'
-
 version "$VERSION_NAME"
 group 'com.squidpony'
 

@@ -243,9 +243,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         writer.setDitherStrength(1.5f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
-        apng = new AnimatedPNG();
-        apng.setFlipY(false);
-        apng.setCompression(2);
+
+//        apng = new AnimatedPNG();
+//        apng.setFlipY(false);
+//        apng.setCompression(2);
+
 //        pngWriter = new PixmapIO.PNG();
 //        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
@@ -271,18 +273,14 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.5f, NoiseWrapper.FBM, 1);
 //        INoise fn = new CyclicNoise(seed, 4 , 0.9f);
 //        INoise fn = new CyclicNoise(seed, 4 , 1f);
-        INoise fn = new PerlinNoise(seed);
-        iNoise = new Noise3DFrom5D(fn);
-
-        path = "out/worldsAnimated/" + date + "/Flowing"+fn.getTag()+"/";
-
-        if(!Gdx.files.local(path).exists())
-            Gdx.files.local(path).mkdirs();
+//        INoise fn = new PerlinNoise(seed);
+//        iNoise = new Noise3DFrom5D(fn);
 
 
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
 //        iNoise = new Noise3DFrom5D(new FlanNoise(seed, 5)); // between 53757ms and 59479ms
+        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
 //        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 4, 2f)); // between 53757ms and 59479ms
 //        iNoise = new Noise3DFrom5D(new HighDimensionalValueNoise(seed, 5)); // between 69009ms and 94373ms
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
@@ -291,12 +289,18 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
+        path = "out/worldsAnimated/" + date + "/Flowing"+iNoise.noise.getTag()+"/";
 
-        world = new GlobeMap(seed, width, height, iNoise, 0.75f);
+        if(!Gdx.files.local(path).exists())
+            Gdx.files.local(path).mkdirs();
 
 
-        wmv = new UnrealisticWorldMapView(world);
-//        wmv = new BlendedWorldMapView(world);
+
+        world = new GlobeMap(seed, width, height, iNoise, 0.6f);
+
+
+//        wmv = new UnrealisticWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
 //        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
@@ -379,7 +383,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette.analyze(pms);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
-        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
+//        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
