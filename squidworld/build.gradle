@@ -13,7 +13,7 @@ dependencies {
     testImplementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
 
     testImplementation "junit:junit:$junitVersion"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
+    //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
     testImplementation "com.github.tommyettinger:anim8-gdx:$anim8Version"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
