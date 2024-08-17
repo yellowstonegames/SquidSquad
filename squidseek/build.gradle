@@ -1,0 +1,28 @@
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+ext.projectName = 'SquidSeek'
+eclipse.project.name = ext.projectName
+
+dependencies {
+    api project(':squidcore')
+    api project(':squidgrid')
+    api "com.github.tommyettinger:gand:$gandVersion"
+    testImplementation "junit:junit:$junitVersion"
+    //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
+}
+
+
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
+mavenPublishing {
+    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+}
+
+mavenPlainJavadocJar.archiveBaseName.set(project.name)
+
+jar {
+    archiveBaseName.set(project.name)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}
