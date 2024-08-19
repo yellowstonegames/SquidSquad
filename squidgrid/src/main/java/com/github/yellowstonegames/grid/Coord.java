@@ -86,11 +86,11 @@ public final class Coord implements Point2<Coord> {
      */
     public transient final int hash;
 
-    protected Coord() {
+    private Coord() {
         this(0, 0);
     }
 
-    protected Coord(final int x, final int y) {
+    private Coord(final int x, final int y) {
         this.x = (short)x;
         this.y = (short)y;
 

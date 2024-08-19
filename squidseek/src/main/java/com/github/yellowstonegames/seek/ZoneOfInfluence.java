@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.seek;
 
 import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.gand.GradientGrid;
 import com.github.tommyettinger.gand.utils.GridMetric;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.grid.*;
@@ -31,7 +30,7 @@ import java.util.Collection;
  * like a Collection of Coord values.
  */
 public class ZoneOfInfluence {
-    protected GradientGrid dijkstra;
+    protected DijkstraMap dijkstra;
     protected Coord[][] influences;
     protected Region[] groups;
     protected boolean completed;
@@ -53,7 +52,7 @@ public class ZoneOfInfluence {
         this.influences = influences;
         groups = new Region[influences.length];
         radius = radiusStrategy == null ? GridMetric.EUCLIDEAN : radiusStrategy;
-        dijkstra = new GradientGrid(map, radius);
+        dijkstra = new DijkstraMap(map, radius);
     }
     /**
      * Constructs a Zone of Influence map. Takes an arrays of Coord influences, where each Coord is treated as both a
@@ -75,7 +74,7 @@ public class ZoneOfInfluence {
         }
         groups = new Region[influences.length];
         radius = radiusStrategy == null ? GridMetric.EUCLIDEAN : radiusStrategy;
-        dijkstra = new GradientGrid(map, radius);
+        dijkstra = new DijkstraMap(map, radius);
     }
     /**
      * Constructs a Zone of Influence map. Takes a Collection of Coord influences, where each Coord is treated as both a
@@ -99,7 +98,7 @@ public class ZoneOfInfluence {
         }
         groups = new Region[this.influences.length];
         radius = radiusStrategy == null ? GridMetric.EUCLIDEAN : radiusStrategy;
-        dijkstra = new GradientGrid(map, radius);
+        dijkstra = new DijkstraMap(map, radius);
     }
 
     /**
@@ -140,7 +139,7 @@ public class ZoneOfInfluence {
     protected Region increasing(float[][] dm, Coord[] inf) {
         CoordOrderedSet open = new CoordOrderedSet(inf), fresh = new CoordOrderedSet(64);
         Direction[] dirs = (radius == GridMetric.MANHATTAN) ? Direction.CARDINALS : Direction.OUTWARDS;
-        Region influenced = new Region(dijkstra.width, dijkstra.height);
+        Region influenced = new Region(dijkstra.getWidth(), dijkstra.getHeight());
         final int width = dm.length;
         final int height = width == 0 ? 0 : dm[0].length;
 
@@ -155,7 +154,7 @@ public class ZoneOfInfluence {
                     if (adj.x < 0 || adj.y < 0 || width <= adj.x || height <= adj.y)
                     	/* Outside the map */
                     	continue;
-                    if (!open.contains(adj) && dm[adj.x][adj.y] < GradientGrid.FLOOR && !influenced.contains(adj)) {
+                    if (!open.contains(adj) && dm[adj.x][adj.y] < DijkstraMap.FLOOR && !influenced.contains(adj)) {
                         //h = heuristic(dirs[d]);
                         diff = dm[adj.x][adj.y] - dm[cell.x][cell.y];
                         if (diff <= 1.0 && diff >= 0) {
