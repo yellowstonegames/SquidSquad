@@ -1022,6 +1022,16 @@ public final class Coord implements Point2<Coord> {
     }
 
     @Override
+    public int xi() {
+        return x;
+    }
+
+    @Override
+    public Coord xi(int next) {
+        return Coord.get(next, y);
+    }
+
+    @Override
     public float y() {
         return y;
     }
@@ -1032,7 +1042,22 @@ public final class Coord implements Point2<Coord> {
     }
 
     @Override
+    public int yi() {
+        return y;
+    }
+
+    @Override
+    public Coord yi(int next) {
+        return Coord.get(x, next);
+    }
+
+    @Override
     public Coord set(float nextX, float nextY) {
         return get((short)nextX, (short)nextY);
+    }
+
+    @Override
+    public Coord seti(int x, int y) {
+        return Coord.get(x, y);
     }
 }
