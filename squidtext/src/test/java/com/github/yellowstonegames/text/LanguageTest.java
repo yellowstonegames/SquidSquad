@@ -18,9 +18,8 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.random.LaserRandom;
+import com.github.tommyettinger.random.*;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
 import org.junit.Test;
@@ -30,27 +29,27 @@ public class LanguageTest {
     public void testSentence() {
         if (!TextInternals.PRINTING) return;
 
-        int len = 25;
-
-        WhiskerRandom random = new WhiskerRandom(1000L);
-        Language[] languages = new Language[16];
-        for (int i = 0; i < 16; i++) {
-            languages[i] = Language.randomLanguage(random.nextLong());//.addAccents(0.8, 0.6);
+        for (int len = 25; len <= 100; len += 25) {
+            EnhancedRandom random = new AceRandom(0xFEDCBA987654321L);
+            Language[] languages = new Language[16];
+            for (int i = 0; i < 16; i++) {
+                languages[i] = Language.randomLanguage(random.nextLong());//.addAccents(0.8, 0.6);
+            }
+            final String[] mid = {",", ",", ",", ";"}, end = {".", ".", ".", "!", "?", "..."};
+            double totalLength = 0.0;
+            String[] sentences = new String[64];
+            int minWords = len / 9 + 1, maxWords = minWords+1;
+            for (int i = 0; i < sentences.length; i++) {
+                String s = languages[i & 15].sentence(random.nextLong(), minWords, maxWords, mid, end, 0.2, len);
+                totalLength += s.length();
+                sentences[i] = s;
+            }
+            System.out.println("\nAverage char[] or word length is " + (totalLength / sentences.length) + " with len " + len + ":\n");
+            System.out.println("Using minWords: " + minWords + ", maxWords: " + maxWords);
+            for (String sentence : sentences) {
+                System.out.println(sentence + " " + sentence.length());
+            }
         }
-        final String[] mid = {",", ",", ",", ";"}, end = {".", ".", ".", "!", "?", "..."};
-        double totalLength = 0.0;
-        String[] words = new String[3];
-        for (int i = 0; i < 3; i++) {
-            String w = languages[i & 15].sentence(random.nextLong(), (len+4)/5, (len+6)/5, mid, end, 0.2, len + random.nextInt(len));
-            totalLength += w.length();
-            words[i] = w;
-        }
-        System.out.println("Average char[] or word length: " + (totalLength / 3.0) + " with len: " + len);
-        System.out.println("First three sentences:");
-        System.out.println(words[0] + " " + words[0].length() + ", language has minWords: " + ((len+4)/5) + ", maxWords: " + ((len+6)/5));
-        System.out.println(words[1] + " " + words[1].length() + ", language has minWords: " + ((len+4)/5) + ", maxWords: " + ((len+6)/5));
-        System.out.println(words[2] + " " + words[2].length() + ", language has minWords: " + ((len+4)/5) + ", maxWords: " + ((len+6)/5));
-
     }
 
     @Test
