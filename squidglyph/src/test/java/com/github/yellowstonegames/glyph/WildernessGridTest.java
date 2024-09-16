@@ -74,7 +74,7 @@ public class WildernessGridTest extends ApplicationAdapter {
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Font test");
-        config.setWindowedMode(720, 640);
+        config.setWindowedMode(60 * 22, 32 * 22);
         config.disableAudio(true);
         config.useVsync(false);
         new Lwjgl3Application(new WildernessGridTest(), config);
@@ -84,14 +84,14 @@ public class WildernessGridTest extends ApplicationAdapter {
     public void create() {
         random = new PouchRandom(12345);
         stage = new Stage();
-        font = KnownFonts.getIosevkaSlab().setDescent(0f).scaleTo(12f, 20f);
+        font = KnownFonts.getIosevkaSlab().adjustLineHeight(1.25f);
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);
 //        font = KnownFonts.getDejaVuSansMono().scale(0.75f, 0.75f);
 //        font = KnownFonts.getCozette();
 //        font = KnownFonts.getAStarry();
-        gg = new GlyphGrid(font, 60, 32);
+        gg = new GlyphGrid(font, 60, 32, true);
 
         wilderness = new WildernessGenerator(60, 32, Biome.TABLE[random.nextInt(42)], random);
         regenerate();

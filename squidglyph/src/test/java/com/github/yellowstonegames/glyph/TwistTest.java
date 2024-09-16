@@ -102,7 +102,7 @@ public class TwistTest extends ApplicationAdapter {
         Gdx.app.log("SEED", "Initial seed is " + seed);
         EnhancedRandom random = new WhiskerRandom(seed);
         stage = new Stage();
-        Font font = KnownFonts.getIosevkaSlab().scaleTo(16f, 28f).setDescent(0f).adjustLineHeight(1.25f);
+        Font font = KnownFonts.getIosevkaSlab().adjustLineHeight(1.25f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         playerGlyph = new GlyphActor('@', "[dark gray][%?whiten]", gg.font);

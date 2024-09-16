@@ -146,6 +146,7 @@ public class FontTest extends ApplicationAdapter {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         font = fonts[(int) (System.currentTimeMillis() >>> 10 & 0x7FFFFFFF) % fonts.length];
+        font.resizeDistanceField(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
 //        layout.setFont(font);
 //        font.calculateSize(layout);
         float x = 0, y = layout.getHeight();

@@ -47,7 +47,7 @@ public class REXPaintTest extends ApplicationAdapter {
     @Override
     public void create() {
         stage = new Stage();
-        font = KnownFonts.getIosevkaSlab().scaleTo(20f, 32f).setDescent(0f).adjustLineHeight(1.25f);
+        font = KnownFonts.getIosevkaSlab().adjustLineHeight(1.25f);
         XPFile room = XPIO.loadXP(Gdx.files.internal("Dungeon1685158844401.xp"));
 //        XPFile room = XPIO.loadXP(Gdx.files.internal("Room.xp"));
 
