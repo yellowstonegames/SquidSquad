@@ -130,6 +130,7 @@ public class MathComparison extends ApplicationAdapter {
                         break;
                     case NUM_0:
                     case NUMPAD_0:
+                    case EQUALS:
                         index0 = (index0 + (UIUtils.shift() ? functions.length - 1 : 1)) % functions.length;
                         System.out.println("Left side: index " + index0 + ", right side: index " + index1);
                         break;
