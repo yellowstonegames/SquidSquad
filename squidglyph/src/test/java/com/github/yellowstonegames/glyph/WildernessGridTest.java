@@ -84,7 +84,7 @@ public class WildernessGridTest extends ApplicationAdapter {
     public void create() {
         random = new PouchRandom(12345);
         stage = new Stage();
-        font = KnownFonts.getIosevkaSlab().adjustLineHeight(1.25f);
+        font = KnownFonts.getIosevkaSlab();
 //        font = KnownFonts.getCascadiaMono().scale(0.5f, 0.5f);
 //        font = KnownFonts.getIosevka().scale(0.75f, 0.75f);
 //        font = KnownFonts.getIosevkaSlab().scale(0.75f, 0.75f);

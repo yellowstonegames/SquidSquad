@@ -159,8 +159,14 @@ public class GlyphGrid extends Group {
 //                font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
             viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
+            // I don't know why 1.25x line height works so much better.
+            font.adjustLineHeight(1.25f);
+            // The rest of this code scales the font down so it has a max width and max height of 1.
+            // The width to height ratio will be the same, but extra space will be added to make glyphs square.
             float larger = Math.max(font.cellWidth, font.cellHeight);
             font.scaleTo(font.cellWidth / larger, font.cellHeight / larger).fitCell(1f, 1f, true);
+            // this wouldn't work in the rare font with greater width than height.
+//            font.scaleHeightTo(1f).fitCell(1f, 1f, true);
         } else {
 //            if (font.distanceField == Font.DistanceFieldType.MSDF)
 //                font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;

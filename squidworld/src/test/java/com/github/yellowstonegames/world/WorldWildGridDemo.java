@@ -26,7 +26,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
@@ -60,10 +59,10 @@ public class WorldWildGridDemo extends ApplicationAdapter {
     private static final int bigWidth = 512, bigHeight = 256;
 //    private static final int bigWidth = 2048, bigHeight = 1024;
     //private static final int bigWidth = 400, bigHeight = 400;
-    private static final float cellWidth = 16, cellHeight = 16;
-    private static final int shownWidth = 96, shownHeight = 48;
+    private static final float cellWidth = 28, cellHeight = 28;
+    private static final int shownWidth = 48, shownHeight = 24;
     private Stage stage;
-    private GlyphGrid display, inner;
+    private GlyphGrid display;
     private InputProcessor input;
     private Viewport view;
     private Camera camera;
@@ -98,8 +97,9 @@ public class WorldWildGridDemo extends ApplicationAdapter {
     @Override
     public void create() {
         stage = new Stage();
-        display = new GlyphGrid(KnownFonts.getIosevka().scaleTo(cellWidth, cellHeight).adjustLineHeight(1.25f), bigWidth, bigHeight, true);
-        view = display.viewport = new StretchViewport(shownWidth, shownHeight);
+        display = new GlyphGrid(KnownFonts.getIosevkaMSDF(), bigWidth, bigHeight, true);
+        display.viewport.setWorldSize(shownWidth, shownHeight);
+        view = display.viewport;// = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
         seed = 1234567890L;
         rng = new DistinctRandom(seed);
