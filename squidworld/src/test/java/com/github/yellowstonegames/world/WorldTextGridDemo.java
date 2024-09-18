@@ -33,6 +33,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.FlowRandom;
+import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
@@ -93,9 +94,10 @@ public class WorldTextGridDemo extends ApplicationAdapter {
 //        System.out.printf("%.8ff, %.8ff, %.8ff, 1f\n\n", DescriptiveColor.red(0xFF7A8121), DescriptiveColor.green(0xFF7A8121), DescriptiveColor.blue(0xFF7A8121));
         stage = new Stage();
         display = new GlyphGrid(
-                KnownFonts.getIosevka().setDescent(10),
+                KnownFonts.getIosevka(Font.DistanceFieldType.MSDF),//.setDescent(10),
                 bigWidth, bigHeight, true);
-        view = display.viewport = new StretchViewport(shownWidth, shownHeight);
+        display.viewport.setWorldSize(shownWidth, shownHeight);
+        view = display.viewport;// = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
         seedA = 1234567890L;
         seedB = 0x12345L;

@@ -71,15 +71,16 @@ public class GlyphGrid extends Group {
 
     /**
      * Constructs a bare-bones GlyphGrid with size 64x64. Does not set {@link #font}, you will have to set it later.
+     * This calls {@link #GlyphGrid(Font, int, int, boolean)} with font=null and squareCenteredCells=false.
      */
     public GlyphGrid() {
-        this(null, 64, 64, true);
+        this(null, 64, 64, false);
     }
 
     /**
      * Constructs a 64x64 GlyphGrid with the specified Font. You probably want {@link #GlyphGrid(Font, int, int)} unless
      * your maps are always 64x64. This calls {@link #GlyphGrid(Font, int, int, boolean)} with
-     * squareCenteredCells=false.
+     * squareCenteredCells=true.
      *
      * @param font a Font that will be copied and used for the new GlyphGrid
      */
@@ -90,7 +91,7 @@ public class GlyphGrid extends Group {
     /**
      * Constructs a GlyphGrid with the specified size in cells wide and cells tall for its grid, using the specified
      * Font (which will be copied). This calls {@link #GlyphGrid(Font, int, int, boolean)} with
-     * squareCenteredCells=false.
+     * squareCenteredCells=true.
      *
      * @param font       a Font that will be copied and used for the new GlyphGrid
      * @param gridWidth  how many cells wide the grid should be
@@ -143,9 +144,13 @@ public class GlyphGrid extends Group {
 
     /**
      * Sets the Font this uses, but also configures the viewport to use the appropriate size cells, then scales the font
-     * to size 1x1 (this makes some calculations much easier inside GlyphGrid). This can add spacing to cells so that
-     * they are always square, while keeping the aspect ratio of {@code font} as it was passed in. Use squareCenter=true
-     * to enable this; note that it modifies the Font more deeply than normally.
+     * to size 1x1 (this makes some calculations much easier inside GlyphGrid). The line height of the given Font is set
+     * to 1.25x its current height, which helps a lot when fitting glyphs into cells. This also halves the crispness of
+     * distance field fonts used (standard fonts are not affected), and just for good measure sets
+     * {@link Font#integerPosition} to false, even though this usually doesn't do anything in the current version.
+     * <br>
+     * This can add spacing to cells so that they are always square, while keeping the aspect ratio of {@code font} as
+     * it was passed in. Use squareCenter=true to enable this; note that it modifies the Font more deeply than normally.
      *
      * @param font         a Font that will be used directly (not copied) and used to calculate the viewport dimensions
      * @param squareCenter if true, spacing will be added to the sides of each glyph so that they fit in square cells
@@ -153,14 +158,18 @@ public class GlyphGrid extends Group {
     public void setFont(Font font, boolean squareCenter) {
         if (font == null) return;
         this.font = font;
+        // This probably has no effect in the current TextraTypist, but it shouldn't ever be on at size 1x1.
         font.useIntegerPositions(false);
+        // This only affects SDF and MSDF fonts, but it improves their legibility a lot.
+        font.multiplyCrispness(0.5f);
+        // I don't know why 1.25x line height works so much better.
+        font.adjustLineHeight(1.25f);
+
         if (squareCenter) {
 //            if (font.distanceField == Font.DistanceFieldType.MSDF)
 //                font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
             viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
-            // I don't know why 1.25x line height works so much better.
-            font.adjustLineHeight(1.25f);
             // The rest of this code scales the font down so it has a max width and max height of 1.
             // The width to height ratio will be the same, but extra space will be added to make glyphs square.
             float larger = Math.max(font.cellWidth, font.cellHeight);

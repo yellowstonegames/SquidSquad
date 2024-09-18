@@ -19,6 +19,7 @@ import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.FullPaletteRgb;
@@ -67,7 +68,7 @@ public class TechniqueDemo extends ApplicationAdapter {
     @Override
     public void create () {
         batch = new SpriteBatch();
-        display = new GlyphGrid(KnownFonts.getAStarry().scaleTo(cellWidth, cellHeight), gridWidth, gridHeight, false);
+        display = new GlyphGrid(KnownFonts.getAStarry(Font.DistanceFieldType.MSDF).scaleTo(cellWidth, cellHeight), gridWidth, gridHeight, false);
         display.backgrounds = ArrayTools.fill(FullPaletteRgb.AURORA_CHINCHILLA, gridWidth, gridHeight);
         stage = new Stage(new ScreenViewport(), batch);
 

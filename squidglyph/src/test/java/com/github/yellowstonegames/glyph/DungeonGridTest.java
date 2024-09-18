@@ -107,7 +107,7 @@ public class DungeonGridTest extends ApplicationAdapter {
         EnhancedRandom random = new WhiskerRandom(seed);
         stage = new Stage();
 //        Font font = KnownFonts.getIosevka().scaleTo(15f, 25f);
-        font = KnownFonts.getInconsolata(Font.DistanceFieldType.MSDF).setCrispness(0.5f);
+        font = KnownFonts.getInconsolata(Font.DistanceFieldType.MSDF);
 //        Font font = KnownFonts.getIosevka().scaleTo(15f, 25f).setDescent(0f).adjustLineHeight(1.25f);
 
 //        Font font = KnownFonts.getIosevkaSlab().scaleTo(15f, 25f);
