@@ -33,15 +33,19 @@ import java.io.ObjectOutput;
 @Beta
 public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Externalizable {
 
-    private long hi;
-    private long lo;
+    private int a;
+    private int b;
+    private int c;
+    private int d;
 
     /**
      * Creates a new, invalid UniqueIdentifier. All states will be 0.
      */
     public UniqueIdentifier(){
-        hi = 0L;
-        lo = 0L;
+        a = 0;
+        b = 0;
+        c = 0;
+        d = 0;
     }
 
     /**
@@ -53,23 +57,58 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
      * @param lo the low 64 bits, as a long
      */
     public UniqueIdentifier(long hi, long lo){
-        this.hi = hi;
-        this.lo = lo;
+        this.a = (int)(hi >>> 32);
+        this.b = (int)hi;
+        this.c = (int)(lo >>> 32);
+        this.d = (int)lo;
+    }
+
+    /**
+     * Creates a new UniqueIdentifier that may or may not actually be unique. This uses the given states verbatim.
+     * If all states are 0, this will be treated as an invalid identifier. Most usage should prefer
+     * {@link #next()} instead.
+     *
+     * @param stateA will be used verbatim for state a
+     * @param stateB will be used verbatim for state b
+     * @param stateC will be used verbatim for state c
+     * @param stateD will be used verbatim for state d
+     */
+    public UniqueIdentifier(int stateA, int stateB, int stateC, int stateD){
+        this.a = stateA;
+        this.b = stateB;
+        this.c = stateC;
+        this.d = stateD;
+    }
+
+    public int getA() {
+        return a;
+    }
+
+    public int getB() {
+        return b;
+    }
+
+    public int getC() {
+        return c;
+    }
+
+    public int getD() {
+        return d;
     }
 
     public long getHi() {
-        return hi;
+        return (long) a << 32 | (b & 0xFFFFFFFFL);
     }
 
     public long getLo() {
-        return lo;
+        return (long) c << 32 | (d & 0xFFFFFFFFL);
     }
 
     /**
      * @return false if this instance was produced by {@link #UniqueIdentifier()} and not modified; true otherwise
      */
     public boolean isValid() {
-        return ((hi | lo) != 0L);
+        return ((a | b | c | d) != 0L);
     }
 
     @Override
@@ -79,34 +118,37 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
 
         UniqueIdentifier that = (UniqueIdentifier) o;
 
-        if (hi != that.hi) return false;
-        return lo == that.lo;
+        return a == that.a && b == that.b && c == that.c && d == that.d;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (hi ^ (hi >>> 32));
-        result = 31 * result + (int) (lo ^ (lo >>> 32));
-        return result;
+        return a ^ b ^ c ^ d;
     }
 
     @Override
     public String toString() {
         return "UniqueIdentifier{" +
-                "hi=" + hi +
-                ", lo=" + lo +
+                "a=" + a +
+                ", b=" + b +
+                ", c=" + c +
+                ", d=" + d +
                 '}';
     }
 
     /**
      * Serializes this UniqueIdentifier to a String, where it can be read back by {@link #stringDeserialize(String)}.
      * This is different from most other stringSerialize() methods in that it always produces a 33-character String,
-     * consisting of {@link #getHi()}, then a {@code '_'}, then {@link #getLo()}, with hi and lo represented as unsigned
+     * consisting of {@link #getA()}, then a {@code '_'}, then {@link #getLo()}, with hi and lo represented as unsigned
      * hex long Strings.
      * @return a 33-character-long String storing this identifier; can be read back with {@link #stringDeserialize(String)}
      */
     public String stringSerialize() {
-        return Base.BASE16.appendUnsigned(Base.BASE16.appendUnsigned(new StringBuilder(33), hi).append('_'), lo).toString();
+        StringBuilder sb = Base.BASE16.appendUnsigned(new StringBuilder(35), a).append('_');
+        Base.BASE16.appendUnsigned(sb, b).append('_');
+        Base.BASE16.appendUnsigned(sb, c).append('_');
+        Base.BASE16.appendUnsigned(sb, d);
+        return sb.toString();
     }
 
     /**
@@ -115,8 +157,10 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
      * @return this UniqueIdentifier, after it has been modified.
      */
     public UniqueIdentifier stringDeserialize(String data) {
-        hi = Base.BASE16.readLong(data, 0, 16);
-        lo = Base.BASE16.readLong(data, 17, 33);
+        a = Base.BASE16.readInt(data, 0, 8);
+        b = Base.BASE16.readInt(data, 9, 17);
+        c = Base.BASE16.readInt(data, 18, 26);
+        d = Base.BASE16.readInt(data, 27, 35);
         return this;
     }
 
@@ -152,8 +196,10 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
      */
     @GwtIncompatible
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeLong(hi);
-        out.writeLong(lo);
+        out.writeInt(a);
+        out.writeInt(b);
+        out.writeInt(c);
+        out.writeInt(d);
     }
 
     /**
@@ -168,8 +214,10 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
      */
     @GwtIncompatible
     public void readExternal(ObjectInput in) throws IOException {
-        hi = in.readLong();
-        lo = in.readLong();
+        a = in.readInt();
+        b = in.readInt();
+        c = in.readInt();
+        d = in.readInt();
     }
 
     /**
@@ -193,8 +241,13 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
 
     @Override
     public int compareTo(UniqueIdentifier other) {
-        int c = Long.compare(hi, other.hi);
-        return c == 0 ? Long.compare(lo, other.lo) : c;
+        int r = Integer.compare(a, other.a);
+        if(r != 0) return r;
+        r = Integer.compare(b, other.b);
+        if(r != 0) return r;
+        r = Integer.compare(c, other.c);
+        if(r != 0) return r;
+        return Integer.compare(d, other.d);
     }
 
     /**
@@ -202,15 +255,21 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
      * This is used in {@link UniqueIdentifier#GENERATOR}, and can be used independently via {@link #generate()}.
      */
     public static final class Generator implements Externalizable {
-        private long stateA;
-        private long stateB;
+        private int a;
+        private int b;
+        private int c;
+        private int d;
 
         /**
          * Creates a new Generator with one of (2 to the 64) possible random initial states.
          */
         public Generator() {
-            stateA = Hasher.randomize3(System.currentTimeMillis()) ^ EnhancedRandom.seedFromMath();
-            stateB = Hasher.randomize3(stateA);
+            long state = Hasher.randomize3(System.currentTimeMillis()) ^ EnhancedRandom.seedFromMath();
+            a = (int)(state>>>32);
+            b = (int)state;
+            state = Hasher.randomize3(state);
+            c = (int)(state>>>32);
+            d = (int)state;
         }
 
         /**
@@ -219,8 +278,25 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
          * @param stateB may be any long unless both states are 0, in which case this is treated as 1
          */
         public Generator(long stateA, long stateB) {
-            this.stateA = stateA;
-            this.stateB = (stateA | stateB) == 0L ? 1L : stateB;
+            a = (int)(stateA>>>32);
+            b = (int)stateA;
+            stateB = (stateA | stateB) == 0L ? 1L : stateB;
+            c = (int)(stateB>>>32);
+            d = (int)stateB;
+        }
+
+        /**
+         * Creates a new Generator using the given 4 states verbatim, unless they are all 0 (then it treats d as 1).
+         * @param a may be any int unless all are 0
+         * @param b may be any int unless all are 0
+         * @param c may be any int unless all are 0
+         * @param d may be any int unless all are 0
+         */
+        public Generator(int a, int b, int c, int d) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.d = (a | b | c | d) == 0 ? 1 : d;
         }
 
         /**
@@ -228,21 +304,30 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
          * @return a new UniqueIdentifier that will not occur again from this Generator unless (2 to the 128) - 1 more identifiers are generated
          */
         public UniqueIdentifier generate(){
-            // xoroshiro algorithm
-            final long s0 = stateA;
-            final long s1 = stateB ^ s0;
-            stateA = (s0 << 24 | s0 >>> 40) ^ s1 ^ (s1 << 16);
-            stateB = (s1 << 37 | s1 >>> 27);
-            return new UniqueIdentifier(stateA, stateB);
+            // xoshiro algorithm
+            int t = b << 9;
+            c ^= a;
+            d ^= b;
+            b ^= c;
+            a ^= d;
+            c ^= t;
+            d = (d << 11 | d >>> 21);
+            return new UniqueIdentifier(a, b, c, d);
         }
 
         public String stringSerialize() {
-            return Base.BASE16.appendUnsigned(Base.BASE16.appendUnsigned(new StringBuilder(33), stateA).append('$'), stateB).toString();
+            StringBuilder sb = Base.BASE16.appendUnsigned(new StringBuilder(35), a).append('$');
+            Base.BASE16.appendUnsigned(sb, b).append('$');
+            Base.BASE16.appendUnsigned(sb, c).append('$');
+            Base.BASE16.appendUnsigned(sb, d);
+            return sb.toString();
         }
 
         public Generator stringDeserialize(String data) {
-            stateA = Base.BASE16.readLong(data, 0, 16);
-            stateB = Base.BASE16.readLong(data, 17, 33);
+            a = Base.BASE16.readInt(data, 0, 8);
+            b = Base.BASE16.readInt(data, 9, 17);
+            c = Base.BASE16.readInt(data, 18, 26);
+            d = Base.BASE16.readInt(data, 27, 35);
             return this;
         }
 
@@ -278,8 +363,10 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
          */
         @GwtIncompatible
         public void writeExternal(ObjectOutput out) throws IOException {
-            out.writeLong(stateA);
-            out.writeLong(stateB);
+            out.writeInt(a);
+            out.writeInt(b);
+            out.writeInt(c);
+            out.writeInt(d);
         }
 
         /**
@@ -294,8 +381,10 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
          */
         @GwtIncompatible
         public void readExternal(ObjectInput in) throws IOException {
-            stateA = in.readLong();
-            stateB = in.readLong();
+            a = in.readInt();
+            b = in.readInt();
+            c = in.readInt();
+            d = in.readInt();
         }
     }
 }
