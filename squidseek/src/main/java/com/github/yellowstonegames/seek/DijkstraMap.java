@@ -69,15 +69,9 @@ import java.util.Collection;
  * {@link DirectedGraph} can handle even very complicated kinds of map.
  */
 public class DijkstraMap extends GradientGrid<Coord> {
-
     @Override
-    protected Coord acquire(float x, float y) {
-        return Coord.get((int) x, (int) y);
-    }
-
-    @Override
-    protected Coord workingEdit(float x, float y) {
-        return Coord.get((int) x, (int) y);
+    protected Coord acquire(int x, int y) {
+        return Coord.get(x, y);
     }
 
     /**
@@ -103,7 +97,7 @@ public class DijkstraMap extends GradientGrid<Coord> {
      * @param measurement          the distance calculation to use
      */
     public DijkstraMap(final float[][] level, GridMetric measurement) {
-        this.measurement = measurement;
+        this.setMeasurement(measurement);
         initialize(level);
     }
 
@@ -145,7 +139,7 @@ public class DijkstraMap extends GradientGrid<Coord> {
      * @param measurement how this should measure orthogonal vs. diagonal measurement, such as {@link GridMetric#MANHATTAN} for 4-way only movement
      */
     public DijkstraMap(final char[][] level, GridMetric measurement) {
-        this.measurement = measurement;
+        this.setMeasurement(measurement);
 
         initialize(level);
     }
@@ -164,7 +158,7 @@ public class DijkstraMap extends GradientGrid<Coord> {
      * @param measurement how this should measure orthogonal vs. diagonal measurement, such as {@link GridMetric#MANHATTAN} for 4-way only movement
      */
     public DijkstraMap(final char[][] level, char alternateWall, GridMetric measurement) {
-        this.measurement = measurement;
+        this.setMeasurement(measurement);
 
         initialize(level, alternateWall);
     }

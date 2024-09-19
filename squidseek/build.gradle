@@ -7,7 +7,6 @@ dependencies {
     api project(':squidgrid')
     api "com.github.tommyettinger:gand:$gandVersion"
     testImplementation "junit:junit:$junitVersion"
-    //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }
 
 
