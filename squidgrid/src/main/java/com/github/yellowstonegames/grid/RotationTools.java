@@ -185,25 +185,62 @@ public final class RotationTools {
      * @return output, after modifications.
      */
     public static float[] slerp(float[] start, float[] end, float alpha, float[] output) {
+        return slerp(start.length, start, 0, end, 0, alpha, output, 0);
+    }
+    
+    /**
+     * A geometric "slerp" (spherical linear interpolation) from the input n-dimensional point {@code start} to the
+     * point in the same dimension {@code end}, moving a fraction of the distance equal to {@code alpha}, and placing
+     * the result in {@code output} (modifying it in-place). This does not allocate. This has undefined behavior if
+     * start and end are polar opposites; that is, points where for any coordinate {@code a} in start, that coordinate
+     * in end is {@code -a} or any positive linear scale of the point where that is true. This degenerates to a linear
+     * interpolation if either start or end is the origin, and simply returns the start if both are the origin.
+     * Otherwise, this can smoothly move points that aren't already on the unit sphere towards the distance of the other
+     * point from the origin.
+     * <br>
+     * Based on the non-approximation code from
+     * <a href="https://observablehq.com/@mourner/approximating-geometric-slerp">an article by Volodymyr Agafonkin</a>.
+     * Note that this is the "geometric slerp" rather than the version using quaternions in 3D (or rotors in other
+     * dimensions). It has been augmented slightly to handle start and end vectors that don't have unit length.
+     *
+     * @param n the dimension of the points in start, end, and output; must be 2 or more
+     * @param start an n-dimensional point to rotate from
+     * @param startOffset what array index to start reading from in {@code start}
+     * @param end another n-dimensional point to rotate to
+     * @param endOffset what array index to start reading from in {@code start}
+     * @param alpha between 0 and 1, inclusive; how much to travel from start towards end
+     * @param output will be modified in-place so n items, starting at outputOffset, have the result
+     * @param outputOffset what array index to start writing to in {@code output}
+     * @return output, after modifications.
+     */
+    public static float[] slerp(int n, float[] start, int startOffset, float[] end, int endOffset,
+                                float alpha, float[] output, int outputOffset) {
+        n = Math.max(2, n);
+        int startEnd = startOffset + n;
+        if(startEnd > start.length) throw new IllegalArgumentException("start is not large enough; must have "
+                + startEnd + " items.");
+        int endEnd = endOffset + n;
+        if(endEnd > end.length) throw new IllegalArgumentException("end is not large enough; must have "
+                + endEnd + " items.");
         float magS = 0f, magE = 0f;
-        for (int i = 0; i < start.length; i++) {
+        for (int i = startOffset, j = endOffset; i < startEnd; i++, j++) {
             magS += start[i] * start[i];
-            magE += end[i] * end[i];
+            magE += end[j] * end[j];
         }
         // if both start and end are the origin
         if(MathTools.isZero(magS + magE)) {
-            System.arraycopy(start, 0, output, 0, start.length);
+            System.arraycopy(start, startOffset, output, outputOffset, n);
         }
         // if only the start is the origin
         else if(MathTools.isZero(magS)){
-            for (int i = 0; i < start.length; i++) {
-                output[i] = end[i] * alpha;
+            for (int i = endOffset, j = outputOffset; i < endEnd; i++, j++) {
+                output[j] = end[i] * alpha;
             }
         }
         // if only the end is the origin
         else if(MathTools.isZero(magE)){
-            for (int i = 0; i < start.length; i++) {
-                output[i] = start[i] * (1f - alpha);
+            for (int i = startOffset, j = outputOffset; i < startEnd; i++, j++) {
+                output[j] = start[i] * (1f - alpha);
             }
         }
         else {
@@ -211,15 +248,15 @@ public final class RotationTools {
             magE = (float) Math.sqrt(magE);
 
             float k = 0, invDistance = 1f / (magS * (1f - alpha) + magE * alpha);
-            for (int i = 0; i < start.length; i++) {
-                k += (start[i] / magS) * (end[i] / magE);
+            for (int i = startOffset, j = endOffset; i < startEnd; i++, j++) {
+                k += (start[i] / magS) * (end[j] / magE);
             }
             k = TrigTools.acos(k);
             float s = TrigTools.sin(k * (1f - alpha));
             float e = TrigTools.sin(k * alpha);
 
-            for (int i = 0; i < start.length; i++) {
-                output[i] = (start[i] * s + end[i] * e) * invDistance;
+            for (int i = startOffset, j = endOffset, h = outputOffset; i < startEnd; i++, j++, h++) {
+                output[h] = (start[i] * s + end[j] * e) * invDistance;
             }
         }
         return output;
@@ -1089,41 +1126,82 @@ public final class RotationTools {
      * @return output, after modifications.
      */
     public static double[] slerp(double[] start, double[] end, double alpha, double[] output) {
-        double magS = 0.0, magE = 0.0;
-        for (int i = 0; i < start.length; i++) {
+        return slerp(start.length, start, 0, end, 0, alpha, output, 0);
+    }
+
+    /**
+     * A geometric "slerp" (spherical linear interpolation) from the input n-dimensional point {@code start} to the
+     * point in the same dimension {@code end}, moving a fraction of the distance equal to {@code alpha}, and placing
+     * the result in {@code output} (modifying it in-place). This does not allocate. This has undefined behavior if
+     * start and end are polar opposites; that is, points where for any coordinate {@code a} in start, that coordinate
+     * in end is {@code -a} or any positive linear scale of the point where that is true. This degenerates to a linear
+     * interpolation if either start or end is the origin, and simply returns the start if both are the origin.
+     * Otherwise, this can smoothly move points that aren't already on the unit sphere towards the distance of the other
+     * point from the origin.
+     * <br>
+     * Unlike the {@code float} version of this method, this calls {@link Math#acos(double)} and
+     * {@link Math#sin(double)} for higher precision. This is expected to be somewhat slower than using the
+     * approximations from {@link TrigTools}.
+     * <br>
+     * Based on the non-approximation code from
+     * <a href="https://observablehq.com/@mourner/approximating-geometric-slerp">an article by Volodymyr Agafonkin</a>.
+     * Note that this is the "geometric slerp" rather than the version using quaternions in 3D (or rotors in other
+     * dimensions). It has been augmented slightly to handle start and end vectors that don't have unit length.
+     *
+     * @param n the dimension of the points in start, end, and output; must be 2 or more
+     * @param start an n-dimensional point to rotate from
+     * @param startOffset what array index to start reading from in {@code start}
+     * @param end another n-dimensional point to rotate to
+     * @param endOffset what array index to start reading from in {@code start}
+     * @param alpha between 0 and 1, inclusive; how much to travel from start towards end
+     * @param output will be modified in-place so n items, starting at outputOffset, have the result
+     * @param outputOffset what array index to start writing to in {@code output}
+     * @return output, after modifications.
+     */
+    public static double[] slerp(int n, double[] start, int startOffset, double[] end, int endOffset,
+                                double alpha, double[] output, int outputOffset) {
+        n = Math.max(2, n);
+        int startEnd = startOffset + n;
+        if(startEnd > start.length) throw new IllegalArgumentException("start is not large enough; must have "
+                + startEnd + " items.");
+        int endEnd = endOffset + n;
+        if(endEnd > end.length) throw new IllegalArgumentException("end is not large enough; must have "
+                + endEnd + " items.");
+        double magS = 0f, magE = 0f;
+        for (int i = startOffset, j = endOffset; i < startEnd; i++, j++) {
             magS += start[i] * start[i];
-            magE += end[i] * end[i];
+            magE += end[j] * end[j];
         }
         // if both start and end are the origin
         if(MathTools.isZero(magS + magE, 1E-9)) {
-            System.arraycopy(start, 0, output, 0, start.length);
+            System.arraycopy(start, startOffset, output, outputOffset, n);
         }
         // if only the start is the origin
         else if(MathTools.isZero(magS, 1E-9)){
-            for (int i = 0; i < start.length; i++) {
-                output[i] = end[i] * alpha;
+            for (int i = endOffset, j = outputOffset; i < endEnd; i++, j++) {
+                output[j] = end[i] * alpha;
             }
         }
         // if only the end is the origin
         else if(MathTools.isZero(magE, 1E-9)){
-            for (int i = 0; i < start.length; i++) {
-                output[i] = start[i] * (1.0 - alpha);
+            for (int i = startOffset, j = outputOffset; i < startEnd; i++, j++) {
+                output[j] = start[i] * (1f - alpha);
             }
         }
         else {
             magS = Math.sqrt(magS);
             magE = Math.sqrt(magE);
 
-            double k = 0.0, invDistance = 1.0 / (magS * (1.0 - alpha) + magE * alpha);
-            for (int i = 0; i < start.length; i++) {
-                k += (start[i] / magS) * (end[i] / magE);
+            double k = 0, invDistance = 1f / (magS * (1f - alpha) + magE * alpha);
+            for (int i = startOffset, j = endOffset; i < startEnd; i++, j++) {
+                k += (start[i] / magS) * (end[j] / magE);
             }
             k = Math.acos(k);
-            double s = Math.sin(k * (1.0 - alpha));
+            double s = Math.sin(k * (1f - alpha));
             double e = Math.sin(k * alpha);
 
-            for (int i = 0; i < start.length; i++) {
-                output[i] = (start[i] * s + end[i] * e) * invDistance;
+            for (int i = startOffset, j = endOffset, h = outputOffset; i < startEnd; i++, j++, h++) {
+                output[h] = (start[i] * s + end[j] * e) * invDistance;
             }
         }
         return output;
@@ -1858,11 +1936,12 @@ public final class RotationTools {
         }
         public Rotator(int dimension, Random random) {
             this.dimension = Math.max(2, dimension);
+            final int dimSq = dimension * dimension;
             this.random = random == null ? new AceRandom() : random;
             gauss = new float[this.dimension];
-            house = new float[this.dimension * this.dimension];
-            large = new float[this.dimension * this.dimension];
-            rotation = new float[this.dimension * this.dimension];
+            house = new float[dimSq];
+            large = new float[dimSq];
+            rotation = new float[dimSq];
 
             randomize();
         }
