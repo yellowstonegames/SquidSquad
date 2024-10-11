@@ -260,4 +260,24 @@ public class JsonCoreTest {
         Assert.assertEquals(shuffler.next(), shuffler2.next());
         Assert.assertEquals(shuffler.next(), shuffler2.next());
     }
+
+    @Test
+    public void testUniqueIdentifier() {
+        Json json = new Json();
+        UniqueIdentifier orig = UniqueIdentifier.next();
+        String ser = json.toJson(orig);
+        System.out.println(ser);
+        UniqueIdentifier dser = json.fromJson(UniqueIdentifier.class, ser);
+        System.out.println(ser + "   " + json.toJson(dser));
+        Assert.assertEquals("Failure with " + ser, orig, dser);
+        String serG = json.toJson(UniqueIdentifier.GENERATOR);
+        System.out.println(serG);
+        orig = UniqueIdentifier.next();
+        orig = UniqueIdentifier.next();
+        UniqueIdentifier.GENERATOR = json.fromJson(UniqueIdentifier.Generator.class, serG);
+        dser = UniqueIdentifier.next();
+        dser = UniqueIdentifier.next();
+        Assert.assertEquals(orig, dser);
+    }
+
 }

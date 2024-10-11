@@ -80,6 +80,18 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
         this.d = stateD;
     }
 
+    /**
+     * Given a String containing the output of {@link #stringSerialize()}, this creates a new UniqueIdentifier
+     * with the same data as the UniqueIdentifier that was serialized.
+     * @param serialized a String almost always produced by {@link #stringSerialize()}
+     */
+    public UniqueIdentifier(String serialized){
+        a = Base.BASE16.readInt(serialized, 0, 8);
+        b = Base.BASE16.readInt(serialized, 9, 17);
+        c = Base.BASE16.readInt(serialized, 18, 26);
+        d = Base.BASE16.readInt(serialized, 27, 35);
+    }
+
     public int getA() {
         return a;
     }
@@ -138,9 +150,9 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
 
     /**
      * Serializes this UniqueIdentifier to a String, where it can be read back by {@link #stringDeserialize(String)}.
-     * This is different from most other stringSerialize() methods in that it always produces a 33-character String,
-     * consisting of {@link #getA()}, then a {@code '_'}, then {@link #getLo()}, with hi and lo represented as unsigned
-     * hex long Strings.
+     * This is different from most other stringSerialize() methods in that it always produces a 35-character String,
+     * consisting of {@link #getA()}, then a {@code '_'}, then {@link #getB()}, then another underscore, c, underscore,
+     * and finally d, with a, b, c, and d represented as unsigned hex int Strings.
      * @return a 33-character-long String storing this identifier; can be read back with {@link #stringDeserialize(String)}
      */
     public String stringSerialize() {
@@ -297,6 +309,18 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
             this.b = b;
             this.c = c;
             this.d = (a | b | c | d) == 0 ? 1 : d;
+        }
+
+        /**
+         * Given a String containing the output of {@link #stringSerialize()}, this creates a new
+         * UniqueIdentifier.Generator with the same data as the UniqueIdentifier.Generator that was serialized.
+         * @param serialized a String almost always produced by {@link #stringSerialize()}
+         */
+        public Generator(String serialized){
+            a = Base.BASE16.readInt(serialized, 0, 8);
+            b = Base.BASE16.readInt(serialized, 9, 17);
+            c = Base.BASE16.readInt(serialized, 18, 26);
+            d = Base.BASE16.readInt(serialized, 27, 35);
         }
 
         /**

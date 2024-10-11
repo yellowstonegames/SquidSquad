@@ -341,6 +341,52 @@ public final class JsonCore {
     }
 
     /**
+     * Registers UniqueIdentifier with the given Json object, so UniqueIdentifier can be written to and read from JSON.
+     * This is a simple wrapper around UniqueIdentifier's built-in {@link UniqueIdentifier#stringSerialize()} and
+     * {@link UniqueIdentifier#stringDeserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerUniqueIdentifier(@NonNull Json json) {
+        json.addClassTag("UIdn", UniqueIdentifier.class);
+        json.setSerializer(UniqueIdentifier.class, new Json.Serializer<UniqueIdentifier>() {
+            @Override
+            public void write(Json json, UniqueIdentifier object, Class knownType) {
+                json.writeValue(object.stringSerialize());
+            }
+
+            @Override
+            public UniqueIdentifier read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new UniqueIdentifier(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers UniqueIdentifier with the given Json object, so UniqueIdentifier can be written to and read from JSON.
+     * This is a simple wrapper around UniqueIdentifier's built-in {@link UniqueIdentifier#stringSerialize()} and
+     * {@link UniqueIdentifier#stringDeserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerUniqueIdentifierGenerator(@NonNull Json json) {
+        json.addClassTag("UIdG", UniqueIdentifier.Generator.class);
+        json.setSerializer(UniqueIdentifier.Generator.class, new Json.Serializer<UniqueIdentifier.Generator>() {
+            @Override
+            public void write(Json json, UniqueIdentifier.Generator object, Class knownType) {
+                json.writeValue(object.stringSerialize());
+            }
+
+            @Override
+            public UniqueIdentifier.Generator read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new UniqueIdentifier.Generator(jsonData.asString());
+            }
+        });
+    }
+
+    /**
      * Registers IntShuffler with the given Json object, so IntShuffler can be written to and read from JSON.
      * This is a simple wrapper around IntShuffler's built-in {@link IntShuffler#stringSerialize()} and
      * {@link IntShuffler#stringDeserialize(String)} methods.
