@@ -339,6 +339,22 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
             return new UniqueIdentifier(a, b, c, d);
         }
 
+        public int getA() {
+            return a;
+        }
+
+        public int getB() {
+            return b;
+        }
+
+        public int getC() {
+            return c;
+        }
+
+        public int getD() {
+            return d;
+        }
+
         public String stringSerialize() {
             StringBuilder sb = Base.BASE16.appendUnsigned(new StringBuilder(35), a).append('$');
             Base.BASE16.appendUnsigned(sb, b).append('$');

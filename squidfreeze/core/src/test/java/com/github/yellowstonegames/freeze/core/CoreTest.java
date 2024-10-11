@@ -152,4 +152,41 @@ public class CoreTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testUniqueIdentifier() {
+        Kryo kryo = new Kryo();
+        kryo.register(UniqueIdentifier.class, new UniqueIdentifierSerializer());
+        kryo.register(UniqueIdentifier.Generator.class, new UniqueIdentifierGeneratorSerializer());
+        {
+            UniqueIdentifier data = UniqueIdentifier.next();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+            Output output = new Output(baos);
+            kryo.writeObject(output, data);
+            byte[] bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                UniqueIdentifier data2 = kryo.readObject(input, UniqueIdentifier.class);
+                Assert.assertEquals("Failure on original data " + data.stringSerialize(), data, data2);
+            }
+        }
+        {
+            UniqueIdentifier.Generator dataG = UniqueIdentifier.GENERATOR;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+            Output output = new Output(baos);
+            kryo.writeObject(output, dataG);
+            byte[] bytes = output.toBytes();
+
+            UniqueIdentifier orig, dser;
+            orig = UniqueIdentifier.next();
+            orig = UniqueIdentifier.next();
+
+            try (Input input = new Input(bytes)) {
+                UniqueIdentifier.GENERATOR = kryo.readObject(input, UniqueIdentifier.Generator.class);
+                dser = UniqueIdentifier.next();
+                dser = UniqueIdentifier.next();
+                Assert.assertEquals(orig, dser);
+            }
+        }
+    }
+
 }
