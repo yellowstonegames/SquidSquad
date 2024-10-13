@@ -494,10 +494,13 @@ public class NameGenerator {
                 }
                 TableGroup weightedLetterGroup = wl.get(letterBefore);
                 if (weightedLetterGroup != null) {
-                    float letterCounter = weightedLetterGroup.weights[weightedLetterGroup.items.indexOf(letterAfter)];
-                    if (letterCounter > bestFitScore) {
-                        bestFitLetter = letter;
-                        bestFitScore = letterCounter;
+                    int index = weightedLetterGroup.items.indexOf(letterAfter);
+                    if(index >= 0) {
+                        float letterCounter = weightedLetterGroup.weights[index];
+                        if (letterCounter > bestFitScore) {
+                            bestFitLetter = letter;
+                            bestFitScore = letterCounter;
+                        }
                     }
                 }
             }

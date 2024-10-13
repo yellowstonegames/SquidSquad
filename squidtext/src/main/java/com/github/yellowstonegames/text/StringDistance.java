@@ -133,8 +133,8 @@ public class StringDistance {
         if (target.length() == 0) {
             return source.length() * deleteCost;
         }
-        int width = source.length();
-        int height = target.length();
+        int width = target.length();
+        int height = source.length();
         int total = width * height;
         if (buffer.length < total) {
             buffer = new int[total];

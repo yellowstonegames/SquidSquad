@@ -24,6 +24,8 @@ import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 public class LanguageTest {
     @Test
     public void testSentence() {
@@ -632,4 +634,19 @@ public class LanguageTest {
         System.out.println(lang1.sentence(123, 5, 9));
         System.out.println(lang2.sentence(123, 5, 9));
     }
+
+    @Test
+    public void testNameGen()
+    {
+        if(!TextInternals.PRINTING) return;
+        EnhancedRandom rng = new AceRandom(2252637788195L);
+        ArrayList<String> men = new NameGenerator(NameGenerator.COMMON_USA_MALE_NAMES, 3, rng).generateList(500),
+                women = new NameGenerator(NameGenerator.COMMON_USA_FEMALE_NAMES, 3, rng).generateList(500),
+                family = new NameGenerator(NameGenerator.COMMON_USA_LAST_NAMES, 4, rng).generateList(1000);
+        for (int i = 0; i < 500; i++) {
+            System.out.println(men.get(i) + " " + family.get(i << 1) + ", " + women.get(i) + " " + family.get(i << 1 | 1));
+//                    + ", " + FakeLanguageGen.SIMPLISH.word(rng, true, rng.betweenWeighted(1, rng.between(1, 4), 3)) + " " + FakeLanguageGen.SIMPLISH.word(rng, true, rng.betweenWeighted(1, 4, 3)));
+        }
+    }
+
 }
