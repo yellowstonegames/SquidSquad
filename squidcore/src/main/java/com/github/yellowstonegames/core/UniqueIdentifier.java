@@ -1,9 +1,6 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.io.Externalizable;
@@ -15,14 +12,17 @@ import java.io.ObjectOutput;
  * A substitute for the UUID class, since it isn't available on GWT.
  * The typical usage is to call {@link #next()} when you want a new UniqueIdentifier. If the app is closing down and
  * needs to save its state to be resumed later, {@link #GENERATOR} must be serialized as well, and deserialized before
- * calling {@link #next()} again after resuming. Without this last step, the generated identifiers are <em>likely</em>
+ * calling {@link #next()} again after resuming. Without this last step, the generated identifiers are <em>extremely
+ * likely</em>
  * to be unique, but not <em>guaranteed</em> to be unique.
  * <br>
  * This can be serialized out-of-the-box to Strings using {@link #stringSerialize()}, but if you do, so must the
  * {@link #GENERATOR} that produces new UniqueIdentifier instances and ensures they are unique.
  * If you are using Fury or another type of serializer that can use {@link Externalizable} objects, this can be sent
  * directly to that without needing any extra serialization code. Like with the String serialization, you must serialize
- * the {@link #GENERATOR} field and restore it when restarting from a serialized state.
+ * the {@link #GENERATOR} field and restore it when restarting from a serialized state. The methods from Externalizable
+ * are marked as {@link GwtIncompatible}; if you compile targeting GWT, they will not be present in the generated JS
+ * code. The GwtIncompatible annotation and the {@code Base} class (in digital) are all this uses from other code.
  * <br>
  * This is also Comparable, for some reason (UUID is, but since these should all be random, it doesn't mean much).
  * UniqueIdentifier supports up to 2 to the 128 minus 1 unique instances, which should be far more than enough for
@@ -30,7 +30,6 @@ import java.io.ObjectOutput;
  * 50% likely after 2 to the 61 UUIDs were generated. If this is used properly, it can't collide until all (2 to the 128
  * minus 1) identifiers have been generated.
  */
-@Beta
 public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Externalizable {
 
     private int a;
@@ -39,7 +38,8 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
     private int d;
 
     /**
-     * Creates a new, invalid UniqueIdentifier. All states will be 0.
+     * Creates a new, <em>invalid</em> UniqueIdentifier. All states will be 0.
+     * Use {@link #next()} to generate random UniqueIdentifiers.
      */
     public UniqueIdentifier(){
         a = 0;
@@ -153,7 +153,7 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
      * This is different from most other stringSerialize() methods in that it always produces a 35-character String,
      * consisting of {@link #getA()}, then a {@code '_'}, then {@link #getB()}, then another underscore, c, underscore,
      * and finally d, with a, b, c, and d represented as unsigned hex int Strings.
-     * @return a 33-character-long String storing this identifier; can be read back with {@link #stringDeserialize(String)}
+     * @return a 35-character-long String storing this identifier; can be read back with {@link #stringDeserialize(String)}
      */
     public String stringSerialize() {
         StringBuilder sb = Base.BASE16.appendUnsigned(new StringBuilder(35), a).append('_');
@@ -175,22 +175,6 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
         d = Base.BASE16.readInt(data, 27, 35);
         return this;
     }
-
-    // Json.Serializable implementations, should be used by squidstore
-//    @Override
-//    public void write(Json json) {
-//        json.writeObjectStart("ui");
-//        json.writeValue("h", hi);
-//        json.writeValue("l", lo);
-//        json.writeObjectEnd();
-//    }
-//
-//    @Override
-//    public void read(Json json, JsonValue jsonData) {
-//        jsonData = jsonData.get("ui");
-//        hi = jsonData.getLong("h");
-//        lo = jsonData.getLong("l");
-//    }
 
     /**
      * The object implements the writeExternal method to save its contents
@@ -273,15 +257,18 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
         private int d;
 
         /**
-         * Creates a new Generator with one of (2 to the 64) possible random initial states.
+         * Creates a new Generator with a and b states derived from the current time in nanoseconds, and one of (2 to
+         * the 48) possible random initial c and d states pulled from {@link Math#random()}. This means that unless
+         * trillions of Generator instances are created <em>before the nanosecond time changes</em>, this cannot have
+         * the same initial state as another Generator. Eventually, all valid generators will enter all valid states,
+         * but this should really only be a concern after calling {@link #next()} for over a year continuously.
          */
         public Generator() {
-            long state = Hasher.randomize3(System.currentTimeMillis()) ^ EnhancedRandom.seedFromMath();
+            long state = System.nanoTime();
             a = (int)(state>>>32);
             b = (int)state;
-            state = Hasher.randomize3(state);
-            c = (int)(state>>>32);
-            d = (int)state;
+            c = (int)((Math.random() - 0.5) * 4294967296.0); // 4294967296.0 is 2.0 to the 32
+            d = (int)((Math.random() - 0.5) * 4294967296.0); // 4294967296.0 is 2.0 to the 32
         }
 
         /**
@@ -314,6 +301,8 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
         /**
          * Given a String containing the output of {@link #stringSerialize()}, this creates a new
          * UniqueIdentifier.Generator with the same data as the UniqueIdentifier.Generator that was serialized.
+         * This requires a 35-char String at minimum with four 8-hex-digit sections, but the delimiters between sections
+         * are permitted to be anything (such as {@code '_'} for {@link UniqueIdentifier} or {@code '$'} for this).
          * @param serialized a String almost always produced by {@link #stringSerialize()}
          */
         public Generator(String serialized){
@@ -363,6 +352,13 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
             return sb.toString();
         }
 
+        /**
+         * Loads the state of another serialized Generator (or UniqueIdentifier) into this.
+         * This requires a 35-char String at minimum with four 8-hex-digit sections, but the delimiters between sections
+         * are permitted to be anything (such as {@code '_'} for {@link UniqueIdentifier} or {@code '$'} for this).
+         * @param data a String almost always produced by {@link #stringSerialize()}
+         * @return this Generator, after deserializing
+         */
         public Generator stringDeserialize(String data) {
             a = Base.BASE16.readInt(data, 0, 8);
             b = Base.BASE16.readInt(data, 9, 17);
@@ -370,22 +366,6 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
             d = Base.BASE16.readInt(data, 27, 35);
             return this;
         }
-
-        // Json.Serializable implementations, should be used by squidstore
-//        @Override
-//        public void write(Json json) {
-//            json.writeObjectStart("uig");
-//            json.writeValue("a", stateA);
-//            json.writeValue("b", stateB);
-//            json.writeObjectEnd();
-//        }
-//
-//        @Override
-//        public void read(Json json, JsonValue jsonData) {
-//            jsonData = jsonData.get("uig");
-//            stateA = jsonData.getLong("a");
-//            stateB = jsonData.getLong("b");
-//        }
 
         /**
          * The object implements the writeExternal method to save its contents
