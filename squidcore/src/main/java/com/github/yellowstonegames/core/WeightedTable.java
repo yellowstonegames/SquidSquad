@@ -18,6 +18,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
@@ -60,8 +61,30 @@ public class WeightedTable implements Externalizable {
      * @param probabilities an array or varargs of positive floats representing the weights for their own indices
      */
     public WeightedTable(float... probabilities) {
+        this(probabilities, 0, probabilities.length);
+    }
+
+    /**
+     * Constructs a WeightedTable with the given array of weights for each index. The array can also be a varargs for
+     * convenience. The weights can be any positive non-zero floats, but should usually not be so large or small that
+     * precision loss is risked. Each weight will be used to determine the likelihood of that weight's index being
+     * returned by {@link #random(long)}.
+     * @param probabilities a FloatList of positive floats representing the weights for their own indices
+     */
+    public WeightedTable(FloatList probabilities) {
+        this(probabilities.items, 0, probabilities.size());
+    }
+
+    /**
+     * Constructs a WeightedTable with the given array of weights for each index. The array can also be a varargs for
+     * convenience. The weights can be any positive non-zero floats, but should usually not be so large or small that
+     * precision loss is risked. Each weight will be used to determine the likelihood of that weight's index being
+     * returned by {@link #random(long)}.
+     * @param probabilities an array or varargs of positive floats representing the weights for their own indices
+     */
+    public WeightedTable(float[] probabilities, int offset, int length) {
         /* Begin by doing basic structural checks on the inputs. */
-        if ((size = probabilities.length) == 0)
+        if ((size = Math.min(probabilities.length - offset, length)) == 0)
             throw new IllegalArgumentException("Array 'probabilities' given to WeightedTable must be nonempty.");
 
         mixed = new int[size<<1];
@@ -72,9 +95,9 @@ public class WeightedTable implements Externalizable {
          * changes to it.
          */
         float[] probs = new float[size];
-        for (int i = 0; i < size; ++i) {
+        for (int i = offset, idx = 0; idx < size; ++i, ++idx) {
             if(probabilities[i] <= 0) continue;
-            sum += (probs[i] = probabilities[i]);
+            sum += (probs[idx] = probabilities[i]);
         }
         if(sum <= 0)
             throw new IllegalArgumentException("At least one probability must be positive");

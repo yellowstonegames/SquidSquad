@@ -56,9 +56,9 @@ import java.util.Arrays;
  * The running time of the Damerau-Levenshtein algorithm is O(n*m) where n is
  * the length of the source string and m is the length of the target string.
  * This implementation consumes O(n*m) space on the first call to
- * {@link #distance(String, String)}, but won't always consume more space than
- * that - the total this uses is O(n*m) for the largest value of n*m requested
- * on any call to distance() on the same instance.
+ * {@link #distance(CharSequence, CharSequence)}, but won't always consume more
+ * space than that - the total this uses is O(n*m) for the largest value of n*m
+ * requested on any call to distance() on the same instance.
  *
  * @author Kevin L. Stern
  */
@@ -126,11 +126,11 @@ public class StringDistance {
      * @param target the goal String; we are measuring the edit distance to get from source to target
      * @return the edit distance from source to target with the configured costs, as an int
      */
-    public int distance(@NonNull String source, @NonNull String target) {
-        if (source.isEmpty()) {
+    public int distance(@NonNull CharSequence source, @NonNull CharSequence target) {
+        if (source.length() == 0) {
             return target.length() * insertCost;
         }
-        if (target.isEmpty()) {
+        if (target.length() == 0) {
             return source.length() * deleteCost;
         }
         int width = source.length();
