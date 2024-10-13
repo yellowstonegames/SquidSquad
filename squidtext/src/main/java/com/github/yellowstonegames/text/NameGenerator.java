@@ -16,9 +16,7 @@
 
 package com.github.yellowstonegames.text;
 
-import com.github.tommyettinger.ds.IntFloatOrderedMap;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.IntObjectMap;
+import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
@@ -293,12 +291,10 @@ public class NameGenerator {
     private EnhancedRandom rng;
     private String[] names;
     private int consonantLimit;
-    private ArrayList<Integer> sizes;
-
-    private HashMap<Character, HashMap<Character, TablePair>> letters;
-    private IntObjectMap<IntObjectMap<IntFloatOrderedMap>> letterWeights;
-    private ArrayList<Character> firstLetterSamples;
-    private ArrayList<Character> lastLetterSamples;
+    private IntList sizes;
+    private IntObjectMap<IntObjectMap<TableGroup>> letters;
+    private CharList firstLetterSamples;
+    private CharList lastLetterSamples;
     private final StringDistance dla = new StringDistance(1, 1, 1, 1);
 
     /**
@@ -340,11 +336,10 @@ public class NameGenerator {
      * Initialization, statistically measures letter likelihood.
      */
     private void init() {
-        sizes = new ArrayList<>();
-        letters = new HashMap<>();
-        letterWeights = new IntObjectMap<>(32);
-        firstLetterSamples = new ArrayList<>();
-        lastLetterSamples = new ArrayList<>();
+        sizes = new IntList();
+        letters = new IntObjectMap<>(32);
+        firstLetterSamples = new CharList();
+        lastLetterSamples = new CharList();
 
         for (int i = 0; i < names.length - 1; i++) {
             String name = names[i];
@@ -367,13 +362,13 @@ public class NameGenerator {
                 char nextLetter = name.charAt(n + 1);
 
                 // Create letter if it doesn't exist
-                IntObjectMap<IntFloatOrderedMap> wl = letterWeights.computeIfAbsent(letter, k -> new IntObjectMap<>());
-                IntFloatOrderedMap basis = wl.get(letter);
+                IntObjectMap<TableGroup> wl = letters.computeIfAbsent(letter, k -> new IntObjectMap<>());
+                TableGroup basis = wl.get(letter);
                 if (basis == null) {
-                    basis = new IntFloatOrderedMap();
+                    basis = new TableGroup(new IntFloatOrderedMap());
                     wl.put(letter, basis);
                 }
-                basis.getAndIncrement(nextLetter, 0, 1);
+                basis.map.getAndIncrement(nextLetter, 0, 1);
 
                 // If letter was uppercase (beginning of name), also add a lowercase entry
                 if (Category.Lu.contains(letter)) {
@@ -381,23 +376,20 @@ public class NameGenerator {
 
                     basis = wl.get(letter);
                     if (basis == null) {
-                        basis = new IntFloatOrderedMap();
+                        basis = new TableGroup(new IntFloatOrderedMap());
                         wl.put(letter, basis);
                     }
-                    basis.getAndIncrement(nextLetter, 0, 1);
+                    basis.map.getAndIncrement(nextLetter, 0, 1);
                 }
             }
         }
-        IntIterator it = letterWeights.keySet().iterator();
+        IntIterator it = letters.keySet().iterator();
         while (it.hasNext()){
             char c = (char) it.nextInt();
-            HashMap<Character, TablePair> hmt = letters.computeIfAbsent(c, k -> new HashMap<>());
-            IntObjectMap.Entries<IntFloatOrderedMap> es = letterWeights.get(c).entrySet();
-            IntObjectMap.EntryIterator<IntFloatOrderedMap> it2 = es.iterator();
+            IntObjectMap<TableGroup> hmt = letters.computeIfAbsent(c, k -> new IntObjectMap<>());
+            IntObjectMap.ValueIterator<TableGroup> it2 = letters.get(c).values().iterator();
             while (it2.hasNext()){
-                IntObjectMap.Entry<IntFloatOrderedMap> ent = it2.next();
-                char c2 = (char)ent.key;
-                hmt.computeIfAbsent(c2, k -> new TablePair(ent.value.order(), ent.value.values().toArray()));
+                it2.next().initialize();
             }
         }
     }
@@ -406,10 +398,10 @@ public class NameGenerator {
         for (int runs = 0; runs < LAST_LETTER_CANDIDATES_MAX; runs++) {
             name.setLength(0);
             // Pick size
-            int size = rng.randomElement(sizes);
+            int size = sizes.random(rng);
 
             // Pick first letter
-            char latest = rng.randomElement(firstLetterSamples);
+            char latest = firstLetterSamples.random(rng);
             name.append(latest);
 
             for (int i = 1; i < size - 2; i++) {
@@ -418,7 +410,7 @@ public class NameGenerator {
 
             // Attempt to find a last letter
             for (int lastLetterFits = 0; lastLetterFits < LAST_LETTER_CANDIDATES_MAX; lastLetterFits++) {
-                char lastLetter = rng.randomElement(lastLetterSamples);
+                char lastLetter = lastLetterSamples.random(rng);
                 char intermediateLetterCandidate = getIntermediateLetter(latest, lastLetter);
 
                 // Only attach last letter if the candidate is valid (if no candidate, the antepenultimate letter always occurs at the end)
@@ -484,7 +476,7 @@ public class NameGenerator {
     private char getIntermediateLetter(char letterBefore, char letterAfter) {
         if (Category.L.contains(letterBefore) && Category.L.contains(letterAfter)) {
             // First grab all letters that come after the 'letterBefore'
-            HashMap<Character, TablePair> wl = letters.get(letterBefore);
+            IntObjectMap<TableGroup> wl = letters.get(letterBefore);
             if (wl == null) {
                 return getRandomNextLetter(letterBefore);
             }
@@ -500,7 +492,7 @@ public class NameGenerator {
                 if (wl == null) {
                     continue;
                 }
-                TablePair weightedLetterGroup = wl.get(letterBefore);
+                TableGroup weightedLetterGroup = wl.get(letterBefore);
                 if (weightedLetterGroup != null) {
                     float letterCounter = weightedLetterGroup.weights[weightedLetterGroup.items.indexOf(letterAfter)];
                     if (letterCounter > bestFitScore) {
@@ -587,15 +579,21 @@ public class NameGenerator {
         }
     }
 
-    private static class TablePair {
+    private static class TableGroup {
         public IntList items;
         public float[] weights;
         public WeightedTable table;
+        public IntFloatOrderedMap map;
 
-        public TablePair(IntList items, float[] weights) {
-            this.items = items;
-            this.weights = weights;
+        public TableGroup(IntFloatOrderedMap map) {
+            this.map = map;
+        }
+
+        public TableGroup initialize(){
+            this.items = map.order();
+            this.weights = map.values().toArray();
             this.table = new WeightedTable(weights);
+            return this;
         }
 
         public char random(Random random) {
