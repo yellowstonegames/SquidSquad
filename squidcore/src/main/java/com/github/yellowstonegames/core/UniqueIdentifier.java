@@ -13,8 +13,7 @@ import java.io.ObjectOutput;
  * The typical usage is to call {@link #next()} when you want a new UniqueIdentifier. If the app is closing down and
  * needs to save its state to be resumed later, {@link #GENERATOR} must be serialized as well, and deserialized before
  * calling {@link #next()} again after resuming. Without this last step, the generated identifiers are <em>extremely
- * likely</em>
- * to be unique, but not <em>guaranteed</em> to be unique.
+ * likely</em> to be unique, but not <em>guaranteed</em> to be unique.
  * <br>
  * This can be serialized out-of-the-box to Strings using {@link #stringSerialize()}, but if you do, so must the
  * {@link #GENERATOR} that produces new UniqueIdentifier instances and ensures they are unique.
@@ -117,7 +116,7 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
     }
 
     /**
-     * @return false if this instance was produced by {@link #UniqueIdentifier()} and not modified; true otherwise
+     * @return false if this instance is the invalid all-0 value; true otherwise
      */
     public boolean isValid() {
         return ((a | b | c | d) != 0L);
@@ -269,6 +268,7 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
             b = (int)state;
             c = (int)((Math.random() - 0.5) * 4294967296.0); // 4294967296.0 is 2.0 to the 32
             d = (int)((Math.random() - 0.5) * 4294967296.0); // 4294967296.0 is 2.0 to the 32
+            if((a | b | c | d) == 0) d = 1;
         }
 
         /**
@@ -279,9 +279,8 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
         public Generator(long stateA, long stateB) {
             a = (int)(stateA>>>32);
             b = (int)stateA;
-            stateB = (stateA | stateB) == 0L ? 1L : stateB;
             c = (int)(stateB>>>32);
-            d = (int)stateB;
+            d = (stateA | stateB) == 0 ? 1 : (int)stateB;
         }
 
         /**

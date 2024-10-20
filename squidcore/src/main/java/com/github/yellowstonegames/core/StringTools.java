@@ -18,6 +18,8 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.ds.OffsetBitSet;
+import regexodus.Category;
 import regexodus.Matcher;
 import regexodus.Pattern;
 import regexodus.Replacer;
@@ -985,6 +987,24 @@ public final class StringTools {
     }
 
     /**
+     * Takes the compressed bitset inside a RegExodus {@link Category} and decompresses it to a jdkgdxds
+     * {@link OffsetBitSet}. This may improve lookup time for frequently-checked Categories, since
+     * {@link OffsetBitSet#contains(int)} is quite fast (it runs in O(1) time), while {@link Category#contains(char)}
+     * is... not as fast (it runs in O(n) time, where n is the RLE-compressed size of the entire bitset). An
+     * OffsetBitSet can also be modified if needed, whereas a Category cannot.
+     * @param category a RegExodus Category, such as {@link Category#Lu} for upper-case letters
+     * @return a new OffsetBitSet storing the same contents as the given Category, but optimized for faster access
+     */
+    public static OffsetBitSet decompressCategory(Category category) {
+        char[] contents = category.contents();
+        OffsetBitSet set = new OffsetBitSet(contents[contents.length - 1]);
+        for (int i = contents.length - 1; i >= 0; i--) {
+            set.add(contents[i]);
+        }
+        return set;
+    }
+
+    /**
      * A constant containing only chars that are reasonably likely to be supported by broad fonts and thus display-able.
      * This assumes the font supports Latin, Greek, and Cyrillic alphabets, with good support for extended Latin (at
      * least for European languages) but not required to be complete enough to support the very large Vietnamese set of
@@ -1066,4 +1086,20 @@ public final class StringTools {
     public static final String LETTERS_LOWER = LATIN_LETTERS_LOWER + GREEK_LETTERS_LOWER + CYRILLIC_LETTERS_LOWER;
     public static final String LETTERS = LETTERS_UPPER + LETTERS_LOWER;
     public static final String LETTERS_AND_NUMBERS = LETTERS + DIGITS;
+
+    /**
+     * An OffsetBitSet containing every letter char in the Unicode BMP as an index.
+     * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LETTER_SET.contains(c)} .
+     */
+    public static final OffsetBitSet ALL_UNICODE_LETTER_SET = decompressCategory(Category.L);
+    /**
+     * An OffsetBitSet containing every upper-case letter char in the Unicode BMP as an index.
+     * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_UPPERCASE_LETTER_SET.contains(c)} .
+     */
+    public static final OffsetBitSet ALL_UNICODE_UPPERCASE_LETTER_SET = decompressCategory(Category.Lu);
+    /**
+     * An OffsetBitSet containing every lower-case letter char in the Unicode BMP as an index.
+     * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LOWERCASE_LETTER_SET.contains(c)} .
+     */
+    public static final OffsetBitSet ALL_UNICODE_LOWERCASE_LETTER_SET = decompressCategory(Category.Ll);
 }
