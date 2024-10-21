@@ -84,7 +84,7 @@ public class MarkovTest {
             System.out.print("..."+markovText.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
         
-        FilteredStringSet names = FilteredStringSet.with(CharFilter.getOrCreate("LetterOnlyCaseInsensitive", Category.L::contains, Character::toUpperCase), ArrayTools.stringSpan(48, 72));
+        FilteredStringSet names = FilteredStringSet.with(CharFilter.getOrCreate("LetterOnlyCaseInsensitive", StringTools.ALL_UNICODE_LETTER_SET::contains, Character::toUpperCase), ArrayTools.stringSpan(48, 72));
 
         MarkovText copy = markovText.copy();
 

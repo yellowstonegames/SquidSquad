@@ -19,6 +19,7 @@ package com.github.yellowstonegames.text;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.yellowstonegames.core.StringTools;
 import regexodus.*;
 
 import java.util.Arrays;
@@ -891,9 +892,9 @@ se$->z
         // respect unicode case data on its own (see
         // https://github.com/gwtproject/gwt/blob/2.6.1/user/super/com/google/gwt/emul/java/lang/Character.java#L54-L61
         // ). We are using GWT to capitalize, though, which appears to work in practice and the docs agree.
-        if(Category.Lu.contains(source.charAt(0)))
+        if(StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(source.charAt(0)))
             chars[0] = Character.toUpperCase(chars[0]);
-        if(source.length() > 1 && Category.Lu.contains(source.charAt(1))) {
+        if(source.length() > 1 && StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(source.charAt(1))) {
             for (int i = 1; i < chars.length; i++) {
                 chars[i] = Character.toUpperCase(chars[i]);
             }
@@ -939,9 +940,9 @@ se$->z
                 return;
             }
             char[] chars = translated.toCharArray();
-            if(Category.Lu.contains(match.charAt(0)))
+            if(StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(match.charAt(0)))
                 chars[0] = Character.toUpperCase(chars[0]);
-            if(match.length() > 1 && Category.Lu.contains(match.charAt(1))) {
+            if(match.length() > 1 && StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(match.charAt(1))) {
                 for (int i = 1; i < chars.length; i++) {
                     chars[i] = Character.toUpperCase(chars[i]);
                 }

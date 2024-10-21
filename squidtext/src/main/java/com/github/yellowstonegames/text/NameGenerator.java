@@ -20,6 +20,7 @@ import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.core.WeightedTable;
 import regexodus.Category;
 
@@ -371,7 +372,7 @@ public class NameGenerator {
                 basis.map.getAndIncrement(nextLetter, 0, 1);
 
                 // If letter was uppercase (beginning of name), also add a lowercase entry
-                if (Category.Lu.contains(letter)) {
+                if (StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(letter)) {
                     letter = Character.toLowerCase(letter);
 
                     basis = wl.get(letter);
@@ -414,7 +415,7 @@ public class NameGenerator {
                 char intermediateLetterCandidate = getIntermediateLetter(latest, lastLetter);
 
                 // Only attach last letter if the candidate is valid (if no candidate, the antepenultimate letter always occurs at the end)
-                if (Category.L.contains(intermediateLetterCandidate)) {
+                if (StringTools.ALL_UNICODE_LETTER_SET.contains(intermediateLetterCandidate)) {
                     name.append(intermediateLetterCandidate).append(lastLetter);
                     break;
                 }
@@ -474,7 +475,7 @@ public class NameGenerator {
      * @return	The best fit letter between the provided letters.
      */
     private char getIntermediateLetter(char letterBefore, char letterAfter) {
-        if (Category.L.contains(letterBefore) && Category.L.contains(letterAfter)) {
+        if (StringTools.ALL_UNICODE_LETTER_SET.contains(letterBefore) && StringTools.ALL_UNICODE_LETTER_SET.contains(letterAfter)) {
             // First grab all letters that come after the 'letterBefore'
             IntObjectMap<TableGroup> wl = letters.get(letterBefore);
             if (wl == null) {

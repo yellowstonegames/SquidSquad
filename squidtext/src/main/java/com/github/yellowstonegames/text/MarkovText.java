@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.*;
+import com.github.yellowstonegames.core.StringTools;
 import regexodus.Category;
 import regexodus.Matcher;
 import regexodus.Pattern;
@@ -219,7 +220,7 @@ public class MarkovText {
         String name;
         PER_WORD:
         for (int i = 5; i < words.length; i++) {
-            if(Category.Lu.contains((name = words[i]).charAt(0)))
+            if(StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains((name = words[i]).charAt(0)))
             {
                 for (int w = 5; w < words.length; w++) {
                     for (int p = 0; p < processed[w].length; p++) {

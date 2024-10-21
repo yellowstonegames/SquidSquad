@@ -20,6 +20,7 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.*;
+import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 import regexodus.Category;
 
@@ -91,7 +92,7 @@ public class MarkovChar {
         for (int i = 0; i < corpus.length(); i++) {
             char c = corpus.charAt(i);
 
-            if('\'' != c && !Category.L.contains(c))
+            if('\'' != c && !StringTools.ALL_UNICODE_LETTER_SET.contains(c))
                 c = END;
             current = body.addOrIndex(c);
             pair = pair << 16 | (current & 0xFFFF);

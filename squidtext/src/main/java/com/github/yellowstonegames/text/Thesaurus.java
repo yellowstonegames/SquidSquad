@@ -30,6 +30,7 @@ import regexodus.*;
 import java.util.*;
 
 import static com.github.tommyettinger.ds.ObjectList.with;
+import static com.github.yellowstonegames.core.StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET;
 
 /**
  * A text processing class that can swap out occurrences of special keywords and replace them with randomly-selected
@@ -578,34 +579,34 @@ public class Thesaurus {
             if (nx.isEmpty()) {
                 return nx;
             }
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 return nx.toUpperCase();
             }
-            if (Category.Lu.contains(word.charAt(0))) {
+            if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 return Character.toUpperCase(nx.charAt(0)) + nx.substring(1);
             }
             return nx;
         } else if (languages.containsKey(word2)) {
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 return languages.get(word2).word(rng, false, rng.nextInt(2, 4)).toUpperCase();
             }
-            if (Category.Lu.contains(word.charAt(0))) {
+            if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 return languages.get(word2).word(rng, true, rng.nextInt(2, 4));
             }
             return languages.get(word2).word(rng, false, rng.nextInt(2, 4));
         } else if ((num = numbers.get(word)) != null) {
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 return (numberWordInRange(2, num).toUpperCase());
-            } else if (Category.Lu.contains(word.charAt(0))) {
+            } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberWordInRange(2, num);
                 return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
             } else {
                 return (numberWordInRange(2, num));
             }
         } else if ((num = numberAdjectives.get(word)) != null) {
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 return (numberAdjectiveInRange(2, num).toUpperCase());
-            } else if (Category.Lu.contains(word.charAt(0))) {
+            } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberAdjectiveInRange(2, num);
                 return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
             } else {
@@ -643,11 +644,11 @@ public class Thesaurus {
             String nx = mapping.next();
             if (nx.isEmpty())
                 return;
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 dest.append(nx.toUpperCase());
                 return;
             }
-            if (Category.Lu.contains(word.charAt(0))) {
+            if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 dest.append(Character.toUpperCase(nx.charAt(0)));
                 dest.append(nx.substring(1));
                 return;
@@ -655,18 +656,18 @@ public class Thesaurus {
             dest.append(nx);
             return;
         } else if ((lang = languages.get(word)) != null) {
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 dest.append(lang.word(rng, false, rng.nextInt(2, 4)).toUpperCase());
-            } else if (Category.Lu.contains(word.charAt(0))) {
+            } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 dest.append(lang.word(rng, true, rng.nextInt(2, 4)));
             } else {
                 dest.append(lang.word(rng, false, rng.nextInt(2, 4)));
             }
             return;
         } else if ((num = numbers.get(word)) != null) {
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 dest.append(numberWordInRange(2, num).toUpperCase());
-            } else if (Category.Lu.contains(word.charAt(0))) {
+            } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberWordInRange(2, num);
                 dest.append(Character.toUpperCase(w.charAt(0)));
                 dest.append(w.substring(1));
@@ -675,9 +676,9 @@ public class Thesaurus {
             }
             return;
         } else if ((numberAdj = numberAdjectives.get(word)) != null) {
-            if (word.length() > 1 && Category.Lu.contains(word.charAt(1))) {
+            if (word.length() > 1 && ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(1))) {
                 dest.append(numberAdjectiveInRange(2, numberAdj).toUpperCase());
-            } else if (Category.Lu.contains(word.charAt(0))) {
+            } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberAdjectiveInRange(2, numberAdj);
                 dest.append(Character.toUpperCase(w.charAt(0)));
                 dest.append(w.substring(1));
