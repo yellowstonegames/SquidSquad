@@ -20,6 +20,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
@@ -45,21 +46,22 @@ import java.util.Date;
  */
 public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 1920, height = 1080;
-    private static final int width = 256, height = 256; // localMimic
+//    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 420, height = 210; // mimic, elliptical
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 256, height = 256; // space view
 //    private static final int width = 1200, height = 400; // squat
-//    private static final int width = 300, height = 300;
+    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
     private static final int LIMIT = 3;
-    private static final int FRAMES = 480;
+    private static final int FRAMES = 180;
 //    private static final boolean FLOWING_LAND = true;
 //    private static final boolean ALIEN_COLORS = false;
+    private static final boolean MANY_STILL = true;
     private static final boolean SEEDY = false;
     private int baseSeed = 1234567890;
     private final int AA = 1;
@@ -82,6 +84,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
     private AnimatedGif writer;
     private AnimatedPNG apng;
+    private FastPNG png;
     
     private String date, path;
     private Noise noise;
@@ -141,6 +144,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
+        if(MANY_STILL){
+            png = new FastPNG();
+            png.setFlipY(false);
+        }
         rng = new DistinctRandom(Hasher.balam.hash64(date));
         //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date  
         //rng = new StatefulRNG(0L);
@@ -272,6 +279,12 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         long hash;
         if(SEEDY) hash = baseSeed;
         else hash = Hasher.balam.hash64(name);
+        FileHandle stills = null;
+        if(MANY_STILL){
+            stills = Gdx.files.local(path + "/"+name+"_stills/");
+            stills.mkdirs();
+        }
+
         worldTime = System.currentTimeMillis();
         Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
@@ -306,10 +319,17 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
             if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
+
+        if(MANY_STILL){
+            for (int i = 0; i < pm.length; i++) {
+                png.write(stills.child("world_" + i + ".png"), pm[i]);
+            }
+        }
+
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette.analyze(pms);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 30);
-        apng.write(Gdx.files.local(path + name + ".png"), pms, 30);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
+        apng.write(Gdx.files.local(path + name + ".png"), pms, 20);
         temp.dispose();
 
         System.out.println();
