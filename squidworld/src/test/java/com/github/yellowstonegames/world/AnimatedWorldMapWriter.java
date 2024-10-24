@@ -138,8 +138,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
-        writer.setDitherStrength(1.5f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.LOAF);
+        writer.setDitherStrength(1f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
         apng = new AnimatedPNG();

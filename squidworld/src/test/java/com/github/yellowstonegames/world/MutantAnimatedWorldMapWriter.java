@@ -43,6 +43,7 @@ import java.util.Date;
 
 /**
  * Writes one or more spinning globes to the out/ folder.
+ * You probably want {@link FlowingWorldMapWriter}.
  */
 public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 400, height = 400;
@@ -52,7 +53,7 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
 
     private static final int LIMIT = 8;
 //    private static final boolean FLOWING_LAND = true;
-    private static final boolean ALIEN_COLORS = true;
+    private static final boolean ALIEN_COLORS = false;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -95,8 +96,8 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
-//        path = "out/worldsAnimated/" + date + "/Mutant/";
-        path = "out/worldsAnimated/" + date + "/MutantAlien/";
+        path = "out/worldsAnimated/" + date + "/Mutant/";
+//        path = "out/worldsAnimated/" + date + "/MutantAlien/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
 //        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
 //        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
@@ -121,8 +122,8 @@ public class MutantAnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
-        writer.setDitherStrength(1.5f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.LOAF);
+        writer.setDitherStrength(1f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));

@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
+import com.github.tommyettinger.anim8.FastPNG;
 import com.github.tommyettinger.anim8.QualityPalette;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
@@ -73,7 +74,7 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
     private AnimatedGif writer;
 //    private AnimatedPNG apng;
-    private PixmapIO.PNG pngWriter;
+    private FastPNG pngWriter;
 
     private String date, path;
     private float mutationA, mutationB;
@@ -101,14 +102,14 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
         writer = new AnimatedGif();
         writer.palette = new QualityPalette();
 //        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
-        writer.setDitherStrength(1.5f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.OCEANIC);
+        writer.setDitherStrength(0.5f);
 //        writer.fastAnalysis = true;
         writer.setFlipY(false);
 //        apng = new AnimatedPNG();
 //        apng.setFlipY(false);
 //        apng.setCompression(7);
-        pngWriter = new PixmapIO.PNG();
+        pngWriter = new FastPNG();
         pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date

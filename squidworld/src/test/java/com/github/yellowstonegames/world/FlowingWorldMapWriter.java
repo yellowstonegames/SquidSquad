@@ -92,7 +92,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapView wmv;
     private AnimatedGif writer;
-    private AnimatedPNG apng;
+//    private AnimatedPNG apng;
 //    private PixmapIO.PNG pngWriter;
 
     private String date, path;
@@ -239,8 +239,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BURKES);
-        writer.setDitherStrength(1.5f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.LOAF);
+        writer.setDitherStrength(1f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
 
@@ -381,9 +381,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 16);
-//        apng.write(Gdx.files.local(path + name + ".png"), pms, 16);
+        writer.palette.analyze(pms, 100.0);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
+//        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }

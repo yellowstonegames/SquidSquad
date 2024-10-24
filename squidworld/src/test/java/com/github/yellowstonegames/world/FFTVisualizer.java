@@ -208,7 +208,7 @@ public class FFTVisualizer extends ApplicationAdapter {
         }
         Fft.transformWindowless2D(realKnown, imagKnown);
         gif = new FastGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.GRADIENT_NOISE);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.LOAF);
         gif.setDitherStrength(0.2f);
         gif.palette = new PaletteReducer(
                 new int[] {
