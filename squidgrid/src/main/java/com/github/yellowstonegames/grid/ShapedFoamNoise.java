@@ -770,13 +770,13 @@ public class ShapedFoamNoise implements INoise {
     // OTHER
 
     /**
-     * Returns the String "FoaN", to be used as a unique tag for this generator.
+     * Returns the String "SFoN", to be used as a unique tag for this generator.
      *
-     * @return the String "FoaN"
+     * @return the String "SFoN"
      */
     @Override
     public String getTag() {
-        return "FoaN";
+        return "SFoN";
     }
 
     /**
@@ -828,27 +828,33 @@ public class ShapedFoamNoise implements INoise {
 
     @Override
     public String stringSerialize() {
-        return "`" + seed + "`";
+        return "`" + seed + '~' + shape + "`";
     }
 
     @Override
     public ShapedFoamNoise stringDeserialize(String data) {
-        setSeed(Base.BASE10.readLong(data, 1, data.length() - 1));
+        int idx = data.indexOf('~');
+        setSeed(Base.BASE10.readLong(data, 1, idx));
+        setShape(Base.BASE10.readFloat(data, idx + 1, data.length() - 1));
         return this;
     }
 
     public static ShapedFoamNoise recreateFromString(String data) {
-        return new ShapedFoamNoise(Base.BASE10.readLong(data, 1, data.length() - 1));
+        int idx = data.indexOf('~');
+        return new ShapedFoamNoise(Base.BASE10.readLong(data, 1, idx), Base.BASE10.readFloat(data, idx + 1, data.length() - 1));
     }
 
     @Override
     public ShapedFoamNoise copy() {
-        return new ShapedFoamNoise(this.seed);
+        return new ShapedFoamNoise(this.seed, this.shape);
     }
 
     @Override
     public String toString() {
-        return "FoamNoise{seed=" + seed + "}";
+        return "ShapedFoamNoise{" +
+                "seed=" + seed +
+                ", shape=" + shape +
+                '}';
     }
 
     @Override
@@ -857,12 +863,11 @@ public class ShapedFoamNoise implements INoise {
         if (o == null || getClass() != o.getClass()) return false;
 
         ShapedFoamNoise that = (ShapedFoamNoise) o;
-
-        return (seed == that.seed);
+        return seed == that.seed && Float.compare(shape, that.shape) == 0;
     }
 
     @Override
     public int hashCode() {
-        return (int) (seed ^ seed >>> 32);
+        return (int)(seed ^ seed >>> 32) ^ BitConversion.floatToRawIntBits(shape);
     }
 }
