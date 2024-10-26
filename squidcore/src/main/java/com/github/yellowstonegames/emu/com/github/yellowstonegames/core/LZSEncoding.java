@@ -91,7 +91,18 @@ public class LZSEncoding {
     public static String compressToEncodedURIComponent(String uncompressed) {
         if (uncompressed == null)
             return null;
-        return _compress(uncompressed, 6, keyStrUriSafe, 0);
+        String res = _compress(uncompressed, 6, keyStrUriSafe, 0);
+        switch (res.length() & 3) { // To produce valid URI-Encoding
+            case 1:
+                return res + "$$$";
+            case 2:
+                return res + "$$";
+            case 3:
+                return res + "$";
+            case 0:
+            default:
+                return res;
+        }
     }
     /**
      * Decompresses a String that had been compressed with {@link #compressToEncodedURIComponent(String)}.

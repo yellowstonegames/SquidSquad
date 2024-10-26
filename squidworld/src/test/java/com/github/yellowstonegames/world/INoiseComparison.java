@@ -221,6 +221,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new ShapedFoamNoise(1L, 2f),
             new ShapedFoamNoise(1L, 1f),
             new ShapedFoamNoise(1L, 0.5f),
+            new ShapedFoamNoise(1L, 0.25f),
             new FoamNoise(1L),
             new FoamplexNoise(1L),
 //            new NoiseAdjustment(new SimplexNoise(1L), watcher),

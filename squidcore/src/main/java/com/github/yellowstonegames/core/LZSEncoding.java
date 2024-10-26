@@ -68,15 +68,15 @@ public final class LZSEncoding {
             return null;
         String res = _compress(uncompressed, 6, keyStrBase64);
         switch (res.length() & 3) { // To produce valid Base64
-            default: // When could this happen ?
-            case 0:
-                return res;
             case 1:
                 return res + "===";
             case 2:
                 return res + "==";
             case 3:
                 return res + "=";
+            case 0:
+            default:
+                return res;
         }
     }
 
@@ -127,7 +127,18 @@ public final class LZSEncoding {
     public static String compressToEncodedURIComponent(String uncompressed) {
         if (uncompressed == null)
             return null;
-        return _compress(uncompressed, 6, keyStrUriSafe);
+        String res = _compress(uncompressed, 6, keyStrUriSafe);
+        switch (res.length() & 3) { // To produce valid URI-encoding
+            case 1:
+                return res + "$$$";
+            case 2:
+                return res + "$$";
+            case 3:
+                return res + "$";
+            case 0:
+            default:
+                return res;
+        }
     }
     /**
      * Decompresses a String that had been compressed with {@link #compressToEncodedURIComponent(String)}.
@@ -154,7 +165,7 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        // This boxes int to Integer, but HashMap is vastly better with containsKey() calls with String keys, somehow.
+        // This boxes int to Integer, but HashMap is faster on containsKey() calls with String keys, maybe?
         HashMap<String, Integer> context_dictionary = new HashMap<>(256, 0.5f);
         HashSet<String> context_dictionaryToCreate = new HashSet<>(256, 0.5f);
         String context_c;
