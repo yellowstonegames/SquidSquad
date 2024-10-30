@@ -2,6 +2,9 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.crux.Point2;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.io.Externalizable;
@@ -28,10 +31,6 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
         this.y = y;
     }
 
-    public Point2Float(Coord p) {
-        this(p.x, p.y);
-    }
-
     public Point2Float(Point2Float p) {
         this(p.x, p.y);
     }
@@ -55,8 +54,14 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
     public Point2Float cpy() {
         return new Point2Float(this);
     }
+
     public Point2Float copy() {
         return cpy();
+    }
+
+    @Override
+    public float len2() {
+        return x * x + y * y;
     }
 
     @Override
@@ -113,6 +118,9 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
         return scl(point);
     }
     public Point2Float mul(Point2Float point) {
+        return scl(point);
+    }
+    public Point2Float mul(Point2<?> point) {
         return scl(point);
     }
     public Point2Float multiply(Point2<?> point) {
@@ -185,6 +193,14 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
         return this;
     }
 
+    public Point2Float sub(float x, float y) {
+        this.x -= x;
+        this.y -= y;
+        return this;
+    }
+    public Point2Float subtract(float x, float y) {
+        return sub(x, y);
+    }
     public Point2Float scl(float scalar) {
         x *= scalar;
         y *= scalar;
@@ -264,104 +280,132 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
         return mulAdd(vec, mulVec);
     }
 
-    @Override
     public Point2Float limit(float limit) {
-        super.limit(limit);
-        return this;
+        return limit2(limit * limit);
     }
 
-    @Override
     public Point2Float limit2(float limit2) {
-        super.limit2(limit2);
+        float len2 = len2();
+        if (len2 > limit2) {
+            return scl((float)Math.sqrt(limit2 / len2));
+        }
+        return this;
+    }
+    public Point2Float limitSquared(float limit2) {
+        return limit2(limit2);
+    }
+
+    public Point2Float clampLength(float min, float max) {
+        final float len2 = len2();
+        if (len2 == 0f) return this;
+        float max2 = max * max;
+        if (len2 > max2) return scl((float)Math.sqrt(max2 / len2));
+        float min2 = min * min;
+        if (len2 < min2) return scl((float)Math.sqrt(min2 / len2));
         return this;
     }
 
-    @Override
-    public Point2Float clamp(float min, float max) {
-        super.clamp(min, max);
-        return this;
-    }
-
-    @Override
     public Point2Float setLength(float len) {
-        super.setLength(len);
-        return this;
+        return setLength2(len * len);
     }
 
-    @Override
     public Point2Float setLength2(float len2) {
-        super.setLength2(len2);
-        return this;
+        float oldLen2 = len2();
+        return (oldLen2 == 0 || oldLen2 == len2) ? this : scl((float)Math.sqrt(len2 / oldLen2));
     }
 
-    @Override
-    public Point2Float mul(Matrix3 mat) {
-        super.mul(mat);
-        return this;
+    public Point2Float setAngleRad (float radians) {
+        set(len(), 0f);
+        return rotateRad(radians);
     }
 
-    @Override
     public Point2Float setAngleDeg(float degrees) {
-        super.setAngleDeg(degrees);
-        return this;
+        set(len(), 0f);
+        return rotateDeg(degrees);
     }
 
-    @Override
-    public Point2Float setAngleRad(float radians) {
-        super.setAngleRad(radians);
-        return this;
+    public Point2Float setAngleTurns(float turns) {
+        set(len(), 0f);
+        return rotateTurns(turns);
     }
 
-    @Override
-    public Point2Float rotateDeg(float degrees) {
-        super.rotateDeg(degrees);
-        return this;
-    }
-
-    @Override
     public Point2Float rotateRad(float radians) {
-        super.rotateRad(radians);
+        float cos = TrigTools.cos(radians);
+        float sin = TrigTools.sin(radians);
+
+        float newX = this.x * cos - this.y * sin;
+        float newY = this.x * sin + this.y * cos;
+
+        this.x = newX;
+        this.y = newY;
+
         return this;
     }
 
-    @Override
-    public Point2Float rotateAroundDeg(Vector2 reference, float degrees) {
-        super.rotateAroundDeg(reference, degrees);
+    public Point2Float rotateDeg(float degrees) {
+        float cos = TrigTools.cosDeg(degrees);
+        float sin = TrigTools.sinDeg(degrees);
+
+        float newX = this.x * cos - this.y * sin;
+        float newY = this.x * sin + this.y * cos;
+
+        this.x = newX;
+        this.y = newY;
+
         return this;
     }
 
-    @Override
-    public Point2Float rotateAroundRad(Vector2 reference, float radians) {
-        super.rotateAroundRad(reference, radians);
+    public Point2Float rotateTurns(float turns) {
+        float cos = TrigTools.cosTurns(turns);
+        float sin = TrigTools.sinTurns(turns);
+
+        float newX = this.x * cos - this.y * sin;
+        float newY = this.x * sin + this.y * cos;
+
+        this.x = newX;
+        this.y = newY;
+
         return this;
     }
 
-    @Override
-    public Point2Float rotate90(int dir) {
-        super.rotate90(dir);
+    public Point2Float rotateAroundRad(Point2<?> reference, float radians) {
+        return this.sub(reference).rotateRad(radians).add(reference);
+    }
+
+    public Point2Float rotateAroundDeg(Point2<?> reference, float degrees) {
+        return this.sub(reference).rotateDeg(degrees).add(reference);
+    }
+
+    public Point2Float rotateAroundTurns(Point2<?> reference, float turns) {
+        return this.sub(reference).rotateTurns(turns).add(reference);
+    }
+
+    public Point2Float rotate90(int sign) {
+        float x = this.x;
+        if (sign >= 0) {
+            this.x = -y;
+            y = x;
+        } else {
+            this.x = y;
+            y = -x;
+        }
         return this;
     }
 
-    @Override
-    public Point2Float lerp(Vector2 target, float alpha) {
-        super.lerp(target, alpha);
+    public Point2Float lerp(Point2<?> target, float alpha) {
+        final float invAlpha = 1.0f - alpha;
+        this.x = (x * invAlpha) + (target.x() * alpha);
+        this.y = (y * invAlpha) + (target.y() * alpha);
         return this;
     }
 
-    @Override
-    public Point2Float interpolate(Vector2 target, float alpha, Interpolation interpolation) {
-        super.interpolate(target, alpha, interpolation);
-        return this;
-    }
-
-    @Override
-    public Point2Float setToRandomDirection() {
-        return setToRandomDirection(MathUtils.random);
+    public Point2Float interpolate(Point2<?> target, float alpha, Interpolations.Interpolator interpolation) {
+        return lerp(target, interpolation.apply(alpha));
     }
 
     public Point2Float setToRandomDirection(Random random) {
-        float theta = random.nextFloat() * MathUtils.PI2;
-        return this.set(MathUtils.cos(theta), MathUtils.sin(theta));
+        int index = random.nextInt() & TrigTools.TABLE_MASK;
+        return this.set(TrigTools.COS_TABLE[index], TrigTools.SIN_TABLE[index]);
     }
 
     /**
@@ -379,7 +423,7 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
     /**
      * Sets each component so it only has a fractional value, by subtracting the floor from each component.
      * This produces a non-negative float for each component, between 0.0 inclusive and 1.0 exclusive, unless a
-     * component is outside the safe range for {@link MathUtils#floor(float)} (-16384.0 at the lowest).
+     * component is outside the safe range for {@link MathTools#floor(float)} (-16384.0 at the lowest).
      * <pre>
      * The result of fract() for a component with a value of  1.25 will be 0.25 .
      * The result of fract() for a component with a value of -1.25 will be 0.75 .
@@ -388,11 +432,13 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
      * @return this, after modifications
      */
     public Point2Float fract () {
-        x -= MathUtils.floor(x);
-        y -= MathUtils.floor(y);
+        x -= MathTools.floor(x);
+        y -= MathTools.floor(y);
         return this;
     }
-
+    public Point2Float fractional () {
+        return fract();
+    }
     /**
      * Gets the component at the specified index.
      * Kotlin-compatible using square-bracket indexing.
