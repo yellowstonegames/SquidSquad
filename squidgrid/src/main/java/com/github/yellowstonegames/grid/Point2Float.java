@@ -5,6 +5,8 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.io.Externalizable;
@@ -18,7 +20,7 @@ import java.util.Random;
  * and {@link Externalizable}. This does have some more additions to those interfaces, such as
  * {@link #get(int)} and {@link #setAt(int, float)}.
  */
-public class Point2Float implements Point2<Point2Float>, Externalizable {
+public class Point2Float implements Point2<Point2Float>, PrimitiveCollection.OfFloat, Externalizable {
 
     public float x;
     public float y;
@@ -502,5 +504,67 @@ public class Point2Float implements Point2<Point2Float>, Externalizable {
             return this.set(x, y);
         }
         throw new IllegalArgumentException("Not a valid format for a Point2Float: " + s);
+    }
+
+    @Override
+    public boolean add(float v) {
+        throw new UnsupportedOperationException("Point2Float is fixed-size.");
+    }
+
+    @Override
+    public boolean remove(float v) {
+        throw new UnsupportedOperationException("Point2Float is fixed-size.");
+    }
+
+    @Override
+    public boolean contains(float v) {
+        return (x == v || y == v);
+    }
+
+    @Override
+    public int size() {
+        return 2;
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Point2Float is fixed-size.");
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public boolean notEmpty() {
+        return true;
+    }
+
+    @Override
+    public FloatIterator iterator() {
+        return new Point2FloatIterator(this);
+    }
+
+    public static class Point2FloatIterator implements FloatIterator {
+        public Point2Float pt;
+        public int index;
+        public Point2FloatIterator(Point2Float pt){
+            this.pt = pt;
+            index = 0;
+        }
+        @Override
+        public float nextFloat() {
+            return pt.get(index++);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < pt.rank();
+        }
+
+        public void reset(){
+            index = 0;
+        }
     }
 }
