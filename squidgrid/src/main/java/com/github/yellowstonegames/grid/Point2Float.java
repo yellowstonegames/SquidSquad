@@ -6,7 +6,6 @@ import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.io.Externalizable;
@@ -16,11 +15,10 @@ import java.io.ObjectOutput;
 import java.util.Random;
 
 /**
- * A mutable point with float components implementing {@link Point2}
- * and {@link Externalizable}. This does have some more additions to those interfaces, such as
- * {@link #get(int)} and {@link #setAt(int, float)}.
+ * A mutable 2D point with float components implementing {@link Point2}, {@link PrimitiveCollection.OfFloat},
+ * {@link PointNFloat}, and {@link Externalizable}.
  */
-public class Point2Float implements Point2<Point2Float>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float>, PrimitiveCollection.OfFloat, Externalizable {
 
     public float x;
     public float y;
@@ -542,29 +540,8 @@ public class Point2Float implements Point2<Point2Float>, PrimitiveCollection.OfF
     }
 
     @Override
-    public FloatIterator iterator() {
-        return new Point2FloatIterator(this);
+    public PointNFloatIterator iterator() {
+        return new PointNFloatIterator(this);
     }
 
-    public static class Point2FloatIterator implements FloatIterator {
-        public Point2Float pt;
-        public int index;
-        public Point2FloatIterator(Point2Float pt){
-            this.pt = pt;
-            index = 0;
-        }
-        @Override
-        public float nextFloat() {
-            return pt.get(index++);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return index < pt.rank();
-        }
-
-        public void reset(){
-            index = 0;
-        }
-    }
 }
