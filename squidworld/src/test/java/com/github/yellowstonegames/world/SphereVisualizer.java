@@ -1859,7 +1859,7 @@ public static final float[] GRADIENTS_6D = {
      * you pass 1, you will get positive infinity.
      * <br>
      * NOTE: this is usually slower than {@link MathTools#probit(double)}, and this doesn't produce a correct Gaussian
-     * distribution. For generating Gaussian variables, {@link Ziggurat#normal(long)} is generally fastest.
+     * distribution. For generating Gaussian variables, {@link Distributor#normal(long)} is generally fastest.
      * @param x between 0 and 1, inclusive if you do accept infinite outputs, or exclusive if you do not
      * @return an approximately-normal-distributed double with mu = 0.0, sigma = 1.0
      */

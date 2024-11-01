@@ -16,10 +16,10 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Distributor;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
-import com.github.tommyettinger.random.Ziggurat;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Arrays;
@@ -290,7 +290,7 @@ public final class RotationTools {
      * A more-specific variation on {@link com.github.tommyettinger.digital.Hasher#randomize1(long)}, this expects its
      * inputs to change by a very large amount between every call, such as {@code 0x9E3779B97F4A7C15L}.
      * This is not as high-quality on its own as any of Hasher's randomize methods, but this class assumes the other
-     * random factors in things like {@link Ziggurat} will make up for any lacking quality here.
+     * random factors in things like {@link Distributor#normal(long)} will make up for any lacking quality here.
      * @param state change this with {@code randomize((state += 0x9E3779B97F4A7C15L))}
      * @return a long that has been deterministically randomized from state
      */
@@ -330,7 +330,7 @@ public final class RotationTools {
         float sum = 0f, t;
         for (int i = 0; i < targetSize; i++) {
             // use Juniper's Ziggurat algorithm to generate Gaussians directly, which requires randomizing the seed
-            gauss[i] = t = (float) Ziggurat.normal(randomize((seed += 0x9E3779B97F4A7C15L)));
+            gauss[i] = t = (float) Distributor.normal(randomize((seed += 0x9E3779B97F4A7C15L)));
             sum += t * t;
         }
         final float inv = 1f / (float) Math.sqrt(sum);
@@ -396,7 +396,7 @@ public final class RotationTools {
         long sd = randomize(seed + squareSize);
         float sum = 0f, t;
         for (int i = 0; i < targetSize; i++) {
-            gauss[i] = t = (float) Ziggurat.normal(randomize((sd += 0x9E3779B97F4A7C15L)));
+            gauss[i] = t = (float) Distributor.normal(randomize((sd += 0x9E3779B97F4A7C15L)));
             sum += t * t;
         }
         final float inv = (float) (1.0 / Math.sqrt(sum));
@@ -460,7 +460,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 9-element float array, meant as effectively a 3D rotation matrix
      */
@@ -471,7 +471,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 3D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Ziggurat}, and uses an existing 2D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 2D rotation matrix to avoid redoing
      * any generation work already done for 2D. There will probably be some correlation between the appearance of the 2D
      * rotation this will build upon and the 3D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -485,7 +485,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 4D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 16-element float array, meant as effectively a 4D rotation matrix
      */
@@ -496,7 +496,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 4D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Ziggurat}, and uses an existing 3D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 3D rotation matrix to avoid redoing
      * any generation work already done for 3D. There will probably be some correlation between the appearance of the 3D
      * rotation this will build upon and the 4D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -510,7 +510,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 5D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 25-element float array, meant as effectively a 5D rotation matrix
      */
@@ -521,7 +521,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 5D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Ziggurat}, and uses an existing 4D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 4D rotation matrix to avoid redoing
      * any generation work already done for 4D. There will probably be some correlation between the appearance of the 4D
      * rotation this will build upon and the 5D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -535,7 +535,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 6D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 36-element float array, meant as effectively a 6D rotation matrix
      */
@@ -546,7 +546,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 6D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Ziggurat}, and uses an existing 5D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 5D rotation matrix to avoid redoing
      * any generation work already done for 5D. There will probably be some correlation between the appearance of the 5D
      * rotation this will build upon and the 6D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -560,7 +560,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 7D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 49-element float array, meant as effectively a 7D rotation matrix
      */
@@ -571,7 +571,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 7D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get Gaussian floats using
-     * {@link Ziggurat}, and uses an existing 6D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 6D rotation matrix to avoid redoing
      * any generation work already done for 6D. There will probably be some correlation between the appearance of the 5D
      * rotation this will build upon and the 7D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -901,7 +901,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 7D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE} and Gaussian floats using {@link Distributor#normal(long)}.
      * @param random any {@link Random} from the JDK or from the juniper library
      * @return a newly-allocated 49-element float array, meant as effectively a 7D rotation matrix
      */
@@ -912,7 +912,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D float array that can be used as a 7D rotation matrix by
      * {@link #rotate(float[], float[], float[])}. Uses the given Random random to get Gaussian floats using
-     * {@link Ziggurat}, and uses an existing 6D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 6D rotation matrix to avoid redoing
      * any generation work already done for 6D. There will probably be some correlation between the appearance of the 5D
      * rotation this will build upon and the 7D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -1260,7 +1260,7 @@ public final class RotationTools {
         double sum = 0, t;
         for (int i = 0; i < targetSize; i++) {
             // use Juniper's Ziggurat algorithm to generate Gaussians directly, which requires randomizing the seed
-            gauss[i] = t = Ziggurat.normal(randomize((seed += 0x9E3779B974A7C15L)));
+            gauss[i] = t = Distributor.normal(randomize((seed += 0x9E3779B974A7C15L)));
             sum += t * t;
         }
         final double inv = 1 / Math.sqrt(sum);
@@ -1326,7 +1326,7 @@ public final class RotationTools {
         long sd = randomize(seed + squareSize);
         double sum = 0.0, t;
         for (int i = 0; i < targetSize; i++) {
-            gauss[i] = t = Ziggurat.normal(randomize((sd += 0x9E3779B97F4A7C15L)));
+            gauss[i] = t = Distributor.normal(randomize((sd += 0x9E3779B97F4A7C15L)));
             sum += t * t;
         }
         final double inv = 1.0 / Math.sqrt(sum);
@@ -1390,7 +1390,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 3D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 9-element double array, meant as effectively a 3D rotation matrix
      */
@@ -1401,7 +1401,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 3D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get Gaussian doubles using
-     * {@link Ziggurat}, and uses an existing 2D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 2D rotation matrix to avoid redoing
      * any generation work already done for 2D. There will probably be some correlation between the appearance of the 2D
      * rotation this will build upon and the 3D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -1415,7 +1415,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 4D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 16-element double array, meant as effectively a 4D rotation matrix
      */
@@ -1426,7 +1426,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 4D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get Gaussian doubles using
-     * {@link Ziggurat}, and uses an existing 3D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 3D rotation matrix to avoid redoing
      * any generation work already done for 3D. There will probably be some correlation between the appearance of the 3D
      * rotation this will build upon and the 4D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -1440,7 +1440,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 5D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 25-element double array, meant as effectively a 5D rotation matrix
      */
@@ -1451,7 +1451,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 5D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get Gaussian doubles using
-     * {@link Ziggurat}, and uses an existing 4D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 4D rotation matrix to avoid redoing
      * any generation work already done for 4D. There will probably be some correlation between the appearance of the 4D
      * rotation this will build upon and the 5D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -1465,7 +1465,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 6D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 36-element double array, meant as effectively a 6D rotation matrix
      */
@@ -1476,7 +1476,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 6D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get Gaussian doubles using
-     * {@link Ziggurat}, and uses an existing 5D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 5D rotation matrix to avoid redoing
      * any generation work already done for 5D. There will probably be some correlation between the appearance of the 5D
      * rotation this will build upon and the 6D rotation this produces, but other factors may make this irrelevant when
      * used for noise.
@@ -1490,7 +1490,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 7D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get an angle using
-     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Ziggurat}.
+     * {@link TrigTools#SIN_TABLE_D} and Gaussian doubles using {@link Distributor#normal(long)}.
      * @param seed any long; will be scrambled
      * @return a newly-allocated 49-element double array, meant as effectively a 7D rotation matrix
      */
@@ -1501,7 +1501,7 @@ public final class RotationTools {
     /**
      * Creates a new 1D double array that can be used as a 7D rotation matrix by
      * {@link #rotate(double[], double[], double[])}. Uses the given long seed to get Gaussian doubles using
-     * {@link Ziggurat}, and uses an existing 6D rotation matrix to avoid redoing
+     * {@link Distributor#normal(long)}, and uses an existing 6D rotation matrix to avoid redoing
      * any generation work already done for 6D. There will probably be some correlation between the appearance of the 6D
      * rotation this will build upon and the 7D rotation this produces, but other factors may make this irrelevant when
      * used for noise.

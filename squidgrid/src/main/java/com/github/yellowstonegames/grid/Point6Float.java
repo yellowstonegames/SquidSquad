@@ -456,13 +456,12 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
     }
 
     public Point6Float setToRandomDirection(Random random) {
-        // TODO: normalF will need to change to match new name in next digital version
-        x = Distributor.normalF(random.nextInt());
-        y = Distributor.normalF(random.nextInt());
-        z = Distributor.normalF(random.nextInt());
-        w = Distributor.normalF(random.nextInt());
-        u = Distributor.normalF(random.nextInt());
-        v = Distributor.normalF(random.nextInt());
+        x = Distributor.linearNormalF(random.nextInt());
+        y = Distributor.linearNormalF(random.nextInt());
+        z = Distributor.linearNormalF(random.nextInt());
+        w = Distributor.linearNormalF(random.nextInt());
+        u = Distributor.linearNormalF(random.nextInt());
+        v = Distributor.linearNormalF(random.nextInt());
         return nor();
     }
 
