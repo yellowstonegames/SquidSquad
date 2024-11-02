@@ -22,6 +22,8 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.INoise;
 
+import static com.github.yellowstonegames.core.DescriptiveColor.lerpColors;
+
 /**
  * A different type of noise that produces packed float colors rather than standard scalar noise values.
  * This handles lerping between colors (in Oklab color space), and outputs a ready to use ABGR7888 float,
@@ -95,32 +97,6 @@ public class ColorNoise implements INoise {
                 '}';
     }
 
-    /**
-     * This is the same as {@link MathTools#lerpAngleTurns(float, float, float)}, but has extra optimizations that
-     * aren't in a released version yet.
-     * @param fromTurns start angle in turns
-     * @param toTurns   target angle in turns
-     * @param progress  interpolation value in the range [0, 1]
-     * @return the interpolated angle in the range [0, 1)
-     */
-    public static int angle(int fromTurns, int toTurns, float progress){
-//        float delta = ((toTurns - fromTurns) % 1.0f + 1.0f + 0.5f) % 1.0f - 0.5f;
-//        return ((fromTurns + delta * progress) % 1.0f + 1.0f) % 1.0f;
-
-//        return MathTools.lerpAngleTurns(fromTurns, toTurns, progress);
-
-//        if(fromTurns < toTurns)
-//            return MathTools.lerp(fromTurns, toTurns, progress);
-//        return MathTools.lerp(fromTurns, toTurns + 1f, progress) % 1f;
-
-        return DescriptiveColor.lerpColors(fromTurns, toTurns, progress);
-//        return MathTools.lerp(fromTurns, toTurns, progress);
-
-//        float d = toTurns - fromTurns;
-//        d = fromTurns + progress * (d - ((int) (d + 16384.5) - 16384));
-//        return d - ((int) (d + 16384.0) - 16384);
-    }
-
     public static float valueNoise(float x, float y, int seed)
     {
         final int STEPX = 0xD1B55;
@@ -134,9 +110,9 @@ public class ColorNoise implements INoise {
         xFloor *= STEPX;
         yFloor *= STEPY;
         return DescriptiveColor.oklabIntToFloat(
-                angle(
-                angle(hashPart1024(xFloor, yFloor, seed), hashPart1024(xFloor + STEPX, yFloor, seed), x),
-                angle(hashPart1024(xFloor, yFloor + STEPY, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, seed), x),
+                lerpColors(
+                lerpColors(hashPart1024(xFloor, yFloor, seed), hashPart1024(xFloor + STEPX, yFloor, seed), x),
+                lerpColors(hashPart1024(xFloor, yFloor + STEPY, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, seed), x),
                 y)
         );
     }
@@ -172,11 +148,11 @@ public class ColorNoise implements INoise {
         yFloor *= STEPY;
         zFloor *= STEPZ;
         return DescriptiveColor.oklabIntToFloat(
-                angle(
-                angle(angle(hashPart1024(xFloor, yFloor, zFloor, seed), hashPart1024(xFloor + STEPX, yFloor, zFloor, seed), x)
-                        , angle(hashPart1024(xFloor, yFloor + STEPY, zFloor, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, zFloor, seed), x), y)
-                , angle(angle(hashPart1024(xFloor, yFloor, zFloor + STEPZ, seed), hashPart1024(xFloor + STEPX, yFloor, zFloor + STEPZ, seed), x)
-                        , angle(hashPart1024(xFloor, yFloor + STEPY, zFloor + STEPZ, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, seed), x), y)
+                lerpColors(
+                lerpColors(lerpColors(hashPart1024(xFloor, yFloor, zFloor, seed), hashPart1024(xFloor + STEPX, yFloor, zFloor, seed), x)
+                        , lerpColors(hashPart1024(xFloor, yFloor + STEPY, zFloor, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, zFloor, seed), x), y)
+                , lerpColors(lerpColors(hashPart1024(xFloor, yFloor, zFloor + STEPZ, seed), hashPart1024(xFloor + STEPX, yFloor, zFloor + STEPZ, seed), x)
+                        , lerpColors(hashPart1024(xFloor, yFloor + STEPY, zFloor + STEPZ, seed), hashPart1024(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, seed), x), y)
                 , z)
         );
     }
