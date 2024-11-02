@@ -934,7 +934,7 @@ public final class RotationTools {
      * {@link Rotator} and using it to rotate vectors instead of using {@link #rotate(float[], float[], float[])}
      * directly. Rotator allocates its memory upon construction and doesn't allocate after that.
      *
-     * @param random any {@link Random} from the JDK or from the juniper library
+     * @param random any {@link Random}, such as from the JDK or from the juniper library
      * @param dimension will be clamped to at minimum 2, but there is technically no maximum
      * @return a newly-allocated {@code dimension * dimension}-element float array, meant as effectively a
      * {@code dimension}-D rotation matrix
