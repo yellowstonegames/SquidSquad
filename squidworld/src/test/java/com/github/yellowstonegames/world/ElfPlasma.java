@@ -79,4 +79,13 @@ public class ElfPlasma {
         sway(out, fixedC3, tA.add(tB)).mul(0.5f).add(0.5f, 0.5f, 0.5f);
         return out;
     }
+
+    public String stringSerialize() {
+        return seed.toString();
+    }
+
+    public ElfPlasma stringDeserialize(String data) {
+        seed.fromString(data);
+        return this;
+    }
 }
