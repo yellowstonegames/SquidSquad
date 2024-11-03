@@ -510,7 +510,7 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
 
     /** Sets this {@code Point5Float} to the value represented by the specified string according to the format of {@link #toString()}.
      * @param s the string.
-     * @return this vector for chaining */
+     * @return this point for chaining */
     public Point4Float fromString (String s) {
         int s0 = s.indexOf(',', 1);
         int s1 = s.indexOf(',', s0 + 1);

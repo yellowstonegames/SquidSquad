@@ -501,7 +501,7 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
 
     /** Sets this {@code Point2Float} to the value represented by the specified string according to the format of {@link #toString()}.
      * @param s the string.
-     * @return this vector for chaining */
+     * @return this point for chaining */
     public Point2Float fromString (String s) {
         int s0 = s.indexOf(',', 1);
         if (s0 != -1 && s.charAt(0) == '(' && s.charAt(s.length() - 1) == ')') {

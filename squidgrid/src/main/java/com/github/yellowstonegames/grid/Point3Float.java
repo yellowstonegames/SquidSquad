@@ -357,6 +357,40 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
         return a.x() * b.x() + a.y() * b.y() + a.z() * b.z();
     }
 
+    /** Sets this point to the cross product between it and the other point.
+     * @param point The other point
+     * @return This point for chaining */
+    public Point3Float crs (final Point3<?> point) {
+        return this.set(y * point.z() - z * point.y(), z * point.x() - x * point.z(), x * point.y() - y * point.x());
+    }
+
+    /** Sets this point to the cross product between it and the other point.
+     * @param x The x-component of the other point
+     * @param y The y-component of the other point
+     * @param z The z-component of the other point
+     * @return This point for chaining */
+    public Point3Float crs (float x, float y, float z) {
+        return this.set(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
+    }
+
+    /** Sets this point to the cross product between it and the other point.
+     * This is an alias for {@link #crs(Point3)}.
+     * @param point The other point
+     * @return This point for chaining */
+    public Point3Float cross (final Point3<?> point) {
+        return crs(point);
+    }
+
+    /** Sets this point to the cross product between it and the other point.
+     * This is an alias for {@link #crs(float, float, float)}.
+     * @param x The x-component of the other point
+     * @param y The y-component of the other point
+     * @param z The z-component of the other point
+     * @return This point for chaining */
+    public Point3Float cross (float x, float y, float z) {
+        return crs(x, y, z);
+    }
+
     public Point3Float lerp(Point3<?> target, float alpha) {
         final float invAlpha = 1.0f - alpha;
         this.x = (x * invAlpha) + (target.x() * alpha);
@@ -370,10 +404,10 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     }
     /**
      * Spherically interpolates between this point and the target point by alpha, which must be in the range [0,1].
-     * The result is stored in this vector.
+     * The result is stored in this point.
      *
      * @see PointNFloat#slerp(PointNFloat, PointNFloat, float, PointNFloat) An alternative for other dimensions.
-     * @param target The target vector
+     * @param target The target point
      * @param alpha The interpolation coefficient
      * @return This Point3Float for chaining
      */
@@ -382,9 +416,9 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
         // If the inputs are too close for comfort, simply linearly interpolate.
         if (dot > 0.9995 || dot < -0.9995) return lerp(target, alpha);
 
-        // theta0 = angle between input vectors
+        // theta0 = angle between input points
         final float theta0 = TrigTools.acos(dot);
-        // theta = angle between this vector and result
+        // theta = angle between this point and result
         final float theta = theta0 * alpha;
 
         final float st = TrigTools.sinSmoother(theta);
@@ -400,7 +434,7 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     /** Sets the components from the given spherical coordinates in radians.
      * @param azimuthalAngle The angle around the pole in radians (related to longitude), [0, 2pi]
      * @param polarAngle The angle between the North and South Pole in radians (related to latitude), [0, pi]
-     * @return This vector for chaining
+     * @return This point for chaining
      */
     public Point3Float setFromSpherical (float azimuthalAngle, float polarAngle) {
         float cosPolar = TrigTools.cos(polarAngle);
@@ -415,7 +449,7 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     /** Sets the components from the given spherical coordinates in degrees.
      * @param azimuthalAngle the angle around the pole in degrees (related to longitude), [0, 360]
      * @param polarAngle The angle between the North and South Pole in degrees (related to latitude), [0, 180]
-     * @return This vector for chaining
+     * @return This point for chaining
      */
     public Point3Float setFromSphericalDeg (float azimuthalAngle, float polarAngle) {
         float cosPolar = TrigTools.cosDeg(polarAngle);
@@ -430,7 +464,7 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     /** Sets the components from the given spherical coordinates in turns.
      * @param azimuthalAngle the angle around the pole in turns (related to longitude), [0, 1]
      * @param polarAngle The angle between the North and South Pole in turns (related to latitude), [0, 0.5]
-     * @return This vector for chaining
+     * @return This point for chaining
      */
     public Point3Float setFromSphericalTurns (float azimuthalAngle, float polarAngle) {
         float cosPolar = TrigTools.cosTurns(polarAngle);
@@ -544,7 +578,7 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
 
     /** Sets this {@code Point3Float} to the value represented by the specified string according to the format of {@link #toString()}.
      * @param s the string.
-     * @return this vector for chaining */
+     * @return this point for chaining */
     public Point3Float fromString (String s) {
         int s0 = s.indexOf(',', 1);
         int s1 = s.indexOf(',', s0 + 1);

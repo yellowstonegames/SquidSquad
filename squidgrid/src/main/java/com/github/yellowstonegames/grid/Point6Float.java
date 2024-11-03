@@ -591,7 +591,7 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
 
     /** Sets this {@code Point6Float} to the value represented by the specified string according to the format of {@link #toString()}.
      * @param s the string.
-     * @return this vector for chaining */
+     * @return this point for chaining */
     public Point6Float fromString (String s) {
         int s0 = s.indexOf(',', 1);
         int s1 = s.indexOf(',', s0 + 1);
