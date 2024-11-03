@@ -349,6 +349,14 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
         return (oldLen2 == 0 || oldLen2 == len2) ? this : scl((float)Math.sqrt(len2 / oldLen2));
     }
 
+    public float dot(Point3<?> other) {
+        return x * other.x() + y * other.y() + z * other.z();
+    }
+
+    public static float dot(Point3<?> a, Point3<?> b) {
+        return a.x() * b.x() + a.y() * b.y() + a.z() * b.z();
+    }
+
     public Point3Float lerp(Point3<?> target, float alpha) {
         final float invAlpha = 1.0f - alpha;
         this.x = (x * invAlpha) + (target.x() * alpha);

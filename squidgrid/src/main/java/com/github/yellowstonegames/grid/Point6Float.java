@@ -440,6 +440,14 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
         return (oldLen2 == 0 || oldLen2 == len2) ? this : scl((float)Math.sqrt(len2 / oldLen2));
     }
 
+    public float dot(Point6<?> other) {
+        return x * other.x() + y * other.y() + z * other.z() + w * other.w() + u * other.u() + v * other.v();
+    }
+
+    public static float dot(Point6<?> a, Point6<?> b) {
+        return a.x() * b.x() + a.y() * b.y() + a.z() * b.z() + a.w() * b.w() + a.u() * b.u() + a.v() * b.v();
+    }
+
     public Point6Float lerp(Point6<?> target, float alpha) {
         final float invAlpha = 1.0f - alpha;
         this.x = (x * invAlpha) + (target.x() * alpha);

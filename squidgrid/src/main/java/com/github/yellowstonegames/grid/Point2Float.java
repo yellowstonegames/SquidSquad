@@ -392,6 +392,14 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    public float dot(Point2<?> other) {
+        return x * other.x() + y * other.y();
+    }
+
+    public static float dot(Point2<?> a, Point2<?> b) {
+        return a.x() * b.x() + a.y() * b.y();
+    }
+
     public Point2Float lerp(Point2<?> target, float alpha) {
         final float invAlpha = 1.0f - alpha;
         this.x = (x * invAlpha) + (target.x() * alpha);
