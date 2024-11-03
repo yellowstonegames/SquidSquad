@@ -369,6 +369,51 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
         return lerp(target, interpolation.apply(alpha));
     }
 
+    /** Sets the components from the given spherical coordinates in radians.
+     * @param azimuthalAngle The angle around the pole in radians (related to longitude), [0, 2pi]
+     * @param polarAngle The angle between the North and South Pole in radians (related to latitude), [0, pi]
+     * @return This vector for chaining
+     */
+    public Point3Float setFromSpherical (float azimuthalAngle, float polarAngle) {
+        float cosPolar = TrigTools.cos(polarAngle);
+        float sinPolar = TrigTools.sin(polarAngle);
+
+        float cosAzim = TrigTools.cos(azimuthalAngle);
+        float sinAzim = TrigTools.sin(azimuthalAngle);
+
+        return this.set(cosAzim * sinPolar, sinAzim * sinPolar, cosPolar);
+    }
+
+    /** Sets the components from the given spherical coordinates in degrees.
+     * @param azimuthalAngle the angle around the pole in degrees (related to longitude), [0, 360]
+     * @param polarAngle The angle between the North and South Pole in degrees (related to latitude), [0, 180]
+     * @return This vector for chaining
+     */
+    public Point3Float setFromSphericalDeg (float azimuthalAngle, float polarAngle) {
+        float cosPolar = TrigTools.cosDeg(polarAngle);
+        float sinPolar = TrigTools.sinDeg(polarAngle);
+
+        float cosAzim = TrigTools.cosDeg(azimuthalAngle);
+        float sinAzim = TrigTools.sinDeg(azimuthalAngle);
+
+        return this.set(cosAzim * sinPolar, sinAzim * sinPolar, cosPolar);
+    }
+
+    /** Sets the components from the given spherical coordinates in turns.
+     * @param azimuthalAngle the angle around the pole in turns (related to longitude), [0, 1]
+     * @param polarAngle The angle between the North and South Pole in turns (related to latitude), [0, 0.5]
+     * @return This vector for chaining
+     */
+    public Point3Float setFromSphericalTurns (float azimuthalAngle, float polarAngle) {
+        float cosPolar = TrigTools.cosTurns(polarAngle);
+        float sinPolar = TrigTools.sinTurns(polarAngle);
+
+        float cosAzim = TrigTools.cosTurns(azimuthalAngle);
+        float sinAzim = TrigTools.sinTurns(azimuthalAngle);
+
+        return this.set(cosAzim * sinPolar, sinAzim * sinPolar, cosPolar);
+    }
+
     public Point3Float setToRandomDirection(Random random) {
         x = Distributor.linearNormalF(random.nextInt());
         y = Distributor.linearNormalF(random.nextInt());
