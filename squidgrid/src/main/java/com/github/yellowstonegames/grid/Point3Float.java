@@ -415,10 +415,9 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     }
 
     public Point3Float setToRandomDirection(Random random) {
-        x = Distributor.linearNormalF(random.nextInt());
-        y = Distributor.linearNormalF(random.nextInt());
-        z = Distributor.linearNormalF(random.nextInt());
-        return nor();
+        float theta = random.nextFloat(); // azimuthal angle
+        float phi = TrigTools.acosTurns(2f * (random.nextFloat() - 0.5f)); // polar angle
+        return this.setFromSphericalTurns(theta, phi);
     }
 
     /**
