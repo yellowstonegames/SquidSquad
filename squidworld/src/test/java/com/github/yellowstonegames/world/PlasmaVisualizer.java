@@ -52,8 +52,7 @@ public class PlasmaVisualizer extends ApplicationAdapter {
     private Point3Float inPt = new Point3Float(), outPt = new Point3Float();
     private Color color = new Color();
     private int octaves = 1;
-    private float freq = 1f;
-    private boolean inverse;
+    private float freq = 0x1p-10f;
     private ImmediateModeRenderer20 renderer;
 
     private static final int width = 256, height = 256;
@@ -100,12 +99,12 @@ public class PlasmaVisualizer extends ApplicationAdapter {
                     case W:
                         for (int c = 0; c < 128; c++) {
                             int w = 256, h = 256;
-                            float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f, inv = 1f / w, tm = c * 0x1p-3f, xf, yf;
+                            float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f, tm = c * 0x1p-13f, xf, yf;
                             Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
                             for (int x = 0; x < w; x++) {
-                                xf = x * freq - w * 0.5f;
+                                xf = x * freq - halfW;
                                 for (int y = 0; y < h; y++) {
-                                    yf = y * freq - h * 0.5f;
+                                    yf = y * freq - halfH;
                                     elf.plasma(outPt, inPt.set(xf, yf, tm));
                                     color.set(outPt.x, outPt.y, outPt.z, 1f);
                                     p.setColor(color);
@@ -167,7 +166,7 @@ public class PlasmaVisualizer extends ApplicationAdapter {
 
     public void putMap() {
         renderer.begin(view.getCamera().combined, GL_POINTS);
-        float bright, tm = ctr * 0x1p-7f, xf, yf;
+        float bright, tm = ctr * 0x1p-4f * freq, xf, yf;
         for (int x = 0; x < width; x++) {
             xf = x * freq - width * 0.5f;
             for (int y = 0; y < height; y++) {

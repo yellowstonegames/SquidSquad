@@ -18,10 +18,11 @@ void mainImage( out vec4 O, vec2 U )
 }
  */
 
+import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.grid.Point3Float;
 
-import static com.github.tommyettinger.digital.TrigTools.sin;
-import static com.github.tommyettinger.digital.TrigTools.cos;
+import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
  * From <a href="https://www.shadertoy.com/view/7sdSz7">this ShaderToy</a>.
@@ -52,10 +53,10 @@ public class ElfPlasma {
      */
     public Point3Float sway(Point3Float out, Point3Float s, Point3Float v) {
         return out.set(
-                sin(s.x + v.z - cos(s.z + v.y) + cos(s.y + v.x)),
-                sin(s.y + v.x - cos(s.x + v.z) + cos(s.z + v.y)),
-                sin(s.z + v.y - cos(s.y + v.x) + cos(s.x + v.z))
-        );
+                MathTools.signPreservingPow(LineWobble.bicubicWobble(0x12341234, s.x - v.z - sinSmootherTurns(s.z + v.y) + cosSmootherTurns(s.y - v.x)), 1.6f),
+                MathTools.signPreservingPow(LineWobble.bicubicWobble(0x56785678, s.y - v.x - sinSmootherTurns(s.x + v.z) + cosSmootherTurns(s.z - v.y)), 1.6f),
+                MathTools.signPreservingPow(LineWobble.bicubicWobble(0x9ABC9ABC, s.z - v.y - sinSmootherTurns(s.y + v.x) + cosSmootherTurns(s.x - v.z)), 1.6f)
+        ).mul(8f).clampEach(-1f, 1f);
     }
 
     /**
@@ -65,9 +66,9 @@ public class ElfPlasma {
      * @return out, after changes
      */
     public Point3Float plasma(Point3Float out, Point3Float in) {
-        float time = tA.z = in.z;
-        float x = tA.x = in.x * 0.125f + cos(time);
-        float y = tA.y = in.y * 0.125f + sin(time);
+        float time = (tA.z = in.z * 0x1p-1f);
+        float x = tA.x = in.x * 0x1p-6f + cosSmootherTurns(time);
+        float y = tA.y = in.y * 0x1p-6f + sinSmootherTurns(time);
         out.set(seed).mul(time);
         tB.set(tA).add(seed);
         tA.sub(seed.y, seed.z, seed.x);
@@ -76,7 +77,7 @@ public class ElfPlasma {
         out.set(tA).add(tB).mul(0.25f);
         sway(tA, fixedC, out).add(out).mul(0.5f);
         sway(tB, fixedCphi, sway(tC, fixedC, out).add(out).mul(0.5f)).mul(3f);
-        sway(out, fixedC3, tA.add(tB)).mul(0.5f).add(0.5f, 0.5f, 0.5f);
+        sway(out, fixedC3, tA.add(tB).mul(2f)).mul(0.5f).add(0.5f, 0.5f, 0.5f);
         return out;
     }
 
