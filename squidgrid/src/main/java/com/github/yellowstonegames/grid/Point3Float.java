@@ -368,6 +368,34 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     public Point3Float interpolate(Point3<?> target, float alpha, Interpolations.Interpolator interpolation) {
         return lerp(target, interpolation.apply(alpha));
     }
+    /**
+     * Spherically interpolates between this point and the target point by alpha, which must be in the range [0,1].
+     * The result is stored in this vector.
+     *
+     * @see PointNFloat#slerp(PointNFloat, PointNFloat, float, PointNFloat) An alternative for other dimensions.
+     * @param target The target vector
+     * @param alpha The interpolation coefficient
+     * @return This Point3Float for chaining
+     */
+    public Point3Float slerpInPlace (final Point3<?> target, float alpha) {
+        final float dot = dot(target);
+        // If the inputs are too close for comfort, simply linearly interpolate.
+        if (dot > 0.9995 || dot < -0.9995) return lerp(target, alpha);
+
+        // theta0 = angle between input vectors
+        final float theta0 = TrigTools.acos(dot);
+        // theta = angle between this vector and result
+        final float theta = theta0 * alpha;
+
+        final float st = TrigTools.sinSmoother(theta);
+        final float tx = target.x() - x * dot;
+        final float ty = target.y() - y * dot;
+        final float tz = target.z() - z * dot;
+        final float l2 = tx * tx + ty * ty + tz * tz;
+        final float dl = st * ((l2 < 0.0001f) ? 1f : 1f / (float)Math.sqrt(l2));
+
+        return scl(TrigTools.cosSmoother(theta)).add(tx * dl, ty * dl, tz * dl).nor();
+    }
 
     /** Sets the components from the given spherical coordinates in radians.
      * @param azimuthalAngle The angle around the pole in radians (related to longitude), [0, 2pi]
