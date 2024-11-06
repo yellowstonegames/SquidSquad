@@ -512,18 +512,18 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
     }
 
     @Override
-    public boolean add(float v) {
+    public boolean add(float c) {
         throw new UnsupportedOperationException("Point2Float is fixed-size.");
     }
 
     @Override
-    public boolean remove(float v) {
+    public boolean remove(float c) {
         throw new UnsupportedOperationException("Point2Float is fixed-size.");
     }
 
     @Override
-    public boolean contains(float v) {
-        return (x == v || y == v);
+    public boolean contains(float c) {
+        return (x == c || y == c);
     }
 
     @Override
