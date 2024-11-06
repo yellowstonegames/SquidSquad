@@ -5,6 +5,7 @@ eclipse.project.name = ext.projectName
 dependencies {
     api project(':squidcore')
     api project(':squidgrid')
+    testImplementation project(':squidplace')
     testImplementation "junit:junit:$junitVersion"
     //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }
