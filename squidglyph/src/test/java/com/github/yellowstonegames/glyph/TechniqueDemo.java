@@ -172,14 +172,13 @@ public class TechniqueDemo extends ApplicationAdapter {
      */
     private void startMove(int idx) {
 //        if(health <= 0) return;
-        int i = 0;
         DijkstraMap whichDijkstra;
         Technique whichTech;
         foes.clear();
         allies.clear();
-        GlyphActor ae = null;
-        float health = 0;
-        Coord user = null;
+        GlyphActor ae;
+        float health;
+        Coord user;
         if(blueTurn)
         {
             whichDijkstra = getToRed;
@@ -239,10 +238,10 @@ public class TechniqueDemo extends ApplicationAdapter {
         visibleTargets.clear();
         foes.clear();
         allies.clear();
-        GlyphActor ae = null;
-        float health = 0;
-        Coord user = null;
-        int whichTint = DescriptiveColorRgb.WHITE;
+        GlyphActor ae;
+        float health;
+        Coord user;
+        int whichTint;
         CoordObjectOrderedMap<GlyphActor> whichEnemyTeam;
         CoordFloatOrderedMap effects;
         if (blueTurn) {
@@ -303,14 +302,17 @@ public class TechniqueDemo extends ApplicationAdapter {
                     {
                         float currentHealth = Math.max((Float)tgt.getUserObject() - (3.5f * strength) - 1, 0);
                         tgt.setUserObject(currentHealth);
-                        tgt.setChar((char)('0' + MathTools.roundPositive(currentHealth)));
+                        tgt.setChar((char)('0' + MathTools.ceilPositive(currentHealth)));
                     }
                 }
             }
-            for (int i = whichEnemyTeam.size()-1; i >= 0; i--) {
-                if((Float)whichEnemyTeam.getAt(i).getUserObject() <= 0f)
-                    display.removeActor(whichEnemyTeam.removeAt(i));
-
+            for (int i = teamBlue.size()-1; i >= 0; i--) {
+                if((Float)teamBlue.getAt(i).getUserObject() <= 0f)
+                    display.removeActor(teamBlue.removeAt(i));
+            }
+            for (int i = teamRed.size()-1; i >= 0; i--) {
+                if((Float)teamRed.getAt(i).getUserObject() <= 0f)
+                    display.removeActor(teamRed.removeAt(i));
             }
             if(!effects.isEmpty())
             {
@@ -368,8 +370,8 @@ public class TechniqueDemo extends ApplicationAdapter {
             return;
         }
         int i = 0;
-        GlyphActor ae = null;
-        int whichIdx = 0;
+        GlyphActor ae;
+        int whichIdx;
         if(blueTurn) {
             whichIdx = blueIdx;
             ae = teamBlue.getAt(blueIdx);
