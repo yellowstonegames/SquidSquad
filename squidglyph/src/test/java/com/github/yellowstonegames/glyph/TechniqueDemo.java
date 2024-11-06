@@ -208,9 +208,10 @@ public class TechniqueDemo extends ApplicationAdapter {
             user = ae.getLocation();
         }
         allies.remove(user);
-        ObjectDeque<Coord> path = whichDijkstra.findTechniquePath(moveLength, whichTech, res, null, foes, allies, user, foes);
-        if(path.isEmpty())
-            path = whichDijkstra.findPath(moveLength, foes, allies, user, foes.toArray(new Coord[0]));
+
+
+        // This is allowed to be empty in case the best place to be is where we are.
+        ObjectDeque<Coord> path = whichDijkstra.findTechniquePath(moveLength, whichTech, res, los, foes, allies, user, foes);
         awaitedMoves.clear();
         awaitedMoves.addAll(path);
     }
@@ -317,6 +318,9 @@ public class TechniqueDemo extends ApplicationAdapter {
             if(!effects.isEmpty())
             {
                 display.addAction(new GridAction.TintAction(display, TINT_DURATION, null, colorGrid));
+//                if(!foes.containsAny(effects.keySet())) {
+//                    System.out.println("NO FOES HIT BY " + whichTech.name);
+//                }
             }
         }
         else
