@@ -498,7 +498,7 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
         w = in.readFloat();
     }
 
-    /** Converts this {@code Point5Float} to a string in the format {@code (x,y,z,w,u)}.
+    /** Converts this {@code Point5Float} to a string in the format {@code (x,y,z,w)}.
      * @return a string representation of this object. */
     @Override
     public String toString () {

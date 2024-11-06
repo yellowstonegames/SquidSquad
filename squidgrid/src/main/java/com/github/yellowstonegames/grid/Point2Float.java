@@ -1,10 +1,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.crux.Point2;
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.Interpolations;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
@@ -496,7 +493,8 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
      * @return a string representation of this object. */
     @Override
     public String toString () {
-        return "(" + x + "," + y + ")";
+        return "(" + Base.BASE10.general(x) + ","
+                + Base.BASE10.general(y) + ")";
     }
 
     /** Sets this {@code Point2Float} to the value represented by the specified string according to the format of {@link #toString()}.
@@ -505,10 +503,11 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
     public Point2Float fromString (String s) {
         int s0 = s.indexOf(',', 1);
         if (s0 != -1 && s.charAt(0) == '(' && s.charAt(s.length() - 1) == ')') {
-            float x = Float.parseFloat(s.substring(1, s0));
-            float y = Float.parseFloat(s.substring(s0 + 1, s.length() - 1));
+            float x = Base.BASE10.readFloat(s, 1, s0);
+            float y = Base.BASE10.readFloat(s, s0 + 1, s.length() - 1);
             return this.set(x, y);
         }
+
         throw new IllegalArgumentException("Not a valid format for a Point2Float: " + s);
     }
 

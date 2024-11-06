@@ -107,7 +107,7 @@ public class TechniqueDemo extends ApplicationAdapter {
             teamBlue.put(monPos, ga);
             display.addActor(ga);
         }
-        // your choice of FOV matters here.
+        // your choice of LOS matters here.
         los = new BresenhamLine();
         res = FOV.generateResistances(bareDungeon);
 

@@ -567,7 +567,7 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
         z = in.readFloat();
     }
 
-    /** Converts this {@code Point3Float} to a string in the format {@code (x,y,z,w,u)}.
+    /** Converts this {@code Point3Float} to a string in the format {@code (x,y,z)}.
      * @return a string representation of this object. */
     @Override
     public String toString () {
