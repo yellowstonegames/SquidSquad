@@ -9,10 +9,9 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.Random;
 
 /**
- * A mutable 2D point with int components implementing {@link Point2}, {@link OfInt},
+ * A mutable 2D point with int components implementing {@link Point2}, {@link PrimitiveCollection.OfInt},
  * {@link PointNInt}, and {@link Externalizable}.
  */
 public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int>, PrimitiveCollection.OfInt, Externalizable {
