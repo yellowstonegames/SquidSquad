@@ -55,7 +55,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * If this causes problems in, for instance, Kotlin code, you could create an extension method that gets the type you
  * want and has the name you want.
  */
-public final class Coord implements Point2<Coord> {
+public final class Coord implements Point2<Coord>, PointNInt<Coord> {
     /**
      * The x-coordinate.
      */
@@ -213,6 +213,35 @@ public final class Coord implements Point2<Coord> {
     @Override
     public boolean floatingPoint() {
         return false;
+    }
+
+    /**
+     * Gets the component at the specified index.
+     * Kotlin-compatible using square-bracket indexing.
+     * Getting index 1 gets y; anything else gets x.
+     *
+     * @param index which component to get, in order
+     * @return the component
+     */
+    @Override
+    public int get(int index) {
+        return index == 1 ? y : x;
+    }
+
+    /**
+     * Sets the component at the specified index to the specified value, obtaining a Coord
+     * that has the requested value from the pool if possible.
+     * Setting index 1 sets y; anything else sets x.
+     * This can sometimes return the same Coord reference it was called upon (when the changed
+     * component already had the requested value), but it usually returns a different one.
+     *
+     * @param index which component to set, in order
+     * @param value the value to assign at index
+     * @return a Coord retrieved from the pool with the given value at the given index
+     */
+    @Override
+    public Coord setAt(int index, int value) {
+        return index == 1 ? Coord.get(x, value) : Coord.get(value, y);
     }
 
     @Override

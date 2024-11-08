@@ -68,7 +68,7 @@ public class LightingManager {
      * cell B, you could move the light from A to B without changing that both are lit up. That guarantee is not present
      * if this is set to FAST.
      */
-    public enum SymmetryMode {
+    public enum SymmetryMode implements FovFunction {
         FAST(FOV::reuseFOV), SYMMETRICAL(FOV::reuseFOVSymmetrical);
 
         private final FovFunction fun;
