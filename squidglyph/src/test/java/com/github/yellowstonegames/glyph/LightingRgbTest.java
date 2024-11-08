@@ -237,7 +237,7 @@ public class LightingRgbTest extends ApplicationAdapter {
         Coord player = floors.singleRandom(rng);
         playerGlyph.setPosition(player.x, player.y);
 
-        lighting = new LightingManagerRgb(res, DescriptiveColorRgb.describe("dark gray black"), Radius.CIRCLE, 9f, LightingManager.SymmetryMode.SYMMETRICAL);
+        lighting = new LightingManagerRgb(res, DescriptiveColorRgb.describe("dark gray black"), Radius.CIRCLE, 9f, LightingManager.SymmetryMode.FAST);
         Coord[] lightPositions = floors.separatedBlue(0.075f);
         for (int i = 0; i < lightPositions.length; i++) {
             lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,

@@ -34,6 +34,11 @@ import static com.github.tommyettinger.digital.MathTools.PHI;
  * You can set the {@link #flare} variable to some value between 0.0f and 1.0f to temporarily expand the minimum radius
  * for strobe and/or flare, useful for gameplay-dependent brightening of a Radiance.
  * <br>
+ * A Radiance does not describe an individual source of light in the world, but rather the qualities that a source of
+ * light can have. A Radiance doesn't know its own position, or whether it is currently being drawn; it can be thought
+ * of like a color or texture. Some examples would be that data might describe one sword that glows blue (in the
+ * presence of game developers, perhaps), and another group of swords that all glow red and strobe rapidly.
+ * <br>
  * This object has 6 fields, each a float:
  * <ul>
  * <li>range, how far the light extends; 0f is "just this cell"</li>
