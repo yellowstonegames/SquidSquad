@@ -443,6 +443,8 @@ public final class FOV {
      * of the origin cell. Radius determinations are determined by the provided
      * RadiusStrategy.  A conical section of FOV is lit by this method if
      * span is greater than 0.
+     * <br>
+     * This is an alias for {@link #reuseFOVDeg(float[][], float[][], int, int, float, Radius, float, float)}.
      *
      * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
      * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
@@ -456,13 +458,103 @@ public final class FOV {
      */
     public static float[][] reuseFOV(float[][] resistanceMap, float[][] light, int startX, int startY,
                                           float radius, Radius radiusTechnique, float angle, float span) {
+        return reuseFOVTurns(resistanceMap, light, startX, startY, radius, radiusTechnique,
+                angle * (1f/360f), span * (1f/360f));
+    }
+
+    /**
+     * Calculates the Field Of View for the provided map from the given x, y
+     * coordinates, lighting at the given angle in radians and covering a span
+     * centered on that angle, also in radians. Assigns to, and returns, a light
+     * map where the values represent a percentage of fully lit. Always uses
+     * Shadow FOV, which allows this method to be static since it doesn't
+     * need to keep any state around, and can reuse the state the user gives it
+     * via the {@code light} parameter. The values in light are cleared before
+     * this is run, because prior state can make this give incorrect results.
+     * <br>
+     * The starting point for the calculation is considered to be at the center
+     * of the origin cell. Radius determinations are determined by the provided
+     * RadiusStrategy.  A conical section of FOV is lit by this method if
+     * span is greater than 0.
+     *
+     * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
+     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param startX the horizontal component of the starting location
+     * @param startY the vertical component of the starting location
+     * @param radius the distance the light will extend to
+     * @param radiusTechnique provides a means to shape the FOV by changing distance calculation (circle, square, etc.)
+     * @param angle the angle in radians that will be the center of the FOV cone, 0 points right
+     * @param span the angle in radians that measures the full arc contained in the FOV cone
+     * @return the computed light grid
+     */
+    public static float[][] reuseFOVRad(float[][] resistanceMap, float[][] light, int startX, int startY,
+                                          float radius, Radius radiusTechnique, float angle, float span) {
+        return reuseFOVTurns(resistanceMap, light, startX, startY, radius, radiusTechnique,
+                angle * (TrigTools.PI_INVERSE * 0.5f), span * (TrigTools.PI_INVERSE * 0.5f));
+    }
+
+    /**
+     * Calculates the Field Of View for the provided map from the given x, y
+     * coordinates, lighting at the given angle in degrees and covering a span
+     * centered on that angle, also in degrees. Assigns to, and returns, a light
+     * map where the values represent a percentage of fully lit. Always uses
+     * Shadow FOV, which allows this method to be static since it doesn't
+     * need to keep any state around, and can reuse the state the user gives it
+     * via the {@code light} parameter. The values in light are cleared before
+     * this is run, because prior state can make this give incorrect results.
+     * <br>
+     * The starting point for the calculation is considered to be at the center
+     * of the origin cell. Radius determinations are determined by the provided
+     * RadiusStrategy.  A conical section of FOV is lit by this method if
+     * span is greater than 0.
+     *
+     * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
+     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param startX the horizontal component of the starting location
+     * @param startY the vertical component of the starting location
+     * @param radius the distance the light will extend to
+     * @param radiusTechnique provides a means to shape the FOV by changing distance calculation (circle, square, etc.)
+     * @param angle the angle in degrees that will be the center of the FOV cone, 0 points right
+     * @param span the angle in degrees that measures the full arc contained in the FOV cone
+     * @return the computed light grid
+     */
+    public static float[][] reuseFOVDeg(float[][] resistanceMap, float[][] light, int startX, int startY,
+                                          float radius, Radius radiusTechnique, float angle, float span) {
+        return reuseFOVTurns(resistanceMap, light, startX, startY, radius, radiusTechnique,
+                angle * (1f/360f), span * (1f/360f));
+    }
+
+    /**
+     * Calculates the Field Of View for the provided map from the given x, y
+     * coordinates, lighting at the given angle in turns and covering a span
+     * centered on that angle, also in turns. Assigns to, and returns, a light
+     * map where the values represent a percentage of fully lit. Always uses
+     * Shadow FOV, which allows this method to be static since it doesn't
+     * need to keep any state around, and can reuse the state the user gives it
+     * via the {@code light} parameter. The values in light are cleared before
+     * this is run, because prior state can make this give incorrect results.
+     * <br>
+     * The starting point for the calculation is considered to be at the center
+     * of the origin cell. Radius determinations are determined by the provided
+     * RadiusStrategy.  A conical section of FOV is lit by this method if
+     * span is greater than 0.
+     *
+     * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
+     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param startX the horizontal component of the starting location
+     * @param startY the vertical component of the starting location
+     * @param radius the distance the light will extend to
+     * @param radiusTechnique provides a means to shape the FOV by changing distance calculation (circle, square, etc.)
+     * @param angle the angle in turns that will be the center of the FOV cone, 0 points right
+     * @param span the angle in turns that measures the full arc contained in the FOV cone
+     * @return the computed light grid
+     */
+    public static float[][] reuseFOVTurns(float[][] resistanceMap, float[][] light, int startX, int startY,
+                                     float radius, Radius radiusTechnique, float angle, float span) {
         float decay = 1.0f / radius;
         ArrayTools.fill(light, 0);
         light[startX][startY] = Math.min(1.0f, radius);//make the starting space full power unless radius is tiny
-        angle *= (1f/360f);
-        angle -= MathTools.fastFloor(angle);
-        span *= (1f/360f);
-
+        angle = MathTools.fract(angle);
 
         light = shadowCastLimited(1, 1.0f, 0.0f, 0, 1, 1, 0, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, angle, span);
         light = shadowCastLimited(1, 1.0f, 0.0f, 1, 0, 0, 1, radius, startX, startY, decay, light, resistanceMap, radiusTechnique, angle, span);
