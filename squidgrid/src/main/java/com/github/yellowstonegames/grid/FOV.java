@@ -431,7 +431,7 @@ public final class FOV {
 
     /**
      * Calculates the Field Of View for the provided map from the given x, y
-     * coordinates, lighting at the given angle in  degrees and covering a span
+     * coordinates, lighting at the given angle in degrees and covering a span
      * centered on that angle, also in degrees. Assigns to, and returns, a light
      * map where the values represent a percentage of fully lit. Always uses
      * Shadow FOV, which allows this method to be static since it doesn't
@@ -1037,6 +1037,8 @@ public final class FOV {
      * RadiusStrategy. If all direction ranges are the same, this acts like
      * {@link #reuseFOV(float[][], float[][], int, int, float, Radius)}; otherwise
      * may produce conical shapes (potentially more than one, or overlapping ones).
+     * <br>
+     * This is an alias for {@link #reuseFOVDeg(float[][], float[][], int, int, float, Radius, float, float, float, float, float, float)}.
      *
      * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
      * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
@@ -1045,16 +1047,130 @@ public final class FOV {
      * @param radius the distance the light will extend to (roughly); direction ranges will be multiplied by this
      * @param radiusTechnique provides a means to shape the FOV by changing distance calculation (circle, square, etc.)
      * @param angle the angle in degrees that will be the center of the FOV cone, 0 points right
-     * @param forward the range to extend when the light is within 22.5f degrees of angle; will be interpolated with sideForward
-     * @param sideForward the range to extend when the light is between 22.5f and 67.5f degrees of angle; will be interpolated with forward or side
-     * @param side the range to extend when the light is between 67.5f and 112.5f degrees of angle; will be interpolated with sideForward or sideBack
-     * @param sideBack the range to extend when the light is between 112.5f and 157.5f degrees of angle; will be interpolated with side or back
-     * @param back the range to extend when the light is more than 157.5f degrees away from angle; will be interpolated with sideBack
+     * @param forward the portion of {@code radius} to extend when the light is within 22.5f degrees of angle; will be interpolated with sideForward
+     * @param sideForward the portion of {@code radius} to extend when the light is between 22.5f and 67.5f degrees of angle; will be interpolated with forward or side
+     * @param side the portion of {@code radius} to extend when the light is between 67.5f and 112.5f degrees of angle; will be interpolated with sideForward or sideBack
+     * @param sideBack the portion of {@code radius} to extend when the light is between 112.5f and 157.5f degrees of angle; will be interpolated with side or back
+     * @param back the portion of {@code radius} to extend when the light is more than 157.5f degrees away from angle; will be interpolated with sideBack
      * @return the computed light grid (the same as {@code light})
      */
     public static float[][] reuseFOV(float[][] resistanceMap, float[][] light, int startX, int startY,
                                       float radius, Radius radiusTechnique, float angle,
                                       float forward, float sideForward, float side, float sideBack, float back) {
+        return reuseFOVTurns(resistanceMap, light, startX, startY, radius, radiusTechnique,
+                angle * (1f/360f), forward, sideForward, side, sideBack, back);
+    }
+
+    /**
+     * Calculates the Field Of View for the provided map from the given x, y
+     * coordinates, lighting with the view "pointed at" the given {@code angle} in radians,
+     * extending to different ranges based on the direction the light is traveling.
+     * The direction ranges are {@code forward}, {@code sideForward}, {@code side},
+     * {@code sideBack}, and {@code back}; all are multiplied by {@code radius}.
+     * Assigns to, and returns, a light map where the values represent a percentage of fully
+     * lit. The values in light are cleared before this is run, because prior state can make
+     * this give incorrect results. You can use {@link #addFOVsInto(float[][], float[][]...)}
+     * if you want to mix FOV results, which works as an alternative to using the prior light state.
+     * <br>
+     * The starting point for the calculation is considered to be at the center
+     * of the origin cell. Radius determinations are determined by the provided
+     * RadiusStrategy. If all direction ranges are the same, this acts like
+     * {@link #reuseFOV(float[][], float[][], int, int, float, Radius)}; otherwise
+     * may produce conical shapes (potentially more than one, or overlapping ones).
+     *
+     * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
+     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param startX the horizontal component of the starting location
+     * @param startY the vertical component of the starting location
+     * @param radius the distance the light will extend to (roughly); direction ranges will be multiplied by this
+     * @param radiusTechnique provides a means to shape the FOV by changing distance calculation (circle, square, etc.)
+     * @param angle the angle in radians that will be the center of the FOV cone, 0 points right
+     * @param forward the portion of {@code radius} to extend when the light is within PI/8 radians of angle; will be interpolated with sideForward
+     * @param sideForward the portion of {@code radius} to extend when the light is between PI/8 and 3*PI/8 radians of angle; will be interpolated with forward or side
+     * @param side the portion of {@code radius} to extend when the light is between 3*PI/8 and 5*PI/8 radians of angle; will be interpolated with sideForward or sideBack
+     * @param sideBack the portion of {@code radius} to extend when the light is between 5*PI/8 and 7*PI/8 radians of angle; will be interpolated with side or back
+     * @param back the portion of {@code radius} to extend when the light is more than 7*PI/8 radians away from angle; will be interpolated with sideBack
+     * @return the computed light grid (the same as {@code light})
+     */
+    public static float[][] reuseFOVRad(float[][] resistanceMap, float[][] light, int startX, int startY,
+                                      float radius, Radius radiusTechnique, float angle,
+                                      float forward, float sideForward, float side, float sideBack, float back) {
+        return reuseFOVTurns(resistanceMap, light, startX, startY, radius, radiusTechnique,
+                angle * (TrigTools.PI_INVERSE * 0.5f), forward, sideForward, side, sideBack, back);
+    }
+
+    /**
+     * Calculates the Field Of View for the provided map from the given x, y
+     * coordinates, lighting with the view "pointed at" the given {@code angle} in degrees,
+     * extending to different ranges based on the direction the light is traveling.
+     * The direction ranges are {@code forward}, {@code sideForward}, {@code side},
+     * {@code sideBack}, and {@code back}; all are multiplied by {@code radius}.
+     * Assigns to, and returns, a light map where the values represent a percentage of fully
+     * lit. The values in light are cleared before this is run, because prior state can make
+     * this give incorrect results. You can use {@link #addFOVsInto(float[][], float[][]...)}
+     * if you want to mix FOV results, which works as an alternative to using the prior light state.
+     * <br>
+     * The starting point for the calculation is considered to be at the center
+     * of the origin cell. Radius determinations are determined by the provided
+     * RadiusStrategy. If all direction ranges are the same, this acts like
+     * {@link #reuseFOV(float[][], float[][], int, int, float, Radius)}; otherwise
+     * may produce conical shapes (potentially more than one, or overlapping ones).
+     *
+     * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
+     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param startX the horizontal component of the starting location
+     * @param startY the vertical component of the starting location
+     * @param radius the distance the light will extend to (roughly); direction ranges will be multiplied by this
+     * @param radiusTechnique provides a means to shape the FOV by changing distance calculation (circle, square, etc.)
+     * @param angle the angle in degrees that will be the center of the FOV cone, 0 points right
+     * @param forward the portion of {@code radius} to extend when the light is within 22.5f degrees of angle; will be interpolated with sideForward
+     * @param sideForward the portion of {@code radius} to extend when the light is between 22.5f and 67.5f degrees of angle; will be interpolated with forward or side
+     * @param side the portion of {@code radius} to extend when the light is between 67.5f and 112.5f degrees of angle; will be interpolated with sideForward or sideBack
+     * @param sideBack the portion of {@code radius} to extend when the light is between 112.5f and 157.5f degrees of angle; will be interpolated with side or back
+     * @param back the portion of {@code radius} to extend when the light is more than 157.5f degrees away from angle; will be interpolated with sideBack
+     * @return the computed light grid (the same as {@code light})
+     */
+    public static float[][] reuseFOVDeg(float[][] resistanceMap, float[][] light, int startX, int startY,
+                                      float radius, Radius radiusTechnique, float angle,
+                                      float forward, float sideForward, float side, float sideBack, float back) {
+        return reuseFOVTurns(resistanceMap, light, startX, startY, radius, radiusTechnique,
+                angle * (1f/360f), forward, sideForward, side, sideBack, back);
+    }
+
+    /**
+     * Calculates the Field Of View for the provided map from the given x, y
+     * coordinates, lighting with the view "pointed at" the given {@code angle} in turns,
+     * extending to different ranges based on the direction the light is traveling.
+     * The direction ranges are {@code forward}, {@code sideForward}, {@code side},
+     * {@code sideBack}, and {@code back}; all are multiplied by {@code radius}.
+     * Assigns to, and returns, a light map where the values represent a percentage of fully
+     * lit. The values in light are cleared before this is run, because prior state can make
+     * this give incorrect results. You can use {@link #addFOVsInto(float[][], float[][]...)}
+     * if you want to mix FOV results, which works as an alternative to using the prior light state.
+     * <br>
+     * The starting point for the calculation is considered to be at the center
+     * of the origin cell. Radius determinations are determined by the provided
+     * RadiusStrategy. If all direction ranges are the same, this acts like
+     * {@link #reuseFOV(float[][], float[][], int, int, float, Radius)}; otherwise
+     * may produce conical shapes (potentially more than one, or overlapping ones).
+     *
+     * @param resistanceMap the grid of cells to calculate on; the kind made by {@link #generateResistances(char[][])}
+     * @param light the grid of cells to assign to; may have existing values, and 0.0f is used to mean "unlit"
+     * @param startX the horizontal component of the starting location
+     * @param startY the vertical component of the starting location
+     * @param radius the distance the light will extend to (roughly); direction ranges will be multiplied by this
+     * @param radiusTechnique provides a means to shape the FOV by changing distance calculation (circle, square, etc.)
+     * @param angle the angle in turns that will be the center of the FOV cone, 0 points right
+     * @param forward the portion of {@code radius} to extend when the light is within 1/16f turns of angle; will be interpolated with sideForward
+     * @param sideForward the portion of {@code radius} to extend when the light is between 1/16f and 3/16f turns of angle; will be interpolated with forward or side
+     * @param side the portion of {@code radius} to extend when the light is between 3/16f and 5/16f turns of angle; will be interpolated with sideForward or sideBack
+     * @param sideBack the portion of {@code radius} to extend when the light is between 5/16f and 7/16f turns of angle; will be interpolated with side or back
+     * @param back the portion of {@code radius} to extend when the light is more than 7/16f turns away from angle; will be interpolated with sideBack
+     * @return the computed light grid (the same as {@code light})
+     */
+    public static float[][] reuseFOVTurns(float[][] resistanceMap, float[][] light, int startX, int startY,
+                                     float radius, Radius radiusTechnique, float angle,
+                                     float forward, float sideForward, float side, float sideBack, float back) {
         directionRanges[0] = forward * radius;
         directionRanges[7] = directionRanges[1] = sideForward * radius;
         directionRanges[6] = directionRanges[2] = side * radius;
@@ -1063,9 +1179,8 @@ public final class FOV {
 
         radius = Math.max(1, radius);
         ArrayTools.fill(light, 0);
-        light[startX][startY] = 1;//make the starting space full power
-        angle *= (1f/360f);
-        angle -= MathTools.fastFloor(angle);
+        light[startX][startY] = 1; // make the starting space full power
+        angle = MathTools.fract(angle);
 
         light = shadowCastPersonalized(1, 1.0f, 0.0f, 0, 1, 1, 0,   radius, startX, startY, light, resistanceMap, radiusTechnique, angle, directionRanges);
         light = shadowCastPersonalized(1, 1.0f, 0.0f, 1, 0, 0, 1,   radius, startX, startY, light, resistanceMap, radiusTechnique, angle, directionRanges);
@@ -1221,7 +1336,7 @@ public final class FOV {
     }
 
     /**
-     * Adds an FOV map to another in the simplest way possible; does not check line-of-sight between FOV maps.
+     * Adds an FOV grid to another in the simplest way possible; does not check line-of-sight between FOV grids.
      * Clamps the highest value for any single position at 1.0f. Modifies the basis parameter in-place and makes no
      * allocations; this is different from {@link #addFOVs(float[][][])}, which creates a new 2D array.
      * @param basis a 2D float array, which can be empty or returned by calculateFOV() or reuseFOV(); modified!
@@ -1238,45 +1353,45 @@ public final class FOV {
         return basis;
     }
     /**
-     * Adds multiple FOV maps together in the simplest way possible; does not check line-of-sight between FOV maps.
+     * Adds multiple FOV grids together in the simplest way possible; does not check line-of-sight between FOV grids.
      * Clamps the highest value for any single position at 1.0f. Allocates a new 2D float array and returns it.
-     * @param maps an array or vararg of 2D float arrays, each usually returned by calculateFOV()
+     * @param grids an array or vararg of 2D float arrays, each usually returned by calculateFOV()
      * @return the sum of all the 2D float arrays passed, using the dimensions of the first if they don't all match
      */
-    public static float[][] addFOVs(float[][]... maps)
+    public static float[][] addFOVs(float[][]... grids)
     {
-        if(maps == null || maps.length == 0)
+        if(grids == null || grids.length == 0)
             return new float[0][0];
-        float[][] map = ArrayTools.copy(maps[0]);
-        for(int i = 1; i < maps.length; i++)
+        float[][] grid = ArrayTools.copy(grids[0]);
+        for(int i = 1; i < grids.length; i++)
         {
-            for (int x = 0; x < map.length && x < maps[i].length; x++) {
-                for (int y = 0; y < map[x].length && y < maps[i][x].length; y++) {
-                    map[x][y] += maps[i][x][y];
+            for (int x = 0; x < grid.length && x < grids[i].length; x++) {
+                for (int y = 0; y < grid[x].length && y < grids[i][x].length; y++) {
+                    grid[x][y] += grids[i][x][y];
                 }
             }
         }
-        for (int x = 0; x < map.length; x++) {
-            for (int y = 0; y < map[x].length; y++) {
-                if(map[x][y] > 1.0f) map[x][y] = 1.0f;
+        for (int x = 0; x < grid.length; x++) {
+            for (int y = 0; y < grid[x].length; y++) {
+                if(grid[x][y] > 1.0f) grid[x][y] = 1.0f;
             }
         }
-        return map;
+        return grid;
     }
     /**
-     * Adds multiple FOV maps to basis cell-by-cell, modifying basis; does not check line-of-sight between FOV maps.
+     * Adds multiple FOV grids to basis cell-by-cell, modifying basis; does not check line-of-sight between FOV grids.
      * Clamps the highest value for any single position at 1.0f. Returns basis without allocating new objects.
-     * @param basis a 2D float array that will be modified by adding values in maps to it and clamping to 1.0f or less
-     * @param maps an array or vararg of 2D float arrays, each usually returned by calculateFOV()
-     * @return basis, with all elements in all of maps added to the corresponding cells and clamped
+     * @param basis a 2D float array that will be modified by adding values in grids to it and clamping to 1.0f or less
+     * @param grids an array or vararg of 2D float arrays, each usually returned by calculateFOV()
+     * @return basis, with all elements in all grids added to the corresponding cells and clamped
      */
-    public static float[][] addFOVsInto(float[][] basis, float[][]... maps) {
-        if (maps == null || maps.length == 0)
+    public static float[][] addFOVsInto(float[][] basis, float[][]... grids) {
+        if (grids == null || grids.length == 0)
             return basis;
-        for (int i = 1; i < maps.length; i++) {
-            for (int x = 0; x < basis.length && x < maps[i].length; x++) {
-                for (int y = 0; y < basis[x].length && y < maps[i][x].length; y++) {
-                    basis[x][y] += maps[i][x][y];
+        for (int i = 1; i < grids.length; i++) {
+            for (int x = 0; x < basis.length && x < grids[i].length; x++) {
+                for (int y = 0; y < basis[x].length && y < grids[i][x].length; y++) {
+                    basis[x][y] += grids[i][x][y];
                 }
             }
         }
@@ -1289,137 +1404,137 @@ public final class FOV {
     }
 
     /**
-     * Adds multiple FOV maps together in the simplest way possible; does not check line-of-sight between FOV maps.
+     * Adds multiple FOV grids together in the simplest way possible; does not check line-of-sight between FOV grids.
      * Clamps the highest value for any single position at 1.0f. Allocates a new 2D float array and returns it.
-     * @param maps an Iterable of 2D float arrays (most collections implement Iterable),
+     * @param grids an Iterable of 2D float arrays (most collections implement Iterable),
      *             each usually returned by calculateFOV()
      * @return the sum of all the 2D float arrays passed, using the dimensions of the first if they don't all match
      */
-    public static float[][] addFOVs(Iterable<float[][]> maps)
+    public static float[][] addFOVs(Iterable<float[][]> grids)
     {
-        if(maps == null)
+        if(grids == null)
             return new float[0][0];
-        Iterator<float[][]> it = maps.iterator();
+        Iterator<float[][]> it = grids.iterator();
         if(!it.hasNext())
             return new float[0][0];
-        float[][] map = ArrayTools.copy(it.next()), t;
+        float[][] grid = ArrayTools.copy(it.next()), t;
         while (it.hasNext())
         {
             t = it.next();
-            for (int x = 0; x < map.length && x < t.length; x++) {
-                for (int y = 0; y < map[x].length && y < t[x].length; y++) {
-                    map[x][y] += t[x][y];
+            for (int x = 0; x < grid.length && x < t.length; x++) {
+                for (int y = 0; y < grid[x].length && y < t[x].length; y++) {
+                    grid[x][y] += t[x][y];
                 }
             }
         }
-        for (int x = 0; x < map.length; x++) {
-            for (int y = 0; y < map[x].length; y++) {
-                if(map[x][y] > 1.0f) map[x][y] = 1.0f;
+        for (int x = 0; x < grid.length; x++) {
+            for (int y = 0; y < grid[x].length; y++) {
+                if(grid[x][y] > 1.0f) grid[x][y] = 1.0f;
             }
         }
-        return map;
+        return grid;
     }
 
     /**
-     * Adds together multiple FOV maps, but only adds to a position if it is visible in the given LOS map. Useful if
-     * you want distant lighting to be visible only if the player has line-of-sight to a lit cell. Typically the LOS map
-     * is calculated by {@link #reuseLOS(float[][], float[][], int, int)}, using the same resistance map used to
-     * calculate the FOV maps. Clamps the highest value for any single position at 1.0f.
-     * @param losMap an LOS map such as one generated by {@link #reuseLOS(float[][], float[][], int, int)}
-     * @param maps an array or vararg of 2D float arrays, each usually returned by calculateFOV()
-     * @return the sum of all the 2D float arrays in maps where a cell was visible in losMap
+     * Adds together multiple FOV grids, but only adds to a position if it is visible in the given LOS grid. Useful if
+     * you want distant lighting to be visible only if the player has line-of-sight to a lit cell. Typically the LOS grid
+     * is calculated by {@link #reuseLOS(float[][], float[][], int, int)}, using the same resistance grid used to
+     * calculate the FOV grids. Clamps the highest value for any single position at 1.0f.
+     * @param losGrid an LOS grid such as one generated by {@link #reuseLOS(float[][], float[][], int, int)}
+     * @param grids an array or vararg of 2D float arrays, each usually returned by calculateFOV()
+     * @return the sum of all the 2D float arrays in grids where a cell was visible in losGrid
      */
-    public static float[][] mixVisibleFOVs(float[][] losMap, float[][]... maps)
+    public static float[][] mixVisibleFOVs(float[][] losGrid, float[][]... grids)
     {
-        if(losMap == null || losMap.length == 0)
-            return addFOVs(maps);
-        final int width = losMap.length, height = losMap[0].length;
-        float[][] map = new float[width][height];
-        if(maps == null || maps.length == 0)
-            return map;
-        for(int i = 0; i < maps.length; i++)
+        if(losGrid == null || losGrid.length == 0)
+            return addFOVs(grids);
+        final int width = losGrid.length, height = losGrid[0].length;
+        float[][] grid = new float[width][height];
+        if(grids == null || grids.length == 0)
+            return grid;
+        for(int i = 0; i < grids.length; i++)
         {
-            for (int x = 0; x < width && x < maps[i].length; x++) {
-                for (int y = 0; y < height && y < maps[i][x].length; y++) {
-                    if(losMap[x][y] > 0.0001f) {
-                        map[x][y] += maps[i][x][y];
+            for (int x = 0; x < width && x < grids[i].length; x++) {
+                for (int y = 0; y < height && y < grids[i][x].length; y++) {
+                    if(losGrid[x][y] > 0.0001f) {
+                        grid[x][y] += grids[i][x][y];
                     }
                 }
             }
         }
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if(map[x][y] > 1.0f) map[x][y] = 1.0f;
+                if(grid[x][y] > 1.0f) grid[x][y] = 1.0f;
             }
         }
 
-        return map;
+        return grid;
     }
     /**
-     * Adds together multiple FOV maps, but only adds to a position if it is visible in the given LOS map. Useful if
-     * you want distant lighting to be visible only if the player has line-of-sight to a lit cell. Typically the LOS map
-     * is calculated by {@link #reuseLOS(float[][], float[][], int, int)}, using the same resistance map used to
-     * calculate the FOV maps. Clamps the highest value for any single position at 1.0f.
-     * @param losMap an LOS map such as one generated by {@link #reuseLOS(float[][], float[][], int, int)}
-     * @param basis an existing 2D float array that should have matching width and height to losMap; will be modified
-     * @param maps an array or vararg of 2D float arrays, each usually returned by calculateFOV()
-     * @return the sum of all the 2D float arrays in maps where a cell was visible in losMap
+     * Adds together multiple FOV grids, but only adds to a position if it is visible in the given LOS grid. Useful if
+     * you want distant lighting to be visible only if the player has line-of-sight to a lit cell. Typically, the LOS
+     * grid is calculated by {@link #reuseLOS(float[][], float[][], int, int)}, using the same resistance grid used to
+     * calculate the FOV grids. Clamps the highest value for any single position at 1.0f.
+     * @param losGrid an LOS grid such as one generated by {@link #reuseLOS(float[][], float[][], int, int)}
+     * @param basis an existing 2D float array that should have matching width and height to losGrid; will be modified
+     * @param grids an array or vararg of 2D float arrays, each usually returned by calculateFOV()
+     * @return the sum of all the 2D float arrays in grids where a cell was visible in losGrid
      */
-    public static float[][] mixVisibleFOVsInto(float[][] losMap, float[][] basis, float[][]... maps)
+    public static float[][] mixVisibleFOVsInto(float[][] losGrid, float[][] basis, float[][]... grids)
 
     {
-        if(losMap == null || losMap.length <= 0 || losMap[0].length <= 0)
-            return addFOVsInto(basis, maps);
-        final int width = losMap.length, height = losMap[0].length;
-        float[][] map = new float[width][height];
-        if(maps == null || maps.length == 0)
-            return map;
-        for(int i = 0; i < maps.length; i++)
+        if(losGrid == null || losGrid.length <= 0 || losGrid[0].length <= 0)
+            return addFOVsInto(basis, grids);
+        final int width = losGrid.length, height = losGrid[0].length;
+        float[][] grid = new float[width][height];
+        if(grids == null || grids.length == 0)
+            return grid;
+        for(int i = 0; i < grids.length; i++)
         {
-            for (int x = 0; x < width && x < maps[i].length; x++) {
-                for (int y = 0; y < height && y < maps[i][x].length; y++) {
-                    if(losMap[x][y] > 0.0001f) {
-                        map[x][y] += maps[i][x][y];
+            for (int x = 0; x < width && x < grids[i].length; x++) {
+                for (int y = 0; y < height && y < grids[i][x].length; y++) {
+                    if(losGrid[x][y] > 0.0001f) {
+                        grid[x][y] += grids[i][x][y];
                     }
                 }
             }
         }
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if(map[x][y] > 1.0f) map[x][y] = 1.0f;
+                if(grid[x][y] > 1.0f) grid[x][y] = 1.0f;
             }
         }
-        return map;
+        return grid;
     }
 
     /**
-     * Adds together multiple FOV maps, but only adds to a position if it is visible in the given LOS map. Useful if
-     * you want distant lighting to be visible only if the player has line-of-sight to a lit cell. Typically the LOS map
-     * is calculated by {@link #reuseLOS(float[][], float[][], int, int)}, using the same resistance map used to
-     * calculate the FOV maps. Clamps the highest value for any single position at 1.0f.
-     * @param losMap an LOS map such as one generated by {@link #reuseLOS(float[][], float[][], int, int)}
-     * @param maps an Iterable of 2D float arrays, each usually returned by calculateFOV()
-     * @return the sum of all the 2D float arrays in maps where a cell was visible in losMap
+     * Adds together multiple FOV grids, but only adds to a position if it is visible in the given LOS grid. Useful if
+     * you want distant lighting to be visible only if the player has line-of-sight to a lit cell. Typically the LOS grid
+     * is calculated by {@link #reuseLOS(float[][], float[][], int, int)}, using the same resistance grid used to
+     * calculate the FOV grids. Clamps the highest value for any single position at 1.0f.
+     * @param losGrid an LOS grid such as one generated by {@link #reuseLOS(float[][], float[][], int, int)}
+     * @param grids an Iterable of 2D float arrays, each usually returned by calculateFOV()
+     * @return the sum of all the 2D float arrays in grids where a cell was visible in losGrid
      */
-    public static float[][] mixVisibleFOVs(float[][] losMap, Iterable<float[][]> maps)
+    public static float[][] mixVisibleFOVs(float[][] losGrid, Iterable<float[][]> grids)
     {
-        if(losMap == null || losMap.length == 0)
-            return addFOVs(maps);
-        final int width = losMap.length, height = losMap[0].length;
-        float[][] map = new float[width][height];
-        if(maps == null)
-            return map;
-        for (float[][] map1 : maps) {
-            for (int x = 0; x < width && x < map1.length; x++) {
-                for (int y = 0; y < height && y < map1[x].length; y++) {
-                    if (losMap[x][y] > 0.0001f) {
-                        map[x][y] += map1[x][y];
-                        if (map[x][y] > 1.0f) map[x][y] = 1.0f;
+        if(losGrid == null || losGrid.length == 0)
+            return addFOVs(grids);
+        final int width = losGrid.length, height = losGrid[0].length;
+        float[][] grid = new float[width][height];
+        if(grids == null)
+            return grid;
+        for (float[][] grid1 : grids) {
+            for (int x = 0; x < width && x < grid1.length; x++) {
+                for (int y = 0; y < height && y < grid1[x].length; y++) {
+                    if (losGrid[x][y] > 0.0001f) {
+                        grid[x][y] += grid1[x][y];
+                        if (grid[x][y] > 1.0f) grid[x][y] = 1.0f;
                     }
                 }
             }
         }
-        return map;
+        return grid;
     }
 
     /**
@@ -1486,7 +1601,7 @@ public final class FOV {
     }
 
     /**
-     * Given a char[][] for the map, produces a float[][] that can be used with most of the methods in FOV, like
+     * Given a char[][] for the local area, produces a float[][] that can be used with most of the methods in FOV, like
      * {@link #reuseFOV(float[][], float[][], int, int, float)}. It expects any doors to be represented by '+' if
      * closed or '/' if open, any walls to be '#' or box drawing characters, and it doesn't care what other chars are
      * used (only doors, including open ones, and walls obscure light and thus have a resistance by default). Open doors
@@ -1534,23 +1649,23 @@ public final class FOV {
     }
 
     /**
-     * Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
-     * be used with most of the methods in FOV, like {@link #reuseFOV(float[][], float[][], int, int, float)}. It
+     * Given a char[][] for the local area and a float[][] with the same dimensions as the chars, fills the float[][] so
+     * it can be used with most of the methods in FOV, like {@link #reuseFOV(float[][], float[][], int, int, float)}. It
      * expects any doors to be represented by '+' if closed or '/' if open, any walls to be '#' or box drawing
      * characters, and it doesn't care what other chars are used (only doors, including open ones, and walls obscure
      * light and thus have a resistance by default). Open doors slightly obscure light, closed doors obscure almost all
      * light coming from the other side, walls block all light, and anything else does not obscure light.
      *
-     * @param map a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
-     * @param into a 2D float array that should have the same dimensions as {@code map}; will be modified completely
-     * @return {@code into} modified so it acts as a resistance map, with clear cells assigned 0.0f and blocked ones 1.0f
+     * @param grid a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
+     * @param into a 2D float array that should have the same dimensions as {@code grid}; will be modified completely
+     * @return {@code into} modified so it acts as a resistance grid, with clear cells assigned 0.0f and blocked ones 1.0f
      */
-    public static float[][] fillResistancesInto(char[][] map, float[][] into) {
-        int width = Math.min(map.length, into.length);
-        int height = Math.min(map[0].length, into[0].length);
+    public static float[][] fillResistancesInto(char[][] grid, float[][] into) {
+        int width = Math.min(grid.length, into.length);
+        int height = Math.min(grid[0].length, into[0].length);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                switch (map[i][j]) {
+                switch (grid[i][j]) {
                     case ' ':
                     case '├':
                     case '┤':
@@ -1581,24 +1696,24 @@ public final class FOV {
     }
 
     /**
-     * Given a char[][] for the map that should use box drawing characters, produces a float[][] with triple width and
-     * triple height that can be used with FOV methods like {@link #reuseFOV(float[][], float[][], int, int, float)}
-     * in classes that use subcell lighting. Importantly, this only considers a "thin line" of wall to be blocking
-     * (matching the box drawing character), instead of the whole 3x3 area. This expects any doors to be represented by
-     * '+' if closed or '/' if open, any normal walls to be box drawing characters, any cells that block all subcells to
-     * be '#', and it doesn't care what other chars are used (only doors, including open ones, and walls obscure light
-     * and thus have a resistance normally).
+     * Given a char[][] for the local area that should use box drawing characters, produces a float[][] with triple
+     * width and triple height that can be used with FOV methods like
+     * {@link #reuseFOV(float[][], float[][], int, int, float)} in classes that use subcell lighting. Importantly, this
+     * only considers a "thin line" of wall to be blocking (matching the box drawing character), instead of the whole
+     * 3x3 area. This expects any doors to be represented by '+' if closed or '/' if open, any normal walls to be box
+     * drawing characters, any cells that block all subcells to be '#', and it doesn't care what other chars are used
+     * (only doors, including open ones, and walls obscure light and thus have a resistance normally).
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
-     * @return a resistance map suitable for use with the FOV class and subcell lighting, with triple width/height
+     * @param grid a place grid as a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
+     * @return a resistance grid suitable for use with the FOV class and subcell lighting, with triple width/height
      */
-    public static float[][] generateResistances3x3(char[][] map) {
-        int width = map.length;
-        int height = map[0].length;
+    public static float[][] generateResistances3x3(char[][] grid) {
+        int width = grid.length;
+        int height = grid[0].length;
         float[][] portion = new float[width * 3][height * 3];
         for (int i = 0, x = 0; i < width; i++, x+=3) {
             for (int j = 0, y = 0; j < height; j++, y+=3) {
-                switch (map[i][j]) {
+                switch (grid[i][j]) {
                     case '#':
                         portion[x][y] = portion[x+1][y] = portion[x+2][y] =
                                 portion[x][y+1] = portion[x+1][y+1] = portion[x+2][y+1] =
@@ -1688,24 +1803,24 @@ public final class FOV {
     }
 
     /**
-     * Given a char[][] for the map, produces a float[][] that can be used with any FOV methods that expect a
-     * resistance map (like {@link #reuseFOV(float[][], float[][], int, int, float)}), but does not treat
+     * Given a char[][] for the local area, produces a float[][] that can be used with any FOV methods that expect a
+     * resistance grid (like {@link #reuseFOV(float[][], float[][], int, int, float)}), but does not treat
      * any cells as partly transparent, only fully-blocking or fully-permitting light. This is mainly useful if you
      * expect the FOV radius to be very high or (effectively) infinite, since anything less than complete blockage would
      * be passed through by infinite-radius FOV. This expects any doors to be represented by '+' if closed or '/' if
      * open, and any walls to be '#' or box drawing characters. This will assign 1.0f resistance to walls and closed
      * doors or 0.0f for any other cell.
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
-     * @return a resistance map suitable for use with the FOV class, but with no partially transparent cells
+     * @param grid a place grid, width by height, with any closed doors as '+' and open doors as '/'
+     * @return a resistance grid suitable for use with the FOV class, but with no partially transparent cells
      */
-    public static float[][] generateSimpleResistances(char[][] map) {
-        int width = map.length;
-        int height = map[0].length;
+    public static float[][] generateSimpleResistances(char[][] grid) {
+        int width = grid.length;
+        int height = grid[0].length;
         float[][] portion = new float[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                switch (map[i][j]) {
+                switch (grid[i][j]) {
                     case ' ':
                     case '├':
                     case '┤':
@@ -1731,7 +1846,7 @@ public final class FOV {
     }
 
     /**
-     * Given a char[][] for the map and a float[][] with the same dimensions as the map, fills the float[][] so it can
+     * Given a char[][] for the local area and a float[][] with the same dimensions as the chars, fills the float[][] so it can
      * be used with most of the methods in FOV, like {@link #reuseFOV(float[][], float[][], int, int, float)}, but does
      * not treat any cells as partly transparent, only fully-blocking or fully-permitting light. This is mainly useful
      * if you expect the FOV radius to be very high or (effectively) infinite, since anything less than complete
@@ -1739,16 +1854,16 @@ public final class FOV {
      * closed or '/' if open, and any walls to be '#' or box drawing characters. This will assign 1.0f resistance to
      * walls and closed doors or 0.0f for any other cell.
      *
-     * @param map a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
-     * @param into a 2D float array that should have the same dimensions as {@code map}; will be modified completely
-     * @return {@code into} modified so it acts as a resistance map, with clear cells assigned 0.0f and blocked ones 1.0f
+     * @param grid a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
+     * @param into a 2D float array that should have the same dimensions as {@code grid}; will be modified completely
+     * @return {@code into} modified so it acts as a resistance grid, with clear cells assigned 0.0f and blocked ones 1.0f
      */
-    public static float[][] fillSimpleResistancesInto(char[][] map, float[][] into) {
-        int width = Math.min(map.length, into.length);
-        int height = Math.min(map[0].length, into[0].length);
+    public static float[][] fillSimpleResistancesInto(char[][] grid, float[][] into) {
+        int width = Math.min(grid.length, into.length);
+        int height = Math.min(grid[0].length, into[0].length);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                switch (map[i][j]) {
+                switch (grid[i][j]) {
                     case ' ':
                     case '├':
                     case '┤':
@@ -1774,23 +1889,23 @@ public final class FOV {
     }
 
     /**
-     * Given a char[][] for the map that should use box drawing characters, produces a float[][] with triple width and
-     * triple height that can be used with FOV's methods that expect a resistance map (like
+     * Given a char[][] for the local area that should use box drawing characters, produces a float[][] with triple
+     * width and triple height that can be used with FOV's methods that expect a resistance grid (like
      * {@link #reuseFOV(float[][], float[][], int, int, float)}) in classes that use subcell lighting. This expects
      * any doors to be represented by '+' if closed or '/' if open, any walls to be box drawing characters, and any
      * cells that block all subcells within their area to be '#'. This will assign 1.0f resistance to walls and closed
      * doors where a line of the box drawing char would block light, or 0.0f for any other subcell.
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
-     * @return a resistance map suitable for use with the FOV class and subcell lighting, with triple width/height
+     * @param grid a dungeon, width by height, with any closed doors as '+' and open doors as '/'
+     * @return a resistance grid suitable for use with the FOV class and subcell lighting, with triple width/height
      */
-    public static float[][] generateSimpleResistances3x3(char[][] map) {
-        int width = map.length;
-        int height = map[0].length;
+    public static float[][] generateSimpleResistances3x3(char[][] grid) {
+        int width = grid.length;
+        int height = grid[0].length;
         float[][] portion = new float[width * 3][height * 3];
         for (int i = 0, x = 0; i < width; i++, x+=3) {
             for (int j = 0, y = 0; j < height; j++, y+=3) {
-                switch (map[i][j]) {
+                switch (grid[i][j]) {
                     case '#':
                     case '+':
                         portion[x][y] = portion[x+1][y] = portion[x+2][y] =
@@ -1870,24 +1985,24 @@ public final class FOV {
         return portion;
     }
     /**
-     * Given a char[][] for the map, produces a float[][] that can be used with the sound-related methods here, allowing
-     * sound to pass through thin-enough walls and doors. It expects any doors to be represented by '+' if
+     * Given a char[][] for the local area, produces a float[][] that can be used with the sound-related methods here,
+     * allowing sound to pass through thin-enough walls and doors. It expects any doors to be represented by '+' if
      * closed or '/' if open, any walls to be '#' or box drawing characters, anything that can't possibly let sound
      * through to be ' ' or Unicode u0001, and lets everything else permit sound to pass freely. Open doors slightly
      * obscure sound (by 5%), closed doors obscure 30% of sound coming from the other side, walls block 55% of the
      * sound (making walls that are 2-cells-thick block all sound, but 1-cell-thick walls won't), the ' ' and Unicode 1
      * cells block all sound, and everything else lets sound through.
      *
-     * @param map a dungeon, width by height, with any closed doors as '+' and open doors as '/'
-     * @return a resistance map meant for sound resistance rather than light, with clear cells assigned 0.0f and fully-blocked ones 1.0f
+     * @param grid a 2D char array, width by height, with any closed doors as '+' and open doors as '/'
+     * @return a resistance grid meant for sound resistance rather than light, with clear cells assigned 0.0f and fully-blocked ones 1.0f
      */
-    public static float[][] generateSoundResistances(char[][] map) {
-        int width = map.length;
-        int height = map[0].length;
+    public static float[][] generateSoundResistances(char[][] grid) {
+        int width = grid.length;
+        int height = grid[0].length;
         float[][] portion = new float[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                switch (map[i][j]) {
+                switch (grid[i][j]) {
                     case ' ': 
                         portion[i][j] = 1.0f;
                         break;
@@ -1920,21 +2035,21 @@ public final class FOV {
     }
 
     /**
-     * Given a typical FOV map produced by {@link #reuseFOV(float[][], float[][], int, int)},
+     * Given a typical FOV grid produced by {@link #reuseFOV(float[][], float[][], int, int)},
      * {@link #reuseRippleFOV(float[][], float[][], int, int, float, Radius)}, or a similar method, this gets a
      * {@link CoordFloatOrderedMap} containing only the visible Coord cells as keys, associated with their visibility
      * levels, and ordered so the most-visible cell (typically where the viewer is) is first in the iteration order.
      * Lower visibility values will go later and later in the iteration order. This method allocates a new
      * CoordFloatOrderedMap; if you want to reuse an existing one, use
      * {@link #fillCellsByDescendingValue(float[][], CoordFloatOrderedMap)} instead.
-     * @param fovMap a rectangular 2D float array ideally containing values greater than 0 and less than or equal to 1
-     * @return a CoordFloatOrderedMap containing the non-zero values in fovMap, ordered from the highest value to lowest
+     * @param fovGrid a rectangular 2D float array ideally containing values greater than 0 and less than or equal to 1
+     * @return a CoordFloatOrderedMap containing the non-zero values in fovGrid, ordered from the highest value to lowest
      */
-    public static CoordFloatOrderedMap cellsByDescendingValue(float[][] fovMap) {
-        CoordFloatOrderedMap cells = new CoordFloatOrderedMap(fovMap.length * fovMap[0].length + 72 >>> 3, 0.5f);
-        for (int x = 0; x < fovMap.length; x++) {
-            for (int y = 0; y < fovMap[x].length; y++) {
-                final float f = fovMap[x][y];
+    public static CoordFloatOrderedMap cellsByDescendingValue(float[][] fovGrid) {
+        CoordFloatOrderedMap cells = new CoordFloatOrderedMap(fovGrid.length * fovGrid[0].length + 72 >>> 3, 0.5f);
+        for (int x = 0; x < fovGrid.length; x++) {
+            for (int y = 0; y < fovGrid[x].length; y++) {
+                final float f = fovGrid[x][y];
                 if (f > 0f) {
                     cells.put(Coord.get(x, y), f);
                 }
@@ -1952,15 +2067,15 @@ public final class FOV {
      * Lower visibility values will go later and later in the iteration order. This is meant to reuse a
      * CoordFloatOrderedMap to avoid allocations, but if you don't have one, you could easily call
      * {@link #cellsByDescendingValue(float[][])} to get a starting point.
-     * @param fovMap a rectangular 2D float array ideally containing values greater than 0 and less than or equal to 1
+     * @param fovGrid a rectangular 2D float array ideally containing values greater than 0 and less than or equal to 1
      * @param modifying a {@link CoordFloatOrderedMap} that will have its contents cleared and then refilled by this
-     * @return {@code modifying} now containing the non-zero values in fovMap, ordered from the highest value to lowest
+     * @return {@code modifying} now containing the non-zero values in fovGrid, ordered from the highest value to lowest
      */
-    public static CoordFloatOrderedMap fillCellsByDescendingValue(float[][] fovMap, CoordFloatOrderedMap modifying) {
+    public static CoordFloatOrderedMap fillCellsByDescendingValue(float[][] fovGrid, CoordFloatOrderedMap modifying) {
         modifying.clear();
-        for (int x = 0; x < fovMap.length; x++) {
-            for (int y = 0; y < fovMap[x].length; y++) {
-                final float f = fovMap[x][y];
+        for (int x = 0; x < fovGrid.length; x++) {
+            for (int y = 0; y < fovGrid[x].length; y++) {
+                final float f = fovGrid[x][y];
                 if (f > 0f) {
                     modifying.put(Coord.get(x, y), f);
                 }
