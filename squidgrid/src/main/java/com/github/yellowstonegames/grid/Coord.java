@@ -20,6 +20,8 @@ import com.github.tommyettinger.crux.Point2;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 
+import com.github.tommyettinger.ds.PrimitiveCollection;
+import com.github.tommyettinger.ds.support.util.IntIterator;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -55,7 +57,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * If this causes problems in, for instance, Kotlin code, you could create an extension method that gets the type you
  * want and has the name you want.
  */
-public final class Coord implements Point2<Coord>, PointNInt<Coord> {
+public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCollection.OfInt{
     /**
      * The x-coordinate.
      */
@@ -296,13 +298,56 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord> {
 
     /**
      * Separately adds the x and y positions of this Coord to operand, producing a different Coord as their
-     * "sum."
+     * "sum." This is called "plus" and not "add" because {@link PrimitiveCollection.OfInt#add(int)} was already used.
      *
      * @param operand a value to add each of x and y to
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x + operand; y = this.y + operand}
      */
-    public Coord add(final int operand) {
+    public Coord plus(final int operand) {
         return get(x + operand, y + operand);
+    }
+
+    /**
+     * Always throws an {@link UnsupportedOperationException} because Coord is fixed-size.
+     * If you want to add {@code i} to both components, use {@link #plus(int)} or {@link #add(double)} instead.
+     * @param i ignored
+     * @return never returns
+     * @throws UnsupportedOperationException always
+     */
+    @Override
+    public boolean add(int i) {
+        throw new UnsupportedOperationException("Coord is fixed-size. Did you want Coord.plus(int) instead?");
+    }
+
+    /**
+     * Always throws an {@link UnsupportedOperationException} because Coord is fixed-size.
+     * @param i ignored
+     * @return never returns
+     * @throws UnsupportedOperationException always
+     */
+    @Override
+    public boolean remove(int i) {
+        throw new UnsupportedOperationException("Coord is fixed-size.");
+    }
+
+    @Override
+    public boolean contains(int i) {
+        return x == i || y == i;
+    }
+
+    @Override
+    public int size() {
+        return 2;
+    }
+
+    @Override
+    public IntIterator iterator() {
+        return new PointNIntIterator(this);
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     /**
