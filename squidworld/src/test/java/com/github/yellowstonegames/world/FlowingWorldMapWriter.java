@@ -239,7 +239,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.LOAF);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.GOURD);
         writer.setDitherStrength(1f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
