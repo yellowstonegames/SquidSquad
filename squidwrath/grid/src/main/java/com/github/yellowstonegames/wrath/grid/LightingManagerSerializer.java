@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.wrath.grid;
 
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.grid.*;
 import org.apache.fury.Fury;
 import org.apache.fury.memory.MemoryBuffer;
@@ -51,7 +52,7 @@ public class LightingManagerSerializer extends Serializer<LightingManager> {
     public LightingManager read(MemoryBuffer buffer) {
         LightingManager lm = new LightingManager((float[][]) fury.readRef(buffer), buffer.readInt32(), Radius.ALL[buffer.readVarUint32()], buffer.readFloat32());
         lm.noticeable = (Region) fury.readRef(buffer);
-        lm.lights = (CoordObjectOrderedMap) fury.readRef(buffer);
+        lm.lights = (ObjectDeque<LightSource>) fury.readRef(buffer);
         lm.colorLighting = (int[][]) fury.readRef(buffer);
         lm.lightingStrength = (float[][]) fury.readRef(buffer);
         lm.fovResult = (float[][]) fury.readRef(buffer);

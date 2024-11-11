@@ -21,6 +21,7 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.grid.*;
 
 /**
@@ -39,7 +40,7 @@ public class LightingManagerRgbSerializer extends Serializer<LightingManagerRgb>
         LightingManagerRgb lm = new LightingManagerRgb(ArrayTools.copy(original.resistances), original.backgroundColor, original.radiusStrategy,
                 original.viewerRange);
         lm.noticeable.remake(original.noticeable);
-        lm.lights.putAll(original.lights);
+        lm.lights.addAll(original.lights);
         lm.colorLighting = ArrayTools.copy(original.colorLighting);
         lm.lightingStrength = ArrayTools.copy(original.lightingStrength);
         lm.fovResult = ArrayTools.copy(original.fovResult);
@@ -67,7 +68,7 @@ public class LightingManagerRgbSerializer extends Serializer<LightingManagerRgb>
     public LightingManagerRgb read(Kryo kryo, Input input, Class<? extends LightingManagerRgb> type) {
         LightingManagerRgb lm = new LightingManagerRgb(kryo.readObject(input, float[][].class), input.readInt(), Radius.ALL[input.readVarInt(true)], input.readFloat());
         lm.noticeable = kryo.readObject(input, Region.class);
-        lm.lights = kryo.readObject(input, CoordObjectOrderedMap.class);
+        lm.lights = kryo.readObject(input, ObjectDeque.class);
         lm.colorLighting = kryo.readObject(input, int[][].class);
         lm.lightingStrength = kryo.readObject(input, float[][].class);
         lm.fovResult = kryo.readObject(input, float[][].class);

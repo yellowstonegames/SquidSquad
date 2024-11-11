@@ -65,6 +65,7 @@ public class ThesaurusTest {
         System.out.println(Thesaurus.ZOMBIE.process(oz));
         System.out.println();
         thesaurus.refresh(thesaurus.rng.nextLong());
+//        thesaurus.refresh(System.nanoTime());
         thesaurus.defaultLanguage = Language.mixAll(Language.randomLanguage(thesaurus.rng).removeAccents(), 1, Language.SIMPLISH, 3, Language.MALAY, 4);
         StringBuilder text = new StringBuilder("The elixir you desire is no simple matter to brew. " +
                 "I would require many ingredients, most rare or exotic, to even begin to craft this tonic. " +

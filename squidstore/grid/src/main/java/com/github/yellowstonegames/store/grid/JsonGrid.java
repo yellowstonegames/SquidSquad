@@ -1251,7 +1251,7 @@ public final class JsonGrid {
                 Region noticeable = json.readValue(Region.class, jsonData.get("noticeable"));
                 Radius radiusStrategy = Radius.valueOf(json.readValue(String.class, jsonData.get("radiusStrategy")));
                 LightingManager.SymmetryMode symmetry = LightingManager.SymmetryMode.valueOf(json.readValue(String.class, jsonData.get("symmetry")));
-                CoordObjectOrderedMap lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
+                ObjectDeque<LightSource> lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
                 LightingManager data = new LightingManager(resistances, backgroundColor, radiusStrategy, viewerRange, symmetry);
                 data.width = width;
                 data.height = height;
@@ -1321,7 +1321,7 @@ public final class JsonGrid {
                 Region noticeable = json.readValue(Region.class, jsonData.get("noticeable"));
                 Radius radiusStrategy = Radius.valueOf(json.readValue(String.class, jsonData.get("radiusStrategy")));
                 LightingManagerRgb.SymmetryMode symmetry = LightingManagerRgb.SymmetryMode.valueOf(json.readValue(String.class, jsonData.get("symmetry")));
-                CoordObjectOrderedMap lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
+                ObjectDeque<LightSource> lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
                 LightingManagerRgb data = new LightingManagerRgb(resistances, backgroundColor, radiusStrategy, viewerRange, symmetry);
                 data.width = width;
                 data.height = height;

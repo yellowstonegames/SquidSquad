@@ -20,17 +20,17 @@ public class LightSource {
     public float direction;
 
     public LightSource() {
-        this(new Radiance(), Coord.get(0,0), 1f, 0f);
+        this(Coord.get(0,0), new Radiance(), 1f, 0f);
     }
 
-    public LightSource(Radiance radiance, Coord position) {
-        this(radiance, position, 1f, 0f);
+    public LightSource(Coord position, Radiance radiance) {
+        this(position, radiance, 1f, 0f);
     }
-    public LightSource(Radiance radiance, Coord position, float span, float direction) {
+    public LightSource(Coord position, Radiance radiance, float spanTurns, float directionTurns) {
         this.radiance = radiance;
         this.position = position;
-        this.span = span;
-        this.direction = direction;
+        this.span = spanTurns;
+        this.direction = directionTurns;
     }
 
     public Radiance getRadiance() {
@@ -54,10 +54,10 @@ public class LightSource {
     }
 
     /**
-     * @param span how wide of an arc this should spread light into, measured in turns (0-1)
+     * @param spanTurns how wide of an arc this should spread light into, measured in turns (0-1)
      */
-    public void setSpan(float span) {
-        this.span = span;
+    public void setSpan(float spanTurns) {
+        this.span = spanTurns;
     }
 
     public float getDirection() {
@@ -65,10 +65,10 @@ public class LightSource {
     }
 
     /**
-     * @param direction what angle the light should project in, measured in turns (0-1, counterclockwise from right)
+     * @param directionTurns what angle the light should project in, measured in turns (0-1, counterclockwise from right)
      */
-    public void setDirection(float direction) {
-        this.direction = direction;
+    public void setDirection(float directionTurns) {
+        this.direction = directionTurns;
     }
 
     @Override

@@ -19,6 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
@@ -154,7 +155,7 @@ public class LightingManager {
      * this manually or by using {@link #moveLight(int, int, int, int)}, {@link #addLight(int, int, Radiance)}, and
      * {@link #removeLight(int, int)}.
      */
-    public CoordObjectOrderedMap<Radiance> lights;
+    public ObjectDeque<LightSource> lights;
 
     /**
      * A GreasedRegion that stores any cells that are in line-of-sight or are close enough to a cell in line-of-sight to
@@ -238,7 +239,7 @@ public class LightingManager {
         floatCombining = new float[width][height];
         fovLightColors = new int[width][height];
         Coord.expandPoolTo(width, height);
-        lights = new CoordObjectOrderedMap<>(32);
+        lights = new ObjectDeque<>(32);
         noticeable = new Region(width, height);
     }
 
@@ -277,7 +278,20 @@ public class LightingManager {
      */
     public LightingManager addLight(Coord position, Radiance light)
     {
-        lights.put(position, light);
+        lights.add(new LightSource(position, light));
+        return this;
+    }
+    /**
+     * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
+     * @param position the position to add the Radiance at
+     * @param light a Radiance object that can have a changing radius, color, and various other effects on lighting
+     * @param spanTurns how wide of an arc the LightSource will cover, measured in turns
+     * @param angleTurns what direction the LightSource will point towards, measured in turns
+     * @return this for chaining
+     */
+    public LightingManager addLight(Coord position, Radiance light, float spanTurns, float angleTurns)
+    {
+        lights.add(new LightSource(position, light, spanTurns, angleTurns));
         return this;
     }
 
@@ -285,21 +299,26 @@ public class LightingManager {
      * Removes a Radiance as a light source from the given position, if any is present.
      * @param x the x-position to remove the Radiance from
      * @param y the y-position to remove the Radiance from
-     * @return this for chaining
+     * @return true if any light was removed, false otherwise
      */
-    public LightingManager removeLight(int x, int y)
+    public boolean removeLight(int x, int y)
     {
         return removeLight(Coord.get(x, y));
     }
     /**
-     * Removes a Radiance as a light source from the given position, if any is present.
+     * Removes the first encountered LightSource with the given position, if any is present.
      * @param position the position to remove the Radiance from
-     * @return this for chaining
+     * @return true if any light was removed, false otherwise
      */
-    public LightingManager removeLight(Coord position)
+    public boolean removeLight(Coord position)
     {
-        lights.remove(position);
-        return this;
+        for (int i = 0; i < lights.size; i++) {
+            if(lights.get(i).position.equals(position)) {
+                lights.removeAt(i);
+                return true;
+            }
+        }
+        return false;
     }
     /**
      * If a Radiance is present at oldX,oldY, this will move it to newX,newY and overwrite any existing Radiance at
@@ -308,9 +327,9 @@ public class LightingManager {
      * @param oldY the y-position to move a Radiance from
      * @param newX the x-position to move a Radiance to
      * @param newY the y-position to move a Radiance to
-     * @return this for chaining
+     * @return true if any light was moved, or false otherwise
      */
-    public LightingManager moveLight(int oldX, int oldY, int newX, int newY)
+    public boolean moveLight(int oldX, int oldY, int newX, int newY)
     {
         return moveLight(Coord.get(oldX, oldY), Coord.get(newX, newY));
     }
@@ -319,14 +338,18 @@ public class LightingManager {
      * newPosition. If no Radiance is present at oldPosition, this does nothing.
      * @param oldPosition the Coord to move a Radiance from
      * @param newPosition the Coord to move a Radiance to
-     * @return this for chaining
+     * @return true if any light was moved, or false otherwise
      */
-    public LightingManager moveLight(Coord oldPosition, Coord newPosition)
+    public boolean moveLight(Coord oldPosition, Coord newPosition)
     {
-        Radiance old = lights.get(oldPosition);
-        if(old == null) return this;
-        lights.alter(oldPosition, newPosition);
-        return this;
+        LightSource ls;
+        for (int i = 0; i < lights.size; i++) {
+            if ((ls = lights.get(i)).position.equals(oldPosition)) {
+                ls.position = newPosition;
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -335,18 +358,24 @@ public class LightingManager {
      * @param y the y-position to look up
      * @return the Radiance at the given position, or null if none is present there
      */
-    public Radiance get(int x, int y)
+    public LightSource get(int x, int y)
     {
-        return lights.get(Coord.get(x, y));
+        return get(Coord.get(x, y));
     }
     /**
      * Gets the Radiance at the given position, if present, or null if there is no light source there.
      * @param position the position to look up
      * @return the Radiance at the given position, or null if none is present there
      */
-    public Radiance get(Coord position)
+    public LightSource get(Coord position)
     {
-        return lights.get(position);
+        LightSource ls;
+        for (int i = 0; i < lights.size; i++) {
+            if ((ls = lights.get(i)).position.equals(position)) {
+                return ls;
+            }
+        }
+        return null;
     }
 
     /**
@@ -516,14 +545,19 @@ public class LightingManager {
         ArrayTools.fill(lightingStrength, 0f);
         ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
+        LightSource ls;
         Coord pos;
         for (int i = 0; i < sz; i++) {
-            pos = lights.keyAt(i);
+            ls = lights.get(i);
+            pos = ls.position;
             if(!noticeable.contains(pos))
                 continue;
-            Radiance radiance = lights.getAt(i);
+            Radiance radiance = ls.radiance;
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+                symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            else
+                FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy, ls.direction, ls.span);
             mixColoredLighting(radiance.flare, radiance.color);
         }
     }
@@ -554,10 +588,14 @@ public class LightingManager {
         ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
         for (int i = 0; i < sz; i++) {
-            Coord pos = lights.keyAt(i);
-            Radiance radiance = lights.getAt(i);
+            LightSource ls = lights.get(i);
+            Coord pos = ls.position;
+            Radiance radiance = ls.radiance;
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+                symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
+            else
+                FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy, ls.direction, ls.span);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = 0; x < width; x++) {
@@ -712,10 +750,12 @@ public class LightingManager {
         ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
         float maxRange = 0, range;
+        LightSource ls;
         Coord pos;
         for (int i = 0; i < sz; i++) {
-            pos = lights.keyAt(i);
-            radiance = lights.getAt(i);
+            ls = lights.get(i);
+            pos = ls.position;
+            radiance = ls.radiance;
             if(radiance == null) continue;
             range = radiance.range;
             if(range > maxRange &&
@@ -725,12 +765,16 @@ public class LightingManager {
         FOV.reuseLOS(resistances, losResult, viewerX, viewerY, minX, minY, maxX, maxY);
         noticeable.refill(losResult, 0.0001f, Float.POSITIVE_INFINITY).expand8way((int) Math.ceil(maxRange));
         for (int i = 0; i < sz; i++) {
-            pos = lights.keyAt(i);
+            ls = lights.get(i);
+            pos = ls.position;
             if(!noticeable.contains(pos))
                 continue;
-            radiance = lights.getAt(i);
+            radiance = ls.radiance;
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+                symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            else
+                FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy, ls.direction, ls.span);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
@@ -778,10 +822,12 @@ public class LightingManager {
         ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
         float maxRange = 0, range;
+        LightSource ls;
         Coord pos;
         for (int i = 0; i < sz; i++) {
-            pos = lights.keyAt(i);
-            radiance = lights.getAt(i);
+            ls = lights.get(i);
+            pos = ls.position;
+            radiance = ls.radiance;
             if(radiance == null) continue;
             range = radiance.range;
             if(range > maxRange &&
@@ -794,12 +840,16 @@ public class LightingManager {
         }
         noticeable.refill(losResult, 0.0001f, Float.POSITIVE_INFINITY).expand8way((int) Math.ceil(maxRange));
         for (int i = 0; i < sz; i++) {
-            pos = lights.keyAt(i);
+            ls = lights.get(i);
+            pos = ls.position;
             if(!noticeable.contains(pos))
                 continue;
-            radiance = lights.getAt(i);
+            radiance = ls.radiance;
             if(radiance == null) continue;
-            symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+                symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
+            else
+                FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy, ls.direction, ls.span);
             mixColoredLighting(radiance.flare, radiance.color);
         }
         for (int x = Math.max(0, minX); x < maxX && x < width; x++) {
