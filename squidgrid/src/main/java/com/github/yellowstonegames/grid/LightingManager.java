@@ -21,9 +21,12 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectFloatMap;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -452,6 +455,19 @@ public class LightingManager {
     }
 
     /**
+     * Gets the nth LightSource at any position, where n is {@code index}.
+     * This is largely unnecessary because you can call {@link ObjectDeque#get(int)} on {@link #lights}. The only
+     * difference here is that this method returns null if {@code index} is out-of-bounds, while ObjectQueue.get(int)
+     * throws an Exception then.
+     * @param index which LightSource index to get
+     * @return the LightSource with the given index across all positions, or null if index if out of bounds.
+     */
+    public LightSource get(int index) {
+        if (index < 0 || index >= lights.size)
+            return null;
+        return lights.get(index);
+    }
+    /**
      * Gets the first LightSource at the given position, if present, or null if there is no LightSource there.
      *
      * @param x the x-position to look up
@@ -502,6 +518,34 @@ public class LightingManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Finds all LightSources this has with the given {@code position} and adds them to a newly-allocated ObjectList,
+     * which this returns.
+     * @param position the position to look up LightSources at
+     * @return a newly-allocated ObjectList that may have LightSource items which were found at position
+     */
+    public ObjectList<LightSource> lightsAt(Coord position) {
+        ObjectList<LightSource> buffer = new ObjectList<>(8);
+        lightsAt(buffer, position);
+        return buffer;
+    }
+
+    /**
+     * Finds all LightSources this has with the given {@code position} and appends them to {@code buffer}.
+     * @param buffer any modifiable Collection of LightSource items; may be modified
+     * @param position the position to look up LightSources at
+     * @return buffer, potentially after modification
+     */
+    public Collection<LightSource> lightsAt(@NonNull Collection<LightSource> buffer, Coord position) {
+        LightSource ls;
+        for (int i = 0; i < lights.size; i++) {
+            if ((ls = lights.get(i)).position.equals(position)) {
+                buffer.add(ls);
+            }
+        }
+        return buffer;
     }
 
     /**
