@@ -267,10 +267,25 @@ public class LightingManager {
     }
 
     /**
-     * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
+     * Returns how many LightSources are at the given {@code position}.
+     * @param position the position to count at
+     * @return a non-negative int, at least 0 and less than {@code lights.size}
+     */
+    public int lightCount(Coord position) {
+        int count = 0;
+        for (int i = 0; i < lights.size; i++) {
+            if (lights.get(i).position.equals(position)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Adds a Radiance as a LightSource at the given position. The LightSource will spread light in all directions.
      *
-     * @param x     the x-position to add the Radiance at
-     * @param y     the y-position to add the Radiance at
+     * @param x     the x-position to add the LightSource at
+     * @param y     the y-position to add the LightSource at
      * @param light a Radiance object that can have a changing radius, color, and various other effects on lighting
      * @return this for chaining
      */
@@ -279,9 +294,9 @@ public class LightingManager {
     }
 
     /**
-     * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
+     * Adds a Radiance as a LightSource at the given position. The LightSource will spread light in all directions.
      *
-     * @param position the position to add the Radiance at
+     * @param position the position to add the LightSource at
      * @param light    a Radiance object that can have a changing radius, color, and various other effects on lighting
      * @return this for chaining
      */
@@ -291,7 +306,9 @@ public class LightingManager {
     }
 
     /**
-     * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
+     * Adds a LightSource using the given Radiance at the given position. This also restricts the lit span to
+     * {@code spanTurns} (between 0 and 1) and sets the initial direction of the light to {@code angleTurns} (also
+     * between 0 and 1).
      *
      * @param position   the position to add the Radiance at
      * @param light      a Radiance object that can have a changing radius, color, and various other effects on lighting
@@ -305,14 +322,38 @@ public class LightingManager {
     }
 
     /**
-     * Removes a Radiance as a light source from the given position, if any is present.
+     * Adds a LightSource to the collection this has for lights.
+     * This is largely irrelevant, since you can just call {@link ObjectDeque#add(Object)} on {@link #lights}.
      *
-     * @param x the x-position to remove the Radiance from
-     * @param y the y-position to remove the Radiance from
+     * @param light an existing LightSource, with a position and Radiance, to add
+     * @return this for chaining
+     */
+    public LightingManager addLight(LightSource light) {
+        lights.add(light);
+        return this;
+    }
+
+    /**
+     * Removes the first encountered LightSource with the given position, if any is present.
+     *
+     * @param x the x-position to remove the LightSource from
+     * @param y the y-position to remove the LightSource from
      * @return true if any light was removed, false otherwise
      */
     public boolean removeLight(int x, int y) {
-        return removeLight(Coord.get(x, y));
+        return removeLight(Coord.get(x, y), 0);
+    }
+
+    /**
+     * Removes the nth encountered LightSource with the given position, where n is {@code index}, if any is present.
+     *
+     * @param x the x-position to remove the LightSource from
+     * @param y the y-position to remove the LightSource from
+     * @param index which of the possible lights at x,y to remove
+     * @return true if any light was removed, false otherwise
+     */
+    public boolean removeLight(int x, int y, int index) {
+        return removeLight(Coord.get(x, y), index);
     }
 
     /**
@@ -322,8 +363,18 @@ public class LightingManager {
      * @return true if any light was removed, false otherwise
      */
     public boolean removeLight(Coord position) {
+        return removeLight(position, 0);
+    }
+    /**
+     * Removes the nth encountered LightSource with the given position, where n is {@code index}, if any is present.
+     *
+     * @param position the position to remove the LightSource from
+     * @param index which of the possible lights at position to remove
+     * @return true if any light was removed, false otherwise
+     */
+    public boolean removeLight(Coord position, int index) {
         for (int i = 0; i < lights.size; i++) {
-            if (lights.get(i).position.equals(position)) {
+            if (lights.get(i).position.equals(position) && index-- <= 0) {
                 lights.removeAt(i);
                 return true;
             }
