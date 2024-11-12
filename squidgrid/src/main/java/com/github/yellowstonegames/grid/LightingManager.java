@@ -82,6 +82,7 @@ public class LightingManager {
             return fun.getFov(resistanceMap, light, startX, startY, radius, radiusTechnique);
         }
     }
+
     /**
      * How light should spread; usually {@link Radius#CIRCLE} unless gameplay reasons need it to be SQUARE or DIAMOND.
      */
@@ -164,12 +165,12 @@ public class LightingManager {
     public Region noticeable;
 
     public SymmetryMode symmetry;
+
     /**
      * Unlikely to be used except during serialization; makes a LightingManager for a 20x20 fully visible level.
      * The viewer vision range will be 4.0f, and lights will use a circular shape.
      */
-    public LightingManager()
-    {
+    public LightingManager() {
         this(new float[20][20], 0, Radius.CIRCLE, 4.0f);
     }
 
@@ -179,51 +180,55 @@ public class LightingManager {
      * LightingManager that can have {@link Radiance} objects added to it in various locations. This will use a solid
      * black background when it casts light on cells without existing lighting. The viewer vision range will be 4.0f, and
      * lights will use a circular shape.
+     *
      * @param resistance a resistance array as produced by DungeonUtility
      */
-    public LightingManager(float[][] resistance)
-    {
+    public LightingManager(float[][] resistance) {
         this(resistance, 0, Radius.CIRCLE, 4.0f);
     }
+
     /**
      * Given a resistance array as produced by {@link FOV#generateResistances(char[][])}
      * or {@link FOV#generateSimpleResistances(char[][])}, makes a
      * LightingManager that can have {@link Radiance} objects added to it in various locations.
-     * @param resistance a resistance array as produced by DungeonUtility
-     * @param backgroundColor the background color to use, as a color description
-     * @param radiusStrategy the shape lights should take, typically {@link Radius#CIRCLE} for "realistic" lights or one
-     *                       of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
+     *
+     * @param resistance        a resistance array as produced by DungeonUtility
+     * @param backgroundColor   the background color to use, as a color description
+     * @param radiusStrategy    the shape lights should take, typically {@link Radius#CIRCLE} for "realistic" lights or one
+     *                          of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
      * @param viewerVisionRange how far the player can see without light, in cells
      */
-    public LightingManager(float[][] resistance, String backgroundColor, Radius radiusStrategy, float viewerVisionRange)
-    {
+    public LightingManager(float[][] resistance, String backgroundColor, Radius radiusStrategy, float viewerVisionRange) {
         this(resistance, DescriptiveColor.describeOklab(backgroundColor), radiusStrategy, viewerVisionRange);
     }
+
     /**
      * Given a resistance array as produced by {@link FOV#generateResistances(char[][])}
      * or {@link FOV#generateSimpleResistances(char[][])}, makes a
      * LightingManager that can have {@link Radiance} objects added to it in various locations.
-     * @param resistance a resistance array as produced by DungeonUtility
-     * @param backgroundColor the background color to use, as a packed Oklab int
-     * @param radiusStrategy the shape lights should take, typically {@link Radius#CIRCLE} for "realistic" lights or one
-     *                       of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
+     *
+     * @param resistance        a resistance array as produced by DungeonUtility
+     * @param backgroundColor   the background color to use, as a packed Oklab int
+     * @param radiusStrategy    the shape lights should take, typically {@link Radius#CIRCLE} for "realistic" lights or one
+     *                          of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
      * @param viewerVisionRange how far the player can see without light, in cells
      */
     public LightingManager(float[][] resistance, int backgroundColor, Radius radiusStrategy, float viewerVisionRange) {
         this(resistance, backgroundColor, radiusStrategy, viewerVisionRange, SymmetryMode.SYMMETRICAL);
     }
+
     /**
      * Given a resistance array as produced by {@link FOV#generateResistances(char[][])}
      * or {@link FOV#generateSimpleResistances(char[][])}, makes a
      * LightingManager that can have {@link Radiance} objects added to it in various locations.
-     * @param resistance a resistance array as produced by DungeonUtility
-     * @param backgroundColor the background color to use, as a packed Oklab int
-     * @param radiusStrategy the shape lights should take, typically {@link Radius#CIRCLE} for "realistic" lights or one
-     *                       of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
+     *
+     * @param resistance        a resistance array as produced by DungeonUtility
+     * @param backgroundColor   the background color to use, as a packed Oklab int
+     * @param radiusStrategy    the shape lights should take, typically {@link Radius#CIRCLE} for "realistic" lights or one
+     *                          of {@link Radius#DIAMOND} or {@link Radius#SQUARE} to match game rules for distance
      * @param viewerVisionRange how far the player can see without light, in cells
      */
-    public LightingManager(float[][] resistance, int backgroundColor, Radius radiusStrategy, float viewerVisionRange, SymmetryMode symmetry)
-    {
+    public LightingManager(float[][] resistance, int backgroundColor, Radius radiusStrategy, float viewerVisionRange, SymmetryMode symmetry) {
         this.radiusStrategy = radiusStrategy;
         this.symmetry = symmetry;
         viewerRange = viewerVisionRange;
@@ -254,97 +259,140 @@ public class LightingManager {
     /**
      * An extension point for subclasses that don't use the Oklab color space; this defaults to returning
      * {@link DescriptiveColor#WHITE}. There is no setter or field for the neutral color.
+     *
      * @return if not overridden, {@link DescriptiveColor#WHITE}
      */
     public int getNeutralColor() {
         return DescriptiveColor.WHITE;
     }
+
     /**
      * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
-     * @param x the x-position to add the Radiance at
-     * @param y the y-position to add the Radiance at
+     *
+     * @param x     the x-position to add the Radiance at
+     * @param y     the y-position to add the Radiance at
      * @param light a Radiance object that can have a changing radius, color, and various other effects on lighting
      * @return this for chaining
      */
-    public LightingManager addLight(int x, int y, Radiance light)
-    {
+    public LightingManager addLight(int x, int y, Radiance light) {
         return addLight(Coord.get(x, y), light);
     }
+
     /**
      * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
+     *
      * @param position the position to add the Radiance at
-     * @param light a Radiance object that can have a changing radius, color, and various other effects on lighting
+     * @param light    a Radiance object that can have a changing radius, color, and various other effects on lighting
      * @return this for chaining
      */
-    public LightingManager addLight(Coord position, Radiance light)
-    {
+    public LightingManager addLight(Coord position, Radiance light) {
         lights.add(new LightSource(position, light));
         return this;
     }
+
     /**
      * Adds a Radiance as a light source at the given position. Overwrites any existing Radiance at the same position.
-     * @param position the position to add the Radiance at
-     * @param light a Radiance object that can have a changing radius, color, and various other effects on lighting
-     * @param spanTurns how wide of an arc the LightSource will cover, measured in turns
+     *
+     * @param position   the position to add the Radiance at
+     * @param light      a Radiance object that can have a changing radius, color, and various other effects on lighting
+     * @param spanTurns  how wide of an arc the LightSource will cover, measured in turns
      * @param angleTurns what direction the LightSource will point towards, measured in turns
      * @return this for chaining
      */
-    public LightingManager addLight(Coord position, Radiance light, float spanTurns, float angleTurns)
-    {
+    public LightingManager addLight(Coord position, Radiance light, float spanTurns, float angleTurns) {
         lights.add(new LightSource(position, light, spanTurns, angleTurns));
         return this;
     }
 
     /**
      * Removes a Radiance as a light source from the given position, if any is present.
+     *
      * @param x the x-position to remove the Radiance from
      * @param y the y-position to remove the Radiance from
      * @return true if any light was removed, false otherwise
      */
-    public boolean removeLight(int x, int y)
-    {
+    public boolean removeLight(int x, int y) {
         return removeLight(Coord.get(x, y));
     }
+
     /**
      * Removes the first encountered LightSource with the given position, if any is present.
-     * @param position the position to remove the Radiance from
+     *
+     * @param position the position to remove the LightSource from
      * @return true if any light was removed, false otherwise
      */
-    public boolean removeLight(Coord position)
-    {
+    public boolean removeLight(Coord position) {
         for (int i = 0; i < lights.size; i++) {
-            if(lights.get(i).position.equals(position)) {
+            if (lights.get(i).position.equals(position)) {
                 lights.removeAt(i);
                 return true;
             }
         }
         return false;
     }
+
     /**
-     * If a Radiance is present at oldX,oldY, this will move it to newX,newY and overwrite any existing Radiance at
-     * newX,newY. If no Radiance is present at oldX,oldY, this does nothing.
-     * @param oldX the x-position to move a Radiance from
-     * @param oldY the y-position to move a Radiance from
-     * @param newX the x-position to move a Radiance to
-     * @param newY the y-position to move a Radiance to
+     * If at least one LightSource is present at oldX,oldY, this will move the first LightSource to newX,newY.
+     * If no LightSource is present at oldX,oldY, this does nothing. This will not remove any LightSource already
+     * present at newX,newY.
+     *
+     * @param oldX the x-position to move a LightSource from
+     * @param oldY the y-position to move a LightSource from
+     * @param newX the x-position to move a LightSource to
+     * @param newY the y-position to move a LightSource to
      * @return true if any light was moved, or false otherwise
      */
-    public boolean moveLight(int oldX, int oldY, int newX, int newY)
-    {
-        return moveLight(Coord.get(oldX, oldY), Coord.get(newX, newY));
+    public boolean moveLight(int oldX, int oldY, int newX, int newY) {
+        return moveLight(Coord.get(oldX, oldY), Coord.get(newX, newY), 0);
     }
+
     /**
-     * If a Radiance is present at oldPosition, this will move it to newPosition and overwrite any existing Radiance at
-     * newPosition. If no Radiance is present at oldPosition, this does nothing.
-     * @param oldPosition the Coord to move a Radiance from
-     * @param newPosition the Coord to move a Radiance to
+     * If at least one LightSource is present at oldX,oldY, this will move the nth LightSource at oldX,oldY, where
+     * n is {@code index}, to newX,newY.
+     * If no LightSource is present at oldX,oldY, this does nothing. This also does nothing if index is greater than
+     * or equal to the number of lights at oldX,oldY.
+     * This will not remove any LightSource already present at newX,newY.
+     *
+     * @param oldX  the x-position to move a LightSource from
+     * @param oldY  the y-position to move a LightSource from
+     * @param newX  the x-position to move a LightSource to
+     * @param newY  the y-position to move a LightSource to
+     * @param index which of the possible lights at oldPosition to move
      * @return true if any light was moved, or false otherwise
      */
-    public boolean moveLight(Coord oldPosition, Coord newPosition)
-    {
+    public boolean moveLight(int oldX, int oldY, int newX, int newY, int index) {
+        return moveLight(Coord.get(oldX, oldY), Coord.get(newX, newY), index);
+    }
+
+    /**
+     * If at least one LightSource is present at oldPosition, this will move the first LightSource to newPosition.
+     * If no LightSource is present at oldPosition, this does nothing. This will not remove any LightSource already
+     * present at newPosition.
+     *
+     * @param oldPosition the Coord to move a LightSource from
+     * @param newPosition the Coord to move a LightSource to
+     * @return true if any light was moved, or false otherwise
+     */
+    public boolean moveLight(Coord oldPosition, Coord newPosition) {
+        return moveLight(oldPosition, newPosition, 0);
+    }
+
+    /**
+     * If at least one LightSource is present at oldPosition, this will move the nth LightSource at oldPosition, where
+     * n is {@code index}, to newPosition.
+     * If no LightSource is present at oldPosition, this does nothing. This also does nothing if index is greater than
+     * or equal to the number of lights at oldPosition.
+     * This will not remove any LightSource already present at newPosition.
+     *
+     * @param oldPosition the Coord to move a LightSource from
+     * @param newPosition the Coord to move a LightSource to
+     * @param index       which of the possible lights at oldPosition to move
+     * @return true if any light was moved, or false otherwise
+     */
+    public boolean moveLight(Coord oldPosition, Coord newPosition, int index) {
         LightSource ls;
         for (int i = 0; i < lights.size; i++) {
-            if ((ls = lights.get(i)).position.equals(oldPosition)) {
+            if ((ls = lights.get(i)).position.equals(oldPosition) && index-- <= 0) {
                 ls.position = newPosition;
                 return true;
             }
@@ -353,25 +401,52 @@ public class LightingManager {
     }
 
     /**
-     * Gets the Radiance at the given position, if present, or null if there is no light source there.
+     * Gets the first LightSource at the given position, if present, or null if there is no LightSource there.
+     *
      * @param x the x-position to look up
      * @param y the y-position to look up
-     * @return the Radiance at the given position, or null if none is present there
+     * @return the first LightSource at the given position, or null if none is present there
      */
-    public LightSource get(int x, int y)
-    {
+    public LightSource get(int x, int y) {
         return get(Coord.get(x, y));
     }
+
     /**
-     * Gets the Radiance at the given position, if present, or null if there is no light source there.
-     * @param position the position to look up
-     * @return the Radiance at the given position, or null if none is present there
+     * Gets the nth LightSource at the given position, where n is {@code index},
+     * or null if there is no LightSource there.
+     *
+     * @param x     the x-position to look up
+     * @param y     the y-position to look up
+     * @param index which LightSource to get from the given position
+     * @return the nth LightSource at the given position, or null if none is present there
      */
-    public LightSource get(Coord position)
-    {
+    public LightSource get(int x, int y, int index) {
+        return get(Coord.get(x, y), index);
+    }
+
+    /**
+     * Gets the first LightSource at the given position, if present,
+     * or null if there is no LightSource there.
+     *
+     * @param position the position to look up
+     * @return the first LightSource at the given position, or null if none is present there
+     */
+    public LightSource get(Coord position) {
+        return get(position, 0);
+    }
+
+    /**
+     * Gets the nth LightSource at the given position, where n is {@code index},
+     * or null if there is no LightSource there.
+     *
+     * @param position the position to look up
+     * @param index    which LightSource to get from the given position
+     * @return the nth LightSource at the given position, or null if none is present there
+     */
+    public LightSource get(Coord position, int index) {
         LightSource ls;
         for (int i = 0; i < lights.size; i++) {
-            if ((ls = lights.get(i)).position.equals(position)) {
+            if ((ls = lights.get(i)).position.equals(position) && index-- <= 0) {
                 return ls;
             }
         }
@@ -387,10 +462,10 @@ public class LightingManager {
      * <br>
      * This is very limited-use; the related method {@link #mixColoredLighting(float, int)} is used as part of
      * {@link #update()}, but this method is meant for when multiple colors of FOV light need to be mixed at once.
+     *
      * @param flare boosts the effective strength of lighting in {@link #fovLightColors}; usually from 0 to 1
      */
-    public void mixColoredLighting(float flare)
-    {
+    public void mixColoredLighting(float flare) {
         int[][] basis = colorLighting, other = fovLightColors;
         float[][] basisStrength = lightingStrength, otherStrength = lightFromFOV;
         flare += 1f;
@@ -423,7 +498,7 @@ public class LightingManager {
                         if (x < width - 1 && losResult[x + 1][y] > 0 && otherStrength[x + 1][y] > 0 && resistances[x + 1][y] < 1) {
                             os = otherStrength[x][y];
                         }
-                        if(os > 0f) o = other[x][y];
+                        if (os > 0f) o = other[x][y];
                         else continue;
                     } else {
                         os = otherStrength[x][y];
@@ -465,11 +540,11 @@ public class LightingManager {
      * <br>
      * This has limited use outside this class, unless you are reimplementing part of {@link #update()} or something
      * like it.
+     *
      * @param flare boosts the effective strength of lighting in {@link #lightFromFOV}; usually from 0 to 1
      * @param color the Oklab color to mix in where the light strength in {@link #lightFromFOV} is greater than 0
      */
-    public void mixColoredLighting(float flare, int color)
-    {
+    public void mixColoredLighting(float flare, int color) {
         final int[][] basis = colorLighting;
         final float[][] basisStrength = lightingStrength;
         final float[][] otherStrength = lightFromFOV;
@@ -483,8 +558,8 @@ public class LightingManager {
                         os = 0f;
                         if (y > 0) {
                             if ((losResult[x][y - 1] > 0 && otherStrength[x][y - 1] > 0 && resistances[x][y - 1] < 1)
-                            || (x > 0 && losResult[x - 1][y - 1] > 0 && otherStrength[x - 1][y - 1] > 0 && resistances[x - 1][y - 1] < 1)
-                            || (x < width - 1 && losResult[x + 1][y - 1] > 0 && otherStrength[x + 1][y - 1] > 0 && resistances[x + 1][y - 1] < 1)) {
+                                    || (x > 0 && losResult[x - 1][y - 1] > 0 && otherStrength[x - 1][y - 1] > 0 && resistances[x - 1][y - 1] < 1)
+                                    || (x < width - 1 && losResult[x + 1][y - 1] > 0 && otherStrength[x + 1][y - 1] > 0 && resistances[x + 1][y - 1] < 1)) {
                                 os = otherStrength[x][y];
                             }
                         }
@@ -501,10 +576,10 @@ public class LightingManager {
                         if (x < width - 1 && losResult[x + 1][y] > 0 && otherStrength[x + 1][y] > 0 && resistances[x + 1][y] < 1) {
                             os = otherStrength[x][y];
                         }
-                        if(os > 0f) o = color;
+                        if (os > 0f) o = color;
                         else continue;
                     } else {
-                        if((os = otherStrength[x][y]) != 0) o = color;
+                        if ((os = otherStrength[x][y]) != 0) o = color;
                         else continue;
                     }
                     bs = basisStrength[x][y];
@@ -540,8 +615,7 @@ public class LightingManager {
      * be called once per frame. This method is usually called before each call to {@link #draw(int[][])}, but other
      * code may be between the calls and may affect the lighting in customized ways.
      */
-    public void update()
-    {
+    public void update() {
         ArrayTools.fill(lightingStrength, 0f);
         ArrayTools.fill(colorLighting, getNeutralColor());
         final int sz = lights.size();
@@ -550,17 +624,18 @@ public class LightingManager {
         for (int i = 0; i < sz; i++) {
             ls = lights.get(i);
             pos = ls.position;
-            if(!noticeable.contains(pos))
+            if (!noticeable.contains(pos))
                 continue;
             Radiance radiance = ls.radiance;
-            if(radiance == null) continue;
-            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+            if (radiance == null) continue;
+            if (symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
                 symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             else
                 FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy, ls.direction, ls.span);
             mixColoredLighting(radiance.flare, radiance.color);
         }
     }
+
     /**
      * Typically called every frame when there isn't a single viewer, this updates the flicker and strobe effects of
      * Radiance objects and applies those changes in lighting color and strength to the various fields of this
@@ -569,14 +644,13 @@ public class LightingManager {
      * are considered visible unless they are fully obstructed (solid cells behind walls, for example). Unlike update(),
      * this method does not need {@link #calculateFOV(Coord)} to be called for it to work properly.
      */
-    public void updateAll()
-    {
+    public void updateAll() {
         for (int x = 0; x < width; x++) {
             PER_CELL:
             for (int y = 0; y < height; y++) {
                 for (int xx = Math.max(0, x - 1), xi = 0; xi < 3 && xx < width; xi++, xx++) {
                     for (int yy = Math.max(0, y - 1), yi = 0; yi < 3 && yy < height; yi++, yy++) {
-                        if(resistances[xx][yy] < 1.0f){
+                        if (resistances[xx][yy] < 1.0f) {
                             losResult[x][y] = 1.0f;
                             continue PER_CELL;
                         }
@@ -591,8 +665,8 @@ public class LightingManager {
             LightSource ls = lights.get(i);
             Coord pos = ls.position;
             Radiance radiance = ls.radiance;
-            if(radiance == null) continue;
-            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+            if (radiance == null) continue;
+            if (symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
                 symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy);
             else
                 FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.currentRange(), radiusStrategy, ls.direction, ls.span);
@@ -606,17 +680,18 @@ public class LightingManager {
             }
         }
     }
+
     /**
      * Updates the flicker and strobe effects of a Radiance object and applies the lighting from just that Radiance to
      * just the {@link #colorLighting} field, without changing FOV. This method is meant to be used for GUI effects that
      * aren't representative of something a character in the game could interact with. It is usually called after
      * {@link #update()} and before each call to {@link #draw(int[][])}, but other code may be between the calls
      * and may affect the lighting in customized ways.
-     * @param pos the position of the light effect
+     *
+     * @param pos      the position of the light effect
      * @param radiance the Radiance to update standalone, which does not need to be already added to this
      */
-    public void updateUI(Coord pos, Radiance radiance)
-    {
+    public void updateUI(Coord pos, Radiance radiance) {
         updateUI(pos.x, pos.y, radiance);
     }
 
@@ -626,12 +701,12 @@ public class LightingManager {
      * aren't representative of something a character in the game could interact with. It is usually called after
      * {@link #update()} and before each call to {@link #draw(int[][])}, but other code may be between the calls
      * and may affect the lighting in customized ways.
-     * @param lightX the x-position of the light effect
-     * @param lightY the y-position of the light effect
+     *
+     * @param lightX   the x-position of the light effect
+     * @param lightY   the y-position of the light effect
      * @param radiance the Radiance to update standalone, which does not need to be already added to this
      */
-    public void updateUI(int lightX, int lightY, Radiance radiance)
-    {
+    public void updateUI(int lightX, int lightY, Radiance radiance) {
         symmetry.getFov(resistances, lightFromFOV, lightX, lightY, radiance.currentRange(), radiusStrategy);
         mixColoredLighting(radiance.flare, radiance.color);
     }
@@ -646,10 +721,10 @@ public class LightingManager {
      * {@link #lightingStrength} to determine how much the lights should affect the background color.
      * <br>
      * If this class is extended, this method should be considered as one to override.
+     *
      * @param backgrounds a 2D int array, which will be modified in-place; visible cells will receive RGBA8888 colors
      */
-    public void draw(int[][] backgrounds)
-    {
+    public void draw(int[][] backgrounds) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (losResult[x][y] > 0.0f && fovResult[x][y] > 0.0f) {
@@ -670,15 +745,15 @@ public class LightingManager {
      * {@link #lightingStrength} to determine how much the lights should affect the background color.
      * <br>
      * If this class is extended, this method should be considered as one to override.
+     *
      * @param backgrounds a 2D int array, which will be modified in-place; visible cells will receive Oklab colors
      */
-    public void drawOklab(int[][] backgrounds)
-    {
+    public void drawOklab(int[][] backgrounds) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (losResult[x][y] > 0.0f && fovResult[x][y] > 0.0f) {
-                        backgrounds[x][y] = DescriptiveColor.lerpColorsBlended(backgroundColor,
-                                colorLighting[x][y], lightingStrength[x][y]);
+                    backgrounds[x][y] = DescriptiveColor.lerpColorsBlended(backgroundColor,
+                            colorLighting[x][y], lightingStrength[x][y]);
                 }
             }
         }
@@ -693,11 +768,11 @@ public class LightingManager {
      * to be called before {@link #updateAll()} (with no arguments) because that doesn't need a viewer. Sets
      * {@link #fovResult}, {@link #losResult}, and {@link #noticeable} based on the given viewer position and any lights
      * in {@link #lights}.
+     *
      * @param viewer the position of the player or other viewer
      * @return the calculated FOV 2D array, which is also stored in {@link #fovResult}
      */
-    public float[][] calculateFOV(Coord viewer)
-    {
+    public float[][] calculateFOV(Coord viewer) {
         return calculateFOV(viewer.x, viewer.y);
     }
 
@@ -710,12 +785,12 @@ public class LightingManager {
      * to be called before {@link #updateAll()} (with no arguments) because that doesn't need a viewer. Sets
      * {@link #fovResult}, {@link #losResult}, and {@link #noticeable} based on the given viewer position and any lights
      * in {@link #lights}.
+     *
      * @param viewerX the x-position of the player or other viewer
      * @param viewerY the y-position of the player or other viewer
      * @return the calculated FOV 2D array, which is also stored in {@link #fovResult}
      */
-    public float[][] calculateFOV(int viewerX, int viewerY)
-    {
+    public float[][] calculateFOV(int viewerX, int viewerY) {
         return calculateFOV(viewerX, viewerY, 0, 0, width, height);
     }
 
@@ -730,16 +805,16 @@ public class LightingManager {
      * {@code minY} and {@code maxY}, ignoring any lights outside that area (typically because they are a long way out
      * from the map's shown area). Sets {@link #fovResult}, {@link #losResult}, and {@link #noticeable} based on the
      * given viewer position and any lights in {@link #lights}.
+     *
      * @param viewerX the x-position of the player or other viewer
      * @param viewerY the y-position of the player or other viewer
-     * @param minX inclusive lower bound on x to calculate
-     * @param minY inclusive lower bound on y to calculate
-     * @param maxX exclusive upper bound on x to calculate
-     * @param maxY exclusive upper bound on y to calculate
+     * @param minX    inclusive lower bound on x to calculate
+     * @param minY    inclusive lower bound on y to calculate
+     * @param maxX    exclusive upper bound on x to calculate
+     * @param maxY    exclusive upper bound on y to calculate
      * @return the calculated FOV 2D array, which is also stored in {@link #fovResult}
      */
-    public float[][] calculateFOV(int viewerX, int viewerY, int minX, int minY, int maxX, int maxY)
-    {
+    public float[][] calculateFOV(int viewerX, int viewerY, int minX, int minY, int maxX, int maxY) {
         Radiance radiance;
         minX = Math.min(Math.max(minX, 0), width);
         maxX = Math.min(Math.max(maxX, 0), width);
@@ -756,9 +831,9 @@ public class LightingManager {
             ls = lights.get(i);
             pos = ls.position;
             radiance = ls.radiance;
-            if(radiance == null) continue;
+            if (radiance == null) continue;
             range = radiance.range;
-            if(range > maxRange &&
+            if (range > maxRange &&
                     pos.x + range >= minX && pos.x - range < maxX && pos.y + range >= minY && pos.y - range < maxY)
                 maxRange = range;
         }
@@ -767,11 +842,11 @@ public class LightingManager {
         for (int i = 0; i < sz; i++) {
             ls = lights.get(i);
             pos = ls.position;
-            if(!noticeable.contains(pos))
+            if (!noticeable.contains(pos))
                 continue;
             radiance = ls.radiance;
-            if(radiance == null) continue;
-            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+            if (radiance == null) continue;
+            if (symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
                 symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
             else
                 FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy, ls.direction, ls.span);
@@ -798,15 +873,15 @@ public class LightingManager {
      * {@code minY} and {@code maxY}, ignoring any lights outside that area (typically because they are a long way out
      * from the map's shown area). Sets {@link #fovResult}, {@link #losResult}, and {@link #noticeable} based on the
      * given viewer position and any lights in {@link #lights}.
+     *
      * @param viewers an ObjectFloatMap with Coord keys representing viewer positions and float values for their vision ranges; often a {@link CoordFloatOrderedMap}
-     * @param minX inclusive lower bound on x to calculate
-     * @param minY inclusive lower bound on y to calculate
-     * @param maxX exclusive upper bound on x to calculate
-     * @param maxY exclusive upper bound on y to calculate
+     * @param minX    inclusive lower bound on x to calculate
+     * @param minY    inclusive lower bound on y to calculate
+     * @param maxX    exclusive upper bound on x to calculate
+     * @param maxY    exclusive upper bound on y to calculate
      * @return the calculated FOV 2D array, which is also stored in {@link #fovResult}
      */
-    public float[][] calculateFOV(ObjectFloatMap<Coord> viewers, int minX, int minY, int maxX, int maxY)
-    {
+    public float[][] calculateFOV(ObjectFloatMap<Coord> viewers, int minX, int minY, int maxX, int maxY) {
         Radiance radiance;
         minX = Math.min(Math.max(minX, 0), width);
         maxX = Math.min(Math.max(maxX, 0), width);
@@ -814,7 +889,7 @@ public class LightingManager {
         maxY = Math.min(Math.max(maxY, 0), height);
         ArrayTools.fill(fovResult, 0f);
         ArrayTools.fill(losResult, 0f);
-        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
+        for (ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
             symmetry.getFov(resistances, floatCombining, e.key.x, e.key.y, e.value, radiusStrategy);
             FOV.addFOVsInto(fovResult, floatCombining);
         }
@@ -828,13 +903,13 @@ public class LightingManager {
             ls = lights.get(i);
             pos = ls.position;
             radiance = ls.radiance;
-            if(radiance == null) continue;
+            if (radiance == null) continue;
             range = radiance.range;
-            if(range > maxRange &&
+            if (range > maxRange &&
                     pos.x + range >= minX && pos.x - range < maxX && pos.y + range >= minY && pos.y - range < maxY)
                 maxRange = range;
         }
-        for(ObjectFloatMap.Entry<Coord> e : viewers.entrySet()){
+        for (ObjectFloatMap.Entry<Coord> e : viewers.entrySet()) {
             FOV.reuseLOS(resistances, floatCombining, e.key.x, e.key.y, minX, minY, maxX, maxY);
             FOV.addFOVsInto(losResult, floatCombining);
         }
@@ -842,11 +917,11 @@ public class LightingManager {
         for (int i = 0; i < sz; i++) {
             ls = lights.get(i);
             pos = ls.position;
-            if(!noticeable.contains(pos))
+            if (!noticeable.contains(pos))
                 continue;
             radiance = ls.radiance;
-            if(radiance == null) continue;
-            if(symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
+            if (radiance == null) continue;
+            if (symmetry == SymmetryMode.SYMMETRICAL || ls.span >= 1f)
                 symmetry.getFov(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy);
             else
                 FOV.reuseFOVTurns(resistances, lightFromFOV, pos.x, pos.y, radiance.range, radiusStrategy, ls.direction, ls.span);
