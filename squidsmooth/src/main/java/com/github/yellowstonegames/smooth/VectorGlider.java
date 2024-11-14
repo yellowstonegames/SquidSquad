@@ -16,40 +16,41 @@
 
 package com.github.yellowstonegames.smooth;
 
-import com.github.tommyettinger.digital.Interpolations;
-import com.github.yellowstonegames.grid.Point2Float;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * Allows specifying a smoothly-changing float position using a libGDX Point2Float for the start and the end, with a change
+ * Allows specifying a smoothly-changing float position using a libGDX Vector2 for the start and the end, with a change
  * amount that affects how far a position has moved from start to end. Typical usage sets the start with
- * {@link #setStart(Point2Float)} once and the end more than once with {@link #setEnd(Point2Float)}, changing the end each time the
+ * {@link #setStart(Vector2)} once and the end more than once with {@link #setEnd(Vector2)}, changing the end each time the
  * move is complete. The x and y positions are automatically calculated in {@link #getX()} and {@link #getY()}, and
  * their values will be different every time {@link #setChange(float)} is called with a different amount. You can
- * optionally use an {@link Interpolations.Interpolator} to make the rate of change different.
+ * optionally use an {@link Interpolation} to make the rate of change different.
  * <br>
  * This is extremely similar to {@link CoordGlider}, but instead of locking positions to integer coordinates, this
  * allows movement to non-integer positions. This should be useful for small movements like shaking or bumping.
  * <br>
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
-public class Float2Glider extends Glider {
-    protected @NonNull Point2Float start;
-    protected @NonNull Point2Float end;
+public class VectorGlider extends Glider {
+    protected @NonNull Vector2 start;
+    protected @NonNull Vector2 end;
 
-    public Float2Glider() {
+    public VectorGlider() {
         super();
-        start = new Point2Float();
-        end = new Point2Float();
+        start = new Vector2();
+        end = new Vector2();
     }
 
     /**
-     * Assigns {@code 0,0} into start and end into end; does not continue to use the reference to the parameter end.
+     * Assigns {@link Vector2#Zero} into start and end into end; does not continue to use the reference to the parameter end, or Zero.
      * @param end will be copied into end
      */
-    public Float2Glider(@NonNull Point2Float end) {
+    public VectorGlider(@NonNull Vector2 end) {
         super(new Changer("x", 0f, end.x), new Changer("y", 0f, end.y));
-        this.start = new Point2Float(0f, 0f);
+        this.start = new Vector2(0f, 0f);
         this.end = end.cpy();
     }
 
@@ -58,7 +59,7 @@ public class Float2Glider extends Glider {
      * @param start will be copied into start
      * @param end will be copied into end
      */
-    public Float2Glider(@NonNull Point2Float start, @NonNull Point2Float end) {
+    public VectorGlider(@NonNull Vector2 start, @NonNull Vector2 end) {
         super(new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start.cpy();
         this.end = end.cpy();
@@ -68,16 +69,16 @@ public class Float2Glider extends Glider {
      * Copies start into start and end into end; does not continue to use references to the parameters.
      * @param start will be copied into start
      * @param end will be copied into end
-     * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolations}
+     * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolation}
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public Float2Glider(@NonNull Point2Float start, @NonNull Point2Float end, Interpolations.@NonNull Interpolator interpolation, Runnable completeRunner) {
+    public VectorGlider(@NonNull Vector2 start, @NonNull Vector2 end, @NonNull Interpolation interpolation, Runnable completeRunner) {
         super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start.cpy();
         this.end = end.cpy();
     }
 
-    public Float2Glider(Float2Glider other) {
+    public VectorGlider(VectorGlider other) {
         super(other);
         this.start = other.start.cpy();
         this.end = other.end.cpy();
@@ -86,10 +87,10 @@ public class Float2Glider extends Glider {
         this.completeRunner = other.completeRunner;
     }
 
-    public Float2Glider(Glider other) {
+    public VectorGlider(Glider other) {
         super(other);
-        this.start = new Point2Float(other.getStartFloat("x"), other.getStartFloat("y"));
-        this.end = new Point2Float(other.getEndFloat("x"), other.getEndFloat("y"));
+        this.start = new Vector2(other.getStartFloat("x"), other.getStartFloat("y"));
+        this.end = new Vector2(other.getEndFloat("x"), other.getEndFloat("y"));
         this.change = other.change;
         this.interpolation = other.interpolation;
         this.completeRunner = other.completeRunner;
@@ -106,11 +107,11 @@ public class Float2Glider extends Glider {
     }
 
     @NonNull
-    public Point2Float getStart() {
+    public Vector2 getStart() {
         return start;
     }
 
-    public void setStart(@NonNull Point2Float start) {
+    public void setStart(@NonNull Vector2 start) {
         this.start.set(start);
         setStartFloat("x", start.x);
         setStartFloat("y", start.y);
@@ -118,11 +119,11 @@ public class Float2Glider extends Glider {
     }
 
     @NonNull
-    public Point2Float getEnd() {
+    public Vector2 getEnd() {
         return end;
     }
 
-    public void setEnd(@NonNull Point2Float end) {
+    public void setEnd(@NonNull Vector2 end) {
         this.end.set(end);
         setEndFloat("x", end.x);
         setEndFloat("y", end.y);
@@ -137,7 +138,7 @@ public class Float2Glider extends Glider {
 
     @Override
     public String toString() {
-        return "Float2Glider{" +
+        return "VectorGlider{" +
                 "start=" + start +
                 ", end=" + end +
                 ", changers=" + changers +

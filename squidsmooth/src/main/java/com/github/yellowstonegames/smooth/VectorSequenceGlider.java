@@ -16,54 +16,54 @@
 
 package com.github.yellowstonegames.smooth;
 
+import com.badlogic.gdx.math.Vector2;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.Direction;
-import com.github.yellowstonegames.grid.Point2Float;
 
+import static com.badlogic.gdx.math.Vector2.Zero;
 import static com.github.yellowstonegames.grid.Direction.*;
 
 /**
- * Allows chaining a sequence of Float2Glider movements.
+ * Very experimental; allows chaining a sequence of VectorGlider movements.
  */
 @Beta
-public class Float2SequenceGlider extends SequenceGlider {
+public class VectorSequenceGlider extends SequenceGlider {
 
-    private static final Point2Float Zero = new Point2Float(0, 0);
     /**
      * A VectorSequenceGlider that has no movements; useful as a default value. You probably want to copy this using
      * {@link #copy()} instead of modifying this global reference, though there aren't many changes that will make a
      * difference in the behavior of this particular global.
      */
-    public static final Float2SequenceGlider EMPTY = new Float2SequenceGlider();
+    public static final VectorSequenceGlider EMPTY = new VectorSequenceGlider();
 
     /**
      * Predefined VectorSequenceGliders for bump animations in different directions (keyed by that direction). It is strongly
      * recommended that you copy the VectorSequenceGlider value using {@link #copy()}, and avoid using it directly.
      */
-    public static final ObjectObjectOrderedMap<Direction, Float2SequenceGlider> BUMPS =
+    public static final ObjectObjectOrderedMap<Direction, VectorSequenceGlider> BUMPS =
             ObjectObjectOrderedMap.with(
-                    UP,         new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(0, 0.5f)), new Float2Glider(new Point2Float(0, 0.5f), Zero)}, new float[]{3f, 5f}),
-                    UP_RIGHT,   new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(0.35f, 0.35f)), new Float2Glider(new Point2Float(0.35f, 0.35f), Zero)}, new float[]{3f, 5f}),
-                    RIGHT,      new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(0.5f, 0f)), new Float2Glider(new Point2Float(0.5f, 0f), Zero)}, new float[]{3f, 5f}),
-                    DOWN_RIGHT, new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(0.35f, -0.35f)), new Float2Glider(new Point2Float(0.35f, -0.35f), Zero)}, new float[]{3f, 5f}),
-                    DOWN,       new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(0, -0.5f)), new Float2Glider(new Point2Float(0, -0.5f), Zero)}, new float[]{3f, 5f}),
-                    DOWN_LEFT,  new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(-0.35f, -0.35f)), new Float2Glider(new Point2Float(-0.35f, -0.35f), Zero)}, new float[]{3f, 5f}),
-                    LEFT,       new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(-0.5f, 0f)), new Float2Glider(new Point2Float(-0.5f, 0f), Zero)}, new float[]{3f, 5f}),
-                    UP_LEFT,    new Float2SequenceGlider(new Float2Glider[]{new Float2Glider(new Point2Float(-0.35f, 0.35f)), new Float2Glider(new Point2Float(-0.35f, 0.35f), Zero)}, new float[]{3f, 5f})
+                    UP,         new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0, 0.5f)), new VectorGlider(new Vector2(0, 0.5f), Zero)}, new float[]{3f, 5f}),
+                    UP_RIGHT,   new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0.35f, 0.35f)), new VectorGlider(new Vector2(0.35f, 0.35f), Zero)}, new float[]{3f, 5f}),
+                    RIGHT,      new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0.5f, 0f)), new VectorGlider(new Vector2(0.5f, 0f), Zero)}, new float[]{3f, 5f}),
+                    DOWN_RIGHT, new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0.35f, -0.35f)), new VectorGlider(new Vector2(0.35f, -0.35f), Zero)}, new float[]{3f, 5f}),
+                    DOWN,       new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(0, -0.5f)), new VectorGlider(new Vector2(0, -0.5f), Zero)}, new float[]{3f, 5f}),
+                    DOWN_LEFT,  new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(-0.35f, -0.35f)), new VectorGlider(new Vector2(-0.35f, -0.35f), Zero)}, new float[]{3f, 5f}),
+                    LEFT,       new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(-0.5f, 0f)), new VectorGlider(new Vector2(-0.5f, 0f), Zero)}, new float[]{3f, 5f}),
+                    UP_LEFT,    new VectorSequenceGlider(new VectorGlider[]{new VectorGlider(new Vector2(-0.35f, 0.35f)), new VectorGlider(new Vector2(-0.35f, 0.35f), Zero)}, new float[]{3f, 5f})
             );
 
-    public Float2SequenceGlider(){
-        this(new Float2Glider[0], new float[0]);
+    public VectorSequenceGlider(){
+        this(new VectorGlider[0], new float[0]);
     }
-    public Float2SequenceGlider(Float2Glider[] gliders, float[] lengths) {
+    public VectorSequenceGlider(VectorGlider[] gliders, float[] lengths) {
         super(gliders, lengths);
     }
 
-    public Float2SequenceGlider(Float2SequenceGlider other){
-        super(new Float2Glider[other.sequence.length], new float[other.durations.length]);
+    public VectorSequenceGlider(VectorSequenceGlider other){
+        super(new VectorGlider[other.sequence.length], new float[other.durations.length]);
         for (int i = 0; i < other.sequence.length; i++) {
-            sequence[i] = new Float2Glider(other.sequence[i]);
+            sequence[i] = new VectorGlider(other.sequence[i]);
             durations[i] = other.durations[i];
         }
         this.active = other.active;
@@ -73,8 +73,8 @@ public class Float2SequenceGlider extends SequenceGlider {
         this.completeRunner = other.completeRunner;
     }
 
-    public Float2SequenceGlider copy(){
-        return new Float2SequenceGlider(this);
+    public VectorSequenceGlider copy(){
+        return new VectorSequenceGlider(this);
     }
 
     public float getX()

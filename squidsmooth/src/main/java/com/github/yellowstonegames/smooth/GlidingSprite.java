@@ -35,7 +35,7 @@ public class GlidingSprite extends ParentSprite {
     @NonNull
     public CoordGlider location;
     @NonNull
-    public Float2SequenceGlider smallMotion;
+    public VectorSequenceGlider smallMotion;
     /**
      * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
      * This is public so external code can use it, but should never be modified.
@@ -43,7 +43,7 @@ public class GlidingSprite extends ParentSprite {
      * You can also use {@code setSmallMotion(null)} to stop any small motion.
      */
     @NonNull
-    public final Float2SequenceGlider ownEmptyMotion = Float2SequenceGlider.EMPTY.copy();
+    public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private GlidingSprite()
     {
@@ -90,11 +90,11 @@ public class GlidingSprite extends ParentSprite {
     }
 
     @NonNull
-    public Float2SequenceGlider getSmallMotion() {
+    public VectorSequenceGlider getSmallMotion() {
         return smallMotion;
     }
 
-    public void setSmallMotion(@Nullable Float2SequenceGlider smallMotion) {
+    public void setSmallMotion(@Nullable VectorSequenceGlider smallMotion) {
         if(smallMotion == null) this.smallMotion = ownEmptyMotion;
         else this.smallMotion = smallMotion;
     }
