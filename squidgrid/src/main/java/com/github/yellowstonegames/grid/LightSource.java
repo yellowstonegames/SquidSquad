@@ -1,6 +1,8 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A tiny data wrapper around a {@link #radiance} and a Coord {@link #position} for that Radiance, as well as,
@@ -23,10 +25,10 @@ public class LightSource {
         this(Coord.get(0,0), new Radiance(), 1f, 0f);
     }
 
-    public LightSource(Coord position, Radiance radiance) {
+    public LightSource(@NonNull Coord position, @NonNull Radiance radiance) {
         this(position, radiance, 1f, 0f);
     }
-    public LightSource(Coord position, Radiance radiance, float spanTurns, float directionTurns) {
+    public LightSource(@NonNull Coord position, @NonNull Radiance radiance, float spanTurns, float directionTurns) {
         this.radiance = radiance;
         this.position = position;
         this.span = spanTurns;
@@ -37,7 +39,7 @@ public class LightSource {
         return radiance;
     }
 
-    public void setRadiance(Radiance radiance) {
+    public void setRadiance(@NonNull Radiance radiance) {
         this.radiance = radiance;
     }
 
@@ -45,7 +47,7 @@ public class LightSource {
         return position;
     }
 
-    public void setPosition(Coord position) {
+    public void setPosition(@NonNull Coord position) {
         this.position = position;
     }
 
@@ -97,5 +99,26 @@ public class LightSource {
                 ", span=" + span +
                 ", direction=" + direction +
                 '}';
+    }
+
+    public String stringSerialize() {
+        return radiance.stringSerialize() + "`" + position.x + "`" + position.y + "`" + span + "`" + direction + "`";
+    }
+
+    public LightSource stringDeserialize(String data) {
+        if(data == null) return this;
+        int idx = data.indexOf("``", 1);
+        radiance.stringDeserialize(data);
+        position = Coord.get(
+                Base.SIMPLE64.readShort(data, idx + 1, idx = data.indexOf('`', idx + 1)),
+                Base.SIMPLE64.readShort(data, idx + 1, idx = data.indexOf('`', idx + 1))
+        );
+        span = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('`', idx + 1));
+        direction = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('`', idx + 1));
+        return this;
+    }
+
+    public static LightSource recreateFromString(String data) {
+        return new LightSource().stringDeserialize(data);
     }
 }

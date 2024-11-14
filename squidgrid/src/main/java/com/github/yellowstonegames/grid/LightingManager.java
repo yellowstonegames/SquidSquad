@@ -34,11 +34,12 @@ import java.util.Objects;
  * All fields are public and documented to encourage their use alongside the API methods. The typical usage case for
  * this class is when a game has complex lighting needs that should be consolidated into one LightingManager per level,
  * where a level corresponds to a {@code char[][]}. After constructing a LightingManager with the resistances for a
- * level, you should add all light sources with their positions, either using {@link #addLight(int, int, Radiance)} or
- * by directly putting keys and values into {@link #lights}. Then you can calculate the visible cells once lighting is
- * considered (which may include distant lit cells with unseen but unobstructing cells between the viewer and the light)
- * using {@link #calculateFOV(Coord)}, which should be called every time the viewer moves. You can update the flicker
- * and strobe effects on all Radiance objects, which is typically done every frame, using {@link #update()} or
+ * level, you should add all light sources with their positions, such as by using {@link #addLight(int, int, Radiance)}
+ * to create a {@link LightSource} with a specific {@link Radiance} at a position, or by directly putting keys and
+ * values into {@link #lights}. Then you can calculate the visible cells once lighting is considered (which may include
+ * distant lit cells with unseen but unobstructing cells between the viewer and the light) using
+ * {@link #calculateFOV(Coord)}, which should be called every time the viewer moves. You can update the flicker
+ * and strobe effects on all light sources, which is typically done every frame, using {@link #update()} or
  * {@link #updateAll()} (updateAll() is for when there is no viewer), and once that update() call has been made you can
  * call {@link #draw(int[][])} to change a 2D int array that holds packed int colors (such as the backgrounds in a
  * GlyphMap). To place user-interface lighting effects that don't affect the in-game-world lights, you can use
@@ -46,7 +47,8 @@ import java.util.Objects;
  * <br>
  * This class uses the same Oklab color space that {@link DescriptiveColor} uses for almost every place it deals with
  * color. The exception here is {@link #draw(int[][])}, which uses Oklab internally but converts the colors to RGBA8888
- * when it outputs them.
+ * when it outputs them. You can use the alternative class {@link LightingManagerRgb} if you want to use RGBA colors
+ * throughout the lighting code.
  * <br>
  * Honestly, this class is quite complex, and you should really take a look at a demo that uses it to see how the
  * different parts fit together. If you have the SquidSquad test sources, LightingTest in squidglyph provides a
@@ -122,7 +124,7 @@ public class LightingManager {
     /**
      * A temporary work-area variable used to add up or combine multiple float[][] variables.
      */
-    private float[][] floatCombining;
+    private final float[][] floatCombining;
     /**
      * A 2D array that stores the color of light in each cell, as a packed Oklab int color. This 2D array is the size of
      * the map, as defined by {@link #resistances} initially and later available in {@link #width} and {@link #height}.

@@ -487,12 +487,12 @@ public final class JsonGrid {
     /**
      * Registers Radiance with the given Json object, so Radiance can be written to and read from JSON.
      * This is a simple wrapper around Radiance's built-in {@link Radiance#stringSerialize()} and
-     * {@link Radiance#stringDeserialize(String)} methods.
+     * {@link Radiance#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerRadiance(@NonNull Json json) {
-        json.addClassTag("Radi", Radiance.class);
+        json.addClassTag("Rada", Radiance.class);
         json.setSerializer(Radiance.class, new Json.Serializer<Radiance>() {
             @Override
             public void write(Json json, Radiance object, Class knownType) {
@@ -504,7 +504,7 @@ public final class JsonGrid {
             @Override
             public Radiance read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
-                return Radiance.stringDeserialize(jsonData.get("v").asString());
+                return Radiance.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -1251,7 +1251,7 @@ public final class JsonGrid {
                 Region noticeable = json.readValue(Region.class, jsonData.get("noticeable"));
                 Radius radiusStrategy = Radius.valueOf(json.readValue(String.class, jsonData.get("radiusStrategy")));
                 LightingManager.SymmetryMode symmetry = LightingManager.SymmetryMode.valueOf(json.readValue(String.class, jsonData.get("symmetry")));
-                ObjectDeque<LightSource> lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
+                ObjectDeque<LightSource> lights = json.readValue(ObjectDeque.class, LightSource.class, jsonData.get("lights"));
                 LightingManager data = new LightingManager(resistances, backgroundColor, radiusStrategy, viewerRange, symmetry);
                 data.width = width;
                 data.height = height;
@@ -1321,7 +1321,7 @@ public final class JsonGrid {
                 Region noticeable = json.readValue(Region.class, jsonData.get("noticeable"));
                 Radius radiusStrategy = Radius.valueOf(json.readValue(String.class, jsonData.get("radiusStrategy")));
                 LightingManagerRgb.SymmetryMode symmetry = LightingManagerRgb.SymmetryMode.valueOf(json.readValue(String.class, jsonData.get("symmetry")));
-                ObjectDeque<LightSource> lights = json.readValue(CoordObjectOrderedMap.class, Radiance.class, jsonData.get("lights"));
+                ObjectDeque<LightSource> lights = json.readValue(ObjectDeque.class, LightSource.class, jsonData.get("lights"));
                 LightingManagerRgb data = new LightingManagerRgb(resistances, backgroundColor, radiusStrategy, viewerRange, symmetry);
                 data.width = width;
                 data.height = height;

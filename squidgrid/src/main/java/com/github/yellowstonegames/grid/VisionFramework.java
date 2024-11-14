@@ -27,7 +27,7 @@ import java.util.Objects;
 /**
  * A "one-stop shop" for handling field-of-view, line-of-sight, (colorful) light sources, and more.
  * Encapsulates currently-visible and previously-seen cell data, and allows updating and modifying light levels/colors.
- * This controls a {@link LightingManager}, which manages {@link Radiance} light sources. This tracks which cells on a
+ * This controls a {@link LightingManager}, which manages {@link LightSource} objects. This tracks which cells on a
  * place-map grid have been seen before, which are currently visible, which just became visible and which just became
  * hidden, among other things. This tracks a map as a {@code char[][]}, typically but not always using box-drawing
  * characters, but these chars can merely be used as abbreviations for what graphic to display in a non-text-based game.
@@ -53,7 +53,7 @@ import java.util.Objects;
  * To recap, the methods here get called in this order:
  * <ol>
  *     <li>Call {@link #restart} when an area map is loaded, giving it the viewer(s) and their vision range(s).</li>
- *     <li>Call {@link LightingManager#addLight(Coord, Radiance)} on {@link #lighting} for every light source.</li>
+ *     <li>Call {@link LightingManager#addLight(Coord, Radiance)} on {@link #lighting} for every light source, or otherwise add {@link LightSource} values to that {@link LightingManager}.</li>
  *     <li>Every "turn" (when an input is entered), call {@link LightingManager#moveLight(Coord, Coord)} if a light source moved.</li>
  *     <li>Every "turn" (when an input is entered), call {@link #removeViewer(Coord)} if a viewer was removed.</li>
  *     <li>Every "turn" (when an input is entered), call {@link #moveViewer(Coord, Coord)} if a viewer moved.</li>

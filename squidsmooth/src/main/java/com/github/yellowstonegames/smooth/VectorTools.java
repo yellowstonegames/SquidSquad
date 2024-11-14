@@ -63,7 +63,7 @@ public class VectorTools {
      * @param receiving a non-null Vector2 that will have its contents reassigned
      * @return receiving, after modifications
      */
-    public static Vector2 deserializeString(String data, Vector2 receiving) {
+    public static Vector2 stringDeserialize(String data, Vector2 receiving) {
         int idx = data.indexOf('~');
         receiving.x = Base.BASE10.readFloat(data, 0, idx);
         receiving.y = Base.BASE10.readFloat(data, idx+1, data.length());
@@ -71,12 +71,12 @@ public class VectorTools {
     }
 
     /**
-     * Deserializes a Vector2 from the given String using {@link #deserializeString(String, Vector2)}, allocating a new
+     * Deserializes a Vector2 from the given String using {@link #stringDeserialize(String, Vector2)}, allocating a new
      * Vector2 that this returns.
      * @param data a String containing a serialized Vector2
      * @return a new Vector2 using the values from data
      */
-    public static Vector2 deserializeString(String data) {
-        return deserializeString(data, new Vector2());
+    public static Vector2 recreateFromString(String data) {
+        return stringDeserialize(data, new Vector2());
     }
 }

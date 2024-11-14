@@ -360,7 +360,21 @@ public class Radiance {
         return sb.toString();
     }
     
-    public static Radiance stringDeserialize(String data)
+    public Radiance stringDeserialize(String data)
+    {
+        if(data == null) return this;
+        int idx = 0;
+        range = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        color = Base.SIMPLE64.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        flicker = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        strobe = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        delay = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        flare = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('~', idx + 1));
+        seed = Base.SIMPLE64.readInt(data, idx + 1, data.indexOf('`', idx + 1));
+        return this;
+    }
+
+    public static Radiance recreateFromString(String data)
     {
         if(data == null) return null;
         int idx = 0;
