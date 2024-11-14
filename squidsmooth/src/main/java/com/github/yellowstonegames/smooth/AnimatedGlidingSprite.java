@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * {@link #getLocation()}, which should be used to determine or change where this started its move, where it is going,
  * and how far it has gone between the two. You Must Call {@link #animate(float)} with an increasing float parameter
  * when you want the animation to be playing; otherwise it will stay on the first frame (or a later frame if you stop
- * calling animate() at some other point). You can use the {@link VectorSequenceGlider} {@link #smallMotion} to move
+ * calling animate() at some other point). You can use the {@link Float2SequenceGlider} {@link #smallMotion} to move
  * this Sprite at a finer resolution than between Coords for start and end points.
  * <br>
  * You probably want to use Textures with a width and height of 1 world unit in
@@ -42,7 +42,7 @@ public class AnimatedGlidingSprite extends ParentSprite {
     @NonNull
     public CoordGlider location;
     @NonNull
-    public VectorSequenceGlider smallMotion;
+    public Float2SequenceGlider smallMotion;
     /**
      * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
      * This is public so external code can use it, but should never be modified.
@@ -50,7 +50,7 @@ public class AnimatedGlidingSprite extends ParentSprite {
      * You can also use {@code setSmallMotion(null)} to stop any small motion.
      */
     @NonNull
-    public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
+    public final Float2SequenceGlider ownEmptyMotion = Float2SequenceGlider.EMPTY.copy();
 
     private AnimatedGlidingSprite()
     {
@@ -119,11 +119,11 @@ public class AnimatedGlidingSprite extends ParentSprite {
     }
 
     @NonNull
-    public VectorSequenceGlider getSmallMotion() {
+    public Float2SequenceGlider getSmallMotion() {
         return smallMotion;
     }
 
-    public void setSmallMotion(@Nullable VectorSequenceGlider smallMotion) {
+    public void setSmallMotion(@Nullable Float2SequenceGlider smallMotion) {
         if(smallMotion == null) this.smallMotion = ownEmptyMotion;
         else this.smallMotion = smallMotion;
     }

@@ -48,7 +48,7 @@ import com.github.yellowstonegames.place.DungeonProcessor;
 import com.github.yellowstonegames.smooth.AnimatedGlidingSprite;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.Director;
-import com.github.yellowstonegames.smooth.VectorSequenceGlider;
+import com.github.yellowstonegames.smooth.Float2SequenceGlider;
 import com.github.yellowstonegames.text.Language;
 
 import static com.badlogic.gdx.Gdx.input;
@@ -683,7 +683,7 @@ public class VisionDawnDemo extends ApplicationAdapter {
                     if (tmp.x == player.x && tmp.y == player.y) {
                         playerSprite.setPackedColor(DescriptiveColor.oklabIntToFloat(INT_BLOOD));
                         health--;
-                        VectorSequenceGlider small = VectorSequenceGlider.BUMPS.getOrDefault(pos.toGoTo(player), null);
+                        Float2SequenceGlider small = Float2SequenceGlider.BUMPS.getOrDefault(pos.toGoTo(player), null);
                         if(small != null) {
                             small = small.copy();
                             small.setCompleteRunner(() -> mon.setSmallMotion(null));

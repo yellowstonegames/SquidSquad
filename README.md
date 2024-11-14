@@ -67,7 +67,7 @@ dependency will usually pull in a few others. The full list is:
      somewhat like the original.
  - squidsmooth
    - This depends on `squidcore` and `squidgrid`. It provides smooth interpolation for various kinds of `Glider`s, all
-     managed by a `Director` that can be paused, resumed, stopped, and restarted. Example `Glider`s are `VectorGlider`,
+     managed by a `Director` that can be paused, resumed, stopped, and restarted. Example `Glider`s are `Float2Glider`,
      which smoothly changes two float components (x and y), `IntColorGlider`, which interpolates between two different
      colors as time goes on, and `AngleGlider`, which is usually used to make rotations turn taking the shorter
      distance. You can chain multiple gliders in a sequence with `SequenceGlider`, and can make multiple Gliders run at
