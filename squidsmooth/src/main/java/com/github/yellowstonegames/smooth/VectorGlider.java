@@ -19,6 +19,7 @@ package com.github.yellowstonegames.smooth;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
+import com.github.tommyettinger.digital.Interpolations;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -72,7 +73,7 @@ public class VectorGlider extends Glider {
      * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolation}
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public VectorGlider(@NonNull Vector2 start, @NonNull Vector2 end, @NonNull Interpolation interpolation, Runnable completeRunner) {
+    public VectorGlider(@NonNull Vector2 start, @NonNull Vector2 end, Interpolations.@NonNull Interpolator interpolation, Runnable completeRunner) {
         super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start.cpy();
         this.end = end.cpy();
