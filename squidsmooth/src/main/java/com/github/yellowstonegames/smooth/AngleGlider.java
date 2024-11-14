@@ -16,7 +16,8 @@
 
 package com.github.yellowstonegames.smooth;
 
-import com.badlogic.gdx.math.Interpolation;
+import com.github.tommyettinger.digital.Interpolations.Interpolator;
+import com.github.tommyettinger.digital.TrigTools;
 
 /**
  * Allows specifying a smoothly-changing float value that represents an angle, using floats measured in turns (between
@@ -25,11 +26,11 @@ import com.badlogic.gdx.math.Interpolation;
  * the start with {@link #setStart(float)} once and the end more than once with {@link #setEnd(float)}, changing the end
  * each time the transition is complete. The value is automatically calculated in {@link #getAngle()}, and its value
  * will be different every time {@link #setChange(float)} is called with a different amount. You can
- * optionally use an {@link Interpolation} to make the rate of change different.
+ * optionally use an {@link Interpolator} to make the rate of change different.
  * <br>
  * Note that because this measures angles in turns, it is meant to either be used with code that already expects turns,
- * like {@link com.github.tommyettinger.digital.TrigTools#sinTurns(float)}, or to have the angle in turns converted to
- * radians (by multiplying an angle in turns by {@link com.github.tommyettinger.digital.TrigTools#PI2}) or to degrees
+ * like {@link TrigTools#sinTurns(float)}, or to have the angle in turns converted to
+ * radians (by multiplying an angle in turns by {@link TrigTools#PI2}) or to degrees
  * (by multiplying an angle in turns by {@code 360)}).
  * <br>
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).

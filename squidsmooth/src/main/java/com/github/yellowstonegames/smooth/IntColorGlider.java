@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.smooth;
 
-import com.badlogic.gdx.math.Interpolation;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -29,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * {@link #setStart(int)} once and the end more than once with {@link #setEnd(int)}, changing the end each time the
  * move is complete. The current color is automatically calculated in {@link #getColor()}, and its
  * value will be different every time {@link #setChange(float)} is called with a different amount. You can
- * optionally use an {@link Interpolation} to make the rate of change different.
+ * optionally use an {@link Interpolations.Interpolator} to make the rate of change different.
  * <br>
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
@@ -69,18 +69,18 @@ public class IntColorGlider extends Glider {
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
     public IntColorGlider(int start, int end, @Nullable Runnable completeRunner) {
-        super(Interpolation.linear, completeRunner, new Changer("color", start, end, IntSmoother.COLOR));
+        super(Interpolations.linear, completeRunner, new Changer("color", start, end, IntSmoother.COLOR));
     }
 
     /**
-     * Creates an IntColorGlider that interpolates the start color to the end color using the given Interpolation, and
+     * Creates an IntColorGlider that interpolates the start color to the end color using the given Interpolator, and
      * runs the given Runnable upon completion.
      * @param start the start color, as an int (this could be RGBA or Oklab)
      * @param end the end color, as an int (this could be RGBA or Oklab, but should be the same kind as start)
-     * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolation}
+     * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolations}
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public IntColorGlider(int start, int end, @NonNull Interpolation interpolation, @Nullable Runnable completeRunner) {
+    public IntColorGlider(int start, int end, Interpolations.@NonNull Interpolator interpolation, @Nullable Runnable completeRunner) {
         super(interpolation, completeRunner, new Changer("color", start, end, IntSmoother.COLOR));
     }
 

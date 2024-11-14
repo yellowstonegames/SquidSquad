@@ -16,7 +16,7 @@
 
 package com.github.yellowstonegames.smooth;
 
-import com.badlogic.gdx.math.Interpolation;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.grid.Coord;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * {@link #setStart(Coord)} once and the end more than once with {@link #setEnd(Coord)}, changing the end each time the
  * move is complete. The x and y positions are automatically calculated in {@link #getX()} and {@link #getY()}, and
  * their values will be different every time {@link #setChange(float)} is called with a different amount. You can
- * optionally use an {@link Interpolation} to make the rate of change different.
+ * optionally use an {@link Interpolations.Interpolator} to make the rate of change different.
  * <br>
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
@@ -49,7 +49,7 @@ public class CoordGlider extends Glider {
         this.start = start;
         this.end = end;
     }
-    public CoordGlider(@NonNull Interpolation interpolation, Runnable completeRunner, @NonNull Coord start, @NonNull Coord end) {
+    public CoordGlider(Interpolations.@NonNull Interpolator interpolation, Runnable completeRunner, @NonNull Coord start, @NonNull Coord end) {
         super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;

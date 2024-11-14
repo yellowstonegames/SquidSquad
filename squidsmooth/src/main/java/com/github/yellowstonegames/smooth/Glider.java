@@ -16,8 +16,8 @@
 
 package com.github.yellowstonegames.smooth;
 
-import com.badlogic.gdx.math.Interpolation;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.HolderSet;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -99,39 +99,39 @@ public class Glider {
 
     @NonNull public final HolderSet<Changer, String> changers = new HolderSet<>(Changer::getName);
     protected float change = 0f;
-    protected @NonNull Interpolation interpolation;
+    protected Interpolations.@NonNull Interpolator interpolation;
     protected @Nullable Runnable completeRunner;
 
     public Glider() {
-        this.interpolation = Interpolation.linear;
+        this.interpolation = Interpolations.linear;
     }
     public Glider(Changer changer) {
-        this.interpolation = Interpolation.linear;
+        this.interpolation = Interpolations.linear;
         this.changers.add(changer);
     }
 
     public Glider(Changer... changers) {
-        this.interpolation = Interpolation.linear;
+        this.interpolation = Interpolations.linear;
         this.changers.addAll(changers);
     }
 
-    public Glider(@NonNull Interpolation interpolation, Changer changer) {
+    public Glider(Interpolations.@NonNull Interpolator interpolation, Changer changer) {
         this.interpolation = interpolation;
         this.changers.add(changer);
     }
 
-    public Glider(@NonNull Interpolation interpolation, Changer... changers) {
+    public Glider(Interpolations.@NonNull Interpolator interpolation, Changer... changers) {
         this.interpolation = interpolation;
         this.changers.addAll(changers);
     }
 
-    public Glider(@NonNull Interpolation interpolation, @Nullable Runnable completeRunner, Changer changer) {
+    public Glider(Interpolations.@NonNull Interpolator interpolation, @Nullable Runnable completeRunner, Changer changer) {
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         this.changers.add(changer);
     }
 
-    public Glider(@NonNull Interpolation interpolation, @Nullable Runnable completeRunner, Changer... changers) {
+    public Glider(Interpolations.@NonNull Interpolator interpolation, @Nullable Runnable completeRunner, Changer... changers) {
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         this.changers.addAll(changers);
@@ -327,12 +327,11 @@ public class Glider {
         change = 0f;
     }
 
-    @NonNull
-    public Interpolation getInterpolation() {
+    public Interpolations.@NonNull Interpolator getInterpolation() {
         return interpolation;
     }
 
-    public void setInterpolation(@NonNull Interpolation interpolation) {
+    public void setInterpolation(Interpolations.@NonNull Interpolator interpolation) {
         this.interpolation = interpolation;
         change = 0f;
     }

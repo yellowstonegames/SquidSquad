@@ -16,9 +16,10 @@
 
 package com.github.yellowstonegames.smooth;
 
-import com.badlogic.gdx.math.Interpolation;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.digital.Interpolations.Interpolator;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -42,9 +43,9 @@ public class SequenceGlider extends Glider {
         durations = null;
     }
     public SequenceGlider(Glider[] gliders, float[] lengths){
-        this(gliders, lengths, Interpolation.linear, null);
+        this(gliders, lengths, Interpolations.linear, null);
     }
-    public SequenceGlider(Glider[] gliders, float[] lengths, Interpolation interpolation,
+    public SequenceGlider(Glider[] gliders, float[] lengths, @NonNull Interpolator interpolation,
                           @Nullable Runnable completeRunner){
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
@@ -158,13 +159,12 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    @NonNull
-    public Interpolation getInterpolation() {
+    public @NonNull Interpolator getInterpolation() {
         return interpolation;
     }
 
     @Override
-    public void setInterpolation(@NonNull Interpolation interpolation) {
+    public void setInterpolation(@NonNull Interpolator interpolation) {
         super.setInterpolation(interpolation);
         active = 0;
         passed = 0f;
