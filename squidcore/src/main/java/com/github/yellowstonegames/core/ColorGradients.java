@@ -61,7 +61,7 @@ public final class ColorGradients {
      * @param start the packed int Oklab color to start with
      * @param end the packed int Oklab color to end on
      * @param steps how many steps the gradient should use; usually greater than 2, and must be non-negative
-     * @param interpolation a libGDX Interpolation that can be used to customize how start transitions to end
+     * @param interpolation an InterpolationFunction that can be used to customize how start transitions to end
      * @return a new IntList that contains the requested gradient
      */
     public static IntList makeGradient(int start, int end, int steps, InterpolationFunction interpolation) {
@@ -100,7 +100,7 @@ public final class ColorGradients {
      * @param start the packed int Oklab color to start with
      * @param end the packed int Oklab color to end on
      * @param steps how many steps the gradient should use; usually greater than 2
-     * @param interpolation a libGDX Interpolation that can be used to customize how start transitions to end
+     * @param interpolation an InterpolationFunction that can be used to customize how start transitions to end
      * @return {@code appending}, after adding the gradient to the end
      */
     public static IntList appendGradient(IntList appending, int start, int end, int steps, InterpolationFunction interpolation) {
@@ -150,7 +150,7 @@ public final class ColorGradients {
      * end of {@code appending} and produces a total of {@code steps} colors.
      * @param appending a IntList that will be appended to
      * @param steps how many steps the gradient should use; usually greater than 2
-     * @param interpolation a libGDX Interpolation that can be used to customize how start transitions to end
+     * @param interpolation an InterpolationFunction that can be used to customize how start transitions to end
      * @param chain a IntList of packed int Oklab colors that this will interpolate through in order
      * @return {@code appending}, after adding the gradient to the end
      */
@@ -186,7 +186,7 @@ public final class ColorGradients {
      * end of {@code appending} and produces a total of {@code steps} colors.
      * @param appending a IntList that will be appended to
      * @param steps how many steps the gradient should use; usually greater than 2
-     * @param interpolation a libGDX Interpolation that can be used to customize how start transitions to end
+     * @param interpolation an InterpolationFunction that can be used to customize how start transitions to end
      * @param chain an array or varargs of packed int Oklab colors that this will interpolate through in order
      * @return {@code appending}, after adding the gradient to the end
      */
@@ -239,7 +239,7 @@ public final class ColorGradients {
      * @param start the packed int Oklab color to start with
      * @param end the packed int Oklab color to end just before
      * @param steps how many steps the gradient should use; usually greater than 2
-     * @param interpolation a libGDX Interpolation that can be used to customize how start transitions toward end
+     * @param interpolation an InterpolationFunction that can be used to customize how start transitions toward end
      * @return {@code appending}, after adding the gradient to its end
      */
     public static IntList appendPartialGradient(IntList appending, int start, int end, int steps, InterpolationFunction interpolation){

@@ -102,7 +102,11 @@ public class LightSource {
     }
 
     public String stringSerialize() {
-        return radiance.stringSerialize() + "`" + position.x + "`" + position.y + "`" + span + "`" + direction + "`";
+        return radiance.stringSerialize() + "`" +
+                Base.SIMPLE64.signed(position.x) + "`" +
+                Base.SIMPLE64.signed(position.y) + "`" +
+                Base.SIMPLE64.signed(span) + "`" +
+                Base.SIMPLE64.signed(direction) + "`";
     }
 
     public LightSource stringDeserialize(String data) {
@@ -110,7 +114,7 @@ public class LightSource {
         int idx = data.indexOf("``", 1);
         radiance.stringDeserialize(data);
         position = Coord.get(
-                Base.SIMPLE64.readShort(data, idx + 1, idx = data.indexOf('`', idx + 1)),
+                Base.SIMPLE64.readShort(data, idx + 2, idx = data.indexOf('`', idx + 2)),
                 Base.SIMPLE64.readShort(data, idx + 1, idx = data.indexOf('`', idx + 1))
         );
         span = Base.SIMPLE64.readFloatExact(data, idx + 1, idx = data.indexOf('`', idx + 1));

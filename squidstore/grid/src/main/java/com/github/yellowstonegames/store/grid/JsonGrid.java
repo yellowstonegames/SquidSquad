@@ -67,6 +67,7 @@ public final class JsonGrid {
         registerFoamNoise(json);
         registerFoamplexNoise(json);
         registerHighDimensionalValueNoise(json);
+        registerHoneyNoise(json);
         registerNoiseAdjustment(json);
         registerNoise(json);
         registerNoiseWrapper(json);
@@ -84,6 +85,7 @@ public final class JsonGrid {
         registerTaffyNoise(json);
         registerValueNoise(json);
         registerWhiteNoise(json);
+        registerINoise(json);
     }
 
     /**
@@ -196,7 +198,7 @@ public final class JsonGrid {
             @Override
             public CoordObjectOrderedMap<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                CoordObjectOrderedMap data = new CoordObjectOrderedMap<>(jsonData.size);
+                CoordObjectOrderedMap<?> data = new CoordObjectOrderedMap<>(jsonData.size);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(null, value));
                 }
@@ -505,6 +507,31 @@ public final class JsonGrid {
             public Radiance read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return Radiance.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers LightSource with the given Json object, so LightSource can be written to and read from JSON.
+     * This is a simple wrapper around LightSource's built-in {@link LightSource#stringSerialize()} and
+     * {@link LightSource#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerLightSource(@NonNull Json json) {
+        json.addClassTag("LiSo", LightSource.class);
+        json.setSerializer(LightSource.class, new Json.Serializer<LightSource>() {
+            @Override
+            public void write(Json json, LightSource object, Class knownType) {
+                json.writeObjectStart(LightSource.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public LightSource read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return LightSource.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
@@ -1206,8 +1233,8 @@ public final class JsonGrid {
     public static void registerLightingManager(@NonNull Json json) {
         json.addClassTag("LiMo", LightingManager.class);
         registerRegion(json);
-        registerRadiance(json);
-        registerCoordObjectOrderedMap(json);
+        registerLightSource(json);
+        JsonSupport.registerObjectDeque(json);
         JsonCore.registerFloat2D(json);
         JsonCore.registerInt2D(json);
 
@@ -1229,7 +1256,7 @@ public final class JsonGrid {
                 json.writeValue("noticeable", object.noticeable, Region.class);
                 json.writeValue("radiusStrategy", object.radiusStrategy.name());
                 json.writeValue("symmetry", object.symmetry.name());
-                json.writeValue("lights", object.lights, CoordObjectOrderedMap.class, Radiance.class);
+                json.writeValue("lights", object.lights, ObjectDeque.class, LightSource.class);
                 json.writeObjectEnd();
             }
 
@@ -1276,8 +1303,8 @@ public final class JsonGrid {
     public static void registerLightingManagerRgb(@NonNull Json json) {
         json.addClassTag("LiMr", LightingManagerRgb.class);
         registerRegion(json);
-        registerRadiance(json);
-        registerCoordObjectOrderedMap(json);
+        registerLightSource(json);
+        JsonSupport.registerObjectDeque(json);
         JsonCore.registerFloat2D(json);
         JsonCore.registerInt2D(json);
 
@@ -1299,7 +1326,7 @@ public final class JsonGrid {
                 json.writeValue("noticeable", object.noticeable, Region.class);
                 json.writeValue("radiusStrategy", object.radiusStrategy.name());
                 json.writeValue("symmetry", object.symmetry.name());
-                json.writeValue("lights", object.lights, CoordObjectOrderedMap.class, Radiance.class);
+                json.writeValue("lights", object.lights, ObjectDeque.class, LightSource.class);
                 json.writeObjectEnd();
             }
 
@@ -1473,7 +1500,7 @@ public final class JsonGrid {
             @Override
             public PointPair<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return new PointPair(json.readValue("a", null, jsonData), json.readValue("b", null, jsonData));
+                return new PointPair<>(json.readValue("a", null, jsonData), json.readValue("b", null, jsonData));
             }
         });
     }
