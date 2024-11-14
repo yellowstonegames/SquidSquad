@@ -22,8 +22,10 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.github.tommyettinger.crux.PointPair;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.kryo.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
@@ -265,6 +267,25 @@ public class GridTest {
     }
 
     @Test
+    public void testLightSource() {
+        Kryo kryo = new Kryo();
+        kryo.register(Coord.class, new CoordSerializer());
+        kryo.register(Radiance.class, new RadianceSerializer());
+        kryo.register(LightSource.class, new LightSourceSerializer());
+
+        LightSource data = new LightSource(Coord.get(1, 10), new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123), 1f/6f, 0.125f);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            LightSource data2 = kryo.readObject(input, LightSource.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testLightingManager() {
         Kryo kryo = new Kryo();
         kryo.register(int[].class);
@@ -274,7 +295,8 @@ public class GridTest {
         kryo.register(Coord.class, new CoordSerializer());
         kryo.register(Radiance.class, new RadianceSerializer());
         kryo.register(Region.class, new RegionSerializer());
-        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        kryo.register(ObjectDeque.class, new ObjectDequeSerializer());
+        kryo.register(LightSource.class, new LightSourceSerializer());
         kryo.register(LightingManager.class, new LightingManagerSerializer());
 
         LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
@@ -300,7 +322,8 @@ public class GridTest {
         kryo.register(Coord.class, new CoordSerializer());
         kryo.register(Radiance.class, new RadianceSerializer());
         kryo.register(Region.class, new RegionSerializer());
-        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        kryo.register(ObjectDeque.class, new ObjectDequeSerializer());
+        kryo.register(LightSource.class, new LightSourceSerializer());
         kryo.register(LightingManagerRgb.class, new LightingManagerRgbSerializer());
 
         LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
@@ -328,7 +351,8 @@ public class GridTest {
         kryo.register(Coord.class, new CoordSerializer());
         kryo.register(Radiance.class, new RadianceSerializer());
         kryo.register(Region.class, new RegionSerializer());
-        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        kryo.register(ObjectDeque.class, new ObjectDequeSerializer());
+        kryo.register(LightSource.class, new LightSourceSerializer());
         kryo.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
         kryo.register(LightingManager.class, new LightingManagerSerializer());
         kryo.register(VisionFramework.class, new VisionFrameworkSerializer());
@@ -360,7 +384,8 @@ public class GridTest {
         kryo.register(Coord.class, new CoordSerializer());
         kryo.register(Radiance.class, new RadianceSerializer());
         kryo.register(Region.class, new RegionSerializer());
-        kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
+        kryo.register(ObjectDeque.class, new ObjectDequeSerializer());
+        kryo.register(LightSource.class, new LightSourceSerializer());
         kryo.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
         kryo.register(LightingManagerRgb.class, new LightingManagerRgbSerializer());
         kryo.register(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer());

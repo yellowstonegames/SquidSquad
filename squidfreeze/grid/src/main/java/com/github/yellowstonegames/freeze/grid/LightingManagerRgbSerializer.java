@@ -22,12 +22,14 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectDeque;
+import com.github.tommyettinger.kryo.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.grid.*;
 
 /**
  * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@link CoordSerializer} for {@link Coord},
- * {@link CoordObjectOrderedMapSerializer} for {@link CoordObjectOrderedMap}, {@link RegionSerializer} for
- * {@link Region}, and {@link RadianceSerializer} for {@link Radiance} to be registered.
+ * {@link ObjectDequeSerializer} for {@link ObjectDeque}, {@link RegionSerializer} for {@link Region},
+ * {@link RadianceSerializer} for {@link Radiance}, and {@link LightSourceSerializer} for {@link LightSource}
+ * to be registered.
  */
 @SuppressWarnings({"unchecked"})
 public class LightingManagerRgbSerializer extends Serializer<LightingManagerRgb> {

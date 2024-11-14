@@ -21,14 +21,17 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.ds.ObjectDeque;
+import com.github.tommyettinger.kryo.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.grid.*;
 
 /**
  * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@code char[]}, {@code char[][]},
- * {@link CoordSerializer} for {@link Coord}, {@link CoordObjectOrderedMapSerializer} for {@link CoordObjectOrderedMap},
+ * {@link CoordSerializer} for {@link Coord}, {@link ObjectDequeSerializer} for {@link ObjectDeque},
  * {@link CoordFloatOrderedMapSerializer} for {@link CoordFloatOrderedMap}, {@link RegionSerializer} for
- * {@link Region}, {@link RadianceSerializer} for {@link Radiance}, and {@link LightingManagerSerializer} for
- * {@link LightingManager} to be registered.
+ * {@link Region}, {@link RadianceSerializer} for {@link Radiance}, {@link LightSourceSerializer} for
+ * {@link LightSource}, and {@link LightingManagerSerializer} for {@link LightingManager} to be registered.
+
  */
 @SuppressWarnings({"unchecked"})
 public class VisionFrameworkSerializer extends Serializer<VisionFramework> {
