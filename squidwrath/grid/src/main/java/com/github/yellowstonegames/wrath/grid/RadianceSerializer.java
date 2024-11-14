@@ -21,6 +21,9 @@ import org.apache.fury.Fury;
 import org.apache.fury.memory.MemoryBuffer;
 import org.apache.fury.serializer.Serializer;
 
+/**
+ * Serializes {@link Radiance}; doesn't need anything else registered.
+ */
 public class RadianceSerializer extends Serializer<Radiance> {
     public RadianceSerializer(Fury fury) {
         super(fury, Radiance.class);

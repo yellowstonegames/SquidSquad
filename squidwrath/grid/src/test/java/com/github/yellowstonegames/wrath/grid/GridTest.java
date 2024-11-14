@@ -19,7 +19,9 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.tommyettinger.crux.PointPair;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Interpolations;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.tantrum.jdkgdxds.ObjectDequeSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
@@ -285,6 +287,22 @@ public class GridTest {
     }
 
     @Test
+    public void testLightSource() {
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
+        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
+        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
+
+        LightSource data = new LightSource(Coord.get(1, 10), new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123), 1f/6f, 0.125f);
+
+        byte[] bytes = fury.serializeJavaObject(data);
+        {
+            LightSource data2 = fury.deserializeJavaObject(bytes, LightSource.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testLightingManager() {
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(int[].class);
@@ -294,7 +312,8 @@ public class GridTest {
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.register(Region.class);
         fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
-        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
+        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
         fury.registerSerializer(LightingManager.class, new LightingManagerSerializer(fury));
 
         LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
@@ -317,7 +336,8 @@ public class GridTest {
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.register(Region.class);
         fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
-        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
+        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
         fury.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fury));
 
         LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
@@ -342,7 +362,8 @@ public class GridTest {
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
         fury.register(Region.class);
-        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
+        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
         fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
         fury.registerSerializer(LightingManager.class, new LightingManagerSerializer(fury));
         fury.registerSerializer(VisionFramework.class, new VisionFrameworkSerializer(fury));
@@ -370,7 +391,8 @@ public class GridTest {
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
         fury.register(Region.class);
-        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
+        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
         fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
         fury.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fury));
         fury.registerSerializer(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer(fury));

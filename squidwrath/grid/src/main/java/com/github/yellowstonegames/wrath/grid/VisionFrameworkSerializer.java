@@ -16,6 +16,8 @@
 
 package com.github.yellowstonegames.wrath.grid;
 
+import com.github.tommyettinger.ds.ObjectDeque;
+import com.github.tommyettinger.tantrum.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.grid.*;
 import org.apache.fury.Fury;
 import org.apache.fury.memory.MemoryBuffer;
@@ -23,10 +25,10 @@ import org.apache.fury.serializer.Serializer;
 
 /**
  * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@code char[]}, {@code char[][]},
- * {@link Region}, {@link CoordSerializer} for {@link Coord}, {@link CoordObjectOrderedMapSerializer} for
- * {@link CoordObjectOrderedMap}, {@link CoordFloatOrderedMapSerializer} for {@link CoordFloatOrderedMap},
- * {@link RadianceSerializer} for {@link Radiance}, and {@link LightingManagerSerializer} for
- * {@link LightingManager} to be registered.
+ * {@link Region}, {@link CoordSerializer} for {@link Coord}, {@link ObjectDequeSerializer} for {@link ObjectDeque},
+ * {@link CoordFloatOrderedMapSerializer} for {@link CoordFloatOrderedMap}, {@link RadianceSerializer} for
+ * {@link Radiance}, {@link LightingManagerSerializer} for {@link LightingManager}, and {@link LightSourceSerializer}
+ * for {@link LightSource} to be registered.
  */
 @SuppressWarnings({"unchecked"})
 public class VisionFrameworkSerializer extends Serializer<VisionFramework> {
