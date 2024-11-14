@@ -33,9 +33,8 @@ public class VectorTools {
      */
     public static Vector2 randomUnit(Vector2 receiving, EnhancedRandom random) {
         final int index = random.next(14);
-        return receiving.set(TrigTools.SIN_TABLE[index], TrigTools.SIN_TABLE[index + 4096 & TrigTools.TABLE_MASK]);
+        return receiving.set(TrigTools.COS_TABLE[index], TrigTools.SIN_TABLE[index]);
     }
-    private static final StringBuilder sb = new StringBuilder(50);
 
     /**
      * Appends the serialized representation of the given Vector2 to the given StringBuilder.
@@ -44,7 +43,7 @@ public class VectorTools {
      * @return sb, after modifications
      */
     public static StringBuilder appendSerializedString(StringBuilder sb, Vector2 vec) {
-        return Base.BASE10.appendFriendly(Base.BASE10.appendFriendly(sb, vec.x).append('~'), vec.y);
+        return sb.append(vec.toString());
     }
 
     /**
@@ -53,8 +52,7 @@ public class VectorTools {
      * @return the serialized String version of vec
      */
     public static String serializeString(Vector2 vec) {
-        sb.setLength(0);
-        return appendSerializedString(sb, vec).toString();
+        return vec.toString();
     }
 
     /**
@@ -64,10 +62,7 @@ public class VectorTools {
      * @return receiving, after modifications
      */
     public static Vector2 stringDeserialize(String data, Vector2 receiving) {
-        int idx = data.indexOf('~');
-        receiving.x = Base.BASE10.readFloat(data, 0, idx);
-        receiving.y = Base.BASE10.readFloat(data, idx+1, data.length());
-        return receiving;
+        return receiving.fromString(data);
     }
 
     /**
@@ -77,6 +72,6 @@ public class VectorTools {
      * @return a new Vector2 using the values from data
      */
     public static Vector2 recreateFromString(String data) {
-        return stringDeserialize(data, new Vector2());
+        return new Vector2().fromString(data);
     }
 }
