@@ -39,7 +39,7 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int>, Primi
      * Returns true if this type of point uses {@code float} or {@code double} for its components, or false otherwise.
      * This always returns false.
      *
-     * @return true
+     * @return false
      */
     @Override
     public boolean floatingPoint() {

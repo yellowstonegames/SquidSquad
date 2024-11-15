@@ -46,13 +46,13 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
 
     /**
      * Returns true if this type of point uses {@code float} or {@code double} for its components, or false otherwise.
-     * This always returns true.
+     * This always returns false.
      *
-     * @return true
+     * @return false
      */
     @Override
     public boolean floatingPoint() {
-        return true;
+        return false;
     }
 
     @Override
