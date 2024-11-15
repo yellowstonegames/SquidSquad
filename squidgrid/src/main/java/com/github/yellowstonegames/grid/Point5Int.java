@@ -446,7 +446,7 @@ public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int>, Primi
     /**
      * Multiplies each component of this by the given scalar, in-place, and returns this.
      * This is an alias for {@link #scl(int)}.
-     * @param scalar a int that will be multiplied with each component
+     * @param scalar an int that will be multiplied with each component
      * @return this, for chaining
      */
     public Point5Int mul(int scalar) {
@@ -456,7 +456,7 @@ public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int>, Primi
     /**
      * Multiplies each component of this by the given scalar, in-place, and returns this.
      * This is an alias for {@link #scl(int)}.
-     * @param scalar a int that will be multiplied with each component
+     * @param scalar an int that will be multiplied with each component
      * @return this, for chaining
      */
     public Point5Int multiply(int scalar) {
@@ -465,8 +465,8 @@ public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int>, Primi
     /**
      * Multiplies each component of this by the corresponding scalar, in-place, and returns this.
      * This is an alias for {@link #scl(int, int, int, int, int)}.
-     * @param x a int that will be multiplied with x
-     * @param y a int that will be multiplied with y
+     * @param x an int that will be multiplied with x
+     * @param y an int that will be multiplied with y
      * @return this, for chaining
      */
     public Point5Int mul(int x, int y, int z, int w, int u) {
@@ -475,8 +475,8 @@ public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int>, Primi
     /**
      * Multiplies each component of this by the corresponding scalar, in-place, and returns this.
      * This is an alias for {@link #scl(int, int, int, int, int)}.
-     * @param x a int that will be multiplied with x
-     * @param y a int that will be multiplied with y
+     * @param x an int that will be multiplied with x
+     * @param y an int that will be multiplied with y
      * @return this, for chaining
      */
     public Point5Int multiply(int x, int y, int z, int w, int u) {
@@ -616,7 +616,7 @@ public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int>, Primi
 
     @Override
     public int hashCode() {
-        return x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139;
+        return x * 0x1C3361 ^ y * 0x18DA39 ^ z * 0x15E6DB ^ w * 0x134D29 ^ u * 0x110281;
     }
 
     @GwtIncompatible

@@ -1,7 +1,8 @@
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.crux.Point6;
-import com.github.tommyettinger.digital.*;
+import com.github.tommyettinger.crux.Point4;
+import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
@@ -11,186 +12,162 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 /**
- * A mutable 6D point with int components implementing {@link Point6}, {@link PrimitiveCollection.OfInt},
+ * A mutable 4D point with int components implementing {@link Point4}, {@link OfInt},
  * {@link PointNInt}, and {@link Externalizable}.
  */
-public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, PrimitiveCollection.OfInt, Externalizable {
+public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int>, PrimitiveCollection.OfInt, Externalizable {
 
     public int x;
     public int y;
     public int z;
     public int w;
-    public int u;
-    public int v;
 
-    public Point6Int() {
+    public Point4Int() {
     }
 
-    public Point6Int(int x, int y, int z, int w, int u, int v) {
+    public Point4Int(int x, int y, int z, int w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
-        this.u = u;
-        this.v = v;
     }
 
-    public Point6Int(Point6Int p) {
-        this(p.x, p.y, p.z, p.w, p.u, p.v);
+    public Point4Int(Point4Int p) {
+        this(p.x, p.y, p.z, p.w);
     }
 
-    public Point6Int(Point6<?> p) {
-        this(p.xi(), p.yi(), p.zi(), p.wi(), p.ui(), p.vi());
+    public Point4Int(Point4<?> p) {
+        this(p.xi(), p.yi(), p.zi(), p.wi());
     }
 
     /**
      * Returns true if this type of point uses {@code float} or {@code double} for its components, or false otherwise.
-     * This always returns true.
+     * This always returns false.
      *
-     * @return true
+     * @return false
      */
     @Override
     public boolean floatingPoint() {
-        return true;
+        return false;
     }
 
     @Override
-    public Point6Int cpy() {
-        return new Point6Int(this);
+    public Point4Int cpy() {
+        return new Point4Int(this);
     }
 
-    public Point6Int copy() {
+    public Point4Int copy() {
         return cpy();
     }
 
     @Override
     public float len2() {
-        return x * x + y * y + z * z + w * w + u * u + v * v;
+        return x * x + y * y + z * z + w * w;
     }
 
     @Override
-    public Point6Int set(Point6Int point) {
+    public Point4Int set(Point4Int point) {
         x = point.x;
         y = point.y;
         z = point.z;
         w = point.w;
-        u = point.u;
-        v = point.v;
         return this;
     }
-    public Point6Int set(Point6<?> point) {
+    public Point4Int set(Point4<?> point) {
         x = point.xi();
         y = point.yi();
         z = point.zi();
         w = point.wi();
-        u = point.ui();
-        v = point.vi();
         return this;
     }
 
     @Override
-    public Point6Int sub(Point6Int point) {
+    public Point4Int sub(Point4Int point) {
         x -= point.x;
         y -= point.y;
         z -= point.z;
         w -= point.w;
-        u -= point.u;
-        v -= point.v;
         return this;
     }
-    public Point6Int sub(Point6<?> point) {
+    public Point4Int sub(Point4<?> point) {
         x -= point.x();
         y -= point.y();
         z -= point.z();
         w -= point.w();
-        u -= point.u();
-        v -= point.v();
         return this;
     }
-    public Point6Int subtract(Point6<?> point) {
+    public Point4Int subtract(Point4<?> point) {
         return sub(point);
     }
 
     @Override
-    public Point6Int add(Point6Int point) {
+    public Point4Int add(Point4Int point) {
         x += point.x;
         y += point.y;
         z += point.z;
         w += point.w;
-        u += point.u;
-        v += point.v;
         return this;
     }
-    public Point6Int add(Point6<?> point) {
+    public Point4Int add(Point4<?> point) {
         x += point.x();
         y += point.y();
         z += point.z();
         w += point.w();
-        u += point.u();
-        v += point.v();
         return this;
     }
 
     @Override
-    public Point6Int scl(Point6Int point) {
+    public Point4Int scl(Point4Int point) {
         x *= point.x;
         y *= point.y;
         z *= point.z;
         w *= point.w;
-        u *= point.u;
-        v *= point.v;
         return this;
     }
-    public Point6Int scl(Point6<?> point) {
+    public Point4Int scl(Point4<?> point) {
         x *= point.x();
         y *= point.y();
         z *= point.z();
         w *= point.w();
-        u *= point.u();
-        v *= point.v();
         return this;
     }
-    public Point6Int scale(Point6<?> point) {
+    public Point4Int scale(Point4<?> point) {
         return scl(point);
     }
-    public Point6Int mul(Point6Int point) {
+    public Point4Int mul(Point4Int point) {
         return scl(point);
     }
-    public Point6Int mul(Point6<?> point) {
+    public Point4Int mul(Point4<?> point) {
         return scl(point);
     }
-    public Point6Int multiply(Point6<?> point) {
+    public Point4Int multiply(Point4<?> point) {
         return scl(point);
     }
 
     @Override
-    public float dst2(Point6Int point) {
+    public float dst2(Point4Int point) {
         return
                 (point.x - x) * (point.x - x) +
                 (point.y - y) * (point.y - y) +
                 (point.z - z) * (point.z - z) +
-                (point.w - w) * (point.w - w) +
-                (point.u - u) * (point.u - u) +
-                (point.v - v) * (point.v - v);
+                (point.w - w) * (point.w - w);
     }
-    public int dst2(Point6<?> point) {
+    public int dst2(Point4<?> point) {
         return
                 (point.xi() - x) * (point.xi() - x) +
                 (point.yi() - y) * (point.yi() - y) +
                 (point.zi() - z) * (point.zi() - z) +
-                (point.wi() - w) * (point.wi() - w) +
-                (point.ui() - u) * (point.ui() - u) +
-                (point.vi() - v) * (point.vi() - v);
+                (point.wi() - w) * (point.wi() - w);
     }
-    public float distance(Point6<?> point) {
+    public float distance(Point4<?> point) {
         return (float) Math.sqrt(dst2(point));
     }
-    public int distanceSquared(Point6<?> point) {
+    public int distanceSquared(Point4<?> point) {
         return dst2(point);
     }
     @Override
-    public Point6Int setZero() {
-        x = y = z = w = u = v = 0;
+    public Point4Int setZero() {
+        x = y = z = w = 0;
         return this;
     }
 
@@ -200,7 +177,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int x(float next) {
+    public Point4Int x(float next) {
         x = (int)next;
         return this;
     }
@@ -211,7 +188,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int xi(int next) {
+    public Point4Int xi(int next) {
         x = next;
         return this;
     }
@@ -222,7 +199,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int y(float next) {
+    public Point4Int y(float next) {
         y = (int)next;
         return this;
     }
@@ -233,7 +210,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int yi(int next) {
+    public Point4Int yi(int next) {
         y = next;
         return this;
     }
@@ -244,7 +221,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int z(float next) {
+    public Point4Int z(float next) {
         z = (int)next;
         return this;
     }
@@ -255,7 +232,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int zi(int next) {
+    public Point4Int zi(int next) {
         z = next;
         return this;
     }
@@ -266,7 +243,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int w(float next) {
+    public Point4Int w(float next) {
         w = (int)next;
         return this;
     }
@@ -277,123 +254,66 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
     }
 
     @Override
-    public Point6Int wi(int next) {
+    public Point4Int wi(int next) {
         w = next;
         return this;
     }
-
     @Override
-    public float u() {
-        return u;
-    }
-
-    @Override
-    public Point6Int u(float next) {
-        u = (int)next;
-        return this;
-    }
-
-    @Override
-    public int ui() {
-        return u;
-    }
-
-    @Override
-    public Point6Int ui(int next) {
-        u = next;
-        return this;
-    }
-
-    @Override
-    public float v() {
-        return v;
-    }
-
-    @Override
-    public Point6Int v(float next) {
-        v = (int)next;
-        return this;
-    }
-
-    @Override
-    public int vi() {
-        return v;
-    }
-
-    @Override
-    public Point6Int vi(int next) {
-        v = next;
-        return this;
-    }
-
-    @Override
-    public Point6Int set(float x, float y, float z, float w, float u, float v) {
+    public Point4Int set(float x, float y, float z, float w) {
         this.x = (int)x;
         this.y = (int)y;
         this.z = (int)z;
         this.w = (int)w;
-        this.u = (int)u;
-        this.v = (int)v;
         return this;
     }
-    public Point6Int set(int x, int y, int z, int w, int u, int v) {
+    public Point4Int set(int x, int y, int z, int w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
-        this.u = u;
-        this.v = v;
         return this;
     }
 
-    public Point6Int add(float x, float y, float z, float w, float u, float v) {
+    public Point4Int add(float x, float y, float z, float w) {
         this.x += x;
         this.y += y;
         this.z += z;
         this.w += w;
-        this.u += u;
-        this.v += v;
         return this;
     }
 
-    public Point6Int sub(float x, float y, float z, float w, float u, float v) {
+    public Point4Int sub(float x, float y, float z, float w) {
         this.x -= x;
         this.y -= y;
         this.z -= z;
         this.w -= w;
-        this.u -= u;
-        this.v -= v;
         return this;
     }
-    public Point6Int subtract(float x, float y, float z, float w, float u, float v) {
-        return sub(x, y, z, w, u, v);
+    public Point4Int subtract(float x, float y, float z, float w) {
+        return sub(x, y, z, w);
     }
-    public Point6Int scl(float scalar) {
+    public Point4Int scl(float scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;
         w *= scalar;
-        u *= scalar;
-        v *= scalar;
         return this;
     }
 
-    public Point6Int scale(float scalar) {
+    public Point4Int scale(float scalar) {
         return scl(scalar);
     }
 
-    public Point6Int scl(float x, float y, float z, float w, float u, float v) {
+    public Point4Int scl(float x, float y, float z, float w) {
         this.x *= x;
         this.y *= y;
         this.z *= z;
         this.w *= w;
-        this.u *= u;
-        this.v *= v;
         return this;
     }
 
-    public Point6Int scale(float x, float y, float z, float w, float u, float v) {
-        return scl(x, y, z, w, u, v);
+    public Point4Int scale(float x, float y, float z, float w) {
+        return scl(x, y, z, w);
     }
 
     /**
@@ -402,7 +322,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
      * @param scalar a float that will be multiplied with each component
      * @return this, for chaining
      */
-    public Point6Int mul(float scalar) {
+    public Point4Int mul(float scalar) {
         return scl(scalar);
     }
 
@@ -412,78 +332,70 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
      * @param scalar a float that will be multiplied with each component
      * @return this, for chaining
      */
-    public Point6Int multiply(float scalar) {
+    public Point4Int multiply(float scalar) {
         return scl(scalar);
     }
     /**
      * Multiplies each component of this by the corresponding scalar, in-place, and returns this.
-     * This is an alias for {@link #scl(float, float, float, float, float, float)}.
+     * This is an alias for {@link #scl(float, float, float, float)}.
      * @param x a float that will be multiplied with x
      * @param y a float that will be multiplied with y
      * @return this, for chaining
      */
-    public Point6Int mul(float x, float y, float z, float w, float u, float v) {
-        return scl(x, y, z, w, u, v);
+    public Point4Int mul(float x, float y, float z, float w) {
+        return scl(x, y, z, w);
     }
     /**
      * Multiplies each component of this by the corresponding scalar, in-place, and returns this.
-     * This is an alias for {@link #scl(float, float, float, float, float, float)}.
+     * This is an alias for {@link #scl(float, float, float, float)}.
      * @param x a float that will be multiplied with x
      * @param y a float that will be multiplied with y
      * @return this, for chaining
      */
-    public Point6Int multiply(float x, float y, float z, float w, float u, float v) {
-        return scl(x, y, z, w, u, v);
+    public Point4Int multiply(float x, float y, float z, float w) {
+        return scl(x, y, z, w);
     }
 
-    public Point6Int add(int x, int y, int z, int w, int u, int v) {
+    public Point4Int add(int x, int y, int z, int w) {
         this.x += x;
         this.y += y;
         this.z += z;
         this.w += w;
-        this.u += u;
-        this.v += v;
         return this;
     }
 
-    public Point6Int sub(int x, int y, int z, int w, int u, int v) {
+    public Point4Int sub(int x, int y, int z, int w) {
         this.x -= x;
         this.y -= y;
         this.z -= z;
         this.w -= w;
-        this.u -= u;
-        this.v -= v;
         return this;
     }
-    public Point6Int subtract(int x, int y, int z, int w, int u, int v) {
-        return sub(x, y, z, w, u, v);
+    public Point4Int subtract(int x, int y, int z, int w) {
+        return sub(x, y, z, w);
     }
-    public Point6Int scl(int scalar) {
+    public Point4Int scl(int scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;
         w *= scalar;
-        u *= scalar;
-        v *= scalar;
         return this;
     }
 
-    public Point6Int scale(int scalar) {
+    public Point4Int scale(int scalar) {
         return scl(scalar);
     }
 
-    public Point6Int scl(int x, int y, int z, int w, int u, int v) {
+    public Point4Int scl(int x, int y, int z, int w) {
         this.x *= x;
         this.y *= y;
         this.z *= z;
         this.w *= w;
-        this.u *= u;
-        this.v *= v;
         return this;
     }
 
-    public Point6Int scale(int x, int y, int z, int w, int u, int v) {
-        return scl(x, y, z, w, u, v);
+    public Point4Int scale(int x, int y, int z, int w) {
+        return scl(x, y, z, w);
     }
 
     /**
@@ -492,7 +404,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
      * @param scalar an int that will be multiplied with each component
      * @return this, for chaining
      */
-    public Point6Int mul(int scalar) {
+    public Point4Int mul(int scalar) {
         return scl(scalar);
     }
 
@@ -502,73 +414,69 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
      * @param scalar an int that will be multiplied with each component
      * @return this, for chaining
      */
-    public Point6Int multiply(int scalar) {
+    public Point4Int multiply(int scalar) {
         return scl(scalar);
     }
     /**
      * Multiplies each component of this by the corresponding scalar, in-place, and returns this.
-     * This is an alias for {@link #scl(int, int, int, int, int, int)}.
+     * This is an alias for {@link #scl(int, int, int, int)}.
      * @param x an int that will be multiplied with x
      * @param y an int that will be multiplied with y
      * @return this, for chaining
      */
-    public Point6Int mul(int x, int y, int z, int w, int u, int v) {
-        return scl(x, y, z, w, u, v);
+    public Point4Int mul(int x, int y, int z, int w) {
+        return scl(x, y, z, w);
     }
     /**
      * Multiplies each component of this by the corresponding scalar, in-place, and returns this.
-     * This is an alias for {@link #scl(int, int, int, int, int, int)}.
+     * This is an alias for {@link #scl(int, int, int, int)}.
      * @param x an int that will be multiplied with x
      * @param y an int that will be multiplied with y
      * @return this, for chaining
      */
-    public Point6Int multiply(int x, int y, int z, int w, int u, int v) {
-        return scl(x, y, z, w, u, v);
+    public Point4Int multiply(int x, int y, int z, int w) {
+        return scl(x, y, z, w);
     }
 
-    public Point6Int addProduct(Point6<?> vec, float scalar) {
+    public Point4Int addProduct(Point4<?> vec, float scalar) {
         return mulAdd(vec, scalar);
     }
-    public Point6Int mulAdd(Point6<?> vec, float scalar) {
+    public Point4Int mulAdd(Point4<?> vec, float scalar) {
         x += vec.x() * scalar;
         y += vec.y() * scalar;
         z += vec.z() * scalar;
         w += vec.w() * scalar;
-        u += vec.u() * scalar;
-        v += vec.v() * scalar;
         return this;
     }
 
-    public Point6Int mulAdd(Point6<?> vec, Point6<?> mulVec) {
+    public Point4Int mulAdd(Point4<?> vec, Point4<?> mulVec) {
         x += vec.x() * mulVec.x();
         y += vec.y() * mulVec.y();
         z += vec.z() * mulVec.z();
         w += vec.w() * mulVec.w();
-        u += vec.u() * mulVec.u();
-        v += vec.v() * mulVec.v();
         return this;
     }
 
-    public Point6Int addProduct(Point6<?> vec, Point6<?> mulVec) {
+    public Point4Int addProduct(Point4<?> vec, Point4<?> mulVec) {
         return mulAdd(vec, mulVec);
     }
 
-    public Point6Int limit(float limit) {
+    public Point4Int limit(float limit) {
         return limit2(limit * limit);
     }
 
-    public Point6Int limit2(float limit2) {
+    public Point4Int limit2(float limit2) {
         float len2 = len2();
         if (len2 > limit2) {
             return scl((float)Math.sqrt(limit2 / len2));
         }
         return this;
     }
-    public Point6Int limitSquared(float limit2) {
+    public Point4Int limitSquared(float limit2) {
         return limit2(limit2);
     }
 
-    public Point6Int clampLength(float min, float max) {
+    public Point4Int clampLength(float min, float max) {
         final float len2 = len2();
         if (len2 == 0f) return this;
         float max2 = max * max;
@@ -578,35 +486,33 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
         return this;
     }
 
-    public Point6Int setLength(float len) {
+    public Point4Int setLength(float len) {
         return setLength2(len * len);
     }
 
-    public Point6Int setLength2(float len2) {
+    public Point4Int setLength2(float len2) {
         float oldLen2 = len2();
         return (oldLen2 == 0 || oldLen2 == len2) ? this : scl((float)Math.sqrt(len2 / oldLen2));
     }
 
-    public float dot(Point6<?> other) {
-        return x * other.x() + y * other.y() + z * other.z() + w * other.w() + u * other.u() + v * other.v();
+    public float dot(Point4<?> other) {
+        return x * other.x() + y * other.y() + z * other.z() + w * other.w();
     }
 
-    public static float dot(Point6<?> a, Point6<?> b) {
-        return a.x() * b.x() + a.y() * b.y() + a.z() * b.z() + a.w() * b.w() + a.u() * b.u() + a.v() * b.v();
+    public static float dot(Point4<?> a, Point4<?> b) {
+        return a.x() * b.x() + a.y() * b.y() + a.z() * b.z() + a.w() * b.w();
     }
 
-    public Point6Int lerp(Point6<?> target, float alpha) {
+    public Point4Int lerp(Point4<?> target, float alpha) {
         final float invAlpha = 1.0f - alpha;
         this.x = (int)((x * invAlpha) + (target.x() * alpha));
         this.y = (int)((y * invAlpha) + (target.y() * alpha));
         this.z = (int)((z * invAlpha) + (target.z() * alpha));
         this.w = (int)((w * invAlpha) + (target.w() * alpha));
-        this.u = (int)((u * invAlpha) + (target.u() * alpha));
-        this.v = (int)((v * invAlpha) + (target.v() * alpha));
         return this;
     }
 
-    public Point6Int interpolate(Point6<?> target, float alpha, Interpolations.Interpolator interpolation) {
+    public Point4Int interpolate(Point4<?> target, float alpha, Interpolations.Interpolator interpolation) {
         return lerp(target, interpolation.apply(alpha));
     }
 
@@ -616,13 +522,11 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
      * @param max the maximum value allowable for any component, inclusive
      * @return this, after modifications
      */
-    public Point6Int clampEach (int min, int max) {
+    public Point4Int clampEach (int min, int max) {
         x = Math.min(Math.max(x, min), max);
         y = Math.min(Math.max(y, min), max);
         z = Math.min(Math.max(z, min), max);
         w = Math.min(Math.max(w, min), max);
-        u = Math.min(Math.max(u, min), max);
-        v = Math.min(Math.max(v, min), max);
         return this;
     }
 
@@ -639,8 +543,6 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
             case 1 : return y;
             case 2 : return z;
             case 3 : return w;
-            case 4 : return u;
-            case 5 : return v;
         }
     }
 
@@ -651,21 +553,19 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
      * @return this, for chaining
      */
     @SuppressWarnings({"DefaultNotLastCaseInSwitch"})
-    public Point6Int setAt(int index, int value){
+    public Point4Int setAt(int index, int value){
         switch (index){
             default: x = value;
             case 1 : y = value;
             case 2 : z = value;
             case 3 : w = value;
-            case 4 : u = value;
-            case 5 : v = value;
         }
         return this;
     }
 
     @Override
     public int hashCode() {
-        return x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
+        return x * 0x1B69E1 ^ y * 0x177C0B ^ z * 0x141E5D ^ w * 0x113C31;
     }
 
     @GwtIncompatible
@@ -674,8 +574,6 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
         out.writeInt(y);
         out.writeInt(z);
         out.writeInt(w);
-        out.writeInt(u);
-        out.writeInt(v);
     }
 
     @GwtIncompatible
@@ -684,67 +582,59 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, Primi
         y = in.readInt();
         z = in.readInt();
         w = in.readInt();
-        u = in.readInt();
-        v = in.readInt();
     }
 
-    /** Converts this {@code Point6Int} to a string in the format {@code (x,y,z,w,u,v)}.
+    /** Converts this {@code Point4Int} to a string in the format {@code (x,y,z,w,u)}.
      * @return a string representation of this object. */
     @Override
     public String toString () {
         return "(" + Base.BASE10.signed(x) + ","
                    + Base.BASE10.signed(y) + ","
                    + Base.BASE10.signed(z) + ","
-                   + Base.BASE10.signed(w) + ","
-                   + Base.BASE10.signed(u) + ","
-                   + Base.BASE10.signed(v) + ")";
+                   + Base.BASE10.signed(w) + ")";
     }
 
-    /** Sets this {@code Point6Int} to the value represented by the specified string according to the format of {@link #toString()}.
+    /** Sets this {@code Point4Int} to the value represented by the specified string according to the format of {@link #toString()}.
      * @param s the string.
      * @return this point for chaining */
-    public Point6Int fromString (String s) {
+    public Point4Int fromString (String s) {
         int s0 = s.indexOf(',', 1);
         int s1 = s.indexOf(',', s0 + 1);
         int s2 = s.indexOf(',', s1 + 1);
-        int s3 = s.indexOf(',', s2 + 1);
-        int s4 = s.indexOf(',', s3 + 1);
-        if (s0 != -1 && s1 != -1 && s2 != -1 && s3 != -1 && s4 != -1 && s.charAt(0) == '(' && s.charAt(s.length() - 1) == ')') {
+        if (s0 != -1 && s1 != -1 && s2 != -1 && s.charAt(0) == '(' && s.charAt(s.length() - 1) == ')') {
             int x = Base.BASE10.readInt(s, 1, s0);
             int y = Base.BASE10.readInt(s, s0 + 1, s1);
             int z = Base.BASE10.readInt(s, s1 + 1, s2);
-            int w = Base.BASE10.readInt(s, s2 + 1, s3);
-            int u = Base.BASE10.readInt(s, s3 + 1, s4);
-            int v = Base.BASE10.readInt(s, s4 + 1, s.length() - 1);
-            return this.set(x, y, z, w, u, v);
+            int w = Base.BASE10.readInt(s, s2 + 1, s.length() - 1);
+            return this.set(x, y, z, w);
         }
 
-        throw new IllegalArgumentException("Not a valid format for a Point6Int: " + s);
+        throw new IllegalArgumentException("Not a valid format for a Point4Int: " + s);
     }
 
     @Override
     public boolean add(int c) {
-        throw new UnsupportedOperationException("Point6Int is fixed-size.");
+        throw new UnsupportedOperationException("Point4Int is fixed-size.");
     }
 
     @Override
     public boolean remove(int c) {
-        throw new UnsupportedOperationException("Point6Int is fixed-size.");
+        throw new UnsupportedOperationException("Point4Int is fixed-size.");
     }
 
     @Override
     public boolean contains(int c) {
-        return (x == c || y == c || z == c || w == c || u == c || v == c);
+        return (x == c || y == c || z == c || w == c);
     }
 
     @Override
     public int size() {
-        return 6;
+        return 4;
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Point6Int is fixed-size.");
+        throw new UnsupportedOperationException("Point4Int is fixed-size.");
     }
 
     @Override
