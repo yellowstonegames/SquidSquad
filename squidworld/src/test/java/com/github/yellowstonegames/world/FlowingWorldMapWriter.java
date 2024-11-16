@@ -240,7 +240,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.GOURD);
-        writer.setDitherStrength(1f);
+        writer.setDitherStrength(0.3f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
 
@@ -276,11 +276,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        INoise fn = new PerlinNoise(seed);
 //        iNoise = new Noise3DFrom5D(fn);
 
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
+        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2));
 
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
 //        iNoise = new Noise3DFrom5D(new FlanNoise(seed, 5)); // between 53757ms and 59479ms
-        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
 //        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 4, 2f)); // between 53757ms and 59479ms
 //        iNoise = new Noise3DFrom5D(new HighDimensionalValueNoise(seed, 5)); // between 69009ms and 94373ms
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
@@ -289,6 +290,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
+        ((NoiseWrapper)iNoise.noise).setFractalSpiral(true);
         path = "out/worldsAnimated/" + date + "/Flowing"+iNoise.noise.getTag()+"/";
 
         if(!Gdx.files.local(path).exists())
@@ -381,7 +383,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms, 100.0);
+        writer.palette.analyze(pms, 80.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
