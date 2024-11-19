@@ -66,13 +66,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 
 //    private static final int width = 256, height = 256;
-    private static final int width = 300, height = 300;
+//    private static final int width = 300, height = 300;
+    private static final int width = 400, height = 200;
 
 //    private static final int FRAMES = 100;
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
     private static final float SPEED = 0.25f;
     private static final boolean FLOWING_LAND = true;
+    private static final boolean GLOBE_SPIN = false;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
 
@@ -214,23 +216,6 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
-//        path = "out/worldsAnimated/" + date + "/Foam/";
-//        path = "out/worldsAnimated/" + date + "/Classic/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFoamMaelstrom/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFoamAlien/";
-//        path = "out/worldsAnimated/" + date + "/FlowingPear/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFlan/";
-//        path = "out/worldsAnimated/" + date + "/FlowingTaffy/";
-//        path = "out/worldsAnimated/" + date + "/FlowingFoam/";
-//        path = "out/worldsAnimated/" + date + "/FlowingSorbet/";
-//        path = "out/worldsAnimated/" + date + "/FlowingCyclic/";
-//        path = "out/worldsAnimated/" + date + "/FlowingSimplex/";
-//        path = "out/worldsAnimated/" + date + "/FlowingSimplexCentral/";
-//        path = "out/worldsAnimated/" + date + "/FlowingSimplexOuter/";
-//        path = "out/worldsAnimated/" + date + "/FlowingClassic/";
-//        path = "out/worldsAnimated/" + date + "/FlowingValue/";
-//        path = "out/worldsAnimated/" + date + "/FlowingHoney/";
 
         pm = new Pixmap[FRAMES];
         for (int i = 0; i < FRAMES; i++) {
@@ -240,7 +225,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.GOURD);
-        writer.setDitherStrength(0.3f);
+        writer.setDitherStrength(0.25f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
 
@@ -291,15 +276,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
         ((NoiseWrapper)iNoise.noise).setFractalSpiral(true);
-        path = "out/worldsAnimated/" + date + "/Flowing"+iNoise.noise.getTag()+"/";
+
+//        world = new GlobeMap(seed, width, height, iNoise, 0.6f);
+        world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.6f);
+//        world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
+
+        path = "out/worldsFlowing/" + date + "/"+world.getClass().getSimpleName()+iNoise.noise.getTag()+"/";
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
-
-
-
-        world = new GlobeMap(seed, width, height, iNoise, 0.6f);
-
 
 //        wmv = new UnrealisticWorldMapView(world);
         wmv = new BlendedWorldMapView(world);
@@ -360,7 +345,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             iNoise.s = TrigTools.sinTurns(angle) * SPEED;// 0.4f;// 0.3125f;
             iNoise.c = TrigTools.cosTurns(angle) * SPEED;// 0.4f;// 0.3125f;
 
-            world.setCenterLongitude(angle * TrigTools.PI2);
+            if(GLOBE_SPIN)
+                world.setCenterLongitude(angle * TrigTools.PI2);
             generate(hash);
             int[][] cm = wmv.show();
             if(i == 0) {
@@ -383,7 +369,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms, 80.0);
+        writer.palette.analyze(pms, 60.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
