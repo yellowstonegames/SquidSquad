@@ -46,6 +46,7 @@ public final class JsonGrid {
         registerPoint2Int(json);
         registerPoint3Int(json);
         registerPoint4Int(json);
+        registerPoint5Int(json);
         registerRegion(json);
         registerCoordSet(json);
         registerCoordOrderedSet(json);
@@ -187,6 +188,34 @@ public final class JsonGrid {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return new Point4Int(jsonData.getInt("x", 0), jsonData.getInt("y", 0),
                         jsonData.getInt("z", 0), jsonData.getInt("w", 0));
+            }
+        });
+    }
+
+    /**
+     * Registers Point5Int with the given Json object, so Point5Int can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPoint5Int(@NonNull Json json) {
+        json.addClassTag("Pt5I", Point5Int.class);
+        json.setSerializer(Point5Int.class, new Json.Serializer<Point5Int>() {
+            @Override
+            public void write(Json json, Point5Int object, Class knownType) {
+                json.writeObjectStart(Point5Int.class, knownType);
+                json.writeValue("x", object.x);
+                json.writeValue("y", object.y);
+                json.writeValue("z", object.z);
+                json.writeValue("w", object.w);
+                json.writeValue("u", object.u);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Point5Int read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Point5Int(jsonData.getInt("x", 0), jsonData.getInt("y", 0),
+                        jsonData.getInt("z", 0), jsonData.getInt("w", 0), jsonData.getInt("u", 0));
             }
         });
     }
