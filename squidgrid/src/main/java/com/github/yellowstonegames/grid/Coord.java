@@ -57,7 +57,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * If this causes problems in, for instance, Kotlin code, you could create an extension method that gets the type you
  * want and has the name you want.
  */
-public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCollection.OfInt{
+public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, PrimitiveCollection.OfInt{
     /**
      * The x-coordinate.
      */
@@ -309,7 +309,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
 
     /**
      * Always throws an {@link UnsupportedOperationException} because Coord is fixed-size.
-     * If you want to add {@code i} to both components, use {@link #plus(int)} or {@link #add(double)} instead.
+     * If you want to add {@code i} to both components, use {@link #plus(int)} or {@link #add(float)} instead.
      * @param i ignored
      * @return never returns
      * @throws UnsupportedOperationException always
@@ -358,8 +358,8 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x + operand; y = this.y +
      * operand}, with both x and y rounded accordingly
      */
-    public Coord add(final double operand) {
-        return get((int) Math.round(x + operand), (int) Math.round(y + operand));
+    public Coord add(final float operand) {
+        return get(Math.round(x + operand), Math.round(y + operand));
     }
 
     /**
@@ -392,8 +392,8 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x - operand; y = this.y -
      * operand}, with both x and y rounded accordingly
      */
-    public Coord subtract(final double operand) {
-        return get((int) Math.round(x - operand), (int) Math.round(y - operand));
+    public Coord subtract(final float operand) {
+        return get(Math.round(x - operand), Math.round(y - operand));
     }
 
     /**
@@ -426,8 +426,8 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x * operand; y = this.y *
      * operand}, with both x and y rounded accordingly
      */
-    public Coord multiply(final double operand) {
-        return get((int) Math.round(x * operand), (int) Math.round(y * operand));
+    public Coord multiply(final float operand) {
+        return get(Math.round(x * operand), Math.round(y * operand));
     }
 
     /**
@@ -453,7 +453,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
     }
 
     /**
-     * Separately divides the x and y positions of this Coord by operand, flooring to a lower int for each of x and
+     * Separately divides the x and y positions of this Coord by operand, truncating closer to 0 for non-integer x and
      * y and producing a different Coord as their "quotient." If operand is 0.0, expect strange results (infinity and
      * NaN are both possibilities).
      *
@@ -461,7 +461,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x / operand; y = this.y /
      * operand}, with both x and y rounded accordingly
      */
-    public Coord divide(final double operand) {
+    public Coord divide(final float operand) {
         return get((int) (x / operand), (int) (y / operand));
     }
 
@@ -474,8 +474,8 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x / operand; y = this.y /
      * operand}, with both x and y rounded accordingly
      */
-    public Coord divideRounding(final double operand) {
-        return get((int) Math.round(x / operand), (int) Math.round(y / operand));
+    public Coord divideRounding(final float operand) {
+        return get(Math.round(x / operand), Math.round(y / operand));
     }
 
     /**
@@ -1072,17 +1072,19 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord>, PrimitiveCo
     }
 
     /**
-     * Gets a (usually cached) Coord between this Coord and {@code end}, with the actual position relative to this based
-     * on {@code amountTraveled}. If amountTraveled is 0, this simply returns a Coord equal to this; if amountTraveled
-     * is 1, this returns a Coord equal to end, and values in between 0 and 1 give Coords between this and end.
+     * Gets a (usually cached) Coord linearly-interpolated between this Coord and {@code end}, with the actual position
+     * relative to this based on {@code amountTraveled}. If amountTraveled is 0, this simply returns a Coord equal to
+     * this; if amountTraveled is 1, this returns a Coord equal to end, and values in between 0 and 1 give Coords
+     * between this and end.
      *
      * @param end            another Coord that acts as the "far" endpoint, where this is the "near" start point
      * @param amountTraveled a float between 0 and 1 inclusive, with lower meaning closer to this, higher meaning closer to end
      * @return a Coord that is between this and end as long as amountTraveled is between 0 and 1
      */
-    public Coord interpolate(Coord end, float amountTraveled) {
-        return Coord.get(x + Math.round((end.x - x) * amountTraveled),
-                y + Math.round((end.y - y) * amountTraveled));
+    @Override
+    public Coord lerp(Point2<?> end, float amountTraveled) {
+        return Coord.get(x + Math.round((end.x() - x) * amountTraveled),
+                y + Math.round((end.y() - y) * amountTraveled));
     }
 
     @Override

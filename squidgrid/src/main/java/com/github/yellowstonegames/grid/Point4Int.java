@@ -15,7 +15,7 @@ import java.io.ObjectOutput;
  * A mutable 4D point with int components implementing {@link Point4}, {@link OfInt},
  * {@link PointNInt}, and {@link Externalizable}.
  */
-public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int>, PrimitiveCollection.OfInt, Externalizable {
+public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4<?>>, PrimitiveCollection.OfInt, Externalizable {
 
     public int x;
     public int y;

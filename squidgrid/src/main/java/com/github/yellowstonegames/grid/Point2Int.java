@@ -14,7 +14,7 @@ import java.io.ObjectOutput;
  * A mutable 2D point with int components implementing {@link Point2}, {@link PrimitiveCollection.OfInt},
  * {@link PointNInt}, and {@link Externalizable}.
  */
-public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int>, PrimitiveCollection.OfInt, Externalizable {
+public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2<?>>, PrimitiveCollection.OfInt, Externalizable {
 
     public int x;
     public int y;

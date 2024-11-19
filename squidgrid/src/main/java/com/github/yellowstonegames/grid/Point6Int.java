@@ -14,7 +14,7 @@ import java.io.ObjectOutput;
  * A mutable 6D point with int components implementing {@link Point6}, {@link PrimitiveCollection.OfInt},
  * {@link PointNInt}, and {@link Externalizable}.
  */
-public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int>, PrimitiveCollection.OfInt, Externalizable {
+public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6<?>>, PrimitiveCollection.OfInt, Externalizable {
 
     public int x;
     public int y;

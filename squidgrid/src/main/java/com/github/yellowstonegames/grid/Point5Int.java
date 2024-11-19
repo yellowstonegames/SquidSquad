@@ -15,7 +15,7 @@ import java.io.ObjectOutput;
  * A mutable 5D point with int components implementing {@link Point5}, {@link OfInt},
  * {@link PointNInt}, and {@link Externalizable}.
  */
-public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int>, PrimitiveCollection.OfInt, Externalizable {
+public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int, Point5<?>>, PrimitiveCollection.OfInt, Externalizable {
 
     public int x;
     public int y;

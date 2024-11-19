@@ -369,7 +369,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms, 60.0);
+        writer.palette.analyze(pms, 50.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
