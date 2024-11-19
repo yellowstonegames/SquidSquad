@@ -15,7 +15,7 @@ import java.util.Random;
  * A mutable 3D point with float components implementing {@link Point3}, {@link OfFloat},
  * {@link PointNFloat}, and {@link Externalizable}.
  */
-public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float, Point3<?>>, PrimitiveCollection.OfFloat, Externalizable {
 
     public float x;
     public float y;

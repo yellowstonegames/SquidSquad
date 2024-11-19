@@ -15,7 +15,7 @@ import java.util.Random;
  * A mutable 4D point with float components implementing {@link Point4}, {@link OfFloat},
  * {@link PointNFloat}, and {@link Externalizable}.
  */
-public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float, Point4<?>>, PrimitiveCollection.OfFloat, Externalizable {
 
     public float x;
     public float y;
@@ -400,10 +400,10 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
     }
 
     public Point4Float setToRandomDirection(Random random) {
-        x = Distributor.linearNormalF(random.nextInt());
-        y = Distributor.linearNormalF(random.nextInt());
-        z = Distributor.linearNormalF(random.nextInt());
-        w = Distributor.linearNormalF(random.nextInt());
+        x = Distributor.probitI(random.nextInt());
+        y = Distributor.probitI(random.nextInt());
+        z = Distributor.probitI(random.nextInt());
+        w = Distributor.probitI(random.nextInt());
         return nor();
     }
 

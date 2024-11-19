@@ -15,7 +15,7 @@ import java.util.Random;
  * A mutable 6D point with float components implementing {@link Point6}, {@link OfFloat},
  * {@link PointNFloat}, and {@link Externalizable}.
  */
-public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float, Point6<?>>, PrimitiveCollection.OfFloat, Externalizable {
 
     public float x;
     public float y;
@@ -464,12 +464,12 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
     }
 
     public Point6Float setToRandomDirection(Random random) {
-        x = Distributor.linearNormalF(random.nextInt());
-        y = Distributor.linearNormalF(random.nextInt());
-        z = Distributor.linearNormalF(random.nextInt());
-        w = Distributor.linearNormalF(random.nextInt());
-        u = Distributor.linearNormalF(random.nextInt());
-        v = Distributor.linearNormalF(random.nextInt());
+        x = Distributor.probitI(random.nextInt());
+        y = Distributor.probitI(random.nextInt());
+        z = Distributor.probitI(random.nextInt());
+        w = Distributor.probitI(random.nextInt());
+        u = Distributor.probitI(random.nextInt());
+        v = Distributor.probitI(random.nextInt());
         return nor();
     }
 

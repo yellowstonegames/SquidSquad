@@ -1,11 +1,21 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.crux.Point3;
+import com.github.tommyettinger.crux.Point4;
 import com.github.tommyettinger.crux.PointN;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 
-public interface PointNFloat<P extends PointNFloat<P>> extends PointN<P> {
+import java.util.Random;
+
+/**
+ * Groups functionality common to points with float components, in any dimension.
+ * @param <P> should be the subclassing type itself
+ * @param <R> should be a wildcard-generic type for a sub-interface of {@link PointN}, such as {@code Point3<?>}
+ */
+public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> extends PointN<P> {
     @Override
     default boolean floatingPoint() {
         return true;
@@ -26,10 +36,13 @@ public interface PointNFloat<P extends PointNFloat<P>> extends PointN<P> {
      */
     P setAt(int index, float value);
 
+    /**
+     * Iterates over the components in this PointNFloat using {@link #get(int)}.
+     */
     class PointNFloatIterator implements FloatIterator {
-        public PointNFloat<?> pt;
+        public PointNFloat<?,?> pt;
         public int index;
-        public PointNFloatIterator(PointNFloat<?> pt){
+        public PointNFloatIterator(PointNFloat<?,?> pt){
             this.pt = pt;
             index = 0;
         }
@@ -46,6 +59,60 @@ public interface PointNFloat<P extends PointNFloat<P>> extends PointN<P> {
         public void reset(){
             index = 0;
         }
+    }
+
+    /**
+     * Scales this point by a single value for all components.
+     *
+     * @param scalar will be multiplied with each component
+     * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
+     */
+    P scl(float scalar);
+
+    /**
+     * Normalizes this point in-place, making its length as close to 1.0 as this can get.
+     *
+     * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
+     */
+    default P nor() {
+        return scl(1f/len());
+    }
+
+    /**
+     * Sets this PointNFloat to a randomly chosen unit vector.
+     * The exact algorithm is expected to vary between dimensions.
+     * In 2D, for instance, it is sufficient to get a random float and call
+     * {@link TrigTools#cosTurns(float)} and {@link TrigTools#sinTurns(float)}
+     * to get x and y. In higher dimensions, this gets more complex. A
+     * solution that works for any dimension, but is only the best option for
+     * 4D and up, is to assign to each component a normal-distributed float
+     * using {@link com.github.tommyettinger.digital.Distributor#probitF(float)}
+     * with random inputs, then normalize the PointNFloat with {@link #nor()}.
+     * @param random any Random or subclass thereof, such as one from juniper
+     * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
+     */
+    P setToRandomDirection(Random random);
+
+    /**
+     * Linear-interpolates from this point toward target, moving a distance proportional to alpha and changing this
+     * point in-place if possible. If this point is not {@link #mutable()}, this will return a new or pooled point.
+     * The alpha is expected to be in the 0 to 1 range, inclusive.
+     * @param target any point with the same dimension to move toward
+     * @param alpha between 0 and 1, inclusive
+     * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
+     */
+    P lerp(R target, float alpha);
+
+    /**
+     * Calls {@link #lerp(PointN, float)} with the alpha determined by the given {@code interpolation}.
+     * Simply returns {@code lerp(target, interpolation.apply(alpha))} .
+     * @param target any point with the same dimension to move toward
+     * @param alpha between 0 and 1, inclusive
+     * @param interpolation an Interpolator from digital, such as {@link Interpolations#smooth}
+     * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
+     */
+    default P interpolate(R target, float alpha, Interpolations.Interpolator interpolation) {
+        return lerp(target, interpolation.apply(alpha));
     }
 
     /**
@@ -71,7 +138,7 @@ public interface PointNFloat<P extends PointNFloat<P>> extends PointN<P> {
      * @param output will be modified in-place so this is set to the result
      * @return output, after modifications.
      */
-    static <P extends PointNFloat<P>> P slerp(P start, P end,
+    static <P extends PointNFloat<P, R>, R extends PointN<P>> P slerp(P start, P end,
                                 float alpha, P output) {
         final int n = start.rank();
         float magS = 0f, magE = 0f;

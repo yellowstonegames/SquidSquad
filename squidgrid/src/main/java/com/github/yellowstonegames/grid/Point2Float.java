@@ -15,7 +15,7 @@ import java.util.Random;
  * A mutable 2D point with float components implementing {@link Point2}, {@link PrimitiveCollection.OfFloat},
  * {@link PointNFloat}, and {@link Externalizable}.
  */
-public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float, Point2<?>>, PrimitiveCollection.OfFloat, Externalizable {
 
     public float x;
     public float y;

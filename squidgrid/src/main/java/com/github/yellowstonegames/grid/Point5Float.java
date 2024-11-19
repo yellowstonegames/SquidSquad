@@ -15,7 +15,7 @@ import java.util.Random;
  * A mutable 5D point with float components implementing {@link Point5}, {@link OfFloat},
  * {@link PointNFloat}, and {@link Externalizable}.
  */
-public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float, Point5<?>>, PrimitiveCollection.OfFloat, Externalizable {
 
     public float x;
     public float y;
@@ -432,11 +432,11 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
     }
 
     public Point5Float setToRandomDirection(Random random) {
-        x = Distributor.linearNormalF(random.nextInt());
-        y = Distributor.linearNormalF(random.nextInt());
-        z = Distributor.linearNormalF(random.nextInt());
-        w = Distributor.linearNormalF(random.nextInt());
-        u = Distributor.linearNormalF(random.nextInt());
+        x = Distributor.probitI(random.nextInt());
+        y = Distributor.probitI(random.nextInt());
+        z = Distributor.probitI(random.nextInt());
+        w = Distributor.probitI(random.nextInt());
+        u = Distributor.probitI(random.nextInt());
         return nor();
     }
 
