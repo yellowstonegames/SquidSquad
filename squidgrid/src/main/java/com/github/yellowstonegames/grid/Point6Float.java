@@ -463,6 +463,10 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
         return lerp(target, interpolation.apply(alpha));
     }
 
+    public Point6Float slerpGeometric(Point6Float target, float alpha) {
+        return PointNFloat.slerpGeometric(this, target, alpha, this);
+    }
+
     public Point6Float setToRandomDirection(Random random) {
         x = Distributor.probitI(random.nextInt());
         y = Distributor.probitI(random.nextInt());

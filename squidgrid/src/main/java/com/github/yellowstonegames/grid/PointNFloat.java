@@ -1,7 +1,5 @@
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.crux.Point3;
-import com.github.tommyettinger.crux.Point4;
 import com.github.tommyettinger.crux.PointN;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.MathTools;
@@ -138,8 +136,7 @@ public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> e
      * @param output will be modified in-place so this is set to the result
      * @return output, after modifications.
      */
-    static <P extends PointNFloat<P, R>, R extends PointN<P>> P slerp(P start, P end,
-                                float alpha, P output) {
+    static <P extends PointNFloat<P, ?>> P slerpGeometric(P start, P end, float alpha, P output) {
         final int n = start.rank();
         float magS = 0f, magE = 0f;
         for (int i = 0; i < n; i++) {

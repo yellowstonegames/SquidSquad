@@ -72,7 +72,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //    private static final int FRAMES = 100;
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
-    private static final float SPEED = 0.25f;
+    private static float SPEED = 0.25f;
     private static final boolean FLOWING_LAND = true;
     private static final boolean GLOBE_SPIN = false;
     private static final boolean ALIEN_COLORS = false;
@@ -262,7 +262,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(fn);
 
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
-        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2));
+        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 3f)); SPEED *= 0.75f;
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2));
 
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
@@ -275,11 +276,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
 //        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
-        ((NoiseWrapper)iNoise.noise).setFractalSpiral(true);
+//        ((NoiseWrapper)iNoise.noise).setFractalSpiral(true);
 
 //        world = new GlobeMap(seed, width, height, iNoise, 0.6f);
-        world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.6f);
-//        world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
+//        world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.5f);
+        world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
 
         path = "out/worldsFlowing/" + date + "/"+world.getClass().getSimpleName()+iNoise.noise.getTag()+"/";
 
@@ -369,7 +370,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms, 50.0);
+        writer.palette.analyzeHueWise(pms, 50.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {

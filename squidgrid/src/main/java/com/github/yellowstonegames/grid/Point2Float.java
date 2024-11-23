@@ -408,6 +408,10 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return lerp(target, interpolation.apply(alpha));
     }
 
+    public Point2Float slerpGeometric(Point2Float target, float alpha) {
+        return PointNFloat.slerpGeometric(this, target, alpha, this);
+    }
+
     public Point2Float setToRandomDirection(Random random) {
         int index = random.nextInt() & TrigTools.TABLE_MASK;
         return this.set(TrigTools.COS_TABLE[index], TrigTools.SIN_TABLE[index]);

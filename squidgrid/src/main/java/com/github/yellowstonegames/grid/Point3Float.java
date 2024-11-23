@@ -406,7 +406,7 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
      * Spherically interpolates between this point and the target point by alpha, which must be in the range [0,1].
      * The result is stored in this point.
      *
-     * @see PointNFloat#slerp(PointNFloat, PointNFloat, float, PointNFloat) An alternative for other dimensions.
+     * @see PointNFloat#slerpGeometric(PointNFloat, PointNFloat, float, PointNFloat) An alternative for other dimensions.
      * @param target The target point
      * @param alpha The interpolation coefficient
      * @return This Point3Float for chaining
@@ -429,6 +429,10 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
         final float dl = st * ((l2 < 0.0001f) ? 1f : 1f / (float)Math.sqrt(l2));
 
         return scl(TrigTools.cosSmoother(theta)).add(tx * dl, ty * dl, tz * dl).nor();
+    }
+
+    public Point3Float slerpGeometric(Point3Float target, float alpha) {
+        return PointNFloat.slerpGeometric(this, target, alpha, this);
     }
 
     /** Sets the components from the given spherical coordinates in radians.

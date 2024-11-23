@@ -399,6 +399,10 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
         return lerp(target, interpolation.apply(alpha));
     }
 
+    public Point4Float slerpGeometric(Point4Float target, float alpha) {
+        return PointNFloat.slerpGeometric(this, target, alpha, this);
+    }
+
     public Point4Float setToRandomDirection(Random random) {
         x = Distributor.probitI(random.nextInt());
         y = Distributor.probitI(random.nextInt());

@@ -2,8 +2,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.crux.PointN;
 import com.github.tommyettinger.digital.Interpolations;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 
 /**
@@ -75,5 +73,4 @@ public interface PointNInt<P extends PointNInt<P, R>, R extends PointN<?>> exten
     default P interpolate(R target, float alpha, Interpolations.Interpolator interpolation) {
         return lerp(target, interpolation.apply(alpha));
     }
-
 }

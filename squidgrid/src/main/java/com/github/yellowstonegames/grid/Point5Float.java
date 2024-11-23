@@ -431,6 +431,10 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
         return lerp(target, interpolation.apply(alpha));
     }
 
+    public Point5Float slerpGeometric(Point5Float target, float alpha) {
+        return PointNFloat.slerpGeometric(this, target, alpha, this);
+    }
+
     public Point5Float setToRandomDirection(Random random) {
         x = Distributor.probitI(random.nextInt());
         y = Distributor.probitI(random.nextInt());
