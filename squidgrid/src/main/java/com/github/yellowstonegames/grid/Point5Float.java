@@ -284,7 +284,26 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
     public Point5Float subtract(float x, float y, float z, float w, float u) {
         return sub(x, y, z, w, u);
     }
-    public Point5Float scl(float scalar) {
+
+    public Point5Float plus(float scalar) {
+        x += scalar;
+        y += scalar;
+        z += scalar;
+        w += scalar;
+        u += scalar;
+        return this;
+    }
+
+    public Point5Float minus(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        z -= scalar;
+        w -= scalar;
+        u -= scalar;
+        return this;
+    }
+
+    public Point5Float times(float scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;
@@ -294,7 +313,7 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
     }
 
     public Point5Float scale(float scalar) {
-        return scl(scalar);
+        return times(scalar);
     }
 
     public Point5Float scl(float x, float y, float z, float w, float u) {
@@ -312,22 +331,22 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
 
     /**
      * Multiplies each component of this by the given scalar, in-place, and returns this.
-     * This is an alias for {@link #scl(float)}.
+     * This is an alias for {@link #times(float)}.
      * @param scalar a float that will be multiplied with each component
      * @return this, for chaining
      */
     public Point5Float mul(float scalar) {
-        return scl(scalar);
+        return times(scalar);
     }
 
     /**
      * Multiplies each component of this by the given scalar, in-place, and returns this.
-     * This is an alias for {@link #scl(float)}.
+     * This is an alias for {@link #times(float)}.
      * @param scalar a float that will be multiplied with each component
      * @return this, for chaining
      */
     public Point5Float multiply(float scalar) {
-        return scl(scalar);
+        return times(scalar);
     }
     /**
      * Multiplies each component of this by the corresponding scalar, in-place, and returns this.
@@ -382,7 +401,7 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
     public Point5Float limit2(float limit2) {
         float len2 = len2();
         if (len2 > limit2) {
-            return scl((float)Math.sqrt(limit2 / len2));
+            return times((float)Math.sqrt(limit2 / len2));
         }
         return this;
     }
@@ -394,9 +413,9 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
         final float len2 = len2();
         if (len2 == 0f) return this;
         float max2 = max * max;
-        if (len2 > max2) return scl((float)Math.sqrt(max2 / len2));
+        if (len2 > max2) return times((float)Math.sqrt(max2 / len2));
         float min2 = min * min;
-        if (len2 < min2) return scl((float)Math.sqrt(min2 / len2));
+        if (len2 < min2) return times((float)Math.sqrt(min2 / len2));
         return this;
     }
 
@@ -406,7 +425,7 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
 
     public Point5Float setLength2(float len2) {
         float oldLen2 = len2();
-        return (oldLen2 == 0 || oldLen2 == len2) ? this : scl((float)Math.sqrt(len2 / oldLen2));
+        return (oldLen2 == 0 || oldLen2 == len2) ? this : times((float)Math.sqrt(len2 / oldLen2));
     }
 
     public float dot(Point5<?> other) {

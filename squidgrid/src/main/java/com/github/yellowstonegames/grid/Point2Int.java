@@ -72,6 +72,30 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2
         return this;
     }
 
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point2Int plus(float scalar) {
+        x += scalar;
+        y += scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point2Int minus(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point2Int times(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        return this;
+    }
+
     @Override
     public Point2Int sub(Point2Int point) {
         x -= point.x;
@@ -110,6 +134,13 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2
         y *= point.yi();
         return this;
     }
+
+    public Point2Int scl(int scalar) {
+        x *= scalar;
+        y *= scalar;
+        return this;
+    }
+
     public Point2Int scale(Point2<?> point) {
         return scl(point);
     }
@@ -118,6 +149,12 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2
     }
     public Point2Int mul(Point2<?> point) {
         return scl(point);
+    }
+    public Point2Int mul(int scalar) {
+        return scl(scalar);
+    }
+    public Point2Int multiply(int scalar) {
+        return scl(scalar);
     }
     public Point2Int multiply(Point2<?> point) {
         return scl(point);

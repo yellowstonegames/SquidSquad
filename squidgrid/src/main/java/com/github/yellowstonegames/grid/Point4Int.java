@@ -374,6 +374,37 @@ public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4
     public Point4Int subtract(int x, int y, int z, int w) {
         return sub(x, y, z, w);
     }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point4Int plus(float scalar) {
+        x += scalar;
+        y += scalar;
+        z += scalar;
+        w += scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point4Int minus(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        z -= scalar;
+        w -= scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point4Int times(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        w *= scalar;
+        return this;
+    }
+
     public Point4Int scl(int scalar) {
         x *= scalar;
         y *= scalar;

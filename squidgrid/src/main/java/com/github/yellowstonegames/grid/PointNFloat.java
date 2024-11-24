@@ -60,23 +60,6 @@ public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> e
     }
 
     /**
-     * Scales this point by a single value for all components.
-     *
-     * @param scalar will be multiplied with each component
-     * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
-     */
-    P scl(float scalar);
-
-    /**
-     * Normalizes this point in-place, making its length as close to 1.0 as this can get.
-     *
-     * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
-     */
-    default P nor() {
-        return scl(1f/len());
-    }
-
-    /**
      * Sets this PointNFloat to a randomly chosen unit vector.
      * The exact algorithm is expected to vary between dimensions.
      * In 2D, for instance, it is sufficient to get a random float and call

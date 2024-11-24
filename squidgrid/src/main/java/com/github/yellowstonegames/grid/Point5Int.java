@@ -417,6 +417,40 @@ public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int, Point5
     public Point5Int subtract(int x, int y, int z, int w, int u) {
         return sub(x, y, z, w, u);
     }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point5Int plus(float scalar) {
+        x += scalar;
+        y += scalar;
+        z += scalar;
+        w += scalar;
+        u += scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point5Int minus(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        z -= scalar;
+        w -= scalar;
+        u -= scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point5Int times(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        w *= scalar;
+        u *= scalar;
+        return this;
+    }
+
     public Point5Int scl(int scalar) {
         x *= scalar;
         y *= scalar;

@@ -100,6 +100,24 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    public Point2Float plus(float scalar) {
+        x += scalar;
+        y += scalar;
+        return this;
+    }
+
+    public Point2Float minus(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        return this;
+    }
+
+    public Point2Float times(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        return this;
+    }
+
     @Override
     public Point2Float scl(Point2Float point) {
         x *= point.x;

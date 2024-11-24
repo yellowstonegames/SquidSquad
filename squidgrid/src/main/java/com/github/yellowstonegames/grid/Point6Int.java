@@ -458,6 +458,43 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
     public Point6Int subtract(int x, int y, int z, int w, int u, int v) {
         return sub(x, y, z, w, u, v);
     }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point6Int plus(float scalar) {
+        x += scalar;
+        y += scalar;
+        z += scalar;
+        w += scalar;
+        u += scalar;
+        v += scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point6Int minus(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        z -= scalar;
+        w -= scalar;
+        u -= scalar;
+        v -= scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point6Int times(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        w *= scalar;
+        u *= scalar;
+        v *= scalar;
+        return this;
+    }
+
     public Point6Int scl(int scalar) {
         x *= scalar;
         y *= scalar;

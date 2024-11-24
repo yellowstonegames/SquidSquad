@@ -333,6 +333,34 @@ public class Point3Int implements Point3<Point3Int>, PointNInt<Point3Int, Point3
     public Point3Int subtract(int x, int y, int z) {
         return sub(x, y, z);
     }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point3Int plus(float scalar) {
+        x += scalar;
+        y += scalar;
+        z += scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point3Int minus(float scalar) {
+        x -= scalar;
+        y -= scalar;
+        z -= scalar;
+        return this;
+    }
+
+    @SuppressWarnings("lossy-conversions")
+    @Override
+    public Point3Int times(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        return this;
+    }
+
     public Point3Int scl(int scalar) {
         x *= scalar;
         y *= scalar;

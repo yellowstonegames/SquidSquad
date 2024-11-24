@@ -358,8 +358,32 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @return a Coord (usually cached and not a new instance) with {@code x = this.x + operand; y = this.y +
      * operand}, with both x and y rounded accordingly
      */
-    public Coord add(final float operand) {
+    public Coord plus(final float operand) {
         return get(Math.round(x + operand), Math.round(y + operand));
+    }
+
+    /**
+     * Separately subtracts operand from the x and y positions of this Coord, rounding to the nearest int for each of x
+     * and y and producing a different Coord as their "difference."
+     *
+     * @param operand a value to subtract from each of x and y
+     * @return a Coord (usually cached and not a new instance) with {@code x = this.x - operand; y = this.y -
+     * operand}, with both x and y rounded accordingly
+     */
+    public Coord minus(final float operand) {
+        return get(Math.round(x - operand), Math.round(y - operand));
+    }
+
+    /**
+     * Separately multiplies operand with the x and y positions of this Coord, rounding to the nearest int for each of x
+     * and y and producing a different Coord as their "product."
+     *
+     * @param operand a value to multiply with each of x and y
+     * @return a Coord (usually cached and not a new instance) with {@code x = this.x * operand; y = this.y *
+     * operand}, with both x and y rounded accordingly
+     */
+    public Coord times(final float operand) {
+        return get(Math.round(x * operand), Math.round(y * operand));
     }
 
     /**
