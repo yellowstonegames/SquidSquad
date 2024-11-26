@@ -1,2 +1,5 @@
+before_install:
+  - sdk install java 23-open
+  - sdk use java 23-open
 jdk:
-  - openjdk21
+  - openjdk23
