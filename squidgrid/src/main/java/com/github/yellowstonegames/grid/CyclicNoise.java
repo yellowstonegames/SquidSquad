@@ -19,7 +19,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
@@ -223,10 +222,6 @@ float cyclicNoise(vec3 p){
 
     @Override
     public float getNoise(float x, float y) {
-//        return getNoise(x, y, LineWobble.bicubicWobble(seed, x), LineWobble.bicubicWobble(~seed, y));
-        x += LineWobble.bicubicWobble(seed    , x) * 0.5f;
-        y += LineWobble.bicubicWobble(seed + 1, y) * 0.5f;
-
         float noise = 0f;
 
         float amp = start;
@@ -269,9 +264,6 @@ float cyclicNoise(vec3 p){
 
     @Override
     public float getNoise(float x, float y, float z) {
-        x += LineWobble.bicubicWobble(seed    , x) * 0.5f;
-        y += LineWobble.bicubicWobble(seed + 1, y) * 0.5f;
-        z += LineWobble.bicubicWobble(seed + 2, z) * 0.5f;
         float noise = 0f;
 
         float amp = start;
@@ -348,11 +340,6 @@ float cyclicNoise(vec3 p){
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        x += LineWobble.bicubicWobble(seed    , x) * 0.5f;
-        y += LineWobble.bicubicWobble(seed + 1, y) * 0.5f;
-        z += LineWobble.bicubicWobble(seed + 2, z) * 0.5f;
-        w += LineWobble.bicubicWobble(seed + 3, w) * 0.5f;
-
         float noise = 0f;
 
         float amp = start;
@@ -410,12 +397,6 @@ float cyclicNoise(vec3 p){
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        x += LineWobble.bicubicWobble(seed    , x) * 0.5f;
-        y += LineWobble.bicubicWobble(seed + 1, y) * 0.5f;
-        z += LineWobble.bicubicWobble(seed + 2, z) * 0.5f;
-        w += LineWobble.bicubicWobble(seed + 3, w) * 0.5f;
-        u += LineWobble.bicubicWobble(seed + 4, u) * 0.5f;
-
         float noise = 0f;
 
         float amp = start;
@@ -480,13 +461,6 @@ float cyclicNoise(vec3 p){
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        x += LineWobble.bicubicWobble(seed    , x) * 0.5f;
-        y += LineWobble.bicubicWobble(seed + 1, y) * 0.5f;
-        z += LineWobble.bicubicWobble(seed + 2, z) * 0.5f;
-        w += LineWobble.bicubicWobble(seed + 3, w) * 0.5f;
-        u += LineWobble.bicubicWobble(seed + 4, u) * 0.5f;
-        v += LineWobble.bicubicWobble(seed + 5, v) * 0.5f;
-
         float noise = 0f;
 
         float amp = start;
@@ -557,14 +531,6 @@ float cyclicNoise(vec3 p){
     }
 
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
-        x += LineWobble.bicubicWobble(seed    , x) * 0.5f;
-        y += LineWobble.bicubicWobble(seed + 1, y) * 0.5f;
-        z += LineWobble.bicubicWobble(seed + 2, z) * 0.5f;
-        w += LineWobble.bicubicWobble(seed + 3, w) * 0.5f;
-        u += LineWobble.bicubicWobble(seed + 4, u) * 0.5f;
-        v += LineWobble.bicubicWobble(seed + 5, v) * 0.5f;
-        m += LineWobble.bicubicWobble(seed + 6, m) * 0.5f;
-
         float noise = 0f;
 
         float amp = start;
@@ -640,6 +606,8 @@ float cyclicNoise(vec3 p){
         }
         return noise * total;
     }
+
+    private static final float radToIndex = TABLE_SIZE / PI2;
 
     @Override
     public String toString() {
