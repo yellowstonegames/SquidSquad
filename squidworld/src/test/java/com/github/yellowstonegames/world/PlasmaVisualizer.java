@@ -85,8 +85,8 @@ public class PlasmaVisualizer extends ApplicationAdapter {
         view = new ScreenViewport();
 
         gif = new AnimatedGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.LOAF);
-        gif.setDitherStrength(0.5f);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.GOURD);
+        gif.setDitherStrength(0.3f);
         gif.palette = new QualityPalette();
 
         input = new InputAdapter(){
@@ -117,6 +117,7 @@ public class PlasmaVisualizer extends ApplicationAdapter {
 
                         String ser = elf.stringSerialize() + "_" + System.currentTimeMillis();
                         System.out.println(ser);
+                        gif.palette.analyzeHueWise(frames);
                         gif.write(Gdx.files.local("out/" + ser + ".gif"), frames, 16);
                         for (int i = 0; i < frames.size; i++) {
                             frames.get(i).dispose();

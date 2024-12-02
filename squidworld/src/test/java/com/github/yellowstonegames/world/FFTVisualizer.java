@@ -67,7 +67,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 64);
     private final FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
     private final SpectatorPointHash spec = new SpectatorPointHash();
-    private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt, spec};
+    private final SlimPointHash slim = new SlimPointHash();
+    private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt, spec, slim, };
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
@@ -88,9 +89,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final SorbetNoise sorbet = new SorbetNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
-    private int hashIndex = 5;
+    private int hashIndex = 6;
     private static final int MODE_LIMIT = 29;
-    private int mode = 2;
+    private int mode = 24;
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
