@@ -3,19 +3,14 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.crux.Point4;
 import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Random;
 
 /**
  * A mutable 4D point with float components implementing {@link Point4}, {@link OfFloat},
- * {@link PointNFloat}, and {@link Externalizable}.
+ * and {@link PointNFloat}.
  */
-public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float, Point4<?>>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float, Point4<?>>, PrimitiveCollection.OfFloat {
 
     public float x;
     public float y;
@@ -501,22 +496,6 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
         final int h = BitConversion.floatToIntBits(x) + 53  * BitConversion.floatToIntBits(y) +
                 113 * BitConversion.floatToIntBits(z) + 151 * BitConversion.floatToIntBits(w);
         return h ^ h >>> 16;
-    }
-
-    @GwtIncompatible
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeFloat(x);
-        out.writeFloat(y);
-        out.writeFloat(z);
-        out.writeFloat(w);
-    }
-
-    @GwtIncompatible
-    public void readExternal(ObjectInput in) throws IOException {
-        x = in.readFloat();
-        y = in.readFloat();
-        z = in.readFloat();
-        w = in.readFloat();
     }
 
     /** Converts this {@code Point5Float} to a string in the format {@code (x,y,z,w)}.

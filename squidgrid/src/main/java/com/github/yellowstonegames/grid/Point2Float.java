@@ -3,19 +3,14 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.crux.Point2;
 import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Random;
 
 /**
  * A mutable 2D point with float components implementing {@link Point2}, {@link PrimitiveCollection.OfFloat},
- * {@link PointNFloat}, and {@link Externalizable}.
+ * and {@link PointNFloat}.
  */
-public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float, Point2<?>>, PrimitiveCollection.OfFloat, Externalizable {
+public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float, Point2<?>>, PrimitiveCollection.OfFloat {
 
     public float x;
     public float y;
@@ -497,18 +492,6 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
     public int hashCode() {
         final int h = BitConversion.floatToIntBits(x) + 53 * BitConversion.floatToIntBits(y);
         return h ^ h >>> 16;
-    }
-
-    @GwtIncompatible
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeFloat(x);
-        out.writeFloat(y);
-    }
-
-    @GwtIncompatible
-    public void readExternal(ObjectInput in) throws IOException {
-        x = in.readFloat();
-        y = in.readFloat();
     }
 
     /** Converts this {@code Point2Float} to a string in the format {@code (x,y)}.

@@ -4,18 +4,12 @@ import com.github.tommyettinger.crux.Point4;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.yellowstonegames.core.annotations.GwtIncompatible;
-
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 /**
  * A mutable 4D point with int components implementing {@link Point4}, {@link OfInt},
- * {@link PointNInt}, and {@link Externalizable}.
+ * and {@link PointNInt}.
  */
-public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4<?>>, PrimitiveCollection.OfInt, Externalizable {
+public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4<?>>, PrimitiveCollection.OfInt {
 
     public int x;
     public int y;
@@ -597,22 +591,6 @@ public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4
     @Override
     public int hashCode() {
         return x * 0x1B69E1 ^ y * 0x177C0B ^ z * 0x141E5D ^ w * 0x113C31;
-    }
-
-    @GwtIncompatible
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(x);
-        out.writeInt(y);
-        out.writeInt(z);
-        out.writeInt(w);
-    }
-
-    @GwtIncompatible
-    public void readExternal(ObjectInput in) throws IOException {
-        x = in.readInt();
-        y = in.readInt();
-        z = in.readInt();
-        w = in.readInt();
     }
 
     /** Converts this {@code Point4Int} to a string in the format {@code (x,y,z,w)}.

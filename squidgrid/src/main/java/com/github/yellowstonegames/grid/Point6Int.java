@@ -3,18 +3,12 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.crux.Point6;
 import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import com.github.yellowstonegames.core.annotations.GwtIncompatible;
-
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 /**
  * A mutable 6D point with int components implementing {@link Point6}, {@link PrimitiveCollection.OfInt},
- * {@link PointNInt}, and {@link Externalizable}.
+ * and {@link PointNInt}.
  */
-public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6<?>>, PrimitiveCollection.OfInt, Externalizable {
+public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6<?>>, PrimitiveCollection.OfInt {
 
     public int x;
     public int y;
@@ -703,26 +697,6 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
     @Override
     public int hashCode() {
         return x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
-    }
-
-    @GwtIncompatible
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(x);
-        out.writeInt(y);
-        out.writeInt(z);
-        out.writeInt(w);
-        out.writeInt(u);
-        out.writeInt(v);
-    }
-
-    @GwtIncompatible
-    public void readExternal(ObjectInput in) throws IOException {
-        x = in.readInt();
-        y = in.readInt();
-        z = in.readInt();
-        w = in.readInt();
-        u = in.readInt();
-        v = in.readInt();
     }
 
     /** Converts this {@code Point6Int} to a string in the format {@code (x,y,z,w,u,v)}.
