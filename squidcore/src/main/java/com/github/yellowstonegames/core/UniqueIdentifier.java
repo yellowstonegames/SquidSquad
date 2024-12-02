@@ -1,12 +1,6 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.yellowstonegames.core.annotations.GwtIncompatible;
-
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 /**
  * A substitute for the UUID class, since it isn't available on GWT.
@@ -17,11 +11,10 @@ import java.io.ObjectOutput;
  * <br>
  * This can be serialized out-of-the-box to Strings using {@link #stringSerialize()}, but if you do, so must the
  * {@link #GENERATOR} that produces new UniqueIdentifier instances and ensures they are unique.
- * If you are using Fury or another type of serializer that can use {@link Externalizable} objects, this can be sent
+ * If you are using Fury or another type of serializer that can register arbitrary classes, this can be sent
  * directly to that without needing any extra serialization code. Like with the String serialization, you must serialize
- * the {@link #GENERATOR} field and restore it when restarting from a serialized state. The methods from Externalizable
- * are marked as {@link GwtIncompatible}; if you compile targeting GWT, they will not be present in the generated JS
- * code. The GwtIncompatible annotation and the {@code Base} class (in digital) are all this uses from other code.
+ * the {@link #GENERATOR} field and restore it when restarting from a serialized state. The {@code Base} class (in
+ * digital) is all this uses from other code.
  * <br>
  * This is also Comparable, for some reason (UUID is, but since these should all be random, it doesn't mean much).
  * UniqueIdentifier supports up to 2 to the 128 minus 1 unique instances, which should be far more than enough for
@@ -29,7 +22,7 @@ import java.io.ObjectOutput;
  * 50% likely after 2 to the 61 UUIDs were generated. If this is used properly, it can't collide until all (2 to the 128
  * minus 1) identifiers have been generated.
  */
-public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Externalizable {
+public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
 
     private int a;
     private int b;
@@ -176,46 +169,6 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
     }
 
     /**
-     * The object implements the writeExternal method to save its contents
-     * by calling the methods of DataOutput for its primitive values or
-     * calling the writeObject method of ObjectOutput for objects, strings,
-     * and arrays.
-     *
-     * @param out the stream to write the object to
-     * @throws IOException Includes any I/O exceptions that may occur
-     * @serialData Overriding methods should use this tag to describe
-     * the data layout of this Externalizable object.
-     * List the sequence of element types and, if possible,
-     * relate the element to a public/protected field and/or
-     * method of this Externalizable class.
-     */
-    @GwtIncompatible
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(a);
-        out.writeInt(b);
-        out.writeInt(c);
-        out.writeInt(d);
-    }
-
-    /**
-     * The object implements the readExternal method to restore its
-     * contents by calling the methods of DataInput for primitive
-     * types and readObject for objects, strings and arrays.  The
-     * readExternal method must read the values in the same sequence
-     * and with the same types as were written by writeExternal.
-     *
-     * @param in the stream to read data from in order to restore the object
-     * @throws IOException            if I/O errors occur
-     */
-    @GwtIncompatible
-    public void readExternal(ObjectInput in) throws IOException {
-        a = in.readInt();
-        b = in.readInt();
-        c = in.readInt();
-        d = in.readInt();
-    }
-
-    /**
      * The {@link Generator} that actually produces unique identifiers.
      * If your application pauses and needs to be resumed later by loading serialized state,
      * you must include this field in what you serialize, and load it before creating any
@@ -249,7 +202,7 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
      * The type used as a factory to produce UniqueIdentifiers that are actually unique for a given Generator.
      * This is used in {@link UniqueIdentifier#GENERATOR}, and can be used independently via {@link #generate()}.
      */
-    public static final class Generator implements Externalizable {
+    public static final class Generator {
         private int a;
         private int b;
         private int c;
@@ -364,46 +317,6 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier>, Ext
             c = Base.BASE16.readInt(data, 18, 26);
             d = Base.BASE16.readInt(data, 27, 35);
             return this;
-        }
-
-        /**
-         * The object implements the writeExternal method to save its contents
-         * by calling the methods of DataOutput for its primitive values or
-         * calling the writeObject method of ObjectOutput for objects, strings,
-         * and arrays.
-         *
-         * @param out the stream to write the object to
-         * @throws IOException Includes any I/O exceptions that may occur
-         * @serialData Overriding methods should use this tag to describe
-         * the data layout of this Externalizable object.
-         * List the sequence of element types and, if possible,
-         * relate the element to a public/protected field and/or
-         * method of this Externalizable class.
-         */
-        @GwtIncompatible
-        public void writeExternal(ObjectOutput out) throws IOException {
-            out.writeInt(a);
-            out.writeInt(b);
-            out.writeInt(c);
-            out.writeInt(d);
-        }
-
-        /**
-         * The object implements the readExternal method to restore its
-         * contents by calling the methods of DataInput for primitive
-         * types and readObject for objects, strings and arrays.  The
-         * readExternal method must read the values in the same sequence
-         * and with the same types as were written by writeExternal.
-         *
-         * @param in the stream to read data from in order to restore the object
-         * @throws IOException            if I/O errors occur
-         */
-        @GwtIncompatible
-        public void readExternal(ObjectInput in) throws IOException {
-            a = in.readInt();
-            b = in.readInt();
-            c = in.readInt();
-            d = in.readInt();
         }
     }
 }

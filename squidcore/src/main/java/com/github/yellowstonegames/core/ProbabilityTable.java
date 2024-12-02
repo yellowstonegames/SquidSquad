@@ -1,4 +1,5 @@
 /*
+
  * Copyright (c) 2020-2024 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,12 +26,9 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A generic method of holding a probability table to determine weighted random outcomes.
@@ -45,9 +43,10 @@ import java.io.ObjectOutput;
  * with {@link #add(ProbabilityTable, int)} and {@link #addAllNested(ObjectIntMap)}. Actually getting a
  * randomly-selected item is easy; just use {@link #random()}.
  * <br>
- * You can serialize a ProbabilityTable in various ways. The class is {@link Externalizable}, which mostly
- * matters if you use <a href="https://fury.apache.org">Fury serialization</a>. It can also be written and
- * read with a specialized serializer from SquidStore or SquidFreeze, for JSON or Kryo respectively. All
+ * You can serialize a ProbabilityTable in various ways. The class can be registered with
+ * <a href="https://fury.apache.org">Fury serialization</a> using {@code fury.register()} as long as you have
+ * already registered the classes listed in {@link #classesToRegister}. It can also be written
+ * and read with a specialized serializer from SquidStore or SquidFreeze, for JSON or Kryo respectively. All
  * these options require having other types registered, which always includes {@code T}. Kryo and Fury
  * also require {@link ObjectList}, {@link NumberedSet}, and {@link IntList} to be registered, plus the
  * concrete subclass of {@link EnhancedRandom} used by the ProbabilityTable (which defaults to
@@ -59,7 +58,7 @@ import java.io.ObjectOutput;
  *
  * @param <T> The type of object to be held in the table
  */
-public class ProbabilityTable<T> implements Externalizable {
+public class ProbabilityTable<T> {
     /**
      * The set of items that can be produced directly from {@link #random()} (without additional lookups).
      */
@@ -462,51 +461,10 @@ public class ProbabilityTable<T> implements Externalizable {
     }
 
     /**
-     * The object implements the writeExternal method to save its contents
-     * by calling the methods of DataOutput for its primitive values or
-     * calling the writeObject method of ObjectOutput for objects, strings,
-     * and arrays.
-     *
-     * @param out the stream to write the object to
-     * @throws IOException Includes any I/O exceptions that may occur
-     * @serialData Overriding methods should use this tag to describe
-     * the data layout of this Externalizable object.
-     * List the sequence of element types and, if possible,
-     * relate the element to a public/protected field and/or
-     * method of this Externalizable class.
+     * An unmodifiable List of classes that must be registered with serialization frameworks for this class to be able
+     * to be registered. This may also need the concrete subclass of EnhancedRandom registered.
+     * <br>
+     * {@code EnhancedRandom.class, NumberedSet.class, ObjectList.class, IntList.class}
      */
-    @GwtIncompatible
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(rng);
-        out.writeObject(table);
-        out.writeObject(extraTable);
-        out.writeObject(weights);
-        out.writeInt(total);
-
-    }
-
-    /**
-     * The object implements the readExternal method to restore its
-     * contents by calling the methods of DataInput for primitive
-     * types and readObject for objects, strings and arrays.  The
-     * readExternal method must read the values in the same sequence
-     * and with the same types as were written by writeExternal.
-     *
-     * @param in the stream to read data from in order to restore the object
-     * @throws IOException            if I/O errors occur
-     * @throws ClassNotFoundException If the class for an object being
-     *                                restored cannot be found.
-     */
-    @GwtIncompatible
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        rng = (EnhancedRandom) in.readObject();
-        table.clear();
-        table.addAll((NumberedSet<T>)in.readObject());
-        extraTable.clear();
-        extraTable.addAll((ObjectList<ProbabilityTable<T>>)in.readObject());
-        weights.clear();
-        weights.addAll((IntList)in.readObject());
-        total = in.readInt();
-
-    }
+    public static final List<Class<?>> classesToRegister = Arrays.asList(EnhancedRandom.class, NumberedSet.class, ObjectList.class, IntList.class);
 }

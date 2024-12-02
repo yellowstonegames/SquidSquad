@@ -22,15 +22,12 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.Hasher;
 
-import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Meant to take a fixed-size set of items and produce a shuffled stream of them such that an element is never chosen in
@@ -39,15 +36,15 @@ import java.util.Iterator;
  * iterates through one of these, or call the iterator's next() method only a limited number of times. Collections have
  * a size that can be checked, but Iterables can be infinite (and in this case, this one is).
  * <br>
- * You can serialize this with <a href="https://fury.apache.org">Fury</a> without needing a serializer because it
- * implements Externalizable. To do so, it needs {@link ObjectList} registered
- * (<a href="https://github.com/tommyettinger/tantrum/blob/main/tantrum-jdkgdxds/src/main/java/com/github/tommyettinger/tantrum/jdkgdxds/ObjectListSerializer.java">the tantrum library has code for this already</a>),
- * as well as the concrete subclass of {@link EnhancedRandom} that this uses (which you can also use tantrum for). The
- * default subclass of EnhancedRandom used here is {@link AceRandom}, unless otherwise provided.
+ * You can serialize this with <a href="https://fury.apache.org">Fury</a> without needing a serializer, as long as you
+ * have the classes in {@link #classesToRegister} registered. You probably need to register the concrete subclass of
+ * EnhancedRandom you use here; the default subclass of EnhancedRandom used here is {@link AceRandom}, unless you have
+ * provided your own with a different type. If you use JSON, a serializer is available in squidstore.grid, and if you
+ * use Kryo, one is available in squidfreeze.grid .
  *
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
-public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Externalizable {
+public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
     public @NonNull EnhancedRandom random;
     protected @NonNull ObjectList<T> elements;
     protected int index;
@@ -382,45 +379,12 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T>, Externalizable 
         return elements.equals(that.elements);
     }
 
-
     /**
-     * Requires the deserializer to be able to read in an {@link ObjectList} of {@code T} items, as well as a
-     * {@link EnhancedRandom}. These typically need to be registered before a GapShuffler can be written.
-     * If you are using Apache Fury, the concrete subclass of EnhancedRandom is required to be registered (typically this is
-     * {@link AceRandom}), but EnhancedRandom itself does not need to be registered.
-     *
-     * @param out the stream to write the object to
-     * @throws IOException Includes any I/O exceptions that may occur
-     * @serialData Overriding methods should use this tag to describe
-     * the data layout of this Externalizable object.
-     * List the sequence of element types and, if possible,
-     * relate the element to a public/protected field and/or
-     * method of this Externalizable class.
+     * An unmodifiable List of classes that must be registered with serialization frameworks for this class to be able
+     * to be registered. This may also need the concrete subclass of EnhancedRandom registered.
+     * <br>
+     * {@code EnhancedRandom.class, ObjectList.class}
      */
-    @GwtIncompatible
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(elements);
-        out.writeObject(random);
-        out.writeInt(index);
-    }
-
-    /**
-     * Requires the deserializer to be able to read in an {@link ObjectList} of {@code T} items, as well as an
-     * {@link EnhancedRandom}. These typically need to be registered before a GapShuffler can be read in.
-     * If you are using Apache Fury, the concrete subclass of EnhancedRandom is required to be registered (typically
-     * this is {@link AceRandom}), but EnhancedRandom itself does not need to be registered.
-     *
-     * @param in the stream to read data from in order to restore the object
-     * @throws IOException            if I/O errors occur
-     * @throws ClassNotFoundException If the class for an object being
-     *                                restored cannot be found.
-     */
-    @GwtIncompatible
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        //noinspection unchecked
-        elements = (ObjectList<T>) in.readObject();
-        random = (EnhancedRandom) in.readObject();
-        index = in.readInt();
-    }
+    public static final List<Class<?>> classesToRegister = Arrays.asList(EnhancedRandom.class, ObjectList.class);
 
 }
