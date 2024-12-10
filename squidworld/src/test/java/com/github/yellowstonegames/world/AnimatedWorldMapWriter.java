@@ -32,6 +32,8 @@ import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.StringTools;
+import com.github.yellowstonegames.grid.CyclicNoise;
+import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.IPointHash;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
@@ -58,10 +60,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 512;
 
     private static final int LIMIT = 3;
-    private static final int FRAMES = 180;
-//    private static final boolean FLOWING_LAND = true;
-//    private static final boolean ALIEN_COLORS = false;
-    private static final boolean MANY_STILL = true;
+    private static final int FRAMES = 240;
+    private static final boolean FLOWING_LAND = false;
+    private static final boolean ALIEN_COLORS = false;
+    private static final boolean MANY_STILL = false;
     private static final boolean SEEDY = false;
     private int baseSeed = 1234567890;
     private final int AA = 1;
@@ -69,8 +71,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
     {
-        if(SEEDY) return String.valueOf(++baseSeed);
-        else return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
+        return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
     }
 
     private Pixmap[] pm;
@@ -87,49 +88,12 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private FastPNG png;
     
     private String date, path;
-    private Noise noise;
+    private INoise noise;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
-//        path = "out/worldsAnimated/" + date + "/Sphere/";
-//        path = "out/worldsAnimated/" + date + "/SphereQuilt/";
-//        path = "out/worldsAnimated/" + date + "/SphereQuilt/";
-//        path = "out/worldsAnimated/" + date + "/SphereExpo/";
-//        path = "out/worldsAnimated/" + date + "/Ellipse/";
-//        path = "out/worldsAnimated/" + date + "/EllipseExpo/";
-//        path = "out/worldsAnimated/" + date + "/Mimic/";
-//        path = "out/worldsAnimated/" + date + "/SpaceView/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewMutantClassic/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewMutantFoam/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewMutantHoney/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewFlan/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewTaffy/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewValue/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewValueCrescent/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewClassic/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewSeedy/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewPerlin/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewHoney/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewFoam/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewSimplex/";
-//        path = "out/worldsAnimated/" + date + "/SpaceViewRidged/";
-//        path = "out/worldsAnimated/" + date + "/HyperellipseWrithing/";
-//        path = "out/worldsAnimated/" + date + "/Hyperellipse/";
-//        path = "out/worldsAnimated/" + date + "/HyperellipseExpo/";
-//        path = "out/worldsAnimated/" + date + "/HyperellipseQuilt/";
-//        path = "out/worldsAnimated/" + date + "/Tiling/";
-//        path = "out/worldsAnimated/" + date + "/RoundSide/";
-//        path = "out/worldsAnimated/" + date + "/Local/";
-//        path = "out/worldsAnimated/" + date + "/LocalSquat/";
-//        path = "out/worldsAnimated/" + date + "/LocalMimic/";
-//        path = "out/worldsAnimated/" + date + "/EllipseHammer/";
-        path = "out/worldsAnimated/" + date + "/GoodFoam/";
-//        path = "out/worldsAnimated/" + date + "/RoughFoam/";
-
-        if(!Gdx.files.local(path).exists())
-            Gdx.files.local(path).mkdirs();
 
         pm = new Pixmap[FRAMES];
         for (int i = 0; i < pm.length; i++) {
@@ -138,8 +102,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.LOAF);
-        writer.setDitherStrength(1f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.GOURD);
+        writer.setDitherStrength(0.25f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
         apng = new AnimatedPNG();
@@ -171,43 +135,15 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 2f, Noise.PERLIN_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
+//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
 
-        fn.setInterpolation(Noise.QUINTIC);
+//        fn.setInterpolation(Noise.QUINTIC);
 
-        if(SEEDY) {
-            fn.setPointHash(new IPointHash.IntImpl() {
-                @Override
-                public int hashWithState(int x, int y, int state) {
-                    return (int) (0xC13FA9A902A6328FL * x + 0x91E10DA5C79E7B1DL * y + 0x9E3779B97F4A7C15L * state);
-                }
+        INoise fn = new CyclicNoise(seed, 3, 1.5f);
 
-                @Override
-                public int hashWithState(int x, int y, int z, int state) {
-                    return (int) (0xD1B54A32D192ED03L * x + 0xABC98388FB8FAC03L * y + 0x8CB92BA72F3D8DD7L * z + 0x9E3779B97F4A7C15L * state);
-                }
+        noise = fn;
 
-                @Override
-                public int hashWithState(int x, int y, int z, int w, int state) {
-                    return (int) (0xDB4F0B9175AE2165L * x + 0xBBE0563303A4615FL * y + 0xA0F2EC75A1FE1575L * z + 0x89E182857D9ED689L * w + 0x9E3779B97F4A7C15L * state);
-                }
-
-                @Override
-                public int hashWithState(int x, int y, int z, int w, int u, int state) {
-                    return (int) (0xE19B01AA9D42C633L * x + 0xC6D1D6C8ED0C9631L * y + 0xAF36D01EF7518DBBL * z + 0x9A69443F36F710E7L * w + 0x881403B9339BD42DL * u + 0x9E3779B97F4A7C15L * state);
-                }
-
-                @Override
-                public int hashWithState(int x, int y, int z, int w, int u, int v, int state) {
-                    return (int) (0xE60E2B722B53AEEBL * x + 0xCEBD76D9EDB6A8EFL * y + 0xB9C9AA3A51D00B65L * z + 0xA6F5777F6F88983FL * w + 0x9609C71EB7D03F7BL * u + 0x86D516E50B04AB1BL * v + 0x9E3779B97F4A7C15L * state);
-                }
-            });
-        }
-//        if(FLOWING_LAND)
-//            noise = new Noise.Adapted3DFrom5D(fn);
-//        else
-            noise = fn;
 //        WorldMapGenerator.DEFAULT_NOISE.setNoiseType(FastNoise.HONEY);
 //        WorldMapGenerator.DEFAULT_NOISE.setFrequency(1.25f);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(1);
@@ -234,6 +170,11 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
 
         wmv = new BlendedWorldMapView(world);
+
+        path = "out/worldsAnimated/" + date + "/"+world.getClass().getSimpleName()+noise.getTag()+"/";
+
+        if(!Gdx.files.local(path).exists())
+            Gdx.files.local(path).mkdirs();
 
         //generate(seed);
         rng.setSeed(seed);
@@ -262,12 +203,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        if(ALIEN_COLORS) {
 //            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
 //        }
-        if(SEEDY){
-            wmv.generate(1.0f, 1.25f);
-        }
-        else {
-            wmv.generate(0.9f, 1.25f);
-        }
+        wmv.generate(0.9f, 1.25f);
         ttg = System.currentTimeMillis() - startTime;
     }
 
@@ -277,8 +213,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         while (Gdx.files.local(path + name + ".gif").exists())
             name = makeName(thesaurus);
         long hash;
-        if(SEEDY) hash = baseSeed;
-        else hash = Hasher.balam.hash64(name);
+        hash = Hasher.balam.hash64(name);
         FileHandle stills = null;
         if(MANY_STILL){
             stills = Gdx.files.local(path + "/"+name+"_stills/");
@@ -327,9 +262,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
-        apng.write(Gdx.files.local(path + name + ".png"), pms, 20);
+        writer.palette.analyzeHueWise(pms, 50.0);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
+        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
         temp.dispose();
 
         System.out.println();
