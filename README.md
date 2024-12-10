@@ -131,7 +131,7 @@ able to only use part of the library instead of needing the monolithic squidlib-
 problematic during development, like how squidlib-util defined its own (elaborate) data structures based on
 heavily-altered code from an older version of [fastutil](https://github.com/vigna/fastutil), and needed a lot of effort
 to add new types of those data structures. All of SquidLib depended and still (sort-of) depends on Java 7; now with
-virtually all targets permitting at least some of Java 8 or even Java 11, there's not much reason to reach back 12 years
+virtually all targets permitting at least some of Java 8 or even Java 11, there's not much reason to reach back 13 years
 to July 2011, when Java 7 came out.
 
 # How?
@@ -200,12 +200,12 @@ because they can change without warning and don't tell you what commit you are a
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.5.0
-  - `jdkgdxdsVersion`=1.6.2
-  - `juniperVersion`=0.6.1
-  - `regExodusVersion`=0.1.15
-  - `cruxVersion`=0.0.1
-  - `textraTypistVersion`=1.0.0
+  - `digitalVersion`=0.5.4
+  - `jdkgdxdsVersion`=1.7.1
+  - `juniperVersion`=0.6.3
+  - `regExodusVersion`=0.1.16
+  - `cruxVersion`=0.1.0
+  - `textraTypistVersion`=1.1.0
 
 # License
 

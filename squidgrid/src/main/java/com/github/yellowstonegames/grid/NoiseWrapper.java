@@ -115,16 +115,18 @@ public class NoiseWrapper implements INoise {
         return wrapped;
     }
 
-    public void setWrapped(INoise wrapped) {
+    public NoiseWrapper setWrapped(INoise wrapped) {
         this.wrapped = wrapped;
+        return this;
     }
 
     public float getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(float frequency) {
+    public NoiseWrapper setFrequency(float frequency) {
         this.frequency = frequency;
+        return this;
     }
 
     /**
@@ -139,8 +141,9 @@ public class NoiseWrapper implements INoise {
      * Wraps {@link #setFractalType(int)}
      * @param mode an int between 0 and 4, corresponding to {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, or {@link #EXO}
      */
-    public void setMode(int mode) {
+    public NoiseWrapper setMode(int mode) {
         setFractalType(mode);
+        return this;
     }
 
     public int getFractalType() {
@@ -150,8 +153,9 @@ public class NoiseWrapper implements INoise {
     /**
      * @param mode an int between 0 and 4, corresponding to {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, or {@link #EXO}
      */
-    public void setFractalType(int mode) {
+    public NoiseWrapper setFractalType(int mode) {
         this.mode = mode;
+        return this;
     }
 
     /**
@@ -166,8 +170,9 @@ public class NoiseWrapper implements INoise {
      * Wraps {@link #setFractalOctaves(int)}.
      * @param octaves how many octaves to use to increase detail; must be at least 1.
      */
-    public void setOctaves(int octaves) {
+    public NoiseWrapper setOctaves(int octaves) {
         setFractalOctaves(octaves);
+        return this;
     }
 
     public int getFractalOctaves() {
@@ -177,16 +182,18 @@ public class NoiseWrapper implements INoise {
     /**
      * @param octaves how many octaves to use to increase detail; must be at least 1.
      */
-    public void setFractalOctaves(int octaves) {
+    public NoiseWrapper setFractalOctaves(int octaves) {
         this.octaves = Math.max(1, octaves);
+        return this;
     }
 
     public boolean isFractalSpiral() {
         return fractalSpiral;
     }
 
-    public void setFractalSpiral(boolean fractalSpiral) {
+    public NoiseWrapper setFractalSpiral(boolean fractalSpiral) {
         this.fractalSpiral = fractalSpiral;
+        return this;
     }
 
     @Override

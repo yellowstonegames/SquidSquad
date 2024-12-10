@@ -66,15 +66,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 
 //    private static final int width = 256, height = 256;
-//    private static final int width = 300, height = 300;
-    private static final int width = 400, height = 200;
+    private static final int width = 300, height = 300;
+//    private static final int width = 400, height = 200;
 
 //    private static final int FRAMES = 100;
     private static final int FRAMES = 240;
     private static final int LIMIT = 3;
     private static float SPEED = 0.25f;
     private static final boolean FLOWING_LAND = true;
-    private static final boolean GLOBE_SPIN = false;
+    private static final boolean GLOBE_SPIN = true;
     private static final boolean ALIEN_COLORS = false;
     private int baseSeed = 1234567890;
 
@@ -262,8 +262,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(fn);
 
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
-        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 3f)); SPEED *= 0.75f;
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2));
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 1));
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new CyclicNoise(seed, 3, 3f), seed, 0.75f, NoiseWrapper.FBM, 2));
+        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 3f)); SPEED *= 0.7f;
+//        iNoise = new Noise3DFrom5D(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlinNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
 
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
 //        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
@@ -278,9 +282,11 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        ((NoiseWrapper)iNoise.noise).setFractalSpiral(true);
 
-//        world = new GlobeMap(seed, width, height, iNoise, 0.6f);
-//        world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.5f);
-        world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
+        if(GLOBE_SPIN)
+            world = new GlobeMap(seed, width, height, iNoise, 0.6f);
+        else
+            world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
+//            world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.5f);
 
         path = "out/worldsFlowing/" + date + "/"+world.getClass().getSimpleName()+iNoise.noise.getTag()+"/";
 
