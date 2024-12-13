@@ -63,8 +63,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
     private WorldMapGenerator world, inner;
     private WorldMapView wmv;
 
-    private INoise terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise;
-    
+    private INoise terrainNoise;
+//    private INoise terrainNoise, terrainLayeredNoise, heatNoise, moistureNoise, otherNoise;
+
     private boolean spinning;
 
     private long ttg; // time to generate
@@ -84,41 +85,6 @@ public class WorldViewerDemo extends ApplicationAdapter {
         view = new StretchViewport(width << AA, height << AA);
         seed = 42;
         rng = new DistinctRandom(seed);
-        //// NOTE: this Noise has a different frequency (1f) than the default (1/32f), and that
-        //// makes a huge difference on world map quality. It also uses extra octaves.
-        //WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(3);
-//        WorldMapGenerator.DEFAULT_NOISE.setFractalLacunarity(0.625f);
-//        WorldMapGenerator.DEFAULT_NOISE.setFractalGain(1.6f);
-        
-//        {
-//            @Override
-//            public float singleSimplex(int seed, float x, float y, float z) {
-//                noiseCalls++;
-//                super.setSeed(seed);
-//                return super.getSimplexFractal(x, y, z);
-//            }
-//
-//            @Override
-//            public float singleSimplex(int seed, float x, float y) {
-//                noiseCalls++;
-//                super.setSeed(seed);
-//                return super.getSimplexFractal(x, y);
-//            }
-//
-//            @Override
-//            public float singleSimplex(int seed, float x, float y, float z, float w) {
-//                noiseCalls++;
-//                super.setSeed(seed);
-//                return super.getSimplexFractal(x, y, z, w);
-//            }
-//
-//            @Override
-//            public float singleSimplex(int seed, float x, float y, float z, float w, float u, float v) {
-//                noiseCalls++;
-//                super.setSeed(seed);
-//                return super.getSimplexFractal(x, y, z, w, u, v);
-//            }
-//        };
 
 //        world = new RotatingGlobeMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.8f);
 
@@ -129,16 +95,18 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2);
 //        terrainNoise = new Noise(rng.nextInt(), 2f, Noise.MUTANT_FRACTAL, 1);
 //        terrainNoise = new SorbetNoise(rng.nextLong(), 4);
-        terrainNoise = new CyclicNoise(rng.nextLong(), 1);
+//        terrainNoise = new CyclicNoise(rng.nextLong(), 1);
+        terrainNoise = new PerlueNoise(rng.nextLong());
 //        terrainNoise = new PerlinNoise(rng.nextLong());
 //        terrainNoise = new NoiseWrapper(new PerlinNoise(rng.nextLong()), 1.6f, NoiseWrapper.FBM, 1);
 
-        terrainLayeredNoise = new Noise(rng.nextInt(), 1.6f, Noise.FOAM_FRACTAL, 1);
-        heatNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
-        moistureNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
-        otherNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
-        world = new GlobeMap(seed, width << AA, height << AA, terrainNoise, 0.75f);
-//        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.75f);
+//        terrainLayeredNoise = new Noise(rng.nextInt(), 1.6f, Noise.FOAM_FRACTAL, 1);
+//        heatNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
+//        moistureNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
+//        otherNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
+
+//        world = new GlobeMap(seed, width << AA, height << AA, terrainNoise, 0.75f);
+        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.75f);
 
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
