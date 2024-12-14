@@ -251,6 +251,141 @@ public final class JsonGrid {
         });
     }
 
+
+    /**
+     * Registers Point2Float with the given Json object, so Point2Float can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPoint2Float(@NonNull Json json) {
+        json.addClassTag("Pt2F", Point2Float.class);
+        json.setSerializer(Point2Float.class, new Json.Serializer<Point2Float>() {
+            @Override
+            public void write(Json json, Point2Float object, Class knownType) {
+                json.writeObjectStart(Point2Float.class, knownType);
+                json.writeValue("x", object.x);
+                json.writeValue("y", object.y);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Point2Float read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Point2Float(jsonData.getFloat("x", 0), jsonData.getFloat("y", 0));
+            }
+        });
+    }
+
+    /**
+     * Registers Point3Float with the given Json object, so Point3Float can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPoint3Float(@NonNull Json json) {
+        json.addClassTag("Pt3F", Point3Float.class);
+        json.setSerializer(Point3Float.class, new Json.Serializer<Point3Float>() {
+            @Override
+            public void write(Json json, Point3Float object, Class knownType) {
+                json.writeObjectStart(Point3Float.class, knownType);
+                json.writeValue("x", object.x);
+                json.writeValue("y", object.y);
+                json.writeValue("z", object.z);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Point3Float read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Point3Float(jsonData.getFloat("x", 0), jsonData.getFloat("y", 0), jsonData.getFloat("z", 0));
+            }
+        });
+    }
+
+    /**
+     * Registers Point4Float with the given Json object, so Point4Float can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPoint4Float(@NonNull Json json) {
+        json.addClassTag("Pt4F", Point4Float.class);
+        json.setSerializer(Point4Float.class, new Json.Serializer<Point4Float>() {
+            @Override
+            public void write(Json json, Point4Float object, Class knownType) {
+                json.writeObjectStart(Point4Float.class, knownType);
+                json.writeValue("x", object.x);
+                json.writeValue("y", object.y);
+                json.writeValue("z", object.z);
+                json.writeValue("w", object.w);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Point4Float read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Point4Float(jsonData.getFloat("x", 0), jsonData.getFloat("y", 0),
+                        jsonData.getFloat("z", 0), jsonData.getFloat("w", 0));
+            }
+        });
+    }
+
+    /**
+     * Registers Point5Float with the given Json object, so Point5Float can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPoint5Float(@NonNull Json json) {
+        json.addClassTag("Pt5F", Point5Float.class);
+        json.setSerializer(Point5Float.class, new Json.Serializer<Point5Float>() {
+            @Override
+            public void write(Json json, Point5Float object, Class knownType) {
+                json.writeObjectStart(Point5Float.class, knownType);
+                json.writeValue("x", object.x);
+                json.writeValue("y", object.y);
+                json.writeValue("z", object.z);
+                json.writeValue("w", object.w);
+                json.writeValue("u", object.u);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Point5Float read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Point5Float(jsonData.getFloat("x", 0), jsonData.getFloat("y", 0),
+                        jsonData.getFloat("z", 0), jsonData.getFloat("w", 0), jsonData.getFloat("u", 0));
+            }
+        });
+    }
+
+    /**
+     * Registers Point6Float with the given Json object, so Point6Float can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPoint6Float(@NonNull Json json) {
+        json.addClassTag("Pt6F", Point6Float.class);
+        json.setSerializer(Point6Float.class, new Json.Serializer<Point6Float>() {
+            @Override
+            public void write(Json json, Point6Float object, Class knownType) {
+                json.writeObjectStart(Point6Float.class, knownType);
+                json.writeValue("x", object.x);
+                json.writeValue("y", object.y);
+                json.writeValue("z", object.z);
+                json.writeValue("w", object.w);
+                json.writeValue("u", object.u);
+                json.writeValue("v", object.v);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Point6Float read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Point6Float(jsonData.getFloat("x", 0), jsonData.getFloat("y", 0),
+                        jsonData.getFloat("z", 0), jsonData.getFloat("w", 0),
+                        jsonData.getFloat("u", 0), jsonData.getFloat("v", 0));
+            }
+        });
+    }
+
     /**
      * Registers Region with the given Json object, so Region can be written to and read from JSON.
      * This is a simple wrapper around Region's built-in {@link Region#stringSerialize()} and
