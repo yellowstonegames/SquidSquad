@@ -70,13 +70,146 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
         return left == right;
     }
 
-    public static CoordOrderedSet with(Coord item) {
+    /**
+     * Constructs an empty set given the type as a generic type argument.
+     * This is usually less useful than just using the constructor, but can be handy
+     * in some code-generation scenarios when you don't know how many arguments you will have.
+     *
+     * @return a new set containing nothing
+     */
+    public static CoordOrderedSet with () {
+        return new CoordOrderedSet(0);
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given item, but can be resized.
+     * @param item one Coord item
+     * @return a new CoordOrderedSet that holds the given item
+     */
+    public static CoordOrderedSet with (Coord item) {
         CoordOrderedSet set = new CoordOrderedSet(1);
         set.add(item);
         return set;
     }
 
-    public static CoordOrderedSet with (Coord... array) {
-        return new CoordOrderedSet(array);
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * @param item0 a Coord item
+     * @param item1 a Coord item
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    public static CoordOrderedSet with (Coord item0, Coord item1) {
+        CoordOrderedSet set = new CoordOrderedSet(2);
+        set.add(item0, item1);
+        return set;
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * @param item0 a Coord item
+     * @param item1 a Coord item
+     * @param item2 a Coord item
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    public static CoordOrderedSet with (Coord item0, Coord item1, Coord item2) {
+        CoordOrderedSet set = new CoordOrderedSet(3);
+        set.add(item0, item1, item2);
+        return set;
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * @param item0 a Coord item
+     * @param item1 a Coord item
+     * @param item2 a Coord item
+     * @param item3 a Coord item
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    public static CoordOrderedSet with (Coord item0, Coord item1, Coord item2, Coord item3) {
+        CoordOrderedSet set = new CoordOrderedSet(4);
+        set.add(item0, item1, item2, item3);
+        return set;
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * @param item0 a Coord item
+     * @param item1 a Coord item
+     * @param item2 a Coord item
+     * @param item3 a Coord item
+     * @param item4 a Coord item
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    public static CoordOrderedSet with (Coord item0, Coord item1, Coord item2, Coord item3, Coord item4) {
+        CoordOrderedSet set = new CoordOrderedSet(5);
+        set.add(item0, item1, item2, item3);
+        set.add(item4);
+        return set;
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * @param item0 a Coord item
+     * @param item1 a Coord item
+     * @param item2 a Coord item
+     * @param item3 a Coord item
+     * @param item4 a Coord item
+     * @param item5 a Coord item
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    public static CoordOrderedSet with (Coord item0, Coord item1, Coord item2, Coord item3, Coord item4, Coord item5) {
+        CoordOrderedSet set = new CoordOrderedSet(6);
+        set.add(item0, item1, item2, item3);
+        set.add(item4, item5);
+        return set;
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * @param item0 a Coord item
+     * @param item1 a Coord item
+     * @param item2 a Coord item
+     * @param item3 a Coord item
+     * @param item4 a Coord item
+     * @param item5 a Coord item
+     * @param item6 a Coord item
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    public static CoordOrderedSet with (Coord item0, Coord item1, Coord item2, Coord item3, Coord item4, Coord item5, Coord item6) {
+        CoordOrderedSet set = new CoordOrderedSet(7);
+        set.add(item0, item1, item2, item3);
+        set.add(item4, item5, item6);
+        return set;
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * @param item0 a Coord item
+     * @param item1 a Coord item
+     * @param item2 a Coord item
+     * @param item3 a Coord item
+     * @param item4 a Coord item
+     * @param item5 a Coord item
+     * @param item6 a Coord item
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    public static CoordOrderedSet with (Coord item0, Coord item1, Coord item2, Coord item3, Coord item4, Coord item5, Coord item6, Coord item7) {
+        CoordOrderedSet set = new CoordOrderedSet(8);
+        set.add(item0, item1, item2, item3);
+        set.add(item4, item5, item6, item7);
+        return set;
+    }
+
+    /**
+     * Creates a new CoordOrderedSet that holds only the given items, but can be resized.
+     * This overload will only be used when an array is supplied and the type of the
+     * items requested is the component type of the array, or if varargs are used and
+     * there are 9 or more arguments.
+     * @param varargs a Coord varargs or Coord array; remember that varargs allocate
+     * @return a new CoordOrderedSet that holds the given items
+     */
+    @SafeVarargs
+    public static CoordOrderedSet with (Coord... varargs) {
+        return new CoordOrderedSet(varargs);
     }
 }
