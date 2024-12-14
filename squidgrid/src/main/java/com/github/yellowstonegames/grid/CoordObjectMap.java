@@ -72,19 +72,101 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     }
 
     /**
+     * Constructs an empty map given the types as generic type arguments.
+     * This is usually less useful than just using the constructor, but can be handy
+     * in some code-generation scenarios when you don't know how many arguments you will have.
+     * <br>
+     * This needs to be named differently because of shadowing issues with the parent class.
+     *
+     * @param <V>    the type of values
+     * @return a new map containing nothing
+     */
+    public static <V> CoordObjectMap<V> withNothing () {
+        return new CoordObjectMap<>(0);
+    }
+
+    /**
      * Constructs a single-entry map given one key and one value.
      * This is mostly useful as an optimization for {@link #with(Coord, Object, Object...)}
      * when there's no "rest" of the keys or values.
-     * @param key0 the first and only key
+     *
+     * @param key0   the first and only key
      * @param value0 the first and only value
-     * @param <V> the type of value0
+     * @param <V>    the type of value0
      * @return a new map containing just the entry mapping key0 to value0
      */
-    public static <V> CoordObjectMap<V> with(Coord key0, V value0) {
+    public static <V> CoordObjectMap<V> with (Coord key0, V value0) {
         CoordObjectMap<V> map = new CoordObjectMap<>(1);
         map.put(key0, value0);
         return map;
     }
+
+    /**
+     * Constructs a single-entry map given two key-value pairs.
+     * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+     * when there's no "rest" of the keys or values.
+     *
+     * @param key0   a Coord key
+     * @param value0 a V value
+     * @param key1   a Coord key
+     * @param value1 a V value
+     * @param <V>    the type of value0
+     * @return a new map containing entries mapping each key to the following value
+     */
+    public static <V> CoordObjectMap<V> with (Coord key0, V value0, Coord key1, V value1) {
+        CoordObjectMap<V> map = new CoordObjectMap<>(2);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        return map;
+    }
+
+    /**
+     * Constructs a single-entry map given three key-value pairs.
+     * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+     * when there's no "rest" of the keys or values.
+     *
+     * @param key0   a Coord key
+     * @param value0 a V value
+     * @param key1   a Coord key
+     * @param value1 a V value
+     * @param key2   a Coord key
+     * @param value2 a V value
+     * @param <V>    the type of value0
+     * @return a new map containing entries mapping each key to the following value
+     */
+    public static <V> CoordObjectMap<V> with (Coord key0, V value0, Coord key1, V value1, Coord key2, V value2) {
+        CoordObjectMap<V> map = new CoordObjectMap<>(3);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        return map;
+    }
+
+    /**
+     * Constructs a single-entry map given four key-value pairs.
+     * This is mostly useful as an optimization for {@link #with(Object, Object, Object...)}
+     * when there's no "rest" of the keys or values.
+     *
+     * @param key0   a Coord key
+     * @param value0 a V value
+     * @param key1   a Coord key
+     * @param value1 a V value
+     * @param key2   a Coord key
+     * @param value2 a V value
+     * @param key3   a Coord key
+     * @param value3 a V value
+     * @param <V>    the type of value0
+     * @return a new map containing entries mapping each key to the following value
+     */
+    public static <V> CoordObjectMap<V> with (Coord key0, V value0, Coord key1, V value1, Coord key2, V value2, Coord key3, V value3) {
+        CoordObjectMap<V> map = new CoordObjectMap<>(4);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        return map;
+    }
+    
     /**
      * Constructs a map given alternating keys and values.
      * This can be useful in some code-generation scenarios, or when you want to make a

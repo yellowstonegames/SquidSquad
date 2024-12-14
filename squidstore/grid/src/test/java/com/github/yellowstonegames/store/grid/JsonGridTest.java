@@ -108,9 +108,11 @@ public class JsonGridTest {
     public void testCoordObjectMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordObjectMap(json);
-        CoordObjectMap<String> points = new CoordObjectMap<>(
-                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
-                new String[]{"foo", "bar", "baz"});
+        CoordObjectMap<String> points = CoordObjectMap.with(
+                Coord.get(42, 42), "foo", Coord.get(23, 23), "bar", Coord.get(66, 66), "baz");
+//        CoordObjectMap<String> points = new CoordObjectMap<>(
+//                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
+//                new String[]{"foo", "bar", "baz"});
         String data = json.toJson(points);
         System.out.println(data);
         CoordObjectMap<?> points2 = json.fromJson(CoordObjectMap.class, data);
@@ -129,9 +131,8 @@ public class JsonGridTest {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordObjectOrderedMap(json);
         {
-            CoordObjectOrderedMap<String> points = new CoordObjectOrderedMap<>(
-                    new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
-                    new String[]{"foo", "bar", "baz"});
+            CoordObjectOrderedMap<String> points = CoordObjectOrderedMap.with(
+                    Coord.get(42, 42), "foo", Coord.get(23, 23), "bar", Coord.get(66, 66), "baz");
             String data = json.toJson(points);
             System.out.println(data);
             CoordObjectOrderedMap<?> points2 = json.fromJson(CoordObjectOrderedMap.class, data);
