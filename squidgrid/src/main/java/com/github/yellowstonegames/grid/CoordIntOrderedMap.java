@@ -79,12 +79,23 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
     }
 
     /**
+     * Constructs an empty map.
+     * This is usually less useful than just using the constructor, but can be handy
+     * in some code-generation scenarios when you don't know how many arguments you will have.
+     *
+     * @return a new map containing nothing
+     */
+    public static CoordIntOrderedMap withNothing () {
+        return new CoordIntOrderedMap(0);
+    }
+
+    /**
      * Constructs a single-entry map given one key and one value.
      * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
      * when there's no "rest" of the keys or values. Like the more-argument with(), this will
      * convert its Number value to a primitive int, regardless of which Number type was used.
      *
-     * @param key0   the first and only key; always a Coord
+     * @param key0   the first and only key
      * @param value0 the first and only value; will be converted to primitive int
      * @return a new map containing just the entry mapping key0 to value0
      */
@@ -96,16 +107,83 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
 
     /**
      * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+     * convert its Number values to primitive ints, regardless of which Number type was used.
+     *
+     * @param key0   a Coord key
+     * @param value0 a Number for a value; will be converted to primitive int
+     * @param key1   a Coord key
+     * @param value1 a Number for a value; will be converted to primitive int
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordIntOrderedMap with (Coord key0, Number value0, Coord key1, Number value1) {
+        CoordIntOrderedMap map = new CoordIntOrderedMap(2);
+        map.put(key0, value0.intValue());
+        map.put(key1, value1.intValue());
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+     * convert its Number values to primitive ints, regardless of which Number type was used.
+     *
+     * @param key0   a Coord key
+     * @param value0 a Number for a value; will be converted to primitive int
+     * @param key1   a Coord key
+     * @param value1 a Number for a value; will be converted to primitive int
+     * @param key2   a Coord key
+     * @param value2 a Number for a value; will be converted to primitive int
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordIntOrderedMap with (Coord key0, Number value0, Coord key1, Number value1, Coord key2, Number value2) {
+        CoordIntOrderedMap map = new CoordIntOrderedMap(3);
+        map.put(key0, value0.intValue());
+        map.put(key1, value1.intValue());
+        map.put(key2, value2.intValue());
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+     * convert its Number values to primitive ints, regardless of which Number type was used.
+     *
+     * @param key0   a Coord key
+     * @param value0 a Number for a value; will be converted to primitive int
+     * @param key1   a Coord key
+     * @param value1 a Number for a value; will be converted to primitive int
+     * @param key2   a Coord key
+     * @param value2 a Number for a value; will be converted to primitive int
+     * @param key3   a Coord key
+     * @param value3 a Number for a value; will be converted to primitive int
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordIntOrderedMap with (Coord key0, Number value0, Coord key1, Number value1, Coord key2, Number value2, Coord key3, Number value3) {
+        CoordIntOrderedMap map = new CoordIntOrderedMap(4);
+        map.put(key0, value0.intValue());
+        map.put(key1, value1.intValue());
+        map.put(key2, value2.intValue());
+        map.put(key3, value3.intValue());
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
      * This can be useful in some code-generation scenarios, or when you want to make a
      * map conveniently by-hand and have it populated at the start. You can also use
      * {@link #CoordIntOrderedMap(Coord[], int[])}, which takes all keys and then all values.
-     * All values must be some type of boxed Number, such as {@link Integer}
+     * This needs all keys to have the same type, because it gets a generic type from the
+     * first key parameter. All values must be some type of boxed Number, such as {@link Integer}
      * or {@link Double}, and will be converted to primitive {@code int}s. Any keys that don't
      * have Coord as their type or values that aren't {@code Number}s have that entry skipped.
      *
-     * @param key0   the first key; always a Coord
+     * @param key0   the first key; will be used to determine the type of all keys
      * @param value0 the first value; will be converted to primitive int
-     * @param rest   an array or varargs of alternating Coord, Number, Coord, Number... elements
+     * @param rest   an array or varargs of alternating Coord, Number, Coord, Number... elements, inferred from key0
      * @return a new map containing the given keys and values
      */
     public static CoordIntOrderedMap with (Coord key0, Number value0, Object... rest) {
@@ -113,10 +191,103 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
         map.put(key0, value0.intValue());
         for (int i = 1; i < rest.length; i += 2) {
             try {
-                map.put((Coord) rest[i - 1], ((Number)rest[i]).intValue());
+                map.put((Coord)rest[i - 1], ((Number)rest[i]).intValue());
             } catch (ClassCastException ignored) {
             }
         }
+        return map;
+    }
+
+    /**
+     * Constructs an empty map given the key type as a generic type argument.
+     * This is usually less useful than just using the constructor, but can be handy
+     * in some code-generation scenarios when you don't know how many arguments you will have.
+     *
+     * @return a new map containing nothing
+     */
+    public static CoordIntOrderedMap withPrimitive () {
+        return new CoordIntOrderedMap(0);
+    }
+
+    /**
+     * Constructs a single-entry map given one key and one value.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord for a key
+     * @param value0 a int for a value
+     * @return a new map containing just the entry mapping key0 to value0
+     */
+    public static CoordIntOrderedMap withPrimitive (Coord key0, int value0) {
+        CoordIntOrderedMap map = new CoordIntOrderedMap(1);
+        map.put(key0, value0);
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed int as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord key
+     * @param value0 a int for a value
+     * @param key1   a Coord key
+     * @param value1 a int for a value
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordIntOrderedMap withPrimitive (Coord key0, int value0, Coord key1, int value1) {
+        CoordIntOrderedMap map = new CoordIntOrderedMap(2);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed int as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord key
+     * @param value0 a int for a value
+     * @param key1   a Coord key
+     * @param value1 a int for a value
+     * @param key2   a Coord key
+     * @param value2 a int for a value
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordIntOrderedMap withPrimitive (Coord key0, int value0, Coord key1, int value1, Coord key2, int value2) {
+        CoordIntOrderedMap map = new CoordIntOrderedMap(3);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed int as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord key
+     * @param value0 a int for a value
+     * @param key1   a Coord key
+     * @param value1 a int for a value
+     * @param key2   a Coord key
+     * @param value2 a int for a value
+     * @param key3   a Coord key
+     * @param value3 a int for a value
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordIntOrderedMap withPrimitive (Coord key0, int value0, Coord key1, int value1, Coord key2, int value2, Coord key3, int value3) {
+        CoordIntOrderedMap map = new CoordIntOrderedMap(4);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
         return map;
     }
 

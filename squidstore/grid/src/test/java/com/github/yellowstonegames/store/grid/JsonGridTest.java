@@ -239,9 +239,7 @@ public class JsonGridTest {
     public void testCoordIntMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordIntMap(json);
-        CoordIntMap points = new CoordIntMap(
-                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
-                new int[]{4242, 2323, 6666});
+        CoordIntMap points = CoordIntMap.with(Coord.get(42, 42), 4242, Coord.get(23, 23), 2323, Coord.get(66, 66), 6666);
         String data = json.toJson(points);
         System.out.println(data);
         CoordIntMap points2 = json.fromJson(CoordIntMap.class, data);
@@ -259,9 +257,7 @@ public class JsonGridTest {
     public void testCoordIntOrderedMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordIntOrderedMap(json);
-        CoordIntOrderedMap points = new CoordIntOrderedMap(
-                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
-                new int[]{4242, 2323, 6666});
+        CoordIntOrderedMap points = CoordIntOrderedMap.with(Coord.get(42, 42), 4242, Coord.get(23, 23), 2323, Coord.get(66, 66), 6666);
         String data = json.toJson(points);
         System.out.println(data);
         CoordIntOrderedMap points2 = json.fromJson(CoordIntOrderedMap.class, data);
