@@ -146,9 +146,8 @@ public class JsonGridTest {
         }
         {
             JsonGrid.registerRadiance(json);
-            CoordObjectOrderedMap<Radiance> lights = new CoordObjectOrderedMap<>(
-                    new Coord[]{Coord.get(42, 42)},
-                    new Radiance[]{new Radiance(3, 0xF0F0B0FF, 1.5f, 0f, 0.1f, 0.5f)});
+            CoordObjectOrderedMap<Radiance> lights = CoordObjectOrderedMap.with(Coord.get(42, 42),
+                    new Radiance(3, 0xF0F0B0FF, 1.5f, 0f, 0.1f, 0.5f));
             String data = json.toJson(lights, CoordObjectOrderedMap.class, Radiance.class);
             System.out.println(data);
             CoordObjectOrderedMap<?> lights2 = json.fromJson(CoordObjectOrderedMap.class, data);
@@ -167,9 +166,7 @@ public class JsonGridTest {
     public void testCoordFloatMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordFloatMap(json);
-        CoordFloatMap points = new CoordFloatMap(
-                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
-                new float[]{42.42f, 23.23f, 66.66f});
+        CoordFloatMap points = CoordFloatMap.with(Coord.get(42, 42), 42.42, Coord.get(23, 23), 23.23, Coord.get(66, 66), 66.66);
         String data = json.toJson(points);
         System.out.println(data);
         CoordFloatMap points2 = json.fromJson(CoordFloatMap.class, data);
@@ -187,9 +184,7 @@ public class JsonGridTest {
     public void testCoordFloatOrderedMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCoordFloatOrderedMap(json);
-        CoordFloatOrderedMap points = new CoordFloatOrderedMap(
-                new Coord[]{Coord.get(42, 42), Coord.get(23, 23), Coord.get(66, 66)},
-                new float[]{42.42f, 23.23f, 66.66f});
+        CoordFloatOrderedMap points = CoordFloatOrderedMap.with(Coord.get(42, 42), 42.42, Coord.get(23, 23), 23.23, Coord.get(66, 66), 66.66);
         String data = json.toJson(points);
         System.out.println(data);
         CoordFloatOrderedMap points2 = json.fromJson(CoordFloatOrderedMap.class, data);

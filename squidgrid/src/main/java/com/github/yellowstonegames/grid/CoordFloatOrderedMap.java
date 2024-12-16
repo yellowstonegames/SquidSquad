@@ -84,12 +84,23 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
     }
 
     /**
+     * Constructs an empty map.
+     * This is usually less useful than just using the constructor, but can be handy
+     * in some code-generation scenarios when you don't know how many arguments you will have.
+     *
+     * @return a new map containing nothing
+     */
+    public static CoordFloatOrderedMap withNothing () {
+        return new CoordFloatOrderedMap(0);
+    }
+
+    /**
      * Constructs a single-entry map given one key and one value.
      * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
      * when there's no "rest" of the keys or values. Like the more-argument with(), this will
      * convert its Number value to a primitive float, regardless of which Number type was used.
      *
-     * @param key0   the first and only key; always a Coord
+     * @param key0   the first and only key
      * @param value0 the first and only value; will be converted to primitive float
      * @return a new map containing just the entry mapping key0 to value0
      */
@@ -101,16 +112,83 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
 
     /**
      * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+     * convert its Number values to primitive floats, regardless of which Number type was used.
+     *
+     * @param key0   a Coord key
+     * @param value0 a Number for a value; will be converted to primitive float
+     * @param key1   a Coord key
+     * @param value1 a Number for a value; will be converted to primitive float
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordFloatOrderedMap with (Coord key0, Number value0, Coord key1, Number value1) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(2);
+        map.put(key0, value0.floatValue());
+        map.put(key1, value1.floatValue());
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+     * convert its Number values to primitive floats, regardless of which Number type was used.
+     *
+     * @param key0   a Coord key
+     * @param value0 a Number for a value; will be converted to primitive float
+     * @param key1   a Coord key
+     * @param value1 a Number for a value; will be converted to primitive float
+     * @param key2   a Coord key
+     * @param value2 a Number for a value; will be converted to primitive float
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordFloatOrderedMap with (Coord key0, Number value0, Coord key1, Number value1, Coord key2, Number value2) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(3);
+        map.put(key0, value0.floatValue());
+        map.put(key1, value1.floatValue());
+        map.put(key2, value2.floatValue());
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Like the more-argument with(), this will
+     * convert its Number values to primitive floats, regardless of which Number type was used.
+     *
+     * @param key0   a Coord key
+     * @param value0 a Number for a value; will be converted to primitive float
+     * @param key1   a Coord key
+     * @param value1 a Number for a value; will be converted to primitive float
+     * @param key2   a Coord key
+     * @param value2 a Number for a value; will be converted to primitive float
+     * @param key3   a Coord key
+     * @param value3 a Number for a value; will be converted to primitive float
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordFloatOrderedMap with (Coord key0, Number value0, Coord key1, Number value1, Coord key2, Number value2, Coord key3, Number value3) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(4);
+        map.put(key0, value0.floatValue());
+        map.put(key1, value1.floatValue());
+        map.put(key2, value2.floatValue());
+        map.put(key3, value3.floatValue());
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
      * This can be useful in some code-generation scenarios, or when you want to make a
      * map conveniently by-hand and have it populated at the start. You can also use
      * {@link #CoordFloatOrderedMap(Coord[], float[])}, which takes all keys and then all values.
-     * All values must be some type of boxed Number, such as {@link Integer}
+     * This needs all keys to have the same type, because it gets a generic type from the
+     * first key parameter. All values must be some type of boxed Number, such as {@link Integer}
      * or {@link Double}, and will be converted to primitive {@code float}s. Any keys that don't
      * have Coord as their type or values that aren't {@code Number}s have that entry skipped.
      *
-     * @param key0   the first key; always a Coord
+     * @param key0   the first key; will be used to determine the type of all keys
      * @param value0 the first value; will be converted to primitive float
-     * @param rest   an array or varargs of alternating Coord, Number, Coord, Number... elements
+     * @param rest   an array or varargs of alternating Coord, Number, Coord, Number... elements, inferred from key0
      * @return a new map containing the given keys and values
      */
     public static CoordFloatOrderedMap with (Coord key0, Number value0, Object... rest) {
@@ -118,10 +196,103 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
         map.put(key0, value0.floatValue());
         for (int i = 1; i < rest.length; i += 2) {
             try {
-                map.put((Coord) rest[i - 1], ((Number)rest[i]).floatValue());
+                map.put((Coord)rest[i - 1], ((Number)rest[i]).floatValue());
             } catch (ClassCastException ignored) {
             }
         }
+        return map;
+    }
+
+    /**
+     * Constructs an empty map given the key type as a generic type argument.
+     * This is usually less useful than just using the constructor, but can be handy
+     * in some code-generation scenarios when you don't know how many arguments you will have.
+     *
+     * @return a new map containing nothing
+     */
+    public static CoordFloatOrderedMap withPrimitive () {
+        return new CoordFloatOrderedMap(0);
+    }
+
+    /**
+     * Constructs a single-entry map given one key and one value.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed float as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord for a key
+     * @param value0 a float for a value
+     * @return a new map containing just the entry mapping key0 to value0
+     */
+    public static CoordFloatOrderedMap withPrimitive (Coord key0, float value0) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(1);
+        map.put(key0, value0);
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values. Unlike with(), this takes unboxed float as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord key
+     * @param value0 a float for a value
+     * @param key1   a Coord key
+     * @param value1 a float for a value
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordFloatOrderedMap withPrimitive (Coord key0, float value0, Coord key1, float value1) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(2);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed float as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord key
+     * @param value0 a float for a value
+     * @param key1   a Coord key
+     * @param value1 a float for a value
+     * @param key2   a Coord key
+     * @param value2 a float for a value
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordFloatOrderedMap withPrimitive (Coord key0, float value0, Coord key1, float value1, Coord key2, float value2) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(3);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        return map;
+    }
+
+    /**
+     * Constructs a map given alternating keys and values.
+     * This is mostly useful as an optimization for {@link #with(Coord, Number, Object...)}
+     * when there's no "rest" of the keys or values.  Unlike with(), this takes unboxed float as
+     * its value type, and will not box it.
+     *
+     * @param key0   a Coord key
+     * @param value0 a float for a value
+     * @param key1   a Coord key
+     * @param value1 a float for a value
+     * @param key2   a Coord key
+     * @param value2 a float for a value
+     * @param key3   a Coord key
+     * @param value3 a float for a value
+     * @return a new map containing the given key-value pairs
+     */
+    public static CoordFloatOrderedMap withPrimitive (Coord key0, float value0, Coord key1, float value1, Coord key2, float value2, Coord key3, float value3) {
+        CoordFloatOrderedMap map = new CoordFloatOrderedMap(4);
+        map.put(key0, value0);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
         return map;
     }
 
