@@ -589,6 +589,14 @@ public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4
     }
 
     @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Point4Int)) return false;
+
+        Point4Int point4Int = (Point4Int) o;
+        return x == point4Int.x && y == point4Int.y && z == point4Int.z && w == point4Int.w;
+    }
+
+    @Override
     public int hashCode() {
         return x * 0x1B69E1 ^ y * 0x177C0B ^ z * 0x141E5D ^ w * 0x113C31;
     }

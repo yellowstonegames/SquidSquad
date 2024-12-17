@@ -537,6 +537,14 @@ public class Point3Int implements Point3<Point3Int>, PointNInt<Point3Int, Point3
     }
 
     @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Point3Int)) return false;
+
+        Point3Int point3Int = (Point3Int) o;
+        return x == point3Int.x && y == point3Int.y && z == point3Int.z;
+    }
+
+    @Override
     public int hashCode() {
         return x * 0x1A36A9 ^ y * 0x157931 ^ z * 0x119725;
     }

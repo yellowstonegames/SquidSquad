@@ -492,6 +492,14 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
     }
 
     @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Point4Float)) return false;
+
+        Point4Float that = (Point4Float) o;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0 && Float.compare(z, that.z) == 0 && Float.compare(w, that.w) == 0;
+    }
+
+    @Override
     public int hashCode() {
         final int h = BitConversion.floatToIntBits(x) + 53  * BitConversion.floatToIntBits(y) +
                 113 * BitConversion.floatToIntBits(z) + 151 * BitConversion.floatToIntBits(w);

@@ -695,6 +695,14 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
     }
 
     @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Point6Int)) return false;
+
+        Point6Int point6Int = (Point6Int) o;
+        return x == point6Int.x && y == point6Int.y && z == point6Int.z && w == point6Int.w && u == point6Int.u && v == point6Int.v;
+    }
+
+    @Override
     public int hashCode() {
         return x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
     }

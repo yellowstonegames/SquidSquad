@@ -570,6 +570,14 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
     }
 
     @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Point6Float)) return false;
+
+        Point6Float that = (Point6Float) o;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0 && Float.compare(z, that.z) == 0 && Float.compare(w, that.w) == 0 && Float.compare(u, that.u) == 0 && Float.compare(v, that.v) == 0;
+    }
+
+    @Override
     public int hashCode() {
         final int h = BitConversion.floatToIntBits(x) + 53  * BitConversion.floatToIntBits(y) +
                 113 * BitConversion.floatToIntBits(z) + 151 * BitConversion.floatToIntBits(w) +

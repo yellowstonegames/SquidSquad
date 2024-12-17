@@ -488,6 +488,15 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Point2Float)) return false;
+
+        Point2Float that = (Point2Float) o;
+        return Float.compare(x, that.x) == 0 && Float.compare(y, that.y) == 0;
+    }
+
     @Override
     public int hashCode() {
         final int h = BitConversion.floatToIntBits(x) + 53 * BitConversion.floatToIntBits(y);
