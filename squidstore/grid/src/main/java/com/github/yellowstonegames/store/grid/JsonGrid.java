@@ -48,6 +48,11 @@ public final class JsonGrid {
         registerPoint4Int(json);
         registerPoint5Int(json);
         registerPoint6Int(json);
+        registerPoint2Float(json);
+        registerPoint3Float(json);
+        registerPoint4Float(json);
+        registerPoint5Float(json);
+        registerPoint6Float(json);
         registerRegion(json);
         registerCoordSet(json);
         registerCoordOrderedSet(json);
@@ -82,6 +87,7 @@ public final class JsonGrid {
         registerPerlueNoise(json);
         registerPhantomNoise(json);
         registerRadialNoiseWrapper(json);
+        registerShapedFoamNoise(json);
         registerSimplexNoise(json);
         registerSimplexNoiseHard(json);
         registerSimplexNoiseScaled(json);
@@ -1134,7 +1140,31 @@ public final class JsonGrid {
             }
         });
     }
+    /**
+     * Registers ShapedFoamNoise with the given Json object, so ShapedFoamNoise can be written to and read from JSON.
+     * This is a simple wrapper around ShapedFoamNoise's built-in {@link ShapedFoamNoise#stringSerialize()} and
+     * {@link ShapedFoamNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerShapedFoamNoise(@NonNull Json json) {
+        json.addClassTag("SFoN", ShapedFoamNoise.class);
+        json.setSerializer(ShapedFoamNoise.class, new Json.Serializer<ShapedFoamNoise>() {
+            @Override
+            public void write(Json json, ShapedFoamNoise object, Class knownType) {
+                json.writeObjectStart(ShapedFoamNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
 
+            @Override
+            public ShapedFoamNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return ShapedFoamNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+    
     /**
      * Registers HoneyNoise with the given Json object, so HoneyNoise can be written to and read from JSON.
      * This is a simple wrapper around HoneyNoise's built-in {@link HoneyNoise#stringSerialize()} and
