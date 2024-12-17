@@ -24,6 +24,8 @@ import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.ds.ObjectLongMap;
+import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
@@ -70,6 +72,109 @@ public class JsonGridTest {
         Assert.assertEquals(coord, coord2);
 
         System.out.println();
+    }
+
+    @Test
+    public void testPoint2Float() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint2Float(json);
+        Point2Float pt, pt2;
+        pt = new Point2Float(0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point2Float.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point2Float.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint3Float() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint3Float(json);
+        Point3Float pt, pt2;
+        pt = new Point3Float(0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point3Float.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point3Float.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint4Float() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint4Float(json);
+        Point4Float pt, pt2;
+        pt = new Point4Float(0,0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point4Float.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
+                    , random.nextFloat(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point4Float.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint5Float() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint5Float(json);
+        Point5Float pt, pt2;
+        pt = new Point5Float(0,0,0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point5Float.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
+                    , random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point5Float.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint6Float() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint6Float(json);
+        Point6Float pt, pt2;
+        pt = new Point6Float(0,0,0,0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point6Float.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
+                    , random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point6Float.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
     }
 
     @Test
