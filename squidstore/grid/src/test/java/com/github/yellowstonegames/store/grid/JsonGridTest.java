@@ -178,6 +178,109 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testPoint2Int() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint2Int(json);
+        Point2Int pt, pt2;
+        pt = new Point2Int(0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point2Int.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point2Int.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint3Int() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint3Int(json);
+        Point3Int pt, pt2;
+        pt = new Point3Int(0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point3Int.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point3Int.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint4Int() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint4Int(json);
+        Point4Int pt, pt2;
+        pt = new Point4Int(0,0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point4Int.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
+                    , random.nextInt(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point4Int.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint5Int() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint5Int(json);
+        Point5Int pt, pt2;
+        pt = new Point5Int(0,0,0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point5Int.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
+                    , random.nextInt(-100, 100), random.nextInt(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point5Int.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
+    public void testPoint6Int() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerPoint6Int(json);
+        Point6Int pt, pt2;
+        pt = new Point6Int(0,0,0,0,0,0);
+        String data = json.toJson(pt);
+        System.out.println(data);
+        pt2 = json.fromJson(Point6Int.class, data);
+        Assert.assertEquals(pt, pt2);
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
+                    , random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100));
+            data = json.toJson(pt);
+            pt2 = json.fromJson(Point6Int.class, data);
+            Assert.assertEquals(pt, pt2);
+        }
+    }
+
+    @Test
     public void testRegion() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerRegion(json);
@@ -487,6 +590,21 @@ public class JsonGridTest {
         String data = json.toJson(noise);
         System.out.println(data);
         noise2 = json.fromJson(FoamplexNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
+    public void testShapedFoamNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerShapedFoamNoise(json);
+        ShapedFoamNoise noise, noise2;
+        noise = new ShapedFoamNoise(-9876543210L);
+        noise.setShape(3f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(ShapedFoamNoise.class, data);
         Assert.assertEquals(noise, noise2);
         Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
         System.out.println();
