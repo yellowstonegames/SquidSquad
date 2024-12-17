@@ -843,6 +843,28 @@ public class GridTest {
     }
 
     @Test
+    public void testShapedFoamNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(ShapedFoamNoise.class, new ShapedFoamNoiseSerializer());
+
+        ShapedFoamNoise data = new ShapedFoamNoise(-9876543210L, 3f);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            ShapedFoamNoise data2 = kryo.readObject(input, ShapedFoamNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testNoiseWrapper() {
         Kryo kryo = new Kryo();
         kryo.register(Noise.class, new NoiseSerializer());
