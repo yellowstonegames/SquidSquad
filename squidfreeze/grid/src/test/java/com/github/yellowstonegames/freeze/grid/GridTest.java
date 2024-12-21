@@ -88,6 +88,124 @@ public class GridTest {
     }
 
     @Test
+    public void testPoint2Float() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point2Float.class, new Point2FloatSerializer());
+        Point2Float pt, pt2;
+        pt = new Point2Float(0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point2Float.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point2Float.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
+    public void testPoint3Float() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point3Float.class, new Point3FloatSerializer());
+        Point3Float pt, pt2;
+        pt = new Point3Float(0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point3Float.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point3Float.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
+    public void testPoint4Float() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point4Float.class, new Point4FloatSerializer());
+        Point4Float pt, pt2;
+        pt = new Point4Float(0,0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point4Float.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
+                    , random.nextFloat(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point4Float.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
+    public void testPoint5Float() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point5Float.class, new Point5FloatSerializer());
+        Point5Float pt, pt2;
+        pt = new Point5Float(0,0,0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point5Float.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
+                    , random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point5Float.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
     public void testPoint6Float() {
         Kryo kryo = new Kryo();
         kryo.register(Point6Float.class, new Point6FloatSerializer());
