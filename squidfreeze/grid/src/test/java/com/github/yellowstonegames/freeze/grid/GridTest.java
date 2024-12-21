@@ -235,6 +235,155 @@ public class GridTest {
         }
     }
 
+
+    @Test
+    public void testPoint2Int() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point2Int.class, new Point2IntSerializer());
+        Point2Int pt, pt2;
+        pt = new Point2Int(0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point2Int.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point2Int.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
+    public void testPoint3Int() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point3Int.class, new Point3IntSerializer());
+        Point3Int pt, pt2;
+        pt = new Point3Int(0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point3Int.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point3Int.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
+    public void testPoint4Int() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point4Int.class, new Point4IntSerializer());
+        Point4Int pt, pt2;
+        pt = new Point4Int(0,0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point4Int.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
+                    , random.nextInt(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point4Int.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
+    public void testPoint5Int() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point5Int.class, new Point5IntSerializer());
+        Point5Int pt, pt2;
+        pt = new Point5Int(0,0,0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point5Int.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
+                    , random.nextInt(-100, 100), random.nextInt(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point5Int.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
+    @Test
+    public void testPoint6Int() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point6Int.class, new Point6IntSerializer());
+        Point6Int pt, pt2;
+        pt = new Point6Int(0,0,0,0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point6Int.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
+                    , random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point6Int.class);
+                Assert.assertEquals(pt, pt2);
+            }
+        }
+    }
+
     @Test
     public void testCoordOrderedSet() {
         Kryo kryo = new Kryo();
