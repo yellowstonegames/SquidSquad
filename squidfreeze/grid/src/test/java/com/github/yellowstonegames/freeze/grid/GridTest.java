@@ -26,6 +26,8 @@ import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.kryo.jdkgdxds.ObjectDequeSerializer;
+import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
@@ -82,6 +84,36 @@ public class GridTest {
         try (Input input = new Input(bytes)) {
             CoordSet data2 = kryo.readObject(input, CoordSet.class);
             Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testPoint6Float() {
+        Kryo kryo = new Kryo();
+        kryo.register(Point6Float.class, new Point6FloatSerializer());
+        Point6Float pt, pt2;
+        pt = new Point6Float(0,0,0,0,0,0);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
+        Output output = new Output(baos);
+        kryo.writeObject(output, pt);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            pt2 = kryo.readObject(input, Point6Float.class);
+            Assert.assertEquals(pt, pt2);
+        }
+
+        EnhancedRandom random = new AceRandom(12345);
+        for (int i = 0; i < 256; i++) {
+            pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
+                    , random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100));
+            output.flush();
+            kryo.writeObject(output, pt);
+            bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                pt2 = kryo.readObject(input, Point6Float.class);
+                Assert.assertEquals(pt, pt2);
+            }
         }
     }
 
