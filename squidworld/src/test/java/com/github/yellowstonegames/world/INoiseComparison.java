@@ -224,11 +224,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new ShapedFoamNoise(1L, 0.25f),
             new FoamNoise(1L),
             new FoamplexNoise(1L),
-//            new NoiseAdjustment(new SimplexNoise(1L), watcher),
             new SimplexNoiseHard(1L),
             new SimplexNoiseScaled(1L),
-//            new OpenSimplex2(1L),
-//            new OpenSimplex2Smooth(1L),
             new PerlinNoise(1L),
             new PerlueNoise(1L),
             new NoiseAdjustment(new PerlinNoise(1L), watcher),
@@ -252,10 +249,12 @@ public class INoiseComparison extends ApplicationAdapter {
             new TriplexNoise(1L),
             new BadgerNoise(1L),
             new SnakeNoise(1L),
-            new Noise(1)
+            new Noise(1),
+            new WavyNoise(1, 1),
+            new WavyNoise(1, 3),
     };
-    private int index0 = 1;
-    private int index1 = 6;
+    private int index0 = 34;
+    private int index1 = 35;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);

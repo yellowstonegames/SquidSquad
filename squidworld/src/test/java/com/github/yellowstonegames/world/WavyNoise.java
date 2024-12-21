@@ -321,8 +321,8 @@ float cyclicNoise(vec3 p){
             int ys = (int)(yy * 0x1p-6f + 16384.5f) & TABLE_MASK;
 
             noise += LineWobble.bicubicWobble(sd, (
-                            TABLE[xs] * TABLE[ys] + xx - yy
-                    ) * (0.5f)
+                    (TABLE[xs] + TABLE[ys]) * (xx + yy)
+                    )
             ) * amp;
 
             x = xx * LACUNARITY;
