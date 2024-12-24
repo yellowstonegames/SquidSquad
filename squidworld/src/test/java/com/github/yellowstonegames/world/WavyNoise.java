@@ -138,7 +138,7 @@ float cyclicNoise(vec3 p){
     public void generateLookupTable(long seed, int points, int octaves) {
         Arrays.fill(TABLE, 0f);
         points = Integer.highestOneBit(points);
-        int mask = points - 1;
+        long lp = points;
         octaves = Math.min(Math.max(octaves, 1), 31);
         int totalStrength = (1 << octaves) - 1;
         float divisor = 1f / totalStrength;
@@ -146,7 +146,7 @@ float cyclicNoise(vec3 p){
         float frequency = (float)points / (float) TABLE_SIZE;
         for (int o = 0; o < octaves; o++, strength *= 0.5f, frequency += frequency, seed = seed * 0xC6BC279692B5C323L ^ 0x9E3779B97F4A7C15L) {
             for (int i = 0; i < TABLE_SIZE; i++) {
-                TABLE[i] += bicubicWobbleMasked(seed, i * frequency, mask) * strength;
+                TABLE[i] += bicubicWobbleMasked(seed, i * frequency, (lp << o) - 1L) * strength;
             }
         }
     }

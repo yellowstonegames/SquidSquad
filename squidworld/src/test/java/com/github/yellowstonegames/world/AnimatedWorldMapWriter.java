@@ -29,9 +29,11 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.anim8.Dithered.DitherAlgorithm;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.Biome;
@@ -65,6 +67,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private static final boolean ALIEN_COLORS = false;
     private static final boolean MANY_STILL = false;
     private static final boolean SEEDY = false;
+    private static final boolean SHADOW = true;
     private int baseSeed = 1234567890;
     private final int AA = 1;
 
@@ -159,7 +162,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 
-            world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.5f);
+            world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.2f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 0.75f);
 
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
@@ -174,7 +177,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             wmv = new BlendedWorldMapView(world);
 
             path = "out/worldsAnimated/" + date + "/" + dither.legibleName + "/" +
-                    world.getClass().getSimpleName() + noise.getTag() + "/";
+                    world.getClass().getSimpleName() + noise.getTag() + (SHADOW ? "_shadow/" : "/");
 
             if (!Gdx.files.local(path).exists())
                 Gdx.files.local(path).mkdirs();
@@ -249,9 +252,19 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             temp.fill();
 
             final int bw = width << AA, bh = height << AA;
-            for (int x = 0; x < bw; x++) {
-                for (int y = 0; y < bh; y++) {
-                    temp.drawPixel(x, y, cm[x][y]);
+            if(SHADOW){
+                final float iw = 1f / bw, ih = 1f / bh;
+                for (int x = 0; x < bw; x++) {
+                    for (int y = 0; y < bh; y++) {
+                        temp.drawPixel(x, y, DescriptiveColorRgb.adjustLightness(cm[x][y], Math.min(Math.max(MathTools.barronSpline(1f - (x * iw + y * ih), 4f, 0.75f) * 1.5f - 1f, -1f), 1f)));
+                    }
+                }
+            }
+            else {
+                for (int x = 0; x < bw; x++) {
+                    for (int y = 0; y < bh; y++) {
+                        temp.drawPixel(x, y, cm[x][y]);
+                    }
                 }
             }
             pm[i].setFilter(Pixmap.Filter.BiLinear);
