@@ -62,7 +62,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 512;
 
     private static final int LIMIT = 3;
-    private static final int FRAMES = 360;
+    private static final int FRAMES = 300;
     private static final boolean FLOWING_LAND = false;
     private static final boolean ALIEN_COLORS = false;
     private static final boolean MANY_STILL = false;
@@ -94,15 +94,16 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private String date, path;
     private INoise noise;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
+    private static final int ATMOSPHERE = DescriptiveColorRgb.describeRgb("silver 6 white 9 sky 1");
     @Override
     public void create() {
-        view = new StretchViewport(width * cellWidth, height * cellHeight);
+        view = new StretchViewport(width * cellWidth + 10, height * cellHeight + 10);
         date = DateFormat.getDateInstance().format(new Date());
 
         pm = new Pixmap[FRAMES];
         for (int i = 0; i < pm.length; i++) {
-            pm[i] = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
-            pm[i].setBlending(Pixmap.Blending.None);
+            pm[i] = new Pixmap(width * cellWidth + 10, height * cellHeight + 10, Pixmap.Format.RGBA8888);
+//            pm[i].setBlending(Pixmap.Blending.SourceOver);
         }
 
         writer = new AnimatedGif();
@@ -115,7 +116,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             png.setFlipY(false);
         }
 
-        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GRADIENT_NOISE}) {
+        for(DitherAlgorithm dither : new DitherAlgorithm[]{GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
             writer.setDitherStrength(0.25f);
@@ -230,7 +231,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         worldTime = System.currentTimeMillis();
-        Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
+        Pixmap temp = new Pixmap(width * cellWidth + 10 << AA, height * cellHeight + 10 << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
         if(world instanceof RotatingGlobeMap) {
             world.setCenterLongitude(0f);
@@ -253,10 +254,15 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 
             final int bw = width << AA, bh = height << AA;
             if(SHADOW){
+                final int padding = (5<<AA), margin = (1<<AA);
+                temp.setColor(ATMOSPHERE & 0xFFFFFF00);
+                temp.fill();
+                temp.setColor(ATMOSPHERE);
+                temp.fillCircle((temp.getWidth() >> 1), (temp.getHeight() >> 1), (temp.getWidth() >> 1) - margin);
                 final float iw = 0.45f / bw, ih = 0.45f / bh;
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
-                        temp.drawPixel(x, y, DescriptiveColorRgb.adjustLightness(cm[x][y], Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f)));
+                        temp.drawPixel(x + padding, y + padding, DescriptiveColorRgb.adjustLightness(cm[x][y], Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f)));
                     }
                 }
             }
@@ -268,9 +274,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 }
             }
             // for whatever reason, drawPixmap will replace existing pixels with transparent ones in the drawn Pixmap.
-//            pm[i].setColor(INK);
+//            temp.setColor(INK);
 //            pm[i].fill();
-
             pm[i].setFilter(Pixmap.Filter.BiLinear);
             pm[i].setBlending(Pixmap.Blending.None);
             pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
@@ -285,7 +290,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette.analyzeHueWise(pms, 50.0);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
         temp.dispose();
 
@@ -306,7 +311,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Demo: Animated World Map Writer");
-        config.setWindowedMode(width * cellWidth, height * cellHeight);
+        config.setWindowedMode(width * cellWidth + 10, height * cellHeight + 10);
         config.setResizable(false);
         config.useVsync(true);
         new Lwjgl3Application(new AnimatedWorldMapWriter(), config);
