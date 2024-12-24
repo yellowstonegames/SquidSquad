@@ -268,9 +268,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                     for (int y = 0; y < bh; y++) {
                         int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
                                 ? cm[x - padding][y - padding] : 0;
-                        if(mapColor == 0){
+                        if((mapColor & 0xFF) == 0){
                             double xx = x - center, yy = y - center, distance2 = xx * xx + yy * yy;
-                            if(distance2 <= innerRadius2 && distance2 >= radius2)
+                            if(distance2 >= innerRadius2 && distance2 <= radius2)
                                 mapColor = ATMOSPHERE;
                             else continue;
                         }
