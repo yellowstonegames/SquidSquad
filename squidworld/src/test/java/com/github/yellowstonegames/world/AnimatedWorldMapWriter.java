@@ -117,10 +117,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             png.setFlipY(false);
         }
 
-        for(DitherAlgorithm dither : new DitherAlgorithm[]{GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
+        for(DitherAlgorithm dither : new DitherAlgorithm[]{GOURD, GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
-            writer.setDitherStrength(0.25f);
+            writer.setDitherStrength(0.5f);
             rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
             seed = rng.state;
             thesaurus = new Thesaurus(rng);
@@ -231,6 +231,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             stills.mkdirs();
         }
 
+        StringBuilder sb = new StringBuilder(256 * 12);
         worldTime = System.currentTimeMillis();
         Pixmap temp = new Pixmap(width * cellWidth + 10 << AA, height * cellHeight + 10 << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
@@ -303,12 +304,22 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyzeHueWise(pms, 50.0);
+        writer.palette.analyzeHueWise(pms, 15.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
         temp.dispose();
 
-        System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName);
+        System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
+
+        sb.setLength(0);
+        int idx = 0;
+        for (;idx < writer.palette.paletteArray.length;) {
+            for (int i = 0; i < 8 && idx < writer.palette.paletteArray.length; i++, idx++) {
+                Base.BASE16.appendUnsigned(sb.append("0x"), writer.palette.paletteArray[idx]).append(", ");
+            }
+            sb.setCharAt(sb.length() - 1, '\n');
+        }
+        System.out.println(sb);
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }
     @Override
