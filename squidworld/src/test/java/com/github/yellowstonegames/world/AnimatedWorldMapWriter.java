@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.anim8.Dithered.DitherAlgorithm;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
@@ -261,7 +262,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 temp.fill();
 //                temp.setColor(ATMOSPHERE);
 //                temp.fillCircle((temp.getWidth() >> 1), (temp.getHeight() >> 1), (temp.getWidth() >> 1) - margin);
-                final float iw = 0.45f / bw, ih = 0.45f / bh;
+                final float iw = 0.9f / bw, ih = 0.9f / bh;
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
                         int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
@@ -272,7 +273,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                                 mapColor = ATMOSPHERE;
                             else continue;
                         }
-                        temp.drawPixel(x, y, DescriptiveColorRgb.adjustLightness(mapColor, Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f)));
+                        float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
+                        int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
+//                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
+                        temp.drawPixel(x, y, adjusted);
                     }
                 }
             }
