@@ -252,17 +252,27 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 wmv.getBiomeMapper().makeBiomes(world);
             int[][] cm = wmv.show();
 
-            final int bw = width << AA, bh = height << AA;
+            final int bw = temp.getWidth(), bh = temp.getHeight();
             if(SHADOW){
                 final int padding = (5<<AA), margin = (1<<AA);
+                final double center = (temp.getWidth() - 1) * 0.5, radius2 = (center - margin) * (center - margin),
+                        innerRadius2 = (center - padding -margin) * (center - padding - margin);
                 temp.setColor(ATMOSPHERE & 0xFFFFFF00);
                 temp.fill();
-                temp.setColor(ATMOSPHERE);
-                temp.fillCircle((temp.getWidth() >> 1), (temp.getHeight() >> 1), (temp.getWidth() >> 1) - margin);
+//                temp.setColor(ATMOSPHERE);
+//                temp.fillCircle((temp.getWidth() >> 1), (temp.getHeight() >> 1), (temp.getWidth() >> 1) - margin);
                 final float iw = 0.45f / bw, ih = 0.45f / bh;
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
-                        temp.drawPixel(x + padding, y + padding, DescriptiveColorRgb.adjustLightness(cm[x][y], Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f)));
+                        int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
+                                ? cm[x - padding][y - padding] : 0;
+                        if(mapColor == 0){
+                            double xx = x - center, yy = y - center, distance2 = xx * xx + yy * yy;
+                            if(distance2 <= innerRadius2 && distance2 >= radius2)
+                                mapColor = ATMOSPHERE;
+                            else continue;
+                        }
+                        temp.drawPixel(x, y, DescriptiveColorRgb.adjustLightness(mapColor, Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f)));
                     }
                 }
             }
