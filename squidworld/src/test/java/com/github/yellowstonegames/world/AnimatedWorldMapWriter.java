@@ -62,13 +62,14 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 512;
 
     private static final int LIMIT = 3;
-    private static final int FRAMES = 480;
+    private static final int FRAMES = 360;
     private static final boolean FLOWING_LAND = false;
     private static final boolean ALIEN_COLORS = false;
     private static final boolean MANY_STILL = false;
     private static final boolean SEEDY = false;
     private static final boolean SHADOW = true;
     private int baseSeed = 1234567890;
+//    private final int AA = 0;
     private final int AA = 1;
 
     private Thesaurus thesaurus;
@@ -114,7 +115,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             png.setFlipY(false);
         }
 
-        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
+        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GRADIENT_NOISE}) {
+//        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
             writer.setDitherStrength(0.25f);
             rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
@@ -248,15 +250,13 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             else
                 wmv.getBiomeMapper().makeBiomes(world);
             int[][] cm = wmv.show();
-            temp.setColor(INK);
-            temp.fill();
 
             final int bw = width << AA, bh = height << AA;
             if(SHADOW){
-                final float iw = 1f / bw, ih = 1f / bh;
+                final float iw = 0.45f / bw, ih = 0.45f / bh;
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
-                        temp.drawPixel(x, y, DescriptiveColorRgb.adjustLightness(cm[x][y], Math.min(Math.max(MathTools.barronSpline(1f - (x * iw + y * ih), 4f, 0.75f) * 1.5f - 1f, -1f), 1f)));
+                        temp.drawPixel(x, y, DescriptiveColorRgb.adjustLightness(cm[x][y], Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f)));
                     }
                 }
             }
@@ -267,7 +267,12 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                     }
                 }
             }
+            // for whatever reason, drawPixmap will replace existing pixels with transparent ones in the drawn Pixmap.
+//            pm[i].setColor(INK);
+//            pm[i].fill();
+
             pm[i].setFilter(Pixmap.Filter.BiLinear);
+            pm[i].setBlending(Pixmap.Blending.None);
             pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
             if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }

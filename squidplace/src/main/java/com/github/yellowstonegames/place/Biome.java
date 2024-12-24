@@ -266,7 +266,7 @@ public class Biome {
             new Biome(HOT, OCEAN, "Ocean", 0xFF7A7837, '≈'  ),
             new Biome(HOTTER, OCEAN, "Ocean", 0xFF7A7835, '≈'  ),
             new Biome(HOTTEST, OCEAN, "Ocean", 0xFF7A7833, '≈'  ),
-            new Biome(COLDEST, STRANGE, "Space", 0xFF7A8121, ' '),                        //  60
+            new Biome(COLDEST, STRANGE, "Space", 0x007A8121, ' '),                        //  60
             new Biome(COLDER, STRANGE, "Moon", 0xFF7F7FCA, '¬'  ),
             new Biome(COLD, STRANGE, "Cavern", 0xFF82822D, '□'  ),
             new Biome(HOT, STRANGE, "Cavern", 0xFF828230, '□'  ),
