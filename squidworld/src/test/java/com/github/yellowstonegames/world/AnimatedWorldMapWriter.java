@@ -62,11 +62,11 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
-    private static final int LIMIT = 3;
+    private static final int LIMIT = 2;
     private static final int FRAMES = 300;
     private static final boolean FLOWING_LAND = false;
     private static final boolean ALIEN_COLORS = false;
-    private static final boolean MANY_STILL = false;
+    private static final boolean MANY_STILL = true;
     private static final boolean SEEDY = false;
     private static final boolean SHADOW = true;
     private int baseSeed = 1234567890;
@@ -90,6 +90,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
     private AnimatedGif writer;
     private AnimatedPNG apng;
+    private PNG8 png8;
     private FastPNG png;
     
     private String date, path;
@@ -112,6 +113,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
+        png8 = new PNG8();
+        png8.setFlipY(false);
+        png8.palette = writer.palette;
         if(MANY_STILL){
             png = new FastPNG();
             png.setFlipY(false);
@@ -121,6 +125,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
             writer.setDitherStrength(0.5f);
+            png8.setDitherAlgorithm(dither);
+            png8.setDitherStrength(0.5f);
             rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
             seed = rng.state;
             thesaurus = new Thesaurus(rng);
@@ -300,13 +306,15 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         if(MANY_STILL){
             for (int i = 0; i < pm.length; i++) {
                 png.write(stills.child("world_" + i + ".png"), pm[i]);
+                png8.write(stills.child("world_" + i + "_png8.png"), pm[i]);
             }
         }
 
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette.analyzeHueWise(pms, 15.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
-//        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
+        apng.write(Gdx.files.local(path + name + "_apng.png"), pms, 20);
+        png8.write(Gdx.files.local(path + name + "_png8.png"), pms, 20);
         temp.dispose();
 
         System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
