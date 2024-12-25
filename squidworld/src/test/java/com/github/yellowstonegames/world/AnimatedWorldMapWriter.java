@@ -124,12 +124,12 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{GOURD, GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
-        for(DitherAlgorithm dither : new DitherAlgorithm[]{PATTERN}) {
+        for(DitherAlgorithm dither : new DitherAlgorithm[]{BLUE_NOISE, }) {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
-            writer.setDitherStrength(0.5f);
+            writer.setDitherStrength(0.75f);
 //            png8.setDitherAlgorithm(dither);
-//            png8.setDitherStrength(0.5f);
+//            png8.setDitherStrength(0.75f);
             rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
             seed = rng.state;
             thesaurus = new Thesaurus(rng);
