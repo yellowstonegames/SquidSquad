@@ -41,6 +41,7 @@ import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
+import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -56,23 +57,23 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
-    private static final int width = 480, height = 480; // BIG space view
-//    private static final int width = 240, height = 240; // space view
+//    private static final int width = 480, height = 480; // BIG space view
+    private static final int width = 240, height = 240; // space view
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
-    private static final int LIMIT = 2;
+    private static final int LIMIT = 5;
     private static final int FRAMES = 300;
     private static final boolean FLOWING_LAND = false;
     private static final boolean ALIEN_COLORS = false;
-    private static final boolean MANY_STILL = true;
+    private static final boolean MANY_STILL = false;
     private static final boolean SEEDY = false;
     private static final boolean SHADOW = true;
     private int baseSeed = 1234567890;
-    private final int AA = 0;
-//    private final int AA = 1;
+//    private final int AA = 0;
+    private final int AA = 1;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -122,7 +123,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             png.setFlipY(false);
         }
 
-        for(DitherAlgorithm dither : new DitherAlgorithm[]{GOURD, GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
+//        for(DitherAlgorithm dither : new DitherAlgorithm[]{GOURD, GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
+        for(DitherAlgorithm dither : new DitherAlgorithm[]{PATTERN}) {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
             writer.setDitherStrength(0.5f);
@@ -285,6 +287,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                         int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
 //                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
                         adjusted |= adjusted >>> 7 & 1;
+                        // debug to find any non-opaque planet pixels
+//                        if((adjusted & 0xFF) != 0xFF)
+//                            adjusted = DescriptiveColorRgb.RED;
                         temp.drawPixel(x, y, adjusted);
                     }
                 }
@@ -303,6 +308,12 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             pm[i].setFilter(Pixmap.Filter.BiLinear);
             pm[i].setBlending(Pixmap.Blending.SourceOver);
             pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
+            ByteBuffer buf = pm[i].getPixels();
+            for (int pos = 3, lim = buf.limit(); pos < lim; pos += 4) {
+                byte alpha = buf.get(pos);
+                alpha >>= 31;
+                buf.put(pos, alpha);
+            }
             if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
 
