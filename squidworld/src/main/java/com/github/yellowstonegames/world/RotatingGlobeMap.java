@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -203,7 +204,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, lon, lat, rho,
-                i_pi = 1f / TrigTools.PI,
+                i_pi = MathTools.towardsZero(1f / TrigTools.PI),
                 rx = width * 0.5f, irx = i_uw / rx,
                 ry = height * 0.5f, iry = i_uh / ry;
 
@@ -218,7 +219,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
             float radians, from, to;
             int floor, masked;
             radians = lat * TrigTools.radToIndex;
-            floor = (int)(radians + 16384f) - 16384;
+            floor = (int)(radians + 16384.0) - 16384;
             radians -= floor;
             masked = floor & TrigTools.TABLE_MASK;
 
@@ -250,7 +251,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 lon = removeExcess((centerLongitude + (TrigTools.atan2(ixPos * rho, rho * TrigTools.cosSmoother(th)))) * 0.5f);
 
                 radians = lon * TrigTools.radToIndex;
-                floor = (int)(radians + 16384f) - 16384;
+                floor = (int)(radians + 16384.0) - 16384;
                 masked = floor & TrigTools.TABLE_MASK;
 
 //                ps = TrigTools.SIN_TABLE[masked];
