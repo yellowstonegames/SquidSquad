@@ -64,7 +64,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
-    private static final int LIMIT = 5;
+    private static final int LIMIT = 2;
     private static final int FRAMES = 300;
     private static final boolean FLOWING_LAND = false;
     private static final boolean ALIEN_COLORS = false;
@@ -266,8 +266,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             final int bw = temp.getWidth(), bh = temp.getHeight();
             if(SHADOW){
                 final int padding = (5<<AA), margin = (1<<AA);
-                final double center = (temp.getWidth() - 1) * 0.5, radius2 = (center - margin) * (center - margin),
-                        innerRadius2 = (center - padding -margin) * (center - padding - margin);
+                final double center = (temp.getWidth() - 1) * 0.5,
+                        rim2 = center * center + 4,
+                        radius2 = (center - margin) * (center - margin),
+                        innerRadius2 = (center - padding - margin) * (center - padding - margin);
                 temp.setColor(ATMOSPHERE & 0xFFFFFF00);
                 temp.fill();
 //                temp.setColor(ATMOSPHERE);
@@ -279,8 +281,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                                 ? cm[x - padding][y - padding] : 0;
                         if((mapColor & 0xFF) == 0){
                             double xx = x - center, yy = y - center, distance2 = xx * xx + yy * yy;
-                            if(distance2 >= innerRadius2 && distance2 <= radius2)
-                                mapColor = ATMOSPHERE;
+                            if(distance2 >= innerRadius2 && distance2 <= rim2) {
+                                mapColor = (distance2 <= radius2) ? ATMOSPHERE : ATMOSPHERE & 0xFFFFFF00;
+                            }
                             else continue;
                         }
                         float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
@@ -310,9 +313,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
             ByteBuffer buf = pm[i].getPixels();
             for (int pos = 3, lim = buf.limit(); pos < lim; pos += 4) {
-                byte alpha = buf.get(pos);
-                alpha >>= 31;
-                buf.put(pos, alpha);
+                int alpha = ~(buf.get(pos) & 0xFF) + 250 >> 31;
+                buf.put(pos, (byte)alpha);
             }
             if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
