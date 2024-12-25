@@ -56,7 +56,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 1024, height = 512; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
-    private static final int width = 240, height = 240; // space view
+    private static final int width = 480, height = 480; // BIG space view
+//    private static final int width = 240, height = 240; // space view
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
     //private static final int width = 314 * 4, height = 400;
@@ -70,8 +71,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private static final boolean SEEDY = false;
     private static final boolean SHADOW = true;
     private int baseSeed = 1234567890;
-//    private final int AA = 0;
-    private final int AA = 1;
+    private final int AA = 0;
+//    private final int AA = 1;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
