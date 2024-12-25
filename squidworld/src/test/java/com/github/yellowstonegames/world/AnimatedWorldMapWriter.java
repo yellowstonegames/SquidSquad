@@ -277,7 +277,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 temp.setColor(ATMOSPHERE & 0xFFFFFF00);
                 temp.fill();
 
-                shadowStrength = TrigTools.sinSmootherTurns(angle) * 0.4f + 0.9f;
+                shadowAngle = -45 + TrigTools.sinSmootherTurns(angle) * 40f;
+//                shadowStrength = TrigTools.sinSmootherTurns(angle) * 0.4f + 0.9f;
 
                 final float iw = 1.4142135623730951f * shadowStrength * TrigTools.cosSmootherDeg(shadowAngle) / bw,
                         ih = -1.4142135623730951f * shadowStrength * TrigTools.sinSmootherDeg(shadowAngle) / bh;
