@@ -1606,7 +1606,7 @@ public final class DescriptiveColorRgb {
      * @return an RGBA8888 int that represents a color between start and white
      */
     public static int lighten(final int start, final float change) {
-        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FF;
         return (a |
                 ((int) (b + (0xFF - b) * change) & 0xFF) << 8 |
                         ((int) (g + (0xFF - g) * change) & 0xFF) << 16 |
@@ -1626,7 +1626,7 @@ public final class DescriptiveColorRgb {
      * @return an RGBA8888 int that represents a color between start and black
      */
     public static int darken(final int start, final float change) {
-        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FF;
         return (
                 ((int) (r * (1f - change)) & 0xFF) << 24 |
                         ((int) (g * (1f - change)) & 0xFF) << 16 |
@@ -1665,7 +1665,7 @@ public final class DescriptiveColorRgb {
      */
     public static int dullen(final int start, final float change) {
         final float rc = 0.32627f, gc = 0.3678f, bc = 0.30593001f;
-        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FF;
         final float ch = 1f - change, rw = change * rc, gw = change * gc, bw = change * bc;
         return (
                 (int) Math.min(Math.max(r * (rw+ch) + g * rw + b * rw, 0), 255) << 24 |
@@ -1687,7 +1687,7 @@ public final class DescriptiveColorRgb {
      */
     public static int enrich(final int start, final float change) {
         final float rc = 0.32627f, gc = 0.3678f, bc = 0.30593001f;
-        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FE;
+        final int r = start >>> 24, g = start >>> 16 & 0xFF, b = start >>> 8 & 0xFF, a = start & 0x000000FF;
         final float ch = 1f + change, rw = (-change) * rc, gw = (-change) * gc, bw = (-change) * bc;
         return (
                 (int) Math.min(Math.max(r * (rw+ch) + g * rw + b * rw, 0), 255) << 24 |

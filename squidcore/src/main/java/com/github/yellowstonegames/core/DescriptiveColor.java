@@ -862,7 +862,7 @@ public final class DescriptiveColor {
         final int r = (int)(reverseGamma(Math.min(Math.max(+4.0767245293f * l - 3.3072168827f * m + 0.2307590544f * s, 0f), 1f)) * 255.999f);
         final int g = (int)(reverseGamma(Math.min(Math.max(-1.2681437731f * l + 2.6093323231f * m - 0.3411344290f * s, 0f), 1f)) * 255.999f);
         final int b = (int)(reverseGamma(Math.min(Math.max(-0.0041119885f * l - 0.7034763098f * m + 1.7068625689f * s, 0f), 1f)) * 255.999f);
-        return r << 24 | g << 16 | b << 8 | (oklab & 0xfe000000) >>> 24 | oklab >>> 31;
+        return r << 24 | g << 16 | b << 8 | (oklab & 0xFF000000) >>> 24 | oklab >>> 31;
     }
 
     /**
@@ -924,7 +924,7 @@ public final class DescriptiveColor {
                 Math.min(Math.max((int)(forwardLight(0.2104542553f * l + 0.7936177850f * m - 0.0040720468f * s) * 255.999f         ), 0), 255)
                         | Math.min(Math.max((int)((1.9779984951f * l - 2.4285922050f * m + 0.4505937099f * s) * 127.999f + 127.5f), 0), 255) << 8
                         | Math.min(Math.max((int)((0.0259040371f * l + 0.7827717662f * m - 0.8086757660f * s) * 127.999f + 127.5f), 0), 255) << 16
-                        | (abgr & 0xFE000000));
+                        | (abgr & 0xFF000000));
     }
 
     /**
@@ -2520,9 +2520,9 @@ public final class DescriptiveColor {
         final int idx = (int)(L * 255.999f) << 8 | (int)(256f * hue);
         final float dist = GAMUT_DATA[idx] * 0.5f;
         if(dist * dist * 0x1p-16f + 0x1p-14f >= (A2 * A2 + B2 * B2))
-            return (int)(L * 255.999f) | (int)(A * 255.999f) << 8 | (int)(B * 255.999f) << 16 | (oklab & 0xFE000000);
+            return (int)(L * 255.999f) | (int)(A * 255.999f) << 8 | (int)(B * 255.999f) << 16 | (oklab & 0xFF000000);
         return (
-                (oklab & 0xFE000000) |
+                (oklab & 0xFF000000) |
                         (int) (TrigTools.sinTurns(hue) * dist + 128f) << 16 |
                         (int) (TrigTools.cosTurns(hue) * dist + 128f) << 8 |
                         (int)(L * 255.999f));

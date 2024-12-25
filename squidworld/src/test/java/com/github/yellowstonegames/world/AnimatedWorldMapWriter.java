@@ -91,7 +91,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
     private AnimatedGif writer;
     private AnimatedPNG apng;
-    private PNG8 png8;
+//    private PNG8 png8;
     private FastPNG png;
     
     private String date, path;
@@ -114,9 +114,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
-        png8 = new PNG8();
-        png8.setFlipY(false);
-        png8.palette = writer.palette;
+//        png8 = new PNG8();
+//        png8.setFlipY(false);
+//        png8.palette = writer.palette;
         if(MANY_STILL){
             png = new FastPNG();
             png.setFlipY(false);
@@ -126,8 +126,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
             writer.setDitherStrength(0.5f);
-            png8.setDitherAlgorithm(dither);
-            png8.setDitherStrength(0.5f);
+//            png8.setDitherAlgorithm(dither);
+//            png8.setDitherStrength(0.5f);
             rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
             seed = rng.state;
             thesaurus = new Thesaurus(rng);
@@ -284,6 +284,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                         float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
                         int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
 //                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
+                        adjusted |= adjusted >>> 7 & 1;
                         temp.drawPixel(x, y, adjusted);
                     }
                 }
@@ -291,7 +292,8 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             else {
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
-                        temp.drawPixel(x, y, cm[x][y]);
+                        int mapColor = cm[x][y];
+                        temp.drawPixel(x, y, mapColor | (mapColor >>> 7 & 1));
                     }
                 }
             }
@@ -299,7 +301,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //            temp.setColor(INK);
 //            pm[i].fill();
             pm[i].setFilter(Pixmap.Filter.BiLinear);
-            pm[i].setBlending(Pixmap.Blending.None);
+            pm[i].setBlending(Pixmap.Blending.SourceOver);
             pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
             if(i % (FRAMES/10) == (FRAMES/10-1)) System.out.print(((i + 1) * 10 / (FRAMES/10)) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
@@ -307,7 +309,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         if(MANY_STILL){
             for (int i = 0; i < pm.length; i++) {
                 png.write(stills.child("world_" + i + ".png"), pm[i]);
-                png8.write(stills.child("world_" + i + "_png8.png"), pm[i]);
+//                png8.write(stills.child("world_" + i + "_png8.png"), pm[i]);
             }
         }
 
@@ -315,7 +317,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer.palette.analyzeHueWise(pms, 15.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
         apng.write(Gdx.files.local(path + name + "_apng.png"), pms, 20);
-        png8.write(Gdx.files.local(path + name + "_png8.png"), pms, 20);
+//        png8.write(Gdx.files.local(path + name + "_png8.png"), pms, 20);
         temp.dispose();
 
         System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
