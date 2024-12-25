@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.Coord;
@@ -188,7 +189,7 @@ public class LatLonWorldMap extends WorldMapGenerator {
     @Override
     public Coord project(float latitude, float longitude) {
         int x = (int) ((((longitude - getCenterLongitude()) + TrigTools.PI2 + TrigTools.PI) % TrigTools.PI2) * TrigTools.PI_INVERSE * 0.5f * width),
-                y = (int) ((latitude * TrigTools.PI_INVERSE + 0.5f) % 1f * height);
+                y = (int) (MathTools.fract(latitude * TrigTools.PI_INVERSE + 0.5f) * height);
         return Coord.get(
                 wrapX(x, y),
                 wrapY(x, y));
@@ -251,7 +252,7 @@ public class LatLonWorldMap extends WorldMapGenerator {
                 h, temp, yPos, xPos,
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (height + 2f),
-                th, thx, thy, lon, lat, ipi = 0.99999f / TrigTools.PI,
+                th, thx, thy, lon, lat, ipi = 0.31830984f,/* MathTools.towardsZero(TrigTools.PI_INVERSE) */
                 rx = width * 0.25f - 0.5f, irx = 1f / rx, hw = width * 0.5f,
                 ry = height * 0.5f, iry = 1f / ry;
 

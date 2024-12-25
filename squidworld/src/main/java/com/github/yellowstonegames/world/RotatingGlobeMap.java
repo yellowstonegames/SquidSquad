@@ -204,7 +204,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 i_uw = usedWidth / (float) width,
                 i_uh = usedHeight / (float) height,
                 th, lon, lat, rho,
-                i_pi = MathTools.towardsZero(1f / TrigTools.PI),
+                i_pi = 0.31830984f,/* MathTools.towardsZero(TrigTools.PI_INVERSE) */
                 rx = width * 0.5f, irx = i_uw / rx,
                 ry = height * 0.5f, iry = i_uh / ry;
 

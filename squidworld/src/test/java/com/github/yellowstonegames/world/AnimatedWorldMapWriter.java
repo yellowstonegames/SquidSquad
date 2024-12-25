@@ -31,6 +31,7 @@ import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.anim8.Dithered.DitherAlgorithm;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.tommyettinger.digital.Hasher;
@@ -76,6 +77,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private final int AA = 1;
 
     private Thesaurus thesaurus;
+    private float shadowStrength = 0.9f;
+    private float shadowAngle = -45f;
+
     private String makeName(final Thesaurus thesaurus)
     {
         return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
@@ -272,9 +276,11 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                         innerRadius2 = (center - padding - margin) * (center - padding - margin);
                 temp.setColor(ATMOSPHERE & 0xFFFFFF00);
                 temp.fill();
-//                temp.setColor(ATMOSPHERE);
-//                temp.fillCircle((temp.getWidth() >> 1), (temp.getHeight() >> 1), (temp.getWidth() >> 1) - margin);
-                final float iw = 0.9f / bw, ih = 0.9f / bh;
+
+                shadowStrength = TrigTools.sinSmootherTurns(angle) * 0.4f + 0.9f;
+
+                final float iw = 1.4142135623730951f * shadowStrength * TrigTools.cosSmootherDeg(shadowAngle) / bw,
+                        ih = -1.4142135623730951f * shadowStrength * TrigTools.sinSmootherDeg(shadowAngle) / bh;
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
                         int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
