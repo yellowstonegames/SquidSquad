@@ -181,7 +181,7 @@ public class AnimatedWorldMapBundleWriter extends ApplicationAdapter {
 
 //        fn.setInterpolation(Noise.QUINTIC);
 
-            INoise fn = new FoamplexNoise(seed);
+            INoise fn = new NoiseWrapper(new FoamNoise(seed), 1.25f, NoiseWrapper.FBM, 3);
 //            INoise fn = new NoiseWrapper(new PerlueNoise(seed), 0.8f, NoiseWrapper.FBM, 3);
 //        INoise fn = new CyclicNoise(seed, 3, 1.5f);
 
@@ -200,7 +200,7 @@ public class AnimatedWorldMapBundleWriter extends ApplicationAdapter {
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
 
-            world = new RotatingGlobeMapBundle(seed, width << AA, height << AA, noise, 2.2f);
+            world = new RotatingGlobeMapBundle(seed, width << AA, height << AA, noise, 1.5f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 0.75f);
 
 //        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);

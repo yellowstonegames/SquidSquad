@@ -30,7 +30,7 @@ import static com.github.yellowstonegames.grid.Noise.*;
  * and can change how it smooths out later octaves based on the derivative of each point on the sphere.
  */
 public class PlanetNoiseWrapper extends NoiseWrapper {
-    private static final float DERIVATIVE_FACTOR = 1f;
+    private static final float DERIVATIVE_FACTOR = 0.125f;
 
     public PlanetNoiseWrapper() {
         this(new PerlueNoise(123L), 123L, 0.03125f, FBM, 1, false);
