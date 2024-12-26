@@ -76,8 +76,35 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private final int AA = 0;
     private final int AA = 1;
 
+    public float getShadowStrength() {
+        return shadowStrength;
+    }
+
+    public void setShadowStrength(float shadowStrength) {
+        this.shadowStrength = shadowStrength;
+    }
+
+    public float getShadowAngle() {
+        return shadowAngle;
+    }
+
+    public void setShadowAngle(float shadowAngle) {
+        this.shadowAngle = shadowAngle;
+    }
+
     private Thesaurus thesaurus;
-    private float shadowStrength = 0.9f;
+    /**
+     * How much stronger or weaker the shadowing effect should be; this is usually in the -1 to 1 range. The default
+     * value is -0.1f, which weakens the shadow and so makes the lit section of the planet slightly larger than the
+     * darkened section.
+     */
+    private float shadowStrength = -0.1f;
+    /**
+     * The angle, in degrees, for a shadow to be case across the planetary surface. From the center of the world,
+     * traveling a positive distance along this angle will get progressively darker, and a negative distance will become
+     * lighter. A traditional example is -45 degrees, which is also the default; it casts a shadow from the upper left
+     * (lightest) to the lower right (darkest).
+     */
     private float shadowAngle = -45f;
 
     private String makeName(final Thesaurus thesaurus)
@@ -96,12 +123,11 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
     private AnimatedGif writer;
     private AnimatedPNG apng;
-//    private PNG8 png8;
     private FastPNG png;
     
     private String date, path;
     private INoise noise;
-    private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
+    private static final int SPACE = DescriptiveColorRgb.TRANSPARENT;
     private static final int ATMOSPHERE = DescriptiveColorRgb.describeRgb("silver 6 white 9 sky 1");
     @Override
     public void create() {
@@ -119,9 +145,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer.setFlipY(false);
         apng = new AnimatedPNG();
         apng.setFlipY(false);
-//        png8 = new PNG8();
-//        png8.setFlipY(false);
-//        png8.palette = writer.palette;
         if(MANY_STILL){
             png = new FastPNG();
             png.setFlipY(false);
@@ -132,8 +155,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
             writer.setDitherStrength(0.75f);
-//            png8.setDitherAlgorithm(dither);
-//            png8.setDitherStrength(0.75f);
             rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
             seed = rng.state;
             thesaurus = new Thesaurus(rng);
@@ -331,7 +352,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         if(MANY_STILL){
             for (int i = 0; i < pm.length; i++) {
                 png.write(stills.child("world_" + i + ".png"), pm[i]);
-//                png8.write(stills.child("world_" + i + "_png8.png"), pm[i]);
             }
         }
 
@@ -339,7 +359,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer.palette.analyzeHueWise(pms, 15.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
         apng.write(Gdx.files.local(path + name + "_apng.png"), pms, 20);
-//        png8.write(Gdx.files.local(path + name + "_png8.png"), pms, 20);
         temp.dispose();
 
         System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
