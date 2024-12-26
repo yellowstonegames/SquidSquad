@@ -573,11 +573,14 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
      * @return a noise result between -1f and 1f
      */
     public float ridged(float x, float y, float z, long seed) {
-        float sum = 0f, exp = 1f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i));
-            sum += spike * exp;
-            correction += (exp *= 0.5f);
+        float correction = 0f;
+        float sum = (1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed)));
+        float outer = (1f - Math.abs(wrapped.getNoiseWithSeed(x * 0x1.01p0f, y * 0x1.01p0f, z * 0x1.01p0f, seed)));
+        float derivative = (outer - sum) * 256f;
+        float amp = 1f / (1f + derivative * derivative);
+        for (int i = 1; i < octaves; i++) {
+            sum += (1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i))) * amp;
+            correction += (amp *= 0.5f);
             x *= 2f;
             y *= 2f;
             z *= 2f;
@@ -598,7 +601,9 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float warp(float x, float y, float z, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, seed);
         float sum = latest;
-        float amp = 1;
+        float outer = wrapped.getNoiseWithSeed(x * 0x1.01p0f, y * 0x1.01p0f, z * 0x1.01p0f, seed);
+        float derivative = (outer - sum) * 256f;
+        float amp = 1f / (1f + derivative * derivative);
 
         for (int i = 1; i < octaves; i++) {
             x *= 2f;
@@ -632,6 +637,15 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, seed + 1111);
         float distort1 = wrapped.getNoiseWithSeed(x * 0.3f, y * 0.3f, z * 0.3f, seed + 2222);
         float noise1 = wrapped.getNoiseWithSeed(x + striation1 - distort1, y + striation1 + distort1, z, seed) * power;
+
+        striation1 = wrapped.getNoiseWithSeed(x * (0x1.01p0f * 0.25f), y * (0x1.01p0f * 0.25f), z * (0x1.01p0f * 0.25f), seed + 1111);
+        distort1 = wrapped.getNoiseWithSeed(x * (0x1.01p0f * 0.3f), y * (0x1.01p0f * 0.3f), z * (0x1.01p0f * 0.3f), seed + 2222);
+
+        float outer = wrapped.getNoiseWithSeed(x * 0x1.01p0f + striation1 - distort1, y * 0x1.01p0f + striation1 + distort1, z * 0x1.01p0f, seed);
+        float derivative = (outer - noise1) * 256f;
+        power /= (1f + derivative * derivative);
+
+
         for (int i = 1; i < octaves; i++) {
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, seed + i + 3333);
             float distort2 = wrapped.getNoiseWithSeed(x * 0.15f, y * 0.15f, z * 0.15f, seed + i + 4444);
