@@ -547,7 +547,6 @@ public class RotatingGlobeMapBundle extends WorldMapGenerator {
             }
             rng.setState(stateA, stateB);
             long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
-            int t;
 
             landModifier = (landMod <= 0) ? rng.nextFloat(0.29f) + 0.91f : landMod;
             heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat() - 0.5f) + 1.1f : heatMod;
@@ -575,13 +574,17 @@ public class RotatingGlobeMapBundle extends WorldMapGenerator {
                     xPositions[x][y] = pc;
                     yPositions[x][y] = ps;
                     zPositions[x][y] = qs;
-                    heightData[x][y] = ((h = terrainBasic.getNoiseWithSeed(pc, ps, qs, seedA) * 0.667f
-                            + terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.333f) + landModifier - 1f);
-                    heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps, qs, seedB) * 0.625f
-                            + otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC) * 0.375f);
-                    moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs, seedC) * 0.625f
-                            + otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA) * 0.375f);
+                    heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc, ps, qs, seedA) + landModifier - 1f);
+                    heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps, qs, seedB));
+                    moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs, seedC));
 
+//                    heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc, ps, qs, seedA) * 0.667f
+//                            + terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.333f + landModifier - 1f);
+//                    heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps, qs, seedB) * 0.625f
+//                            + otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC) * 0.375f);
+//                    moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs, seedC) * 0.625f
+//                            + otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA) * 0.375f);
+//
                     minHeightActual = Math.min(minHeightActual, h);
                     maxHeightActual = Math.max(maxHeightActual, h);
                     if (fresh) {

@@ -30,6 +30,8 @@ import static com.github.yellowstonegames.grid.Noise.*;
  * and can change how it smooths out later octaves based on the derivative of each point on the sphere.
  */
 public class PlanetNoiseWrapper extends NoiseWrapper {
+    private static final float DERIVATIVE_FACTOR = 1f;
+
     public PlanetNoiseWrapper() {
         this(new PerlueNoise(123L), 123L, 0.03125f, FBM, 1, false);
     }
@@ -517,8 +519,8 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float fbm(float x, float y, float z, long seed) {
         float sum = wrapped.getNoiseWithSeed(x, y, z, seed);
         float outer = wrapped.getNoiseWithSeed(x * 0x1.01p0f, y * 0x1.01p0f, z * 0x1.01p0f, seed);
-        float derivative = (outer - sum) * 256f;
-        float amp = 1f / (1f + derivative * derivative);
+        float derivative = (outer - sum) * DERIVATIVE_FACTOR;
+        float amp = 1f / (1f + Math.abs(derivative));
 
         for (int i = 1; i < octaves; i++) {
             x *= 2f;
@@ -546,8 +548,8 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float billow(float x, float y, float z, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed)) * 2 - 1;
         float outer = Math.abs(wrapped.getNoiseWithSeed(x * 0x1.01p0f, y * 0x1.01p0f, z * 0x1.01p0f, seed)) * 2 - 1;
-        float derivative = (outer - sum) * 256f;
-        float amp = 1f / (1f + derivative * derivative);
+        float derivative = (outer - sum) * DERIVATIVE_FACTOR;
+        float amp = 1f / (1f + Math.abs(derivative));
 
         for (int i = 1; i < octaves; i++) {
             x *= 2f;
@@ -576,8 +578,8 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
         float correction = 0f;
         float sum = (1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed)));
         float outer = (1f - Math.abs(wrapped.getNoiseWithSeed(x * 0x1.01p0f, y * 0x1.01p0f, z * 0x1.01p0f, seed)));
-        float derivative = (outer - sum) * 256f;
-        float amp = 1f / (1f + derivative * derivative);
+        float derivative = (outer - sum) * DERIVATIVE_FACTOR;
+        float amp = 1f / (1f + Math.abs(derivative));
         for (int i = 1; i < octaves; i++) {
             sum += (1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i))) * amp;
             correction += (amp *= 0.5f);
@@ -602,8 +604,8 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
         float latest = wrapped.getNoiseWithSeed(x, y, z, seed);
         float sum = latest;
         float outer = wrapped.getNoiseWithSeed(x * 0x1.01p0f, y * 0x1.01p0f, z * 0x1.01p0f, seed);
-        float derivative = (outer - sum) * 256f;
-        float amp = 1f / (1f + derivative * derivative);
+        float derivative = (outer - sum) * DERIVATIVE_FACTOR;
+        float amp = 1f / (1f + Math.abs(derivative));
 
         for (int i = 1; i < octaves; i++) {
             x *= 2f;
@@ -642,8 +644,8 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
         distort1 = wrapped.getNoiseWithSeed(x * (0x1.01p0f * 0.3f), y * (0x1.01p0f * 0.3f), z * (0x1.01p0f * 0.3f), seed + 2222);
 
         float outer = wrapped.getNoiseWithSeed(x * 0x1.01p0f + striation1 - distort1, y * 0x1.01p0f + striation1 + distort1, z * 0x1.01p0f, seed);
-        float derivative = (outer - noise1) * 256f;
-        power /= (1f + derivative * derivative);
+        float derivative = (outer - noise1) * DERIVATIVE_FACTOR;
+        power /= (1f + Math.abs(derivative));
 
 
         for (int i = 1; i < octaves; i++) {
