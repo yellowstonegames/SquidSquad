@@ -262,7 +262,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             stills.mkdirs();
         }
 
-        StringBuilder sb = new StringBuilder(256 * 12);
+//        StringBuilder sb = new StringBuilder(256 * 12);
         worldTime = System.currentTimeMillis();
         Pixmap temp = new Pixmap(width * cellWidth + 10 << AA, height * cellHeight + 10 << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
@@ -360,15 +360,15 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 
         System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
 
-        sb.setLength(0);
-        int idx = 0;
-        for (;idx < writer.palette.paletteArray.length;) {
-            for (int i = 0; i < 8 && idx < writer.palette.paletteArray.length; i++, idx++) {
-                Base.BASE16.appendUnsigned(sb.append("0x"), writer.palette.paletteArray[idx]).append(", ");
-            }
-            sb.setCharAt(sb.length() - 1, '\n');
-        }
-        System.out.println(sb);
+//        sb.setLength(0);
+//        int idx = 0;
+//        for (;idx < writer.palette.paletteArray.length;) {
+//            for (int i = 0; i < 8 && idx < writer.palette.paletteArray.length; i++, idx++) {
+//                Base.BASE16.appendUnsigned(sb.append("0x"), writer.palette.paletteArray[idx]).append(", ");
+//            }
+//            sb.setCharAt(sb.length() - 1, '\n');
+//        }
+//        System.out.println(sb);
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }
     @Override
