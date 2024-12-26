@@ -477,6 +477,16 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Ridged noise in 2D (sometimes called Ridged Multi-Fractal); this has large flat areas of low values, with wiggly
+     * lines of high values running like veins throughout.
+     * Much like {@link #billow(float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float ridged(float x, float y, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -494,6 +504,15 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
+    /**
+     * Domain-warped noise in 2D; this is identical to {@link #fbm(float, float, long)} with
+     * one octave, but with more it looks rounded and bubbly.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float warp(float x, float y, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, seed);
         float sum = latest;
@@ -518,6 +537,14 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Exoplanet noise in 2D, meant to loosely imitate the battered surface of an alien world.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float exo(float x, float y, long seed) {
         float power = 0.5f;
 
@@ -616,6 +643,17 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Ridged noise in 3D (sometimes called Ridged Multi-Fractal); this has large flat areas of low values, with wiggly
+     * lines of high values running like veins throughout.
+     * Much like {@link #billow(float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float ridged(float x, float y, float z, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -635,6 +673,16 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
+    /**
+     * Domain-warped noise in 3D; this is identical to {@link #fbm(float, float, float, long)} with
+     * one octave, but with more it looks rounded and bubbly.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float warp(float x, float y, float z, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, seed);
         float sum = latest;
@@ -663,6 +711,15 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Exoplanet noise in 3D, meant to loosely imitate the battered surface of an alien world.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float exo(float x, float y, float z, long seed) {
         float power = 0.5f;
 
@@ -769,6 +826,18 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Ridged noise in 4D (sometimes called Ridged Multi-Fractal); this has large flat areas of low values, with wiggly
+     * lines of high values running like veins throughout.
+     * Much like {@link #billow(float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float ridged(float x, float y, float z, float w, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -790,6 +859,17 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
+    /**
+     * Domain-warped noise in 4D; this is identical to {@link #fbm(float, float, float, float, long)} with
+     * one octave, but with more it looks rounded and bubbly.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float warp(float x, float y, float z, float w, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, w, seed);
         float sum = latest;
@@ -821,6 +901,16 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Exoplanet noise in 4D, meant to loosely imitate the battered surface of an alien world.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float exo(float x, float y, float z, float w, long seed) {
         float power = 0.5f;
 
@@ -935,6 +1025,19 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Ridged noise in 5D (sometimes called Ridged Multi-Fractal); this has large flat areas of low values, with wiggly
+     * lines of high values running like veins throughout.
+     * Much like {@link #billow(float, float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float ridged(float x, float y, float z, float w, float u, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
@@ -958,6 +1061,18 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
+    /**
+     * Domain-warped noise in 5D; this is identical to {@link #fbm(float, float, float, float, float, long)} with
+     * one octave, but with more it looks rounded and bubbly.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float warp(float x, float y, float z, float w, float u, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, w, u, seed);
         float sum = latest;
@@ -992,6 +1107,17 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
+    /**
+     * Exoplanet noise in 5D, meant to loosely imitate the battered surface of an alien world.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
     public float exo(float x, float y, float z, float w, float u, long seed) {
         float power = 0.5f;
 
