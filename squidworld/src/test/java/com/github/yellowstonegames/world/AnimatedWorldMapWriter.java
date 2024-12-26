@@ -270,30 +270,32 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             final int bw = temp.getWidth(), bh = temp.getHeight();
             if(SHADOW){
                 final int padding = (5<<AA), margin = (1<<AA);
-                final double center = (temp.getWidth() - 1) * 0.5,
+                final float center = (temp.getWidth() - 1) * 0.5f,
                         rim2 = center * center + 4,
                         radius2 = (center - margin) * (center - margin),
                         innerRadius2 = (center - padding - margin) * (center - padding - margin);
                 temp.setColor(ATMOSPHERE & 0xFFFFFF00);
                 temp.fill();
 
-                shadowAngle = -45 + TrigTools.sinSmootherTurns(angle) * 40f;
+                shadowAngle = -45 + TrigTools.sinSmootherTurns(angle) * 180f;
 //                shadowStrength = TrigTools.sinSmootherTurns(angle) * 0.4f + 0.9f;
 
-                final float iw = 1.4142135623730951f * shadowStrength * TrigTools.cosSmootherDeg(shadowAngle) / bw,
-                        ih = -1.4142135623730951f * shadowStrength * TrigTools.sinSmootherDeg(shadowAngle) / bh;
+                // 0.70710677f
+                final float iw = shadowStrength * TrigTools.cosSmootherDeg(shadowAngle) / bw,
+                        ih = -shadowStrength * TrigTools.sinSmootherDeg(shadowAngle) / bh;
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
                         int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
                                 ? cm[x - padding][y - padding] : 0;
+                        float xx = x - center, yy = y - center;
                         if((mapColor & 0xFF) == 0){
-                            double xx = x - center, yy = y - center, distance2 = xx * xx + yy * yy;
+                            double distance2 = xx * xx + yy * yy;
                             if(distance2 >= innerRadius2 && distance2 <= rim2) {
                                 mapColor = (distance2 <= radius2) ? ATMOSPHERE : ATMOSPHERE & 0xFFFFFF00;
                             }
                             else continue;
                         }
-                        float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(1.1f - (x * iw + y * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
+                        float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(0.5f - (xx * iw + yy * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
                         int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
 //                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
                         adjusted |= adjusted >>> 7 & 1;
