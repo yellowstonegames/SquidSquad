@@ -278,11 +278,11 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 temp.fill();
 
                 shadowAngle = -45 + TrigTools.sinSmootherTurns(angle) * 180f;
-//                shadowStrength = TrigTools.sinSmootherTurns(angle) * 0.4f + 0.9f;
+                shadowStrength = TrigTools.cosSmootherTurns(angle) * 0.4f;
 
                 // 0.70710677f
-                final float iw = shadowStrength * TrigTools.cosSmootherDeg(shadowAngle) / bw,
-                        ih = -shadowStrength * TrigTools.sinSmootherDeg(shadowAngle) / bh;
+                final float iw = 1.5f * TrigTools.cosSmootherDeg(shadowAngle) / bw,
+                        ih = -1.5f * TrigTools.sinSmootherDeg(shadowAngle) / bh;
                 for (int x = 0; x < bw; x++) {
                     for (int y = 0; y < bh; y++) {
                         int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
@@ -295,7 +295,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                             }
                             else continue;
                         }
-                        float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(0.5f - (xx * iw + yy * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
+                        float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(-shadowStrength - (xx * iw + yy * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
                         int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
 //                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
                         adjusted |= adjusted >>> 7 & 1;
