@@ -234,7 +234,9 @@ public class NoiseWrapper implements INoise {
         setFrequency(Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+2)));
         setMode(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
         setOctaves(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
-        setFractalSpiral(data.charAt(pos+1) == '1');
+        // This will only read in 1 for on, or anything else for off, but...
+        // ... subclasses might not use fractalSpiral. They can repurpose this to store any int.
+        setFractalSpiral(Base.BASE10.readInt(data, pos+1, data.length()) == 1);
         return this;
     }
 
@@ -415,8 +417,17 @@ public class NoiseWrapper implements INoise {
     }
 
     // 2D
-    
-    protected float fbm(float x, float y, long seed) {
+
+    /**
+     * Fractal Brownian Motion noise in 2D; this starts fairly smooth, usually, and adds finer and finer detail with
+     * each additional octave. This is often considered the primary or default type of continuous noise.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float fbm(float x, float y, long seed) {
         float sum = wrapped.getNoiseWithSeed(x, y, seed);
         float amp = 1;
 
@@ -435,7 +446,18 @@ public class NoiseWrapper implements INoise {
 
         return sum / (amp * ((1 << octaves) - 1));
     }
-    protected float billow(float x, float y, long seed) {
+
+    /**
+     * Billow noise in 2D; this has large flat areas of fairly high values, with wiggly
+     * lines of low values running like folds throughout.
+     * Much like {@link #ridged(float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float billow(float x, float y, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, seed)) * 2 - 1;
         float amp = 1;
 
@@ -455,7 +477,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float ridged(float x, float y, long seed) {
+    public float ridged(float x, float y, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, seed + i));
@@ -472,7 +494,7 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
-    protected float warp(float x, float y, long seed) {
+    public float warp(float x, float y, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, seed);
         float sum = latest;
         float amp = 1;
@@ -496,7 +518,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, long seed) {
+    public float exo(float x, float y, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, seed + 1111);
@@ -528,8 +550,18 @@ public class NoiseWrapper implements INoise {
     }
 
     // 3D
-    
-    protected float fbm(float x, float y, float z, long seed) {
+
+    /**
+     * Fractal Brownian Motion noise in 3D; this starts fairly smooth, usually, and adds finer and finer detail with
+     * each additional octave. This is often considered the primary or default type of continuous noise.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float fbm(float x, float y, float z, long seed) {
         float sum = wrapped.getNoiseWithSeed(x, y, z, seed);
         float amp = 1;
 
@@ -550,7 +582,19 @@ public class NoiseWrapper implements INoise {
 
         return sum / (amp * ((1 << octaves) - 1));
     }
-    protected float billow(float x, float y, float z, long seed) {
+
+    /**
+     * Billow noise in 3D; this has large flat areas of fairly high values, with wiggly
+     * lines of low values running like folds throughout.
+     * Much like {@link #ridged(float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float billow(float x, float y, float z, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed)) * 2 - 1;
         float amp = 1;
 
@@ -572,7 +616,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float ridged(float x, float y, float z, long seed) {
+    public float ridged(float x, float y, float z, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i));
@@ -591,7 +635,7 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
-    protected float warp(float x, float y, float z, long seed) {
+    public float warp(float x, float y, float z, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, seed);
         float sum = latest;
         float amp = 1;
@@ -619,7 +663,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, float z, long seed) {
+    public float exo(float x, float y, float z, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, seed + 1111);
@@ -653,8 +697,19 @@ public class NoiseWrapper implements INoise {
     }
 
     // 4D
-    
-    protected float fbm(float x, float y, float z, float w, long seed) {
+
+    /**
+     * Fractal Brownian Motion noise in 4D; this starts fairly smooth, usually, and adds finer and finer detail with
+     * each additional octave. This is often considered the primary or default type of continuous noise.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float fbm(float x, float y, float z, float w, long seed) {
         float sum = wrapped.getNoiseWithSeed(x, y, z, w, seed);
         float amp = 1;
 
@@ -677,7 +732,20 @@ public class NoiseWrapper implements INoise {
 
         return sum / (amp * ((1 << octaves) - 1));
     }
-    protected float billow(float x, float y, float z, float w, long seed) {
+
+    /**
+     * Billow noise in 4D; this has large flat areas of fairly high values, with wiggly
+     * lines of low values running like folds throughout.
+     * Much like {@link #ridged(float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float billow(float x, float y, float z, float w, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, seed)) * 2 - 1;
         float amp = 1;
 
@@ -701,7 +769,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float ridged(float x, float y, float z, float w, long seed) {
+    public float ridged(float x, float y, float z, float w, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, seed + i));
@@ -722,7 +790,7 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
-    protected float warp(float x, float y, float z, float w, long seed) {
+    public float warp(float x, float y, float z, float w, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, w, seed);
         float sum = latest;
         float amp = 1;
@@ -753,7 +821,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, float z, float w, long seed) {
+    public float exo(float x, float y, float z, float w, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, seed + 1111);
@@ -790,7 +858,19 @@ public class NoiseWrapper implements INoise {
 
     // 5D
 
-    protected float fbm(float x, float y, float z, float w, float u, long seed) {
+    /**
+     * Fractal Brownian Motion noise in 5D; this starts fairly smooth, usually, and adds finer and finer detail with
+     * each additional octave. This is often considered the primary or default type of continuous noise.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float fbm(float x, float y, float z, float w, float u, long seed) {
         float sum = wrapped.getNoiseWithSeed(x, y, z, w, u, seed);
         float amp = 1;
 
@@ -815,7 +895,21 @@ public class NoiseWrapper implements INoise {
 
         return sum / (amp * ((1 << octaves) - 1));
     }
-    protected float billow(float x, float y, float z, float w, float u, long seed) {
+
+    /**
+     * Billow noise in 5D; this has large flat areas of fairly high values, with wiggly
+     * lines of low values running like folds throughout.
+     * Much like {@link #ridged(float, float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float billow(float x, float y, float z, float w, float u, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, seed)) * 2 - 1;
         float amp = 1;
 
@@ -841,7 +935,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float ridged(float x, float y, float z, float w, float u, long seed) {
+    public float ridged(float x, float y, float z, float w, float u, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, seed + i));
@@ -864,7 +958,7 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
-    protected float warp(float x, float y, float z, float w, float u, long seed) {
+    public float warp(float x, float y, float z, float w, float u, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, w, u, seed);
         float sum = latest;
         float amp = 1;
@@ -898,7 +992,7 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float exo(float x, float y, float z, float w, float u, long seed) {
+    public float exo(float x, float y, float z, float w, float u, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, u * 0.25f, seed + 1111);
@@ -937,7 +1031,20 @@ public class NoiseWrapper implements INoise {
 
     // 6D
 
-    protected float fbm(float x, float y, float z, float w, float u, float v, long seed) {
+    /**
+     * Fractal Brownian Motion noise in 6D; this starts fairly smooth, usually, and adds finer and finer detail with
+     * each additional octave. This is often considered the primary or default type of continuous noise.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float fbm(float x, float y, float z, float w, float u, float v, long seed) {
         float sum = wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed);
         float amp = 1;
 
@@ -964,7 +1071,22 @@ public class NoiseWrapper implements INoise {
 
         return sum / (amp * ((1 << octaves) - 1));
     }
-    protected float billow(float x, float y, float z, float w, float u, float v, long seed) {
+
+    /**
+     * Billow noise in 6D; this has large flat areas of fairly high values, with wiggly
+     * lines of low values running like folds throughout.
+     * Much like {@link #ridged(float, float, float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float billow(float x, float y, float z, float w, float u, float v, long seed) {
         float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed)) * 2 - 1;
         float amp = 1;
 
@@ -992,7 +1114,21 @@ public class NoiseWrapper implements INoise {
         return sum / (amp * ((1 << octaves) - 1));
     }
 
-    protected float ridged(float x, float y, float z, float w, float u, float v, long seed) {
+    /**
+     * Ridged noise in 6D (sometimes called Ridged Multi-Fractal); this has large flat areas of low values, with wiggly
+     * lines of high values running like veins throughout.
+     * Much like {@link #billow(float, float, float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float ridged(float x, float y, float z, float w, float u, float v, long seed) {
         float sum = 0f, exp = 1f, correction = 0f, spike;
         for (int i = 0; i < octaves; i++) {
             spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed + i));
@@ -1017,7 +1153,20 @@ public class NoiseWrapper implements INoise {
         return sum / correction - 1f;
     }
 
-    protected float warp(float x, float y, float z, float w, float u, float v, long seed) {
+    /**
+     * Domain-warped noise in 6D; this is identical to {@link #fbm(float, float, float, float, float, float, long)} with
+     * one octave, but with more it looks rounded and bubbly.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float warp(float x, float y, float z, float w, float u, float v, long seed) {
         float latest = wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed);
         float sum = latest;
         float amp = 1;
@@ -1053,7 +1202,20 @@ public class NoiseWrapper implements INoise {
 
         return sum / (amp * ((1 << octaves) - 1));
     }
-    protected float exo(float x, float y, float z, float w, float u, float v, long seed) {
+
+    /**
+     * Exoplanet noise in 6D, meant to loosely imitate the battered surface of an alien world.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float exo(float x, float y, float z, float w, float u, float v, long seed) {
         float power = 0.5f;
 
         float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, u * 0.25f, v * 0.25f, seed + 1111);
