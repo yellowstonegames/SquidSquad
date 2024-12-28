@@ -16,9 +16,9 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.RoughMath;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
+import com.github.tommyettinger.random.Deserializer;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -223,6 +223,61 @@ public class StretchWorldMap extends WorldMapGenerator {
         xPositions = ArrayTools.copy(other.xPositions);
         yPositions = ArrayTools.copy(other.yPositions);
         zPositions = ArrayTools.copy(other.zPositions);
+    }
+
+    public StretchWorldMap(int width, int height, String serialized) {
+        super(width, height);
+        String[] parts = TextTools.split(serialized, "\n");
+
+        int i = 2;
+        // WorldMapGenerator's many fields:
+//        width = Base.BASE86.readInt(parts[0]);
+//        height = Base.BASE86.readInt(parts[1]);
+        usedWidth = Base.BASE86.readInt(parts[i++]);
+        usedHeight = Base.BASE86.readInt(parts[i++]);
+        landModifier = Base.BASE86.readFloatExact(parts[i++]);
+        heatModifier = Base.BASE86.readFloatExact(parts[i++]);
+        minHeat = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeat = Base.BASE86.readFloatExact(parts[i++]);
+        minHeight = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeight = Base.BASE86.readFloatExact(parts[i++]);
+        minWet = Base.BASE86.readFloatExact(parts[i++]);
+        maxWet = Base.BASE86.readFloatExact(parts[i++]);
+        centerLongitude = Base.BASE86.readFloatExact(parts[i++]);
+        zoom = Base.BASE86.readInt(parts[i++]);
+        startX = Base.BASE86.readInt(parts[i++]);
+        startY = Base.BASE86.readInt(parts[i++]);
+        startCacheX.addAll(Base.BASE86.intSplit(parts[i++], " "));
+        startCacheY.addAll(Base.BASE86.intSplit(parts[i++], " "));
+        zoomStartX = Base.BASE86.readInt(parts[i++]);
+        zoomStartY = Base.BASE86.readInt(parts[i++]);
+        seedA = Base.BASE86.readLong(parts[i++]);
+        seedB = Base.BASE86.readLong(parts[i++]);
+        cacheA = Base.BASE86.readLong(parts[i++]);
+        cacheB = Base.BASE86.readLong(parts[i++]);
+        rng = new FlowRandom(Base.BASE86.readLong(parts[i++]), Base.BASE86.readLong(parts[i++]));
+        ArrayTools.set(Base.BASE86.floatSplitExact2D(parts[i++], "\t", " "), heightData);
+        ArrayTools.set(Base.BASE86.floatSplitExact2D(parts[i++], "\t", " "), heatData);
+        ArrayTools.set(Base.BASE86.floatSplitExact2D(parts[i++], "\t", " "), moistureData);
+        landData.decompressInto(parts[i++]);
+        ArrayTools.set(Base.BASE86.intSplit2D(parts[i++], "\t", " "), heightCodeData);
+
+        // Fields of this class:
+        terrainRidged = other.terrainRidged;
+        terrainBasic = other.terrainBasic;
+        heat = other.heat;
+        moisture = other.moisture;
+        otherRidged = other.otherRidged;
+        minHeat0 = other.minHeat0;
+        maxHeat0 = other.maxHeat0;
+        minHeat1 = other.minHeat1;
+        maxHeat1 = other.maxHeat1;
+        minWet0 = other.minWet0;
+        maxWet0 = other.maxWet0;
+        xPositions = ArrayTools.copy(other.xPositions);
+        yPositions = ArrayTools.copy(other.yPositions);
+        zPositions = ArrayTools.copy(other.zPositions);
+
     }
 
     protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
