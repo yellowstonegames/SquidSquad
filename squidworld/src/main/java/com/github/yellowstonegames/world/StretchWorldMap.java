@@ -263,21 +263,20 @@ public class StretchWorldMap extends WorldMapGenerator {
         ArrayTools.set(Base.BASE86.intSplit2D(parts[i++], "\t", " "), heightCodeData);
 
         // Fields of this class:
-        terrainRidged = other.terrainRidged;
-        terrainBasic = other.terrainBasic;
-        heat = other.heat;
-        moisture = other.moisture;
-        otherRidged = other.otherRidged;
-        minHeat0 = other.minHeat0;
-        maxHeat0 = other.maxHeat0;
-        minHeat1 = other.minHeat1;
-        maxHeat1 = other.maxHeat1;
-        minWet0 = other.minWet0;
-        maxWet0 = other.maxWet0;
-        xPositions = ArrayTools.copy(other.xPositions);
-        yPositions = ArrayTools.copy(other.yPositions);
-        zPositions = ArrayTools.copy(other.zPositions);
-
+        terrainRidged = new NoiseWrapper().stringDeserialize(parts[i++]);
+        terrainBasic = new NoiseWrapper().stringDeserialize(parts[i++]);
+        heat = new NoiseWrapper().stringDeserialize(parts[i++]);
+        moisture = new NoiseWrapper().stringDeserialize(parts[i++]);
+        otherRidged = new NoiseWrapper().stringDeserialize(parts[i++]);
+        minHeat0 = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeat0 = Base.BASE86.readFloatExact(parts[i++]);
+        minHeat1 = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeat1 = Base.BASE86.readFloatExact(parts[i++]);
+        minWet0 = Base.BASE86.readFloatExact(parts[i++]);
+        maxWet0 = Base.BASE86.readFloatExact(parts[i++]);
+        xPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
+        yPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
+        zPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
     }
 
     protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
