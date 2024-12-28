@@ -300,8 +300,8 @@ public class StretchWorldMap extends WorldMapGenerator {
         b.appendUnsigned(sb, zoom).append('\n');
         b.appendUnsigned(sb, startX).append('\n');
         b.appendUnsigned(sb, startY).append('\n');
-        b.appendJoined(sb, " ", startCacheX.items, 0, startCacheX.size());
-        b.appendJoined(sb, " ", startCacheY.items, 0, startCacheY.size());
+        b.appendJoined(sb, " ", startCacheX.items, 0, startCacheX.size()).append('\n');
+        b.appendJoined(sb, " ", startCacheY.items, 0, startCacheY.size()).append('\n');
         b.appendUnsigned(sb, zoomStartX).append('\n');
         b.appendUnsigned(sb, zoomStartY).append('\n');
         b.appendUnsigned(sb, seedA).append('\n');
@@ -310,14 +310,28 @@ public class StretchWorldMap extends WorldMapGenerator {
         b.appendUnsigned(sb, cacheB).append('\n');
         b.appendUnsigned(sb, rng.getStateA()).append('\n');
         b.appendUnsigned(sb, rng.getStateB()).append('\n');
-        b.appendJoinedExact2D(sb, "\t", " ", heightData);
-        b.appendJoinedExact2D(sb, "\t", " ", heatData);
-        b.appendJoinedExact2D(sb, "\t", " ", moistureData);
-        sb.append(landData.toCompressedString());
-        b.appendJoined2D(sb, "\t", " ", heightCodeData);
+        b.appendJoinedExact2D(sb, "\t", " ", heightData).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", heatData).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", moistureData).append('\n');
+        sb.append(landData.toCompressedString()).append('\n');
+        b.appendJoined2D(sb, "\t", " ", heightCodeData).append('\n');
 
         //TODO: Fields of this class:
-        
+        sb.append(terrainRidged.stringSerialize()).append('\n');
+        sb.append(terrainBasic.stringSerialize()).append('\n');
+        sb.append(heat        .stringSerialize()).append('\n');
+        sb.append(moisture    .stringSerialize()).append('\n');
+        sb.append(otherRidged .stringSerialize()).append('\n');
+        b.appendUnsigned(sb, minHeat0).append('\n');
+        b.appendUnsigned(sb, maxHeat0).append('\n');
+        b.appendUnsigned(sb, minHeat1).append('\n');
+        b.appendUnsigned(sb, maxHeat1).append('\n');
+        b.appendUnsigned(sb, minWet0 ).append('\n');
+        b.appendUnsigned(sb, maxWet0 ).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", xPositions).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", yPositions).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", zPositions);
+
         return sb.toString();
     }
 
