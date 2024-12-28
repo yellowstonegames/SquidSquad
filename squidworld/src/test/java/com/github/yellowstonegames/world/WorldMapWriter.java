@@ -43,7 +43,7 @@ import java.util.Date;
 public class WorldMapWriter extends ApplicationAdapter {
     private static final int AA = 1;
 
-    private static final int width = 1920, height = 1080;
+//    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 400, height = 400;
 //    private static final int width = 512, height = 256; // mimic, elliptical
@@ -52,7 +52,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 128, height = 128; // space view, MimicLocal
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
-    //private static final int width = 314 * 4, height = 400;
+    private static final int width = 512, height = 256;
 
 //    private static final int width = 512, height = 512;
 //    private static final int width = 512 >>> AA, height = 256 >>> AA; // mimic world
@@ -135,12 +135,12 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new MimicLocalMap(seed, noise, 2f);
 //        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
@@ -261,6 +261,29 @@ public class WorldMapWriter extends ApplicationAdapter {
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
+        System.out.println("Remaking...");
+        worldTime = System.currentTimeMillis();
+        String ser = ((StretchWorldMap) world).stringSerialize();
+        System.out.println(ser.substring(0, 400));
+        world = new StretchWorldMap(width<<AA, height<<AA, ser);
+        wmv.getBiomeMapper().makeBiomes(world);
+        cm = wmv.show();
+        temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
+        temp.setFilter(Pixmap.Filter.BiLinear);
+        temp.setColor(INK);
+        temp.fill();
+
+        for (int x = 0; x < bw; x++) {
+            for (int y = 0; y < bh; y++) {
+                temp.drawPixel(x, y, cm[x][y]);
+            }
+        }
+        pm.setFilter(Pixmap.Filter.BiLinear);
+        pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
+        png.write(Gdx.files.local(path + name + "_remade.png"), pm);
+        temp.dispose();
+        System.out.println("Remake #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
+
     }
     @Override
     public void render() {

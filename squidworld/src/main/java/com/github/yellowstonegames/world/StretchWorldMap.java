@@ -264,10 +264,10 @@ public class StretchWorldMap extends WorldMapGenerator {
 
         // Fields of this class:
         terrainRidged = new NoiseWrapper().stringDeserialize(parts[i++]);
-        terrainBasic = new NoiseWrapper().stringDeserialize(parts[i++]);
-        heat = new NoiseWrapper().stringDeserialize(parts[i++]);
-        moisture = new NoiseWrapper().stringDeserialize(parts[i++]);
-        otherRidged = new NoiseWrapper().stringDeserialize(parts[i++]);
+        terrainBasic =  new NoiseWrapper().stringDeserialize(parts[i++]);
+        heat =          new NoiseWrapper().stringDeserialize(parts[i++]);
+        moisture =      new NoiseWrapper().stringDeserialize(parts[i++]);
+        otherRidged =   new NoiseWrapper().stringDeserialize(parts[i++]);
         minHeat0 = Base.BASE86.readFloatExact(parts[i++]);
         maxHeat0 = Base.BASE86.readFloatExact(parts[i++]);
         minHeat1 = Base.BASE86.readFloatExact(parts[i++]);
@@ -318,10 +318,10 @@ public class StretchWorldMap extends WorldMapGenerator {
 
         //TODO: Fields of this class:
         sb.append(terrainRidged.stringSerialize()).append('\n');
-        sb.append(terrainBasic.stringSerialize()).append('\n');
-        sb.append(heat        .stringSerialize()).append('\n');
-        sb.append(moisture    .stringSerialize()).append('\n');
-        sb.append(otherRidged .stringSerialize()).append('\n');
+        sb.append(terrainBasic .stringSerialize()).append('\n');
+        sb.append(heat         .stringSerialize()).append('\n');
+        sb.append(moisture     .stringSerialize()).append('\n');
+        sb.append(otherRidged  .stringSerialize()).append('\n');
         b.appendUnsigned(sb, minHeat0).append('\n');
         b.appendUnsigned(sb, maxHeat0).append('\n');
         b.appendUnsigned(sb, minHeat1).append('\n');

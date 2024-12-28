@@ -425,7 +425,7 @@ public interface INoise extends Externalizable {
             String tagData = data.substring(0, idx);
             INoise root = NOISE_BY_TAG.get(tagData);
             if (root == null)
-                throw new RuntimeException("Tag in given data is invalid or unknown.");
+                throw new RuntimeException("Tag: '" + tagData + "' in given data: '" + data + "' is invalid or unknown.");
             return root.copy().stringDeserialize(data.substring(idx));
         }
 

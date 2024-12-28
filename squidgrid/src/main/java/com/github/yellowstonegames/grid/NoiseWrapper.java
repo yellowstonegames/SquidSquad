@@ -213,30 +213,32 @@ public class NoiseWrapper implements INoise {
 
     @Override
     public String getTag() {
-        return "Wrap[" + wrapped.getTag() + "]";
+        return "Wrap";
+//        return "Wrap[" + wrapped.getTag() + "]";
     }
 
     @Override
     public String stringSerialize() {
-        return "`" + Serializer.serialize(wrapped) + '~' +
+        return "`" +
                 seed + '~' +
                 frequency + '~' +
                 mode + '~' +
                 octaves + '~' +
-                (fractalSpiral ? '1' : '0') + '`';
+                (fractalSpiral ? '1' : '0') + "~" +
+                Serializer.serialize(wrapped) + '`';
     }
 
     @Override
     public NoiseWrapper stringDeserialize(String data) {
-        int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
-        setWrapped(Serializer.deserialize(data.substring(1, pos)));
+        int pos = data.indexOf('`')+1;
         setSeed(Base.BASE10.readLong(data, pos+1, pos = data.indexOf('~', pos+2)));
         setFrequency(Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+2)));
         setMode(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
         setOctaves(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
         // This will only read in 1 for on, or anything else for off, but...
         // ... subclasses might not use fractalSpiral. They can repurpose this to store any int.
-        setFractalSpiral(Base.BASE10.readInt(data, pos+1, data.length()) == 1);
+        setFractalSpiral(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)) == 1);
+        setWrapped(Serializer.deserialize(data.substring(pos+1, data.lastIndexOf('`')-1)));
         return this;
     }
 
