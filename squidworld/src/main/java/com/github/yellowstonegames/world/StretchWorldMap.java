@@ -279,6 +279,48 @@ public class StretchWorldMap extends WorldMapGenerator {
         zPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
     }
 
+    public String stringSerialize(){
+        StringBuilder sb = new StringBuilder(1024);
+        Base b = Base.BASE86;
+
+        // WorldMapGenerator fields:
+        b.appendUnsigned(sb, width).append('\n');
+        b.appendUnsigned(sb, height).append('\n');
+        b.appendUnsigned(sb, usedWidth).append('\n');
+        b.appendUnsigned(sb, usedHeight).append('\n');
+        b.appendUnsigned(sb, landModifier).append('\n');
+        b.appendUnsigned(sb, heatModifier).append('\n');
+        b.appendUnsigned(sb, minHeat  ).append('\n');
+        b.appendUnsigned(sb, maxHeat  ).append('\n');
+        b.appendUnsigned(sb, minHeight).append('\n');
+        b.appendUnsigned(sb, maxHeight).append('\n');
+        b.appendUnsigned(sb, minWet   ).append('\n');
+        b.appendUnsigned(sb, maxWet   ).append('\n');
+        b.appendUnsigned(sb, centerLongitude).append('\n');
+        b.appendUnsigned(sb, zoom).append('\n');
+        b.appendUnsigned(sb, startX).append('\n');
+        b.appendUnsigned(sb, startY).append('\n');
+        b.appendJoined(sb, " ", startCacheX.items, 0, startCacheX.size());
+        b.appendJoined(sb, " ", startCacheY.items, 0, startCacheY.size());
+        b.appendUnsigned(sb, zoomStartX).append('\n');
+        b.appendUnsigned(sb, zoomStartY).append('\n');
+        b.appendUnsigned(sb, seedA).append('\n');
+        b.appendUnsigned(sb, seedB).append('\n');
+        b.appendUnsigned(sb, cacheA).append('\n');
+        b.appendUnsigned(sb, cacheB).append('\n');
+        b.appendUnsigned(sb, rng.getStateA()).append('\n');
+        b.appendUnsigned(sb, rng.getStateB()).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", heightData);
+        b.appendJoinedExact2D(sb, "\t", " ", heatData);
+        b.appendJoinedExact2D(sb, "\t", " ", moistureData);
+        sb.append(landData.toCompressedString());
+        b.appendJoined2D(sb, "\t", " ", heightCodeData);
+
+        //TODO: Fields of this class:
+        
+        return sb.toString();
+    }
+
     protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
                               float landMod, float heatMod, long stateA, long stateB) {
         boolean fresh = false;
