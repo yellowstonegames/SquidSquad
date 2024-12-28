@@ -213,8 +213,6 @@ public class RoundSideWorldMap extends WorldMapGenerator {
         if (cacheA != stateA || cacheB != stateB || landMod != landModifier || heatMod != heatModifier) {
             minHeight = Float.POSITIVE_INFINITY;
             maxHeight = Float.NEGATIVE_INFINITY;
-            minHeightActual = Float.POSITIVE_INFINITY;
-            maxHeightActual = Float.NEGATIVE_INFINITY;
             minHeat0 = Float.POSITIVE_INFINITY;
             maxHeat0 = Float.NEGATIVE_INFINITY;
             minHeat1 = Float.POSITIVE_INFINITY;
@@ -287,8 +285,6 @@ public class RoundSideWorldMap extends WorldMapGenerator {
                 moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                         , seedC));
-                minHeightActual = Math.min(minHeightActual, h);
-                maxHeightActual = Math.max(maxHeightActual, h);
                 if (fresh) {
                     minHeight = Math.min(minHeight, h);
                     maxHeight = Math.max(maxHeight, h);
@@ -300,8 +296,6 @@ public class RoundSideWorldMap extends WorldMapGenerator {
                     maxWet0 = Math.max(maxWet0, temp);
                 }
             }
-            minHeightActual = Math.min(minHeightActual, minHeight);
-            maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
         }
         float heatDiff = 0.8f / (maxHeat0 - minHeat0),

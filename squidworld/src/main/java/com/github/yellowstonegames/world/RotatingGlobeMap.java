@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -292,11 +291,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 heatData[x][y] = storedMap.heatData[ax][ay];
                 moistureData[x][y] = storedMap.moistureData[ax][ay];
 
-                minHeightActual = Math.min(minHeightActual, h);
-                maxHeightActual = Math.max(maxHeightActual, h);
             }
-            minHeightActual = Math.min(minHeightActual, minHeight);
-            maxHeightActual = Math.max(maxHeightActual, maxHeight);
         }
 
     }
@@ -306,8 +301,6 @@ public class RotatingGlobeMap extends WorldMapGenerator {
         if (cacheA != stateA || cacheB != stateB)// || landMod != storedMap.landModifier || coolMod != storedMap.coolingModifier)
         {
             storedMap.regenerate(0, 0, width << 1, height, landMod, heatMod, stateA, stateB);
-            minHeightActual = Float.POSITIVE_INFINITY;
-            maxHeightActual = Float.NEGATIVE_INFINITY;
 
             minHeight = storedMap.minHeight;
             maxHeight = storedMap.maxHeight;

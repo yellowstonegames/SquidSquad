@@ -181,9 +181,11 @@ public class AnimatedWorldMapBundleWriter extends ApplicationAdapter {
 
 //        fn.setInterpolation(Noise.QUINTIC);
 
-            INoise fn = new NoiseWrapper(new FoamNoise(seed), 1.25f, NoiseWrapper.FBM, 3);
+//            INoise fn = new NoiseWrapper(new FoamNoise(seed), 1.25f, NoiseWrapper.FBM, 3);
 //            INoise fn = new NoiseWrapper(new PerlueNoise(seed), 0.8f, NoiseWrapper.FBM, 3);
-//        INoise fn = new CyclicNoise(seed, 3, 1.5f);
+//            INoise fn = new NoiseWrapper(new HoneyNoise(seed), 0.5f, NoiseWrapper.FBM, 3);
+//        INoise fn = new CyclicNoise(seed, 4, 1.5f);
+        INoise fn = new SorbetNoise(seed, 3, 2f);
 
             noise = fn;
 

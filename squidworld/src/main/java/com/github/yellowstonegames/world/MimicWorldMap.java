@@ -329,8 +329,6 @@ public class MimicWorldMap extends EllipticalWorldMap {
                 moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                         , seedC));
-                minHeightActual = Math.min(minHeightActual, h);
-                maxHeightActual = Math.max(maxHeightActual, h);
                 if (fresh) {
                     minHeight = Math.min(minHeight, h);
                     maxHeight = Math.max(maxHeight, h);
@@ -342,17 +340,12 @@ public class MimicWorldMap extends EllipticalWorldMap {
                     maxWet0 = Math.max(maxWet0, temp);
                 }
             }
-            minHeightActual = Math.min(minHeightActual, minHeight);
-            maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
         }
-        float heightDiff = 2f / (maxHeightActual - minHeightActual),
-                heatDiff = 0.8f / (maxHeat0 - minHeat0),
+        float   heatDiff = 0.8f / (maxHeat0 - minHeat0),
                 wetDiff = 1f / (maxWet0 - minWet0),
                 hMod,
                 halfHeight = (height - 1) * 0.5f, i_half = 1f / (halfHeight);
-        float minHeightActual0 = minHeightActual;
-        float maxHeightActual0 = maxHeightActual;
         yPos = startY + i_uh;
         ps = Float.POSITIVE_INFINITY;
         pc = Float.NEGATIVE_INFINITY;

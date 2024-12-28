@@ -285,8 +285,6 @@ public class LatLonWorldMap extends WorldMapGenerator {
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                         , seedC));
 
-                minHeightActual = Math.min(minHeightActual, h);
-                maxHeightActual = Math.max(maxHeightActual, h);
                 if (fresh) {
                     minHeight = Math.min(minHeight, h);
                     maxHeight = Math.max(maxHeight, h);
@@ -298,8 +296,6 @@ public class LatLonWorldMap extends WorldMapGenerator {
                     maxWet0 = Math.max(maxWet0, temp);
                 }
             }
-            minHeightActual = Math.min(minHeightActual, minHeight);
-            maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
         }
         float heatDiff = 0.8f / (maxHeat0 - minHeat0),

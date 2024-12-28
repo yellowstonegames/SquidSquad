@@ -211,8 +211,6 @@ public class TilingWorldMap extends WorldMapGenerator {
                 moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qc, qs
                                 + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qc, qs, seedC + seedA)
                         , seedC));
-                minHeightActual = Math.min(minHeightActual, h);
-                maxHeightActual = Math.max(maxHeightActual, h);
                 if (fresh) {
                     minHeight = Math.min(minHeight, h);
                     maxHeight = Math.max(maxHeight, h);
@@ -225,8 +223,6 @@ public class TilingWorldMap extends WorldMapGenerator {
 
                 }
             }
-            minHeightActual = Math.min(minHeightActual, minHeight);
-            maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
         }
         float

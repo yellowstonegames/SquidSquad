@@ -63,11 +63,14 @@ public abstract class WorldMapGenerator {
     public final float[][] heightData, heatData, moistureData;
     public final Region landData;
     public final int[][] heightCodeData;
-    public float landModifier = -1f, heatModifier = 1f,
-            minHeight = Float.POSITIVE_INFINITY, maxHeight = Float.NEGATIVE_INFINITY,
-            minHeightActual = Float.POSITIVE_INFINITY, maxHeightActual = Float.NEGATIVE_INFINITY,
-            minHeat = Float.POSITIVE_INFINITY, maxHeat = Float.NEGATIVE_INFINITY,
-            minWet = Float.POSITIVE_INFINITY, maxWet = Float.NEGATIVE_INFINITY;
+    public float landModifier = -1f;
+    public float heatModifier = 1f;
+    public float minHeight = Float.POSITIVE_INFINITY;
+    public float maxHeight = Float.NEGATIVE_INFINITY;
+    public float minHeat = Float.POSITIVE_INFINITY;
+    public float maxHeat = Float.NEGATIVE_INFINITY;
+    public float minWet = Float.POSITIVE_INFINITY;
+    public float maxWet = Float.NEGATIVE_INFINITY;
     protected float centerLongitude;
 
     public int zoom, startX, startY, usedWidth, usedHeight;
@@ -76,7 +79,8 @@ public abstract class WorldMapGenerator {
 
     /**
      * A Noise that has a higher frequency than that class defaults to, which is useful for maps here. With the
-     * default Noise frequency of 1f/32f, the maps this produces are giant blurs.
+     * default Noise frequency of 1f/32f, the maps this produces are giant blurs. This defaults to using
+     * Honey noise with 1.0f frequency and only one octave (each subclass will probably need more octaves).
      * <br>
      * Even though this is a Noise and so technically can be edited, that seems to have issues when there's more
      * than one WorldMapGenerator that uses this field. So you can feel free to use this as a Noise when
@@ -100,8 +104,6 @@ public abstract class WorldMapGenerator {
         maxHeat = other.maxHeat;
         minHeight = other.minHeight;
         maxHeight = other.maxHeight;
-        minHeightActual = other.minHeightActual;
-        maxHeightActual = other.maxHeightActual;
         minWet = other.minWet;
         maxWet = other.maxWet;
         centerLongitude = other.centerLongitude;

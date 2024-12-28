@@ -245,8 +245,6 @@ public class LocalMap extends WorldMapGenerator {
                 temp = 0.375f * otherRidged.getNoiseWithSeed(xPos, yPos, seedC + seedA);
                 moistureData[x][y] = (temp = moisture.getNoiseWithSeed(xPos - temp, yPos + temp, seedC));
 
-                minHeightActual = Math.min(minHeightActual, h);
-                maxHeightActual = Math.max(maxHeightActual, h);
                 if (fresh) {
                     minHeight = Math.min(minHeight, h);
                     maxHeight = Math.max(maxHeight, h);
@@ -258,8 +256,6 @@ public class LocalMap extends WorldMapGenerator {
                     maxWet0 = Math.max(maxWet0, temp);
                 }
             }
-            minHeightActual = Math.min(minHeightActual, minHeight);
-            maxHeightActual = Math.max(maxHeightActual, maxHeight);
 
         }
         float heatDiff = 0.8f / (maxHeat0 - minHeat0),
