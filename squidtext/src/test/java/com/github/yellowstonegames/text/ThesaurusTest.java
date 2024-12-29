@@ -28,6 +28,7 @@ public class ThesaurusTest {
         if(!TextInternals.PRINTING) return;
         Thesaurus thesaurus  = new Thesaurus(new AceRandom(System.currentTimeMillis() >>> 25)); // changes seed roughly once/9 hours
         thesaurus.addFakeWords();
+        thesaurus.alterations.add(Thesaurus.MARKUP_COLOR_NAMES);
 //        TreeSet<String> synonyms = new TreeSet<>();
 //        int len = thesaurus.mappings.size();
 //        for (int i = 0; i < len; i++) {

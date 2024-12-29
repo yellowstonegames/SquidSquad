@@ -1732,14 +1732,26 @@ public class Thesaurus {
      * Thesaurus preset that changes all text to sound like this speaker: "Desaurus preset dat changez all text to sound
      * like dis speakah." You may be familiar with a certain sci-fi game that has orks who sound like this.
      */
-    public static Thesaurus ORK = new Thesaurus("WAAAAAGH!");
+    public static final Thesaurus ORK = new Thesaurus("WAAAAAGH!");
 
     /**
      * Thesaurus preset that sharply reduces the used letters to only: a, b, g, h, m, n, r, and z. This apparently is
      * the canonical set of letters that zombies can use? This will abuse the rules of proper English spelling, using r
      * and h as vowels, kind-of, in addition to a.
      */
-    public static Thesaurus ZOMBIE = new Thesaurus("zrrmbrh grh BRRRNZ!");
+    public static final Thesaurus ZOMBIE = new Thesaurus("zrrmbrh grh BRRRNZ!");
+
+    /**
+     * An Alteration that changes certain color names so they are surrounded by color markup tags, compatible with at
+     * least libGDX color markup and TextraTypist color markup. This can be added to a Thesaurus' {@link #alterations}
+     * field at any time. Only the color name will have its color changed (if markup is interpreting it), so something
+     * like "Your hands run red with my people's blood!" will have "red" colored... red. This immediately undoes the
+     * color change after the word ends, using the {@code []} syntax that both markups use.
+     * <br>
+     * This will only match the colors "black", "white", "red", "orange", "yellow", "green", "blue", "violet", "gray",
+     * "brown", and "pink", without regard to case.
+     */
+    public static final Language.Alteration MARKUP_COLOR_NAMES = new Language.Alteration("(?i)\\b(black|white|red|orange|yellow|green|blue|violet|gray|brown|pink)\\b", "[${!1}]$1[]");
 
     static {
         ORK.alterations.add(new Language.Alteration("\\bth", "d"));
