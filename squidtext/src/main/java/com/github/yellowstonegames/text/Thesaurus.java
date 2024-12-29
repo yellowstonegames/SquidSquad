@@ -20,7 +20,7 @@ import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.CaseInsensitiveOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.MizuchiRandom;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.yellowstonegames.core.GapShuffler;
 import com.github.tommyettinger.digital.Hasher;
@@ -57,14 +57,14 @@ public class Thesaurus {
     public Thesaurus()
     {
         mappings = new CaseInsensitiveOrderedMap<>(256);
-        rng = new MizuchiRandom();
+        rng = new FlowRandom();
         addKnownCategories();
     }
 
     /**
-     * Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with the next long from
+     * Constructs a new Thesaurus, seeding its internal FlowRandom (used to shuffle word order) with the next long from
      * the given EnhancedRandom.
-     * @param rng an EnhancedRandom that will only be used to get one long (for seeding this class' internal MizuchiRandom)
+     * @param rng an EnhancedRandom that will only be used to get one long (for seeding this class' internal FlowRandom)
      */
     public Thesaurus(EnhancedRandom rng)
     {
@@ -72,31 +72,31 @@ public class Thesaurus {
     }
 
     /**
-     * Constructs a new Thesaurus, seeding its internal MizuchiRandom (used to shuffle word order) with shuffleSeed.
-     * @param shuffleSeed a long for seeding this class' MizuchiRandom
+     * Constructs a new Thesaurus, seeding its internal FlowRandom (used to shuffle word order) with shuffleSeed.
+     * @param shuffleSeed a long for seeding this class' FlowRandom
      */
     public Thesaurus(long shuffleSeed)
     {
         mappings = new CaseInsensitiveOrderedMap<>(256);
-        this.rng = new MizuchiRandom(shuffleSeed);
+        this.rng = new FlowRandom(shuffleSeed);
         addKnownCategories();
     }
 
     /**
-     * Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.
-     * @param shuffleSeedA a long for seeding this class' MizuchiRandom
-     * @param shuffleSeedB a long for seeding this class' MizuchiRandom; if even, will be made odd by adding 1
+     * Constructs a new Thesaurus, seeding its FlowRandom (used to shuffle word order) with shuffleSeedA and shuffleSeedB.
+     * @param shuffleSeedA a long for seeding this class' FlowRandom
+     * @param shuffleSeedB a long for seeding this class' FlowRandom
      */
     public Thesaurus(long shuffleSeedA, long shuffleSeedB)
     {
         mappings = new CaseInsensitiveOrderedMap<>(256);
-        this.rng = new MizuchiRandom(shuffleSeedA, shuffleSeedB);
+        this.rng = new FlowRandom(shuffleSeedA, shuffleSeedB);
         addKnownCategories();
     }
 
 
     /**
-     * Constructs a new Thesaurus, seeding its MizuchiRandom (used to shuffle word order) with two different hashes of
+     * Constructs a new Thesaurus, seeding its FlowRandom (used to shuffle word order) with two different hashes of
      * shuffleSeed (produced by {@link Hasher#sallos} and {@link Hasher#sallos_}).
      * @param shuffleSeed a String for seeding this class' RNG
      */
@@ -125,8 +125,8 @@ public class Thesaurus {
      * Changes the sequences for all groups of synonyms this can produce, effectively turning this Thesaurus into a
      * different version that knows all the same synonyms and categories but will produce different results.
      * This version of refresh() is meant for cases where you know the generator this uses has two states, 128 bits.
-     * @param stateA any long; the first part of a two-state EnhancedRandom like a {@link MizuchiRandom}
-     * @param stateB any long; the second part of a two-state EnhancedRandom like a {@link MizuchiRandom}
+     * @param stateA any long; the first part of a two-state EnhancedRandom like a {@link FlowRandom}
+     * @param stateB any long; the second part of a two-state EnhancedRandom like a {@link FlowRandom}
      */
     public void refresh(long stateA, long stateB)
     {
@@ -266,7 +266,7 @@ public class Thesaurus {
      *     <li>villain`noun` : blasphemer, evildoer, killer, knave, monster, murderer, villain</li>
      *     <li>villain`nouns` : blasphemers, evildoers, killers, knaves, monsters, murderers, villains</li>
      *     <li>monster`noun` : abomination, beast, creature, demon, devil, fiend, ghoul, monster</li>
-     *     <li>monsters`nouns` : abominations, beasts, creatures, demons, devils, fiends, ghouls, monsters</li>
+     *     <li>monster`nouns` : abominations, beasts, creatures, demons, devils, fiends, ghouls, monsters</li>
      *     <li>good`adj` : compassionate, flawless, good, kind, moral, perfect, pure, righteous</li>
      *     <li>lethal`adj` : bloodstained, cutthroat, deadly, fatal, lethal, murderous, poisonous, silent, stalking, venomous</li>
      *     <li>lethal`noun` : assassin, blood, killer, murder, ninja, poison, razor, silence, slayer, snake, tiger, venom</li>
@@ -342,9 +342,9 @@ public class Thesaurus {
      *     <li>god`noun` : deity, father, god, king, lord, lordship, ruler</li>
      *     <li>goddess`noun` : deity, goddess, lady, ladyship, mother, queen, ruler</li>
      *     <li>hero`noun` : champion, crusader, hero, knight, savior</li>
-     *     <li>heroes`nouns` : champions, crusaders, heroes, knights, saviors</li>
+     *     <li>hero`nouns` : champions, crusaders, heroes, knights, saviors</li>
      *     <li>heroine`noun` : champion, crusader, heroine, knight, maiden, savior</li>
-     *     <li>heroines`nouns` : champions, crusaders, heroines, knights, maidens, saviors</li>
+     *     <li>heroine`nouns` : champions, crusaders, heroines, knights, maidens, saviors</li>
      *     <li>popular`adj` : adored, beloved, revered, worshipped</li>
      *     <li>unpopular`adj` : despised, hated, loathed, reviled</li>
      *     <li>glyph`noun` : glyph, mark, seal, sigil, sign, symbol</li>
@@ -1487,7 +1487,7 @@ public class Thesaurus {
             with("villains", "knaves", "evildoers", "killers", "blasphemers", "monsters", "murderers"),
             "monster`noun`",
             with("fiend", "abomination", "demon", "devil", "ghoul", "monster", "beast", "creature"),
-            "monsters`nouns`",
+            "monster`nouns`",
             with("fiends", "abominations", "demons", "devils", "ghouls", "monsters", "beasts", "creatures"),
             "good`adj`",
             with("righteous", "moral", "good", "pure", "compassionate", "flawless", "perfect", "kind"),
@@ -1645,11 +1645,11 @@ public class Thesaurus {
             with("goddess", "deity", "ruler", "queen", "mother", "lady", "ladyship"),
             "hero`noun`",
             with("hero", "champion", "savior", "crusader", "knight"),
-            "heroes`nouns`",
+            "hero`nouns`",
             with("heroes", "champions", "saviors", "crusaders", "knights"),
             "heroine`noun`",
             with("heroine", "champion", "savior", "crusader", "knight", "maiden"),
-            "heroines`nouns`",
+            "heroine`nouns`",
             with("heroines", "champions", "saviors", "crusaders", "knights", "maidens"),
             "popular`adj`",
             with("beloved", "adored", "revered", "worshipped"),
