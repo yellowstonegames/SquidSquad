@@ -16,10 +16,8 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.RoughMath;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -168,6 +166,170 @@ public class LatLonWorldMap extends WorldMapGenerator {
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5)); // was 6
     }
 
+    /**
+     * Copies the LatLonWorldMap {@code other} to construct a new one that is exactly the same. References will only be
+     * shared to Noise classes.
+     *
+     * @param other a LatLonWorldMap to copy
+     */
+    public LatLonWorldMap(LatLonWorldMap other) {
+        super(other);
+        terrainRidged = other.terrainRidged;
+        terrainBasic = other.terrainBasic;
+        heat = other.heat;
+        moisture = other.moisture;
+        otherRidged = other.otherRidged;
+        minHeat0 = other.minHeat0;
+        maxHeat0 = other.maxHeat0;
+        minHeat1 = other.minHeat1;
+        maxHeat1 = other.maxHeat1;
+        minWet0 = other.minWet0;
+        maxWet0 = other.maxWet0;
+        xPositions = ArrayTools.copy(other.xPositions);
+        yPositions = ArrayTools.copy(other.yPositions);
+        zPositions = ArrayTools.copy(other.zPositions);
+    }
+
+    /**
+     * Creates a new generator from the given serialized String, produced by {@link #stringSerialize()}, but this also
+     * requires width and height that match the first two lines of the given String (in {@link Base#BASE86}). It is
+     * almost always easier to use {@link #recreateFromString(String)} instead.
+     * @param width width of the map or maps to generate; must match the first line of the given String in {@link Base#BASE86}
+     * @param height height of the map or maps to generate; must match the second line of the given String in {@link Base#BASE86}
+     * @param serialized should have been produced by {@link #stringSerialize()}
+     */
+    public LatLonWorldMap(int width, int height, String serialized) {
+        super(width, height);
+        String[] parts = TextTools.split(serialized, "\n");
+
+        int i = 2;
+        // WorldMapGenerator's many fields:
+//        width = Base.BASE86.readInt(parts[0]);
+//        height = Base.BASE86.readInt(parts[1]);
+        usedWidth = Base.BASE86.readInt(parts[i++]);
+        usedHeight = Base.BASE86.readInt(parts[i++]);
+        landModifier = Base.BASE86.readFloatExact(parts[i++]);
+        heatModifier = Base.BASE86.readFloatExact(parts[i++]);
+        minHeat = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeat = Base.BASE86.readFloatExact(parts[i++]);
+        minHeight = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeight = Base.BASE86.readFloatExact(parts[i++]);
+        minWet = Base.BASE86.readFloatExact(parts[i++]);
+        maxWet = Base.BASE86.readFloatExact(parts[i++]);
+        centerLongitude = Base.BASE86.readFloatExact(parts[i++]);
+        zoom = Base.BASE86.readInt(parts[i++]);
+        startX = Base.BASE86.readInt(parts[i++]);
+        startY = Base.BASE86.readInt(parts[i++]);
+        startCacheX.addAll(Base.BASE86.intSplit(parts[i++], " "));
+        startCacheY.addAll(Base.BASE86.intSplit(parts[i++], " "));
+        zoomStartX = Base.BASE86.readInt(parts[i++]);
+        zoomStartY = Base.BASE86.readInt(parts[i++]);
+        seedA = Base.BASE86.readLong(parts[i++]);
+        seedB = Base.BASE86.readLong(parts[i++]);
+        cacheA = Base.BASE86.readLong(parts[i++]);
+        cacheB = Base.BASE86.readLong(parts[i++]);
+        rng = new FlowRandom(Base.BASE86.readLong(parts[i++]), Base.BASE86.readLong(parts[i++]));
+        ArrayTools.set(Base.BASE86.floatSplitExact2D(parts[i++], "\t", " "), heightData);
+        ArrayTools.set(Base.BASE86.floatSplitExact2D(parts[i++], "\t", " "), heatData);
+        ArrayTools.set(Base.BASE86.floatSplitExact2D(parts[i++], "\t", " "), moistureData);
+        landData.decompressInto(parts[i++]);
+        ArrayTools.set(Base.BASE86.intSplit2D(parts[i++], "\t", " "), heightCodeData);
+
+        // Fields of this class:
+        terrainRidged = new NoiseWrapper().stringDeserialize(parts[i++]);
+        terrainBasic =  new NoiseWrapper().stringDeserialize(parts[i++]);
+        heat =          new NoiseWrapper().stringDeserialize(parts[i++]);
+        moisture =      new NoiseWrapper().stringDeserialize(parts[i++]);
+        otherRidged =   new NoiseWrapper().stringDeserialize(parts[i++]);
+        minHeat0 = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeat0 = Base.BASE86.readFloatExact(parts[i++]);
+        minHeat1 = Base.BASE86.readFloatExact(parts[i++]);
+        maxHeat1 = Base.BASE86.readFloatExact(parts[i++]);
+        minWet0 = Base.BASE86.readFloatExact(parts[i++]);
+        maxWet0 = Base.BASE86.readFloatExact(parts[i++]);
+        xPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
+        yPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
+        zPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
+    }
+
+    /**
+     * Serializes this generator's entire state to a String; it can be read back when creating a new instance of this
+     * type with {@link #LatLonWorldMap(int, int, String)} or (preferably) {@link #recreateFromString(String)}.
+     * Uses {@link Base#BASE86} to represent values very concisely, but not at all readably. The String this produces
+     * tends to be very long because it includes several 2D arrays and a Region as Strings.
+     * @return a String that stores the entire state of this generator
+     */
+    public String stringSerialize(){
+        StringBuilder sb = new StringBuilder(1024);
+        Base b = Base.BASE86;
+
+        // WorldMapGenerator fields:
+        b.appendUnsigned(sb, width).append('\n');
+        b.appendUnsigned(sb, height).append('\n');
+        b.appendUnsigned(sb, usedWidth).append('\n');
+        b.appendUnsigned(sb, usedHeight).append('\n');
+        b.appendUnsigned(sb, landModifier).append('\n');
+        b.appendUnsigned(sb, heatModifier).append('\n');
+        b.appendUnsigned(sb, minHeat  ).append('\n');
+        b.appendUnsigned(sb, maxHeat  ).append('\n');
+        b.appendUnsigned(sb, minHeight).append('\n');
+        b.appendUnsigned(sb, maxHeight).append('\n');
+        b.appendUnsigned(sb, minWet   ).append('\n');
+        b.appendUnsigned(sb, maxWet   ).append('\n');
+        b.appendUnsigned(sb, centerLongitude).append('\n');
+        b.appendUnsigned(sb, zoom).append('\n');
+        b.appendUnsigned(sb, startX).append('\n');
+        b.appendUnsigned(sb, startY).append('\n');
+        b.appendJoined(sb, " ", startCacheX.items, 0, startCacheX.size()).append('\n');
+        b.appendJoined(sb, " ", startCacheY.items, 0, startCacheY.size()).append('\n');
+        b.appendUnsigned(sb, zoomStartX).append('\n');
+        b.appendUnsigned(sb, zoomStartY).append('\n');
+        b.appendUnsigned(sb, seedA).append('\n');
+        b.appendUnsigned(sb, seedB).append('\n');
+        b.appendUnsigned(sb, cacheA).append('\n');
+        b.appendUnsigned(sb, cacheB).append('\n');
+        b.appendUnsigned(sb, rng.getStateA()).append('\n');
+        b.appendUnsigned(sb, rng.getStateB()).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", heightData).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", heatData).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", moistureData).append('\n');
+        sb.append(landData.toCompressedString()).append('\n');
+        b.appendJoined2D(sb, "\t", " ", heightCodeData).append('\n');
+
+        //TODO: Fields of this class:
+        sb.append(terrainRidged.stringSerialize()).append('\n');
+        sb.append(terrainBasic .stringSerialize()).append('\n');
+        sb.append(heat         .stringSerialize()).append('\n');
+        sb.append(moisture     .stringSerialize()).append('\n');
+        sb.append(otherRidged  .stringSerialize()).append('\n');
+        b.appendUnsigned(sb, minHeat0).append('\n');
+        b.appendUnsigned(sb, maxHeat0).append('\n');
+        b.appendUnsigned(sb, minHeat1).append('\n');
+        b.appendUnsigned(sb, maxHeat1).append('\n');
+        b.appendUnsigned(sb, minWet0 ).append('\n');
+        b.appendUnsigned(sb, maxWet0 ).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", xPositions).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", yPositions).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", zPositions);
+
+        return sb.toString();
+    }
+
+    /**
+     * Creates a new instance of this class from a serialized String produced by {@link #stringSerialize()}.
+     * This can get the width and height from the String, which makes this probably preferable to using the constructor
+     * {@link #LatLonWorldMap(int, int, String)}. This stores the last-generated map in this WorldMapGenerator, where
+     * it can be used by other code like a {@link WorldMapView}.
+     * @param data the output of {@link #stringSerialize()}
+     * @return the map that was serialized, as a new generator
+     */
+    public static LatLonWorldMap recreateFromString(String data) {
+        int mid = data.indexOf('\n');
+        int width = Base.BASE86.readInt(data, 0, mid);
+        int height = Base.BASE86.readInt(data, mid + 1, data.indexOf('\n', mid+1));
+        return new LatLonWorldMap(width, height, data);
+    }
+
     @Override
     public int wrapY(final int x, final int y) {
         return Math.max(0, Math.min(y, height - 1));
@@ -193,30 +355,6 @@ public class LatLonWorldMap extends WorldMapGenerator {
         return Coord.get(
                 wrapX(x, y),
                 wrapY(x, y));
-    }
-
-    /**
-     * Copies the StretchWorldMap {@code other} to construct a new one that is exactly the same. References will only be
-     * shared to Noise classes.
-     *
-     * @param other a StretchWorldMap to copy
-     */
-    public LatLonWorldMap(LatLonWorldMap other) {
-        super(other);
-        terrainRidged = other.terrainRidged;
-        terrainBasic = other.terrainBasic;
-        heat = other.heat;
-        moisture = other.moisture;
-        otherRidged = other.otherRidged;
-        minHeat0 = other.minHeat0;
-        maxHeat0 = other.maxHeat0;
-        minHeat1 = other.minHeat1;
-        maxHeat1 = other.maxHeat1;
-        minWet0 = other.minWet0;
-        maxWet0 = other.maxWet0;
-        xPositions = ArrayTools.copy(other.xPositions);
-        yPositions = ArrayTools.copy(other.yPositions);
-        zPositions = ArrayTools.copy(other.zPositions);
     }
 
     protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,
