@@ -225,6 +225,14 @@ public class StretchWorldMap extends WorldMapGenerator {
         zPositions = ArrayTools.copy(other.zPositions);
     }
 
+    /**
+     * Creates a new generator from the given serialized String, produced by {@link #stringSerialize()}, but this also
+     * requires width and height that match the first two lines of the given String (in {@link Base#BASE86}). It is
+     * almost always easier to use {@link #recreateFromString(String)} instead.
+     * @param width width of the map or maps to generate; must match the first line of the given String in {@link Base#BASE86}
+     * @param height height of the map or maps to generate; must match the second line of the given String in {@link Base#BASE86}
+     * @param serialized should have been produced by {@link #stringSerialize()}
+     */
     public StretchWorldMap(int width, int height, String serialized) {
         super(width, height);
         String[] parts = TextTools.split(serialized, "\n");
@@ -279,6 +287,13 @@ public class StretchWorldMap extends WorldMapGenerator {
         zPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
     }
 
+    /**
+     * Serializes this generator's entire state to a String; it can be read back when creating a new instance of this
+     * type with {@link #StretchWorldMap(int, int, String)} or (preferably) {@link #recreateFromString(String)}.
+     * Uses {@link Base#BASE86} to represent values very concisely, but not at all readably. The String this produces
+     * tends to be very long because it includes several 2D arrays and a Region as Strings.
+     * @return a String that stores the entire state of this generator
+     */
     public String stringSerialize(){
         StringBuilder sb = new StringBuilder(1024);
         Base b = Base.BASE86;
@@ -333,6 +348,21 @@ public class StretchWorldMap extends WorldMapGenerator {
         b.appendJoinedExact2D(sb, "\t", " ", zPositions);
 
         return sb.toString();
+    }
+
+    /**
+     * Creates a new instance of this class from a serialized String produced by {@link #stringSerialize()}.
+     * This can get the width and height from the String, which makes this probably preferable to using the constructor
+     * {@link #StretchWorldMap(int, int, String)}. This stores the last-generated map in this WorldMapGenerator, where
+     * it can be used by other code like a {@link WorldMapView}.
+     * @param data the output of {@link #stringSerialize()}
+     * @return the map that was serialized, as a new generator
+     */
+    public static StretchWorldMap recreateFromString(String data) {
+        int mid = data.indexOf('\n');
+        int width = Base.BASE86.readInt(data, 0, mid);
+        int height = Base.BASE86.readInt(data, mid + 1, data.indexOf('\n', mid+1));
+        return new StretchWorldMap(width, height, data);
     }
 
     protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,

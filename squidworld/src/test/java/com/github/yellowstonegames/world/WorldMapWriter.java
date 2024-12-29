@@ -265,7 +265,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         worldTime = System.currentTimeMillis();
         String ser = ((StretchWorldMap) world).stringSerialize();
 
-        world = new StretchWorldMap(width<<AA, height<<AA, ser);
+        world = StretchWorldMap.recreateFromString(ser);
         wmv.setWorld(world);
         wmv.getBiomeMapper().makeBiomes(world);
         cm = wmv.show();
