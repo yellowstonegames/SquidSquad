@@ -264,8 +264,9 @@ public class WorldMapWriter extends ApplicationAdapter {
         System.out.println("Remaking...");
         worldTime = System.currentTimeMillis();
         String ser = ((StretchWorldMap) world).stringSerialize();
-        System.out.println(ser.substring(0, 400));
+
         world = new StretchWorldMap(width<<AA, height<<AA, ser);
+        wmv.setWorld(world);
         wmv.getBiomeMapper().makeBiomes(world);
         cm = wmv.show();
         temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
@@ -283,8 +284,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         png.write(Gdx.files.local(path + name + "_remade.png"), pm);
         temp.dispose();
         System.out.println("Remake #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
-
     }
+
     @Override
     public void render() {
         Gdx.graphics.setTitle("Map! Took " + ttg + " ms to generate");
