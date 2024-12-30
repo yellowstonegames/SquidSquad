@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.smooth;
 
 import com.badlogic.gdx.math.Vector2;
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.EnhancedRandom;
 

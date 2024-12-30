@@ -30,7 +30,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.tommyettinger.textra.Font;

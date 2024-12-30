@@ -444,4 +444,21 @@ public abstract class WorldMapGenerator {
         return (y + height) % height;
     }
 
+    /**
+     * Serializes this generator's entire state to a String; it should be readable when creating a new instance of this
+     * type with a constructor taking {@code (int, int, String)} or (preferably) {@code recreateFromString(String)}.
+     * The constructor typically takes width, height, and a String produced by this method. recreateFromString()
+     * typically takes just the String produced by this method.
+     * <br>
+     * Every existing implementation of this method puts each field on a new line, separated by `\n`, with width
+     * first and height second. This allows recreateFromString() to safely read in the first two lines to get the needed
+     * width and height for the constructor, and then can just call that and return the new generator. The constructor
+     * needs height and width to call a super-constructor that correctly sizes all the internal arrays,
+     * {@link #WorldMapGenerator(int, int)}.
+     *
+     * @return a String that stores the entire state of this generator
+     */
+    public String stringSerialize(){
+        throw new UnsupportedOperationException("stringSerialize() is not implemented.");
+    }
 }

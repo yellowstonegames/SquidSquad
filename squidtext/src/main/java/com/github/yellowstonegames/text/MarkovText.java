@@ -22,7 +22,6 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.*;
 import com.github.yellowstonegames.core.StringTools;
-import regexodus.Category;
 import regexodus.Matcher;
 import regexodus.Pattern;
 

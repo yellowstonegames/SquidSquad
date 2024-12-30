@@ -23,7 +23,6 @@ import com.github.tommyettinger.ds.FilteredStringSet;
 import com.github.yellowstonegames.TextInternals;
 import com.github.yellowstonegames.core.StringTools;
 import org.junit.Test;
-import regexodus.Category;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

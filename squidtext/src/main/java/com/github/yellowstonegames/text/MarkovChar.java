@@ -22,7 +22,6 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.*;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.core.annotations.Beta;
-import regexodus.Category;
 
 /**
  * A simple Markov chain text generator; call {@link #analyze(CharSequence)} once on a large sample text, then you can

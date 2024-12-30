@@ -23,7 +23,6 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.FlowRandom;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
-import com.github.yellowstonegames.grid.NoiseWrapper;
 
 import java.util.Arrays;
 

@@ -22,7 +22,6 @@ import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.core.WeightedTable;
-import regexodus.Category;
 
 import java.util.*;
 

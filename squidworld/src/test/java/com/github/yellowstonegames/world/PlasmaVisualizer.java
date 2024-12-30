@@ -31,14 +31,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
-import com.github.tommyettinger.anim8.PaletteReducer;
 import com.github.tommyettinger.anim8.QualityPalette;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.Interpolations;
-import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.ds.IntList;
-import com.github.yellowstonegames.core.ColorGradients;
-import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
 
 import static com.badlogic.gdx.Input.Keys.*;

@@ -28,7 +28,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.anim8.Dithered.DitherAlgorithm;
-import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;

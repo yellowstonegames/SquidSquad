@@ -29,7 +29,6 @@ import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.yellowstonegames.grid.LongPointHash;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.place.Biome;
 
