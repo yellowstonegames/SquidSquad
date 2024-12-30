@@ -287,7 +287,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
         sb.append(landData.toCompressedString()).append('\n');
         b.appendJoined2D(sb, "\t", " ", heightCodeData).append('\n');
 
-        //TODO: Fields of this class:
+        // FIELDS Of this class:
         b.appendUnsigned(sb, minHeat0).append('\n');
         b.appendUnsigned(sb, maxHeat0).append('\n');
         b.appendUnsigned(sb, minHeat1).append('\n');

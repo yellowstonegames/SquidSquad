@@ -345,7 +345,7 @@ public class GlobeMap extends WorldMapGenerator {
         sb.append(landData.toCompressedString()).append('\n');
         b.appendJoined2D(sb, "\t", " ", heightCodeData).append('\n');
 
-        //TODO: Fields of this class:
+        // FIELDS Of this class:
         sb.append(terrainRidged.stringSerialize()).append('\n');
         sb.append(terrainBasic .stringSerialize()).append('\n');
         sb.append(heat         .stringSerialize()).append('\n');
