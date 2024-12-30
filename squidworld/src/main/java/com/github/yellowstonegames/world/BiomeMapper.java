@@ -522,6 +522,49 @@ public interface BiomeMapper {
         }
 
         /**
+         * Creates a new generator from the given serialized String, produced by {@link #stringSerialize()}.
+         * @param serialized should have been produced by {@link #stringSerialize()}
+         */
+        public DetailedBiomeMapper(String serialized) {
+            String[] parts = TextTools.split(serialized, "\n");
+
+            int i = 0;
+            String part;
+            // Fields of this class:
+            biomeCodeData = (part = parts[i++]).isEmpty() ? null : Base.BASE86.intSplit2D(part, "\t", " ");
+            heatCodeData = (part = parts[i++]).isEmpty() ? null : Base.BASE86.intSplit2D(part, "\t", " ");
+            moistureCodeData = (part = parts[i++]).isEmpty() ? null : Base.BASE86.intSplit2D(part, "\t", " ");
+        }
+
+        /**
+         * Serializes this generator's entire state to a String; it can be read back when creating a new instance of this
+         * type with {@link #DetailedBiomeMapper(String)} or {@link #recreateFromString(String)}.
+         * Uses {@link Base#BASE86} to represent values very concisely, but not at all readably. The String this produces
+         * tends to be very long because it includes some 2D arrays as Strings.
+         * @return a String that stores the entire state of this generator
+         */
+        public String stringSerialize(){
+            StringBuilder sb = new StringBuilder(1024);
+            Base b = Base.BASE86;
+            // Fields of this class:
+            b.appendJoined2D(sb, "\t", " ", biomeCodeData).append('\n');
+            b.appendJoined2D(sb, "\t", " ", heatCodeData).append('\n');
+            b.appendJoined2D(sb, "\t", " ", moistureCodeData).append('\n');
+            return sb.toString();
+        }
+
+        /**
+         * Creates a new instance of this class from a serialized String produced by {@link #stringSerialize()}.
+         * This is here for compatibility with other classes that use String serialization, but you can just use
+         * {@link #DetailedBiomeMapper(String)} instead.
+         * @param data the output of {@link #stringSerialize()}
+         * @return the map that was serialized, as a new generator
+         */
+        public static DetailedBiomeMapper recreateFromString(String data) {
+            return new DetailedBiomeMapper(data);
+        }
+
+        /**
          * Analyzes the last world produced by the given WorldMapGenerator and uses all of its generated information to
          * assign biome codes for each cell (along with heat and moisture codes). After calling this, biome codes can be
          * taken from {@link #biomeCodeData} and used with methods in this class like {@link #extractBiomeA(int)},
