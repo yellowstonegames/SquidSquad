@@ -16,9 +16,14 @@
 
 package com.github.yellowstonegames.world;
 
+import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.TextTools;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
 import com.github.yellowstonegames.grid.Region;
 
 /**
@@ -136,6 +141,110 @@ public class MimicLocalMap extends LocalMap {
         earthOriginal = earth.copy();
         coast = earth.copy().not().fringe(2);
         shallow = earth.copy().fringe(2);
+    }
+
+    /**
+     * Creates a new generator from the given serialized String, produced by {@link #stringSerialize()}, but this also
+     * requires width and height that match the first two lines of the given String (in {@link Base#BASE86}). It is
+     * almost always easier to use {@link #recreateFromString(String)} instead.
+     * @param width width of the map or maps to generate; must match the first line of the given String in {@link Base#BASE86}
+     * @param height height of the map or maps to generate; must match the second line of the given String in {@link Base#BASE86}
+     * @param serialized should have been produced by {@link #stringSerialize()}
+     */
+    public MimicLocalMap(int width, int height, String serialized) {
+        super(width, height, serialized);
+        String[] parts = TextTools.split(serialized, "\n");
+
+        int i = 43;
+        // WorldMapGenerator's many fields:
+//        width = Base.BASE86.readInt(parts[0]);
+//        height = Base.BASE86.readInt(parts[1]);
+        earth.decompressInto(parts[i++]);
+        earthOriginal.decompressInto(parts[i++]);
+        coast.decompressInto(parts[i++]);
+        shallow.decompressInto(parts[i++]);
+    }
+
+    /**
+     * Serializes this generator's entire state to a String; it can be read back when creating a new instance of this
+     * type with {@link #MimicLocalMap(int, int, String)} or (preferably) {@link #recreateFromString(String)}.
+     * Uses {@link Base#BASE86} to represent values very concisely, but not at all readably. The String this produces
+     * tends to be very long because it includes several 2D arrays and a Region as Strings.
+     * @return a String that stores the entire state of this generator
+     */
+    public String stringSerialize(){
+        StringBuilder sb = new StringBuilder(1024);
+        Base b = Base.BASE86;
+
+        // WorldMapGenerator fields:
+        b.appendUnsigned(sb, width).append('\n');
+        b.appendUnsigned(sb, height).append('\n');
+        b.appendUnsigned(sb, usedWidth).append('\n');
+        b.appendUnsigned(sb, usedHeight).append('\n');
+        b.appendUnsigned(sb, landModifier).append('\n');
+        b.appendUnsigned(sb, heatModifier).append('\n');
+        b.appendUnsigned(sb, minHeat  ).append('\n');
+        b.appendUnsigned(sb, maxHeat  ).append('\n');
+        b.appendUnsigned(sb, minHeight).append('\n');
+        b.appendUnsigned(sb, maxHeight).append('\n');
+        b.appendUnsigned(sb, minWet   ).append('\n');
+        b.appendUnsigned(sb, maxWet   ).append('\n');
+        b.appendUnsigned(sb, centerLongitude).append('\n');
+        b.appendUnsigned(sb, zoom).append('\n');
+        b.appendUnsigned(sb, startX).append('\n');
+        b.appendUnsigned(sb, startY).append('\n');
+        b.appendJoined(sb, " ", startCacheX.items, 0, startCacheX.size()).append('\n');
+        b.appendJoined(sb, " ", startCacheY.items, 0, startCacheY.size()).append('\n');
+        b.appendUnsigned(sb, zoomStartX).append('\n');
+        b.appendUnsigned(sb, zoomStartY).append('\n');
+        b.appendUnsigned(sb, seedA).append('\n');
+        b.appendUnsigned(sb, seedB).append('\n');
+        b.appendUnsigned(sb, cacheA).append('\n');
+        b.appendUnsigned(sb, cacheB).append('\n');
+        b.appendUnsigned(sb, rng.getStateA()).append('\n');
+        b.appendUnsigned(sb, rng.getStateB()).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", heightData).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", heatData).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", moistureData).append('\n');
+        sb.append(landData.toCompressedString()).append('\n');
+        b.appendJoined2D(sb, "\t", " ", heightCodeData).append('\n');
+
+        //TODO: Fields of this class:
+        sb.append(terrainRidged.stringSerialize()).append('\n');
+        sb.append(terrainBasic .stringSerialize()).append('\n');
+        sb.append(heat         .stringSerialize()).append('\n');
+        sb.append(moisture     .stringSerialize()).append('\n');
+        sb.append(otherRidged  .stringSerialize()).append('\n');
+        b.appendUnsigned(sb, minHeat0).append('\n');
+        b.appendUnsigned(sb, maxHeat0).append('\n');
+        b.appendUnsigned(sb, minHeat1).append('\n');
+        b.appendUnsigned(sb, maxHeat1).append('\n');
+        b.appendUnsigned(sb, minWet0 ).append('\n');
+        b.appendUnsigned(sb, maxWet0 ).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", xPositions).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", yPositions).append('\n');
+        b.appendJoinedExact2D(sb, "\t", " ", zPositions).append('\n');
+        sb.append(earth.toCompressedString()).append('\n');
+        sb.append(earthOriginal.toCompressedString()).append('\n');
+        sb.append(coast.toCompressedString()).append('\n');
+        sb.append(shallow.toCompressedString());
+
+        return sb.toString();
+    }
+
+    /**
+     * Creates a new instance of this class from a serialized String produced by {@link #stringSerialize()}.
+     * This can get the width and height from the String, which makes this probably preferable to using the constructor
+     * {@link #MimicLocalMap(int, int, String)}. This stores the last-generated map in this WorldMapGenerator, where
+     * it can be used by other code like a {@link WorldMapView}.
+     * @param data the output of {@link #stringSerialize()}
+     * @return the map that was serialized, as a new generator
+     */
+    public static MimicLocalMap recreateFromString(String data) {
+        int mid = data.indexOf('\n');
+        int width = Base.BASE86.readInt(data, 0, mid);
+        int height = Base.BASE86.readInt(data, mid + 1, data.indexOf('\n', mid+1));
+        return new MimicLocalMap(width, height, data);
     }
 
     /**

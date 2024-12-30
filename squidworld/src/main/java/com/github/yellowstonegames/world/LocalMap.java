@@ -190,7 +190,6 @@ public class LocalMap extends WorldMapGenerator {
         zPositions = ArrayTools.copy(other.zPositions);
     }
 
-
     /**
      * Creates a new generator from the given serialized String, produced by {@link #stringSerialize()}, but this also
      * requires width and height that match the first two lines of the given String (in {@link Base#BASE86}). It is
