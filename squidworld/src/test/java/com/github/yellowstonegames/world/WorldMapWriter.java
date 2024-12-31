@@ -263,7 +263,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
         System.out.println("Remaking...");
         worldTime = System.currentTimeMillis();
-        String ser = ((StretchWorldMap) world).stringSerialize();
+        String ser = world.stringSerialize();
 
         world = StretchWorldMap.recreateFromString(ser);
         wmv.setWorld(world);

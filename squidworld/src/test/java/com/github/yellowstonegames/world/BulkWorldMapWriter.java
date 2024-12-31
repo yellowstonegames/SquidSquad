@@ -82,7 +82,6 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
 
     private String date, path;
-    private INoise noise;
     private FastPNG png;
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
     @Override
@@ -115,7 +114,6 @@ public class BulkWorldMapWriter extends ApplicationAdapter {
         };
 
         for(INoise noise : noises) {
-            this.noise = noise;
 
             WorldMapGenerator[] generators = {
                     // fixed size

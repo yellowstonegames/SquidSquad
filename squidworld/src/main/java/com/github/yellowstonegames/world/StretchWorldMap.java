@@ -28,7 +28,7 @@ import static com.github.tommyettinger.digital.TrigTools.asin;
 /**
  * A concrete implementation of {@link WorldMapGenerator} that distorts the map as it nears the poles, expanding the
  * smaller-diameter latitude lines in extreme north and south regions so they take up the same space as the equator.
- * Like all of the WorldMapGenerator implementations, this generator allows configuring a {@link Noise}, which is
+ * Like all the WorldMapGenerator implementations, this generator allows configuring an {@link INoise}, which is
  * used for most of the generation. This type of map is ideal for projecting onto a 3D
  * sphere, which could squash the poles to counteract the stretch this does. You might also want to produce an oval
  * map that more-accurately represents the changes in the diameter of a latitude line on a spherical world; you
@@ -171,33 +171,6 @@ public class StretchWorldMap extends WorldMapGenerator {
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 4
         otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5)); // was 6
-    }
-
-    @Override
-    public int wrapY(final int x, final int y) {
-        return Math.max(0, Math.min(y, height - 1));
-    }
-
-    /**
-     * Given a latitude and longitude in radians (the conventional way of describing points on a globe), this gets the
-     * (x,y) Coord on the map projection this generator uses that corresponds to the given lat-lon coordinates. If this
-     * generator does not represent a globe (if it is toroidal, for instance) or if there is no "good way" to calculate
-     * the projection for a given lat-lon coordinate, this returns null. This implementation never returns null.
-     * If this is a supported operation and the parameters are valid, this returns a Coord with x between 0 and
-     * {@link #width}, and y between 0 and {@link #height}, both exclusive. Automatically wraps the Coord's values using
-     * {@link #wrapX(int, int)} and {@link #wrapY(int, int)}.
-     *
-     * @param latitude  the latitude, from {@code -TrigTools.HALF_PI} to {@code TrigTools.HALF_PI}
-     * @param longitude the longitude, from {@code 0f} to {@code TrigTools.PI2}
-     * @return the point at the given latitude and longitude, as a Coord with x between 0 and {@link #width} and y between 0 and {@link #height}, or null if unsupported
-     */
-    @Override
-    public Coord project(float latitude, float longitude) {
-        int x = (int) ((((longitude - getCenterLongitude()) + TrigTools.PI2 + TrigTools.PI) % TrigTools.PI2) * TrigTools.PI_INVERSE * 0.5f * width),
-                y = (int) ((TrigTools.sinSmoother(latitude) * 0.5f + 0.5f) * height);
-        return Coord.get(
-                wrapX(x, y),
-                wrapY(x, y));
     }
 
     /**
@@ -362,6 +335,33 @@ public class StretchWorldMap extends WorldMapGenerator {
         int width = Base.BASE86.readInt(data, 0, mid);
         int height = Base.BASE86.readInt(data, mid + 1, data.indexOf('\n', mid+1));
         return new StretchWorldMap(width, height, data);
+    }
+
+    @Override
+    public int wrapY(final int x, final int y) {
+        return Math.max(0, Math.min(y, height - 1));
+    }
+
+    /**
+     * Given a latitude and longitude in radians (the conventional way of describing points on a globe), this gets the
+     * (x,y) Coord on the map projection this generator uses that corresponds to the given lat-lon coordinates. If this
+     * generator does not represent a globe (if it is toroidal, for instance) or if there is no "good way" to calculate
+     * the projection for a given lat-lon coordinate, this returns null. This implementation never returns null.
+     * If this is a supported operation and the parameters are valid, this returns a Coord with x between 0 and
+     * {@link #width}, and y between 0 and {@link #height}, both exclusive. Automatically wraps the Coord's values using
+     * {@link #wrapX(int, int)} and {@link #wrapY(int, int)}.
+     *
+     * @param latitude  the latitude, from {@code -TrigTools.HALF_PI} to {@code TrigTools.HALF_PI}
+     * @param longitude the longitude, from {@code 0f} to {@code TrigTools.PI2}
+     * @return the point at the given latitude and longitude, as a Coord with x between 0 and {@link #width} and y between 0 and {@link #height}, or null if unsupported
+     */
+    @Override
+    public Coord project(float latitude, float longitude) {
+        int x = (int) ((((longitude - getCenterLongitude()) + TrigTools.PI2 + TrigTools.PI) % TrigTools.PI2) * TrigTools.PI_INVERSE * 0.5f * width),
+                y = (int) ((TrigTools.sinSmoother(latitude) * 0.5f + 0.5f) * height);
+        return Coord.get(
+                wrapX(x, y),
+                wrapY(x, y));
     }
 
     protected void regenerate(int startX, int startY, int usedWidth, int usedHeight,

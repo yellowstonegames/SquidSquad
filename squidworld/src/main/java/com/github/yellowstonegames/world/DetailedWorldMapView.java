@@ -38,6 +38,26 @@ public class DetailedWorldMapView implements WorldMapView {
     protected WorldMapGenerator world;
     protected DetailedBiomeMapper biomeMapper;
 
+    public DetailedWorldMapView(){
+        this(123, 10, 10);
+    }
+
+    public DetailedWorldMapView(WorldMapGenerator worldMapGenerator)
+    {
+        world = worldMapGenerator == null ? new LocalMap() : worldMapGenerator;
+        width = world.width;
+        height = world.height;
+        colorMap = new int[width][height];
+        colorMapOklab = new int[width][height];
+        this.biomeMapper = new DetailedBiomeMapper();
+        initialize();
+    }
+    
+    public DetailedWorldMapView(long seed, int width, int height)
+    {
+        this(new LocalMap(seed, width, height));
+    }
+
     @Override
     public int getWidth() {
         return width;
@@ -84,25 +104,6 @@ public class DetailedWorldMapView implements WorldMapView {
             colorMap = new int[width][height];
             colorMapOklab = new int[width][height];
         }
-    }
-    public DetailedWorldMapView(){
-        this(123, 10, 10);
-    }
-
-    public DetailedWorldMapView(WorldMapGenerator worldMapGenerator)
-    {
-        world = worldMapGenerator == null ? new LocalMap() : worldMapGenerator;
-        width = world.width;
-        height = world.height;
-        colorMap = new int[width][height];
-        colorMapOklab = new int[width][height];
-        this.biomeMapper = new DetailedBiomeMapper();
-        initialize();
-    }
-    
-    public DetailedWorldMapView(long seed, int width, int height)
-    {
-        this(new LocalMap(seed, width, height));
     }
 
     public final int[] BIOME_COLOR_TABLE = new int[66], BIOME_DARK_COLOR_TABLE = new int[66];
