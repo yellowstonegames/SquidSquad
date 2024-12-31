@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Hasher;
+import com.github.yellowstonegames.grid.Region;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -167,4 +168,37 @@ public class WorldTests {
         }
     }
 
+    @Test
+    public void testMimicWorld() {
+        Region earth = Region.decompress(MimicWorldMap.EARTH_ENCODED);
+        for (int i = 0; i < 10; i++) {
+            MimicWorldMap world = new MimicWorldMap(i, earth);
+            BlendedWorldMapView wmv = new BlendedWorldMapView(world);
+            wmv.generate();
+            int[][] cm0 = wmv.show();
+            String ser = world.stringSerialize();
+            System.out.println("Serialized data is " + ser.length() + " chars long.");
+            wmv.setWorld(MimicWorldMap.recreateFromString(ser));
+            wmv.generate();
+            int[][] cm1 = wmv.show();
+            Assert.assertEquals(Hasher.intArray2DHashBulk64.hash64(i, cm0), Hasher.intArray2DHashBulk64.hash64(i, cm1));
+        }
+    }
+
+    @Test
+    public void testMimicLocal() {
+        Region oz = Region.decompress(MimicLocalMap.AUSTRALIA_ENCODED);
+        for (int i = 0; i < 10; i++) {
+            MimicLocalMap world = new MimicLocalMap(i, oz);
+            BlendedWorldMapView wmv = new BlendedWorldMapView(world);
+            wmv.generate();
+            int[][] cm0 = wmv.show();
+            String ser = world.stringSerialize();
+            System.out.println("Serialized data is " + ser.length() + " chars long.");
+            wmv.setWorld(MimicLocalMap.recreateFromString(ser));
+            wmv.generate();
+            int[][] cm1 = wmv.show();
+            Assert.assertEquals(Hasher.intArray2DHashBulk64.hash64(i, cm0), Hasher.intArray2DHashBulk64.hash64(i, cm1));
+        }
+    }
 }

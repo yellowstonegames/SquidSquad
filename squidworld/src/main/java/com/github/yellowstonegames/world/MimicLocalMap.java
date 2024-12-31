@@ -153,13 +153,12 @@ public class MimicLocalMap extends LocalMap {
         String[] parts = TextTools.split(serialized, "\n");
 
         int i = 43;
-        // WorldMapGenerator's many fields:
-//        width = Base.BASE86.readInt(parts[0]);
-//        height = Base.BASE86.readInt(parts[1]);
-        earth.decompressInto(parts[i++]);
-        earthOriginal.decompressInto(parts[i++]);
-        coast.decompressInto(parts[i++]);
-        shallow.decompressInto(parts[i++]);
+        // WorldMapGenerator's many fields were mostly already read.
+        // The fields of this class:
+        earth = Region.decompress(parts[i++]);
+        earthOriginal = Region.decompress(parts[i++]);
+        coast = Region.decompress(parts[i++]);
+        shallow = Region.decompress(parts[i++]);
     }
 
     /**

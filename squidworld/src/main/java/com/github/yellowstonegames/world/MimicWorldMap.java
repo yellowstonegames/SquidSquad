@@ -190,11 +190,12 @@ public class MimicWorldMap extends EllipticalWorldMap {
         String[] parts = TextTools.split(serialized, "\n");
 
         int i = 44;
-        // WorldMapGenerator's many fields:
-        earth.decompressInto(parts[i++]);
-        earthOriginal.decompressInto(parts[i++]);
-        coast.decompressInto(parts[i++]);
-        shallow.decompressInto(parts[i++]);
+        // WorldMapGenerator's many fields were mostly already read.
+        // The fields of this class:
+        earth = Region.decompress(parts[i++]);
+        earthOriginal = Region.decompress(parts[i++]);
+        coast = Region.decompress(parts[i++]);
+        shallow = Region.decompress(parts[i++]);
     }
 
     /**
