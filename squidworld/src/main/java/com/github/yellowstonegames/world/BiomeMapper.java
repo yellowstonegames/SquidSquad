@@ -31,8 +31,21 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
  * {@link WorldMapGenerator}, you can call {@link #makeBiomes(WorldMapGenerator)} to assign the biomes for that world.
  * After that, you can call {@link #getBiomeCode(int, int)} to get the primary biome code for an area; more specialized
  * methods or fields may be available in implementations.
+ * <br>
+ * You can serialize a BiomeMapper using {@link #stringSerialize()}, which is much like
+ * {@link WorldMapGenerator#stringSerialize()} and creates a String that can be read in by a constructor and/or
+ * {@code recreateFromString(String)}. The serialized data typically includes the most recently-produced code data for
+ * heat, moisture, and biomes; deserializing usually isn't different from calling {@link #makeBiomes(WorldMapGenerator)}
+ * with an identical WorldMapGenerator.
  */
 public interface BiomeMapper {
+    /**
+     * Serializes this generator's entire state to a String; it can be read back when creating a new instance of this
+     * type with a constructor (the most often case) or {@code recreateFromString(String)}.
+     * @return a String that stores the entire state of this generator
+     */
+    String stringSerialize();
+
     /**
      * Gets the most relevant biome code for a given x,y point on the map. Some mappers can store more than one
      * biome at a location, but only the one with the highest influence will be returned by this method. Biome codes
