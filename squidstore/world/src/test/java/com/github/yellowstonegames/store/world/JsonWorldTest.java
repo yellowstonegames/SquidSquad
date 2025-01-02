@@ -82,4 +82,28 @@ public class JsonWorldTest {
         wmg2 = json.fromJson(LatLonWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
     }
+
+    @Test
+    public void testLocalMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        LocalMap wmg, wmg2;
+        wmg = new LocalMap(12345, 200, 100);
+        wmg.generate();
+        JsonWorld.registerLocalMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(LocalMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
+
+    @Test
+    public void testMimicLocalMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        MimicLocalMap wmg, wmg2;
+        wmg = new MimicLocalMap(12345);
+        wmg.generate();
+        JsonWorld.registerMimicLocalMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(MimicLocalMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
 }

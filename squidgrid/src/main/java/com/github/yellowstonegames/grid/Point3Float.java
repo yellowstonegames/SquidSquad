@@ -570,7 +570,7 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Point3Float)) return false;
 
         Point3Float that = (Point3Float) o;

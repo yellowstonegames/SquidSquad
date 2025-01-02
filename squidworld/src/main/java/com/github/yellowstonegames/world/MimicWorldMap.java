@@ -155,6 +155,16 @@ public class MimicWorldMap extends EllipticalWorldMap {
      * Constructs a 512x256 elliptical world map that will use land forms with a similar shape to Earth.
      *
      * @param initialSeed
+     */
+    public MimicWorldMap(long initialSeed) {
+        this(initialSeed,
+                Region.decompress(EARTH_ENCODED), new Noise(DEFAULT_NOISE), 1f);
+    }
+
+    /**
+     * Constructs a 512x256 elliptical world map that will use land forms with a similar shape to Earth.
+     *
+     * @param initialSeed
      * @param noiseGenerator
      * @param octaveMultiplier
      */

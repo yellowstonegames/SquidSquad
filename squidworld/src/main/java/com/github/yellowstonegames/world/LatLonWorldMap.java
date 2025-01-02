@@ -498,7 +498,7 @@ public class LatLonWorldMap extends WorldMapGenerator {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof LatLonWorldMap)) return false;
 
         LatLonWorldMap that = (LatLonWorldMap) o;

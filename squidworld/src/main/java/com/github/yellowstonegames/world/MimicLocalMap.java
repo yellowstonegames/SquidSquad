@@ -17,11 +17,14 @@
 package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TextTools;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.Region;
+
+import java.util.Arrays;
 
 /**
  * An unusual map generator that imitates an existing local map (such as a map of Australia, which it can do by
@@ -152,7 +155,7 @@ public class MimicLocalMap extends LocalMap {
         super(width, height, serialized);
         String[] parts = TextTools.split(serialized, "\n");
 
-        int i = 43;
+        int i = 45;
         // WorldMapGenerator's many fields were mostly already read.
         // The fields of this class:
         earth = Region.decompress(parts[i++]);
@@ -252,6 +255,16 @@ public class MimicLocalMap extends LocalMap {
      * This was flipped vertically early in 2023, to match changes much earlier in squidgrid.
      */
     public static final String AUSTRALIA_ENCODED = "Ƥ䒅⒐᮰囨䈢ħ䐤࠰ࠨ•Ⱙအ䎢ŘňÆ䴣ȢؤF䭠゠ᔤ∠偰ഀՠ₠ኼܨā᭮笁␪Цᇅ扰रࠦ吠䠪ࠦ䠧娮⠬䠬❁ỀកᲪ͠敠ἒ慽Ê䄄洡儠䋻䨡㈠䙬坈མŨྈ䞻䛊哚晪⁞倰h·䡂Ļæ抂㴢္࠮搧䈠ᇩᒠ᩠ɀ༨ʨڤʃ奲ࢠ፠ᆙả䝆䮳りĩ(ॠી᧰྄e॑ᤙ䒠剠⁌ဥࠩФΝ䂂⢴ᑠ㺀ᢣ䗨dBqÚ扜冢࿥੢䐠劣ေ¯䂍䞀ၰ๧ᐓ〈ᄠ塠Ѡ̀ာ⠤ᡤŒęጓ憒‱〿䌳℔ᐼ䊢⁚䤿ӣ◚㙀౴Ӹ抠⣀ĨǊǸ䁃း₺Ý䂁ᜤ䢑V⁄樫焠੠⹸⎲Ĉ䁎勯戡璠悈ᠥ嘡⩩‰ನ檨㡕䶪၁@恑ࠣ䘣ࢠᅀᡎ劰桠Өॢಸ熛փࢸ䀹ఽ䅠勖ਰ۴̄ጺಢ䈠ᙠᨭ⿠焠Ӡܼ䇂䒠ᯀԨĠ愜᪅䦥㶐ୀ৅Ƣ*䂕ॹ∠咠р؄У無~⁆Г椠痠ᲩⰣס㩖ᝋ司楠२ญⳘ䬣汤ǿã㱩ᖷ掠Àݒ㑁c‾䮴,⑒僢ᰣ缠ɋ乨͸䁡绑ס傓䁔瀾ሺÑ䀤ो刡开烀੶Ё䈠䈰״Áj⁑䠡戢碠㘀አ䃉㪙嘈ʂø⸪௰₈㐲暤ƩDᬿ䂖剙書࿠㴢㘩Ĉ䰵掀栰杁4〡Ƞ⭀᫠㠰㹨Zコത䂖ࠠⴠ縣吠ᆠʡ㡀䀧否䣝Ӧ愠ⓀᲢಠո*①ӈԥ獀խ@㟬箬㐱ㆾ簽Ɛᩆᇞ稯禚⟶⣑аβǚ㥎Ḇ⌢㑆 搡⁗ဣ刣౅䑒8怺₵⤦a5ਵ㏰ᩄ猢ฦ䬞㐷䈠呠カ愠ۀᲒ傠ᅼ߃ᙊ䢨ၠླྀš亀ƴ̰刷ʼ墨愠  ";
+
+    /**
+     * Constructs a 256x256 unprojected local map that will use land forms with a similar shape to Australia.
+     *
+     * @param initialSeed
+     */
+    public MimicLocalMap(long initialSeed) {
+        this(initialSeed,
+                Region.decompress(AUSTRALIA_ENCODED), new Noise(DEFAULT_NOISE), 1f);
+    }
 
     /**
      * Constructs a 256x256 unprojected local map that will use land forms with a similar shape to Australia.
@@ -441,5 +454,80 @@ public class MimicLocalMap extends LocalMap {
             maxWet = pc;
         }
         landData.refill(heightCodeData, 4, 999);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MimicLocalMap)) return false;
+
+        MimicLocalMap that = (MimicLocalMap) o;
+        // WorldMapGenerator fields:
+        if(width != that.width) return false;
+        if(height != that.height) return false;
+        if(usedWidth != that.usedWidth) return false;
+        if(usedHeight != that.usedHeight) return false;
+        if(Float.compare(landModifier, that.landModifier) != 0) return false;
+        if(Float.compare(heatModifier, that.heatModifier) != 0) return false;
+        if(Float.compare(minHeat  , that.minHeat  ) != 0) return false;
+        if(Float.compare(maxHeat  , that.maxHeat  ) != 0) return false;
+        if(Float.compare(minHeight, that.minHeight) != 0) return false;
+        if(Float.compare(maxHeight, that.maxHeight) != 0) return false;
+        if(Float.compare(minWet   , that.minWet   ) != 0) return false;
+        if(Float.compare(maxWet   , that.maxWet   ) != 0) return false;
+        if(Float.compare(centerLongitude, that.centerLongitude) != 0) return false;
+        if(zoom != that.zoom) return false;
+        if(startX != that.startX) return false;
+        if(startY != that.startY) return false;
+        if(!startCacheX.equals(that.startCacheX)) return false;
+        if(!startCacheY.equals(that.startCacheY)) return false;
+        if(zoomStartX != that.zoomStartX) return false;
+        if(zoomStartY != that.zoomStartY) return false;
+        if(seedA != that.seedA) return false;
+        if(seedB != that.seedB) return false;
+        if(cacheA != that.cacheA) return false;
+        if(cacheB != that.cacheB) return false;
+        if(rng.getStateA() != that.rng.getStateA()) return false;
+        if(rng.getStateB() != that.rng.getStateB()) return false;
+        if(!Arrays.deepEquals(heightData  , that.heightData  )) return false;
+        if(!Arrays.deepEquals(heatData    , that.heatData    )) return false;
+        if(!Arrays.deepEquals(moistureData, that.moistureData)) return false;
+        if(!landData.equals(that.landData)) return false;
+        if(!Arrays.deepEquals(heightCodeData, that.heightCodeData)) return false;
+
+        // Fields Of this class:
+        if(!terrainRidged.equals(that.terrainRidged)) return false;
+        if(!terrainBasic .equals(that.terrainBasic )) return false;
+        if(!heat         .equals(that.heat         )) return false;
+        if(!moisture     .equals(that.moisture     )) return false;
+        if(!otherRidged  .equals(that.otherRidged  )) return false;
+        if(Float.compare(minHeat0, that.minHeat0) != 0) return false;
+        if(Float.compare(maxHeat0, that.maxHeat0) != 0) return false;
+        if(Float.compare(minHeat1, that.minHeat1) != 0) return false;
+        if(Float.compare(maxHeat1, that.maxHeat1) != 0) return false;
+        if(Float.compare(minWet0 , that.minWet0 ) != 0) return false;
+        if(Float.compare(maxWet0 , that.maxWet0 ) != 0) return false;
+        if(!Arrays.deepEquals(xPositions, that.xPositions)) return false;
+        if(!Arrays.deepEquals(yPositions, that.yPositions)) return false;
+        if(!Arrays.deepEquals(zPositions, that.zPositions)) return false;
+        if(!earth.equals(that.earth)) return false;
+        if(!shallow.equals(that.shallow)) return false;
+        if(!coast.equals(that.coast)) return false;
+        if(!earthOriginal.equals(that.earthOriginal)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Hasher.marax.hashBulk(stringSerialize());
+    }
+
+    @Override
+    public String toString() {
+        return "MimicLocalMap { width: " + width + ", height: " + height
+                + ", landModifier: " + landModifier + ", heatModifier: " + heatModifier
+                + ", seedA: " + seedA + ", seedB: " + seedB
+                + ", zoom: " + zoom + ", noise tag: " + terrainBasic.getTag()
+                + "}";
     }
 }

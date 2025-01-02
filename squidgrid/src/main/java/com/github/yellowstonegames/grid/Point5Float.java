@@ -531,7 +531,7 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Point5Float)) return false;
 
         Point5Float that = (Point5Float) o;

@@ -551,7 +551,7 @@ public class GlobeMap extends WorldMapGenerator {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof GlobeMap)) return false;
 
         GlobeMap that = (GlobeMap) o;

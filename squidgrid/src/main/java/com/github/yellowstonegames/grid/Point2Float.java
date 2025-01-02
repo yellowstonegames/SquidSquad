@@ -490,7 +490,7 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
 
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Point2Float)) return false;
 
         Point2Float that = (Point2Float) o;

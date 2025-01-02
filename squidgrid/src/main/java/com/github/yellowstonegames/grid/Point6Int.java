@@ -695,7 +695,7 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Point6Int)) return false;
 
         Point6Int point6Int = (Point6Int) o;

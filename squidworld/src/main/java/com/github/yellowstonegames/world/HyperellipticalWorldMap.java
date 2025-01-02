@@ -658,7 +658,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof HyperellipticalWorldMap)) return false;
 
         HyperellipticalWorldMap that = (HyperellipticalWorldMap) o;

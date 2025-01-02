@@ -492,7 +492,7 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Point4Float)) return false;
 
         Point4Float that = (Point4Float) o;

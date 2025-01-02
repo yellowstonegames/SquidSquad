@@ -18,11 +18,14 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.random.FlowRandom;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.NoiseWrapper;
+
+import java.util.Arrays;
 
 /**
  * A concrete implementation of {@link WorldMapGenerator} that does no projection of the map, as if the area were
@@ -470,5 +473,76 @@ public class LocalMap extends WorldMapGenerator {
             maxWet = pc;
         }
         landData.refill(heightCodeData, 4, 999);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof LocalMap)) return false;
+
+        LocalMap that = (LocalMap) o;
+        // WorldMapGenerator fields:
+        if(width != that.width) return false;
+        if(height != that.height) return false;
+        if(usedWidth != that.usedWidth) return false;
+        if(usedHeight != that.usedHeight) return false;
+        if(Float.compare(landModifier, that.landModifier) != 0) return false;
+        if(Float.compare(heatModifier, that.heatModifier) != 0) return false;
+        if(Float.compare(minHeat  , that.minHeat  ) != 0) return false;
+        if(Float.compare(maxHeat  , that.maxHeat  ) != 0) return false;
+        if(Float.compare(minHeight, that.minHeight) != 0) return false;
+        if(Float.compare(maxHeight, that.maxHeight) != 0) return false;
+        if(Float.compare(minWet   , that.minWet   ) != 0) return false;
+        if(Float.compare(maxWet   , that.maxWet   ) != 0) return false;
+        if(Float.compare(centerLongitude, that.centerLongitude) != 0) return false;
+        if(zoom != that.zoom) return false;
+        if(startX != that.startX) return false;
+        if(startY != that.startY) return false;
+        if(!startCacheX.equals(that.startCacheX)) return false;
+        if(!startCacheY.equals(that.startCacheY)) return false;
+        if(zoomStartX != that.zoomStartX) return false;
+        if(zoomStartY != that.zoomStartY) return false;
+        if(seedA != that.seedA) return false;
+        if(seedB != that.seedB) return false;
+        if(cacheA != that.cacheA) return false;
+        if(cacheB != that.cacheB) return false;
+        if(rng.getStateA() != that.rng.getStateA()) return false;
+        if(rng.getStateB() != that.rng.getStateB()) return false;
+        if(!Arrays.deepEquals(heightData  , that.heightData  )) return false;
+        if(!Arrays.deepEquals(heatData    , that.heatData    )) return false;
+        if(!Arrays.deepEquals(moistureData, that.moistureData)) return false;
+        if(!landData.equals(that.landData)) return false;
+        if(!Arrays.deepEquals(heightCodeData, that.heightCodeData)) return false;
+
+        // Fields Of this class:
+        if(!terrainRidged.equals(that.terrainRidged)) return false;
+        if(!terrainBasic .equals(that.terrainBasic )) return false;
+        if(!heat         .equals(that.heat         )) return false;
+        if(!moisture     .equals(that.moisture     )) return false;
+        if(!otherRidged  .equals(that.otherRidged  )) return false;
+        if(Float.compare(minHeat0, that.minHeat0) != 0) return false;
+        if(Float.compare(maxHeat0, that.maxHeat0) != 0) return false;
+        if(Float.compare(minHeat1, that.minHeat1) != 0) return false;
+        if(Float.compare(maxHeat1, that.maxHeat1) != 0) return false;
+        if(Float.compare(minWet0 , that.minWet0 ) != 0) return false;
+        if(Float.compare(maxWet0 , that.maxWet0 ) != 0) return false;
+        if(!Arrays.deepEquals(xPositions, that.xPositions)) return false;
+        if(!Arrays.deepEquals(yPositions, that.yPositions)) return false;
+        if(!Arrays.deepEquals(zPositions, that.zPositions)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Hasher.marax.hashBulk(stringSerialize());
+    }
+
+    @Override
+    public String toString() {
+        return "LocalMap { width: " + width + ", height: " + height
+                + ", landModifier: " + landModifier + ", heatModifier: " + heatModifier
+                + ", seedA: " + seedA + ", seedB: " + seedB
+                + ", zoom: " + zoom + ", noise tag: " + terrainBasic.getTag()
+                + "}";
     }
 }

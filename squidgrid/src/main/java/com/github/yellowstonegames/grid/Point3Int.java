@@ -537,7 +537,7 @@ public class Point3Int implements Point3<Point3Int>, PointNInt<Point3Int, Point3
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Point3Int)) return false;
 
         Point3Int point3Int = (Point3Int) o;

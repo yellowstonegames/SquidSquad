@@ -589,7 +589,7 @@ public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof Point4Int)) return false;
 
         Point4Int point4Int = (Point4Int) o;
