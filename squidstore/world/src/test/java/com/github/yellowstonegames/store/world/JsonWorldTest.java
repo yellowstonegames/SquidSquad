@@ -39,7 +39,7 @@ public class JsonWorldTest {
     public void testGlobeMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         GlobeMap wmg, wmg2;
-        wmg = new GlobeMap(12345, 200, 100);
+        wmg = new GlobeMap(12345, 100, 100);
         wmg.generate();
         JsonWorld.registerGlobeMap(json);
         String data = json.toJson(wmg);
@@ -87,7 +87,7 @@ public class JsonWorldTest {
     public void testLocalMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         LocalMap wmg, wmg2;
-        wmg = new LocalMap(12345, 200, 100);
+        wmg = new LocalMap(12345, 100, 100);
         wmg.generate();
         JsonWorld.registerLocalMap(json);
         String data = json.toJson(wmg);
@@ -104,6 +104,30 @@ public class JsonWorldTest {
         JsonWorld.registerMimicLocalMap(json);
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(MimicLocalMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
+
+    @Test
+    public void testMimicWorldMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        MimicWorldMap wmg, wmg2;
+        wmg = new MimicWorldMap(12345);
+        wmg.generate();
+        JsonWorld.registerMimicWorldMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(MimicWorldMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
+
+    @Test
+    public void testRotatingGlobeMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        RotatingGlobeMap wmg, wmg2;
+        wmg = new RotatingGlobeMap(12345, 100, 100);
+        wmg.generate();
+        JsonWorld.registerRotatingGlobeMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(RotatingGlobeMap.class, data);
         Assert.assertEquals(wmg, wmg2);
     }
 }

@@ -16,10 +16,7 @@
 
 package com.github.yellowstonegames.world;
 
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.Base;
-import com.github.tommyettinger.digital.TextTools;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.random.FlowRandom;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
@@ -465,39 +462,71 @@ public class RotatingGlobeMap extends WorldMapGenerator {
         landData.refill(heightCodeData, 4, 999);
     }
 
-//    /**
-//     * This is rather bad! Only use for tests.
-//     * @param y
-//     * @param x
-//     * @return
-//     */
-//    static public float atan2 (float y, float x) {
-//        if(y == 0f && x >= 0f) return 0f;
-//        final float ax = Math.abs(x), ay = Math.abs(y);
-//        if(ax < ay)
-//        {
-//            final float a = ax / ay,
-//                    r = 1.57079637f - (a * (0.7853981633974483f + 0.273f * (1f - a)));
-//            return (x < 0f) ? (y < 0f) ? -3.14159274f + r : 3.14159274f - r : (y < 0f) ? -r : r;
-//        }
-//        else {
-//            final float a = ay / ax,
-//                    r = (a * (0.7853981633974483f + 0.273f * (1f - a)));
-//            return (x < 0f) ? (y < 0f) ? -3.14159274f + r : 3.14159274f - r : (y < 0f) ? -r : r;
-//        }
-////// Actually this is slightly better here, but still not very good.
-////        if (x == 0f) {
-////            if (y > 0f) return PI / 2;
-////            if (y == 0f) return 0f;
-////            return -PI / 2;
-////        }
-////        final float atan, z = y / x;
-////        if (Math.abs(z) < 1f) {
-////            atan = z / (1f + 0.28f * z * z);
-////            if (x < 0f) return atan + (y < 0f ? -PI : PI);
-////            return atan;
-////        }
-////        atan = PI / 2 - z / (z * z + 0.28f);
-////        return y < 0f ? atan - PI : atan;
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof RotatingGlobeMap)) return false;
+
+        RotatingGlobeMap that = (RotatingGlobeMap) o;
+        // WorldMapGenerator fields:
+        if(width != that.width) return false;
+        if(height != that.height) return false;
+        if(usedWidth != that.usedWidth) return false;
+        if(usedHeight != that.usedHeight) return false;
+        if(Float.compare(landModifier, that.landModifier) != 0) return false;
+        if(Float.compare(heatModifier, that.heatModifier) != 0) return false;
+        if(Float.compare(minHeat  , that.minHeat  ) != 0) return false;
+        if(Float.compare(maxHeat  , that.maxHeat  ) != 0) return false;
+        if(Float.compare(minHeight, that.minHeight) != 0) return false;
+        if(Float.compare(maxHeight, that.maxHeight) != 0) return false;
+        if(Float.compare(minWet   , that.minWet   ) != 0) return false;
+        if(Float.compare(maxWet   , that.maxWet   ) != 0) return false;
+        if(Float.compare(centerLongitude, that.centerLongitude) != 0) return false;
+        if(zoom != that.zoom) return false;
+        if(startX != that.startX) return false;
+        if(startY != that.startY) return false;
+        if(!startCacheX.equals(that.startCacheX)) return false;
+        if(!startCacheY.equals(that.startCacheY)) return false;
+        if(zoomStartX != that.zoomStartX) return false;
+        if(zoomStartY != that.zoomStartY) return false;
+        if(seedA != that.seedA) return false;
+        if(seedB != that.seedB) return false;
+        if(cacheA != that.cacheA) return false;
+        if(cacheB != that.cacheB) return false;
+        if(rng.getStateA() != that.rng.getStateA()) return false;
+        if(rng.getStateB() != that.rng.getStateB()) return false;
+        if(!Arrays.deepEquals(heightData  , that.heightData  )) return false;
+        if(!Arrays.deepEquals(heatData    , that.heatData    )) return false;
+        if(!Arrays.deepEquals(moistureData, that.moistureData)) return false;
+        if(!landData.equals(that.landData)) return false;
+        if(!Arrays.deepEquals(heightCodeData, that.heightCodeData)) return false;
+
+        // Fields Of this class:
+        if(Float.compare(minHeat0, that.minHeat0) != 0) return false;
+        if(Float.compare(maxHeat0, that.maxHeat0) != 0) return false;
+        if(Float.compare(minHeat1, that.minHeat1) != 0) return false;
+        if(Float.compare(maxHeat1, that.maxHeat1) != 0) return false;
+        if(Float.compare(minWet0 , that.minWet0 ) != 0) return false;
+        if(Float.compare(maxWet0 , that.maxWet0 ) != 0) return false;
+        if(!Arrays.deepEquals(xPositions, that.xPositions)) return false;
+        if(!Arrays.deepEquals(yPositions, that.yPositions)) return false;
+        if(!Arrays.deepEquals(zPositions, that.zPositions)) return false;
+        if(!Arrays.equals(edges, that.edges)) return false;
+        if(!storedMap.equals(that.storedMap)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Hasher.marax.hashBulk(stringSerialize());
+    }
+
+    @Override
+    public String toString() {
+        return "RotatingGlobeMap { width: " + width + ", height: " + height
+                + ", landModifier: " + landModifier + ", heatModifier: " + heatModifier
+                + ", seedA: " + seedA + ", seedB: " + seedB
+                + ", zoom: " + zoom + ", noise tag: " + storedMap.terrainBasic.getTag()
+                + "}";
+    }
 }
