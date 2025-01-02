@@ -281,7 +281,7 @@ public class NoiseWrapper implements INoise {
     @Override
     public int hashCode() {
         int result = wrapped.hashCode();
-        result = 31 * result + (frequency != +0.0f ? Float.floatToIntBits(frequency) : 0);
+        result = 31 * result + (frequency != +0.0f ? BitConversion.floatToIntBits(frequency) : 0);
         result = 31 * result + mode;
         result = 31 * result + octaves;
         result = 31 * result + (fractalSpiral ? 1 : 0);

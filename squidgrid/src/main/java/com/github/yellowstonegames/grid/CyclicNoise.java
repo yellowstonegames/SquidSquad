@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -606,8 +607,6 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
 
-    private static final float radToIndex = TABLE_SIZE / PI2;
-
     @Override
     public String toString() {
         return "CyclicNoise with seed: " + seed + ", octaves:" + octaves + ", frequency: " + frequency;
@@ -628,7 +627,7 @@ float cyclicNoise(vec3 p){
     @Override
     public int hashCode() {
         int result = octaves;
-        result = 31 * result + (frequency != +0.0f ? Float.floatToIntBits(frequency) : 0);
+        result = 31 * result + (frequency != +0.0f ? BitConversion.floatToIntBits(frequency) : 0);
         result = 31 * result + (int) (seed ^ (seed >>> 32));
         return result;
     }

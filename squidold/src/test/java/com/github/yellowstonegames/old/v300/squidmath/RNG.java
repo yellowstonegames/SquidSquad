@@ -637,7 +637,7 @@ public class RNG implements Serializable, IRNG {
     @Override
     public double nextDouble() {
         return (random.nextLong() & 0x1fffffffffffffL) * 0x1p-53;
-        //this is here for a record of another possibility; it can't generate quite a lot of possible values though
+        //this is here for a record of another option; it can't generate quite a lot of possible values though
         //return Double.longBitsToDouble(0x3FF0000000000000L | random.nextLong() >>> 12) - 1.0;
     }
 

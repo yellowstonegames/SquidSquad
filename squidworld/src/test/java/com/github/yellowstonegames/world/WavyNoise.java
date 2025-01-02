@@ -699,7 +699,7 @@ float cyclicNoise(vec3 p){
     @Override
     public int hashCode() {
         int result = octaves;
-        result = 31 * result + (frequency != +0.0f ? Float.floatToIntBits(frequency) : 0);
+        result = 31 * result + (frequency != +0.0f ? BitConversion.floatToIntBits(frequency) : 0);
         result = 31 * result + (int) (seed ^ (seed >>> 32));
         return result;
     }
