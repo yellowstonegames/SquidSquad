@@ -23,15 +23,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class JsonWorldTest {
-//    @Test
-//    public void testEllipticalWorldMap() {
-//        Json json = new Json(JsonWriter.OutputType.minimal);
-//        EllipticalWorldMap wmg, wmg2;
-//        wmg = new EllipticalWorldMap(12345, 200, 100);
-//        wmg.generate();
-//        JsonWorld.registerEllipticalWorldMap(json);
-//        String data = json.toJson(wmg);
-//        wmg2 = json.fromJson(EllipticalWorldMap.class, data);
-//        Assert.assertEquals(wmg, wmg2);
-//    }
+    @Test
+    public void testEllipticalWorldMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        EllipticalWorldMap wmg, wmg2;
+        wmg = new EllipticalWorldMap(12345, 200, 100);
+        wmg.generate();
+        JsonWorld.registerEllipticalWorldMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(EllipticalWorldMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
 }
