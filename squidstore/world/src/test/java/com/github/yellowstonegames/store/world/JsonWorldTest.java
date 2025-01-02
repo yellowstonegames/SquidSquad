@@ -22,32 +22,16 @@ import com.github.yellowstonegames.world.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class JsonTextTest {
-    @Test
-    public void testLanguage() {
-        Json json = new Json(JsonWriter.OutputType.minimal);
-        Language lang, lang2;
-        lang = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
-//        JsonCore.registerPattern(json);
-        // If you really want to see what this looks like without registerLanguage... Uncomment the next line.
-//        System.out.println(json.toJson(lang));
-        JsonText.registerLanguage(json);
-        String data = json.toJson(lang);
-        System.out.println(data);
-        lang2 = json.fromJson(Language.class, data);
-        Assert.assertEquals(lang, lang2);
-        System.out.println();
-        lang = Language.KOBOLD;
-        data = json.toJson(lang);
-        System.out.println(data);
-        lang2 = json.fromJson(Language.class, data);
-        Assert.assertEquals(lang, lang2);
-        System.out.println();
-        lang = Language.randomLanguage(0x1337BEEFCAFEBABEL).mix(4, Language.ARABIC_ROMANIZED, 5, Language.JAPANESE_ROMANIZED, 3).addModifiers(Language.Modifier.LISP);
-        data = json.toJson(lang);
-        System.out.println(data);
-        lang2 = json.fromJson(Language.class, data);
-        Assert.assertEquals(lang, lang2);
-        System.out.println();
-    }
+public class JsonWorldTest {
+//    @Test
+//    public void testEllipticalWorldMap() {
+//        Json json = new Json(JsonWriter.OutputType.minimal);
+//        EllipticalWorldMap wmg, wmg2;
+//        wmg = new EllipticalWorldMap(12345, 200, 100);
+//        wmg.generate();
+//        JsonWorld.registerEllipticalWorldMap(json);
+//        String data = json.toJson(wmg);
+//        wmg2 = json.fromJson(EllipticalWorldMap.class, data);
+//        Assert.assertEquals(wmg, wmg2);
+//    }
 }
