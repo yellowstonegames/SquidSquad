@@ -24,7 +24,6 @@ import static com.github.yellowstonegames.grid.Noise.*;
 
 public class NoiseWrapper implements INoise {
     public INoise wrapped;
-    protected long seed;
     public float frequency;
     public int mode;
     protected int octaves;
@@ -84,16 +83,26 @@ public class NoiseWrapper implements INoise {
     }
 
     public NoiseWrapper(INoise toWrap){
-        this(toWrap, toWrap.getSeed(), 0.03125f, FBM, 1, false);
+        this(toWrap, 0.03125f, FBM, 1, false);
     }
 
     public NoiseWrapper(INoise toWrap, float frequency, int mode, int octaves){
-        this(toWrap, toWrap.getSeed(), frequency, mode, octaves, false);
+        this(toWrap, frequency, mode, octaves, false);
     }
-    public NoiseWrapper(INoise toWrap, long seed, float frequency, int mode, int octaves){
+
+    public NoiseWrapper(INoise toWrap, float frequency, int mode, int octaves, boolean fractalSpiral) {
+        wrapped = toWrap;
+        this.frequency = frequency;
+        this.mode = mode;
+        this.octaves = octaves;
+        this.fractalSpiral = fractalSpiral;
+    }
+
+    public NoiseWrapper(INoise toWrap, long seed, float frequency, int mode, int octaves) {
         this(toWrap, seed, frequency, mode, octaves, false);
     }
-    public NoiseWrapper(INoise toWrap, long seed, float frequency, int mode, int octaves, boolean fractalSpiral){
+
+    public NoiseWrapper(INoise toWrap, long seed, float frequency, int mode, int octaves, boolean fractalSpiral) {
         wrapped = toWrap;
         setSeed(seed);
         this.frequency = frequency;
@@ -104,7 +113,6 @@ public class NoiseWrapper implements INoise {
 
     public NoiseWrapper(NoiseWrapper other) {
         setWrapped(other.getWrapped().copy());
-        setSeed(other.getSeed());
         setFrequency(other.getFrequency());
         setFractalType(other.getFractalType());
         setFractalOctaves(other.getFractalOctaves());
@@ -220,7 +228,6 @@ public class NoiseWrapper implements INoise {
     @Override
     public String stringSerialize() {
         return "`" +
-                seed + '~' +
                 frequency + '~' +
                 mode + '~' +
                 octaves + '~' +
@@ -230,8 +237,7 @@ public class NoiseWrapper implements INoise {
 
     @Override
     public NoiseWrapper stringDeserialize(String data) {
-        int pos = data.indexOf('`')+1;
-        setSeed(Base.BASE10.readLong(data, pos+1, pos = data.indexOf('~', pos+2)));
+        int pos = data.indexOf('`');
         setFrequency(Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+2)));
         setMode(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
         setOctaves(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
@@ -288,11 +294,11 @@ public class NoiseWrapper implements INoise {
     public float getNoise(float x, float y) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, getSeed());
+            case 1: return billow(x * frequency, y * frequency, getSeed());
+            case 2: return ridged(x * frequency, y * frequency, getSeed());
+            case 3: return warp(x * frequency, y * frequency, getSeed());
+            case 4: return exo(x * frequency, y * frequency, getSeed());
         }
     }
 
@@ -300,11 +306,11 @@ public class NoiseWrapper implements INoise {
     public float getNoise(float x, float y, float z) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, getSeed());
         }
     }
 
@@ -312,11 +318,11 @@ public class NoiseWrapper implements INoise {
     public float getNoise(float x, float y, float z, float w) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, getSeed());
         }
     }
 
@@ -324,11 +330,11 @@ public class NoiseWrapper implements INoise {
     public float getNoise(float x, float y, float z, float w, float u) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, getSeed());
         }
     }
 
@@ -336,23 +342,12 @@ public class NoiseWrapper implements INoise {
     public float getNoise(float x, float y, float z, float w, float u, float v) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, getSeed());
         }
-    }
-
-    @Override
-    public void setSeed(long seed) {
-        this.seed = seed;
-        wrapped.setSeed(seed);
-    }
-
-    @Override
-    public long getSeed() {
-        return seed;
     }
 
     @Override
@@ -1379,4 +1374,13 @@ public class NoiseWrapper implements INoise {
         return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
     }
 
+    @Override
+    public long getSeed() {
+        return wrapped.getSeed();
+    }
+
+    @Override
+    public void setSeed(long seed) {
+        wrapped.setSeed(seed);
+    }
 }

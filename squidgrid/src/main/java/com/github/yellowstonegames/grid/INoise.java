@@ -216,6 +216,8 @@ public interface INoise extends Externalizable {
         throw new UnsupportedOperationException("copy() is not supported.");
     }
 
+    boolean equals(Object other);
+
     /**
      * Gets 2D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
      * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.

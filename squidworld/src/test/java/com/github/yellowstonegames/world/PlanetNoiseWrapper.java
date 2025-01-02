@@ -23,8 +23,6 @@ import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.NoiseWrapper;
 import com.github.yellowstonegames.grid.PerlueNoise;
 
-import static com.github.yellowstonegames.grid.Noise.*;
-
 /**
  * An extremely specialized class, this is a type of NoiseWrapper that is only meant to sample from spheres in 3D space,
  * and can change how it smooths out later octaves based on the derivative of each point on the sphere.
@@ -172,7 +170,6 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     @Override
     public String stringSerialize() {
         return "`" + Serializer.serialize(wrapped) + '~' +
-                seed + '~' +
                 frequency + '~' +
                 mode + '~' +
                 octaves + '~' +
@@ -183,7 +180,6 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public PlanetNoiseWrapper stringDeserialize(String data) {
         int pos = data.indexOf('`', data.indexOf('`', 2) + 1)+1;
         setWrapped(Serializer.deserialize(data.substring(1, pos)));
-        setSeed(Base.BASE10.readLong(data, pos+1, pos = data.indexOf('~', pos+2)));
         setFrequency(Base.BASE10.readFloat(data, pos+1, pos = data.indexOf('~', pos+2)));
         setMode(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
         setOctaves(Base.BASE10.readInt(data, pos+1, pos = data.indexOf('~', pos+2)));
@@ -200,9 +196,8 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
 
     @Override
     public String toString() {
-        return "NoiseWrapper{" +
+        return "PlanetNoiseWrapper{" +
                 "wrapped=" + wrapped +
-                ", seed=" + seed +
                 ", frequency=" + frequency +
                 ", mode=" + mode +
                 ", octaves=" + octaves +
@@ -217,7 +212,6 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
 
         PlanetNoiseWrapper that = (PlanetNoiseWrapper) o;
 
-        if (seed != that.seed) return false;
         if (Float.compare(that.frequency, frequency) != 0) return false;
         if (mode != that.mode) return false;
         if (octaves != that.octaves) return false;
@@ -228,8 +222,7 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     @Override
     public int hashCode() {
         int result = wrapped.hashCode();
-        result = 31 * result + (int) (seed ^ (seed >>> 32));
-        result = 31 * result + (frequency != +0.0f ? Float.floatToIntBits(frequency) : 0);
+        result = 31 * result + (frequency != +0.0f ? BitConversion.floatToIntBits(frequency) : 0);
         result = 31 * result + mode;
         result = 31 * result + octaves;
         result = 31 * result + (fractalSpiral ? 1 : 0);
@@ -242,11 +235,11 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float getNoise(float x, float y) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, super.getSeed());
+            case 1: return billow(x * frequency, y * frequency, super.getSeed());
+            case 2: return ridged(x * frequency, y * frequency, super.getSeed());
+            case 3: return warp(x * frequency, y * frequency, super.getSeed());
+            case 4: return exo(x * frequency, y * frequency, super.getSeed());
         }
     }
 
@@ -254,11 +247,11 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float getNoise(float x, float y, float z) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, super.getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, super.getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, super.getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, super.getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, super.getSeed());
         }
     }
 
@@ -266,11 +259,11 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float getNoise(float x, float y, float z, float w) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, super.getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, super.getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, super.getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, super.getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, super.getSeed());
         }
     }
 
@@ -278,11 +271,11 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float getNoise(float x, float y, float z, float w, float u) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, super.getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, super.getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, super.getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, super.getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, super.getSeed());
         }
     }
 
@@ -290,23 +283,12 @@ public class PlanetNoiseWrapper extends NoiseWrapper {
     public float getNoise(float x, float y, float z, float w, float u, float v) {
         switch (mode) {
             default:
-            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
-            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, super.getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, super.getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, super.getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, super.getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, super.getSeed());
         }
-    }
-
-    @Override
-    public void setSeed(long seed) {
-        this.seed = seed;
-        wrapped.setSeed(seed);
-    }
-
-    @Override
-    public long getSeed() {
-        return wrapped.getSeed();
     }
 
     @Override
