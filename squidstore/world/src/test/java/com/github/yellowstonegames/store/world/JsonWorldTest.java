@@ -130,4 +130,40 @@ public class JsonWorldTest {
         wmg2 = json.fromJson(RotatingGlobeMap.class, data);
         Assert.assertEquals(wmg, wmg2);
     }
+
+    @Test
+    public void testRoundSideWorldMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        RoundSideWorldMap wmg, wmg2;
+        wmg = new RoundSideWorldMap(12345, 200, 100);
+        wmg.generate();
+        JsonWorld.registerRoundSideWorldMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(RoundSideWorldMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
+
+    @Test
+    public void testStretchWorldMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        StretchWorldMap wmg, wmg2;
+        wmg = new StretchWorldMap(12345, 200, 100);
+        wmg.generate();
+        JsonWorld.registerStretchWorldMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(StretchWorldMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
+
+    @Test
+    public void testTilingWorldMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        TilingWorldMap wmg, wmg2;
+        wmg = new TilingWorldMap(12345, 100, 100);
+        wmg.generate();
+        JsonWorld.registerTilingWorldMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(TilingWorldMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
 }
