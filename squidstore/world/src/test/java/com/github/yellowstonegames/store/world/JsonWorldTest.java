@@ -34,4 +34,28 @@ public class JsonWorldTest {
         wmg2 = json.fromJson(EllipticalWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
     }
+
+    @Test
+    public void testGlobeMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        GlobeMap wmg, wmg2;
+        wmg = new GlobeMap(12345, 200, 100);
+        wmg.generate();
+        JsonWorld.registerGlobeMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(GlobeMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
+
+    @Test
+    public void testHexagonalWorldMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        HexagonalWorldMap wmg, wmg2;
+        wmg = new HexagonalWorldMap(12345, 200, 100);
+        wmg.generate();
+        JsonWorld.registerHexagonalWorldMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(HexagonalWorldMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+    }
 }

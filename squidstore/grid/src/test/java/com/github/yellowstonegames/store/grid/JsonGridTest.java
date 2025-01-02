@@ -554,6 +554,20 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testRadialNoiseWrapper() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerRadialNoiseWrapper(json);
+        RadialNoiseWrapper noise, noise2;
+        noise = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 100, 100);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(RadialNoiseWrapper.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Float.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
     public void testNoiseAdjustment() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerNoiseAdjustment(json);
