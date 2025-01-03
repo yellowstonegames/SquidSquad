@@ -233,6 +233,7 @@ public class JsonWorldTest {
         wmv = new DetailedWorldMapView(world);
         wmv.generate();
         JsonWorld.registerDetailedWorldMapView(json);
+        JsonWorld.registerGlobeMap(json);
         String data = json.toJson(wmv);
         wmv2 = json.fromJson(DetailedWorldMapView.class, data);
         Assert.assertEquals(wmv, wmv2);

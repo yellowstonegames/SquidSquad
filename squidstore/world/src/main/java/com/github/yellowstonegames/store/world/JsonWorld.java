@@ -87,13 +87,15 @@ public final class JsonWorld {
         json.setSerializer(GlobeMap.class, new Json.Serializer<GlobeMap>() {
             @Override
             public void write(Json json, GlobeMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(GlobeMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public GlobeMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return GlobeMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return GlobeMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
