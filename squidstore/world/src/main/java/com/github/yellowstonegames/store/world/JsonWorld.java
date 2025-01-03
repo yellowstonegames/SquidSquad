@@ -370,13 +370,15 @@ public final class JsonWorld {
         json.setSerializer(SimpleBiomeMapper.class, new Json.Serializer<SimpleBiomeMapper>() {
             @Override
             public void write(Json json, SimpleBiomeMapper object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(SimpleBiomeMapper.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public SimpleBiomeMapper read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return SimpleBiomeMapper.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return SimpleBiomeMapper.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -393,13 +395,15 @@ public final class JsonWorld {
         json.setSerializer(DetailedBiomeMapper.class, new Json.Serializer<DetailedBiomeMapper>() {
             @Override
             public void write(Json json, DetailedBiomeMapper object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(DetailedBiomeMapper.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public DetailedBiomeMapper read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return DetailedBiomeMapper.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return DetailedBiomeMapper.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -416,13 +420,15 @@ public final class JsonWorld {
         json.setSerializer(BlendedBiomeMapper.class, new Json.Serializer<BlendedBiomeMapper>() {
             @Override
             public void write(Json json, BlendedBiomeMapper object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(BlendedBiomeMapper.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public BlendedBiomeMapper read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return BlendedBiomeMapper.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return BlendedBiomeMapper.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -439,13 +445,15 @@ public final class JsonWorld {
         json.setSerializer(UnrealisticBiomeMapper.class, new Json.Serializer<UnrealisticBiomeMapper>() {
             @Override
             public void write(Json json, UnrealisticBiomeMapper object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(UnrealisticBiomeMapper.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public UnrealisticBiomeMapper read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return UnrealisticBiomeMapper.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return UnrealisticBiomeMapper.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -459,6 +467,7 @@ public final class JsonWorld {
     public static void registerDetailedWorldMapView(@NonNull Json json) {
         json.addClassTag("DeWV", DetailedWorldMapView.class);
         registerDetailedBiomeMapper(json);
+        registerWorldMapGenerators(json);
         JsonCore.registerInt2D(json);
         json.setSerializer(DetailedWorldMapView.class, new Json.Serializer<DetailedWorldMapView>() {
             @Override
