@@ -166,4 +166,18 @@ public class JsonWorldTest {
         wmg2 = json.fromJson(TilingWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
     }
+
+    @Test
+    public void testSimpleBiomeMapper() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        SimpleBiomeMapper bm, bm2;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        bm = new SimpleBiomeMapper();
+        bm.makeBiomes(world);
+        JsonWorld.registerSimpleBiomeMapper(json);
+        String data = json.toJson(bm);
+        bm2 = json.fromJson(SimpleBiomeMapper.class, data);
+        Assert.assertEquals(bm, bm2);
+    }
 }

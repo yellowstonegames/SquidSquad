@@ -19,6 +19,7 @@ package com.github.yellowstonegames.store.world;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.yellowstonegames.world.*;
+import com.github.yellowstonegames.world.BiomeMapper.*;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class JsonWorld {
@@ -32,13 +33,19 @@ public final class JsonWorld {
      */
     public static void registerAll(@NonNull Json json) {
         registerEllipticalWorldMap(json);
+        registerGlobeMap(json);
         registerHexagonalWorldMap(json);
         registerHyperellipticalWorldMap(json);
         registerLatLonWorldMap(json);
+        registerLocalMap(json);
+        registerMimicLocalMap(json);
         registerMimicWorldMap(json);
+        registerRotatingGlobeMap(json);
         registerRoundSideWorldMap(json);
         registerStretchWorldMap(json);
         registerTilingWorldMap(json);
+
+        registerSimpleBiomeMapper(json);
     }
     
     /**
@@ -313,6 +320,29 @@ public final class JsonWorld {
             public TilingWorldMap read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return TilingWorldMap.recreateFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers SimpleBiomeMapper with the given Json object, so SimpleBiomeMapper can be written to and read from JSON.
+     * This is a simple wrapper around SimpleBiomeMapper's built-in {@link SimpleBiomeMapper#stringSerialize()} and
+     * {@link SimpleBiomeMapper#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSimpleBiomeMapper(@NonNull Json json) {
+        json.addClassTag("SiBM", SimpleBiomeMapper.class);
+        json.setSerializer(SimpleBiomeMapper.class, new Json.Serializer<SimpleBiomeMapper>() {
+            @Override
+            public void write(Json json, SimpleBiomeMapper object, Class knownType) {
+                json.writeValue(object.stringSerialize());
+            }
+
+            @Override
+            public SimpleBiomeMapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return SimpleBiomeMapper.recreateFromString(jsonData.asString());
             }
         });
     }

@@ -19,8 +19,9 @@ package com.github.yellowstonegames.world;
 import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.place.Biome;
+
+import java.util.Arrays;
 
 import static com.github.tommyettinger.digital.MathTools.zigzag;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
@@ -348,6 +349,27 @@ public interface BiomeMapper {
                             : heightCode == 4 ? hc + 36 : hc + mc * 6;
                 }
             }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof SimpleBiomeMapper)) return false;
+
+            SimpleBiomeMapper that = (SimpleBiomeMapper) o;
+
+            return Arrays.deepEquals(heatCodeData, that.heatCodeData)
+                    && Arrays.deepEquals(moistureCodeData, that.moistureCodeData)
+                    && Arrays.deepEquals(biomeCodeData, that.biomeCodeData);
+        }
+
+        @Override
+        public String toString() {
+            return "SimpleBiomeMapper { ...complicated... }";
+        }
+
+        @Override
+        public int hashCode() {
+            return Hasher.bifrons.hashBulk(stringSerialize());
         }
     }
 
