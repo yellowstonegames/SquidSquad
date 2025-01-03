@@ -713,6 +713,28 @@ public interface BiomeMapper {
                 }
             }
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof DetailedBiomeMapper)) return false;
+
+            DetailedBiomeMapper that = (DetailedBiomeMapper) o;
+
+            return Arrays.deepEquals(heatCodeData, that.heatCodeData)
+                    && Arrays.deepEquals(moistureCodeData, that.moistureCodeData)
+                    && Arrays.deepEquals(biomeCodeData, that.biomeCodeData);
+        }
+
+        @Override
+        public String toString() {
+            return "DetailedBiomeMapper { ...complicated... }";
+        }
+
+        @Override
+        public int hashCode() {
+            return Hasher.bifrons.hashBulk(stringSerialize());
+        }
+
     }
 
 

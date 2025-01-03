@@ -46,6 +46,7 @@ public final class JsonWorld {
         registerTilingWorldMap(json);
 
         registerSimpleBiomeMapper(json);
+        registerDetailedBiomeMapper(json);
     }
     
     /**
@@ -343,6 +344,29 @@ public final class JsonWorld {
             public SimpleBiomeMapper read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return SimpleBiomeMapper.recreateFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers DetailedBiomeMapper with the given Json object, so DetailedBiomeMapper can be written to and read from JSON.
+     * This is a Detailed wrapper around DetailedBiomeMapper's built-in {@link DetailedBiomeMapper#stringSerialize()} and
+     * {@link DetailedBiomeMapper#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDetailedBiomeMapper(@NonNull Json json) {
+        json.addClassTag("DeBM", DetailedBiomeMapper.class);
+        json.setSerializer(DetailedBiomeMapper.class, new Json.Serializer<DetailedBiomeMapper>() {
+            @Override
+            public void write(Json json, DetailedBiomeMapper object, Class knownType) {
+                json.writeValue(object.stringSerialize());
+            }
+
+            @Override
+            public DetailedBiomeMapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return DetailedBiomeMapper.recreateFromString(jsonData.asString());
             }
         });
     }

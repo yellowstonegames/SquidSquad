@@ -19,6 +19,7 @@ package com.github.yellowstonegames.store.world;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.yellowstonegames.world.*;
+import com.github.yellowstonegames.world.BiomeMapper.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -178,6 +179,20 @@ public class JsonWorldTest {
         JsonWorld.registerSimpleBiomeMapper(json);
         String data = json.toJson(bm);
         bm2 = json.fromJson(SimpleBiomeMapper.class, data);
+        Assert.assertEquals(bm, bm2);
+    }
+
+    @Test
+    public void testDetailedBiomeMapper() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        DetailedBiomeMapper bm, bm2;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        bm = new DetailedBiomeMapper();
+        bm.makeBiomes(world);
+        JsonWorld.registerDetailedBiomeMapper(json);
+        String data = json.toJson(bm);
+        bm2 = json.fromJson(DetailedBiomeMapper.class, data);
         Assert.assertEquals(bm, bm2);
     }
 }
