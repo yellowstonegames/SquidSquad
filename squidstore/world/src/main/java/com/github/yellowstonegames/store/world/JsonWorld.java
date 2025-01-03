@@ -33,6 +33,17 @@ public final class JsonWorld {
      * @param json a libGDX Json object that will have serializers registered for all SquidWorld types.
      */
     public static void registerAll(@NonNull Json json) {
+        registerWorldMapGenerators(json);
+
+        registerSimpleBiomeMapper(json);
+        registerDetailedBiomeMapper(json);
+        registerBlendedBiomeMapper(json);
+        registerUnrealisticBiomeMapper(json);
+
+        registerDetailedWorldMapView(json);
+    }
+
+    public static void registerWorldMapGenerators(@NonNull Json json) {
         registerEllipticalWorldMap(json);
         registerGlobeMap(json);
         registerHexagonalWorldMap(json);
@@ -45,13 +56,8 @@ public final class JsonWorld {
         registerRoundSideWorldMap(json);
         registerStretchWorldMap(json);
         registerTilingWorldMap(json);
-
-        registerSimpleBiomeMapper(json);
-        registerDetailedBiomeMapper(json);
-        registerBlendedBiomeMapper(json);
-        registerUnrealisticBiomeMapper(json);
     }
-    
+
     /**
      * Registers EllipticalWorldMap with the given Json object, so EllipticalWorldMap can be written to and read from JSON.
      * This is a simple wrapper around EllipticalWorldMap's built-in {@link EllipticalWorldMap#stringSerialize()} and
@@ -64,13 +70,15 @@ public final class JsonWorld {
         json.setSerializer(EllipticalWorldMap.class, new Json.Serializer<EllipticalWorldMap>() {
             @Override
             public void write(Json json, EllipticalWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(EllipticalWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public EllipticalWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return EllipticalWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return EllipticalWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -112,13 +120,15 @@ public final class JsonWorld {
         json.setSerializer(HexagonalWorldMap.class, new Json.Serializer<HexagonalWorldMap>() {
             @Override
             public void write(Json json, HexagonalWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(HexagonalWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public HexagonalWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return HexagonalWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return HexagonalWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -135,13 +145,15 @@ public final class JsonWorld {
         json.setSerializer(HyperellipticalWorldMap.class, new Json.Serializer<HyperellipticalWorldMap>() {
             @Override
             public void write(Json json, HyperellipticalWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(HyperellipticalWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public HyperellipticalWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return HyperellipticalWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return HyperellipticalWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -158,13 +170,15 @@ public final class JsonWorld {
         json.setSerializer(LatLonWorldMap.class, new Json.Serializer<LatLonWorldMap>() {
             @Override
             public void write(Json json, LatLonWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(LatLonWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public LatLonWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return LatLonWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return LatLonWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -181,13 +195,15 @@ public final class JsonWorld {
         json.setSerializer(LocalMap.class, new Json.Serializer<LocalMap>() {
             @Override
             public void write(Json json, LocalMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(LocalMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public LocalMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return LocalMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return LocalMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -204,13 +220,15 @@ public final class JsonWorld {
         json.setSerializer(MimicLocalMap.class, new Json.Serializer<MimicLocalMap>() {
             @Override
             public void write(Json json, MimicLocalMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(MimicLocalMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public MimicLocalMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return MimicLocalMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return MimicLocalMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -227,13 +245,15 @@ public final class JsonWorld {
         json.setSerializer(MimicWorldMap.class, new Json.Serializer<MimicWorldMap>() {
             @Override
             public void write(Json json, MimicWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(MimicWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public MimicWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return MimicWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return MimicWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -250,13 +270,15 @@ public final class JsonWorld {
         json.setSerializer(RotatingGlobeMap.class, new Json.Serializer<RotatingGlobeMap>() {
             @Override
             public void write(Json json, RotatingGlobeMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(RotatingGlobeMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public RotatingGlobeMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return RotatingGlobeMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return RotatingGlobeMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -273,13 +295,15 @@ public final class JsonWorld {
         json.setSerializer(RoundSideWorldMap.class, new Json.Serializer<RoundSideWorldMap>() {
             @Override
             public void write(Json json, RoundSideWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(RoundSideWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public RoundSideWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return RoundSideWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return RoundSideWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -296,13 +320,15 @@ public final class JsonWorld {
         json.setSerializer(StretchWorldMap.class, new Json.Serializer<StretchWorldMap>() {
             @Override
             public void write(Json json, StretchWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(StretchWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public StretchWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return StretchWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return StretchWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -319,13 +345,15 @@ public final class JsonWorld {
         json.setSerializer(TilingWorldMap.class, new Json.Serializer<TilingWorldMap>() {
             @Override
             public void write(Json json, TilingWorldMap object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(TilingWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public TilingWorldMap read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return TilingWorldMap.recreateFromString(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return TilingWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
