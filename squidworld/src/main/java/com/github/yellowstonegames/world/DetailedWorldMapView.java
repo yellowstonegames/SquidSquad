@@ -21,6 +21,8 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.world.BiomeMapper.DetailedBiomeMapper;
 
+import java.util.Arrays;
+
 import static com.github.tommyettinger.digital.MathTools.zigzag;
 import static com.github.yellowstonegames.core.DescriptiveColor.*;
 
@@ -73,9 +75,17 @@ public class DetailedWorldMapView implements WorldMapView {
         return colorMap;
     }
 
+    public void setColorMap(int[][] colorMap) {
+        this.colorMap = colorMap;
+    }
+
     @Override
     public int[][] getColorMapOklab() {
         return colorMapOklab;
+    }
+
+    public void setColorMapOklab(int[][] colorMapOklab) {
+        this.colorMapOklab = colorMapOklab;
     }
 
     @Override
@@ -288,5 +298,38 @@ public class DetailedWorldMapView implements WorldMapView {
         }
         
         return colorMap;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof DetailedWorldMapView)) return false;
+
+        DetailedWorldMapView that = (DetailedWorldMapView) o;
+        if (width == that.width) if (height == that.height)
+            if (Arrays.deepEquals(colorMap, that.colorMap))
+            if (Arrays.deepEquals(colorMapOklab, that.colorMapOklab))
+                if (world.equals(that.world))
+                if (biomeMapper.equals(that.biomeMapper))
+                    if (Arrays.equals(BIOME_COLOR_TABLE, that.BIOME_COLOR_TABLE))
+                    if (Arrays.equals(BIOME_DARK_COLOR_TABLE, that.BIOME_DARK_COLOR_TABLE)) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = width;
+        result = 31 * result + height;
+        result = 31 * result + Hasher.intArray2DHashBulk.hash(1234, colorMap);
+        result = 31 * result + Hasher.intArray2DHashBulk.hash(1234, colorMapOklab);
+        result = 31 * result + world.hashCode();
+        result = 31 * result + biomeMapper.hashCode();
+        result = 31 * result + Arrays.hashCode(BIOME_COLOR_TABLE);
+        result = 31 * result + Arrays.hashCode(BIOME_DARK_COLOR_TABLE);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "DetailedWorldMapView { world: " + world + "}";
     }
 }

@@ -223,4 +223,18 @@ public class JsonWorldTest {
         bm2 = json.fromJson(UnrealisticBiomeMapper.class, data);
         Assert.assertEquals(bm, bm2);
     }
+
+    @Test
+    public void testDetailedWorldMapView() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        DetailedWorldMapView wmv, wmv2;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        wmv = new DetailedWorldMapView(world);
+        wmv.generate();
+        JsonWorld.registerDetailedWorldMapView(json);
+        String data = json.toJson(wmv);
+        wmv2 = json.fromJson(DetailedWorldMapView.class, data);
+        Assert.assertEquals(wmv, wmv2);
+    }
 }

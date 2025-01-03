@@ -18,6 +18,7 @@ package com.github.yellowstonegames.store.world;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -47,6 +48,8 @@ public final class JsonWorld {
 
         registerSimpleBiomeMapper(json);
         registerDetailedBiomeMapper(json);
+        registerBlendedBiomeMapper(json);
+        registerUnrealisticBiomeMapper(json);
     }
     
     /**
@@ -413,6 +416,45 @@ public final class JsonWorld {
             public UnrealisticBiomeMapper read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return UnrealisticBiomeMapper.recreateFromString(jsonData.asString());
+            }
+        });
+    }
+
+    /**
+     * Registers DetailedWorldMapView with the given Json object, so DetailedWorldMapView can be written to and read from JSON.
+     * This is a simple wrapper around the serialization for the WorldMapGenerator and BiomeMapper used here.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDetailedWorldMapView(@NonNull Json json) {
+        json.addClassTag("DeWV", DetailedWorldMapView.class);
+        registerDetailedBiomeMapper(json);
+        JsonCore.registerInt2D(json);
+        json.setSerializer(DetailedWorldMapView.class, new Json.Serializer<DetailedWorldMapView>() {
+            @Override
+            public void write(Json json, DetailedWorldMapView object, Class knownType) {
+                json.writeObjectStart(DetailedWorldMapView.class, knownType);
+                json.writeValue("w", object.getWorld(), null);
+                json.writeValue("m", object.getBiomeMapper(), DetailedBiomeMapper.class);
+                json.writeValue("r", object.getColorMap(), int[][].class);
+                json.writeValue("o", object.getColorMapOklab(), int[][].class);
+                json.writeValue("C", object.BIOME_COLOR_TABLE, int[].class);
+                json.writeValue("D", object.BIOME_DARK_COLOR_TABLE, int[].class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public DetailedWorldMapView read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("w") || !jsonData.has("m")) return null;
+                DetailedWorldMapView wmv = new DetailedWorldMapView();
+                wmv.setWorld(json.readValue("w", null, jsonData));
+                wmv.setBiomeMapper(json.readValue("m", DetailedBiomeMapper.class, jsonData));
+                wmv.setColorMap(json.readValue("r", int[][].class, jsonData));
+                wmv.setColorMapOklab(json.readValue("o", int[][].class, jsonData));
+                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.BIOME_COLOR_TABLE, 0, 66);
+                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.BIOME_DARK_COLOR_TABLE, 0, 66);
+
+                return wmv;
             }
         });
     }

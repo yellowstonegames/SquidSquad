@@ -924,7 +924,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerRadialNoiseWrapper(@NonNull Json json) {
-        json.addClassTag("NAdj", RadialNoiseWrapper.class);
+        json.addClassTag("RaNW", RadialNoiseWrapper.class);
         json.setSerializer(RadialNoiseWrapper.class, new Json.Serializer<RadialNoiseWrapper>() {
             @Override
             public void write(Json json, RadialNoiseWrapper object, Class knownType) {
