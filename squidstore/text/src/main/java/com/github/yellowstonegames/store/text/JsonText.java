@@ -24,6 +24,7 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.Language;
+import com.github.yellowstonegames.text.Language.SentenceForm;
 import com.github.yellowstonegames.text.Mnemonic;
 import com.github.yellowstonegames.text.Translator;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -61,13 +62,15 @@ public final class JsonText {
         json.setSerializer(Language.class, new Json.Serializer<Language>() {
             @Override
             public void write(Json json, Language object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+                json.writeObjectStart(Language.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
             public Language read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return Language.stringDeserialize(jsonData.asString());
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return Language.stringDeserialize(jsonData.getString("v"));
             }
         });
     }
@@ -78,19 +81,21 @@ public final class JsonText {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerLanguageSentenceForm(@NonNull Json json) {
-        json.addClassTag("LaSF", Language.SentenceForm.class);
+        json.addClassTag("LaSF", SentenceForm.class);
         JsonSupport.registerEnhancedRandom(json);
         registerLanguage(json);
-        json.setSerializer(Language.SentenceForm.class, new Json.Serializer<Language.SentenceForm>() {
+        json.setSerializer(SentenceForm.class, new Json.Serializer<SentenceForm>() {
             @Override
-            public void write(Json json, Language.SentenceForm object, Class knownType) {
-                json.writeValue(object.stringSerialize());
+            public void write(Json json, SentenceForm object, Class knownType) {
+                json.writeObjectStart(SentenceForm.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
             }
 
             @Override
-            public Language.SentenceForm read(Json json, JsonValue jsonData, Class type) {
-                if (jsonData == null || jsonData.isNull()) return null;
-                return Language.SentenceForm.stringDeserialize(jsonData.asString());
+            public SentenceForm read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return SentenceForm.stringDeserialize(jsonData.getString("v"));
             }
         });
     }
@@ -98,39 +103,36 @@ public final class JsonText {
     /**
      * Registers Translator with the given Json object, so Translator can be written to and read from JSON.
      * Registers {@link ObjectObjectMap} with {@link JsonSupport#registerObjectObjectMap(Json)}, and registers
-     * {@link Language} with {@link #registerLanguage(Json)}.
+     * {@link Language} with {@link #registerLanguage(Json)}. Adds a class tag for both this class and String,
+     * using "str" as the tag for String.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerTranslator(@NonNull Json json) {
         json.addClassTag("Tran", Translator.class);
+        json.addClassTag("str", String.class);
         JsonSupport.registerObjectObjectMap(json);
         registerLanguage(json);
         json.setSerializer(Translator.class, new Json.Serializer<Translator>() {
             @Override
             public void write(Json json, Translator object, Class knownType) {
-                json.writeArrayStart();
-                json.writeValue(object.language, Language.class);
-                json.writeValue((Object) DigitTools.hex(object.shift), String.class);
-                json.writeValue(object.cacheLevel);
-                json.writeValue(object.table, ObjectObjectMap.class);
-                json.writeValue(object.reverse, ObjectObjectMap.class);
-                json.writeArrayEnd();
+                json.writeObjectStart(Translator.class, knownType);
+                json.writeValue("lang", object.language, Language.class);
+                json.writeValue("shift", DigitTools.hex(object.shift), String.class);
+                json.writeValue("cache", object.cacheLevel);
+                json.writeValue("table", object.table, ObjectObjectMap.class);
+                json.writeValue("reverse", object.reverse, ObjectObjectMap.class);
+                json.writeObjectEnd();
             }
 
             @Override
             public Translator read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                JsonValue current = jsonData.child;
-                Language language = json.readValue(Language.class, current);
-                current = current.next;
-                long shift = DigitTools.longFromHex(json.readValue(String.class, current));
-                current = current.next;
-                int cacheLevel = current.asInt();
-                current = current.next;
-                ObjectObjectMap<String, String> table = json.readValue(ObjectObjectMap.class, current);
-                current = current.next;
-                ObjectObjectMap<String, String> reverse = json.readValue(ObjectObjectMap.class, current);
+                Language language = json.readValue("lang", Language.class, jsonData);
+                long shift = DigitTools.longFromHex(jsonData.getString("shift", "0"));
+                int cacheLevel = jsonData.getInt("cache");
+                ObjectObjectMap<String, String> table = json.readValue("table", ObjectObjectMap.class, jsonData);
+                ObjectObjectMap<String, String> reverse = json.readValue("reverse", ObjectObjectMap.class, jsonData);
                 return new Translator(language, shift, cacheLevel, table, reverse);
             }
         });
@@ -138,18 +140,19 @@ public final class JsonText {
 
     /**
      * Registers Mnemonic with the given Json object, so Mnemonic can be written to and read from JSON.
-     * Registers {@link NumberedSet} with {@link JsonSupport#registerNumberedSet(Json)}.
+     * Registers {@link NumberedSet} with {@link JsonSupport#registerNumberedSet(Json)}. Adds a class
+     * tag for both this class and String, using "str" as the tag for String.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerMnemonic(@NonNull Json json) {
         json.addClassTag("Mnem", Mnemonic.class);
+        json.addClassTag("str", String.class);
         JsonSupport.registerNumberedSet(json);
         json.setSerializer(Mnemonic.class, new Json.Serializer<Mnemonic>() {
             @Override
             public void write(Json json, Mnemonic object, Class knownType) {
-                json.writeObjectStart();
-                json.writeType(Mnemonic.class);
+                json.writeObjectStart(Mnemonic.class, knownType);
                 json.writeValue("i", object.items, NumberedSet.class);
                 json.writeValue("a", object.allAdjectives, NumberedSet.class);
                 json.writeValue("n", object.allNouns, NumberedSet.class);
