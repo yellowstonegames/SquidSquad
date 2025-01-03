@@ -370,4 +370,27 @@ public final class JsonWorld {
             }
         });
     }
+
+    /**
+     * Registers BlendedBiomeMapper with the given Json object, so BlendedBiomeMapper can be written to and read from JSON.
+     * This is a Blended wrapper around BlendedBiomeMapper's built-in {@link BlendedBiomeMapper#stringSerialize()} and
+     * {@link BlendedBiomeMapper#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerBlendedBiomeMapper(@NonNull Json json) {
+        json.addClassTag("DeBM", BlendedBiomeMapper.class);
+        json.setSerializer(BlendedBiomeMapper.class, new Json.Serializer<BlendedBiomeMapper>() {
+            @Override
+            public void write(Json json, BlendedBiomeMapper object, Class knownType) {
+                json.writeValue(object.stringSerialize());
+            }
+
+            @Override
+            public BlendedBiomeMapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return BlendedBiomeMapper.recreateFromString(jsonData.asString());
+            }
+        });
+    }
 }
