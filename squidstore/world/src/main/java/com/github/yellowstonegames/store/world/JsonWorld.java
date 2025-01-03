@@ -393,4 +393,27 @@ public final class JsonWorld {
             }
         });
     }
+
+    /**
+     * Registers UnrealisticBiomeMapper with the given Json object, so UnrealisticBiomeMapper can be written to and read from JSON.
+     * This is a Unrealistic wrapper around UnrealisticBiomeMapper's built-in {@link UnrealisticBiomeMapper#stringSerialize()} and
+     * {@link UnrealisticBiomeMapper#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerUnrealisticBiomeMapper(@NonNull Json json) {
+        json.addClassTag("DeBM", UnrealisticBiomeMapper.class);
+        json.setSerializer(UnrealisticBiomeMapper.class, new Json.Serializer<UnrealisticBiomeMapper>() {
+            @Override
+            public void write(Json json, UnrealisticBiomeMapper object, Class knownType) {
+                json.writeValue(object.stringSerialize());
+            }
+
+            @Override
+            public UnrealisticBiomeMapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return UnrealisticBiomeMapper.recreateFromString(jsonData.asString());
+            }
+        });
+    }
 }

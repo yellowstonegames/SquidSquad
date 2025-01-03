@@ -209,4 +209,18 @@ public class JsonWorldTest {
         bm2 = json.fromJson(BlendedBiomeMapper.class, data);
         Assert.assertEquals(bm, bm2);
     }
+
+    @Test
+    public void testUnrealisticBiomeMapper() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        UnrealisticBiomeMapper bm, bm2;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        bm = new UnrealisticBiomeMapper();
+        bm.makeBiomes(world);
+        JsonWorld.registerUnrealisticBiomeMapper(json);
+        String data = json.toJson(bm);
+        bm2 = json.fromJson(UnrealisticBiomeMapper.class, data);
+        Assert.assertEquals(bm, bm2);
+    }
 }

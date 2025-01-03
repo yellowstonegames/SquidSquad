@@ -116,6 +116,8 @@ public interface BiomeMapper {
      */
     void makeBiomes(WorldMapGenerator world);
 
+    boolean equals(Object o);
+
     /**
      * A way to get biome information for the cells on a map when you only need a single value to describe a biome, such
      * as "Grassland" or "TropicalRainforest".
@@ -1607,6 +1609,29 @@ public interface BiomeMapper {
                     colorDataRgba[x][y] = DescriptiveColor.toRGBA8888(c);
                 }
             }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof UnrealisticBiomeMapper)) return false;
+
+            UnrealisticBiomeMapper that = (UnrealisticBiomeMapper) o;
+
+            return Arrays.deepEquals(heatCodeData, that.heatCodeData)
+                    && Arrays.deepEquals(moistureCodeData, that.moistureCodeData)
+                    && Arrays.deepEquals(biomeCodeData, that.biomeCodeData)
+                    && Arrays.deepEquals(colorDataRgba, that.colorDataRgba)
+                    && Arrays.deepEquals(colorDataOklab, that.colorDataOklab);
+        }
+
+        @Override
+        public String toString() {
+            return "UnrealisticBiomeMapper { ...complicated... }";
+        }
+
+        @Override
+        public int hashCode() {
+            return Hasher.bifrons.hashBulk(stringSerialize());
         }
     }
 }
