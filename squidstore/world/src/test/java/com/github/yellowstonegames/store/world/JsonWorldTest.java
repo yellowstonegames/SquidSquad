@@ -18,6 +18,7 @@ package com.github.yellowstonegames.store.world;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.github.tommyettinger.digital.TextTools;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
 import org.junit.Assert;
@@ -34,6 +35,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(EllipticalWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -46,6 +48,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(GlobeMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -58,6 +61,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(HexagonalWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -70,6 +74,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(HyperellipticalWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -82,6 +87,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(LatLonWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -94,6 +100,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(LocalMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -106,6 +113,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(MimicLocalMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -118,6 +126,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(MimicWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -130,6 +139,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(RotatingGlobeMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -142,6 +152,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(RoundSideWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -154,6 +165,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(StretchWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
@@ -166,6 +178,7 @@ public class JsonWorldTest {
         String data = json.toJson(wmg);
         wmg2 = json.fromJson(TilingWorldMap.class, data);
         Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
     }
 
     @Test
