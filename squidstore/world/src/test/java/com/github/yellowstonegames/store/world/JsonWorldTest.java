@@ -250,4 +250,18 @@ public class JsonWorldTest {
         wmv2 = json.fromJson(DetailedWorldMapView.class, data);
         Assert.assertEquals(wmv, wmv2);
     }
+
+    @Test
+    public void testBlendedWorldMapView() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        BlendedWorldMapView wmv, wmv2;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        wmv = new BlendedWorldMapView(world);
+        wmv.generate();
+        JsonWorld.registerBlendedWorldMapView(json);
+        String data = json.toJson(wmv);
+        wmv2 = json.fromJson(BlendedWorldMapView.class, data);
+        Assert.assertEquals(wmv, wmv2);
+    }
 }

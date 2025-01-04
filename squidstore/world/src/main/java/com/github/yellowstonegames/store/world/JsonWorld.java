@@ -497,4 +497,34 @@ public final class JsonWorld {
             }
         });
     }
+
+    /**
+     * Registers BlendedWorldMapView with the given Json object, so BlendedWorldMapView can be written to and read from JSON.
+     * This is a simple wrapper around the serialization for the WorldMapGenerator and BiomeMapper used here.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerBlendedWorldMapView(@NonNull Json json) {
+        json.addClassTag("DeWV", BlendedWorldMapView.class);
+        registerBlendedBiomeMapper(json);
+        registerWorldMapGenerators(json);
+        json.setSerializer(BlendedWorldMapView.class, new Json.Serializer<BlendedWorldMapView>() {
+            @Override
+            public void write(Json json, BlendedWorldMapView object, Class knownType) {
+                json.writeObjectStart(BlendedWorldMapView.class, knownType);
+                json.writeValue("w", object.getWorld(), null);
+                json.writeValue("m", object.getBiomeMapper(), BlendedBiomeMapper.class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public BlendedWorldMapView read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("w") || !jsonData.has("m")) return null;
+                BlendedWorldMapView wmv = new BlendedWorldMapView();
+                wmv.setWorld(json.readValue("w", null, jsonData));
+                wmv.setBiomeMapper(json.readValue("m", BlendedBiomeMapper.class, jsonData));
+                return wmv;
+            }
+        });
+    }
 }

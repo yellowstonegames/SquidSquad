@@ -20,6 +20,8 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.world.BiomeMapper.BlendedBiomeMapper;
 
+import java.util.Arrays;
+
 /**
  * Takes a {@link WorldMapGenerator}, such as a {@link LocalMap}, {@link RotatingGlobeMap}, or {@link StretchWorldMap},
  * and wraps it so that you can call {@link #generate()} on this to coordinate calls to
@@ -191,5 +193,25 @@ public class BlendedWorldMapView implements WorldMapView {
     public int[][] show()
     {
         return biomeMapper.colorDataRgba;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof BlendedWorldMapView)) return false;
+
+        BlendedWorldMapView that = (BlendedWorldMapView) o;
+        return world.equals(that.world) && biomeMapper.equals(that.biomeMapper);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = world.hashCode();
+        result = 31 * result + biomeMapper.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "BlendedWorldMapView { world: " + world + "}";
     }
 }
