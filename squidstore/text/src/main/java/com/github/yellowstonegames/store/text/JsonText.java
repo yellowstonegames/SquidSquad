@@ -120,8 +120,10 @@ public final class JsonText {
                 json.writeValue("lang", object.language, Language.class);
                 json.writeValue("shift", DigitTools.hex(object.shift), String.class);
                 json.writeValue("cache", object.cacheLevel);
-                json.writeValue("table", object.table, ObjectObjectMap.class);
-                json.writeValue("reverse", object.reverse, ObjectObjectMap.class);
+                json.writeValue("tableK", object.table.keySet().toArray(new String[0]), String[].class, String.class);
+                json.writeValue("tableV", object.table.values().toArray(new String[0]), String[].class, String.class);
+                json.writeValue("reverseK", object.reverse.keySet().toArray(new String[0]), String[].class, String.class);
+                json.writeValue("reverseV", object.reverse.values().toArray(new String[0]), String[].class, String.class);
                 json.writeObjectEnd();
             }
 
@@ -131,8 +133,14 @@ public final class JsonText {
                 Language language = json.readValue("lang", Language.class, jsonData);
                 long shift = DigitTools.longFromHex(jsonData.getString("shift", "0"));
                 int cacheLevel = jsonData.getInt("cache");
-                ObjectObjectMap<String, String> table = json.readValue("table", ObjectObjectMap.class, jsonData);
-                ObjectObjectMap<String, String> reverse = json.readValue("reverse", ObjectObjectMap.class, jsonData);
+                ObjectObjectMap<String, String> table = new ObjectObjectMap<>(
+                        json.readValue("tableK", String[].class, String.class, jsonData),
+                        json.readValue("tableV", String[].class, String.class, jsonData)
+                );
+                ObjectObjectMap<String, String> reverse = new ObjectObjectMap<>(
+                        json.readValue("reverseK", String[].class, String.class, jsonData),
+                        json.readValue("reverseV", String[].class, String.class, jsonData)
+                );
                 return new Translator(language, shift, cacheLevel, table, reverse);
             }
         });
@@ -149,9 +157,9 @@ public final class JsonText {
             @Override
             public void write(Json json, Mnemonic object, Class knownType) {
                 json.writeObjectStart(Mnemonic.class, knownType);
-                json.writeValue("i", object.items.toArray(), String[].class, String.class);
-                json.writeValue("a", object.allAdjectives.toArray(), String[].class, String.class);
-                json.writeValue("n", object.allNouns.toArray(), String[].class, String.class);
+                json.writeValue("i", object.items.toArray(new String[0]), String[].class, String.class);
+                json.writeValue("a", object.allAdjectives.toArray(new String[0]), String[].class, String.class);
+                json.writeValue("n", object.allNouns.toArray(new String[0]), String[].class, String.class);
                 json.writeObjectEnd();
             }
 
