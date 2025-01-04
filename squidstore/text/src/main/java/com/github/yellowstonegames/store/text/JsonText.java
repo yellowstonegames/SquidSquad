@@ -140,31 +140,27 @@ public final class JsonText {
 
     /**
      * Registers Mnemonic with the given Json object, so Mnemonic can be written to and read from JSON.
-     * Registers {@link NumberedSet} with {@link JsonSupport#registerNumberedSet(Json)}. Adds a class
-     * tag for both this class and String, using "str" as the tag for String.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerMnemonic(@NonNull Json json) {
         json.addClassTag("Mnem", Mnemonic.class);
-        json.addClassTag("str", String.class);
-        JsonSupport.registerNumberedSet(json);
         json.setSerializer(Mnemonic.class, new Json.Serializer<Mnemonic>() {
             @Override
             public void write(Json json, Mnemonic object, Class knownType) {
                 json.writeObjectStart(Mnemonic.class, knownType);
-                json.writeValue("i", object.items, NumberedSet.class);
-                json.writeValue("a", object.allAdjectives, NumberedSet.class);
-                json.writeValue("n", object.allNouns, NumberedSet.class);
+                json.writeValue("i", object.items.toArray(), String[].class, String.class);
+                json.writeValue("a", object.allAdjectives.toArray(), String[].class, String.class);
+                json.writeValue("n", object.allNouns.toArray(), String[].class, String.class);
                 json.writeObjectEnd();
             }
 
             @Override
             public Mnemonic read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return new Mnemonic(json.readValue("i", NumberedSet.class, jsonData),
-                        json.readValue("a", NumberedSet.class, jsonData),
-                        json.readValue("n", NumberedSet.class, jsonData));
+                return new Mnemonic(new NumberedSet<>(json.readValue("i", String[].class, String.class, jsonData)),
+                        new NumberedSet<>(json.readValue("a", String[].class, String.class, jsonData)),
+                        new NumberedSet<>(json.readValue("n", String[].class, String.class, jsonData)));
             }
         });
     }
