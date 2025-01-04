@@ -305,21 +305,12 @@ public class DetailedWorldMapView implements WorldMapView {
         if (!(o instanceof DetailedWorldMapView)) return false;
 
         DetailedWorldMapView that = (DetailedWorldMapView) o;
-        if (width == that.width) if (height == that.height)
-            if (Arrays.deepEquals(colorMap, that.colorMap))
-            if (Arrays.deepEquals(colorMapOklab, that.colorMapOklab))
-                if (world.equals(that.world))
-                if (biomeMapper.equals(that.biomeMapper))
-                    if (Arrays.equals(BIOME_COLOR_TABLE, that.BIOME_COLOR_TABLE))
-                    if (Arrays.equals(BIOME_DARK_COLOR_TABLE, that.BIOME_DARK_COLOR_TABLE)) return true;
-        return false;
+        return Arrays.deepEquals(colorMap, that.colorMap) && Arrays.deepEquals(colorMapOklab, that.colorMapOklab) && world.equals(that.world) && biomeMapper.equals(that.biomeMapper) && Arrays.equals(BIOME_COLOR_TABLE, that.BIOME_COLOR_TABLE) && Arrays.equals(BIOME_DARK_COLOR_TABLE, that.BIOME_DARK_COLOR_TABLE);
     }
 
     @Override
     public int hashCode() {
-        int result = width;
-        result = 31 * result + height;
-        result = 31 * result + Hasher.intArray2DHashBulk.hash(1234, colorMap);
+        int result = Hasher.intArray2DHashBulk.hash(1234, colorMap);
         result = 31 * result + Hasher.intArray2DHashBulk.hash(1234, colorMapOklab);
         result = 31 * result + world.hashCode();
         result = 31 * result + biomeMapper.hashCode();
