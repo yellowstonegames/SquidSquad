@@ -41,6 +41,8 @@ public final class JsonWorld {
         registerUnrealisticBiomeMapper(json);
 
         registerDetailedWorldMapView(json);
+        registerBlendedWorldMapView(json);
+        registerUnrealisticWorldMapView(json);
     }
 
     public static void registerWorldMapGenerators(@NonNull Json json) {
@@ -505,7 +507,7 @@ public final class JsonWorld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerBlendedWorldMapView(@NonNull Json json) {
-        json.addClassTag("DeWV", BlendedWorldMapView.class);
+        json.addClassTag("BlWV", BlendedWorldMapView.class);
         registerBlendedBiomeMapper(json);
         registerWorldMapGenerators(json);
         json.setSerializer(BlendedWorldMapView.class, new Json.Serializer<BlendedWorldMapView>() {
@@ -523,6 +525,36 @@ public final class JsonWorld {
                 BlendedWorldMapView wmv = new BlendedWorldMapView();
                 wmv.setWorld(json.readValue("w", null, jsonData));
                 wmv.setBiomeMapper(json.readValue("m", BlendedBiomeMapper.class, jsonData));
+                return wmv;
+            }
+        });
+    }
+
+    /**
+     * Registers UnrealisticWorldMapView with the given Json object, so UnrealisticWorldMapView can be written to and read from JSON.
+     * This is a simple wrapper around the serialization for the WorldMapGenerator and BiomeMapper used here.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerUnrealisticWorldMapView(@NonNull Json json) {
+        json.addClassTag("UnWV", UnrealisticWorldMapView.class);
+        registerUnrealisticBiomeMapper(json);
+        registerWorldMapGenerators(json);
+        json.setSerializer(UnrealisticWorldMapView.class, new Json.Serializer<UnrealisticWorldMapView>() {
+            @Override
+            public void write(Json json, UnrealisticWorldMapView object, Class knownType) {
+                json.writeObjectStart(UnrealisticWorldMapView.class, knownType);
+                json.writeValue("w", object.getWorld(), null);
+                json.writeValue("m", object.getBiomeMapper(), UnrealisticBiomeMapper.class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public UnrealisticWorldMapView read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("w") || !jsonData.has("m")) return null;
+                UnrealisticWorldMapView wmv = new UnrealisticWorldMapView();
+                wmv.setWorld(json.readValue("w", null, jsonData));
+                wmv.setBiomeMapper(json.readValue("m", UnrealisticBiomeMapper.class, jsonData));
                 return wmv;
             }
         });

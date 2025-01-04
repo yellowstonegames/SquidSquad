@@ -193,4 +193,24 @@ public class UnrealisticWorldMapView implements WorldMapView {
     {
         return biomeMapper.colorDataRgba;
     }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof UnrealisticWorldMapView)) return false;
+
+        UnrealisticWorldMapView that = (UnrealisticWorldMapView) o;
+        return world.equals(that.world) && biomeMapper.equals(that.biomeMapper);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = world.hashCode();
+        result = 31 * result + biomeMapper.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "UnrealisticWorldMapView { world: " + world + "}";
+    }
 }
