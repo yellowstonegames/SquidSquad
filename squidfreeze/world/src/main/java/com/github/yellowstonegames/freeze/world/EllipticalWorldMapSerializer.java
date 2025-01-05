@@ -20,10 +20,18 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.world.EllipticalWorldMap;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * TOTALLY BROKEN, DO NOT USE.
+ * What appears to be a Kryo bug prevents this from working. It is entirely likely that
+ * if you were to run this as if it was working code, you would immediately get a crash.
+ * That would require editing this file. Don't do it. Use Fury and SquidWrath instead.
+ */
+@Beta
 public class EllipticalWorldMapSerializer extends Serializer<EllipticalWorldMap> {
     public EllipticalWorldMapSerializer() {
         setImmutable(false);
