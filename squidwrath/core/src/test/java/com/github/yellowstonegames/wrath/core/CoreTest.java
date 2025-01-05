@@ -28,6 +28,7 @@ import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.core.*;
 import org.apache.fury.Fury;
 import org.apache.fury.config.Language;
+import org.apache.fury.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -35,6 +36,7 @@ import org.junit.Test;
 public class CoreTest {
     @Test
     public void testDiceRule() {
+        LoggerFactory.disableLogging();        
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(Dice.Rule.class);
 
@@ -50,7 +52,8 @@ public class CoreTest {
     }
 
     @Test
-    public void testGapShuffler() {
+    public void testGapShuffler() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(EnhancedRandom.class);
         fury.register(AceRandom.class);
@@ -67,7 +70,8 @@ public class CoreTest {
     }
 
     @Test
-    public void testProbabilityTable() {
+    public void testProbabilityTable() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(EnhancedRandom.class);
         fury.register(WhiskerRandom.class);
@@ -95,7 +99,8 @@ public class CoreTest {
 
 
     @Test
-    public void testWeightedTable() {
+    public void testWeightedTable() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(WeightedTable.class);
 
@@ -112,7 +117,8 @@ public class CoreTest {
     }
 
     @Test
-    public void testIntShuffler() {
+    public void testIntShuffler() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(IntShuffler.class);
 

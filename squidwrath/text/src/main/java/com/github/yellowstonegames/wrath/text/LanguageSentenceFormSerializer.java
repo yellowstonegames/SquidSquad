@@ -28,7 +28,7 @@ public class LanguageSentenceFormSerializer extends Serializer<Language.Sentence
 
     @Override
     public void write(MemoryBuffer buffer, Language.SentenceForm data) {
-        fury.writeString(buffer, data.stringSerialize());
+        fury.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override

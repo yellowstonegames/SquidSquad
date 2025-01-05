@@ -28,7 +28,7 @@ public class EllipticalWorldMapSerializer extends Serializer<EllipticalWorldMap>
 
     @Override
     public void write(MemoryBuffer buffer, EllipticalWorldMap data) {
-        fury.writeString(buffer, data.stringSerialize());
+        fury.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override

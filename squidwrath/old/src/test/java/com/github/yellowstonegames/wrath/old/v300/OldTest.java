@@ -19,12 +19,14 @@ package com.github.yellowstonegames.wrath.old.v300;
 import com.github.yellowstonegames.old.v300.*;
 import org.apache.fury.Fury;
 import org.apache.fury.config.Language;
+import org.apache.fury.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class OldTest {
     @Test
-    public void testLightRNG() {
+    public void testLightRNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(LightRNG.class);
 
@@ -43,7 +45,8 @@ public class OldTest {
     }
     
     @Test
-    public void testDiverRNG() {
+    public void testDiverRNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(DiverRNG.class);
 
@@ -62,7 +65,8 @@ public class OldTest {
     }
 
     @Test
-    public void testLinnormRNG() {
+    public void testLinnormRNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(LinnormRNG.class);
 
@@ -81,7 +85,8 @@ public class OldTest {
     }
 
     @Test
-    public void testThrustAltRNG() {
+    public void testThrustAltRNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(ThrustAltRNG.class);
 
@@ -100,7 +105,8 @@ public class OldTest {
     }
 
     @Test
-    public void testGWTRNG() {
+    public void testGWTRNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(GWTRNG.class);
 
@@ -119,7 +125,8 @@ public class OldTest {
     }
 
     @Test
-    public void testSilkRNG() {
+    public void testSilkRNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(SilkRNG.class);
 
@@ -138,7 +145,8 @@ public class OldTest {
     }
 
     @Test
-    public void testLongPeriodRNG() {
+    public void testLongPeriodRNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(LongPeriodRNG.class);
 
@@ -156,7 +164,8 @@ public class OldTest {
         }
     }
     @Test
-    public void testXoshiroStarPhi32RNG() {
+    public void testXoshiroStarPhi32RNG() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(XoshiroStarPhi32RNG.class);
 
@@ -175,7 +184,8 @@ public class OldTest {
     }
 
     @Test
-    public void testLowStorageShuffler() {
+    public void testLowStorageShuffler() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(LowStorageShuffler.class, new LowStorageShufflerSerializer(fury));
 
@@ -194,7 +204,8 @@ public class OldTest {
     }
 
     @Test
-    public void testCrossHashYolk() {
+    public void testCrossHashYolk() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(CrossHash.Yolk.class, new CrossHashYolkSerializer(fury));
 
@@ -213,7 +224,8 @@ public class OldTest {
     }
 
     @Test
-    public void testCrossHashCurlup() {
+    public void testCrossHashCurlup() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(CrossHash.Curlup.class, new CrossHashCurlupSerializer(fury));
 
@@ -232,7 +244,8 @@ public class OldTest {
     }
 
     @Test
-    public void testCrossHashMist() {
+    public void testCrossHashMist() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(CrossHash.Mist.class, new CrossHashMistSerializer(fury));
 

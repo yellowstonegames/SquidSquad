@@ -28,7 +28,7 @@ public class LanguageSerializer extends Serializer<Language> {
 
     @Override
     public void write(MemoryBuffer buffer, Language data) {
-        fury.writeString(buffer, data.stringSerialize());
+        fury.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override

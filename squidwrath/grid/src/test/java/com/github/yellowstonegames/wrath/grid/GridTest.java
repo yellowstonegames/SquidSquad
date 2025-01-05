@@ -28,12 +28,14 @@ import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
 import org.apache.fury.Fury;
 import org.apache.fury.config.Language;
+import org.apache.fury.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class GridTest {
     @Test
-    public void testCoord() {
+    public void testCoord() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(ObjectList.class, new ObjectListSerializer(fury));
@@ -45,7 +47,8 @@ public class GridTest {
     }
 
     @Test
-    public void testRegion() {
+    public void testRegion() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(Region.class);
         Region data = new Region(120, 120, Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
@@ -58,7 +61,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordSet() {
+    public void testCoordSet() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordSet.class, new CoordSetSerializer(fury));
@@ -72,7 +76,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordOrderedSet() {
+    public void testCoordOrderedSet() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer(fury));
@@ -86,7 +91,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordObjectMap() {
+    public void testCoordObjectMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fury));
@@ -99,7 +105,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordObjectOrderedMap() {
+    public void testCoordObjectOrderedMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
@@ -113,7 +120,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordFloatMap() {
+    public void testCoordFloatMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordFloatMap.class, new CoordFloatMapSerializer(fury));
@@ -127,7 +135,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordFloatOrderedMap() {
+    public void testCoordFloatOrderedMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
@@ -141,7 +150,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordLongMap() {
+    public void testCoordLongMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordLongMap.class, new CoordLongMapSerializer(fury));
@@ -155,7 +165,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordLongOrderedMap() {
+    public void testCoordLongOrderedMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer(fury));
@@ -169,7 +180,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordIntMap() {
+    public void testCoordIntMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordIntMap.class, new CoordIntMapSerializer(fury));
@@ -183,7 +195,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordIntOrderedMap() {
+    public void testCoordIntOrderedMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer(fury));
@@ -254,7 +267,8 @@ public class GridTest {
         }
     }
     @Test
-    public void testSpatialMap() {
+    public void testSpatialMap() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.register(IGI.class);
@@ -273,7 +287,8 @@ public class GridTest {
     }
 
     @Test
-    public void testRadiance() {
+    public void testRadiance() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
 
@@ -287,7 +302,8 @@ public class GridTest {
     }
 
     @Test
-    public void testLightSource() {
+    public void testLightSource() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
@@ -303,7 +319,8 @@ public class GridTest {
     }
 
     @Test
-    public void testLightingManager() {
+    public void testLightingManager() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(int[].class);
         fury.register(int[][].class);
@@ -327,7 +344,8 @@ public class GridTest {
     }
 
     @Test
-    public void testLightingManagerRgb() {
+    public void testLightingManagerRgb() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(int[].class);
         fury.register(int[][].class);
@@ -351,7 +369,8 @@ public class GridTest {
     }
 
     @Test
-    public void testVisionFramework() {
+    public void testVisionFramework() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(int[].class);
         fury.register(int[][].class);
@@ -380,7 +399,8 @@ public class GridTest {
     }
 
     @Test
-    public void testVisionFrameworkRgb() {
+    public void testVisionFrameworkRgb() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(int[].class);
         fury.register(int[][].class);
@@ -409,7 +429,8 @@ public class GridTest {
     }
 
     @Test
-    public void testNoise() {
+    public void testNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(Noise.class);
 
@@ -430,7 +451,8 @@ public class GridTest {
     }
 
     @Test
-    public void testFoamNoise() {
+    public void testFoamNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(FoamNoise.class);
 
@@ -449,7 +471,8 @@ public class GridTest {
     }
 
     @Test
-    public void testFoamplexNoise() {
+    public void testFoamplexNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(FoamplexNoise.class);
 
@@ -468,7 +491,8 @@ public class GridTest {
     }
 
     @Test
-    public void testPhantomNoise() {
+    public void testPhantomNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(PhantomNoise.class);
 
@@ -483,7 +507,8 @@ public class GridTest {
     }
 
     @Test
-    public void testTaffyNoise() {
+    public void testTaffyNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(TaffyNoise.class);
 
@@ -498,7 +523,8 @@ public class GridTest {
     }
 
     @Test
-    public void testFlanNoise() {
+    public void testFlanNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(FlanNoise.class);
 
@@ -513,7 +539,8 @@ public class GridTest {
     }
 
     @Test
-    public void testCyclicNoise() {
+    public void testCyclicNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(CyclicNoise.class);
 
@@ -528,7 +555,8 @@ public class GridTest {
     }
 
     @Test
-    public void testSorbetNoise() {
+    public void testSorbetNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(SorbetNoise.class);
 
@@ -543,7 +571,8 @@ public class GridTest {
     }
 
     @Test
-    public void testSimplexNoise() {
+    public void testSimplexNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(SimplexNoise.class);
 
@@ -562,7 +591,8 @@ public class GridTest {
     }
 
     @Test
-    public void testSimplexNoiseScaled() {
+    public void testSimplexNoiseScaled() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(SimplexNoiseScaled.class);
 
@@ -581,7 +611,8 @@ public class GridTest {
     }
 
     @Test
-    public void testSimplexNoiseHard() {
+    public void testSimplexNoiseHard() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(SimplexNoiseHard.class);
 
@@ -600,7 +631,8 @@ public class GridTest {
     }
 
     @Test
-    public void testOpenSimplex2() {
+    public void testOpenSimplex2() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(OpenSimplex2.class);
 
@@ -617,7 +649,8 @@ public class GridTest {
     }
 
     @Test
-    public void testOpenSimplex2Smooth() {
+    public void testOpenSimplex2Smooth() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(OpenSimplex2Smooth.class);
 
@@ -634,7 +667,8 @@ public class GridTest {
     }
 
     @Test
-    public void testPerlinNoise() {
+    public void testPerlinNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(PerlinNoise.class);
 
@@ -653,7 +687,8 @@ public class GridTest {
     }
 
     @Test
-    public void testValueNoise() {
+    public void testValueNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(ValueNoise.class);
 
@@ -672,7 +707,8 @@ public class GridTest {
     }
 
     @Test
-    public void testBasicHashNoise() {
+    public void testBasicHashNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash.class);
         fury.registerSerializer(BasicHashNoise.class, new BasicHashNoiseSerializer(fury));
@@ -692,7 +728,8 @@ public class GridTest {
     }
 
     @Test
-    public void testHighDimensionalValueNoise() {
+    public void testHighDimensionalValueNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(HighDimensionalValueNoise.class);
 
@@ -707,7 +744,8 @@ public class GridTest {
     }
 
     @Test
-    public void testWhiteNoise() {
+    public void testWhiteNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(WhiteNoise.class);
 
@@ -726,7 +764,8 @@ public class GridTest {
     }
     
     @Test
-    public void testPerlueNoise() {
+    public void testPerlueNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(PerlueNoise.class);
 
@@ -745,7 +784,8 @@ public class GridTest {
     }
 
     @Test
-    public void testBadgerNoise() {
+    public void testBadgerNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(BadgerNoise.class);
 
@@ -764,7 +804,8 @@ public class GridTest {
     }
 
     @Test
-    public void testSnakeNoise() {
+    public void testSnakeNoise() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(SnakeNoise.class);
 
@@ -783,7 +824,8 @@ public class GridTest {
     }
 
     @Test
-    public void testNoiseWrapper() {
+    public void testNoiseWrapper() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(Noise.class);
         fury.register(NoiseWrapper.class);
@@ -803,7 +845,8 @@ public class GridTest {
     }
 
     @Test
-    public void testRadialNoiseWrapper() {
+    public void testRadialNoiseWrapper() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(Noise.class);
         fury.register(RadialNoiseWrapper.class);
@@ -820,7 +863,8 @@ public class GridTest {
     }
 
     @Test
-    public void testNoiseAdjustment() {
+    public void testNoiseAdjustment() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(Noise.class);
         fury.register(NoiseAdjustment.class);
@@ -840,7 +884,8 @@ public class GridTest {
     }
 
     @Test
-    public void testPointPair() {
+    public void testPointPair() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.registerSerializer(PointPair.class, new PointPairSerializer(fury));

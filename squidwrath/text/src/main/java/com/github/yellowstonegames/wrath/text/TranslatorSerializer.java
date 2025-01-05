@@ -30,15 +30,15 @@ public class TranslatorSerializer extends Serializer<Translator> {
 
     @Override
     public void write(MemoryBuffer buffer, Translator data) {
-        fury.writeString(buffer, data.language.stringSerialize());
+        fury.writeJavaString(buffer, data.language.stringSerialize());
         buffer.writeInt64(data.shift);
         buffer.writeVarUint32(data.cacheLevel);
         buffer.writeVarUint32(data.table.size());
         for(String k : data.table.keySet()){
-            fury.writeString(buffer, k);
+            fury.writeJavaString(buffer, k);
         }
         for(String v : data.table.values()){
-            fury.writeString(buffer, v);
+            fury.writeJavaString(buffer, v);
         }
 
     }
@@ -53,10 +53,10 @@ public class TranslatorSerializer extends Serializer<Translator> {
         String[] vs = new String[tableSize];
 
         for (int i = 0; i < tableSize; i++) {
-            ks[i] = fury.readString(buffer);
+            ks[i] = fury.readJavaString(buffer);
         }
         for (int i = 0; i < tableSize; i++) {
-            vs[i] = fury.readString(buffer);
+            vs[i] = fury.readJavaString(buffer);
         }
         return new Translator(lang, shift, cacheLevel, new ObjectObjectMap<>(ks, vs), new ObjectObjectMap<>(vs, ks));
     }

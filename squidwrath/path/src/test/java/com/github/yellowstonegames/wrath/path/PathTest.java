@@ -21,6 +21,7 @@ import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.path.*;
 import org.apache.fury.Fury;
 import org.apache.fury.config.Language;
+import org.apache.fury.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -58,7 +59,8 @@ public class PathTest {
     }
 
     @Test
-    public void testUndirectedGraph() {
+    public void testUndirectedGraph() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.register(UndirectedGraph.class);
@@ -79,7 +81,8 @@ public class PathTest {
     }
 
     @Test
-    public void testDirectedGraph() {
+    public void testDirectedGraph() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.register(DirectedGraph.class);
@@ -100,7 +103,8 @@ public class PathTest {
     }
 
     @Test
-    public void testDefaultGraph() {
+    public void testDefaultGraph() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.register(DefaultGraph.class);
@@ -127,7 +131,8 @@ public class PathTest {
     }
 
     @Test
-    public void testCostlyGraph() {
+    public void testCostlyGraph() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.registerSerializer(Coord.class, new CoordSerializer(fury));
         fury.register(CostlyGraph.class);

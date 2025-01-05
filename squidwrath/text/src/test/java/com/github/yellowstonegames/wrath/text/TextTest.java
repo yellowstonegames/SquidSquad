@@ -19,12 +19,14 @@ package com.github.yellowstonegames.wrath.text;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Translator;
 import org.apache.fury.Fury;
+import org.apache.fury.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TextTest {
     @Test
-    public void testLanguage() {
+    public void testLanguage() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(Language.class, new LanguageSerializer(fury));
 
@@ -50,7 +52,8 @@ public class TextTest {
     }
 
     @Test
-    public void testLanguageSentenceForm() {
+    public void testLanguageSentenceForm() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(Language.SentenceForm.class, new LanguageSentenceFormSerializer(fury));
 
@@ -63,7 +66,8 @@ public class TextTest {
     }
 
     @Test
-    public void testTranslator() {
+    public void testTranslator() {        
+        LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(Language.class, new LanguageSerializer(fury));
         fury.registerSerializer(Translator.class, new TranslatorSerializer(fury));
