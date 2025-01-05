@@ -1,0 +1,33 @@
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+ext.projectName = 'SquidFreezeWorld'
+eclipse.project.name = ext.projectName
+sourceSets.test.resources.srcDirs += [ file('../../assets').path ]
+javadoc.destinationDir = file("../../docs/squidfreeze/$name/apidocs")
+
+dependencies {
+    api project(':squidcore')
+    api project(':squidfreeze:core')
+    api project(':squidworld')
+
+    testImplementation "junit:junit:$junitVersion"
+    //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
+    testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+}
+
+
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
+mavenPublishing {
+    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+}
+
+mavenPlainJavadocJar.archiveBaseName.set(project.name)
+
+jar {
+    archiveBaseName.set(project.name)
+    manifest {
+        attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
+    }
+}
