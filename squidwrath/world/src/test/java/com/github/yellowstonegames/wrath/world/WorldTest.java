@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.*;
+import com.github.yellowstonegames.world.BiomeMapper.*;
 import org.apache.fury.Fury;
 import org.apache.fury.logging.LoggerFactory;
 import org.junit.Assert;
@@ -199,6 +200,78 @@ public class WorldTest {
         {
             byte[] bytes = fury.serializeJavaObject(data);
             TilingWorldMap data2 = fury.deserializeJavaObject(bytes, TilingWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testSimpleBiomeMapper() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(SimpleBiomeMapper.class, new SimpleBiomeMapperSerializer(fury));
+
+        StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
+        wmg.generate();
+        SimpleBiomeMapper data = new SimpleBiomeMapper();
+        data.makeBiomes(wmg);
+
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            SimpleBiomeMapper data2 = fury.deserializeJavaObject(bytes, SimpleBiomeMapper.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testDetailedBiomeMapper() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(DetailedBiomeMapper.class, new DetailedBiomeMapperSerializer(fury));
+
+        StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
+        wmg.generate();
+        DetailedBiomeMapper data = new DetailedBiomeMapper();
+        data.makeBiomes(wmg);
+
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            DetailedBiomeMapper data2 = fury.deserializeJavaObject(bytes, DetailedBiomeMapper.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testBlendedBiomeMapper() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fury));
+
+        StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
+        wmg.generate();
+        BlendedBiomeMapper data = new BlendedBiomeMapper();
+        data.makeBiomes(wmg);
+
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            BlendedBiomeMapper data2 = fury.deserializeJavaObject(bytes, BlendedBiomeMapper.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testUnrealisticBiomeMapper() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(UnrealisticBiomeMapper.class, new UnrealisticBiomeMapperSerializer(fury));
+
+        StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
+        wmg.generate();
+        UnrealisticBiomeMapper data = new UnrealisticBiomeMapper();
+        data.makeBiomes(wmg);
+
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            UnrealisticBiomeMapper data2 = fury.deserializeJavaObject(bytes, UnrealisticBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
