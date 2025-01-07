@@ -313,4 +313,23 @@ public class WorldTest {
             Assert.assertEquals(data, data2);
         }
     }
+    
+    @Test
+    public void testUnrealisticWorldMapView() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(UnrealisticWorldMapView.class, new UnrealisticWorldMapViewSerializer(fury));
+        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
+
+        UnrealisticWorldMapView data;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        data = new UnrealisticWorldMapView(world);
+        data.generate();
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            UnrealisticWorldMapView data2 = fury.deserializeJavaObject(bytes, UnrealisticWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
