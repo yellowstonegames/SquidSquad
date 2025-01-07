@@ -275,8 +275,7 @@ public class WorldTest {
             Assert.assertEquals(data, data2);
         }
     }
-
-
+    
     @Test
     public void testDetailedWorldMapView() {
         LoggerFactory.disableLogging();
@@ -295,5 +294,23 @@ public class WorldTest {
             Assert.assertEquals(data, data2);
         }
     }
+    
+    @Test
+    public void testBlendedWorldMapView() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(BlendedWorldMapView.class, new BlendedWorldMapViewSerializer(fury));
+        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
 
+        BlendedWorldMapView data;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        data = new BlendedWorldMapView(world);
+        data.generate();
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            BlendedWorldMapView data2 = fury.deserializeJavaObject(bytes, BlendedWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
