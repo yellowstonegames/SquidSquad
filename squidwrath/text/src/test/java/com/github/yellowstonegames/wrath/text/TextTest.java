@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.wrath.text;
 
 import com.github.yellowstonegames.text.Language;
+import com.github.yellowstonegames.text.Mnemonic;
 import com.github.yellowstonegames.text.Translator;
 import org.apache.fury.Fury;
 import org.apache.fury.logging.LoggerFactory;
@@ -57,7 +58,7 @@ public class TextTest {
         Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(Language.SentenceForm.class, new LanguageSentenceFormSerializer(fury));
 
-        Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8), sf2;
+        Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8);
         {
             byte[] bytes = fury.serializeJavaObject(data);
             Language.SentenceForm data2 = fury.deserializeJavaObject(bytes, Language.SentenceForm.class);
@@ -82,4 +83,19 @@ public class TextTest {
             Assert.assertEquals(data.cipher(sentence), data2.cipher(sentence));
         }
     }
+
+    @Test
+    public void testMnemonic() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(Mnemonic.class, new MnemonicSerializer(fury));
+
+        Mnemonic data = new Mnemonic(1234567L);
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            Mnemonic data2 = fury.deserializeJavaObject(bytes, Mnemonic.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
 }
