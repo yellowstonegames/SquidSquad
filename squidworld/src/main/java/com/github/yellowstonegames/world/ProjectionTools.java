@@ -23,7 +23,10 @@ package com.github.yellowstonegames.world;
  * @author jkunimune
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
-public class ProjectionTools {
+public final class ProjectionTools {
+
+    private ProjectionTools(){}
+
     /**
      * Performs a definite integral using Simpson's rule and a constant step size; hard-coded to integrate a
      * hyperellipse function.

@@ -16,7 +16,9 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectObjectMap;
+import com.github.tommyettinger.ds.ObjectSet;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.io.Externalizable;
@@ -130,8 +132,8 @@ public interface INoise extends Externalizable {
      * Returns a typically-four-character String constant that should uniquely identify this INoise as well as possible.
      * If a duplicate tag is already registered and {@link Serializer#register(INoise)} attempts to register the same
      * tag again, a message is printed to {@code System.err}. The default implementation returns the String
-     * {@code (NO)}, which is already registered in Serializer to a null value. Implementing this is required for any
-     * usage of Serializer.
+     * {@code (NO)}, which is essentially an invalid tag, meant to indicate that this was not fully implemented.
+     * Implementing this is required for any usage of Serializer.
      * @return a short String constant that identifies this INoise type
      */
     default String getTag() {
@@ -354,7 +356,6 @@ public interface INoise extends Externalizable {
         }
 
         static {
-            NOISE_BY_TAG.put("(NO)", null); // for classes that cannot be serialized
             register(new BadgerNoise());
             register(new BasicHashNoise());
             register(new CellularNoise());
@@ -401,6 +402,11 @@ public interface INoise extends Externalizable {
          * Given an INoise that implements {@link #stringSerialize()} and {@link #getTag()}, this produces a
          * serialized String that stores the exact state of the INoise. This serialized String can be read back in by
          * {@link #deserialize(String)}.
+         * <br>
+         * This is preferred over calling {@link #stringSerialize()} on its own, because it prepends the
+         * {@link #getTag()} to allow {@link #deserialize(String)} to load it back regardless of implementation.
+         * If you know only one INoise class will be used, you can use its {@link #stringSerialize()} and its
+         * {@link #stringDeserialize(String)} methods to save and restore that single class.
          *
          * @param noise an INoise that implements {@link #stringSerialize()} and {@link #getTag()}
          * @return a String that can be read back in by {@link #deserialize(String)}
@@ -416,6 +422,10 @@ public interface INoise extends Externalizable {
          * deserialization time, though it doesn't actually need to be registered at serialization time. This cannot
          * read back the direct output of {@link INoise#stringSerialize()}; it needs the tag prepended by
          * {@link #serialize(INoise)} to work.
+         * <br>
+         * This is preferred over calling {@link #stringDeserialize(String)} if the implementation of the serialized
+         * INoise is not known. This will return an INoise with the correct implementation, though the compile-time
+         * type will still be INoise and not anything more specific.
          *
          * @param data serialized String data probably produced by {@link #serialize(INoise)}
          * @return a new INoise with the appropriate type internally, using the state from data
@@ -430,6 +440,32 @@ public interface INoise extends Externalizable {
                 throw new RuntimeException("Tag: '" + tagData + "' in given data: '" + data + "' is invalid or unknown.");
             return root.copy().stringDeserialize(data.substring(idx));
         }
+
+    /**
+     * Creates an unordered Set of all String tags for INoise types Serializer knows, and returns it.
+     * A tag can be used with {@link #get(String)} to retrieve the corresponding INoise.
+     * @return an ObjectSet of all String tags for INoise types this knows
+     */
+    public static ObjectSet<String> copyTags() {
+        return new ObjectSet<>(NOISE_BY_TAG.keySet());
+    }
+
+    /**
+     * Returns a List (in no particular order) of copies of the INoise "prototype" objects this uses during
+     * deserialization. Each INoise copy is seeded with {@code -1L} before it is put in the List.
+     * This includes wrapper types such as {@link NoiseWrapper}, using their default INoise and other settings
+     * when retrieved.
+     * @return an ObjectList of copies of the INoise instances this knows
+     */
+    public static ObjectList<INoise> copyNoises() {
+        ObjectList<INoise> list = new ObjectList<>(NOISE_BY_TAG.size());
+        for(INoise e : NOISE_BY_TAG.values()){
+            INoise r = e.copy();
+            r.setSeed(-1L);
+            list.add(r);
+        }
+        return list;
+    }
 
     }
 }

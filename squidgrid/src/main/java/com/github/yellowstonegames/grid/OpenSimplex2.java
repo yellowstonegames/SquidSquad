@@ -279,8 +279,7 @@ public class OpenSimplex2 implements INoise {
     /**
      * Returns a typically-four-character String constant that should uniquely identify this INoise as well as possible.
      * If a duplicate tag is already registered and {@link Serializer#register(INoise)} attempts to register the same
-     * tag again, a message is printed to {@code System.err}. The default implementation returns the String
-     * {@code (NO)}, which is already registered in Serializer to a null value. Implementing this is required for any
+     * tag again, a message is printed to {@code System.err}. Implementing this is required for any
      * usage of Serializer.
      *
      * @return a short String constant that identifies this INoise type
