@@ -7,10 +7,10 @@ javadoc.destinationDir = file("../../docs/squidfreeze/$name/apidocs")
 dependencies {
     api project(':squidcore')
 
-	api("com.github.tommyettinger:kryo-digital:0.5.4.1"){
+	api("com.github.tommyettinger:kryo-digital:0.6.0.1"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-jdkgdxds:1.7.2.1"){
+	api("com.github.tommyettinger:kryo-jdkgdxds:1.8.0.1"){
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }
@@ -20,7 +20,6 @@ dependencies {
     }
 
     testImplementation "junit:junit:$junitVersion"
-    //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }
 
 
