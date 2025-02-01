@@ -47,41 +47,43 @@ public class CaseCodeGen extends ApplicationAdapter {
      */
     public static void generateToUpperCode(String filename){
         StringBuilder sb = new StringBuilder(65536 + 400);
-        sb.append('"');
-        for (int i = 0; i < 65536; i++) {
-            char b = Character.toUpperCase((char)i);
-            switch (b) {
-                case '\t':
-                    sb.append("\\t");
-                    break;
-                case '\b':
-                    sb.append("\\b");
-                    break;
-                case '\n':
-                    sb.append("\\n");
-                    break;
-                case '\r':
-                    sb.append("\\r");
-                    break;
-                case '\f':
-                    sb.append("\\f");
-                    break;
-                case '\"':
-                    sb.append("\\\"");
-                    break;
-                case '\\':
-                    sb.append("\\\\");
-                    break;
-                default:
-                    if (Character.isISOControl(b))
-                        sb.append(String.format("\\%03o", (int)b));
-                    else
-                        sb.append(b);
-                    break;
+        sb.append("    static final char[] allToUpper = new StringBuilder().append(\"");
+        for (int i = 0; i < 65536;) {
+            for (int j = 0; j < 10000 && i < 65536; j++, i++) {
+                char b = Character.toUpperCase((char) i);
+                switch (b) {
+                    case '\t':
+                        sb.append("\\t");
+                        break;
+                    case '\b':
+                        sb.append("\\b");
+                        break;
+                    case '\n':
+                        sb.append("\\n");
+                        break;
+                    case '\r':
+                        sb.append("\\r");
+                        break;
+                    case '\f':
+                        sb.append("\\f");
+                        break;
+                    case '\"':
+                        sb.append("\\\"");
+                        break;
+                    case '\\':
+                        sb.append("\\\\");
+                        break;
+                    default:
+                        if (Character.isISOControl(b))
+                            sb.append(String.format("\\%03o", (int) b));
+                        else
+                            sb.append(b);
+                        break;
+                }
             }
+            if(i < 60000) sb.append("\").append(\"");
         }
-
-        sb.append("\".toCharArray();\n");
+        sb.append("\").toString().toCharArray();\n");
         Gdx.files.local(filename).writeString(sb.toString(), true, "UTF-8");
         System.out.println("Wrote toUpper snippet to " + filename);
     }
@@ -92,41 +94,43 @@ public class CaseCodeGen extends ApplicationAdapter {
      */
     public static void generateToLowerCode(String filename){
         StringBuilder sb = new StringBuilder(65536 + 400);
-        sb.append('"');
-        for (int i = 0; i < 65536; i++) {
-            char b = Character.toLowerCase((char)i);
-            switch (b) {
-                case '\t':
-                    sb.append("\\t");
-                    break;
-                case '\b':
-                    sb.append("\\b");
-                    break;
-                case '\n':
-                    sb.append("\\n");
-                    break;
-                case '\r':
-                    sb.append("\\r");
-                    break;
-                case '\f':
-                    sb.append("\\f");
-                    break;
-                case '\"':
-                    sb.append("\\\"");
-                    break;
-                case '\\':
-                    sb.append("\\\\");
-                    break;
-                default:
-                    if (Character.isISOControl(b))
-                        sb.append(String.format("\\%03o", (int)b));
-                    else
-                        sb.append(b);
-                    break;
+        sb.append("    static final char[] allToLower = new StringBuilder().append(\"");
+        for (int i = 0; i < 65536;) {
+            for (int j = 0; j < 10000 && i < 65536; j++, i++) {
+                char b = Character.toLowerCase((char) i);
+                switch (b) {
+                    case '\t':
+                        sb.append("\\t");
+                        break;
+                    case '\b':
+                        sb.append("\\b");
+                        break;
+                    case '\n':
+                        sb.append("\\n");
+                        break;
+                    case '\r':
+                        sb.append("\\r");
+                        break;
+                    case '\f':
+                        sb.append("\\f");
+                        break;
+                    case '\"':
+                        sb.append("\\\"");
+                        break;
+                    case '\\':
+                        sb.append("\\\\");
+                        break;
+                    default:
+                        if (Character.isISOControl(b))
+                            sb.append(String.format("\\%03o", (int) b));
+                        else
+                            sb.append(b);
+                        break;
+                }
             }
+            if(i < 60000) sb.append("\").append(\"");
         }
-
-        sb.append("\".toCharArray();\n");
+        sb.append("\").toString().toCharArray();\n");
         Gdx.files.local(filename).writeString(sb.toString(), true, "UTF-8");
         System.out.println("Wrote tUoLower snippet to " + filename);
     }
