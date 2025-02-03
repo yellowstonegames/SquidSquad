@@ -21,10 +21,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.github.tommyettinger.anim8.FastPNG;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.random.PouchRandom;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
@@ -32,7 +31,6 @@ import com.github.yellowstonegames.grid.Coord;
 
 import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -79,7 +77,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = true;
+    private static final boolean isTriangular = false;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
@@ -88,7 +86,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 2;
+    private static final int sectorShift = 3;
 
     private static final int size = 1 << shift;
     private static final int sizeSq = size * size;
@@ -127,8 +125,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm, pmSection;
-    private PouchRandom rng;
-    private PixmapIO.PNG writer;
+    private AceRandom rng;
+    private FastPNG writer;
     private String path;
     private final int[] lightCounts = new int[sectors * sectors];
 
@@ -145,10 +143,10 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         pmSection = new Pixmap(sector, sector, Pixmap.Format.RGBA8888);
         pm.setBlending(Pixmap.Blending.None);
 
-        writer = new PixmapIO.PNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
+        writer = new FastPNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new PouchRandom(Hasher.hash64(1L, date));
+        rng = new AceRandom(Hasher.hash64(1L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];
@@ -299,16 +297,12 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         buffer.flip();
 
         String name = path + "BlueNoise" + (isTriangular ? "TriOmni" : "Omni") + "Tiling";
-        try {
-            writer.write(Gdx.files.local(name + size + "x" + size + ".png"), pm);
-            for (int y = 0; y < sectors; y++) {
-                for (int x = 0; x < sectors; x++) {
-                    pmSection.drawPixmap(pm, x * sector, y * sector, sector, sector, 0, 0, sector, sector);
-                    writer.write(Gdx.files.local(name + "_" + x + "x" + y + ".png"), pmSection);
-                }
+        writer.write(Gdx.files.local(name + size + "x" + size + ".png"), pm);
+        for (int y = 0; y < sectors; y++) {
+            for (int x = 0; x < sectors; x++) {
+                pmSection.drawPixmap(pm, x * sector, y * sector, sector, sector, 0, 0, sector, sector);
+                writer.write(Gdx.files.local(name + "_" + x + "x" + y + ".png"), pmSection);
             }
-        } catch (IOException ex) {
-            throw new GdxRuntimeException("Error writing PNG: " + (name + sectors + "x" + sectors + ".png"), ex);
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");
