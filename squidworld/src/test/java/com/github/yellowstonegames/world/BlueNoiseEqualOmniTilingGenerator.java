@@ -82,11 +82,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 9;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int size = 1 << shift;
     private static final int sizeSq = size * size;
@@ -100,7 +100,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //    private static final int wrapMask = sector * 5 >>> 5;
 //    private static final int wrapMask = sector * 13 >>> 5;
     private static final int wrapMask = sector >>> 1;
-    private static final float fraction = 1f / (totalSectors * 2f);
+    private static final float fraction = 1f / (totalSectors * 4f);
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
@@ -182,6 +182,10 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                         for (int ey = 0; ey < sectors; ey++) {
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + sectorMask - y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + sectorMask - y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
                         }
@@ -220,8 +224,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         final int xOff = rng.next(shift - sectorShift), yOff = rng.next(shift - sectorShift);
         for (int i = 1; i <= limit; i++) {
             int sz = positions[i - 1];
-            final Coord pt = Coord.get((vdc(5, i) + xOff & sectorMask) + ((sz & sectors - 1) << shift - sectorShift),
-                    (vdc(3, i) + yOff & sectorMask) + (((sz >>> sectorShift) & sectors - 1) << shift - sectorShift) );
+            final Coord pt = Coord.get((vdc(1, i) + xOff & sectorMask) + ((sz & sectors - 1) << shift - sectorShift),
+                    (vdc(2, i) + yOff & sectorMask) + (((sz >>> sectorShift) & sectors - 1) << shift - sectorShift) );
             initial[i-1] = pt;
         }
 //        CoordOrderedSet initial = new CoordOrderedSet(limit);
@@ -328,6 +332,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("SquidSquad Tool: Blue Noise Tiling Generator");
         config.setWindowedMode(size, size);
+        config.disableAudio(true);
         new Lwjgl3Application(new BlueNoiseEqualOmniTilingGenerator(), config);
     }
 }
