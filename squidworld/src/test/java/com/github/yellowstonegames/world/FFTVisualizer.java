@@ -91,8 +91,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
     private int hashIndex = 6;
     private static final int MODE_LIMIT = 29;
-    private int mode = 24;
-    private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
+    private int mode = 9;
+    private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 3;
     private float freq = 0.125f;
     private float threshold = 0.5f;
@@ -196,8 +196,9 @@ public class FFTVisualizer extends ApplicationAdapter {
 //        pm = new Pixmap(Gdx.files.internal("2021/BlueNoiseOmniTiling512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("2021/BlueNoiseTriOmniTiling512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling512x512.png"));
-        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling512x512.png"));
-//        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling256x256.png"));
+//        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling512x512.png"));
+        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling256x256.png"));
+//        pm = new Pixmap(Gdx.files.internal("2025/BlueNoiseOmniTiling256x256.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling256x256.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling128x128.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling128x128.png"));
@@ -994,10 +995,9 @@ public class FFTVisualizer extends ApplicationAdapter {
 //                            renderer.vertex(x, y, 0);
 //                        }
 //                    }
-                    int ic;
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            ic = pm.getPixel(x & pm.getWidth() - 1, y & pm.getHeight() - 1);
+                            int ic = pm.getPixel(x & pm.getWidth() - 1, y & pm.getHeight() - 1);
                             real[x][y] = bright = (ic >>> 24) * (1f/255f) <= threshold ? 1f : 0f;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);

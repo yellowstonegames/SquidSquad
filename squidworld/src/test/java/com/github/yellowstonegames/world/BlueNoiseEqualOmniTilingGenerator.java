@@ -22,6 +22,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.github.tommyettinger.anim8.FastPNG;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
@@ -82,7 +83,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 7;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
@@ -146,7 +147,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         writer = new FastPNG((int)(pm.getWidth() * pm.getHeight() * 1.5f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new AceRandom(Hasher.hash64(1L, date));
+        rng = new AceRandom(Hasher.hashBulk64(123456789L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];
@@ -310,6 +311,45 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");
+
+        startTime = System.currentTimeMillis();
+
+        final double[][] real = new double[size][size], imag = new double[size][size];
+        final float[][] colors = new float[size][size];
+        for (int threshold = 1; threshold < 255; threshold++) {
+            ArrayTools.fill(imag, 0.0);
+            Pixmap thr = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    int ic = pm.getPixel(x & pm.getWidth() - 1, y & pm.getHeight() - 1);
+                    if((ic >>> 24) <= threshold) {
+                        real[x][y] = 1f;
+                        thr.drawPixel(x, y, -1); // white
+                    }
+                    else {
+                        real[x][y] = 0f;
+                        thr.drawPixel(x, y, 255); // black
+                    }
+                }
+            }
+            name = path + "Threshold" + threshold + (isTriangular ? "TriOmni" : "Omni") + "_";
+
+            writer.write(Gdx.files.local(name + "BW" + size + "x" + size + ".png"), thr);
+
+            Fft.transform2D(real, imag);
+            Fft.getColors(real, imag, colors);
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    thr.drawPixel(x, y, BitConversion.floatToReversedIntBits(colors[x][y]));
+                }
+            }
+            writer.write(Gdx.files.local(name + "FFT" + size + "x" + size + ".png"), thr);
+            thr.dispose();
+
+        }
+
+        System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to get FFT.");
     }
     @Override
     public void render() {
