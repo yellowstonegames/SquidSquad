@@ -155,10 +155,13 @@ public final class Fft {
 
 	public static final int[] histogram = new int[256];
 
-	private static final double[][] temp = new double[256][256];
+	private static double[][] temp;
 
 	public static void getColors(double[][] real, double[][] imag, float[][] background){
 		final int n = real.length, mask = n - 1, half = n >>> 1;
+		if(temp == null || temp.length < n || temp[0].length < n){
+			temp = new double[n][n];
+		}
 		double max = 0.0, mag, r, i;
 		for (int x = 0; x < n; x++) {
 			for (int y = 0; y < n; y++) {

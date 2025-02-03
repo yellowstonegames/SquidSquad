@@ -101,8 +101,9 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //    private static final int wrapMask = sector * 5 >>> 5;
 //    private static final int wrapMask = sector * 13 >>> 5;
     private static final int wrapMask = sector >>> 1;
-    private static final float fraction = 1f / (totalSectors * 2f);
-//    private static final float fraction = 1f / (totalSectors * 4f);
+//    private static final float fraction = 1f / (totalSectors);
+//    private static final float fraction = 1f / (totalSectors * 2f);
+    private static final float fraction = 1f / (totalSectors * 4f);
     private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
@@ -165,6 +166,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 
 
         generate();
+        getThresholdAndFFT(pm);
+//        getThresholdAndFFT(new Pixmap(Gdx.files.local("2025/BlueNoiseOmniTiling512x512.png")));
         Gdx.app.exit();
     }
 
@@ -184,10 +187,10 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                         for (int ey = 0; ey < sectors; ey++) {
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-//                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + sectorMask - y),
-//                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-//                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + y),
-//                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + sectorMask - y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + y),
+                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
                             energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + sectorMask - y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
                         }
@@ -261,8 +264,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 System.out.println("Completed " + ctr + " out of " + n + " in " + (System.currentTimeMillis() - startTime) + "ms.");
             }
 //            energy.shuffle(rng);
-            energy.sort(
-                    (o1, o2) -> Float.floatToIntBits(energy.getOrDefault(o1, 0f) - energy.getOrDefault(o2, 0f)));
+            energy.sortByValue((o1, o2) -> Float.floatToIntBits(o1 - o2));
             int k = 1;
             Coord low = energy.keyAt(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
@@ -312,8 +314,10 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to generate.");
+    }
 
-        startTime = System.currentTimeMillis();
+    public void getThresholdAndFFT(Pixmap pm) {
+        long startTime = System.currentTimeMillis();
 
         final double[][] real = new double[size][size], imag = new double[size][size];
         final float[][] colors = new float[size][size];
@@ -334,7 +338,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                     }
                 }
             }
-            name = path + "Threshold" + threshold + (isTriangular ? "TriOmni" : "Omni") + "_";
+            String name = path + "Threshold" + threshold + (isTriangular ? "TriOmni" : "Omni") + "_";
 
             writer.write(Gdx.files.local(name + "BW" + size + "x" + size + ".png"), thr);
 
@@ -351,6 +355,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to get FFT.");
+
     }
     @Override
     public void render() {
