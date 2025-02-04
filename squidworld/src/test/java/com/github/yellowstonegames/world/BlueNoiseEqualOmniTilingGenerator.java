@@ -162,7 +162,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 lut[x][y] = column[x] * column[y];
             }
         }
-        lut[0][0] = Float.POSITIVE_INFINITY;
+        lut[0][0] = Float.MAX_VALUE;
+//        lut[0][0] = Float.POSITIVE_INFINITY;
 
 
         generate();
@@ -264,7 +265,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 System.out.println("Completed " + ctr + " out of " + n + " in " + (System.currentTimeMillis() - startTime) + "ms.");
             }
 //            energy.shuffle(rng);
-            energy.sortByValue((o1, o2) -> Float.floatToIntBits(o1 - o2));
+            //Took 10655950ms to generate. (9,3)
+            //Took 9109ms to generate. (7,3)
+//            energy.sortByValue((o1, o2) -> Float.floatToIntBits(o1 - o2));
+            //Took 5714ms to generate. (7,3)
+            energy.order().sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
             int k = 1;
             Coord low = energy.keyAt(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
