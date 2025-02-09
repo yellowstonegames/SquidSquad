@@ -78,7 +78,9 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = false;
+    private static final boolean isTriangular = true;
+
+    private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
@@ -88,6 +90,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
     private static final int sectorShift = 3;
+
+    private static final int blockShift = shift - sectorShift;
 
     private static final int size = 1 << shift;
     private static final int sizeSq = size * size;
@@ -104,10 +108,9 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //    private static final float fraction = 1f / (totalSectors);
 //    private static final float fraction = 1f / (totalSectors * 2f);
     private static final float fraction = 1f / (totalSectors * 4f);
-    private static final int lightOccurrence = 1;//sizeSq >>> 8 + sectorShift + sectorShift;
+    private static final int lightOccurrence = sizeSq >>> 8 + sectorShift + sectorShift;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
-    private static final double sigma = 1.9, sigma2 = sigma * sigma;
     private final CoordFloatOrderedMap energy = new CoordFloatOrderedMap(sizeSq, 0.5f);
 //    private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(sizeSq, 0.5f)
 //    { // OK, we're making an anonymous subclass of ObjectFloatOrderedMap so its hashing function is faster.
@@ -128,7 +131,6 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private final float[][] lut = new float[sector][sector];
     private final int[][] done = new int[size][size];
     private Pixmap pm, pmSection;
-    private AceRandom rng;
     private FastPNG writer;
     private String path;
     private final int[] lightCounts = new int[sectors * sectors];
@@ -149,7 +151,6 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         writer = new FastPNG((int)(pm.getWidth() * pm.getHeight() * 2f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-        rng = new AceRandom(Hasher.hashBulk64(123456789L, date));
 
         final int hs = sector >>> 1;
         float[] column = new float[sector];
@@ -186,13 +187,13 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 {
                     for (int ex = 0; ex < sectors; ex++) {
                         for (int ey = 0; ey < sectors; ey++) {
-                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + y),
+                            energy.getAndIncrement(Coord.get((ex << blockShift) + x, (ey << blockShift) + y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + x, (ey << shift - sectorShift) + sectorMask - y),
+                            energy.getAndIncrement(Coord.get((ex << blockShift) + x, (ey << blockShift) + sectorMask - y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + y),
+                            energy.getAndIncrement(Coord.get((ex << blockShift) + sectorMask - x, (ey << blockShift) + y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-                            energy.getAndIncrement(Coord.get((ex << shift - sectorShift) + sectorMask - x, (ey << shift - sectorShift) + sectorMask - y),
+                            energy.getAndIncrement(Coord.get((ex << blockShift) + sectorMask - x, (ey << blockShift) + sectorMask - y),
                                     0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
                         }
                     }
@@ -203,7 +204,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 
     public static int vdc(final int base, int index)
     {
-        return (int)(MathTools.GOLDEN_LONGS[base & 1023] * index >>> -sectorExponent);
+        return (int)(MathTools.GOLDEN_LONGS[base & 1023] * index >>> 64 - shift);
 //        if(base <= 2) {
 //            return (Integer.reverse(index) >>> 32 - shift + sectorShift);
 //        }
@@ -221,25 +222,37 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     {
         long startTime = System.currentTimeMillis();
 
-        final int limit = (size >>> 3) * (size >>> 3);
-        int[] positions = ArrayTools.range(limit);
-        for (int i = 0; i <= limit - totalSectors; i += totalSectors) {
-            rng.shuffle(positions, i, totalSectors);
-        }
+        final int limit = totalSectors;
+//        int[] positions = ArrayTools.range(limit);
+//        for (int i = 0; i <= limit - totalSectors; i += totalSectors) {
+//            rng.shuffle(positions, i, totalSectors);
+//        }
         Coord[] initial = new Coord[limit];
-        final int xOff = rng.next(shift - sectorShift), yOff = rng.next(shift - sectorShift);
-        for (int i = 1; i <= limit; i++) {
-            int sz = positions[i - 1];
-            final Coord pt = Coord.get((vdc(1, i) + xOff & sectorMask) + ((sz & sectors - 1) << shift - sectorShift),
-                    (vdc(2, i) + yOff & sectorMask) + (((sz >>> sectorShift) & sectors - 1) << shift - sectorShift) );
-            initial[i-1] = pt;
+//        final int xOff = rng.next(blockShift), yOff = rng.next(blockShift);
+        final int xOff = 0, yOff = 0;
+        int idx = 1;
+        for (int i = 0; i < limit; i++) {
+//            int sz = positions[i - 1];
+//            final Coord pt = Coord.get((vdc(1, i+1) + xOff & sectorMask) + ((i & sectors - 1) << blockShift),
+//                    (vdc(2, i+1) + yOff & sectorMask) + (((i >>> sectorShift) & sectors - 1) << blockShift) );
+            Coord pt;
+            do{
+                pt = Coord.get(vdc(1, idx), vdc(2, idx));
+                idx++;
+                int loc = (pt.x >>> blockShift) << sectorShift | pt.y >>> blockShift;
+                if(lightCounts[loc] < lightOccurrence) {
+                    lightCounts[loc]++;
+                    break;
+                }
+            }while (true);
+            initial[i] = pt;
         }
 //        CoordOrderedSet initial = new CoordOrderedSet(limit);
 //        final int xOff = rng.next(sector), yOff = rng.next(sector);
 //        for (int i = 1; initial.size() < limit; i++) {
 //            int gray = initial.size();
-//            final Coord pt = Coord.get((vdc(7, i) + xOff & sectorMask) + ((gray & sectors - 1) << shift - sectorShift),
-//                    (vdc(3, i) + yOff & sectorMask) + (((gray >>> sectorShift) & sectors - 1) << shift - sectorShift) );
+//            final Coord pt = Coord.get((vdc(7, i) + xOff & sectorMask) + ((gray & sectors - 1) << blockShift),
+//                    (vdc(3, i) + yOff & sectorMask) + (((gray >>> sectorShift) & sectors - 1) << blockShift) );
 //            initial.add(pt);
 //        }
         //// removed because it messes up the initial ordering; could be added back if it shuffled in groups of (sectors * sectors).
@@ -273,20 +286,22 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             int k = 1;
             Coord low = energy.keyAt(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
-            while(lightCounts[(low.x >>> shift - sectorShift) << sectorShift | (low.y >>> shift - sectorShift)] >= lightOccurrence){
+            while(/* done[low.x][low.y] != 0 || */
+                    lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)] >= lightOccurrence){
                 low = energy.keyAt(k++);
 //                low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), ++k);
             }
-            lightCounts[(low.x >>> shift - sectorShift) << sectorShift | (low.y >>> shift - sectorShift)]++;
+            lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)]++;
             energize(low);
             done[low.x][low.y] = ctr;
         }
         ByteBuffer buffer = pm.getPixels();
         if(isTriangular) {
-            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
+//            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
             for (int x = 0; x < size; x++) {
                 for (int y = 0; y < size; y++) {
-                    float r = (done[x][y] >>> toKindaByteShift) * (1f / ((1 << 8 + triAdjust) - 1));
+                    float r = (done[x][y]) * (1f / (sizeSq - 1f));
+//                    float r = (done[x][y] >>> toKindaByteShift) * (1f / ((1 << 8 + triAdjust) - 1));
                     // old tri map
 //                    r += 0.5f;
 //                    r -= (int) r;
