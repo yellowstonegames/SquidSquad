@@ -78,7 +78,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = true;
+    private static final boolean isTriangular = false;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
@@ -101,7 +101,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int sectorSize = sector * sector;
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
-    private static final int sectorExponent = Integer.numberOfTrailingZeros(~sectorMask);
+    private static final int sectorExponent = Integer.bitCount(sectorMask);
 //    private static final int wrapMask = sector >>> 3;
 //    private static final int wrapMask = sector * 5 >>> 5;
 //    private static final int wrapMask = sector * 13 >>> 5;
@@ -322,14 +322,27 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //            }
         }
         else {
-            ByteBuffer buffer = pm.getPixels();
-            final int toByteShift = Math.max(0, shift + shift - 8);
-            for (int x = 0; x < size; x++) {
-                for (int y = 0; y < size; y++) {
-                    buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
+            ObjectList<Coord> order = energy.order();
+            order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
+            for (int from = 0; from < sizeSq; from += sectorSize) {
+                List<Coord> sub = order.subList(from, from + sectorSize);
+                random.shuffle(sub);
+                sub.sort((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
+                for (int i = 0, sSize = sub.size(); i < sSize; i++) {
+                    Coord pt = sub.get(i);
+                    float r = (i * (256f / sSize));
+                    pm.drawPixel(pt.x, pt.y, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
                 }
             }
-            buffer.flip();
+
+//            ByteBuffer buffer = pm.getPixels();
+//            final int toByteShift = Math.max(0, shift + shift - 8);
+//            for (int x = 0; x < size; x++) {
+//                for (int y = 0; y < size; y++) {
+//                    buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
+//                }
+//            }
+//            buffer.flip();
         }
 
         String name = path + "BlueNoise" + (isTriangular ? "TriOmni" : "Omni") + "Tiling";
