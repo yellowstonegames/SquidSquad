@@ -35,8 +35,7 @@ import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
 
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Porting Bart Wronski's blue noise generator from NumPy to Java, see
@@ -86,7 +85,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 7;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
@@ -109,7 +108,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //    private static final float fraction = 1f / (totalSectors);
 //    private static final float fraction = 1f / (totalSectors * 2f);
     private static final float fraction = 1f / (totalSectors * 4f);
-    private static final int lightOccurrence = sizeSq >>> 8 + sectorShift + sectorShift;
+    private static int lightOccurrenceBase = sizeSq >>> 8 + sectorShift + sectorShift;
+    private static int lightOccurrence = lightOccurrenceBase;
     private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
     private final CoordFloatOrderedMap energy = new CoordFloatOrderedMap(sizeSq, 0.5f);
@@ -241,11 +241,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 pt = Coord.get(vdc(1, idx), vdc(2, idx));
                 idx++;
                 int loc = (pt.x >>> blockShift) << sectorShift | pt.y >>> blockShift;
-                if(lightCounts[loc] < lightOccurrence) {
+                if(lightCounts[loc] < lightOccurrenceBase) {
                     lightCounts[loc]++;
                     break;
                 }
-            }while (true);
+            } while (true);
             initial[i] = pt;
         }
 //        CoordOrderedSet initial = new CoordOrderedSet(limit);
@@ -266,7 +266,6 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
         ArrayTools.fill(done, 0);
         int ctr = 0;
-        Arrays.fill(lightCounts, 0);
 
         for(Coord c : initial) {
             energize(c);
@@ -274,8 +273,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
 
         for (int n = sizeSq; ctr < n; ctr++) {
-            if((ctr & (lightOccurrence << sectorShift + sectorShift) - 1) == 0) {
-                Arrays.fill(lightCounts, 0);
+            if((ctr & (lightOccurrenceBase << sectorShift + sectorShift) - 1) == 0) {
+                lightOccurrence += lightOccurrenceBase;
                 System.out.println("Completed " + ctr + " out of " + n + " in " + (System.currentTimeMillis() - startTime) + "ms.");
             }
 //            energy.shuffle(rng);
@@ -287,8 +286,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             int k = 1;
             Coord low = energy.keyAt(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
-            while(/* done[low.x][low.y] != 0 || */
-                    lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)] >= lightOccurrence){
+            while(lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)] >= lightOccurrence){
                 low = energy.keyAt(k++);
 //                low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), ++k);
             }
