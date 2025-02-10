@@ -78,7 +78,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = false;
+    private static final boolean isTriangular = true;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
@@ -304,8 +304,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 sub.sort((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
                 for (int i = 0, sSize = sub.size() - 1; i <= sSize; i++) {
                     Coord pt = sub.get(i);
-                    float r = (i * (1f / sSize));
-                    r = ((r > 0.5f) ? 1f - (float) Math.sqrt(2f - 2f * r) : (float) Math.sqrt(2f * r) - 1f) * 127.5f + 128f;
+                    double r = (i * (1.0 / sSize));
+                    r = ((r > 0.5) ? 1.0 - Math.sqrt(2.0 - 2.0 * r) : Math.sqrt(2.0 * r) - 1.0) * 127.5 + 128.0;
                     pm.drawPixel(pt.x, pt.y, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
                 }
             }
