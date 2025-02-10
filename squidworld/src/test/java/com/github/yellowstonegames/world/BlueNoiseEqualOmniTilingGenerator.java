@@ -89,7 +89,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 1;
+    private static final int sectorShift = 2;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -296,7 +296,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             done[low.x][low.y] = ctr;
         }
         if(isTriangular) {
-            int[] colorMap = new int[1 << 14];
+            int[] colorMap = new int[sectorSize];
             int span = 1, lastIndex = colorMap.length - 1;
             for(int i = 0, inner = 0; i < 128; i++) {
                 for (int j = 0; j < span; j++) {
@@ -304,7 +304,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                     colorMap[lastIndex - inner] = (255 - i) * 0x01010100 | 0xFF;
                     inner++;
                 }
-                span += (-63 + i | 63 - i) >>> 31;
+                int boost = -1;
+                for (int j = blockShift, s = 0; j < 7; j++, s += 2) {
+                    boost &= i >>> s & i >>> s + 1;
+                }
+                span += (-63 + i | 63 - i) >>> 31 & boost;
             }
 
             ObjectList<Coord> order = energy.order();
@@ -313,7 +317,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 List<Coord> sub = order.subList(from, from + sectorSize);
                 random.shuffle(sub);
                 sub.sort((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
-                for (int i = 0, sSize = sub.size() - 1; i <= sSize; i++) {
+                for (int i = 0, sSize = sub.size(); i < sSize; i++) {
                     Coord pt = sub.get(i);
                     pm.drawPixel(pt.x, pt.y, colorMap[i]);
                 }
