@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.github.tommyettinger.anim8.FastPNG;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -85,7 +86,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 9;
+    private static final int shift = 7;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
@@ -135,12 +136,13 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private String path;
     private final int[] lightCounts = new int[sectors * sectors];
 
+    private final AceRandom random = new AceRandom(1, 2, 3, 4, 5);
     @Override
     public void create() {
         Coord.expandPoolTo(size, size);
-        String date = DateFormat.getDateInstance().format(new Date()) + "_" + System.currentTimeMillis();
-        path = "out/blueNoise/" + date + "/tiling/";
-        
+        String date = DateFormat.getDateInstance().format(new Date());
+        path = "out/blueNoise/" + date + "_" + System.currentTimeMillis() + "/tiling/";
+        random.setSeed(Hasher.bune.hashBulk64(date));
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
         pm = new Pixmap(size, size, Pixmap.Format.RGBA8888);
@@ -165,7 +167,6 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
         lut[0][0] = Float.MAX_VALUE;
 //        lut[0][0] = Float.POSITIVE_INFINITY;
-
 
         generate();
         getThresholdAndFFT(pm);
@@ -295,34 +296,38 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             energize(low);
             done[low.x][low.y] = ctr;
         }
-        ByteBuffer buffer = pm.getPixels();
         if(isTriangular) {
-//            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
-            for (int x = 0; x < size; x++) {
-                for (int y = 0; y < size; y++) {
-                    float r = (done[x][y]) * (1f / (sizeSq - 1f));
-//                    float r = (done[x][y] >>> toKindaByteShift) * (1f / ((1 << 8 + triAdjust) - 1));
-                    // old tri map
-//                    r += 0.5f;
-//                    r -= (int) r;
-//                    float orig = r * 2f - 1f;
-//                    r = (orig == 0f) ? 0f : (float) (orig / Math.sqrt(Math.abs(orig)));
-//                    r = (r - Math.signum(orig)) * 127.5f + 127.5f;
-                    // new tri map
-                    r = ((r > 0.5f) ? 1f - (float)Math.sqrt(2f - 2f * r) : (float)Math.sqrt(2f * r) - 1f) * 127.5f + 127.5f;
-                    buffer.putInt(((int)(r) & 0xFF) * 0x01010100 | 0xFF);
-                }
+            ObjectList<Coord> order = energy.order();
+            order.shuffle(random);
+            order.sortJDK((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
+            for (int i = 0; i < order.size(); i++) {
+                Coord pt = order.get(i);
+                float r = (i * (1f / (sizeSq - 1f)));
+                r = ((r > 0.5f) ? 1f - (float)Math.sqrt(2f - 2f * r) : (float)Math.sqrt(2f * r) - 1f) * 127.5f + 128f;
+                pm.drawPixel(pt.x, pt.y, ((int)(r) & 0xFF) * 0x01010100 | 0xFF);
             }
+//            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
+//
+//            for (int x = 0; x < size; x++) {
+//                for (int y = 0; y < size; y++) {
+//                    float r = (done[x][y]) * (1f / (sizeSq - 1f));
+////                    float r = (done[x][y] >>> toKindaByteShift) * (1f / ((1 << 8 + triAdjust) - 1));
+//
+//                    r = ((r > 0.5f) ? 1f - (float)Math.sqrt(2f - 2f * r) : (float)Math.sqrt(2f * r) - 1f) * 127.5f + 127.5f;
+//                    buffer.putInt(((int)(r) & 0xFF) * 0x01010100 | 0xFF);
+//                }
+//            }
         }
         else {
+            ByteBuffer buffer = pm.getPixels();
             final int toByteShift = Math.max(0, shift + shift - 8);
             for (int x = 0; x < size; x++) {
                 for (int y = 0; y < size; y++) {
                     buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
                 }
             }
+            buffer.flip();
         }
-        buffer.flip();
 
         String name = path + "BlueNoise" + (isTriangular ? "TriOmni" : "Omni") + "Tiling";
         writer.write(Gdx.files.local(name + size + "x" + size + ".png"), pm);
