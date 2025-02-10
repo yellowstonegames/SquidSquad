@@ -98,6 +98,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private static final int sectors = 1 << sectorShift;
     private static final int totalSectors = sectors * sectors;
     private static final int sector = size >>> sectorShift;
+    private static final int sectorSize = sector * sector;
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
     private static final int sectorExponent = Integer.numberOfTrailingZeros(~sectorMask);
@@ -296,13 +297,17 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
         if(isTriangular) {
             ObjectList<Coord> order = energy.order();
-            order.shuffle(random);
-            order.sortJDK((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
-            for (int i = 0; i < order.size(); i++) {
-                Coord pt = order.get(i);
-                float r = (i * (1f / (sizeSq - 1f)));
-                r = ((r > 0.5f) ? 1f - (float)Math.sqrt(2f - 2f * r) : (float)Math.sqrt(2f * r) - 1f) * 127.5f + 128f;
-                pm.drawPixel(pt.x, pt.y, ((int)(r) & 0xFF) * 0x01010100 | 0xFF);
+            order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
+            for (int from = 0; from < sizeSq; from += sectorSize) {
+                List<Coord> sub = order.subList(from, from + sectorSize);
+                random.shuffle(sub);
+                sub.sort((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
+                for (int i = 0, sSize = sub.size() - 1; i <= sSize; i++) {
+                    Coord pt = sub.get(i);
+                    float r = (i * (1f / sSize));
+                    r = ((r > 0.5f) ? 1f - (float) Math.sqrt(2f - 2f * r) : (float) Math.sqrt(2f * r) - 1f) * 127.5f + 128f;
+                    pm.drawPixel(pt.x, pt.y, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
+                }
             }
 //            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
 //
