@@ -314,8 +314,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             ObjectList<Coord> order = energy.order();
             order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
             for (int from = 0; from < sizeSq; from += sectorSize) {
+                random.shuffle(order, from, from + sectorSize);
                 List<Coord> sub = order.subList(from, from + sectorSize);
-                random.shuffle(sub);
                 sub.sort((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
                 for (int i = 0, sSize = sub.size(); i < sSize; i++) {
                     Coord pt = sub.get(i);
