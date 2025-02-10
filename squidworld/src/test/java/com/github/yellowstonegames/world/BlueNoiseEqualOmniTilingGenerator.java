@@ -89,7 +89,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 1;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -296,6 +296,17 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             done[low.x][low.y] = ctr;
         }
         if(isTriangular) {
+            int[] colorMap = new int[1 << 14];
+            int span = 1, lastIndex = colorMap.length - 1;
+            for(int i = 0, inner = 0; i < 128; i++) {
+                for (int j = 0; j < span; j++) {
+                    colorMap[inner] = i * 0x01010100 | 0xFF;
+                    colorMap[lastIndex - inner] = (255 - i) * 0x01010100 | 0xFF;
+                    inner++;
+                }
+                span += (-63 + i | 63 - i) >>> 31;
+            }
+
             ObjectList<Coord> order = energy.order();
             order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
             for (int from = 0; from < sizeSq; from += sectorSize) {
@@ -304,10 +315,14 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 sub.sort((a, b) -> done[a.x][a.y] - done[b.x][b.y]);
                 for (int i = 0, sSize = sub.size() - 1; i <= sSize; i++) {
                     Coord pt = sub.get(i);
-                    double r = (i * (1.0 / sSize));
-                    r = ((r > 0.5) ? 1.0 - Math.sqrt(2.0 - 2.0 * r) : Math.sqrt(2.0 * r) - 1.0) * 127.5 + 128.0;
-                    pm.drawPixel(pt.x, pt.y, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
+                    pm.drawPixel(pt.x, pt.y, colorMap[i]);
                 }
+//                for (int i = 0, sSize = sub.size() - 1; i <= sSize; i++) {
+//                    Coord pt = sub.get(i);
+//                    double r = (i * (1.0 / sSize));
+//                    r = ((r > 0.5) ? 1.0 - Math.sqrt(2.0 - 2.0 * r) : Math.sqrt(2.0 * r) - 1.0) * 127.5 + 128.0;
+//                    pm.drawPixel(pt.x, pt.y, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
+//                }
             }
 //            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
 //
