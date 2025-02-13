@@ -22,13 +22,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.github.tommyettinger.anim8.FastPNG;
-import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.digital.MathTools;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
-import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.grid.Coord;
 
 import com.github.yellowstonegames.grid.CoordFloatOrderedMap;
@@ -85,11 +82,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 9;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 2;
+    private static final int sectorShift = 1;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -138,12 +135,15 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private final int[] lightCounts = new int[sectors * sectors];
 
     private final AceRandom random = new AceRandom(1, 2, 3, 4, 5);
+    private int counter;
     @Override
     public void create() {
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
         path = "out/blueNoise/" + date + "_" + System.currentTimeMillis() + "/tiling/";
-        random.setSeed(Hasher.bune.hashBulk64(date));
+        long seed = Hasher.bune.hashBulk64(date);
+        random.setSeed(seed);
+        counter = random.nextInt();
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
         pm = new Pixmap(size, size, Pixmap.Format.RGBA8888);
@@ -166,7 +166,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 lut[x][y] = column[x] * column[y];
             }
         }
-        lut[0][0] = Float.MAX_VALUE;
+        lut[0][0] = Float.MAX_VALUE; // 3.4028235E38f
+        lut[0][0] = 1E38f;
 //        lut[0][0] = Float.POSITIVE_INFINITY;
 
         generate();
@@ -185,21 +186,29 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                     energy.getAndIncrement(Coord.get(outerX + x, outerY + y),
                             0f, lut[x - point.x & sectorMask][y - point.y & sectorMask]);
                 }
-                else
-                {
+//                else
+//                {
+                //  - (0xDB4F0B91 * fullY >>> 30) + (0xBBE05633 * fullX >>> 30)
+                //  + (0x91E10DA5 * fullY >>> 30) - (0xC13FA9A9 * fullX >>> 30)
                     for (int ex = 0; ex < sectors; ex++) {
                         for (int ey = 0; ey < sectors; ey++) {
+//                            int fullX = (ex << blockShift) + x, fullY = (ey << blockShift) + y;
                             energy.getAndIncrement(Coord.get((ex << blockShift) + x, (ey << blockShift) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-                            energy.getAndIncrement(Coord.get((ex << blockShift) + x, (ey << blockShift) + sectorMask - y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-                            energy.getAndIncrement(Coord.get((ex << blockShift) + sectorMask - x, (ey << blockShift) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
-                            energy.getAndIncrement(Coord.get((ex << blockShift) + sectorMask - x, (ey << blockShift) + sectorMask - y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                                    0f, lut
+                                            [x - point.x & sectorMask]
+                                            [y - point.y & sectorMask]
+                                            + (Distributor.probitI(counter += 0x9E3779B9) * 0x1p-24f));
+//                                            + (random.nextExclusiveFloat() - random.nextExclusiveFloat()) * 0x1p-7f);
+
+//                            energy.getAndIncrement(Coord.get((ex << blockShift) + x, (ey << blockShift) + sectorMask - y),
+//                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+//                            energy.getAndIncrement(Coord.get((ex << blockShift) + sectorMask - x, (ey << blockShift) + y),
+//                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+//                            energy.getAndIncrement(Coord.get((ex << blockShift) + sectorMask - x, (ey << blockShift) + sectorMask - y),
+//                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
                         }
                     }
-                }
+//                }
             }
         }
     }
@@ -283,7 +292,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             //Took 9109ms to generate. (7,3)
 //            energy.sortByValue((o1, o2) -> Float.floatToIntBits(o1 - o2));
             //Took 5714ms to generate. (7,3)
-            energy.order().sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
+            energy.order().sortJDK((a, b) -> Float.compare(energy.get(a), energy.get(b)));
             int k = 1;
             Coord low = energy.keyAt(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
