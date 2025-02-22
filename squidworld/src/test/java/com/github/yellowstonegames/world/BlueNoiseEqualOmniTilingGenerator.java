@@ -142,7 +142,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     public void create() {
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
-        path = "out/blueNoise/" + date + "_" + System.currentTimeMillis() + "/tiling/";
+        path = "out/blueNoise/" + date + "_" + System.currentTimeMillis() + "/";
         random.setSeed(Hasher.bune.hashBulk64(date));
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -239,6 +239,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         final int xOff = 0, yOff = 0;
         int idx = 1;
         for (int i = 0; i < limit; i++) {
+            int runningLimit = (i >>> sectorShift + sectorShift);
 //            int sz = positions[i - 1];
 //            final Coord pt = Coord.get((vdc(1, i+1) + xOff & sectorMask) + ((i & sectors - 1) << blockShift),
 //                    (vdc(2, i+1) + yOff & sectorMask) + (((i >>> sectorShift) & sectors - 1) << blockShift) );
@@ -247,7 +248,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 pt = Coord.get(vdc(1, idx), vdc(2, idx));
                 idx++;
                 int loc = (pt.x >>> blockShift) << sectorShift | pt.y >>> blockShift;
-                if(lightCounts[loc] < lightOccurrenceBase) {
+                if(lightCounts[loc] <= runningLimit) {
                     lightCounts[loc]++;
                     break;
                 }
@@ -320,7 +321,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             ObjectList<Coord> order = energy.order();
             order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
             for (int from = 0; from < sizeSq; from += sectorSize) {
-                random.shuffle(order, from, from + sectorSize);
+                random.shuffle(order, from, sectorSize);
                 ObjectComparators.sort(order, from, from + sectorSize, (a, b) -> done[a.x][a.y] - done[b.x][b.y]);
                 for (int i = 0; i < sectorSize; i++) {
                     Coord pt = order.get(from + i);
@@ -349,7 +350,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             ObjectList<Coord> order = energy.order();
             order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
             for (int from = 0; from < sizeSq; from += sectorSize) {
-                random.shuffle(order, from, from + sectorSize);
+                random.shuffle(order, from, sectorSize);
                 ObjectComparators.sort(order, from, from + sectorSize, (a, b) -> done[a.x][a.y] - done[b.x][b.y]);
                 for (int i = 0; i < sectorSize; i++) {
                     Coord pt = order.get(from+i);
