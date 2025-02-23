@@ -289,14 +289,14 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             //Took 9109ms to generate. (7,3)
 //            energy.sortByValue((o1, o2) -> Float.floatToIntBits(o1 - o2));
             //Took 5714ms to generate. (7,3)
-//            energy.order().sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
-            int k = 0;
-            Coord low;
+            energy.order().sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
+            int k = 1;
+            Coord low = energy.keyAt(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
-            do {
-//                low = energy.keyAt(k++);
-                low = energy.selectRanked((o1, o2) -> Float.floatToIntBits(energy.getOrDefault(o1, 0f) - energy.getOrDefault(o2, 0f)), ++k);
-            } while(lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)] >= lightOccurrence);
+            while(lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)] >= lightOccurrence){
+                low = energy.keyAt(k++);
+//                low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), ++k);
+            }
             lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)]++;
             energize(low);
             done[low.x][low.y] = ctr;
