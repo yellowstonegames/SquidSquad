@@ -34,6 +34,7 @@ import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Coord;
+import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatHeapIndirectPriorityQueue;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 
@@ -41,8 +42,6 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-
-import static com.github.yellowstonegames.grid.Coord.get;
 
 /**
  * Porting Bart Wronski's blue noise generator from NumPy to Java, see
@@ -123,7 +122,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     private final float[] energy = new float[sizeSq];
     private final float[][] lut = new float[sector][sector];
     private final int[] done = new int[sizeSq];
-    private FloatHeapIndirectPriorityQueue pq;
+    private final int[] inv = ArrayTools.range(sizeSq);
     private Pixmap pm, pmSection;
     private FastPNG writer;
     private String path;
@@ -138,13 +137,11 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     private void update(final int x, final int y, final float value) {
         final int idx = x << shift | y;
         energy[idx] = value;
-        pq.changed(idx);
     }
 
     private void add(final int x, final int y, final float value) {
         final int idx = x << shift | y;
         energy[idx] += value;
-        pq.changed(idx);
     }
 
     @Override
@@ -185,21 +182,21 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     }
 
     private void energize(int point) {
-        final int pointx = point >>> shift, pointy = point & mask;
-        final int outerX = pointx & ~sectorMask, outerY = pointy & ~sectorMask;
+        final int pointX = point >>> shift, pointY = point & mask;
+        final int outerX = pointX & ~sectorMask, outerY = pointY & ~sectorMask;
         for (int x = 0; x < sector; x++) {
             for (int y = 0; y < sector; y++) {
-                if((pointx & sectorMask) <= x + wrapMask && (pointx & sectorMask) + wrapMask >= x &&
-                        (pointy & sectorMask) <= y + wrapMask && (pointy & sectorMask) + wrapMask >= y)
+                if((pointX & sectorMask) <= x + wrapMask && (pointX & sectorMask) + wrapMask >= x &&
+                        (pointY & sectorMask) <= y + wrapMask && (pointY & sectorMask) + wrapMask >= y)
                 {
-                    add(outerX + x, outerY + y, lut[x - pointx & sectorMask][y - pointy & sectorMask]);
+                    add(outerX + x, outerY + y, lut[x - pointX & sectorMask][y - pointY & sectorMask]);
                 }
                 else
                 {
                     for (int ex = 0; ex < sectors; ex++) {
                         for (int ey = 0; ey < sectors; ey++) {
                             add((ex << blockShift) + x, (ey << blockShift) + y,
-                                    lut[x - pointx & sectorMask][y - pointy & sectorMask] * fraction);
+                                    lut[x - pointX & sectorMask][y - pointY & sectorMask] * fraction);
                         }
                     }
                 }
@@ -227,8 +224,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     public void generate()
     {
         long startTime = System.currentTimeMillis();
-        int[] inv = ArrayTools.range(sizeSq);
-        pq = new FloatHeapIndirectPriorityQueue(energy, inv);
 
         final int limit = totalSectors << 3;
 //        int[] positions = ArrayTools.range(limit);
@@ -271,7 +266,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             done[c] = ctr++;
         }
 
-        IntList popped = new IntList(size);
         for (int n = sizeSq; ctr < n; ctr++) {
             if((ctr & (lightOccurrenceBase << sectorShift + sectorShift) - 1) == 0) {
                 lightOccurrence += lightOccurrenceBase;
@@ -279,16 +273,12 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             }
             //Took 5714ms to generate. (7,3)
 //            order.sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
-            int low = pq.dequeue();
-            popped.add(low);
+            FloatArrays.radixSortIndirect(inv, energy, false);
+            int low = inv[0];
+            int k = 1;
             while(lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)] >= lightOccurrence){
-                low = pq.dequeue();
-                popped.add(low);
+                low = inv[k++];
             }
-            for (int i = 0, sz = popped.size(); i < sz; i++) {
-                pq.enqueue(popped.get(i));
-            }
-            popped.clear();
             lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)]++;
             energize(low);
             done[low] = ctr;
