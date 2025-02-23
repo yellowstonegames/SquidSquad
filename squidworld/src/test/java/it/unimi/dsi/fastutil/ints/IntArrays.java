@@ -40,6 +40,9 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static it.unimi.dsi.fastutil.floats.FloatArrays.DIGITS_PER_ELEMENT;
+import static it.unimi.dsi.fastutil.floats.FloatArrays.DIGIT_BITS;
+
 /**
  * A class providing static methods and objects that do useful things with type-specific arrays.
  *
@@ -94,6 +97,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class IntArrays {
 	private IntArrays() {
 	}
+
+	public static final IntArrays SINGLETON = new IntArrays();
 
 	/** A static, final, empty array. */
 	public static final int[] EMPTY_ARRAY = {};
@@ -1367,7 +1372,7 @@ public final class IntArrays {
 	public static void unstableSort(final int a[], final int from, final int to) {
 		// TODO For some TBD threshold, delegate to java.util.Arrays.sort if under it.
 		if (to - from >= RADIX_SORT_MIN_THRESHOLD) {
-			radixSort(a, from, to);
+			SINGLETON.radixSort(a, from, to);
 		} else {
 			quickSort(a, from, to);
 		}
@@ -1749,6 +1754,14 @@ public final class IntArrays {
 	/** Threshold <em>hint</em> for using a radix sort vs a comparison based sort. */
 	static final int RADIX_SORT_MIN_THRESHOLD = 2000;
 
+	private static final int maxLevel = DIGITS_PER_ELEMENT - 1;
+	private static final int stackSize = ((1 << DIGIT_BITS) - 1) * (DIGITS_PER_ELEMENT - 1) + 1;
+	private final int[] offsetStack = new int[stackSize];
+	private final int[] lengthStack = new int[stackSize];
+	private final int[] levelStack = new int[stackSize];
+	private final int[] count = new int[1 << DIGIT_BITS];
+	private final int[] pos = new int[1 << DIGIT_BITS];
+
 	/**
 	 * This method fixes negative numbers so that the combination exponent/significand is
 	 * lexicographically sorted.
@@ -1766,7 +1779,7 @@ public final class IntArrays {
 	 *
 	 * @param a the array to be sorted.
 	 */
-	public static void radixSort(final int[] a) {
+	public void radixSort(final int[] a) {
 		radixSort(a, 0, a.length);
 	}
 
@@ -1785,22 +1798,19 @@ public final class IntArrays {
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 */
-	public static void radixSort(final int[] a, final int from, final int to) {
+	public void radixSort(final int[] a, final int from, final int to) {
 		if (to - from < RADIXSORT_NO_REC) {
 			quickSort(a, from, to);
 			return;
 		}
-		final int maxLevel = DIGITS_PER_ELEMENT - 1;
-		final int stackSize = ((1 << DIGIT_BITS) - 1) * (DIGITS_PER_ELEMENT - 1) + 1;
+		java.util.Arrays.fill(offsetStack, 0);
+		java.util.Arrays.fill(lengthStack, 0);
+		java.util.Arrays.fill(levelStack , 0);
 		int stackPos = 0;
-		final int[] offsetStack = new int[stackSize];
-		final int[] lengthStack = new int[stackSize];
-		final int[] levelStack = new int[stackSize];
 		offsetStack[stackPos] = from;
-		lengthStack[stackPos] = to - from;
-		levelStack[stackPos++] = 0;
-		final int[] count = new int[1 << DIGIT_BITS];
-		final int[] pos = new int[1 << DIGIT_BITS];
+		lengthStack[stackPos++] = to - from;
+		java.util.Arrays.fill(count, 0);
+		java.util.Arrays.fill(pos, 0);
 		while (stackPos > 0) {
 			final int first = offsetStack[--stackPos];
 			final int length = lengthStack[stackPos];

@@ -26,22 +26,17 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.ds.IntList;
-import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.ds.support.sort.IntComparator;
-import com.github.tommyettinger.ds.support.sort.IntComparators;
-import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 import com.github.yellowstonegames.grid.Coord;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
-import it.unimi.dsi.fastutil.floats.FloatHeapIndirectPriorityQueue;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 
 import java.text.DateFormat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
+
+import static it.unimi.dsi.fastutil.floats.FloatArrays.*;
 
 /**
  * Porting Bart Wronski's blue noise generator from NumPy to Java, see
@@ -122,7 +117,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     private final float[] energy = new float[sizeSq];
     private final float[][] lut = new float[sector][sector];
     private final int[] done = new int[sizeSq];
-    private final int[] inv = ArrayTools.range(sizeSq);
+    private final int[] inv = ArrayTools.range(sizeSq), support = new int[sizeSq];;
     private Pixmap pm, pmSection;
     private FastPNG writer;
     private String path;
@@ -273,7 +268,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             }
             //Took 5714ms to generate. (7,3)
 //            order.sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
-            FloatArrays.radixSortIndirect(inv, energy, false);
+            radixSortIndirect(inv, energy, support);
             int low = inv[0];
             int k = 1;
             while(lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)] >= lightOccurrence){
@@ -407,8 +402,142 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
         }
 
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to get FFT.");
-
     }
+
+    /**
+     * Sorts the specified array using indirect radix sort.
+     *
+     * <p>
+     * The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M.
+     * Douglas McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages
+     * 5&minus;27 (1993).
+     *
+     * <p>
+     * This method implement an <em>indirect</em> sort. The elements of {@code perm} (which must be
+     * exactly the numbers in the interval {@code [0..perm.length)}) will be permuted so that
+     * {@code a[perm[i]] &le; a[perm[i + 1]]}.
+     *
+     * @implSpec This implementation will allocate, in the stable case, a support array as large as
+     *           {@code perm} (note that the stable version is slightly faster).
+     *
+     * @param perm a permutation array indexing {@code a}.
+     * @param a the array to be sorted.
+     * @param support an int array with the same size as {@code perm} that will be overwritten
+     */
+    public void radixSortIndirect(final int[] perm, final float[] a, final int[] support) {
+        radixSortIndirect(perm, a, 0, perm.length, support);
+    }
+    private static final int maxLevel = DIGITS_PER_ELEMENT - 1;
+    private static final int stackSize = ((1 << DIGIT_BITS) - 1) * (DIGITS_PER_ELEMENT - 1) + 1;
+    private final int[] offsetStack = new int[stackSize];
+    private final int[] lengthStack = new int[stackSize];
+    private final int[] levelStack = new int[stackSize];
+    private final int[] count = new int[1 << DIGIT_BITS];
+    private final int[] pos = new int[1 << DIGIT_BITS];
+
+    /**
+     * Sorts the specified array using indirect radix sort.
+     *
+     * <p>
+     * The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M.
+     * Douglas McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages
+     * 5&minus;27 (1993).
+     *
+     * <p>
+     * This method implement an <em>indirect</em> sort. The elements of {@code perm} (which must be
+     * exactly the numbers in the interval {@code [0..perm.length)}) will be permuted so that
+     * {@code a[perm[i]] &le; a[perm[i + 1]]}.
+     *
+     * @param perm a permutation array indexing {@code a}.
+     * @param a    the array to be sorted.
+     * @param from the index of the first element of {@code perm} (inclusive) to be permuted.
+     * @param to   the index of the last element of {@code perm} (exclusive) to be permuted.
+     */
+    public void radixSortIndirect(final int[] perm, final float[] a, final int from, final int to, final int[] support) {
+        if (to - from < RADIXSORT_NO_REC) {
+            quickSortIndirect(perm, a, from, to);
+            stabilize(perm, a, from, to);
+            return;
+        }
+        Arrays.fill(offsetStack, 0);
+        Arrays.fill(lengthStack, 0);
+        Arrays.fill(levelStack , 0);
+        int stackPos = 0;
+        offsetStack[stackPos] = from;
+        lengthStack[stackPos++] = to - from;
+        Arrays.fill(pos, 0);
+        while (stackPos > 0) {
+            Arrays.fill(count, 0);
+            final int first = offsetStack[--stackPos];
+            final int length = lengthStack[stackPos];
+            final int level = levelStack[stackPos];
+            final int signMask = level % DIGITS_PER_ELEMENT == 0 ? 1 << DIGIT_BITS - 1 : 0;
+            final int shift = (DIGITS_PER_ELEMENT - 1 - level % DIGITS_PER_ELEMENT) * DIGIT_BITS; // This is the shift
+            // that extract the
+            // right byte from a
+            // key
+            // Count keys.
+            for (int i = first + length; i-- != first;) count[(Float.floatToRawIntBits(a[perm[i]]) >>> shift & DIGIT_MASK ^ signMask)]++;
+            // Compute cumulative distribution
+            int lastUsed = -1;
+            for (int i = 0, p = 0; i < 1 << DIGIT_BITS; i++) {
+                if (count[i] != 0) lastUsed = i;
+                pos[i] = (p += count[i]);
+            }
+            for (int i = first + length; i-- != first; )
+                support[--pos[(Float.floatToRawIntBits(a[perm[i]]) >>> shift & DIGIT_MASK ^ signMask)]] = perm[i];
+            System.arraycopy(support, 0, perm, first, length);
+            for (int i = 0, p = first; i <= lastUsed; i++) {
+                if (level < maxLevel && count[i] > 1) {
+                    if (count[i] < RADIXSORT_NO_REC) {
+                        quickSortIndirect(perm, a, p, p + count[i]);
+                        stabilize(perm, a, p, p + count[i]);
+                    } else {
+                        offsetStack[stackPos] = p;
+                        lengthStack[stackPos] = count[i];
+                        levelStack[stackPos++] = level + 1;
+                    }
+                }
+                p += count[i];
+            }
+        }
+    }
+
+    /**
+     * Stabilizes a permutation.
+     *
+     * <p>
+     * This method can be used to stabilize the permutation generated by an indirect sorting, assuming
+     * that initially the permutation array was in ascending order (e.g., the identity, as usually
+     * happens). This method scans the permutation, and for each non-singleton block of elements with
+     * the same associated values in {@code x}, permutes them in ascending order. The resulting
+     * permutation corresponds to a stable sort.
+     *
+     * <p>
+     * Usually combining an unstable indirect sort and this method is more efficient than using a stable
+     * sort, as most stable sort algorithms require a support array.
+     *
+     * <p>
+     * More precisely, assuming that {@code x[perm[i]] &le; x[perm[i + 1]]}, after stabilization we will
+     * also have that {@code x[perm[i]] = x[perm[i + 1]]} implies {@code perm[i] &le; perm[i + 1]}.
+     *
+     * @param perm a permutation array indexing {@code x} so that it is sorted.
+     * @param x the sorted array to be stabilized.
+     * @param from the index of the first element (inclusive) to be stabilized.
+     * @param to the index of the last element (exclusive) to be stabilized.
+     */
+    public static void stabilize(final int[] perm, final float[] x, final int from, final int to) {
+        int curr = from;
+        for (int i = from + 1; i < to; i++) {
+            if (x[perm[i]] != x[perm[curr]]) {
+                if (i - curr > 1) IntArrays.SINGLETON.radixSort(perm, curr, i);
+                curr = i;
+            }
+        }
+        if (to - curr > 1) IntArrays.SINGLETON.radixSort(perm, curr, to);
+    }
+
+
     @Override
     public void render() {
     }

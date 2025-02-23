@@ -1737,12 +1737,12 @@ public final class FloatArrays {
 	}
 
 	/** The size of a digit used during radix sort (must be a power of 2). */
-	private static final int DIGIT_BITS = 8;
+	public static final int DIGIT_BITS = 8;
 	/** The mask to extract a digit of {@link #DIGIT_BITS} bits. */
-	private static final int DIGIT_MASK = (1 << DIGIT_BITS) - 1;
+	public static final int DIGIT_MASK = (1 << DIGIT_BITS) - 1;
 	/** The number of digits per element. */
-	private static final int DIGITS_PER_ELEMENT = Float.SIZE / DIGIT_BITS;
-	private static final int RADIXSORT_NO_REC = 1024;
+	public static final int DIGITS_PER_ELEMENT = Float.SIZE / DIGIT_BITS;
+	public static final int RADIXSORT_NO_REC = 1024;
 	private static final int RADIXSORT_NO_REC_SMALL = 64;
 	private static final int PARALLEL_RADIXSORT_NO_FORK = 1024;
 	// The thresholds were determined on an Intel i7 8700K.
@@ -1753,9 +1753,9 @@ public final class FloatArrays {
 	 * This method fixes negative numbers so that the combination exponent/significand is
 	 * lexicographically sorted.
 	 */
-	private static final int fixFloat(final float f) {
+	public static int fixFloat(final float f) {
 		final int i = Float.floatToIntBits(f);
-		return i >= 0 ? i : i ^ 0x7FFFFFFF;
+		return i ^ (i >> 31 & 0x7FFFFFFF);
 	}
 
 	/**
