@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.github.tommyettinger.anim8.FastPNG;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.sort.ObjectComparators;
 import com.github.tommyettinger.random.AceRandom;
@@ -281,7 +280,6 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
 
         ObjectList<Coord> order = energy.order();
-        ObjectList<ObjectFloatOrderedMap.Entry<Coord>> entries = energy.entrySet().toList();
         for (int n = sizeSq; ctr < n; ctr++) {
             if((ctr & (lightOccurrenceBase << sectorShift + sectorShift) - 1) == 0) {
                 lightOccurrence += lightOccurrenceBase;
@@ -292,12 +290,12 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             //Took 9109ms to generate. (7,3)
 //            energy.sortByValue((o1, o2) -> Float.floatToIntBits(o1 - o2));
             //Took 5714ms to generate. (7,3)
-            entries.sortJDK((a, b) -> Float.floatToIntBits(a.value - b.value));
+            order.sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
             int k = 1;
-            Coord low = entries.get(0).key;
+            Coord low = order.get(0);
 //            Coord low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), 1);
             while(lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)] >= lightOccurrence){
-                low = entries.get(k++).key;
+                low = order.get(k++);
 //                low = energy.selectRanked((o1, o2) -> Float.compare(energy.getOrDefault(o1, 0f), energy.getOrDefault(o2, 0f)), ++k);
             }
             lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)]++;
