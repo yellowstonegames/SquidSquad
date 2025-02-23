@@ -78,7 +78,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = true;
+    private static final boolean isTriangular = false;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
