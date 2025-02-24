@@ -85,11 +85,11 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 10;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 1;
+    private static final int sectorShift = 3;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -130,8 +130,8 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //            return left == right;
 //        }
 //    };
-    private final float[][] lut = new float[sector][sector];
-    private final int[][] done = new int[size][size];
+    private final float[] lut = new float[sector*sector];
+    private final int[] done = new int[sizeSq];
     private Pixmap pm, pmSection;
     private FastPNG writer;
     private String path;
@@ -162,11 +162,12 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         }
         column[0] = 1f;
         for (int x = 0; x < sector; x++) {
+            final float cx = column[x];
             for (int y = 0; y < sector; y++) {
-                lut[x][y] = column[x] * column[y];
+                lut[x<<shift-sectorShift|y] = cx * column[y];
             }
         }
-        lut[0][0] = Float.MAX_VALUE;
+        lut[0] = Float.MAX_VALUE;
 //        lut[0][0] = Float.POSITIVE_INFINITY;
 
         generate();
@@ -179,11 +180,12 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         final int outerX = point.x & ~sectorMask, outerY = point.y & ~sectorMask;
         for (int x = 0; x < sector; x++) {
             for (int y = 0; y < sector; y++) {
+                int lutIndex = (x - point.x & sectorMask) << shift - sectorShift | (y - point.y & sectorMask);
                 if((point.x & sectorMask) <= x + wrapMask && (point.x & sectorMask) + wrapMask >= x &&
                         (point.y & sectorMask) <= y + wrapMask && (point.y & sectorMask) + wrapMask >= y)
                 {
                     energy.getAndIncrement(Coord.get(outerX + x, outerY + y),
-                            0f, lut[x - point.x & sectorMask][y - point.y & sectorMask]);
+                            0f, lut[lutIndex]);
                 }
                 else
                 {
@@ -193,7 +195,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction + (random.next(1) - 0.5f) * 0x1p-32f);
 
                             energy.getAndIncrement(Coord.get((ex << blockShift) + x, (ey << blockShift) + y),
-                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
+                                    0f, lut[lutIndex] * fraction);
 
 //                            energy.getAndIncrement(Coord.get((ex << blockShift) + x, (ey << blockShift) + sectorMask - y),
 //                                    0f, lut[x - point.x & sectorMask][y - point.y & sectorMask] * fraction);
@@ -271,12 +273,12 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
                 energy.put(Coord.get(x, y), 0f);
             }
         }
-        ArrayTools.fill(done, 0);
+        Arrays.fill(done, 0);
         int ctr = 0;
 
         for(Coord c : initial) {
             energize(c);
-            done[c.x][c.y] = ctr++;
+            done[c.x<<shift|c.y] = ctr++;
         }
 
         ObjectList<Coord> order = energy.order();
@@ -300,7 +302,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             }
             lightCounts[(low.x >>> blockShift) << sectorShift | (low.y >>> blockShift)]++;
             energize(low);
-            done[low.x][low.y] = ctr;
+            done[low.x<<shift|low.y] = ctr;
         }
 
         if(isTriangular) {
@@ -322,7 +324,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
             for (int from = 0; from < sizeSq; from += sectorSize) {
                 random.shuffle(order, from, sectorSize);
-                ObjectComparators.sort(order, from, from + sectorSize, (a, b) -> done[a.x][a.y] - done[b.x][b.y]);
+                ObjectComparators.sort(order, from, from + sectorSize, (a, b) -> done[a.x<<shift|a.y] - done[b.x<<shift|b.y]);
                 for (int i = 0; i < sectorSize; i++) {
                     Coord pt = order.get(from + i);
                     pm.drawPixel(pt.x, pt.y, colorMap[i]);
@@ -350,7 +352,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
             order.sortJDK(Comparator.comparingInt(a -> ((a.x >>> blockShift) << sectorShift | (a.y >>> blockShift))));
             for (int from = 0; from < sizeSq; from += sectorSize) {
                 random.shuffle(order, from, sectorSize);
-                ObjectComparators.sort(order, from, from + sectorSize, (a, b) -> done[a.x][a.y] - done[b.x][b.y]);
+                ObjectComparators.sort(order, from, from + sectorSize, (a, b) -> done[a.x<<shift|a.y] - done[b.x<<shift|b.y]);
                 for (int i = 0; i < sectorSize; i++) {
                     Coord pt = order.get(from+i);
                     float r = (i * (256f / sectorSize));
