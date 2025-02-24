@@ -86,11 +86,11 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 10;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 1;
+    private static final int sectorShift = 3;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -112,12 +112,11 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
 //    private static final float fraction = 1f / (totalSectors * 4f);
     private static int lightOccurrenceBase = sizeSq >>> 8 + sectorShift + sectorShift;
     private static int lightOccurrence = lightOccurrenceBase;
-    private static final int triAdjust = Integer.numberOfTrailingZeros(sizeSq >>> 8 + sectorShift + sectorShift);
 
     private final float[] energy = new float[sizeSq];
     private final float[][] lut = new float[sector][sector];
     private final int[] done = new int[sizeSq];
-    private final int[] inv = ArrayTools.range(sizeSq), support = new int[sizeSq];;
+    private final int[] inv = ArrayTools.range(sizeSq);
     private Pixmap pm, pmSection;
     private FastPNG writer;
     private String path;
@@ -268,7 +267,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             }
             //Took 5714ms to generate. (7,3)
 //            order.sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
-            radixSortIndirect(inv, energy, support);
+            FloatArrays.parallelRadixSortIndirect(inv, energy, true);
             int low = inv[0];
             int k = 1;
             while(lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)] >= lightOccurrence){

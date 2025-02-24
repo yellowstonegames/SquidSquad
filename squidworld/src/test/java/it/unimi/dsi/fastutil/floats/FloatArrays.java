@@ -118,7 +118,7 @@ public final class FloatArrays {
 	 *         those of {@code array}.
 	 */
 	public static float[] forceCapacity(final float[] array, final int length, final int preserve) {
-		final float t[] = new float[length];
+		final float[] t = new float[length];
 		System.arraycopy(array, 0, t, 0, preserve);
 		return t;
 	}
@@ -194,7 +194,7 @@ public final class FloatArrays {
 	public static float[] grow(final float[] array, final int length, final int preserve) {
 		if (length > array.length) {
 			final int newLength = (int)Math.max(Math.min((long)array.length + (array.length >> 1), Arrays.MAX_ARRAY_SIZE), length);
-			final float t[] = new float[newLength];
+			final float[] t = new float[newLength];
 			System.arraycopy(array, 0, t, 0, preserve);
 			return t;
 		}
@@ -213,7 +213,7 @@ public final class FloatArrays {
 	 */
 	public static float[] trim(final float[] array, final int length) {
 		if (length >= array.length) return array;
-		final float t[] = length == 0 ? EMPTY_ARRAY : new float[length];
+		final float[] t = length == 0 ? EMPTY_ARRAY : new float[length];
 		System.arraycopy(array, 0, t, 0, length);
 		return t;
 	}
@@ -301,7 +301,7 @@ public final class FloatArrays {
 	 *             in recent JVMs.
 	 */
 	@Deprecated
-	public static boolean equals(final float[] a1, final float a2[]) {
+	public static boolean equals(final float[] a1, final float[] a2) {
 		int i = a1.length;
 		if (i != a2.length) return false;
 		while (i-- != 0) if (!(Float.floatToIntBits(a1[i]) == Float.floatToIntBits(a2[i]))) return false;
@@ -381,7 +381,7 @@ public final class FloatArrays {
 	 * @param a a position in {@code x}.
 	 * @param b another position in {@code x}.
 	 */
-	public static void swap(final float x[], final int a, final int b) {
+	public static void swap(final float[] x, final int a, final int b) {
 		final float t = x[a];
 		x[a] = x[b];
 		x[b] = t;
@@ -399,7 +399,7 @@ public final class FloatArrays {
 		for (int i = 0; i < n; i++, a++, b++) swap(x, a, b);
 	}
 
-	private static int med3(final float x[], final int a, final int b, final int c, FloatComparator comp) {
+	private static int med3(final float[] x, final int a, final int b, final int c, FloatComparator comp) {
 		final int ab = comp.compare(x[a], x[b]);
 		final int ac = comp.compare(x[a], x[c]);
 		final int bc = comp.compare(x[b], x[c]);
@@ -617,7 +617,7 @@ public final class FloatArrays {
 		parallelQuickSort(x, 0, x.length, comp);
 	}
 
-	private static int med3(final float x[], final int a, final int b, final int c) {
+	private static int med3(final float[] x, final int a, final int b, final int c) {
 		final int ab = (Float.compare((x[a]), (x[b])));
 		final int ac = (Float.compare((x[a]), (x[c])));
 		final int bc = (Float.compare((x[b]), (x[c])));
@@ -829,7 +829,7 @@ public final class FloatArrays {
 		parallelQuickSort(x, 0, x.length);
 	}
 
-	private static int med3Indirect(final int perm[], final float x[], final int a, final int b, final int c) {
+	private static int med3Indirect(final int[] perm, final float[] x, final int a, final int b, final int c) {
 		final float aa = x[perm[a]];
 		final float bb = x[perm[b]];
 		final float cc = x[perm[c]];
@@ -943,7 +943,7 @@ public final class FloatArrays {
 	 * @param perm a permutation array indexing {@code x}.
 	 * @param x the array to be sorted.
 	 */
-	public static void quickSortIndirect(final int perm[], final float[] x) {
+	public static void quickSortIndirect(final int[] perm, final float[] x) {
 		quickSortIndirect(perm, x, 0, x.length);
 	}
 
@@ -954,7 +954,7 @@ public final class FloatArrays {
 		private final int[] perm;
 		private final float[] x;
 
-		public ForkJoinQuickSortIndirect(final int perm[], final float[] x, final int from, final int to) {
+		public ForkJoinQuickSortIndirect(final int[] perm, final float[] x, final int from, final int to) {
 			this.from = from;
 			this.to = to;
 			this.x = x;
@@ -1054,7 +1054,7 @@ public final class FloatArrays {
 	 * @param x the array to be sorted.
 	 *
 	 */
-	public static void parallelQuickSortIndirect(final int perm[], final float[] x) {
+	public static void parallelQuickSortIndirect(final int[] perm, final float[] x) {
 		parallelQuickSortIndirect(perm, x, 0, x.length);
 	}
 
@@ -1081,7 +1081,7 @@ public final class FloatArrays {
 	 * @param from the index of the first element (inclusive) to be stabilized.
 	 * @param to the index of the last element (exclusive) to be stabilized.
 	 */
-	public static void stabilize(final int perm[], final float[] x, final int from, final int to) {
+	public static void stabilize(final int[] perm, final float[] x, final int from, final int to) {
 		int curr = from;
 		for (int i = from + 1; i < to; i++) {
 			if (x[perm[i]] != x[perm[curr]]) {
@@ -1113,11 +1113,11 @@ public final class FloatArrays {
 	 * @param perm a permutation array indexing {@code x} so that it is sorted.
 	 * @param x the sorted array to be stabilized.
 	 */
-	public static void stabilize(final int perm[], final float[] x) {
+	public static void stabilize(final int[] perm, final float[] x) {
 		stabilize(perm, x, 0, perm.length);
 	}
 
-	private static int med3(final float x[], final float[] y, final int a, final int b, final int c) {
+	private static int med3(final float[] x, final float[] y, final int a, final int b, final int c) {
 		int t;
 		final int ab = (t = (Float.compare((x[a]), (x[b])))) == 0 ? (Float.compare((y[a]), (y[b]))) : t;
 		final int ac = (t = (Float.compare((x[a]), (x[c])))) == 0 ? (Float.compare((y[a]), (y[c]))) : t;
@@ -1125,7 +1125,7 @@ public final class FloatArrays {
 		return (ab < 0 ? (bc < 0 ? b : ac < 0 ? c : a) : (bc > 0 ? b : ac > 0 ? c : a));
 	}
 
-	private static void swap(final float x[], final float[] y, final int a, final int b) {
+	private static void swap(final float[] x, final float[] y, final int a, final int b) {
 		final float t = x[a];
 		final float u = y[a];
 		x[a] = x[b];
@@ -1365,7 +1365,7 @@ public final class FloatArrays {
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @since 8.3.0
 	 */
-	public static void unstableSort(final float a[], final int from, final int to) {
+	public static void unstableSort(final float[] a, final int from, final int to) {
 		// TODO For some TBD threshold, delegate to java.util.Arrays.sort if under it.
 		if (to - from >= RADIX_SORT_MIN_THRESHOLD) {
 			radixSort(a, from, to);
@@ -1382,7 +1382,7 @@ public final class FloatArrays {
 	 * @param a the array to be sorted.
 	 * @since 8.3.0
 	 */
-	public static void unstableSort(final float a[]) {
+	public static void unstableSort(final float[] a) {
 		unstableSort(a, 0, a.length);
 	}
 
@@ -1397,7 +1397,7 @@ public final class FloatArrays {
 	 * @param comp the comparator to determine the sorting order.
 	 * @since 8.3.0
 	 */
-	public static void unstableSort(final float a[], final int from, final int to, FloatComparator comp) {
+	public static void unstableSort(final float[] a, final int from, final int to, FloatComparator comp) {
 		quickSort(a, from, to, comp);
 	}
 
@@ -1410,7 +1410,7 @@ public final class FloatArrays {
 	 * @param comp the comparator to determine the sorting order.
 	 * @since 8.3.0
 	 */
-	public static void unstableSort(final float a[], FloatComparator comp) {
+	public static void unstableSort(final float[] a, FloatComparator comp) {
 		unstableSort(a, 0, a.length, comp);
 	}
 
@@ -1430,7 +1430,7 @@ public final class FloatArrays {
 	 *            which case {@code a} will be cloned.
 	 */
 
-	public static void mergeSort(final float a[], final int from, final int to, float supp[]) {
+	public static void mergeSort(final float[] a, final int from, final int to, float[] supp) {
 		int len = to - from;
 		// Insertion sort on smallest arrays
 		if (len < MERGESORT_NO_REC) {
@@ -1466,7 +1466,7 @@ public final class FloatArrays {
 	 * @param from the index of the first element (inclusive) to be sorted.
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 */
-	public static void mergeSort(final float a[], final int from, final int to) {
+	public static void mergeSort(final float[] a, final int from, final int to) {
 		mergeSort(a, from, to, (float[])null);
 	}
 
@@ -1479,7 +1479,7 @@ public final class FloatArrays {
 	 * 
 	 * @param a the array to be sorted.
 	 */
-	public static void mergeSort(final float a[]) {
+	public static void mergeSort(final float[] a) {
 		mergeSort(a, 0, a.length);
 	}
 
@@ -1499,7 +1499,7 @@ public final class FloatArrays {
 	 *            identical to those of {@code a} in the specified range. It can be {@code null}, in
 	 *            which case {@code a} will be cloned.
 	 */
-	public static void mergeSort(final float a[], final int from, final int to, FloatComparator comp, float supp[]) {
+	public static void mergeSort(final float[] a, final int from, final int to, FloatComparator comp, float[] supp) {
 		int len = to - from;
 		// Insertion sort on smallest arrays
 		if (len < MERGESORT_NO_REC) {
@@ -1537,7 +1537,7 @@ public final class FloatArrays {
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @param comp the comparator to determine the sorting order.
 	 */
-	public static void mergeSort(final float a[], final int from, final int to, FloatComparator comp) {
+	public static void mergeSort(final float[] a, final int from, final int to, FloatComparator comp) {
 		mergeSort(a, from, to, comp, (float[])null);
 	}
 
@@ -1551,7 +1551,7 @@ public final class FloatArrays {
 	 * @param a the array to be sorted.
 	 * @param comp the comparator to determine the sorting order.
 	 */
-	public static void mergeSort(final float a[], FloatComparator comp) {
+	public static void mergeSort(final float[] a, FloatComparator comp) {
 		mergeSort(a, 0, a.length, comp);
 	}
 
@@ -1569,7 +1569,7 @@ public final class FloatArrays {
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @since 8.3.0
 	 */
-	public static void stableSort(final float a[], final int from, final int to) {
+	public static void stableSort(final float[] a, final int from, final int to) {
 		// Due to subtle differences between Float/Double.compare and operator compare, it is
 		// not safe to delegate this to java.util.Arrays.sort(double[], int, int)
 		mergeSort(a, from, to);
@@ -1588,7 +1588,7 @@ public final class FloatArrays {
 	 * @param a the array to be sorted.
 	 * @since 8.3.0
 	 */
-	public static void stableSort(final float a[]) {
+	public static void stableSort(final float[] a) {
 		stableSort(a, 0, a.length);
 	}
 
@@ -1608,7 +1608,7 @@ public final class FloatArrays {
 	 * @param comp the comparator to determine the sorting order.
 	 * @since 8.3.0
 	 */
-	public static void stableSort(final float a[], final int from, final int to, FloatComparator comp) {
+	public static void stableSort(final float[] a, final int from, final int to, FloatComparator comp) {
 		mergeSort(a, from, to, comp);
 	}
 
@@ -1626,7 +1626,7 @@ public final class FloatArrays {
 	 * @param comp the comparator to determine the sorting order.
 	 * @since 8.3.0
 	 */
-	public static void stableSort(final float a[], FloatComparator comp) {
+	public static void stableSort(final float[] a, FloatComparator comp) {
 		stableSort(a, 0, a.length, comp);
 	}
 
@@ -1754,8 +1754,10 @@ public final class FloatArrays {
 	 * lexicographically sorted.
 	 */
 	public static int fixFloat(final float f) {
-		final int i = Float.floatToIntBits(f);
-		return i ^ (i >> 31 & 0x7FFFFFFF);
+		//TODO: if using this to sort general-use float arrays, make this use the commented block!
+		return Float.floatToIntBits(f);
+//		final int i = Float.floatToIntBits(f);
+//		return i ^ (i >> 31 & 0x7FFFFFFF);
 	}
 
 	/**
@@ -1850,9 +1852,9 @@ public final class FloatArrays {
 	}
 
 	protected static final class Segment {
-		protected final int offset, length, level;
+		private final int offset, length, level;
 
-		protected Segment(final int offset, final int length, final int level) {
+		private Segment(final int offset, final int length, final int level) {
 			this.offset = offset;
 			this.length = length;
 			this.level = level;
@@ -1864,7 +1866,7 @@ public final class FloatArrays {
 		}
 	}
 
-	protected static final Segment POISON_PILL = new Segment(-1, -1, -1);
+	private static final Segment POISON_PILL = new Segment(-1, -1, -1);
 
 	/**
 	 * Sorts the specified range of an array using parallel radix sort.
@@ -2109,7 +2111,7 @@ public final class FloatArrays {
 	 * @param to the index of the last element (exclusive) to be sorted.
 	 * @param stable whether the sorting algorithm should be stable.
 	 */
-	public static void parallelRadixSortIndirect(final int perm[], final float[] a, final int from, final int to, final boolean stable) {
+	public static void parallelRadixSortIndirect(final int[] perm, final float[] a, final int from, final int to, final boolean stable) {
 		ForkJoinPool pool = getPool();
 		if (to - from < PARALLEL_RADIXSORT_NO_FORK || pool.getParallelism() == 1) {
 			radixSortIndirect(perm, a, from, to, stable);
@@ -2213,7 +2215,7 @@ public final class FloatArrays {
 	 * @param a the array to be sorted.
 	 * @param stable whether the sorting algorithm should be stable.
 	 */
-	public static void parallelRadixSortIndirect(final int perm[], final float[] a, final boolean stable) {
+	public static void parallelRadixSortIndirect(final int[] perm, final float[] a, final boolean stable) {
 		parallelRadixSortIndirect(perm, a, 0, a.length, stable);
 	}
 
