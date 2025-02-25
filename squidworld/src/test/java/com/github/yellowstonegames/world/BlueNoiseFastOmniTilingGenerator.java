@@ -78,18 +78,18 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = true;
+    private static final boolean isTriangular = false;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 10;
+    private static final int shift = 7;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 0;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -253,6 +253,8 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
 
         }
 
+        int[] histogram = new int[256];
+
         if(isTriangular) {
             int[] colorMap = new int[sectorSize];
             int span = 1, lastIndex = colorMap.length - 1;
@@ -277,8 +279,10 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
                 random.shuffle(inv, from, sectorSize);
                 IntArrays.stableSort(inv, from, from + sectorSize, (a, b) -> done[a] - done[b]);
                 for (int i = 0; i < sectorSize; i++) {
-                    int pt = inv[from + i];
-                    pm.drawPixel(pt>>>shift, pt&mask, colorMap[i]);
+                    final int pt = inv[from + i];
+                    final int color = colorMap[i];
+                    pm.drawPixel(pt>>>shift, pt&mask, color);
+                    histogram[color>>>24]++;
                 }
             }
         }
@@ -291,11 +295,18 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
                 random.shuffle(inv, from, sectorSize);
                 IntArrays.stableSort(inv, from, from + sectorSize, (a, b) -> done[a] - done[b]);
                 for (int i = 0; i < sectorSize; i++) {
-                    int pt = inv[from+i];
-                    float r = (i * (256f / sectorSize));
-                    pm.drawPixel(pt>>>shift, pt&mask, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
+                    final int pt = inv[from+i];
+                    final float r = (i * (256f / sectorSize));
+                    final int level = ((int) (r) & 0xFF);
+                    histogram[level]++;
+                    pm.drawPixel(pt>>>shift, pt&mask, level * 0x01010100 | 0xFF);
                 }
             }
+        }
+
+        System.out.println("HISTOGRAM:");
+        for (int i = 0; i < 256; i++) {
+            System.out.printf("%3d: %d\n", i, histogram[i]);
         }
 
         String name = path + "BlueNoise" + (isTriangular ? "TriFast" : "Fast") + "Tiling";
