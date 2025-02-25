@@ -78,18 +78,18 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = false;
+    private static final boolean isTriangular = true;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 7;
+    private static final int shift = 10;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 0;
+    private static final int sectorShift = 3;
 
     private static final int blockShift = shift - sectorShift;
 

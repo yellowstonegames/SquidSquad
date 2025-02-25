@@ -824,7 +824,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get128x128(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get(x, y, TILE_NOISE[(int)noise.getSeed() & 31]) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -869,7 +869,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[(int)noise.getSeed() & 63]) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[(int)noise.getSeed() & 31]) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -924,7 +924,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (1f/255f) * (BlueNoise.get128x128(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) & 255) <= threshold ? 1 : 0;
+                            bright = (1f/255f) * (BlueNoise.get(x, y, TILE_NOISE[(int)noise.getSeed() & 31]) + 128) <= threshold ? 1 : 0;
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -969,7 +969,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (1f/255f) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[(int) noise.getSeed() & 63]) + 128) <= threshold ? 1 : 0;
+                            bright = (1f/255f) * (BlueNoise.get(x, y, BlueNoise.TILE_TRI_NOISE[(int) noise.getSeed() & 31]) + 128) <= threshold ? 1 : 0;
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -2308,9 +2308,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     }
 
     public static byte getSeededOmniTiling(final int x, final int y, final int seed) {
-        final int a = x >>> 7 ^ seed >>> 6;
-        final int b = y >>> 7 ^ seed >>> 13;
-        return TILE_NOISE[seed + b + ((a + b) * (a + b + 1) >> 1) & 63][(y << 7 & 0x3F80) | (x & 0x7F)];
+        final int a = x >>> 7 ^ seed >>> 5;
+        final int b = y >>> 7 ^ seed >>> 10;
+        return TILE_NOISE[seed + b + ((a + b) * (a + b + 1) >> 1) & 31][(y << 7 & 0x3F80) | (x & 0x7F)];
     }
 
 
