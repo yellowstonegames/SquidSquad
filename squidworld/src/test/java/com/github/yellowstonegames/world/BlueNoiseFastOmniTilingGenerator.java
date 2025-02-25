@@ -33,7 +33,6 @@ import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 import static it.unimi.dsi.fastutil.floats.FloatArrays.*;
@@ -79,7 +78,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = false;
+    private static final boolean isTriangular = true;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
@@ -102,15 +101,9 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     private static final int sectorSize = sector * sector;
     private static final int mask = size - 1;
     private static final int sectorMask = sector - 1;
-    private static final int sectorExponent = Integer.bitCount(sectorMask);
-//    private static final int wrapMask = sector >>> 3;
-//    private static final int wrapMask = sector * 5 >>> 5;
-//    private static final int wrapMask = sector * 13 >>> 5;
     private static final int wrapMask = sector >>> 1;
     private static final float fraction = 1f / (totalSectors);
-//    private static final float fraction = 1f / (totalSectors * 2f);
-//    private static final float fraction = 1f / (totalSectors * 4f);
-    private static int lightOccurrenceBase = sizeSq >>> 8 + sectorShift + sectorShift;
+    private static final int lightOccurrenceBase = sizeSq >>> 8 + sectorShift + sectorShift;
     private static int lightOccurrence = lightOccurrenceBase;
 
     private final float[] energy = new float[sizeSq];
@@ -167,11 +160,9 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             }
         }
         lut[0][0] = Float.MAX_VALUE;
-//        lut[0][0] = Float.POSITIVE_INFINITY;
 
         generate();
         getThresholdAndFFT(pm);
-//        getThresholdAndFFT(new Pixmap(Gdx.files.local("2025/BlueNoiseOmniTiling512x512.png")));
         Gdx.app.exit();
     }
 
@@ -200,7 +191,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
 
     public static int vdc(final int base, int index)
     {
-//        return QuasiRandomTools.vanDerCorput(base, index ^ index >>> 1);
         return (int)(MathTools.GOLDEN_LONGS[base & 1023] * index >>> 64 - shift);
 //        if(base <= 2) {
 //            return (Integer.reverse(index) >>> 32 - shift);
@@ -220,19 +210,10 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
         long startTime = System.currentTimeMillis();
 
         final int limit = totalSectors << 3;
-//        int[] positions = ArrayTools.range(limit);
-//        for (int i = 0; i <= limit - totalSectors; i += totalSectors) {
-//            rng.shuffle(positions, i, totalSectors);
-//        }
         int[] initial = new int[limit];
-//        final int xOff = rng.next(blockShift), yOff = rng.next(blockShift);
-        final int xOff = 0, yOff = 0;
         int idx = 1;
         for (int i = 0; i < limit; i++) {
             int runningLimit = (i >>> sectorShift + sectorShift);
-//            int sz = positions[i - 1];
-//            final Coord pt = Coord.get((vdc(1, i+1) + xOff & sectorMask) + ((i & sectors - 1) << blockShift),
-//                    (vdc(2, i+1) + yOff & sectorMask) + (((i >>> sectorShift) & sectors - 1) << blockShift) );
             int pt;
             do{
                 pt = get(vdc(1, idx), vdc(2, idx));
@@ -245,14 +226,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             } while (true);
             initial[i] = pt;
         }
-//        CoordOrderedSet initial = new CoordOrderedSet(limit);
-//        final int xOff = rng.next(sector), yOff = rng.next(sector);
-//        for (int i = 1; initial.size() < limit; i++) {
-//            int gray = initial.size();
-//            final Coord pt = Coord.get((vdc(7, i) + xOff & sectorMask) + ((gray & sectors - 1) << blockShift),
-//                    (vdc(3, i) + yOff & sectorMask) + (((gray >>> sectorShift) & sectors - 1) << blockShift) );
-//            initial.add(pt);
-//        }
         int ctr = 0;
 
         for(int c : initial) {
@@ -267,6 +240,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             }
             //Took 5714ms to generate. (7,3)
 //            order.sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
+            // only faster with large shifts, like 10
             FloatArrays.parallelRadixSortIndirect(inv, energy, true);
             int low = inv[0];
             int k = 1;
@@ -306,24 +280,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
                     int pt = inv[from + i];
                     pm.drawPixel(pt>>>shift, pt&mask, colorMap[i]);
                 }
-//                for (int i = 0, sSize = sub.size() - 1; i <= sSize; i++) {
-//                    Coord pt = sub.get(i);
-//                    double r = (i * (1.0 / sSize));
-//                    r = ((r > 0.5) ? 1.0 - Math.sqrt(2.0 - 2.0 * r) : Math.sqrt(2.0 * r) - 1.0) * 127.5 + 128.0;
-//                    pm.drawPixel(pt.x, pt.y, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
-//                }
             }
-//            final int toKindaByteShift = Math.max(0, shift + shift - 8 - triAdjust);
-//
-//            for (int x = 0; x < size; x++) {
-//                for (int y = 0; y < size; y++) {
-//                    float r = (done[x][y]) * (1f / (sizeSq - 1f));
-////                    float r = (done[x][y] >>> toKindaByteShift) * (1f / ((1 << 8 + triAdjust) - 1));
-//
-//                    r = ((r > 0.5f) ? 1f - (float)Math.sqrt(2f - 2f * r) : (float)Math.sqrt(2f * r) - 1f) * 127.5f + 127.5f;
-//                    buffer.putInt(((int)(r) & 0xFF) * 0x01010100 | 0xFF);
-//                }
-//            }
         }
         else {
             IntArrays.unstableSort(inv, (a, b) ->
@@ -339,15 +296,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
                     pm.drawPixel(pt>>>shift, pt&mask, ((int) (r) & 0xFF) * 0x01010100 | 0xFF);
                 }
             }
-
-//            ByteBuffer buffer = pm.getPixels();
-//            final int toByteShift = Math.max(0, shift + shift - 8);
-//            for (int x = 0; x < size; x++) {
-//                for (int y = 0; y < size; y++) {
-//                    buffer.putInt((done[x][y] >>> toByteShift) * 0x01010100 | 0xFF);
-//                }
-//            }
-//            buffer.flip();
         }
 
         String name = path + "BlueNoise" + (isTriangular ? "TriFast" : "Fast") + "Tiling";
@@ -403,144 +351,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to get FFT.");
     }
 
-    /**
-     * Sorts the specified array using indirect radix sort.
-     *
-     * <p>
-     * The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M.
-     * Douglas McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages
-     * 5&minus;27 (1993).
-     *
-     * <p>
-     * This method implement an <em>indirect</em> sort. The elements of {@code perm} (which must be
-     * exactly the numbers in the interval {@code [0..perm.length)}) will be permuted so that
-     * {@code a[perm[i]] &le; a[perm[i + 1]]}.
-     *
-     * @implSpec This implementation will allocate, in the stable case, a support array as large as
-     *           {@code perm} (note that the stable version is slightly faster).
-     *
-     * @param perm a permutation array indexing {@code a}.
-     * @param a the array to be sorted.
-     * @param support an int array with the same size as {@code perm} that will be overwritten
-     */
-    public void radixSortIndirect(final int[] perm, final float[] a, final int[] support) {
-        radixSortIndirect(perm, a, 0, perm.length, support);
-    }
-    private static final int maxLevel = DIGITS_PER_ELEMENT - 1;
-    private static final int stackSize = ((1 << DIGIT_BITS) - 1) * (DIGITS_PER_ELEMENT - 1) + 1;
-    private final int[] offsetStack = new int[stackSize];
-    private final int[] lengthStack = new int[stackSize];
-    private final int[] levelStack = new int[stackSize];
-    private final int[] count = new int[1 << DIGIT_BITS];
-    private final int[] pos = new int[1 << DIGIT_BITS];
-
-    /**
-     * Sorts the specified array using indirect radix sort.
-     *
-     * <p>
-     * The sorting algorithm is a tuned radix sort adapted from Peter M. McIlroy, Keith Bostic and M.
-     * Douglas McIlroy, &ldquo;Engineering radix sort&rdquo;, <i>Computing Systems</i>, 6(1), pages
-     * 5&minus;27 (1993).
-     *
-     * <p>
-     * This method implement an <em>indirect</em> sort. The elements of {@code perm} (which must be
-     * exactly the numbers in the interval {@code [0..perm.length)}) will be permuted so that
-     * {@code a[perm[i]] &le; a[perm[i + 1]]}.
-     *
-     * @param perm a permutation array indexing {@code a}.
-     * @param a    the array to be sorted.
-     * @param from the index of the first element of {@code perm} (inclusive) to be permuted.
-     * @param to   the index of the last element of {@code perm} (exclusive) to be permuted.
-     */
-    public void radixSortIndirect(final int[] perm, final float[] a, final int from, final int to, final int[] support) {
-        if (to - from < RADIXSORT_NO_REC) {
-            quickSortIndirect(perm, a, from, to);
-            stabilize(perm, a, from, to);
-            return;
-        }
-        Arrays.fill(offsetStack, 0);
-        Arrays.fill(lengthStack, 0);
-        Arrays.fill(levelStack , 0);
-        int stackPos = 0;
-        offsetStack[stackPos] = from;
-        lengthStack[stackPos++] = to - from;
-        Arrays.fill(pos, 0);
-        while (stackPos > 0) {
-            Arrays.fill(count, 0);
-            final int first = offsetStack[--stackPos];
-            final int length = lengthStack[stackPos];
-            final int level = levelStack[stackPos];
-            final int signMask = level % DIGITS_PER_ELEMENT == 0 ? 1 << DIGIT_BITS - 1 : 0;
-            final int shift = (DIGITS_PER_ELEMENT - 1 - level % DIGITS_PER_ELEMENT) * DIGIT_BITS; // This is the shift
-            // that extract the
-            // right byte from a
-            // key
-            // Count keys.
-            for (int i = first + length; i-- != first;) count[(Float.floatToRawIntBits(a[perm[i]]) >>> shift & DIGIT_MASK ^ signMask)]++;
-            // Compute cumulative distribution
-            int lastUsed = -1;
-            for (int i = 0, p = 0; i < 1 << DIGIT_BITS; i++) {
-                if (count[i] != 0) lastUsed = i;
-                pos[i] = (p += count[i]);
-            }
-            for (int i = first + length; i-- != first; )
-                support[--pos[(Float.floatToRawIntBits(a[perm[i]]) >>> shift & DIGIT_MASK ^ signMask)]] = perm[i];
-            System.arraycopy(support, 0, perm, first, length);
-            for (int i = 0, p = first; i <= lastUsed; i++) {
-                if (level < maxLevel && count[i] > 1) {
-                    if (count[i] < RADIXSORT_NO_REC) {
-                        quickSortIndirect(perm, a, p, p + count[i]);
-                        stabilize(perm, a, p, p + count[i]);
-                    } else {
-                        offsetStack[stackPos] = p;
-                        lengthStack[stackPos] = count[i];
-                        levelStack[stackPos++] = level + 1;
-                    }
-                }
-                p += count[i];
-            }
-        }
-    }
-
-    /**
-     * Stabilizes a permutation.
-     *
-     * <p>
-     * This method can be used to stabilize the permutation generated by an indirect sorting, assuming
-     * that initially the permutation array was in ascending order (e.g., the identity, as usually
-     * happens). This method scans the permutation, and for each non-singleton block of elements with
-     * the same associated values in {@code x}, permutes them in ascending order. The resulting
-     * permutation corresponds to a stable sort.
-     *
-     * <p>
-     * Usually combining an unstable indirect sort and this method is more efficient than using a stable
-     * sort, as most stable sort algorithms require a support array.
-     *
-     * <p>
-     * More precisely, assuming that {@code x[perm[i]] &le; x[perm[i + 1]]}, after stabilization we will
-     * also have that {@code x[perm[i]] = x[perm[i + 1]]} implies {@code perm[i] &le; perm[i + 1]}.
-     *
-     * @param perm a permutation array indexing {@code x} so that it is sorted.
-     * @param x the sorted array to be stabilized.
-     * @param from the index of the first element (inclusive) to be stabilized.
-     * @param to the index of the last element (exclusive) to be stabilized.
-     */
-    public static void stabilize(final int[] perm, final float[] x, final int from, final int to) {
-        int curr = from;
-        for (int i = from + 1; i < to; i++) {
-            if (x[perm[i]] != x[perm[curr]]) {
-                if (i - curr > 1) IntArrays.SINGLETON.radixSort(perm, curr, i);
-                curr = i;
-            }
-        }
-        if (to - curr > 1) IntArrays.SINGLETON.radixSort(perm, curr, to);
-    }
-
-
-    @Override
-    public void render() {
-    }
-
     @Override
     public void dispose() {
         super.dispose();
@@ -556,7 +366,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidSquad Tool: Blue Noise Tiling Generator");
+        config.setTitle("SquidSquad Tool: LARGE Blue Noise Tiling Generator");
         config.setWindowedMode(size, size);
         config.disableAudio(true);
         new Lwjgl3Application(new BlueNoiseFastOmniTilingGenerator(), config);

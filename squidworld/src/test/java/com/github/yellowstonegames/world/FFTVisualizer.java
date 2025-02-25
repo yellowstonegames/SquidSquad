@@ -101,8 +101,8 @@ public class FFTVisualizer extends ApplicationAdapter {
     private ImmediateModeRenderer20 renderer;
 
 //    private static final int width = 400, height = 400;
-//    private static final int width = 512, height = 512;
-    private static final int width = 256, height = 256;
+    private static final int width = 512, height = 512;
+//    private static final int width = 256, height = 256;
     private static final float iWidth = 1f/width, iHeight = 1f/height;
 
     private final double[][] real = new double[width][height], imag = new double[width][height];
@@ -197,8 +197,8 @@ public class FFTVisualizer extends ApplicationAdapter {
 //        pm = new Pixmap(Gdx.files.internal("2021/BlueNoiseTriOmniTiling512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling512x512.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling512x512.png"));
-        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling256x256.png"));
-//        pm = new Pixmap(Gdx.files.internal("2025/BlueNoiseOmniTiling256x256.png"));
+//        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling256x256.png"));
+        pm = new Pixmap(Gdx.files.internal("2025/BlueNoiseOmniTiling512x512_Feb_21.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling256x256.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseOmniTiling128x128.png"));
 //        pm = new Pixmap(Gdx.files.internal("BlueNoiseTriOmniTiling128x128.png"));
@@ -824,7 +824,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) + 128));
+                            bright = (float) (db = (1.0/255.0) * (BlueNoise.get128x128(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) + 128));
                             real[x][y] = db;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -924,7 +924,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 case 0:
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
-                            bright = (1f/255f) * (BlueNoise.get(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) & 255) <= threshold ? 1 : 0;
+                            bright = (1f/255f) * (BlueNoise.get128x128(x, y, TILE_NOISE[(int)noise.getSeed() & 63]) & 255) <= threshold ? 1 : 0;
                             real[x][y] = bright;
                             renderer.color(bright, bright, bright, 1f);
                             renderer.vertex(x, y, 0);
@@ -2247,38 +2247,6 @@ public class FFTVisualizer extends ApplicationAdapter {
 //        s *= 0x8CB92BA72F3D8DD7L;
 //        return (s ^ s >>> 25) & 0xFF;
 
-    public static byte getBlue(int x, int y, int s){
-        final int m = Integer.bitCount(TILE_NOISE[(x + 23 >>> 6) + (y + 41 >>> 6) + (s >>> 6) & 63][(x + 23 << 6 & 0xFC0) | (y + 41 & 0x3F)] + 128) 
-                * Integer.bitCount(TILE_NOISE[(y + 17 >>> 6) - (x + 47 >>> 7) + (s >>> 12) & 63][(y + 17 << 6 & 0xFC0) | (x + 47 & 0x3F)] + 128)
-                * Integer.bitCount(TILE_NOISE[(y + 33 >>> 7) + (x - 31 >>> 6) + (s >>> 18) & 63][(y + 33 << 6 & 0xFC0) | (x - 31 & 0x3F)] + 128)
-                >>> 1;
-        final int n = Integer.bitCount(TILE_NOISE[(x + 53 >>> 6) - (y + 11 >>> 6) + (s >>> 9) & 63][(x + 53 << 6 & 0xFC0) | (y + 11 & 0x3F)] + 128)
-                * Integer.bitCount(TILE_NOISE[(y - 27 >>> 6) + (x - 37 >>> 7) + (s >>> 15) & 63][(y - 27 << 6 & 0xFC0) | (x - 37 & 0x3F)] + 128)
-                * Integer.bitCount(TILE_NOISE[-(x + 35 >>> 6) - (y - 29 >>> 7) + (s >>> 21) & 63][(x + 35 << 6 & 0xFC0) | (y - 29 & 0x3F)] + 128)
-                >>> 1;
-        return (byte) (TILE_NOISE[s & 63][(y + (m >>> 7) - (n >>> 7) << 6 & 0xFC0) | (x + (n >>> 7) - (m >>> 7) & 0x3F)] ^ (m ^ n));
-    }
-
-    public static byte getChosen(int x, int y, int seed){
-        return getChosen(x, y, seed, TILE_NOISE);
-    }
-    public static byte getChosen(int x, int y, int seed, final byte[][] noises){
-        seed ^= (x >>> 6) * 0x1827F5 ^ (y >>> 6) * 0x123C21;
-        // hash for a 64x64 tile on the "normal grid"
-        int h = (seed = (seed ^ (seed << 19 | seed >>> 13) ^ (seed << 5 | seed >>> 27) ^ 0xD1B54A35) * 0x125493) ^ seed >>> 11;
-        // choose from 64 noise tiles in TILE_NOISE and get the exact pixel for our x,y in its 64x64 area
-        final int xc = noises[h & 0x3F][(y << 6 & 0xFC0) | (x & 0x3F)];
-        // likely to be a different noise tile, and the x,y position is transposed
-        final int yc = noises[h >>> 6 & 0x3F][(x << 6 & 0xFC0) | (y & 0x3F)];
-        // altered x/y; here we choose a start position for the "offset grid" based on the previously sampled noise
-        final int ax = ((xc) * (xc+1) << 6 < ((x & 0x3F) - 32) * ((x & 0x3F) - 31)) ? x - 32 : x + 32;
-        final int ay = ((yc) * (yc+1) << 6 < ((y & 0x3F) - 32) * ((y & 0x3F) - 31)) ? y - 32 : y + 32;
-        // get a tile based on the "offset grid" position we chose and the hash for the normal grid, then a pixel
-        // this transposes x and y again, it seems to help with the particular blue noise textures we have
-        h ^= (ax >>> 6) * 0x1827F5 ^ (ay >>> 6) * 0x123C21;
-        return noises[(h ^ (h << 19 | h >>> 13) ^ (h << 5 | h >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 26][(x << 6 & 0xFC0) | (y & 0x3F)];
-    }
-
     public static byte getWobbled(int x, int y) {
 //        return (byte) (15 - (x & 15) | (y & 15) << 4);
         final int h = Integer.reverse(posToHilbertNoLUT(x, y));
@@ -2340,9 +2308,9 @@ public class FFTVisualizer extends ApplicationAdapter {
     }
 
     public static byte getSeededOmniTiling(final int x, final int y, final int seed) {
-        final int a = x >>> 6;
-        final int b = y >>> 6;
-        return TILE_NOISE[seed + b + ((a + b) * (a + b + 1) >> 1) & 63][(y << 6 & 0xFC0) | (x & 0x3F)];
+        final int a = x >>> 7 ^ seed >>> 6;
+        final int b = y >>> 7 ^ seed >>> 13;
+        return TILE_NOISE[seed + b + ((a + b) * (a + b + 1) >> 1) & 63][(y << 7 & 0x3F80) | (x & 0x7F)];
     }
 
 
