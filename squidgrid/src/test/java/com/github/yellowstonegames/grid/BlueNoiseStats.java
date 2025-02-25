@@ -18,23 +18,23 @@ package com.github.yellowstonegames.grid;
 
 public class BlueNoiseStats {
     public static void main(String[] args){
-        int[][] distances = new int[64][256];
-        double[] sums = new double[64];
-        int[] counts = new int[64];
+        int[][] distances = new int[128][256];
+        double[] sums = new double[128];
+        int[] counts = new int[128];
         byte[][] tileNoise = BlueNoise.TILE_NOISE;
         for (int j = 0, tileNoiseLength = tileNoise.length; j < tileNoiseLength; j++) {
             byte[] bn = tileNoise[j];
-            for (int x = 0, i = 0; x < 64; x++) {
-                for (int y = 0; y < 64; y++, i++) {
+            for (int x = 0, i = 0; x < 128; x++) {
+                for (int y = 0; y < 128; y++, i++) {
                     int v = bn[i] + 128;
-                    int dist = Math.min(Math.abs(x + x - 63), Math.abs(y + y - 63));
+                    int dist = Math.min(Math.abs(x + x - 127), Math.abs(y + y - 127));
                     counts[dist]++;
                     distances[dist][v]++;
                 }
 
             }
         }
-        for (int i = 1; i < 64; i+=2) {
+        for (int i = 1; i < 128; i+=2) {
             for (int v = 0; v < 256; v++) {
                 sums[i] += distances[i][v] / (double)counts[i];
             }
@@ -42,7 +42,7 @@ public class BlueNoiseStats {
         }
         for (int v = 0; v < 256; v++) {
             double total = 0.0;
-            for (int d = 1; d < 64; d += 2) {
+            for (int d = 1; d < 128; d += 2) {
                 total += distances[d][v] / (double) counts[d];
             }
             System.out.println("Value " + v + ": total is " + total);

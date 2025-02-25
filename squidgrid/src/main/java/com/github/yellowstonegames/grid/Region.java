@@ -144,7 +144,7 @@ public class Region implements Collection<Coord> {
      */
     public static final Region[] BLUE_LEVELS = new Region[256];
     static {
-        BLUE_LEVELS[0] = new Region(64, 64);
+        BLUE_LEVELS[0] = new Region(128, 128);
         for (int i = -127; i < 128; i++) {
             BLUE_LEVELS[i + 128] = new Region(BlueNoise.RAW_2D, -128, i);
         }
