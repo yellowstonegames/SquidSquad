@@ -33,6 +33,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.FlowRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
@@ -100,9 +101,9 @@ public class TwistTest extends ApplicationAdapter {
 //        long seed = EnhancedRandom.seedFromMath();// random seed every time
 //        long seed = TimeUtils.millis() >>> 21; // use to keep each seed for about half an hour; useful for testing
         Gdx.app.log("SEED", "Initial seed is " + seed);
-        EnhancedRandom random = new WhiskerRandom(seed);
+        EnhancedRandom random = new FlowRandom(seed);
         stage = new Stage();
-        Font font = KnownFonts.getIosevkaSlab(Font.DistanceFieldType.SDF);
+        Font font = KnownFonts.getIosevkaSlab(Font.DistanceFieldType.SDF).multiplyCrispness(0.5f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         playerGlyph = new GlyphActor('@', "[dark gray][%?whiten]", gg.font);
@@ -171,14 +172,16 @@ public class TwistTest extends ApplicationAdapter {
                     }
                     cursor = Coord.get(screenX, screenY);
                     if(res[screenX][screenY] >= 1f) return false;
-                    // This uses DijkstraMap.findPathPreScannned() to get a path as a List of Coord from the current
-                    // player position to the position the user clicked on. The "PreScanned" part is an optimization
-                    // that's special to DijkstraMap; because the part of the map that is viable to move into has
-                    // already been fully analyzed by the DijkstraMap.partialScan() method at the start of the
-                    // program, and re-calculated whenever the player moves, we only need to do a fraction of the
-                    // work to find the best path with that info.
                     toCursor.clear();
                     Coord player = playerGlyph.getLocation();
+                    // By seeding the TwistedLine's rng here, we guarantee that moving the mouse between two different
+                    // cells will find the same path for each cell regardless of where the mouse has moved before. This
+                    // lets you find a cell you think will have an interesting path, see the path, compare it to other
+                    // paths you move the mouse to, and click when you have the path you want to try. Without this step
+                    // to set the rng state and randomize() the TwistedLine, the path will be different just about every
+                    // time the cursor position changes, and no path can be easily reproduced.
+                    playerToCursor.rng.setState(screenX, screenY);
+                    playerToCursor.randomize();
                     toCursor.addAll(playerToCursor.line(player, cursor));
 
                     if (!toCursor.isEmpty())

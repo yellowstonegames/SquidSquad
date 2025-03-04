@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
+import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.LineTools;
 
 import static com.badlogic.gdx.Gdx.input;
@@ -60,7 +61,7 @@ public class MinimalGridTest extends ApplicationAdapter {
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_INFO);
         stage = new Stage();
-        Font font = KnownFonts.getInconsolata(Font.DistanceFieldType.SDF).scaleTo(15f, 25f);
+        Font font = KnownFonts.getInconsolata(Font.DistanceFieldType.SDF).scaleTo(15f, 25f).multiplyCrispness(0.5f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         playerGlyph = new GlyphActor("[red orange][%?blacken]@", gg.font);
@@ -195,6 +196,9 @@ public class MinimalGridTest extends ApplicationAdapter {
                 }
             }
         }
+        Coord loc = playerGlyph.getLocation();
+        gg.put(loc.x, loc.y, 0L);
+
     }
 
     /**

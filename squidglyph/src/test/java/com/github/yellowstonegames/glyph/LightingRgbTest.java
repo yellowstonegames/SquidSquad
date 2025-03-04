@@ -99,7 +99,7 @@ public class LightingRgbTest extends ApplicationAdapter {
         Gdx.app.log("SEED", "Initial seed is " + seed);
         EnhancedRandom random = new WhiskerRandom(seed);
         stage = new Stage();
-        Font font = KnownFonts.getIosevkaSlab(Font.DistanceFieldType.SDF);
+        Font font = KnownFonts.getIosevkaSlab(Font.DistanceFieldType.SDF).multiplyCrispness(0.5f);;
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         playerGlyph = new GlyphActor('@', "[red orange]", gg.font);
@@ -288,6 +288,8 @@ public class LightingRgbTest extends ApplicationAdapter {
                 }
             }
         }
+        Coord loc = playerGlyph.getLocation();
+        gg.put(loc.x, loc.y, 0L);
         lighting.draw(gg.backgrounds);
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
