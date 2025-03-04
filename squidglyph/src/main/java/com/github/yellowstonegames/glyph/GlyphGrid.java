@@ -146,7 +146,7 @@ public class GlyphGrid extends Group {
      * to size 1x1 (this makes some calculations much easier inside GlyphGrid). The line height of the given Font is set
      * to 1.25x its current height, which helps a lot when fitting glyphs into cells. This also halves the crispness of
      * distance field fonts used (standard fonts are not affected), and just for good measure sets
-     * {@link Font#integerPosition} to false, even though this usually doesn't do anything in the current version.
+     * {@link Font#integerPosition} to false.
      * <br>
      * This can add spacing to cells so that they are always square, while keeping the aspect ratio of {@code font} as
      * it was passed in. Use squareCenter=true to enable this; note that it modifies the Font more deeply than normally.
@@ -159,28 +159,20 @@ public class GlyphGrid extends Group {
         this.font = font;
         // This probably has no effect in the current TextraTypist, but it shouldn't ever be on at size 1x1.
         font.useIntegerPositions(false);
-        // This only affects SDF and MSDF fonts, but it improves their legibility a lot.
-        font.multiplyCrispness(0.5f);
-        // I don't know why 1.25x line height works so much better.
-        font.adjustLineHeight(1.25f);
+        // old code, probably not useful anymore?
+//        // This only affects SDF and MSDF fonts, but it improves their legibility a lot.
+//        font.multiplyCrispness(0.5f);
+//        // I don't know why 1.25x line height works so much better.
+//        font.adjustLineHeight(1.25f);
 
         if (squareCenter) {
-//            if (font.distanceField == Font.DistanceFieldType.MSDF)
-//                font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
             viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
             // The rest of this code scales the font down so it has a max width and max height of 1.
             // The width to height ratio will be the same, but extra space will be added to make glyphs square.
             float larger = Math.max(font.cellWidth, font.cellHeight);
             font.scaleTo(font.cellWidth / larger, font.cellHeight / larger).fitCell(1f, 1f, true);
-            // this wouldn't work in the rare font with greater width than height.
-//            font.scaleHeightTo(1f).fitCell(1f, 1f, true);
         } else {
-//            if (font.distanceField == Font.DistanceFieldType.MSDF)
-//                font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 2f;
-// not sure if we want this code or the above.
-//            if (this.font.distanceField != Font.DistanceFieldType.STANDARD)
-//                this.font.distanceFieldCrispness *= Math.sqrt(font.cellWidth) + Math.sqrt(font.cellHeight) + 1;
             viewport.setScreenWidth((int) (gridWidth * font.cellWidth));
             viewport.setScreenHeight((int) (gridHeight * font.cellHeight));
             font.scaleTo(1f, 1f);
@@ -270,8 +262,6 @@ public class GlyphGrid extends Group {
      */
     public void draw(Batch batch) {
         getStage().setViewport(viewport);
-        float originalDescent = font.descent;
-        font.setDescent(0f);
         font.resizeDistanceField(viewport.getScreenWidth(), viewport.getScreenHeight(), viewport);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
@@ -280,14 +270,12 @@ public class GlyphGrid extends Group {
             font.drawBlocks(batch, backgrounds, x, y);
         Coord pos;
         ObjectList<Coord> order = map.order();
-//        y -= font.descent * font.scaleY;
+        y -= font.descent * font.scaleY * 2f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             font.drawGlyph(batch, map.getAt(i), x + pos.x, y + pos.y);
         }
         super.drawChildren(batch, 1f);
-        font.setDescent(originalDescent);
-
     }
 
     /**
@@ -299,8 +287,6 @@ public class GlyphGrid extends Group {
      */
     public void draw(Batch batch, Frustum limit) {
         getStage().setViewport(viewport);
-        float originalDescent = font.descent;
-        font.setDescent(0f);
         font.resizeDistanceField(viewport.getScreenWidth(), viewport.getScreenHeight(), viewport);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
@@ -310,7 +296,7 @@ public class GlyphGrid extends Group {
         float xPos, yPos, boundsWidth = 2f, boundsHeight = 2f;
         Coord pos;
         ObjectList<Coord> order = map.order();
-//        y -= font.descent * font.scaleY;
+        y -= font.descent * font.scaleY * 2f;
         for (int i = 0, n = order.size(); i < n; i++) {
             pos = order.get(i);
             xPos = x + pos.x;
@@ -319,7 +305,6 @@ public class GlyphGrid extends Group {
                 font.drawGlyph(batch, map.getAt(i), xPos, yPos);
         }
         super.drawChildren(batch, 1f);
-        font.setDescent(originalDescent);
     }
 
     /**
@@ -338,8 +323,6 @@ public class GlyphGrid extends Group {
      */
     public void draw(Batch batch, int startCellX, int startCellY, int endCellX, int endCellY) {
         getStage().setViewport(viewport);
-        float originalDescent = font.descent;
-        font.setDescent(0f);
         font.resizeDistanceField(viewport.getScreenWidth(), viewport.getScreenHeight(), viewport);
         font.enableShader(batch);
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
@@ -348,7 +331,7 @@ public class GlyphGrid extends Group {
             font.drawBlocks(batch, backgrounds, x, y);
         Coord pos;
         long glyph;
-//        y -= font.descent * font.scaleY;
+        y -= font.descent * font.scaleY * 2f;
         for (int xx = startCellX; xx < endCellX; xx++) {
             for (int yy = startCellY; yy < endCellY; yy++) {
                 pos = Coord.get(xx, yy);
@@ -358,7 +341,6 @@ public class GlyphGrid extends Group {
             }
         }
         super.drawChildren(batch, 1f);
-        font.setDescent(originalDescent);
     }
 
     @Override

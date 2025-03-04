@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
+import com.github.yellowstonegames.grid.LineTools;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
@@ -50,7 +51,7 @@ public class MinimalGridTest extends ApplicationAdapter {
         config.setTitle("Traditional Roguelike Map Demo");
         config.setWindowedMode(GRID_WIDTH * CELL_WIDTH, GRID_HEIGHT * CELL_HEIGHT);
         config.disableAudio(true);
-        config.setForegroundFPS(360); // shouldn't need to be any faster
+        config.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
         config.useVsync(true);
         new Lwjgl3Application(new MinimalGridTest(), config);
     }
@@ -62,7 +63,7 @@ public class MinimalGridTest extends ApplicationAdapter {
         Font font = KnownFonts.getInconsolata(Font.DistanceFieldType.MSDF).scaleTo(15f, 25f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
-        playerGlyph = new GlyphActor('@', "[red orange]", gg.font);
+        playerGlyph = new GlyphActor("[red orange][%?blacken]@", gg.font);
         gg.addActor(playerGlyph);
 
         input.setInputProcessor(new InputAdapter(){
@@ -116,48 +117,6 @@ public class MinimalGridTest extends ApplicationAdapter {
 
     public void regenerate(){
         //[SEED] Initial seed is -2701817898995387683
-        dungeon = new char[][]{
-                "└│││││││┌ └│││││││├││┌   ".toCharArray(),
-                "─.......┘│┐.......─..─   ".toCharArray(),
-                "─...............││┐..─   ".toCharArray(),
-                "─....................─   ".toCharArray(),
-                "─.└│..│┌.............─   ".toCharArray(),
-                "─.─....─......└┌....└┐   ".toCharArray(),
-                "─.─....─....└│┐─....─    ".toCharArray(),
-                "─.─....┘│├││┐  ─....─    ".toCharArray(),
-                "┴│┐......─     ─..└│┐    ".toCharArray(),
-                "─........─ └│││┐..─      ".toCharArray(),
-                "─........─└┐......┘┌     ".toCharArray(),
-                "┘├│││││││┤┐........─     ".toCharArray(),
-                "└┐.................─     ".toCharArray(),
-                "─..................┘││││┌".toCharArray(),
-                "─...└│...└││││││┌.......─".toCharArray(),
-                "─...─...└┐└││││┌─.......─".toCharArray(),
-                "─......└┐ ─....─┘││││├││┬".toCharArray(),
-                "─.....└┐  ─....┘│││┌ ─..─".toCharArray(),
-                "┘┌...└┐   ─........─ ─..─".toCharArray(),
-                " ─..│┤││┌ ─........─ ─..─".toCharArray(),
-                " ┘┌.....─ ─........─└┐..─".toCharArray(),
-                "└│┬.....┘┌─........┘┐...─".toCharArray(),
-                "─.─......┘┐.............─".toCharArray(),
-                "─.┘┌....................─".toCharArray(),
-                "─..┘┌..........─....─...─".toCharArray(),
-                "─...┘┌.........─....┴┌..─".toCharArray(),
-                "─....┘│││...........─┘┌.─".toCharArray(),
-                "─...................─ ┘│┐".toCharArray(),
-                "─..................└┐    ".toCharArray(),
-                "┘│││├│..└││┌..─..└│┐     ".toCharArray(),
-                "└│││┐..│┤│┌─..┴││┤│┌  └│┌".toCharArray(),
-                "─.........──..─....─ └┐.─".toCharArray(),
-                "─.........──..─....─└┐..─".toCharArray(),
-                "┴│││┌..─..──..─....──...─".toCharArray(),
-                "─...─..─..──..─....──...─".toCharArray(),
-                "─...─..─..──..─....┘┐...─".toCharArray(),
-                "─...┘││┐..──............─".toCharArray(),
-                "─.........──............─".toCharArray(),
-                "─.........──.......└┌...─".toCharArray(),
-                "┘│││││││││┐┘│││││││┐┘│││┐".toCharArray(),
-        };
         bare = new char[][]{
                 "#########################".toCharArray(),
                 "#.......###.......#..####".toCharArray(),
@@ -200,7 +159,7 @@ public class MinimalGridTest extends ApplicationAdapter {
                 "#.........##.......##...#".toCharArray(),
                 "#########################".toCharArray(),
         };
-
+        dungeon = LineTools.hashesToLines(bare);
 //        dungeonProcessor.setPlaceGrid(dungeon = LineTools.hashesToLines(dungeonProcessor.generate(), true));
 //        System.out.println("new char[][]{");
 //        for (int x = 0; x < dungeon.length; x++) {
