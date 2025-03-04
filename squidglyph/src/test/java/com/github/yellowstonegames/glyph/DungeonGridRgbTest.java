@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectDeque;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.tommyettinger.random.WhiskerRandom;
@@ -97,10 +98,10 @@ public class DungeonGridRgbTest extends ApplicationAdapter {
 //        long seed = EnhancedRandom.seedFromMath();// random seed every time
 //        long seed = TimeUtils.millis() >>> 21; // use to keep each seed for about half an hour; useful for testing
         Gdx.app.log("SEED", "Initial seed is " + seed);
-        EnhancedRandom random = new WhiskerRandom(seed);
+        EnhancedRandom random = new AceRandom(seed);
         stage = new Stage();
 //        Font font = KnownFonts.getIosevka().scaleTo(15f, 25f);
-        font = KnownFonts.getInconsolata(Font.DistanceFieldType.MSDF);
+        font = KnownFonts.getInconsolata(Font.DistanceFieldType.SDF).multiplyCrispness(0.25f);
 //        Font font = KnownFonts.getIosevka().scaleTo(15f, 25f).setDescent(0f).adjustLineHeight(1.25f);
 
 //        Font font = KnownFonts.getIosevkaSlab().scaleTo(15f, 25f);
@@ -403,6 +404,7 @@ public class DungeonGridRgbTest extends ApplicationAdapter {
     public void resize(int width, int height) {
         super.resize(width, height);
         gg.resize(width, height);
+        font.resizeDistanceField(width, height, stage.getViewport());
     }
 
     private boolean onGrid(int screenX, int screenY)

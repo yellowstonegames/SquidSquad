@@ -68,7 +68,7 @@ public class TechniqueDemo extends ApplicationAdapter {
     @Override
     public void create () {
         batch = new SpriteBatch();
-        display = new GlyphGrid(KnownFonts.getAStarry(Font.DistanceFieldType.MSDF).scaleTo(cellWidth, cellHeight), gridWidth, gridHeight, false);
+        display = new GlyphGrid(KnownFonts.getAStarry(Font.DistanceFieldType.SDF).scaleTo(cellWidth, cellHeight), gridWidth, gridHeight, false);
         display.backgrounds = ArrayTools.fill(FullPaletteRgb.AURORA_CHINCHILLA, gridWidth, gridHeight);
         stage = new Stage(new ScreenViewport(), batch);
 

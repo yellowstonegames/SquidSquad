@@ -85,7 +85,7 @@ public class FontTest extends ApplicationAdapter {
 //        font = KnownFonts.getYanoneKaffeesatz().scaleTo(45, 60);
 //        font = KnownFonts.getCanada().scaleTo(40, 58);
 //        font = KnownFonts.getRobotoCondensed().scaleTo(37, 53);
-        fonts = KnownFonts.getAll();
+        fonts = KnownFonts.getAllStandard();
         for(Font f : fonts)
             f.scaleTo(32f * f.originalCellWidth / f.originalCellHeight, 32).fitCell(16, 32, true);
         font = fonts[0];
@@ -93,7 +93,7 @@ public class FontTest extends ApplicationAdapter {
 //        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
 //        font = new Font("dawnlike/PlainAndSimplePlus.fnt", atlas.findRegion("PlainAndSimplePlus"), false, 0, 0, 2, 2);
         layout = new Layout(font).setTargetWidth(Gdx.graphics.getWidth());
-        font.resizeDistanceField(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        font.resizeDistanceField(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backgrounds = new int[(int) Math.ceil(800 / font.cellWidth)][(int) Math.ceil(640 / font.cellHeight)];
         int sw = DescriptiveColor.describe("darker sage"), se = DescriptiveColor.describe("dark rich cactus"),
                 nw = DescriptiveColor.describe("dull peach butter"), ne = DescriptiveColor.describe("dark brown^3 purple");
@@ -146,7 +146,7 @@ public class FontTest extends ApplicationAdapter {
         Gdx.gl.glClearColor(0.4f, 0.5f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         font = fonts[(int) (System.currentTimeMillis() >>> 10 & 0x7FFFFFFF) % fonts.length];
-        font.resizeDistanceField(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+//        font.resizeDistanceField(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
 //        layout.setFont(font);
 //        font.calculateSize(layout);
         float x = 0, y = layout.getHeight();

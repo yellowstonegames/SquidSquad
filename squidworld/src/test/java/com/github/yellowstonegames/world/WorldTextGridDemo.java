@@ -93,7 +93,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
 //        System.out.printf("%.8ff, %.8ff, %.8ff, 1f\n\n", DescriptiveColor.red(0xFF7A8121), DescriptiveColor.green(0xFF7A8121), DescriptiveColor.blue(0xFF7A8121));
         stage = new Stage();
         display = new GlyphGrid(
-                KnownFonts.getIosevka(Font.DistanceFieldType.MSDF),//.setDescent(10),
+                KnownFonts.getIosevka(Font.DistanceFieldType.SDF),//.setDescent(10),
                 bigWidth, bigHeight, true);
         display.viewport.setWorldSize(shownWidth, shownHeight);
         view = display.viewport;// = new StretchViewport(shownWidth, shownHeight);
