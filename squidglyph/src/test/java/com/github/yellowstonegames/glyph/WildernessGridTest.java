@@ -124,7 +124,7 @@ public class WildernessGridTest extends ApplicationAdapter {
         Camera camera = gg.viewport.getCamera();
         camera.position.set(gg.gridWidth * 0.5f, gg.gridHeight * 0.5f, 0f);
         camera.update();
-        long time = (TimeUtils.timeSinceNanos(startTime) >>> 24) % 1440L;
+        long time = (TimeUtils.timeSinceNanos(startTime) >>> 23) % 1440L;
         int range = 1;
         for (; range < colorRanges.length;) {
             if (time <= colorRanges[range])

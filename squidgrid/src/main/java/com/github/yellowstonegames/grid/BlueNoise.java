@@ -196,19 +196,20 @@ new StringBuilder("ù¬Ò<-þ¹ã\rÁ@ç\t©Ï:¹å¦9éÒ¬:ä\n)Õ�
      * Gets a point in a potentially-infinite aperiodically-tiling plane of blue noise, where each 128x128 square of
      * blue noise is drawn from {@link #TILE_NOISE}. Because each square of TILE_NOISE can tile with any other from that
      * group, this can choose those squares randomly, and it does so using a simplistic (and fast) hash based on
-     * Cantor's pairing function. Unlike earlier attempts here to make aperiodic tilings of blue noise, this makes
-     * high-quality blue noise that satisfies the progressive quality.
+     * the Rosenberg-Strong pairing function. Unlike earlier attempts here to make aperiodic tilings of blue noise, this
+     * makes high-quality blue noise that satisfies the progressive quality. This also tolerates both positive and
+     * negative inputs for x and y.
      * <br>
      * <a href="https://i.imgur.com/VZyuAAn.png">Blue noise at left, magnitude histogram at right.</a>
      * @param x x coordinate, in grid cells, pixels, or some other fine-grained measurement
      * @param y y coordinate, in grid cells, pixels, or some other fine-grained measurement
-     * @param seed only the low 15 bits will be used, so this should probably be between 0 and 32768
+     * @param seed only the low 25 bits will be used, so this should probably be between 0 and 33554431
      * @return a byte obeying a blue noise distribution
      */
     public static byte getSeeded(final int x, final int y, final int seed) {
-        final int a = x >>> 7 ^ seed >>> 5;
-        final int b = y >>> 7 ^ seed >>> 10;
-        return TILE_NOISE[(seed + b + ((a + b) * (a + b + 1) >> 1)) & 31][(y << 7 & 0x3F80) | (x & 0x7F)];
+        final int a = x >>> 7 ^ (seed << 27 | seed >>> 5);
+        final int b = y >>> 7 ^ (seed << 22 | seed >>> 10);
+        return TILE_NOISE[(seed ^ seed >>> 15 ^ seed >>> 20 ^ fullHash(a, b)) & 31][(y << 7 & 0x3F80) | (x & 0x7F)];
     }
 
     /**
@@ -216,19 +217,36 @@ new StringBuilder("ù¬Ò<-þ¹ã\rÁ@ç\t©Ï:¹å¦9éÒ¬:ä\n)Õ�
      * blue noise is drawn from {@link #TILE_TRI_NOISE} (which is blue noise with a triangular mapping). The triangular
      * mapping may improve the appearance of the blue noise when used for dithering or other smoothly-fading gradients.
      * Because each square of TILE_TRI_NOISE can tile with any other from that group, this can choose those squares
-     * randomly, and it does so using a simplistic (and fast) hash based on Cantor's pairing function. Unlike earlier
-     * attempts here to make aperiodic tilings of blue noise, this makes high-quality blue noise that satisfies the
-     * progressive quality.
+     * randomly, and it does so using a simplistic (and fast) hash based on the Rosenberg-Strong pairing function.
+     * Unlike earlier attempts here to make aperiodic tilings of blue noise, this makes high-quality blue noise that
+     * satisfies the progressive quality. This also tolerates both positive and negative inputs for x and y.
      * <br>
      * <a href="https://i.imgur.com/0WZKcfN.png">Blue noise at left, magnitude histogram at right.</a>
      * @param x x coordinate, in grid cells, pixels, or some other fine-grained measurement
      * @param y y coordinate, in grid cells, pixels, or some other fine-grained measurement
-     * @param seed only the low 15 bits will be used, so this should probably be between 0 and 32768
+     * @param seed only the low 25 bits will be used, so this should probably be between 0 and 33554431
      * @return a byte obeying a triangular-mapped blue noise distribution
      */
     public static byte getSeededTriangular(final int x, final int y, final int seed) {
-        final int a = x >>> 7 ^ seed >>> 5;
-        final int b = y >>> 7 ^ seed >>> 10;
-        return TILE_TRI_NOISE[(seed + b + ((a + b) * (a + b + 1) >> 1)) & 31][(y << 7 & 0x3F80) | (x & 0x7F)];
+        final int a = x >>> 7 ^ (seed << 27 | seed >>> 5);
+        final int b = y >>> 7 ^ (seed << 22 | seed >>> 10);
+        return TILE_TRI_NOISE[(seed ^ seed >>> 15 ^ seed >>> 20 ^ fullHash(a, b)) & 31][(y << 7 & 0x3F80) | (x & 0x7F)];
     }
+
+    /**
+     * Gets a unique int hash code given x and y that are valid {@code short} numbers, or a likely-unique hash if they
+     * are larger than {@code short}. Uses the Rosenberg-Strong pairing function, modified to produce different values
+     * for {@code (x,y)}, {@code (-x,y)}, {@code (x,-y)}, and {@code (-x,-y)}.
+     * @param x ideally in the range -32768 to 32767
+     * @param y ideally in the range -32768 to 32767
+     * @return an int that combines the arguments to make a unique result for x and y in the ideal range
+     */
+    public static int fullHash(int x, int y) {
+        int xs = x >> 31, ys = y >> 31;
+        x ^= xs;
+        y ^= ys;
+        final int max = Math.max(x, y);
+        return (max * max + max + x - y) ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+    }
+
 }
