@@ -71,7 +71,7 @@ public class CoordTest {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
-                int index = Coord.cantorHashCode(x, y);
+                int index = Coord.cantorHashCode(x&0xFFFF, y&0xFFFF);
                 if((bits[index>>>6] & (1L << index)) != 0) {
                     throw new RuntimeException("Point at " + x + "," + y + " collided at index " + index);
                 }
@@ -82,6 +82,7 @@ public class CoordTest {
 
     /**
      * Fails for any cases where lowerLimit is negative and upperLimit is positive!!!
+     * When using a mask, fails if the range requires more than 8 bits!
      * @param lowerLimit lower inclusive limit
      * @param upperLimit upper inclusive limit
      */
@@ -89,7 +90,7 @@ public class CoordTest {
         long[] bits = new long[1<<26];
         for (int x = lowerLimit; x <= upperLimit; x++) {
             for (int y = lowerLimit; y <= upperLimit; y++) {
-                int index = Coord.cantorHashCode(x, y);
+                int index = Coord.cantorHashCode(x&0xFFFF, y&0xFFFF);
                 if((bits[index>>>6] & (1L << index)) != 0) {
                     throw new RuntimeException("Point at " + x + "," + y + " collided at index " + index);
                 }
@@ -100,7 +101,7 @@ public class CoordTest {
 
     public static void main(String[] args) {
 //        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes!
-        new CoordTest().testRosenbergStrongUniqueness(); // passes!
+//        new CoordTest().testRosenbergStrongUniqueness(); // passes!
 //        new CoordTest().testSignedCantorUniqueness(); // fails!
 //        new CoordTest().testLimitedSignedCantorUniqueness(16384); // passes!
 //        new CoordTest().testLimitedSignedCantorUniqueness(17000); // passes!
@@ -123,10 +124,13 @@ public class CoordTest {
 //        new CoordTest().testLimitedSignedCantorUniqueness(23500); // fails!
 //        new CoordTest().testLimitedSignedCantorUniqueness(24000); // fails!
 
-//        new CoordTest().testCantorUniqueness(); // fails!
+//        new CoordTest().testCantorUniqueness(); // fails! also fails masked!
 //        new CoordTest().testLimitedCantorUniqueness(0, 32767); // passes!
 //        new CoordTest().testLimitedCantorUniqueness(0, 32768); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(-1, 1); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-1, 1); // fails! passes masked
+//        new CoordTest().testLimitedCantorUniqueness(-128, 127); // passes masked!
+        new CoordTest().testLimitedCantorUniqueness(-128, 128); // fails! fails masked!
+//        new CoordTest().testLimitedCantorUniqueness(-256, 255); // fails! fails masked!
 //        new CoordTest().testLimitedCantorUniqueness(-4096, 4095); // fails!
 //        new CoordTest().testLimitedCantorUniqueness(-8192, 8191); // fails!
 //        new CoordTest().testLimitedCantorUniqueness(-16000, 16000); // fails!
