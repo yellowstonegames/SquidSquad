@@ -773,14 +773,14 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * This is just like {@link #signedRosenbergStrongHashCode(int, int)}, but using the Cantor pairing function instead
      * of the Rosenberg-Strong pairing function, and without the finalizing multiplication the other hash code uses.
      * Like that hash code, this will produce different results for {@code (x,y)}, {@code (-x,y)} {@code (x,-y)}, and
-     * {@code (-x,-y)}. You should see unique results if you give this only valid (x,y) points that are acceptable Coord
-     * values (that is, each of x and y will fit in a {@code short}), though Cantor pairing functions may not guarantee
-     * uniqueness for the full range that Rosenberg-Strong does.
+     * {@code (-x,-y)}. You should see unique results if you give this only (x,y) points where each of x and y is
+     * between {@code -23170} and {@code 23169}, inclusive. This is a smaller range than
+     * {@link #signedRosenbergStrongHashCode(int, int)} guarantees uniqueness for, by over 9000 at each end.
      * <br>
      * Calculating this is always branchless.
      *
-     * @param x should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
-     * @param y should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
+     * @param x should usually be in the range from {@code -23170} to {@code 23169}
+     * @param y should usually be in the range from {@code -23170} to {@code 23169}
      * @return an int hash code that should be unique for any combination of short x and short y
      */
     public static int signedCantorHashCode(int x, int y) {
