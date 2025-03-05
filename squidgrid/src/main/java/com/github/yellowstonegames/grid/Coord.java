@@ -760,13 +760,42 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
         final int max = Math.max(x, y);
         // imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
         return BitConversion.imul(
-                // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
+                // Rosenberg-Strong pairing function; produces larger values in a square-shaped "ripple" moving away from the origin
                 (max * max + max + x - y)
                         // XOR with every odd-index bit of xs and every even-index bit of ys
                         // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
                         ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
                 // use imul() to multiply by a golden-ratio-based number to randomize upper bits
                 , 0x9E3779B9);
+    }
+
+    /**
+     * This is just like {@link #signedRosenbergStrongHashCode(int, int)}, but using the Cantor pairing function instead
+     * of the Rosenberg-Strong pairing function, and without the finalizing multiplication the other hash code uses.
+     * Like that hash code, this will produce different results for {@code (x,y)}, {@code (-x,y)} {@code (x,-y)}, and
+     * {@code (-x,-y)}. You should see unique results if you give this only valid (x,y) points that are acceptable Coord
+     * values (that is, each of x and y will fit in a {@code short}), though Cantor pairing functions may not guarantee
+     * uniqueness for the full range that Rosenberg-Strong does.
+     * <br>
+     * Calculating this is always branchless.
+     *
+     * @param x should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
+     * @param y should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
+     * @return an int hash code that should be unique for any combination of short x and short y
+     */
+    public static int signedCantorHashCode(int x, int y) {
+        // Calculates a hash that won't overlap until very, very many Coords have been produced.
+        // the signs for x and y; each is either -1 or 0
+        int xs = x >> 31, ys = y >> 31;
+        // makes x equivalent to -1 ^ x if x is negative; this means x is never negative after this
+        x ^= xs;
+        // same for y; it is also never negative
+        y ^= ys;
+        return  // Cantor pairing function; produces larger values in a diamond-shaped "ripple" moving away from the origin
+                (y + ((x + y) * (x + y + 1) >> 1))
+                        // XOR with every odd-index bit of xs and every even-index bit of ys
+                        // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+                        ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
     }
 
     /**
@@ -810,7 +839,8 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * both x and y are small and positive, and large positive results if either x or y is even moderately large.
      * <br>
      * This is "hasty" because it is meant to be fast, but is no longer the fastest option, so it's just fairly fast and
-     * has perhaps-not-the-best quality possible.
+     * has perhaps-not-the-best quality possible. This is identical to calling {@link #cantorHashCode(int, int)} on this
+     * Coord's x and y.
      *
      * @return an int that should, for different non-negative Coord values, be at least a little different from other hash codes
      */
