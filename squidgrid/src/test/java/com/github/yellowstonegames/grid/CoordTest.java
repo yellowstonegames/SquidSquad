@@ -22,7 +22,7 @@ public class CoordTest {
     /**
      * Not all unique...
      */
-    public void testCantorUniqueness() {
+    public void testSignedCantorUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
@@ -36,9 +36,9 @@ public class CoordTest {
     }
 
     /**
-     * Not all unique...
+     * Not all unique, but with a small enough limit... 23169 passes.
      */
-    public void testLimitedCantorUniqueness(int limit) {
+    public void testLimitedSignedCantorUniqueness(int limit) {
         long[] bits = new long[1<<26];
         for (int x = -limit; x <= limit; x++) {
             for (int y = -limit; y <= limit; y++) {
@@ -51,28 +51,73 @@ public class CoordTest {
         }
     }
 
+    /**
+     * Not all unique... at all...
+     */
+    public void testCantorUniqueness() {
+        long[] bits = new long[1<<26];
+        for (int x = -32768; x <= 32767; x++) {
+            for (int y = -32768; y <= 32767; y++) {
+                int index = Coord.cantorHashCode(x, y);
+                if((bits[index>>>6] & (1L << index)) != 0) {
+                    throw new RuntimeException("Point at " + x + "," + y + " collided at index " + index);
+                }
+                bits[index>>>6] |= (1L << index);
+            }
+        }
+    }
+
+    /**
+     * Fails for any cases where lowerLimit is negative and upperLimit is positive!!!
+     * @param lowerLimit lower inclusive limit
+     * @param upperLimit upper inclusive limit
+     */
+    public void testLimitedCantorUniqueness(int lowerLimit, int upperLimit) {
+        long[] bits = new long[1<<26];
+        for (int x = lowerLimit; x <= upperLimit; x++) {
+            for (int y = lowerLimit; y <= upperLimit; y++) {
+                int index = Coord.cantorHashCode(x, y);
+                if((bits[index>>>6] & (1L << index)) != 0) {
+                    throw new RuntimeException("Point at " + x + "," + y + " collided at index " + index);
+                }
+                bits[index>>>6] |= (1L << index);
+            }
+        }
+    }
+
     public static void main(String[] args) {
 //        new CoordTest().testRosenbergStrongUniqueness(); // passes!
+//        new CoordTest().testSignedCantorUniqueness(); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(16384); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(17000); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(18000); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(19000); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(20000); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(21000); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(22000); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23000); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23125); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23160); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23169); // passes!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23170); // passes if exclusive on positive, fails if inclusive!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23171); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23173); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23175); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23180); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23200); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23250); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(23500); // fails!
+//        new CoordTest().testLimitedSignedCantorUniqueness(24000); // fails!
+
 //        new CoordTest().testCantorUniqueness(); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(16384); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(17000); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(18000); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(19000); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(20000); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(21000); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(22000); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(23000); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(23125); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(23160); // passes!
-        new CoordTest().testLimitedCantorUniqueness(23169); // passes!
-//        new CoordTest().testLimitedCantorUniqueness(23170); // passes if exclusive on positive, fails if inclusive!
-//        new CoordTest().testLimitedCantorUniqueness(23171); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(23173); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(23175); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(23180); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(23200); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(23250); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(23500); // fails!
-//        new CoordTest().testLimitedCantorUniqueness(24000); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(0, 32767); // passes!
+        new CoordTest().testLimitedCantorUniqueness(0, 32768); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-1, 1); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-4096, 4095); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-8192, 8191); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-16000, 16000); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-16384, 16383); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-20000, 20000); // fails!
+//        new CoordTest().testLimitedCantorUniqueness(-23169, 23169); // fails!
     }
 }
