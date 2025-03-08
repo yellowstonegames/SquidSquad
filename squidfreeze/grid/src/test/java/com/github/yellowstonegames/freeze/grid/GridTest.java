@@ -44,8 +44,7 @@ public class GridTest {
         kryo.register(ObjectList.class, new CollectionSerializer<ObjectList<?>>());
         ObjectList<Coord> data = ObjectList.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(-2, -3), Coord.get(100, 100));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -60,8 +59,7 @@ public class GridTest {
         kryo.register(Region.class, new RegionSerializer());
         Region data = new Region(120, 120, Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -77,8 +75,7 @@ public class GridTest {
         kryo.register(CoordSet.class, new CoordSetSerializer());
         CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -94,8 +91,7 @@ public class GridTest {
         Point2Float pt, pt2;
         pt = new Point2Float(0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -123,8 +119,7 @@ public class GridTest {
         Point3Float pt, pt2;
         pt = new Point3Float(0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -152,8 +147,7 @@ public class GridTest {
         Point4Float pt, pt2;
         pt = new Point4Float(0,0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -182,8 +176,7 @@ public class GridTest {
         Point5Float pt, pt2;
         pt = new Point5Float(0,0,0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -212,8 +205,7 @@ public class GridTest {
         Point6Float pt, pt2;
         pt = new Point6Float(0,0,0,0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -243,8 +235,7 @@ public class GridTest {
         Point2Int pt, pt2;
         pt = new Point2Int(0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -272,8 +263,7 @@ public class GridTest {
         Point3Int pt, pt2;
         pt = new Point3Int(0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -301,8 +291,7 @@ public class GridTest {
         Point4Int pt, pt2;
         pt = new Point4Int(0,0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -331,8 +320,7 @@ public class GridTest {
         Point5Int pt, pt2;
         pt = new Point5Int(0,0,0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -361,8 +349,7 @@ public class GridTest {
         Point6Int pt, pt2;
         pt = new Point6Int(0,0,0,0,0,0);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, pt);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -391,8 +378,7 @@ public class GridTest {
         kryo.register(CoordOrderedSet.class, new CoordOrderedSetSerializer());
         CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -408,8 +394,7 @@ public class GridTest {
         kryo.register(CoordObjectMap.class, new CoordObjectMapSerializer());
         CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -425,8 +410,7 @@ public class GridTest {
         kryo.register(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer());
         CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -442,8 +426,7 @@ public class GridTest {
         kryo.register(CoordFloatMap.class, new CoordFloatMapSerializer());
         CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -459,8 +442,7 @@ public class GridTest {
         kryo.register(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer());
         CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -476,8 +458,7 @@ public class GridTest {
         kryo.register(CoordLongMap.class, new CoordLongMapSerializer());
         CoordLongMap data = CoordLongMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -493,8 +474,7 @@ public class GridTest {
         kryo.register(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer());
         CoordLongOrderedMap data = CoordLongOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -510,8 +490,7 @@ public class GridTest {
         kryo.register(CoordIntMap.class, new CoordIntMapSerializer());
         CoordIntMap data = CoordIntMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -527,8 +506,7 @@ public class GridTest {
         kryo.register(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer());
         CoordIntOrderedMap data = CoordIntOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -606,8 +584,7 @@ public class GridTest {
         data.add(new IGI(Coord.get(1, 3)));
         data.add(new IGI(Coord.get(2, 3)));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -623,8 +600,7 @@ public class GridTest {
 
         Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -642,8 +618,7 @@ public class GridTest {
 
         LightSource data = new LightSource(Coord.get(1, 10), new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123), 1f/6f, 0.125f);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -669,8 +644,7 @@ public class GridTest {
         LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -696,8 +670,7 @@ public class GridTest {
         LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -728,8 +701,7 @@ public class GridTest {
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColor.describeOklab("darker gray 9 yellow"));
         data.lighting.addLight(3, 3, new Radiance(3f, 0xFF9966AA, 0.2f, 0f, 0f, 0f));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -761,8 +733,7 @@ public class GridTest {
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
         data.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -779,8 +750,7 @@ public class GridTest {
         Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
         data.setFractalSpiral(true);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -802,8 +772,7 @@ public class GridTest {
 
         FoamNoise data = new FoamNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -824,8 +793,7 @@ public class GridTest {
 
         FoamplexNoise data = new FoamplexNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -846,8 +814,7 @@ public class GridTest {
 
         PhantomNoise data = new PhantomNoise(1234, 8, 7f);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -864,8 +831,7 @@ public class GridTest {
 
         TaffyNoise data = new TaffyNoise(1234, 8, 7f);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -882,8 +848,7 @@ public class GridTest {
 
         FlanNoise data = new FlanNoise(1234, 8, 7f, 2);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -900,8 +865,7 @@ public class GridTest {
 
         CyclicNoise data = new CyclicNoise(-9876543210L, 8);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -918,8 +882,7 @@ public class GridTest {
 
         SorbetNoise data = new SorbetNoise(-9876543210L, 8);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -936,8 +899,7 @@ public class GridTest {
 
         SimplexNoise data = new SimplexNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -958,8 +920,7 @@ public class GridTest {
 
         SimplexNoiseScaled data = new SimplexNoiseScaled(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -980,8 +941,7 @@ public class GridTest {
 
         SimplexNoiseHard data = new SimplexNoiseHard(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1002,8 +962,7 @@ public class GridTest {
 
         OpenSimplex2 data = new OpenSimplex2(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1022,8 +981,7 @@ public class GridTest {
 
         OpenSimplex2Smooth data = new OpenSimplex2Smooth(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1042,8 +1000,7 @@ public class GridTest {
 
         PerlinNoise data = new PerlinNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1064,8 +1021,7 @@ public class GridTest {
 
         ValueNoise data = new ValueNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1087,8 +1043,7 @@ public class GridTest {
 
         BasicHashNoise data = new BasicHashNoise(-987654321, new FlawedPointHash.FlowerHash(123456789));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1109,8 +1064,7 @@ public class GridTest {
 
         HighDimensionalValueNoise data = new HighDimensionalValueNoise(1234, 8);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1127,8 +1081,7 @@ public class GridTest {
 
         WhiteNoise data = new WhiteNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1150,8 +1103,7 @@ public class GridTest {
 
         PerlueNoise data = new PerlueNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1172,8 +1124,7 @@ public class GridTest {
 
         BadgerNoise data = new BadgerNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1194,8 +1145,7 @@ public class GridTest {
 
         SnakeNoise data = new SnakeNoise(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1216,8 +1166,7 @@ public class GridTest {
 
         ShapedFoamNoise data = new ShapedFoamNoise(-9876543210L, 3f);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1239,8 +1188,7 @@ public class GridTest {
 
         NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1262,8 +1210,7 @@ public class GridTest {
 
         RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 10f, 20.125f);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1282,8 +1229,7 @@ public class GridTest {
 
         NoiseAdjustment data = new NoiseAdjustment(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), Interpolations.exp5In);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -1304,8 +1250,7 @@ public class GridTest {
         kryo.register(PointPair.class, new PointPairSerializer());
         PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {

@@ -36,8 +36,7 @@ public class TextTest {
 
         Language data = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -45,8 +44,7 @@ public class TextTest {
             Assert.assertEquals(data, data2);
         }
         data = Language.KOBOLD;
-        output.flush();
-        baos.reset();
+        output = new Output(32, -1);
         kryo.writeObject(output, data);
         bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -54,8 +52,7 @@ public class TextTest {
             Assert.assertEquals(data, data2);
         }
         data = Language.randomLanguage(0x1337BEEFCAFEBABEL).mix(4, Language.ARABIC_ROMANIZED, 5, Language.JAPANESE_ROMANIZED, 3).addModifiers(Language.Modifier.LISP);
-        output.flush();
-        baos.reset();
+        output = new Output(32, -1);
         kryo.writeObject(output, data);
         bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -71,8 +68,7 @@ public class TextTest {
 
         Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8), sf2;
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -91,8 +87,7 @@ public class TextTest {
         String sentence = "For you, I can translate; I will lower my steep rate; to something more affordable; since you are so adorable.";
         Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L), t2;
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {

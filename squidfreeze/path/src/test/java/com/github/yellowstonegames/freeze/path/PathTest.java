@@ -69,8 +69,7 @@ public class PathTest {
         int n = 5;
         Graph<Vector2> data = makeGridGraph(new UndirectedGraph<>(), n);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         System.out.println("Undirected byte length: " + bytes.length);
@@ -93,8 +92,7 @@ public class PathTest {
         int n = 5;
         Graph<Vector2> data = makeGridGraph(new DirectedGraph<>(), n);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         System.out.println("Directed byte length: " + bytes.length);
@@ -123,8 +121,7 @@ public class PathTest {
                 "######".toCharArray(),
         }, true);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         System.out.println("Default byte length: " + bytes.length);
@@ -153,8 +150,7 @@ public class PathTest {
                 "######".toCharArray(),
         }, true);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         System.out.println("Costly byte length: " + bytes.length);

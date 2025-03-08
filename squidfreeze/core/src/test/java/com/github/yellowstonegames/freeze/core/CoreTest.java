@@ -42,8 +42,7 @@ public class CoreTest {
 
         Dice.Rule data = new Dice.Rule("3>4d6");
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -66,8 +65,7 @@ public class CoreTest {
 
         GapShuffler<String> data = new GapShuffler<>(new String[]{"Foo", "Bar", "Baz", "Quux"}, new WhiskerRandom(123));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -98,8 +96,7 @@ public class CoreTest {
         bonus.add("Normality", 10);
         data.add(bonus, 6);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -117,8 +114,7 @@ public class CoreTest {
 
         WeightedTable data = new WeightedTable(1f, 2f, 3f, 4f, 0.5f, 5.5f);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -138,8 +134,7 @@ public class CoreTest {
 
         IntShuffler data = new IntShuffler(10, 123L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -160,8 +155,7 @@ public class CoreTest {
         kryo.register(UniqueIdentifier.Generator.class, new UniqueIdentifierGeneratorSerializer());
         {
             UniqueIdentifier data = UniqueIdentifier.next();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-            Output output = new Output(baos);
+            Output output = new Output(32, -1);
             kryo.writeObject(output, data);
             byte[] bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -171,8 +165,7 @@ public class CoreTest {
         }
         {
             UniqueIdentifier.Generator dataG = UniqueIdentifier.GENERATOR;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-            Output output = new Output(baos);
+            Output output = new Output(32, -1);
             kryo.writeObject(output, dataG);
             byte[] bytes = output.toBytes();
 

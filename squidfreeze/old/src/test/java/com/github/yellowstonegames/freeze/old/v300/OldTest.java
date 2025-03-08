@@ -33,8 +33,7 @@ public class OldTest {
 
         LightRNG data = new LightRNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -55,8 +54,7 @@ public class OldTest {
 
         DiverRNG data = new DiverRNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -77,8 +75,7 @@ public class OldTest {
 
         LinnormRNG data = new LinnormRNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -99,8 +96,7 @@ public class OldTest {
 
         ThrustAltRNG data = new ThrustAltRNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -121,8 +117,7 @@ public class OldTest {
 
         GWTRNG data = new GWTRNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -143,8 +138,7 @@ public class OldTest {
 
         SilkRNG data = new SilkRNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -165,8 +159,7 @@ public class OldTest {
 
         LongPeriodRNG data = new LongPeriodRNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -187,8 +180,7 @@ public class OldTest {
 
         XoshiroStarPhi32RNG data = new XoshiroStarPhi32RNG(-9876543210L);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -209,8 +201,7 @@ public class OldTest {
 
         LowStorageShuffler data = new LowStorageShuffler(5, 12345, 67890);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -232,8 +223,7 @@ public class OldTest {
 
         CrossHash.Yolk hasher = CrossHash.Yolk.psi;
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, hasher);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -255,8 +245,7 @@ public class OldTest {
 
         CrossHash.Curlup hasher = CrossHash.Curlup.psi;
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, hasher);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
@@ -278,8 +267,7 @@ public class OldTest {
 
         CrossHash.Mist hasher = CrossHash.Mist.psi;
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, hasher);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
