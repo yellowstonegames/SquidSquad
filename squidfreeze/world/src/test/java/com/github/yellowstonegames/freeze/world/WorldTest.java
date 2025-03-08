@@ -36,13 +36,12 @@ public class WorldTest {
         EllipticalWorldMap data = new EllipticalWorldMap(123, 200, 100);
 		data.generate();
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(32);
-        Output output = new Output(baos);
+        Output output = new Output(32, -1);
         kryo.writeObject(output, data);
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
             EllipticalWorldMap data2 = kryo.readObject(input, EllipticalWorldMap.class);
-//            Assert.assertEquals(data, data2);
+            Assert.assertEquals(data, data2);
         }
     }
 }

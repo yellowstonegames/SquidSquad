@@ -20,18 +20,13 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.world.EllipticalWorldMap;
 
 import java.nio.charset.StandardCharsets;
 
 /**
- * TOTALLY BROKEN, DO NOT USE.
- * What appears to be a Kryo bug prevents this from working. It is entirely likely that
- * if you were to run this as if it was working code, you would immediately get a crash.
- * That would require editing this file. Don't do it. Use Fury and SquidWrath instead.
+ * Serializer for {@link EllipticalWorldMap}; doesn't need anything else registered.
  */
-@Beta
 public class EllipticalWorldMapSerializer extends Serializer<EllipticalWorldMap> {
     public EllipticalWorldMapSerializer() {
         setImmutable(false);
@@ -43,21 +38,13 @@ public class EllipticalWorldMapSerializer extends Serializer<EllipticalWorldMap>
         String ser = data.stringSerialize();
         byte[] byteStr = ser.getBytes(StandardCharsets.UTF_8);
         output.writeInt(byteStr.length);
-        System.out.println(byteStr.length);
-        output.writeBytes(byteStr); // MARKED
-        //with MARKED line commented OUT, prints:  743360
-        //with MARKED line NOT commented, prints:  743360
+        output.writeBytes(byteStr);
     }
 
     @Override
     public EllipticalWorldMap read(final Kryo kryo, final Input input, final Class<? extends EllipticalWorldMap> dataClass) {
         int len = input.readInt();
-        System.out.println(len);
-        //with MARKED line commented OUT, prints:  743360
-        //with MARKED line NOT commented, prints:  540034627
-
-//        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
-//        return EllipticalWorldMap.recreateFromString(str);
-        return new EllipticalWorldMap();
+        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
+        return EllipticalWorldMap.recreateFromString(str);
     }
 }
