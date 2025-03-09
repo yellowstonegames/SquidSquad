@@ -827,6 +827,29 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
                 // use imul() to multiply by a golden-ratio-based number to randomize upper bits
                 , 0x9E3779B9);
     }
+    /**
+     * Given an int that may have been returned by {@link #signedRosenbergStrongMultiplyHashCode(int, int)}, this finds
+     * the Coord (as {@code short x} and {@code short y}) that would produce that int if passed to
+     * {@link #signedRosenbergStrongMultiplyHashCode(int, int)}.
+     * <br>
+     * Calculating this is branchless if calculating {@link Math#min(int, int)} is branchless. This is true on modern
+     * desktop JVMs with sufficient optimization, and may be true on other platforms as well.
+     * <br>
+     * The inverse algorithm, like the forward algorithm, was modified from
+     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">this article by Steven Pigeon</a>.
+     *
+     * @param code typically a result of {@link #signedRosenbergStrongMultiplyHashCode(int, int)}
+     * @return a Coord that contains the x and y that would have been passed to {@link #signedRosenbergStrongMultiplyHashCode(int, int)}
+     */
+    public static Coord signedRosenbergStrongMultiplyInverse(int code) {
+        code = BitConversion.imul(code, 0x144CBC89);
+        final int xs = code >> 31, ys = (code << 1) >> 31;
+        code ^= (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+        final int b = (int)Math.sqrt(code);
+        final int r = code - b * b;
+        final int min = Math.min(b, r);
+        return Coord.get(min ^ xs, b - r + min ^ ys);
+    }
 
     /**
      * This is just like {@link #signedRosenbergStrongMultiplyHashCode(int, int)}, but using the Cantor pairing function

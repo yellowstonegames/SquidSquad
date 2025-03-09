@@ -1,5 +1,7 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.MathTools;
+
 public class CoordTest {
     /**
      * All unique!
@@ -39,6 +41,22 @@ public class CoordTest {
                 int code = Coord.signedRosenbergStrongHashCode(x, y);
                 Coord tgt = Coord.get(x, y);
                 Coord inverse = Coord.signedRosenbergStrongInverse(code);
+                if(!inverse.equals(tgt)) {
+                    throw new RuntimeException("Points " + tgt + " and " + inverse + " do not match code " + code);
+                }
+            }
+        }
+    }
+
+    /**
+     * Inverse works for all inputs!
+     */
+    public void testSignedRosenbergStrongMultiplyInverse() {
+        for (int x = -32768; x <= 32767; x++) {
+            for (int y = -32768; y <= 32767; y++) {
+                int code = Coord.signedRosenbergStrongMultiplyHashCode(x, y);
+                Coord tgt = Coord.get(x, y);
+                Coord inverse = Coord.signedRosenbergStrongMultiplyInverse(code);
                 if(!inverse.equals(tgt)) {
                     throw new RuntimeException("Points " + tgt + " and " + inverse + " do not match code " + code);
                 }
@@ -128,7 +146,10 @@ public class CoordTest {
     }
 
     public static void main(String[] args) {
-        new CoordTest().testSignedRosenbergStrongInverse(); // passes!
+//        System.out.printf(" 0x%08X ", MathTools.modularMultiplicativeInverse(0x9E3779B9)); // 0x144CBC89
+//        System.out.printf(" 0x%08X ", (0x7FFF * 0x7FFF + 0x7FFF + 0x7FFF - 0)); // 0x3FFFFFFF
+//        new CoordTest().testSignedRosenbergStrongInverse(); // passes!
+        new CoordTest().testSignedRosenbergStrongMultiplyInverse(); // passes!
 //        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes!
 //        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes! but, requires 16-bit x and y.
 //        new CoordTest().testRosenbergStrongUniqueness(); // passes!
