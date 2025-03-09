@@ -762,6 +762,27 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     }
 
     /**
+     * Given an int that may have been returned by {@link #signedRosenbergStrongHashCode(int, int)}, this finds the
+     * Coord (as {@code short x} and {@code short y}) that would produce that int if passed to
+     * {@link #signedRosenbergStrongHashCode(int, int)}.
+     * <br>
+     * Calculating this is branchless if calculating {@link Math#min(int, int)} is branchless. This is true on modern
+     * desktop JVMs with sufficient optimization, and may be true on other platforms as well.
+     * <br>
+     * The inverse algorithm, like the forward algorithm, was modified slightly from
+     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">this article by Steven Pigeon</a>.
+     *
+     * @param code typically a result of {@link #signedRosenbergStrongHashCode(int, int)}
+     * @return a Coord that contains the x and y that would have been passed to {@link #signedRosenbergStrongHashCode(int, int)}
+     */
+    public static Coord signedRosenbergStrongInverse(final int code) {
+        final int b = (int)Math.sqrt(code & 0xFFFFFFFFL);
+        final int r = code - b * b;
+        final int min = Math.min(b, r);
+        return Coord.get(min, b - r + min);
+    }
+
+    /**
      * If x and y are valid {@code short} numbers, then this will return a unique {@code int} hash code for those two.
      * If either is not a valid short, this cannot be guaranteed to produce a unique result. If you compare the results
      * for two nearby x,y points, the upper bits of the hash codes this produces will be more random than the lower
