@@ -4,11 +4,11 @@ public class CoordTest {
     /**
      * All unique!
      */
-    public void testSignedRosenbergStrongUniqueness() {
+    public void testSignedRosenbergStrongMultiplyUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
-                int index = Coord.signedRosenbergStrongHashCode(x, y);
+                int index = Coord.signedRosenbergStrongMultiplyHashCode(x, y);
                 if((bits[index>>>6] & (1L << index)) != 0) {
                     throw new RuntimeException("Point at " + x + "," + y + " collided at index " + index);
                 }
@@ -17,24 +17,24 @@ public class CoordTest {
         }
     }
 
-    public static int signedWeirdRosenbergStrongHashCode(int x, int y) {
-        // Calculates a hash that won't overlap until very, very many Coords have been produced.
+    public static int signedRosenbergStrongHashCode(int x, int y) {
+        // Calculates a hash that won't overlap until Coords reach 65536 or higher in x or y.
+
+        // Masks x and y to the (non-negative) 16-bit range.
+        // This is synonymous to casting x and y each to char.
         x &= 0xFFFF;
         y &= 0xFFFF;
-//        x = (x * 0xC13F) & 0xFFFF;
-//        y = (y * 0x91E1) & 0xFFFF;
-        // Math.max can be branchless on modern JVMs, which may speed this method up a little if called often
+        // Math.max can be branchless on modern JVMs, which may speed this method up a little if called often.
         final int max = Math.max(x, y);
-        // imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
-        return  // Rosenberg-Strong pairing function; produces larger values in a square-shaped "ripple" moving away from the origin
-                (max * max + max + x - y);
+        // Rosenberg-Strong pairing function; produces larger values in a square-shaped "ripple" moving away from the origin.
+        return (max * max + max + x - y);
     }
 
     public void testSignedWeirdRosenbergStrongUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
-                int index = signedWeirdRosenbergStrongHashCode(x, y);
+                int index = signedRosenbergStrongHashCode(x, y);
                 if((bits[index>>>6] & (1L << index)) != 0) {
                     throw new RuntimeException("Point at " + x + "," + y + " collided at index " + index);
                 }

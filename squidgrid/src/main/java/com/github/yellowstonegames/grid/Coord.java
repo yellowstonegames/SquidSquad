@@ -84,7 +84,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * "sub-random" bit patterns in its multiples. Because 0x9E3779B9 is odd, if every possible hashCode() is taken and
      * multiplied by 0x9E3779B9, the full set of (2 to the 32) numbers will just be rearranged; nothing will collide.
      *
-     * @see #signedRosenbergStrongHashCode(int, int)
+     * @see #signedRosenbergStrongMultiplyHashCode(int, int)
      */
     public transient final int hash;
 
@@ -309,7 +309,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
 
     /**
      * Always throws an {@link UnsupportedOperationException} because Coord is fixed-size.
-     * If you want to add {@code i} to both components, use {@link #plus(int)} or {@link #add(float)} instead.
+     * If you want to add {@code i} to both components, use {@link #plus(int)} or {@link #plus(float)} instead.
      * @param i ignored
      * @return never returns
      * @throws UnsupportedOperationException always
@@ -729,6 +729,44 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * for two nearby x,y points, the upper bits of the hash codes this produces will be more random than the lower
      * bits. This helps avoid collisions in dense sets or maps of Coord.
      * <br>
+     * The actual method this uses involves masking x and y to fit in 16-bit unsigned numbers, then passing them to the
+     * Rosenberg-Strong pairing function. The Rosenberg-Strong pairing function is discussed
+     * more <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">here (a good introduction)</a> and
+     * <a href="https://arxiv.org/abs/1706.04129">here (a more technical paper)</a>. Unlike
+     * {@link #signedRosenbergStrongMultiplyHashCode(int, int)}, this does not finish by multiplying by a constant. You
+     * can always do so yourself, but you should use {@link BitConversion#imul(int, int)} if targeting GWT at all.
+     * <br>
+     * This is similar to the algorithm used to precalculate the hash returned by {@link #hashCode()}. Unlike most of
+     * the other hashCode() variants here, this acts fine with negative inputs, and should still return random-enough
+     * hashes when x or y isn't in the short range (just not guaranteed to be unique).
+     * <br>
+     * Calculating this is branchless if calculating {@link Math#max(int, int)} is branchless. This is true on modern
+     * desktop JVMs with sufficient optimization, and may be true on other platforms as well.
+     *
+     * @param x should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
+     * @param y should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
+     * @return an int hash code that will be unique for any combination of short x and short y
+     */
+    public static int signedRosenbergStrongHashCode(int x, int y) {
+        // Calculates a hash that won't overlap until Coords reach 32768 or higher in x or y.
+        // (Or if they reach -32769 or lower in x or y.)
+
+        // Masks x and y to the (non-negative) 16-bit range.
+        // This is synonymous to casting x and y each to char.
+        x &= 0xFFFF;
+        y &= 0xFFFF;
+        // Math.max can be branchless on modern JVMs, which may speed this method up a little if called often.
+        final int max = Math.max(x, y);
+        // Rosenberg-Strong pairing function; produces larger values in a square-shaped "ripple" moving away from the origin.
+        return (max * max + max + x - y);
+    }
+
+    /**
+     * If x and y are valid {@code short} numbers, then this will return a unique {@code int} hash code for those two.
+     * If either is not a valid short, this cannot be guaranteed to produce a unique result. If you compare the results
+     * for two nearby x,y points, the upper bits of the hash codes this produces will be more random than the lower
+     * bits. This helps avoid collisions in dense sets or maps of Coord.
+     * <br>
      * The actual method this uses involves passing x and y to the Rosenberg-Strong pairing function, then
      * multiplying that by 0x9E3779B9, or -1640531527 in decimal. The Rosenberg-Strong pairing function is discussed
      * more <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">here (a good introduction)</a> and
@@ -748,7 +786,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @param y should usually be in the range for a valid short (from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE})
      * @return an int hash code that will be unique for any combination of short x and short y
      */
-    public static int signedRosenbergStrongHashCode(int x, int y) {
+    public static int signedRosenbergStrongMultiplyHashCode(int x, int y) {
         // Calculates a hash that won't overlap until very, very many Coords have been produced.
         // the signs for x and y; each is either -1 or 0
         int xs = x >> 31, ys = y >> 31;
@@ -770,12 +808,12 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     }
 
     /**
-     * This is just like {@link #signedRosenbergStrongHashCode(int, int)}, but using the Cantor pairing function instead
-     * of the Rosenberg-Strong pairing function, and without the finalizing multiplication the other hash code uses.
-     * Like that hash code, this will produce different results for {@code (x,y)}, {@code (-x,y)} {@code (x,-y)}, and
-     * {@code (-x,-y)}. You should see unique results if you give this only (x,y) points where each of x and y is
+     * This is just like {@link #signedRosenbergStrongMultiplyHashCode(int, int)}, but using the Cantor pairing function
+     * instead of the Rosenberg-Strong pairing function, and without the finalizing multiplication the other hash code
+     * uses. Like that hash code, this will produce different results for {@code (x,y)}, {@code (-x,y)} {@code (x,-y)},
+     * and {@code (-x,-y)}. You should see unique results if you give this only (x,y) points where each of x and y is
      * between {@code -23170} and {@code 23169}, inclusive. This is a smaller range than
-     * {@link #signedRosenbergStrongHashCode(int, int)} guarantees uniqueness for, by over 9000 at each end.
+     * {@link #signedRosenbergStrongMultiplyHashCode(int, int)} guarantees uniqueness for, by over 9000 at each end.
      * <br>
      * Calculating this is always branchless.
      *
