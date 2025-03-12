@@ -2378,10 +2378,10 @@ public class Noise implements INoise {
     protected float valueNoise (int seed, float x, float y) {
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        x *= x * (3 - 2 * x);
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
         int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        y *= y * (3 - 2 * y);
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
         xFloor *= 0xD1B55;
         yFloor *= 0xABC99;
         return ((1 - y) * ((1 - x) * hashPart1024(xFloor, yFloor, seed) + x * hashPart1024(xFloor + 0xD1B55, yFloor, seed))
@@ -2544,13 +2544,13 @@ public class Noise implements INoise {
     {
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        x *= x * (3 - 2 * x);
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
         int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        y *= y * (3 - 2 * y);
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
         int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        z *= z * (3 - 2 * z);
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
         //0xDB4F1, 0xBBE05, 0xA0F2F
         xFloor *= 0xDB4F1;
         yFloor *= 0xBBE05;
@@ -2734,16 +2734,16 @@ public class Noise implements INoise {
     {
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        x *= x * (3 - 2 * x);
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
         int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        y *= y * (3 - 2 * y);
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
         int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        z *= z * (3 - 2 * z);
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
         int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
-        w *= w * (3 - 2 * w);
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
         //0xE19B1, 0xC6D1D, 0xAF36D, 0x9A695
         xFloor *= 0xE19B1;
         yFloor *= 0xC6D1D;
@@ -2968,19 +2968,19 @@ public class Noise implements INoise {
     protected float valueNoise(int seed, float x, float y, float z, float w, float u) {
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        x *= x * (3 - 2 * x);
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
         int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        y *= y * (3 - 2 * y);
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
         int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        z *= z * (3 - 2 * z);
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
         int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
-        w *= w * (3 - 2 * w);
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
         int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
-        u *= u * (3 - 2 * u);
+        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
         //0xE60E3, 0xCEBD7, 0xB9C9B, 0xA6F57, 0x9609D, 0x86D51
         xFloor *= 0xE60E3;
         yFloor *= 0xCEBD7;
@@ -3274,22 +3274,22 @@ public class Noise implements INoise {
     protected float valueNoise(int seed, float x, float y, float z, float w, float u, float v) {
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        x *= x * (3 - 2 * x);
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
         int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        y *= y * (3 - 2 * y);
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
         int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        z *= z * (3 - 2 * z);
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
         int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
-        w *= w * (3 - 2 * w);
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
         int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
-        u *= u * (3 - 2 * u);
+        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
         int vFloor = MathTools.fastFloor(v);
         v -= vFloor;
-        v *= v * (3 - 2 * v);
+        v *= v * (1 - v - v + 2); /* Won't go outside 0f to 1f range. */
         //0xE95E1, 0xD4BC7, 0xC1EDB, 0xB0C8B, 0xA1279, 0x92E85
         xFloor *= 0xE95E1;
         yFloor *= 0xD4BC7;
@@ -3369,25 +3369,25 @@ public class Noise implements INoise {
     protected float valueNoise(int seed, float x, float y, float z, float w, float u, float v, float m) {
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
-        x *= x * (3 - 2 * x);
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
         int yFloor = MathTools.fastFloor(y);
         y -= yFloor;
-        y *= y * (3 - 2 * y);
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
         int zFloor = MathTools.fastFloor(z);
         z -= zFloor;
-        z *= z * (3 - 2 * z);
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
         int wFloor = MathTools.fastFloor(w);
         w -= wFloor;
-        w *= w * (3 - 2 * w);
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
         int uFloor = MathTools.fastFloor(u);
         u -= uFloor;
-        u *= u * (3 - 2 * u);
+        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
         int vFloor = MathTools.fastFloor(v);
         v -= vFloor;
-        v *= v * (3 - 2 * v);
+        v *= v * (1 - v - v + 2); /* Won't go outside 0f to 1f range. */
         int mFloor = MathTools.fastFloor(m);
         m -= mFloor;
-        m *= m * (3 - 2 * m);
+        m *= m * (1 - m - m + 2); /* Won't go outside 0f to 1f range. */
         xFloor *= 0xEBEDF;
         yFloor *= 0xD96EB;
         zFloor *= 0xC862B;
