@@ -608,8 +608,8 @@ public final class DigitTools {
      * @return a float array containing the numbers found in {@code source}
      */
     public static float[] splitFloatFromBits(String source, String delimiter) {
-        if(source == null || source.length() == 0) return new float[0];
-        if(delimiter == null || delimiter.length() == 0) delimiter = " ";
+        if(source == null || source.isEmpty()) return new float[0];
+        if(delimiter == null || delimiter.isEmpty()) delimiter = " ";
         int amount = TextTools.count(source, delimiter);
         if (amount <= 0) return new float[]{BitConversion.reversedIntBitsToFloat(intFromDec(source))};
         float[] splat = new float[amount+1];

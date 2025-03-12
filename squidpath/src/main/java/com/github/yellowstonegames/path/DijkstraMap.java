@@ -3353,10 +3353,45 @@ public class DijkstraMap {
      * don't need a large area for each, or if you want to have an effect spread to a certain number of cells away.
      *
      * @param radius the number of steps to take outward from each starting position.
-     * @param starts a vararg group of Points to step outward from; this often will only need to be one Coord.
-     * @return An ObjectFloatOrderedMap, with Coord keys and float values; the starts are included in this with the value 0f .
+     * @param starts a vararg group of Coords to step outward from; this often will only need to be one Coord.
+     * @return a CoordFloatOrderedMap, with float values; the starts are included in this with the value 0f .
      */
     public CoordFloatOrderedMap floodFill(int radius, Coord... starts) {
+        if (!initialized) return null;
+        CoordFloatOrderedMap fill = new CoordFloatOrderedMap();
+
+        resetMap();
+        for (Coord goal : starts) {
+            setGoal(goal.x, goal.y);
+        }
+        if (goals.isEmpty())
+            return fill;
+
+        partialScan(radius, null);
+        float temp;
+        for (int x = 1; x < width - 1; x++) {
+            for (int y = 1; y < height - 1; y++) {
+                temp = gradientMap[x][y];
+                if (temp < FLOOR) {
+                    fill.put(Coord.get(x, y), temp);
+                }
+            }
+        }
+        goals.clear();
+        return fill;
+    }
+
+    /**
+     * A simple limited flood-fill that returns a OrderedMap of Coord keys to the float values in the DijkstraMap, only
+     * calculating out to a number of steps determined by limit. This can be useful if you need many flood-fills and
+     * don't need a large area for each, or if you want to have an effect spread to a certain number of cells away.
+     *
+     * @param radius the number of steps to take outward from each starting position.
+     * @param starts any Iterable of Coords to step outward from; {@link java.util.Collections#singletonList(Object)}
+     *               may be useful if you have only one start
+     * @return a new CoordFloatOrderedMap; the starts are included in this with the value 0f .
+     */
+    public CoordFloatOrderedMap floodFill(int radius, Iterable<Coord> starts) {
         if (!initialized) return null;
         CoordFloatOrderedMap fill = new CoordFloatOrderedMap();
 
