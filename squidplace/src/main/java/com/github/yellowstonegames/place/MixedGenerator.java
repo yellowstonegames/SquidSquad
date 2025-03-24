@@ -16,17 +16,20 @@
 
 package com.github.yellowstonegames.place;
 
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.WeightedTable;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.PoissonDisk;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A dungeon generator that can use a mix of techniques to have part-cave, part-room dungeons. Not entirely intended for
@@ -72,8 +75,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @return evenly spaced Coord points in a list made by PoissonDisk, trimmed down so they aren't all used
      * @see PoissonDisk used to make the list
      */
-    public static CoordObjectOrderedMap<ObjectList<Coord>> basicPoints(int width, int height, EnhancedRandom rng)
-    {
+    public static CoordObjectOrderedMap<ObjectList<Coord>> basicPoints(int width, int height, EnhancedRandom rng) {
         return PoissonDisk.sampleRectangle(Coord.get(2, 2), Coord.get(width - 3, height - 3),
                 8f * (width + height) / 120f + 1f, width, height, 20, rng);
     }
@@ -87,7 +89,7 @@ public class MixedGenerator implements PlaceGenerator {
      * only caves if none are called. You call generate() after adding carvers, which returns a char[][] for a map.
      */
     public MixedGenerator() {
-        this(80, 80, new WhiskerRandom());
+        this(80, 80, new AceRandom());
     }
 
     /**
@@ -122,7 +124,7 @@ public class MixedGenerator implements PlaceGenerator {
         this.height = height;
         this.roomWidth = width / 64.0f;
         this.roomHeight = height / 64.0f;
-        if(width <= 2 || height <= 2)
+        if (width <= 2 || height <= 2)
             throw new IllegalStateException("width and height must be greater than 2");
         this.rng = rng;
         dungeon = new char[width][height];
@@ -144,6 +146,7 @@ public class MixedGenerator implements PlaceGenerator {
         }
         carvers = new float[5];
     }
+
     /**
      * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * This version of the constructor uses a Map with Coord keys and Coord array values to determine a
@@ -156,10 +159,10 @@ public class MixedGenerator implements PlaceGenerator {
      * @param rng an EnhancedRandom object to use for random choices; this makes a lot of random choices.
      * @param connections a Map of Coord keys to arrays of Coord to connect to next; shouldn't connect both ways
      */
-    public MixedGenerator(int width, int height, EnhancedRandom rng, Map<Coord, ? extends List<Coord>> connections)
-    {
+    public MixedGenerator(int width, int height, EnhancedRandom rng, Map<Coord, ? extends List<Coord>> connections) {
         this(width, height, rng, connections, 0.8f);
     }
+
     /**
      * This prepares a map generator that will generate a map with the given width and height, using the given EnhancedRandom.
      * This version of the constructor uses a Map with Coord keys and Coord array values to determine a
@@ -179,7 +182,7 @@ public class MixedGenerator implements PlaceGenerator {
         this.height = height;
         roomWidth = (width / 64.0f) * roomSizeMultiplier;
         roomHeight = (height / 64.0f) * roomSizeMultiplier;
-        if(width <= 2 || height <= 2)
+        if (width <= 2 || height <= 2)
             throw new IllegalStateException("width and height must be greater than 2");
         this.rng = rng;
         dungeon = new char[width][height];
@@ -194,8 +197,7 @@ public class MixedGenerator implements PlaceGenerator {
             System.arraycopy(environment[0], 0, environment[i], 0, height);
         }
         totalPoints = 0;
-        for(List<Coord> vals : connections.values())
-        {
+        for (List<Coord> vals : connections.values()) {
             totalPoints += vals.size();
         }
         points = new IntList(totalPoints);
@@ -217,10 +219,10 @@ public class MixedGenerator implements PlaceGenerator {
      * putWalledRoundRoomCarvers() is reasonable.
      * @param count the number of carvers making caves between rooms; only matters in relation to other carvers
      */
-    public void putCaveCarvers(int count)
-    {
+    public void putCaveCarvers(int count) {
         carvers[CAVE] = count;
     }
+
     /**
      * Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
      * with a random size in a box shape at the start and end, and a small room at the corner if there is one. If count
@@ -232,8 +234,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param count the number of carvers making box-shaped rooms and corridors between them; only matters in relation
      *              to other carvers
      */
-    public void putBoxRoomCarvers(int count)
-    {
+    public void putBoxRoomCarvers(int count) {
         carvers[BOX] = count;
     }
 
@@ -248,10 +249,10 @@ public class MixedGenerator implements PlaceGenerator {
      * @param count the number of carvers making circular rooms and corridors between them; only matters in relation
      *              to other carvers
      */
-    public void putRoundRoomCarvers(int count)
-    {
+    public void putRoundRoomCarvers(int count) {
         carvers[ROUND] = count;
     }
+
     /**
      * Changes the number of "carvers" that will create right-angle corridors from one room to the next, create rooms
      * with a random size in a box shape at the start and end, and a small room at the corner if there is one, enforcing
@@ -265,8 +266,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param count the number of carvers making box-shaped rooms and corridors between them; only matters in relation
      *              to other carvers
      */
-    public void putWalledBoxRoomCarvers(int count)
-    {
+    public void putWalledBoxRoomCarvers(int count) {
         carvers[BOX_WALLED] = count;
     }
 
@@ -283,8 +283,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param count the number of carvers making circular rooms and corridors between them; only matters in relation
      *              to other carvers
      */
-    public void putWalledRoundRoomCarvers(int count)
-    {
+    public void putWalledRoundRoomCarvers(int count) {
         carvers[ROUND_WALLED] = count;
     }
 
@@ -296,79 +295,53 @@ public class MixedGenerator implements PlaceGenerator {
      * @return a char[][] where '#' is a wall and '.' is a floor or corridor; x first y second
      */
     @Override
-    public char[][] generate()
-    {
-        if(carvers[0] <= 0 && carvers[1] <= 0 && carvers[2] <= 0 && carvers[3] <= 0 && carvers[4] <= 0)
+    public char[][] generate() {
+        if (carvers[0] <= 0 && carvers[1] <= 0 && carvers[2] <= 0 && carvers[3] <= 0 && carvers[4] <= 0)
             carvers[0] = 1;
         carverTable = new WeightedTable(carvers);
-//        CarverType[] carvings = carvers.keySet().toArray(new CarverType[carvers.size()]);
-//        int[] carvingsCounters = new int[carvings.length];
-//        int totalLength = 0;
-//        for (int i = 0; i < carvings.length; i++) {
-//            carvingsCounters[i] = carvers.get(carvings[i]);
-//            totalLength += carvingsCounters[i];
-//        }
-//        CarverType[] allCarvings = new CarverType[totalLength];
-//
-//        for (int i = 0, c = 0; i < carvings.length; i++) {
-//            for (int j = 0; j < carvingsCounters[i]; j++) {
-//                allCarvings[c++] = carvings[i];
-//            }
-//        }
-//        if(allCarvings.length == 0)
-//        {
-//            allCarvings = new CarverType[]{CarverType.CAVE};
-//            totalLength = 1;
-//        }
-//        else
-//            allCarvings = rng.shuffle(allCarvings, new CarverType[allCarvings.length]);
 
         for (int p = 0; p < totalPoints; p++) {
             int pair = points.get(p);
             Coord start = Coord.get(pair >>> 24 & 0xff, pair >>> 16 & 0xff),
-                  end   = Coord.get(pair >>> 8 & 0xff, pair & 0xff);
+                    end = Coord.get(pair >>> 8 & 0xff, pair & 0xff);
             int ct = carverTable.random(rng.nextLong());
             Direction dir;
-            switch (ct)
-            {
+            switch (ct) {
                 case CAVE:
                     markPiercing(end);
                     markEnvironmentCave(end.x, end.y);
                     store();
-                    double weight = 0.75;
+                    float weight = 0.75f;
                     do {
                         Coord cent = markPlusCave(start);
-                        if(cent != null)
-                        {
+                        if (cent != null) {
                             markPiercingCave(cent);
                             markPiercingCave(cent.translate(1, 0));
                             markPiercingCave(cent.translate(-1, 0));
                             markPiercingCave(cent.translate(0, 1));
                             markPiercingCave(cent.translate(0, -1));
-                            weight = 0.95;
+                            weight = 0.95f;
                         }
                         dir = stepWobbly(start, end, weight);
                         start = start.translate(dir);
-                    }while (dir != Direction.NONE);
+                    } while (dir != Direction.NONE);
                     break;
                 case BOX:
                     markRectangle(end, rng.nextInt(1, 5), rng.nextInt(1, 5));
                     markRectangle(start, rng.nextInt(1, 4), rng.nextInt(1, 4));
                     store();
                     dir = Direction.getDirection(end.x - start.x, end.y - start.y);
-                    if(dir.isDiagonal())
+                    if (dir.isDiagonal())
                         dir = rng.nextBoolean() ? Direction.getCardinalDirection(dir.deltaX, 0)
                                 : Direction.getCardinalDirection(0, dir.deltaY);
-                    while (start.x != end.x && start.y != end.y)
-                    {
+                    while (start.x != end.x && start.y != end.y) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
                     }
                     markRectangle(start, 1, 1);
                     dir = Direction.getCardinalDirection(end.x - start.x, (end.y - start.y));
-                    while (!(start.x == end.x && start.y == end.y))
-                    {
+                    while (!(start.x == end.x && start.y == end.y)) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
@@ -379,19 +352,17 @@ public class MixedGenerator implements PlaceGenerator {
                     markRectangleWalled(start, rng.nextInt(1, 4), rng.nextInt(1, 4));
                     store();
                     dir = Direction.getDirection(end.x - start.x, end.y - start.y);
-                    if(dir.isDiagonal())
+                    if (dir.isDiagonal())
                         dir = rng.nextBoolean() ? Direction.getCardinalDirection(dir.deltaX, 0)
                                 : Direction.getCardinalDirection(0, dir.deltaY);
-                    while (start.x != end.x && start.y != end.y)
-                    {
+                    while (start.x != end.x && start.y != end.y) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
                     }
                     markRectangleWalled(start, 1, 1);
                     dir = Direction.getCardinalDirection(end.x - start.x, (end.y - start.y));
-                    while (!(start.x == end.x && start.y == end.y))
-                    {
+                    while (!(start.x == end.x && start.y == end.y)) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
@@ -402,19 +373,17 @@ public class MixedGenerator implements PlaceGenerator {
                     markCircle(start, rng.nextInt(2, 6));
                     store();
                     dir = Direction.getDirection(end.x - start.x, end.y - start.y);
-                    if(dir.isDiagonal())
+                    if (dir.isDiagonal())
                         dir = rng.nextBoolean() ? Direction.getCardinalDirection(dir.deltaX, 0)
                                 : Direction.getCardinalDirection(0, dir.deltaY);
-                    while (start.x != end.x && start.y != end.y)
-                    {
+                    while (start.x != end.x && start.y != end.y) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
                     }
                     markCircle(start, 2);
                     dir = Direction.getCardinalDirection(end.x - start.x, (end.y - start.y));
-                    while (!(start.x == end.x && start.y == end.y))
-                    {
+                    while (!(start.x == end.x && start.y == end.y)) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
@@ -425,19 +394,17 @@ public class MixedGenerator implements PlaceGenerator {
                     markCircleWalled(start, rng.nextInt(2, 6));
                     store();
                     dir = Direction.getDirection(end.x - start.x, end.y - start.y);
-                    if(dir.isDiagonal())
+                    if (dir.isDiagonal())
                         dir = rng.nextBoolean() ? Direction.getCardinalDirection(dir.deltaX, 0)
                                 : Direction.getCardinalDirection(0, dir.deltaY);
-                    while (start.x != end.x && start.y != end.y)
-                    {
+                    while (start.x != end.x && start.y != end.y) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
                     }
                     markCircleWalled(start, 2);
                     dir = Direction.getCardinalDirection(end.x - start.x, (end.y - start.y));
-                    while (!(start.x == end.x && start.y == end.y))
-                    {
+                    while (!(start.x == end.x && start.y == end.y)) {
                         markPiercing(start);
                         markEnvironmentCorridor(start.x, start.y);
                         start = start.translate(dir);
@@ -448,7 +415,7 @@ public class MixedGenerator implements PlaceGenerator {
         }
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if(fixedRooms[x][y])
+                if (fixedRooms[x][y])
                     markPiercingCave(Coord.get(x, y)); // this is only used by LanesMapGenerator, where caves make sense
             }
         }
@@ -464,13 +431,11 @@ public class MixedGenerator implements PlaceGenerator {
     }
 
     @Override
-    public int[][] getEnvironment()
-    {
+    public int[][] getEnvironment() {
         return environment;
     }
 
-    public boolean hasGenerated()
-    {
+    public boolean hasGenerated() {
         return generated;
     }
 
@@ -485,12 +450,10 @@ public class MixedGenerator implements PlaceGenerator {
     /**
      * Internal use. Takes cells that have been previously marked and permanently stores them as floors in the dungeon.
      */
-    protected void store()
-    {
+    protected void store() {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if(marked[i][j])
-                {
+                if (marked[i][j]) {
                     dungeon[i][j] = '.';
                     marked[i][j] = false;
                 }
@@ -502,12 +465,10 @@ public class MixedGenerator implements PlaceGenerator {
      * Internal use. Finds all floor cells by environment and marks untouched adjacent (8-way) cells as walls, using the
      * appropriate type for the nearby floor.
      */
-    protected void markEnvironmentWalls()
-    {
+    protected void markEnvironmentWalls() {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if(environment[i][j] == DungeonTools.UNTOUCHED)
-                {
+                if (environment[i][j] == DungeonTools.UNTOUCHED) {
                     boolean allWalls = true;
                     //lowest precedence, also checks for any floors
                     for (int x = Math.max(0, i - 1); x <= Math.min(width - 1, i + 1); x++) {
@@ -516,12 +477,12 @@ public class MixedGenerator implements PlaceGenerator {
                             if (environment[x][y] == DungeonTools.CORRIDOR_FLOOR) {
                                 markEnvironment(i, j, DungeonTools.CORRIDOR_WALL);
                             }
-                            if(dungeon[x][y] == '.')
+                            if (dungeon[x][y] == '.')
                                 allWalls = false;
                         }
                     }
                     //if there are no floors we don't need to check twice again.
-                    if(allWalls)
+                    if (allWalls)
                         continue;
                     //more precedence
                     for (int x = Math.max(0, i - 1); x <= Math.min(width - 1, i + 1); x++) {
@@ -557,8 +518,7 @@ public class MixedGenerator implements PlaceGenerator {
         if (x > 0 && x < width - 1 && y > 0 && y < height - 1 && !walled[x][y]) {
             marked[x][y] = true;
             return false;
-        }
-        else return x > 0 && x < width - 1 && y > 0 && y < height - 1 && walled[x][y];
+        } else return x > 0 && x < width - 1 && y > 0 && y < height - 1 && walled[x][y];
     }
 
     /**
@@ -571,6 +531,7 @@ public class MixedGenerator implements PlaceGenerator {
             marked[x][y] = true;
         }
     }
+
     /**
      * Internal use. Marks a point's environment type as the appropriate kind of environment.
      * @param x x position to mark
@@ -587,7 +548,9 @@ public class MixedGenerator implements PlaceGenerator {
      * @param y y position to mark
      */
     protected void markEnvironmentCorridor(int x, int y) {
-        if (x > 0 && x < width - 1 && y > 0 && y < height - 1 && environment[x][y] != DungeonTools.ROOM_FLOOR && environment[x][y] != DungeonTools.NATURAL_FLOOR) {
+        if (x > 0 && x < width - 1 && y > 0 && y < height - 1
+                && environment[x][y] != DungeonTools.ROOM_FLOOR
+                && environment[x][y] != DungeonTools.NATURAL_FLOOR) {
             markEnvironment(x, y, DungeonTools.CORRIDOR_FLOOR);
         }
     }
@@ -613,6 +576,7 @@ public class MixedGenerator implements PlaceGenerator {
             markEnvironment(x, y, DungeonTools.NATURAL_FLOOR);
         }
     }
+
     /**
      * Internal use. Marks a point to be considered a hard wall.
      * @param x x position to mark
@@ -629,8 +593,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param pos position to mark
      * @return false if everything is normal, true if and only if this failed to mark because the position is walled
      */
-    protected boolean mark(Coord pos)
-    {
+    protected boolean mark(Coord pos) {
         return mark(pos.x, pos.y);
     }
 
@@ -638,26 +601,25 @@ public class MixedGenerator implements PlaceGenerator {
      * Internal use. Marks a point to be made into floor, piercing walls.
      * @param pos position to mark
      */
-    protected void markPiercing(Coord pos)
-    {
+    protected void markPiercing(Coord pos) {
         markPiercing(pos.x, pos.y);
     }
+
     /**
      * Internal use. Marks a point to be made into floor, piercing walls, and also marks the point as a cave floor.
      * @param pos position to mark
      */
-    protected void markPiercingCave(Coord pos)
-    {
+    protected void markPiercingCave(Coord pos) {
         markPiercing(pos.x, pos.y);
         markEnvironmentCave(pos.x, pos.y);
     }
+
     /**
      * Internal use. Marks a point to be made into floor, piercing walls, and also marks the point as a room floor.
      * @param x x coordinate of position to mark
      * @param y y coordinate of position to mark
      */
-    protected void markPiercingRoom(int x, int y)
-    {
+    protected void markPiercingRoom(int x, int y) {
         markPiercing(x, y);
         markEnvironmentRoom(x, y);
     }
@@ -690,16 +652,17 @@ public class MixedGenerator implements PlaceGenerator {
             block = pos;
         else
             markEnvironmentCave(pos.x, pos.y);
-        if(!mark(pos.x + 1, pos.y))
+        if (!mark(pos.x + 1, pos.y))
             markEnvironmentCave(pos.x + 1, pos.y);
-        if(!mark(pos.x - 1, pos.y))
+        if (!mark(pos.x - 1, pos.y))
             markEnvironmentCave(pos.x - 1, pos.y);
-        if(!mark(pos.x, pos.y + 1))
+        if (!mark(pos.x, pos.y + 1))
             markEnvironmentCave(pos.x, pos.y + 1);
-        if(!mark(pos.x, pos.y - 1))
+        if (!mark(pos.x, pos.y - 1))
             markEnvironmentCave(pos.x, pos.y - 1);
         return block;
     }
+
     /**
      * Internal use. Marks a rectangle of points centered on pos, extending halfWidth in both x directions and
      * halfHeight in both vertical directions. Marks all cells in the rectangle as room floors.
@@ -708,14 +671,13 @@ public class MixedGenerator implements PlaceGenerator {
      * @param halfHeight the distance from the center to extend vertically
      * @return null if no points in the rectangle were blocked by walls, otherwise a Coord blocked by a wall
      */
-    private Coord markRectangle(Coord pos, int halfWidth, int halfHeight)
-    {
+    private Coord markRectangle(Coord pos, int halfWidth, int halfHeight) {
         halfWidth = Math.max(1, Math.round(halfWidth * roomWidth));
         halfHeight = Math.max(1, Math.round(halfHeight * roomHeight));
         Coord block = null;
         for (int i = pos.x - halfWidth; i <= pos.x + halfWidth; i++) {
             for (int j = pos.y - halfHeight; j <= pos.y + halfHeight; j++) {
-                if(mark(i, j))
+                if (mark(i, j))
                     block = Coord.get(i, j);
                 else
                     markEnvironmentRoom(i, j);
@@ -723,6 +685,7 @@ public class MixedGenerator implements PlaceGenerator {
         }
         return block;
     }
+
     /**
      * Internal use. Marks a rectangle of points centered on pos, extending halfWidth in both x directions and
      * halfHeight in both vertical directions. Also considers the area just beyond each wall, but not corners, to be
@@ -731,13 +694,11 @@ public class MixedGenerator implements PlaceGenerator {
      * @param pos center position to mark
      * @param halfWidth the distance from the center to extend horizontally
      * @param halfHeight the distance from the center to extend vertically
-     * @return null if no points in the rectangle were blocked by walls, otherwise a Coord blocked by a wall
+     * @return null, always; this can't be blocked by walls
      */
-    private Coord markRectangleWalled(Coord pos, int halfWidth, int halfHeight)
-    {
+    private Coord markRectangleWalled(Coord pos, int halfWidth, int halfHeight) {
         halfWidth = Math.max(1, Math.round(halfWidth * roomWidth));
         halfHeight = Math.max(1, Math.round(halfHeight * roomHeight));
-        Coord block = null;
         for (int i = pos.x - halfWidth; i <= pos.x + halfWidth; i++) {
             for (int j = pos.y - halfHeight; j <= pos.y + halfHeight; j++) {
                 markPiercing(i, j);
@@ -745,8 +706,7 @@ public class MixedGenerator implements PlaceGenerator {
             }
         }
         for (int i = Math.max(0, pos.x - halfWidth - 1); i <= Math.min(width - 1, pos.x + halfWidth + 1); i++) {
-            for (int j = Math.max(0, pos.y - halfHeight - 1); j <= Math.min(height - 1, pos.y + halfHeight + 1); j++)
-            {
+            for (int j = Math.max(0, pos.y - halfHeight - 1); j <= Math.min(height - 1, pos.y + halfHeight + 1); j++) {
                 wallOff(i, j);
             }
         }
@@ -760,17 +720,14 @@ public class MixedGenerator implements PlaceGenerator {
      * @param radius radius to extend in all directions from center
      * @return null if no points in the circle were blocked by walls, otherwise a Coord blocked by a wall
      */
-    private Coord markCircle(Coord pos, int radius)
-    {
+    private Coord markCircle(Coord pos, int radius) {
         Coord block = null;
         int high;
         radius = Math.max(1, Math.round(radius * Math.min(roomWidth, roomHeight)));
-        for (int dx = -radius; dx <= radius; ++dx)
-        {
-            high = (int)Math.floor(Math.sqrt(radius * radius - dx * dx));
-            for (int dy = -high; dy <= high; ++dy)
-            {
-                if(mark(pos.x + dx, pos.y + dy))
+        for (int dx = -radius; dx <= radius; ++dx) {
+            high = (int) Math.floor(Math.sqrt(radius * radius - dx * dx));
+            for (int dy = -high; dy <= high; ++dy) {
+                if (mark(pos.x + dx, pos.y + dy))
                     block = pos.translate(dx, dy);
                 else
                     markEnvironmentRoom(pos.x + dx, pos.y + dy);
@@ -778,45 +735,40 @@ public class MixedGenerator implements PlaceGenerator {
         }
         return block;
     }
+
     /**
      * Internal use. Marks a circle of points centered on pos, extending out to radius in Euclidean measurement.
      * Also considers the area just beyond each wall, but not corners, to be a blocking wall that can only be passed by
      * corridors and small cave openings. Marks all cells in the circle as room floors.
      * @param pos center position to mark
      * @param radius radius to extend in all directions from center
-     * @return null if no points in the circle were blocked by walls, otherwise a Coord blocked by a wall
+     * @return null, always; this can't be blocked by walls
      */
-    private Coord markCircleWalled(Coord pos, int radius)
-    {
-        Coord block = null;
+    private Coord markCircleWalled(Coord pos, int radius) {
         int high;
         radius = Math.max(1, Math.round(radius * Math.min(roomWidth, roomHeight)));
-        for (int dx = -radius; dx <= radius; ++dx)
-        {
-            high = (int)Math.floor(Math.sqrt(radius * radius - dx * dx));
-            for (int dy = -high; dy <= high; ++dy)
-            {
+        for (int dx = -radius; dx <= radius; ++dx) {
+            high = MathTools.floor(Math.sqrt(radius * radius - dx * dx));
+            for (int dy = -high; dy <= high; ++dy) {
                 markPiercing(pos.x + dx, pos.y + dy);
                 markEnvironmentRoom(pos.x + dx, pos.y + dy);
             }
         }
-        for (int dx = -radius; dx <= radius; ++dx)
-        {
-            high = (int)Math.floor(Math.sqrt(radius * radius - dx * dx));
+        for (int dx = -radius; dx <= radius; ++dx) {
+            high = MathTools.floor(Math.sqrt(radius * radius - dx * dx));
             int dx2 = Math.max(1, Math.min(pos.x + dx, width - 2));
-            for (int dy = -high; dy <= high; ++dy)
-            {
+            for (int dy = -high; dy <= high; ++dy) {
                 int dy2 = Math.max(1, Math.min(pos.y + dy, height - 2));
 
-                wallOff(dx2, dy2-1);
-                wallOff(dx2+1, dy2-1);
-                wallOff(dx2-1, dy2-1);
+                wallOff(dx2, dy2 - 1);
+                wallOff(dx2 + 1, dy2 - 1);
+                wallOff(dx2 - 1, dy2 - 1);
                 wallOff(dx2, dy2);
-                wallOff(dx2+1, dy2);
-                wallOff(dx2-1, dy2);
-                wallOff(dx2, dy2+1);
-                wallOff(dx2+1, dy2+1);
-                wallOff(dx2-1, dy2+1);
+                wallOff(dx2 + 1, dy2);
+                wallOff(dx2 - 1, dy2);
+                wallOff(dx2, dy2 + 1);
+                wallOff(dx2 + 1, dy2 + 1);
+                wallOff(dx2 - 1, dy2 + 1);
 
             }
         }
@@ -832,76 +784,56 @@ public class MixedGenerator implements PlaceGenerator {
      * @param weight between 0.5 and 1.0, usually. 0.6 makes very random caves, 0.9 is almost a straight line.
      * @return a Direction, either UP, DOWN, LEFT, or RIGHT if we should move, or NONE if we have reached our target
      */
-    private Direction stepWobbly(Coord current, Coord target, double weight)
-    {
-        int dx = target.x - current.x;
-        int dy = target.y - current.y;
+    private Direction stepWobbly(Coord current, Coord target, float weight) {
+        int dx = Math.min(Math.max(target.x - current.x, -1), 1);
+        int dy = Math.min(Math.max(target.y - current.y, -1), 1);
 
-        if (dx >  1) dx = 1;
-        if (dx < -1) dx = -1;
-        if (dy >  1) dy = 1;
-        if (dy < -1) dy = -1;
-
-        double r = rng.nextDouble();
+        float r = rng.nextFloat();
         Direction dir;
-        if (dx == 0 && dy == 0)
-        {
+        if ((dx | dy) == 0) {
+            // both dx and dy are 0, produce no movement direction
             return Direction.NONE;
-        }
-        else if (dx == 0 || dy == 0)
-        {
+        } else if ((dx & dy) == 0) {
+            // one of dx or dy is 0, so this is a cardinal direction
+            // dx2 and dy2 are equal to dx and dy if dx is 0, or otherwise are swapped so dx2 is dy and dy2 is dx.
             int dx2 = (dx == 0) ? dx : dy, dy2 = (dx == 0) ? dy : dx;
-            if (r >= (weight * 0.5))
-            {
-                r -= weight * 0.5;
-                if (r < weight * (1.0 / 6) + (1 - weight) * (1.0 / 3))
-                {
+            if (r >= (weight * 0.5f)) {
+                r -= weight * 0.5f;
+                if (r < (1 - weight * 0.5f) * (1f / 3)) {
                     dx2 = -1;
                     dy2 = 0;
-                }
-                else if (r < weight * (2.0 / 6) + (1 - weight) * (2.0 / 3))
-                {
+                } else if (r < (1 - weight * 0.5f) * (2f / 3)) {
                     dx2 = 1;
                     dy2 = 0;
-                }
-                else
-                {
+                } else {
                     dx2 = 0;
                     dy2 = -dy2;
                 }
             }
             dir = Direction.getCardinalDirection(dx2, dy2);
-
-        }
-        else
-        {
-            if (r < weight * 0.5)
-            {
+        } else {
+            // this is a diagonal; both dx and dy are non-zero
+            if (r < weight * 0.5f) {
                 dy = 0;
-            }
-            else if (r < weight)
-            {
+            } else if (r < weight) {
                 dx = 0;
-            }
-            else if (r < weight + (1 - weight) * 0.5)
-            {
+            } else if (r < (1 + weight) * 0.5f) {
                 dx = -dx;
                 dy = 0;
-            }
-            else
-            {
+            } else {
                 dx = 0;
                 dy = -dy;
             }
             dir = Direction.getCardinalDirection(dx, dy);
         }
-        if(current.x + dir.deltaX <= 0 || current.x + dir.deltaX >= width - 1) {
+        if (current.x + dir.deltaX <= 0 || current.x + dir.deltaX >= width - 1) {
             if (current.y < target.y) dir = Direction.UP;
             else if (current.y > target.y) dir = Direction.DOWN;
-        }
-        else if(current.y + dir.deltaY <= 0 || current.y + dir.deltaY >= height - 1) {
+            else dir = Direction.NONE;
+        } else if (current.y + dir.deltaY <= 0 || current.y + dir.deltaY >= height - 1) {
             if (current.x < target.x) dir = Direction.RIGHT;
             else if (current.x > target.x) dir = Direction.LEFT;
+            else dir = Direction.NONE;
         }
         return dir;
     }
