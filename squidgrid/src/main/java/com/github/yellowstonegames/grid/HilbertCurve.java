@@ -33,6 +33,7 @@ package com.github.yellowstonegames.grid;
  * curves," like the more-common and easier-to-calculate Z-order curve, the Hilbert
  * Curve doesn't move diagonally or jump long distances between sequential points, so it
  * very often tends to have very close distances for very nearby 2D points.
+ *
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
  */
 public final class HilbertCurve {
@@ -46,8 +47,9 @@ public final class HilbertCurve {
             hilbert3Z = new char[0x200], hilbert3Distances = new char[0x200];
     private static boolean initialized2D;
     private static boolean initialized3D;
+
     public static void init2D() {
-        if(initialized2D) return;
+        if (initialized2D) return;
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
                 computeHilbert2D(x, y);
@@ -57,25 +59,25 @@ public final class HilbertCurve {
         for (int i = 64; i < 128; i++) {
             mooreX[i - 64] = hilbertX[i];
             mooreY[i - 64] = hilbertY[i];
-            mooreDistances[mooreX[i - 64] + (mooreY[i - 64] << 4)] = (char)(i - 64);
+            mooreDistances[mooreX[i - 64] + (mooreY[i - 64] << 4)] = (char) (i - 64);
 
             mooreX[i] = hilbertX[i];
-            mooreY[i] = (char)(hilbertY[i] + 8);
-            mooreDistances[mooreX[i] + (mooreY[i] << 4)] = (char)(i);
+            mooreY[i] = (char) (hilbertY[i] + 8);
+            mooreDistances[mooreX[i] + (mooreY[i] << 4)] = (char) i;
 
-            mooreX[i + 64] = (char)(15 - hilbertX[i]);
-            mooreY[i + 64] = (char)(15 - hilbertY[i]);
-            mooreDistances[mooreX[i + 64] + (mooreY[i + 64] << 4)] = (char)(i + 64);
+            mooreX[i + 64] = (char) (15 - hilbertX[i]);
+            mooreY[i + 64] = (char) (15 - hilbertY[i]);
+            mooreDistances[mooreX[i + 64] + (mooreY[i + 64] << 4)] = (char) (i + 64);
 
-            mooreX[i + 128] = (char)(15 - hilbertX[i]);
-            mooreY[i + 128] = (char)(7 - hilbertY[i]);
-            mooreDistances[mooreX[i + 128] + (mooreY[i + 128] << 4)] = (char)(i + 128);
+            mooreX[i + 128] = (char) (15 - hilbertX[i]);
+            mooreY[i + 128] = (char) (7 - hilbertY[i]);
+            mooreDistances[mooreX[i + 128] + (mooreY[i + 128] << 4)] = (char) (i + 128);
         }
         initialized2D = true;
     }
 
     public static void init3D() {
-        if(initialized3D) return;
+        if (initialized3D) return;
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 for (int z = 0; z < 8; z++) {
@@ -89,31 +91,32 @@ public final class HilbertCurve {
     /**
      * No need to instantiate.
      */
-    private HilbertCurve()
-    {
+    private HilbertCurve() {
     }
 
     /**
      * Encode a number n as a Gray code; Gray codes have a relation to the Hilbert curve and may be useful.
      * Source: <a href="http://xn--2-umb.com/15/hilbert">2π.com (page no longer exists)</a>,
      * <a href="http://aggregate.org/MAGIC/#Gray%20Code%20Conversion">The Aggregate Magic Algorithms</a>
+     *
      * @param n any int
      * @return the gray code for n
      */
-    public static int grayEncode(int n){
-        return n ^ (n >> 1);
+    public static int grayEncode(int n) {
+        return n ^ n >>> 1;
     }
 
     /**
      * Decode a number from a Gray code n; Gray codes have a relation to the Hilbert curve and may be useful.
      * Source: <a href="http://xn--2-umb.com/15/hilbert">2π.com (page no longer exists)</a>,
      * <a href="http://aggregate.org/MAGIC/#Gray%20Code%20Conversion">The Aggregate Magic Algorithms</a>
+     *
      * @param n a gray code, as produced by grayEncode
      * @return the decoded int
      */
     public static int grayDecode(int n) {
         int p = n;
-        while ((n >>= 1) != 0)
+        while ((n >>>= 1) != 0)
             p ^= n;
         return p;
     }
@@ -124,40 +127,45 @@ public final class HilbertCurve {
      * This uses a lookup table for the 256x256 Hilbert Curve, which should make it faster than calculating the
      * distance along the Hilbert Curve repeatedly.
      * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
      * @param x between 0 and 255 inclusive
      * @param y between 0 and 255 inclusive
      * @return the distance to travel along the 256x256 Hilbert Curve to get to the given x, y point.
      */
-    public static int posToHilbert( final int x, final int y ) {
+    public static int posToHilbert(final int x, final int y) {
         //int dist = posToHilbertNoLUT(x, y);
         //return dist;
-        return hilbertDistances[x + (y << 8)] & 0xffff;
+        return hilbertDistances[x | y << 8] & 0xffff;
     }
+
     /**
      * Takes an x, y, z position and returns the length to travel along the 8x8x8 Hilbert curve to reach that
      * position. This assumes x, y, and z are between 0 and 7, inclusive.
      * This uses a lookup table for the 8x8x8 Hilbert Curve, which should make it faster than calculating the
      * distance along the Hilbert Curve repeatedly.
      * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
      * @param x between 0 and 7 inclusive
      * @param y between 0 and 7 inclusive
      * @param z between 0 and 7 inclusive
      * @return the distance to travel along the 8x8x8 Hilbert Curve to get to the given x, y, z point.
      */
-    public static int posToHilbert3D( final int x, final int y, final int z ) {
+    public static int posToHilbert3D(final int x, final int y, final int z) {
         return hilbert3Distances[x | y << 3 | z << 6];
     }
+
     /**
      * Takes an x, y position and returns the length to travel along the 16x16 Moore curve to reach that position.
      * This assumes x and y are between 0 and 15, inclusive.
      * This uses a lookup table for the 16x16 Moore Curve, which should make it faster than calculating the
      * distance along the Moore Curve repeatedly.
+     *
      * @param x between 0 and 15 inclusive
      * @param y between 0 and 15 inclusive
      * @return the distance to travel along the 16x16 Moore Curve to get to the given x, y point.
      */
-    public static int posToMoore( final int x, final int y ) {
-        return mooreDistances[x + (y << 4)] & 0xff;
+    public static int posToMoore(final int x, final int y) {
+        return mooreDistances[x | y << 4] & 0xff;
     }
     /*
      * Takes an x, y position and returns the length to travel along the 256x256 Hilbert curve to reach that position.
@@ -168,8 +176,7 @@ public final class HilbertCurve {
      * @return the distance to travel along the 256x256 Hilbert Curve to get to the given x, y point.
      */
 
-    private static int posToHilbertNoLUT( final int x, final int y )
-    {
+    private static int posToHilbertNoLUT(final int x, final int y) {
         int hilbert = 0, remap = 0xb4, mcode, hcode;
         /*
         while( block > 0 )
@@ -182,45 +189,45 @@ public final class HilbertCurve {
         }
          */
 
-        mcode = ( ( x >> 7 ) & 1 ) | ( ( ( y >> ( 7 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( (0) + hcode );
+        mcode = x >> 7 & 1 | (y >> 7 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = 0 + hcode;
 
-        mcode = ( ( x >> 6 ) & 1 ) | ( ( ( y >> ( 6 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 6 & 1 | (y >> 6 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 5 ) & 1 ) | ( ( ( y >> ( 5 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 5 & 1 | (y >> 5 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 4 ) & 1 ) | ( ( ( y >> ( 4 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 4 & 1 | (y >> 4 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 3 ) & 1 ) | ( ( ( y >> ( 3 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 3 & 1 | (y >> 3 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 2 ) & 1 ) | ( ( ( y >> ( 2 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 2 & 1 | (y >> 2 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 1 ) & 1 ) | ( ( ( y >> ( 1 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 1 & 1 | (y >> 1 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( x & 1 ) | ( ( y & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
+        mcode = x & 1 | (y & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
 
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        hilbert = (hilbert << 2) + hcode;
 
         return hilbert;
     }
@@ -230,21 +237,20 @@ public final class HilbertCurve {
      * the length to travel along the 256x256 Hilbert Curve to reach that position.
      * This uses 16 bits of the Morton code and requires that the code is non-negative.
      * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
      * @param morton a Morton code that interleaves two 8-bit unsigned numbers, with x as index1 and y as index2.
      * @return a distance to travel down the Hilbert Curve to reach the location that can be decoded from morton.
      */
-    public static int mortonToHilbert( final int morton )
-    {
+    public static int mortonToHilbert(final int morton) {
         int hilbert = 0;
         int remap = 0xb4;
         int block = BITS;
-        while( block > 0 )
-        {
+        while (block > 0) {
             block -= 2;
-            int mcode = ( ( morton >> block ) & 3 );
-            int hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-            remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-            hilbert = ( ( hilbert << 2 ) + hcode );
+            int mcode = morton >> block & 3;
+            int hcode = remap >> (mcode << 1) & 3;
+            remap ^= 0x82000028 >> (hcode << 3);
+            hilbert = hilbert << 2 | hcode;
         }
         return hilbert;
     }
@@ -255,12 +261,12 @@ public final class HilbertCurve {
      * bits and x in the least significant bit. This uses a lookup table for the 256x256 Hilbert curve, which should
      * make it faster than calculating the position repeatedly.
      * The parameter hilbert is an int but only 16 unsigned bits are used.
+     *
      * @param hilbert a distance to travel down the Hilbert Curve
      * @return a Morton code that stores x and y interleaved; can be converted to a Coord with other methods.
      */
 
-    public static int hilbertToMorton( final int hilbert )
-    {
+    public static int hilbertToMorton(final int hilbert) {
         return mortonEncode(hilbertX[hilbert], hilbertY[hilbert]);
     }
 
@@ -269,11 +275,11 @@ public final class HilbertCurve {
      * in 2D space that corresponds to that point on the Hilbert curve. This uses a lookup table for the
      * 256x256 Hilbert curve, which should make it faster than calculating the position repeatedly.
      * The parameter hilbert is an int but only 16 unsigned bits are used.
+     *
      * @param hilbert a distance to travel down the Hilbert Curve
      * @return a Coord corresponding to the position in 2D space at the given distance down the Hilbert Curve
      */
-    public static Coord hilbertToCoord( final int hilbert )
-    {
+    public static Coord hilbertToCoord(final int hilbert) {
         return Coord.get(hilbertX[hilbert], hilbertY[hilbert]);
     }
 
@@ -283,11 +289,11 @@ public final class HilbertCurve {
      * 16x16 Hilbert curve, which should make it faster than calculating the position repeatedly.
      * The parameter moore is an int but only 8 unsigned bits are used, and since the Moore Curve loops, it is
      * calculated as {@code moore & 255}.
+     *
      * @param moore a distance to travel down the Moore Curve
      * @return a Coord corresponding to the position in 2D space at the given distance down the Hilbert Curve
      */
-    public static Coord mooreToCoord( final int moore )
-    {
+    public static Coord mooreToCoord(final int moore) {
         return Coord.get(mooreX[moore & 255], mooreY[moore & 255]);
     }
 
@@ -343,16 +349,17 @@ public final class HilbertCurve {
         return Coord.get(x, y);
     }
     */
+
     /**
      * Takes a position as a Coord called pt and returns the length to travel along the 256x256 Hilbert curve to reach
      * that position.
      * This assumes pt.x and pt.y are between 0 and 255, inclusive.
      * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
      * @param pt a Coord with values between 0 and 255, inclusive
      * @return a distance from the start of the 256x256 Hilbert curve to get to the position of pt
      */
-    public static int coordToHilbert(final Coord pt)
-    {
+    public static int coordToHilbert(final Coord pt) {
         return posToHilbert(pt.x, pt.y);
     }
 
@@ -360,16 +367,24 @@ public final class HilbertCurve {
      * Takes a position as a Coord called pt and returns the length to travel along the 16x16 Moore curve to reach
      * that position.
      * This assumes pt.x and pt.y are between 0 and 15, inclusive.
+     *
      * @param pt a Coord with values between 0 and 15, inclusive
      * @return a distance from the "start" of the 16x16 Moore curve to get to the position of pt
      */
-    public static int coordToMoore(final Coord pt)
-    {
+    public static int coordToMoore(final Coord pt) {
         return posToMoore(pt.x, pt.y);
     }
 
-    public static int mortonEncode3D( int index1, int index2, int index3 )
-    { // pack 3 5-bit indices into a 15-bit Morton code
+    /**
+     * Given three 5-bit index parameters, encodes them all into a 15-bit Morton code.
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
+     * @param index1 an int between 0 and 31, both inclusive
+     * @param index2 an int between 0 and 31, both inclusive
+     * @param index3 an int between 0 and 31, both inclusive
+     * @return a 15-bit int encoding all three index parameters
+     */
+    public static int mortonEncode3D(int index1, int index2, int index3) { // pack 3 5-bit indices into a 15-bit Morton code
         index1 &= 0x0000001f;
         index2 &= 0x0000001f;
         index3 &= 0x0000001f;
@@ -385,122 +400,138 @@ public final class HilbertCurve {
         index1 &= 0x12490000;
         index2 &= 0x12490000;
         index3 &= 0x12490000;
-        return( ( index1 >> 16 ) | ( index2 >> 15 ) | ( index3 >> 14 ) );
+        return index1 >>> 16 | index2 >>> 15 | index3 >>> 14;
     }
 
-    public static int mortonBitDecode3D( int morton )
-    { // unpack 3 5-bit indices from a 15-bit Morton code
+    /**
+     * Given a 15-bit Morton code (typically produced by {@link #mortonEncode3D(int, int, int)}), this unpacks the
+     * three interleaved numbers into contiguous 5-bit sections of the returned int. The low 5 bits (bits 0-4) will
+     * store what was originally {@code index1}, the 5 bits above that (5-9) will store what was originally
+     * {@code index2}, and the 5 bits above that (10-14) will store what was originally {@code index2}.
+     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
+     * @param morton a 15-bit Morton code, typically produced by {@link #mortonEncode3D(int, int, int)}
+     * @return a different encoding of the three 5-bit values, with bits 0-4, 5-9, and 10-14 storing the 3 indices
+     */
+    public static int mortonBitDecode3D(int morton) { // unpack 3 5-bit indices from a 15-bit Morton code
         int value1 = morton;
-        int value2 = ( value1 >>> 1 );
-        int value3 = ( value1 >>> 2 );
+        int value2 = value1 >>> 1;
+        int value3 = value1 >>> 2;
         value1 &= 0x00001249;
         value2 &= 0x00001249;
         value3 &= 0x00001249;
-        value1 |= ( value1 >>> 2 );
-        value2 |= ( value2 >>> 2 );
-        value3 |= ( value3 >>> 2 );
+        value1 |= value1 >>> 2;
+        value2 |= value2 >>> 2;
+        value3 |= value3 >>> 2;
         value1 &= 0x000010c3;
         value2 &= 0x000010c3;
         value3 &= 0x000010c3;
-        value1 |= ( value1 >>> 4 );
-        value2 |= ( value2 >>> 4 );
-        value3 |= ( value3 >>> 4 );
+        value1 |= value1 >>> 4;
+        value2 |= value2 >>> 4;
+        value3 |= value3 >>> 4;
         value1 &= 0x0000100f;
         value2 &= 0x0000100f;
         value3 &= 0x0000100f;
-        value1 |= ( value1 >>> 8 );
-        value2 |= ( value2 >>> 8 );
-        value3 |= ( value3 >>> 8 );
+        value1 |= value1 >>> 8;
+        value2 |= value2 >>> 8;
+        value3 |= value3 >>> 8;
         value1 &= 0x0000001f;
         value2 &= 0x0000001f;
         value3 &= 0x0000001f;
-        return value1 | (value2 << 5) | (value3 << 10);
+        return value1 | value2 << 5 | value3 << 10;
     }
 
-    private static void computeHilbert2D(int x, int y)
-    {
+    private static void computeHilbert2D(int x, int y) {
         int hilbert = 0, remap = 0xb4, mcode, hcode;
 
-        mcode = ( ( x >> 7 ) & 1 ) | ( ( ( y >> ( 7 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( (0) + hcode );
+        mcode = x >>> 7 & 1 | (y >>> 7 & 1) << 1;
+        hcode = remap >>> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = 0 + hcode;
 
-        mcode = ( ( x >> 6 ) & 1 ) | ( ( ( y >> ( 6 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 6 & 1 | (y >> 6 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 5 ) & 1 ) | ( ( ( y >> ( 5 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 5 & 1 | (y >> 5 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 4 ) & 1 ) | ( ( ( y >> ( 4 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 4 & 1 | (y >> 4 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 3 ) & 1 ) | ( ( ( y >> ( 3 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 3 & 1 | (y >> 3 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 2 ) & 1 ) | ( ( ( y >> ( 2 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 2 & 1 | (y >> 2 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( ( x >> 1 ) & 1 ) | ( ( ( y >> ( 1 ) ) & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
-        remap ^= ( 0x82000028 >> ( hcode << 3 ) );
-        hilbert = ( ( hilbert << 2 ) + hcode );
+        mcode = x >> 1 & 1 | (y >> 1 & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
+        remap ^= 0x82000028 >> (hcode << 3);
+        hilbert = (hilbert << 2) + hcode;
 
-        mcode = ( x & 1 ) | ( ( y & 1 ) << 1);
-        hcode = ( ( remap >> ( mcode << 1 ) ) & 3 );
+        mcode = x & 1 | (y & 1) << 1;
+        hcode = remap >> (mcode << 1) & 3;
 
-        hilbertDistances[x | (y << 8)] = (char) ( hilbert = ( hilbert << 2 ) + hcode );
-        hilbertX[hilbert] = (char)x;
-        hilbertY[hilbert] = (char)y;
+        hilbertDistances[x | y << 8] = (char) (hilbert = hilbert << 2 | hcode);
+        hilbertX[hilbert] = (char) x;
+        hilbertY[hilbert] = (char) y;
     }
 
-    private static void computeHilbert3D(int x, int y, int z)
-    {
+    /**
+     * Used to initialize the 3D tables here with the 8x8x8 Hilbert curve.
+     * This does not return a result, but instead assigns values to
+     * {@link #hilbert3X}, {@link #hilbert3Y}, {@link #hilbert3Z}, and {@link #hilbert3Distances}.
+     *
+     * @param x between 0 and 7, both inclusive
+     * @param y between 0 and 7, both inclusive
+     * @param z between 0 and 7, both inclusive
+     */
+    private static void computeHilbert3D(int x, int y, int z) {
         int hilbert = mortonEncode3D(x, y, z);
-            int block = 6;
-            int hcode = ( ( hilbert >> block ) & 7 );
-            int mcode, shift, signs;
-            shift = signs = 0;
-            while( block > 0 )
-            {
-                block -= 3;
-                hcode <<= 2;
-                mcode = ( ( 0x20212021 >> hcode ) & 3 );
-                shift = ( ( 0x48 >> ( 7 - shift - mcode ) ) & 3 );
-                signs = ( ( signs | ( signs << 3 ) ) >> mcode );
-                signs = ( ( signs ^ ( 0x53560300 >> hcode ) ) & 7 );
-                mcode = ( ( hilbert >> block ) & 7 );
-                hcode = mcode;
-                hcode = ( ( ( hcode | ( hcode << 3 ) ) >> shift ) & 7 );
-                hcode ^= signs;
-                hilbert ^= ( ( mcode ^ hcode ) << block );
-            }
+        int block = 6;
+        int hcode = hilbert >> block & 7;
+        int mcode, shift, signs;
+        shift = signs = 0;
+        while (block > 0) {
+            block -= 3;
+            hcode <<= 2;
+            mcode = 0x20212021 >> hcode & 3;
+            shift = 0x48 >> 7 - shift - mcode & 3;
+            signs = (signs | signs << 3) >> mcode;
+            signs = (signs ^ 0x53560300 >> hcode) & 7;
+            mcode = hilbert >> block & 7;
+            hcode = mcode;
+            hcode = (hcode | hcode << 3) >> shift & 7;
+            hcode ^= signs;
+            hilbert ^= (mcode ^ hcode) << block;
+        }
 
-        hilbert ^= ( ( hilbert >> 1 ) & 0x92492492 );
-        hilbert ^= ( ( hilbert & 0x92492492 ) >> 1 );
+        hilbert ^= hilbert >> 1 & 0x92492492;
+        hilbert ^= (hilbert & 0x92492492) >> 1;
 
-        hilbert3X[hilbert] = (char)x;
-        hilbert3Y[hilbert] = (char)y;
-        hilbert3Z[hilbert] = (char)z;
-        hilbert3Distances[x | y << 3 | z << 6] = (char)hilbert;
+        hilbert3X[hilbert] = (char) x;
+        hilbert3Y[hilbert] = (char) y;
+        hilbert3Z[hilbert] = (char) z;
+        hilbert3Distances[x | y << 3 | z << 6] = (char) hilbert;
     }
 
     /**
      * Gets the x coordinate for a given index into the 16x16x(8*n) Moore curve. Expects indices to touch the following
      * corners of the 16x16x(8*n) cube in this order, using x,y,z syntax:
      * (0,0,0) (0,0,(8*n)) (0,16,(8*n)) (0,16,0) (16,16,0) (16,16,(8*n)) (16,0,(8*n)) (16,0,0)
+     *
      * @param index the index into the 3D 16x16x(8*n) Moore Curve, must be less than 0x1000
-     * @param n the number of 8-deep layers to use as part of the box shape this travels through
+     * @param n     the number of 8-deep layers to use as part of the box shape this travels through
      * @return the x coordinate of the given distance traveled through the 3D 16x16x(8*n) Moore Curve
      */
     public static int getXMoore3D(final int index, final int n) {
@@ -516,12 +547,12 @@ public final class HilbertCurve {
      * Gets the y coordinate for a given index into the 16x16x(8*n) Moore curve. Expects indices to touch the following
      * corners of the 16x16x(8*n) cube in this order, using x,y,z syntax:
      * (0,0,0) (0,0,(8*n)) (0,16,(8*n)) (0,16,0) (16,16,0) (16,16,(8*n)) (16,0,(8*n)) (16,0,0)
+     *
      * @param index the index into the 3D 16x16x(8*n) Moore Curve, must be less than 0x1000
-     * @param n the number of 8-deep layers to use as part of the box shape this travels through
+     * @param n     the number of 8-deep layers to use as part of the box shape this travels through
      * @return the y coordinate of the given distance traveled through the 3D 16x16x(8*n) Moore Curve
      */
-    public static int getYMoore3D(final int index, final int n)
-    {
+    public static int getYMoore3D(final int index, final int n) {
         int hilbert = index & 0x1ff;
         int sector = index >> 9;
         if (sector < n || sector >= 3 * n)
@@ -530,78 +561,51 @@ public final class HilbertCurve {
             return 8 + hilbert3Y[hilbert];
 
     }
+
     /**
      * Gets the z coordinate for a given index into the 16x16x(8*n) Moore curve. Expects indices to touch the following
      * corners of the 16x16x(8*n) cube in this order, using x,y,z syntax:
      * (0,0,0) (0,0,(8*n)) (0,16,(8*n)) (0,16,0) (16,16,0) (16,16,(8*n)) (16,0,(8*n)) (16,0,0)
+     *
      * @param index the index into the 3D 16x16x(8*n) Moore Curve, must be less than 0x1000
-     * @param n the number of 8-deep layers to use as part of the box shape this travels through
+     * @param n     the number of 8-deep layers to use as part of the box shape this travels through
      * @return the z coordinate of the given distance traveled through the 3D 16x16x(8*n) Moore Curve
      */
     public static int getZMoore3D(final int index, final int n) {
         int hilbert = index & 0x1ff;
         int sector = index >> 9;
-        if (((sector / n) & 1) == 0)
-            return hilbert3Z[hilbert] + ((sector % n) << 3);
+        if ((sector / n & 1) == 0)
+            return hilbert3Z[hilbert] + (sector % n << 3);
         else
-            return (n << 3) - 1 - hilbert3Z[hilbert] - ((sector % n) << 3);
+            return (n << 3) - 1 - hilbert3Z[hilbert] - (sector % n << 3);
     }
 
-
-
-    /**
-     * Takes two 8-bit unsigned integers index1 and index2, and returns a Morton code, with interleaved index1 and
-     * index2 bits and index1 in the least significant bit. With this method, index1 and index2 can have up to 8 bits.
-     * This returns a 16-bit Morton code and WILL encode information in the sign bit if the inputs are large enough.
-     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
-     * @param index1 a non-negative integer using at most 8 bits, to be placed in the "x" slots
-     * @param index2 a non-negative integer using at most 8 bits, to be placed in the "y" slots
-     * @return a Morton code/Z-Code that interleaves the two numbers into one 16-bit char
-     */
-    public static char zEncode(int index1, int index2)
-    { // pack 2 8-bit (unsigned) indices into a 16-bit (signed...) Morton code/Z-Code
-        index1 &= 0x000000ff;
-        index2 &= 0x000000ff;
-        index1 |= ( index1 << 4 );
-        index2 |= ( index2 << 4 );
-        index1 &= 0x00000f0f;
-        index2 &= 0x00000f0f;
-        index1 |= ( index1 << 2 );
-        index2 |= ( index2 << 2 );
-        index1 &= 0x00003333;
-        index2 &= 0x00003333;
-        index1 |= ( index1 << 1 );
-        index2 |= ( index2 << 1 );
-        index1 &= 0x00005555;
-        index2 &= 0x00005555;
-        return (char)(index1 | ( index2 << 1 ));
-    }
     /**
      * Takes two 8-bit unsigned integers index1 and index2, and returns a Morton code, with interleaved index1 and
      * index2 bits and index1 in the least significant bit. With this method, index1 and index2 can have up to 8 bits.
      * This returns a 32-bit Morton code but only uses 16 bits, and will not encode information in the sign bit.
      * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
      * @param index1 a non-negative integer using at most 8 bits, to be placed in the "x" slots
      * @param index2 a non-negative integer using at most 8 bits, to be placed in the "y" slots
      * @return a Morton code that interleaves the two numbers as one 32-bit int, but only in 16 bits of it
      */
-    public static int mortonEncode(int index1, int index2)
-    { // pack 2 8-bit (unsigned) indices into a 32-bit (signed...) Morton code
+    public static int mortonEncode(int index1, int index2) { // pack 2 8-bit (unsigned) indices into a 32-bit (signed...) Morton code
         index1 &= 0x000000ff;
         index2 &= 0x000000ff;
-        index1 |= ( index1 << 4 );
-        index2 |= ( index2 << 4 );
+        index1 |= index1 << 4;
+        index2 |= index2 << 4;
         index1 &= 0x00000f0f;
         index2 &= 0x00000f0f;
-        index1 |= ( index1 << 2 );
-        index2 |= ( index2 << 2 );
+        index1 |= index1 << 2;
+        index2 |= index2 << 2;
         index1 &= 0x00003333;
         index2 &= 0x00003333;
-        index1 |= ( index1 << 1 );
-        index2 |= ( index2 << 1 );
+        index1 |= index1 << 1;
+        index2 |= index2 << 1;
         index1 &= 0x00005555;
         index2 &= 0x00005555;
-        return index1 | ( index2 << 1 );
+        return index1 | index2 << 1;
     }
 
     /**
@@ -609,54 +613,25 @@ public final class HilbertCurve {
      * representing the same x, y position.
      * This uses 16 bits of the Morton code and requires that the code is non-negative.
      * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
+     *
      * @param morton an int containing two interleaved numbers, from 0 to 255 each
      * @return a Coord matching the x and y extracted from the Morton code
      */
-    public static Coord mortonDecode( final int morton )
-    { // unpack 2 8-bit (unsigned) indices from a 32-bit (signed...) Morton code
+    public static Coord mortonDecode(final int morton) { // unpack 2 8-bit (unsigned) indices from a 32-bit (signed...) Morton code
         int value1 = morton;
-        int value2 = ( value1 >> 1 );
+        int value2 = value1 >> 1;
         value1 &= 0x5555;
         value2 &= 0x5555;
-        value1 |= ( value1 >> 1 );
-        value2 |= ( value2 >> 1 );
+        value1 |= value1 >> 1;
+        value2 |= value2 >> 1;
         value1 &= 0x3333;
         value2 &= 0x3333;
-        value1 |= ( value1 >> 2 );
-        value2 |= ( value2 >> 2 );
+        value1 |= value1 >> 2;
+        value2 |= value2 >> 2;
         value1 &= 0x0f0f;
         value2 &= 0x0f0f;
-        value1 |= ( value1 >> 4 );
-        value2 |= ( value2 >> 4 );
-        value1 &= 0x00ff;
-        value2 &= 0x00ff;
-        return Coord.get(value1, value2);
-    }
-
-    /**
-     * Takes a Morton code, with interleaved x and y bits and x in the least significant bit, and returns the Coord
-     * representing the same x, y position.
-     * This takes a 16-bit Z-Code with data in the sign bit, as returned by zEncode().
-     * Source: <a href="http://and-what-happened.blogspot.com/2011/08/fast-2d-and-3d-hilbert-curves-and.html">and-what-happened blog post</a>.
-     * @param morton an int containing two interleaved numbers, from 0 to 255 each
-     * @return a Coord matching the x and y extracted from the Morton code
-     */
-    public static Coord zDecode( final int morton )
-    { // unpack 2 8-bit (unsigned) indices from a 32-bit (signed...) Morton code
-        int value1 = morton & 0xffff;
-        int value2 = ( value1 >> 1 );
-        value1 &= 0x5555;
-        value2 &= 0x5555;
-        value1 |= ( value1 >> 1 );
-        value2 |= ( value2 >> 1 );
-        value1 &= 0x3333;
-        value2 &= 0x3333;
-        value1 |= ( value1 >> 2 );
-        value2 |= ( value2 >> 2 );
-        value1 &= 0x0f0f;
-        value2 &= 0x0f0f;
-        value1 |= ( value1 >> 4 );
-        value2 |= ( value2 >> 4 );
+        value1 |= value1 >> 4;
+        value2 |= value2 >> 4;
         value1 &= 0x00ff;
         value2 &= 0x00ff;
         return Coord.get(value1, value2);

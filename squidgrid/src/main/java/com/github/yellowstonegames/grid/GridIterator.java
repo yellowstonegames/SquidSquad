@@ -258,7 +258,7 @@ public abstract class GridIterator implements Iterator<Coord> {
         /*
          * This method doesn't care about validity, findNext(boolean) handles it
          */
-        protected @Nullable Coord findNextCandidate() {
+        protected Coord findNextCandidate() {
             if (previous == null) {
                 /* Init */
                 return Coord.get(xStart, yStart);
