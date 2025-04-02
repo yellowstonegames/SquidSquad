@@ -384,7 +384,8 @@ public final class HilbertCurve {
      * @param index3 an int between 0 and 31, both inclusive
      * @return a 15-bit int encoding all three index parameters
      */
-    public static int mortonEncode3D(int index1, int index2, int index3) { // pack 3 5-bit indices into a 15-bit Morton code
+    public static int mortonEncode3D(int index1, int index2, int index3) {
+        // pack 3 5-bit indices into a 15-bit Morton code
         index1 &= 0x0000001f;
         index2 &= 0x0000001f;
         index3 &= 0x0000001f;
@@ -413,7 +414,8 @@ public final class HilbertCurve {
      * @param morton a 15-bit Morton code, typically produced by {@link #mortonEncode3D(int, int, int)}
      * @return a different encoding of the three 5-bit values, with bits 0-4, 5-9, and 10-14 storing the 3 indices
      */
-    public static int mortonBitDecode3D(int morton) { // unpack 3 5-bit indices from a 15-bit Morton code
+    public static int mortonBitDecode3D(int morton) {
+        // unpack 3 5-bit indices from a 15-bit Morton code
         int value1 = morton;
         int value2 = value1 >>> 1;
         int value3 = value1 >>> 2;

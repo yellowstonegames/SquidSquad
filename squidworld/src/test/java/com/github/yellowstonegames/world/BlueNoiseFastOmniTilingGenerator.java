@@ -35,8 +35,6 @@ import it.unimi.dsi.fastutil.ints.IntArrays;
 import java.text.DateFormat;
 import java.util.Date;
 
-import static it.unimi.dsi.fastutil.floats.FloatArrays.*;
-
 /**
  * Porting Bart Wronski's blue noise generator from NumPy to Java, see
  * <a href="https://bartwronski.com/2021/04/21/superfast-void-and-cluster-blue-noise-in-python-numpy-jax/">Wronski's
