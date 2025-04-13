@@ -2,6 +2,11 @@ package com.github.yellowstonegames.world;
 
 public class TriangularBayerMatrixGenerator {
 
+//        return (int)(
+//                (((x & 0xFFL) * 0x0101010101010101L & 0x8040201008040201L) * 0x0102040810204081L >>> 49) & 0x5555 |
+//                (((y & 0xFFL) * 0x0101010101010101L & 0x8040201008040201L) * 0x0102040810204081L >>> 48) & 0xAAAA
+//        );
+
     private static final int TBM_BITS = 7;
     private static final int TBM_MASK = (1 << TBM_BITS) - 1;
 
@@ -16,10 +21,6 @@ public class TriangularBayerMatrixGenerator {
      * @return an int that interleaves x and y into the low-order 16 bits
      */
     public static  int interleaveBytes(int x, int y) {
-//        return (int)(
-//                (((x & 0xFFL) * 0x0101010101010101L & 0x8040201008040201L) * 0x0102040810204081L >>> 49) & 0x5555 |
-//                (((y & 0xFFL) * 0x0101010101010101L & 0x8040201008040201L) * 0x0102040810204081L >>> 48) & 0xAAAA
-//        );
         x |= x << 4;
         y |= y << 4;
         x &= 0x00000f0f;
@@ -68,17 +69,21 @@ public class TriangularBayerMatrixGenerator {
 */
             span += (-63 + i | 63 - i) >>> 31;
         }
-        final byte[] matrix = new byte[1 << TBM_BITS + TBM_BITS];
-        for (int i = 0; i < matrix.length; i++) {
-            matrix[i] = levelArray[bayer(i & TBM_MASK, i >>> TBM_BITS)];
+        final byte[] TRI_BAYER_MATRIX = new byte[1 << TBM_BITS + TBM_BITS];
+//        int zeros = 0;
+        for (int i = 0; i < TRI_BAYER_MATRIX.length; i++) {
+            TRI_BAYER_MATRIX[i] = levelArray[bayer(i & TBM_MASK, i >>> TBM_BITS)];
+//            if(TRI_BAYER_MATRIX[i] == 0) zeros++;
         }
 
-        for (int i = 0, index = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                System.out.print(matrix[index] + ", ");
-                index++;
-            }
-            System.out.println();
-        }
+//        for (int i = 0, index = 0; i < 16; i++) {
+//            for (int j = 0; j < 16; j++) {
+//                System.out.print(TRI_BAYER_MATRIX[index] + ", ");
+//                index++;
+//            }
+//            System.out.println();
+//        }
+
+//        System.out.println("Zero occurred " + zeros + " times.");
     }
 }

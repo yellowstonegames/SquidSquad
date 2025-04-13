@@ -132,7 +132,7 @@ public class CaseCodeGen extends ApplicationAdapter {
         }
         sb.append("\").toString().toCharArray();\n");
         Gdx.files.local(filename).writeString(sb.toString(), true, "UTF-8");
-        System.out.println("Wrote tUoLower snippet to " + filename);
+        System.out.println("Wrote toLower snippet to " + filename);
     }
 
 }

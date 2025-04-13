@@ -18,16 +18,12 @@ package com.github.yellowstonegames.path.sg;
 
 public class Path<V> extends Deque<V> {
 
-    public static final Path EMPTY_PATH = new Path(0, false);
+    public static final Path EMPTY_PATH = new Path(0);
 
     float length = 0;
 
     public Path(int size) {
-        super(size, true);
-    }
-
-    public Path(int size, boolean resize) {
-        super(size, resize);
+        super(size);
     }
 
     /**

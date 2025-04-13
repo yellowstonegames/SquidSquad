@@ -28,12 +28,6 @@ public class Deque<T> extends ObjectDeque<T> {
         super(initialSize);
     }
 
-
-    public Deque(int capacity, boolean resize) {
-        super(capacity);
-        if (resize) this.size = capacity;
-    }
-
     public Deque(Collection<? extends T> coll) {
         super(coll);
     }

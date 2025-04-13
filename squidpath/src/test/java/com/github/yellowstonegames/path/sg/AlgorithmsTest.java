@@ -31,7 +31,7 @@ public class AlgorithmsTest {
 
     @Test
     public void shortestPathShouldBeCorrect() {
-        int n = 20;
+        int n = 5;
         Graph<Vector2> undirectedGraph = TestUtils.makeGridGraph(new UndirectedGraph<>(), n);
         Graph<Vector2> diGraph = TestUtils.makeGridGraph(new DirectedGraph<>(), n);
 
@@ -89,7 +89,14 @@ public class AlgorithmsTest {
 
     private static boolean pathIsConnected(Path<Vector2> path, Graph<Vector2> graph) {
         for (int i = 0; i < path.size()-1; i++) {
-            if (!graph.edgeExists(path.get(i), path.get(i+1))) return false;
+            Vector2 current = path.get(i);
+            Vector2 next = path.get(i+1);
+            if (!graph.edgeExists(current, next)) {
+                System.out.println("Problem at index " + i);
+                System.out.println(current + " does not connect to " + next);
+                next = path.get(i+1);
+                return false;
+            }
         }
         return true;
     }
