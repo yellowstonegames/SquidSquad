@@ -200,12 +200,12 @@ because they can change without warning and don't tell you what commit you are a
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.6.1
-  - `jdkgdxdsVersion`=1.8.0
+  - `digitalVersion`=0.6.2
+  - `jdkgdxdsVersion`=1.8.1
   - `juniperVersion`=0.6.5
-  - `regExodusVersion`=0.1.17
+  - `regExodusVersion`=0.1.18
   - `cruxVersion`=0.1.2
-  - `textraTypistVersion`=1.1.0
+  - `textraTypistVersion`=2.0.1
 
 # License
 

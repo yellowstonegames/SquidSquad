@@ -212,7 +212,7 @@ public class PerlueNoise implements INoise {
         return
                 equalize(lerp(lerp(gradCoord2D(seed, x0, y0, xf, yf), gradCoord2D(seed, x0+X_2, y0, xf - 1, yf), xa),
                                 lerp(gradCoord2D(seed, x0, y0+Y_2, xf, yf-1), gradCoord2D(seed, x0+X_2, y0+Y_2, xf - 1, yf - 1), xa),
-                                ya) * SCALE2, EQ_ADD_2, EQ_MUL_2);//* 0.875;// * 1.4142;
+                                ya) * SCALE2, EQ_ADD_2, EQ_MUL_2);
     }
 
     @Override
@@ -255,7 +255,7 @@ public class PerlueNoise implements INoise {
                                                  gradCoord3D(seed, x0+X_3, y0+Y_3, z0+Z_3, xf - 1, yf - 1, zf-1),
                                                  xa),
                                          ya),
-                                 za) * SCALE3, EQ_ADD_3, EQ_MUL_3); // 1.0625f
+                                 za) * SCALE3, EQ_ADD_3, EQ_MUL_3);
     }
 
     @Override
@@ -324,7 +324,7 @@ public class PerlueNoise implements INoise {
                                                         xa),
                                                 ya),
                                         za),
-                                wa) * SCALE4, EQ_ADD_4, EQ_MUL_4);//0.555f);
+                                wa) * SCALE4, EQ_ADD_4, EQ_MUL_4);
     }
 
 
@@ -411,7 +411,7 @@ public class PerlueNoise implements INoise {
                                                 ya),
                                         za),
                                 wa),
-                        ua) * SCALE5, EQ_ADD_5, EQ_MUL_5);//0.7777777f);
+                        ua) * SCALE5, EQ_ADD_5, EQ_MUL_5);
     }
 
     @Override
@@ -562,7 +562,7 @@ public class PerlueNoise implements INoise {
                                                 za),
                                         wa),
                                 ua),
-                        va) * SCALE6, EQ_ADD_6, EQ_MUL_6);//1.61f);
+                        va) * SCALE6, EQ_ADD_6, EQ_MUL_6);
     }
 
     /**

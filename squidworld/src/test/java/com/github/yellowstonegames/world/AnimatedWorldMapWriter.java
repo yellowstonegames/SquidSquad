@@ -332,7 +332,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 }
             }
             // for whatever reason, drawPixmap will replace existing pixels with transparent ones in the drawn Pixmap.
-//            temp.setColor(INK);
+//            pm[i].setColor(INK);
 //            pm[i].fill();
             pm[i].setFilter(Pixmap.Filter.BiLinear);
             pm[i].setBlending(Pixmap.Blending.SourceOver);

@@ -20,22 +20,24 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.*;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
+import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -65,8 +67,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     // World #1, GrayLarch, completed in           111201 ms
 
     private static final boolean FLOWING_LAND = true;
-    private static final boolean GLOBE_SPIN = false;
+    private static final boolean GLOBE_SPIN = true;
     private static final boolean ALIEN_COLORS = false;
+    private static final boolean SHADOW = true;
 
 //    private static final int width = 256, height = 256;
 //    private static final int width = 300, height = 300;
@@ -98,7 +101,25 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //    private PixmapIO.PNG pngWriter;
 
     private String date, path;
-    private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
+
+    private static final int SPACE = 0x27221fff;
+//    private static final int SPACE = DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab);
+//    private static final int SPACE = DescriptiveColorRgb.TRANSPARENT;
+    private static final int ATMOSPHERE = DescriptiveColorRgb.describeRgb("silver 6 white 9 sky 1");
+
+    /**
+     * How much stronger or weaker the shadowing effect should be; this is usually in the -1 to 1 range. The default
+     * value is -0.1f, which weakens the shadow and so makes the lit section of the planet slightly larger than the
+     * darkened section.
+     */
+    private float shadowStrength = -0.1f;
+    /**
+     * The angle, in degrees, for a shadow to be case across the planetary surface. From the center of the world,
+     * traveling a positive distance along this angle will get progressively darker, and a negative distance will become
+     * lighter. A traditional example is -45 degrees, which is also the default; it casts a shadow from the upper left
+     * (lightest) to the lower right (darkest).
+     */
+    private float shadowAngle = -45f;
 
     public static class Noise3DFrom5D implements INoise {
         public INoise noise;
@@ -224,8 +245,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUE_NOISE);
-        writer.setDitherStrength(0.2f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUNT);
+        writer.setDitherStrength(0.4f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
 
@@ -262,11 +283,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(fn);
 
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
-        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new CyclicNoise(seed, 3, 3f), seed, 0.75f, NoiseWrapper.FBM, 2));
 //        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 2, 3f)); SPEED *= 0.7f;
 //        iNoise = new Noise3DFrom5D(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
+        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 1));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlinNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
 
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
@@ -289,7 +311,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //            world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
 //            world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.5f);
 
-        path = "out/worldsFlowing/" + date + "/"+world.getClass().getSimpleName()+iNoise.noise.getTag()+"/";
+        path = "out/worldsFlowing/" + date + "/" +
+                world.getClass().getSimpleName() + iNoise.noise.getTag() + (SHADOW ? "_shadow/" : "/");
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -348,6 +371,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             wmv.initialize(world.rng.nextFloat(), world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() * 0.2f + 0.9f);
         }
 //        try {
+        Pixmap temp = new Pixmap(width * cellWidth + 10, height * cellHeight + 10, Pixmap.Format.RGBA8888);
+        temp.setFilter(Pixmap.Filter.BiLinear);
+        final int bw = temp.getWidth(), bh = temp.getHeight();
         for (int i = 0; i < FRAMES; i++) {
             float angle = i / (float) FRAMES;
             iNoise.s = TrigTools.sinTurns(angle) * SPEED;// 0.4f;// 0.3125f;
@@ -361,15 +387,90 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                 System.out.println(name + " has minHeat "+ world.minHeat+", maxHeat " + world.maxHeat +",\n" +
                         "            minWet " + world.minWet + ", maxWet " + world.maxWet);
             }
-            pm[i].setColor(INK);
-            pm[i].fill();
+//            temp.setColor(SPACE);
+//            temp.fill();
 
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    pm[i].drawPixel(x, y, cm[x][y]);
+//            for (int x = 0; x < width; x++) {
+//                for (int y = 0; y < height; y++) {
+//                    temp.drawPixel(x, y, cm[x][y]);
+//                }
+//            }
+
+
+            final int padding = (5), margin = (1);
+            final float center = (temp.getWidth() - 1) * 0.5f,
+                    rim2 = center * center + 4,
+                    radius2 = (center - margin) * (center - margin),
+                    innerRadius2 = (center - padding - margin) * (center - padding - margin);
+            if(SHADOW){
+                if((SPACE & 0xFF) == 0)
+                    temp.setColor(ATMOSPHERE & 0xFFFFFF00);
+                else
+                    temp.setColor(SPACE);
+                temp.fill();
+
+//                shadowAngle = -45 + TrigTools.sinSmootherTurns(angle) * 180f;
+                shadowStrength = TrigTools.cosSmootherTurns(angle) * 0.4f - 0.15f;
+
+                // 0.70710677f
+                final float iw = 1.5f * TrigTools.cosSmootherDeg(shadowAngle) / bw,
+                        ih = -1.5f * TrigTools.sinSmootherDeg(shadowAngle) / bh;
+                for (int x = 0; x < bw; x++) {
+                    for (int y = 0; y < bh; y++) {
+                        int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
+                                ? cm[x - padding][y - padding] : 0;
+                        float xx = x - center, yy = y - center;
+                        if((mapColor & 0xFF) == 0){
+                            double distance2 = xx * xx + yy * yy;
+                            if(distance2 >= innerRadius2 && distance2 <= rim2) {
+                                mapColor = (distance2 <= radius2) ? ATMOSPHERE : SPACE;
+                            }
+                            else continue;
+                        }
+                        float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(-shadowStrength - (xx * iw + yy * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
+                        int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
+//                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
+                        adjusted |= adjusted >>> 7 & 1;
+                        // debug to find any non-opaque planet pixels
+//                        if((adjusted & 0xFF) != 0xFF)
+//                            adjusted = DescriptiveColorRgb.RED;
+                        temp.drawPixel(x, y, adjusted);
+                    }
                 }
             }
-//                pngWriter.write(Gdx.files.local(path + name + "_frames/frame_" + i + ".png"), pm[i]);
+            else {
+                for (int x = 0; x < bw; x++) {
+                    for (int y = 0; y < bh; y++) {
+                        int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
+                                ? cm[x - padding][y - padding] : 0;
+                        float xx = x - center, yy = y - center;
+                        if((mapColor & 0xFF) == 0){
+                            double distance2 = xx * xx + yy * yy;
+                            if(distance2 >= innerRadius2 && distance2 <= rim2) {
+                                mapColor = (distance2 <= radius2) ? ATMOSPHERE : SPACE;
+                            }
+                        }
+                        temp.drawPixel(x, y, mapColor | (mapColor >>> 7 & 1));
+                    }
+                }
+            }
+
+
+            pm[i].setColor(SPACE);
+            pm[i].fill();
+            pm[i].setFilter(Pixmap.Filter.BiLinear);
+            pm[i].setBlending(Pixmap.Blending.SourceOver);
+            pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
+//            if((SPACE & 0xFE) != 0xFE) {
+                ByteBuffer buf = pm[i].getPixels();
+                for (int pos = 0, lim = buf.limit(); pos < lim; pos += 4) {
+                    int color = buf.getInt(pos);
+                    if((color & 0xFF) == 0)
+                        buf.putInt(pos, SPACE);
+                }
+//            }
+
+
             if(FRAMES >= 10)
                 if(i % (FRAMES / 10) == (FRAMES / 10) - 1) System.out.print(((i + 1) * 100 / FRAMES) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
 
@@ -377,13 +478,13 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyzeHueWise(pms, 30.0);
+        writer.palette.analyze(pms, 30.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
+        temp.dispose();
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }

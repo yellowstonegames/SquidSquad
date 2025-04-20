@@ -55,7 +55,7 @@ import java.util.Collection;
  * NPC will pick the closest).
  * <br>
  * This is similar to {@link com.github.tommyettinger.gand.GradientGridI2}, and both extend {@link GradientGrid}, though
- * this uses {@link Coord} where GradientGridI2 uses {@link com.github.tommyettinger.gand.points.PointI2}.
+ * this uses {@link Coord} where GradientGridI2 uses {@link com.github.tommyettinger.gdcrux.PointI2}.
  * <br>
  * As a bit of introduction, <a href="http://www.roguebasin.com/index.php?title=Dijkstra_Maps_Visualized">this article
  * on RogueBasin</a> can provide some useful information on how these work and how to visualize the information they can
