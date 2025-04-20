@@ -246,7 +246,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         writer = new AnimatedGif();
         writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUNT);
-        writer.setDitherStrength(0.4f);
+        writer.setDitherStrength(0.3f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
 
@@ -423,7 +423,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                         if((mapColor & 0xFF) == 0){
                             double distance2 = xx * xx + yy * yy;
                             if(distance2 >= innerRadius2 && distance2 <= rim2) {
-                                mapColor = (distance2 <= radius2) ? ATMOSPHERE : SPACE;
+                                mapColor = ATMOSPHERE;//(distance2 <= radius2) ? ATMOSPHERE : ATMOSPHERE & 0xFFFFFF00;
                             }
                             else continue;
                         }
@@ -447,7 +447,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                         if((mapColor & 0xFF) == 0){
                             double distance2 = xx * xx + yy * yy;
                             if(distance2 >= innerRadius2 && distance2 <= rim2) {
-                                mapColor = (distance2 <= radius2) ? ATMOSPHERE : SPACE;
+                                mapColor = ATMOSPHERE;// (distance2 <= radius2) ? ATMOSPHERE : SPACE;
                             }
                         }
                         temp.drawPixel(x, y, mapColor | (mapColor >>> 7 & 1));
@@ -478,7 +478,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //                    System.out.print(((i + 1) * 10 / 18) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
         }
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyze(pms, 30.0);
+        writer.palette.analyze(pms, 40.0);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
