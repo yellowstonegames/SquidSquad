@@ -127,7 +127,7 @@ public class SimpleWorldMapView implements WorldMapView {
         int b;
         for (int i = 0; i < 66; i++) {
             BIOME_COLOR_TABLE[i] = b = Biome.TABLE[i].colorOklab;
-            BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);
+            BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.12f);
             if(i == 60)
                 BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i];
         }
@@ -293,7 +293,7 @@ public class SimpleWorldMapView implements WorldMapView {
                     default:
                         colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[bc],
                                 BIOME_DARK_COLOR_TABLE[bc],
-                                MathTools.barronSpline(Hasher.randomize3Float(LongPointHash.hashAll(x, y, world.seedA, world.seedB)), 0.6f, 0.5f)
+                                MathTools.barronSpline(Hasher.randomize3Float(LongPointHash.hashAll(x, y, (int)(heightData[x][y] * 1000), world.seedA, world.seedB)), 0.8f, 0.5f)
                         ));
                 }
             }
