@@ -302,10 +302,14 @@ public interface BiomeMapper {
                 moistureCodeData = new int[world.width][world.height];
             if(biomeCodeData == null || (biomeCodeData.length != world.width || biomeCodeData[0].length != world.height))
                 biomeCodeData = new int[world.width][world.height];
-            final float i_hot = (world.maxHeat == world.minHeat) ? 1f : 1f / (world.maxHeat - world.minHeat);
+//            final float i_hot = (world.maxHeat == world.minHeat) ? 1f : 1f / (world.maxHeat - world.minHeat);
+            final float i_hot = 1f / world.maxHeat;
+            final float[][] heatData = world.heatData, moistureData = world.moistureData;
             for (int x = 0; x < world.width; x++) {
                 for (int y = 0; y < world.height; y++) {
-                    final float hot = (world.heatData[x][y] - world.minHeat) * i_hot, moist = world.moistureData[x][y];
+//                    final float hot = (world.heatData[x][y] - world.minHeat) * i_hot, moist = world.moistureData[x][y];
+                    final float hot = heatData[x][y] * i_hot;
+                    final float moist = moistureData[x][y];
                     final int heightCode = world.heightCodeData[x][y];
                     if(heightCode == 1000) {
                         biomeCodeData[x][y] = 60;
@@ -346,9 +350,10 @@ public interface BiomeMapper {
                     heatCodeData[x][y] = hc;
                     moistureCodeData[x][y] = mc;
                     // 54 == 9 * 6, 9 is used for Ocean groups
-                    // 54 == 9 * 6, 9 is used for Ocean groups
-                    biomeCodeData[x][y] = heightCode < 4 ? hc + 54 // 54 == 9 * 6, 9 is used for Ocean groups
+                    biomeCodeData[x][y]
+                            = heightCode == 3 && hc == 0 ? 48 : heightCode < 4 ? hc + 54
                             : heightCode == 4 ? hc + 36 : hc + mc * 6;
+
                 }
             }
         }
