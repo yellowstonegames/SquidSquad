@@ -358,6 +358,7 @@ public interface INoise extends Externalizable {
         static {
             register(new BadgerNoise());
             register(new BasicHashNoise());
+            register(new BitNoise());
             register(new CellularNoise());
             register(new CyclicNoise());
             register(new FlanNoise());

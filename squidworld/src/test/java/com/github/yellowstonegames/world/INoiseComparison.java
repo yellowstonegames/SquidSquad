@@ -217,6 +217,7 @@ public class INoiseComparison extends ApplicationAdapter {
 
     private final INoise[] noises = new INoise[]{
             new SimplexNoise(1L),
+            new BitNoise(1L, 1, 2),
             new ShapedFoamNoise(1L, 3f),
             new ShapedFoamNoise(1L, 2f),
             new ShapedFoamNoise(1L, 1f),
@@ -253,7 +254,7 @@ public class INoiseComparison extends ApplicationAdapter {
             new WavyNoise(1, 1),
             new WavyNoise(1, 3),
     };
-    private int index0 = 34;
+    private int index0 = 1;
     private int index1 = 35;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
