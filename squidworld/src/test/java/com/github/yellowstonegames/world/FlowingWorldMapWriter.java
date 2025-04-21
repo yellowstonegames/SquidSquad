@@ -67,16 +67,17 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     // World #1, GrayLarch, completed in           111201 ms
 
     private static final boolean FLOWING_LAND = true;
-    private static final boolean GLOBE_SPIN = true;
+    private static final boolean GLOBE_SPIN = false;
     private static final boolean ALIEN_COLORS = false;
-    private static final boolean SHADOW = true;
+    private static final boolean SHADOW = false;
 
 //    private static final int width = 256, height = 256;
 //    private static final int width = 300, height = 300;
     private static final int width = GLOBE_SPIN ? 300 : 400, height = GLOBE_SPIN ? 300 : 200;
 
 //    private static final int FRAMES = 100;
-    private static final int FRAMES = 240;
+//    private static final int FRAMES = 240;
+    private static final int FRAMES = 8;
     private static final int LIMIT = 3;
     private static float SPEED = 0.25f;
     private int baseSeed = 1234567890;
@@ -262,33 +263,13 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         thesaurus = new Thesaurus(rng);
 
-//        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1); // between 69783ms and 72929ms
-//        Noise fn = new Noise((int) seed, 1f, Noise.FOAM_FRACTAL, 1);    // between 130930ms and 131995ms
-//        Noise fn = new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2);   // between 34428ms and 38706ms
-//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 3, 2.6f, 1f/2.6f);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1f, Noise.HONEY_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1f, Noise.PERLIN_FRACTAL, 1);  // between 35894ms and 42264ms
-
-//        fn.setInterpolation(Noise.HERMITE); // the default
-
-//        INoise fn = new CyclicNoise(seed, 3, 2.3f);
-//        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.6f, NoiseWrapper.EXO, 2, false);
-//        INoise fn = new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 1);
-//        INoise fn = new NoiseWrapper(new SorbetNoise(seed, 3, 1.5f), seed, 1.5f, NoiseWrapper.FBM, 1);
-//        INoise fn = new CyclicNoise(seed, 4 , 0.9f);
-//        INoise fn = new CyclicNoise(seed, 4 , 1f);
-//        INoise fn = new PerlinNoise(seed);
-//        iNoise = new Noise3DFrom5D(fn);
-
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new CyclicNoise(seed, 3, 3f), seed, 0.75f, NoiseWrapper.FBM, 2));
 //        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 2, 3f)); SPEED *= 0.7f;
 //        iNoise = new Noise3DFrom5D(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
-        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 1));
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 1));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlinNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
 
 //        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
@@ -307,8 +288,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         if(GLOBE_SPIN)
             world = new GlobeMap(seed, width, height, iNoise, 0.6f);
         else
-            world = new RoundSideWorldMap(seed, width, height, iNoise, 0.7f);
-//            world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
+//            world = new RoundSideWorldMap(seed, width, height, iNoise, 0.7f);
+            world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
 //            world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.5f);
 
         path = "out/worldsFlowing/" + date + "/" +
@@ -317,8 +298,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
 
+        wmv = new SimpleWorldMapView(world);
 //        wmv = new UnrealisticWorldMapView(world);
-        wmv = new BlendedWorldMapView(world);
+//        wmv = new BlendedWorldMapView(world);
 //        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
@@ -398,10 +380,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 
             final int padding = (5), margin = (1);
-            final float center = (temp.getWidth() - 1) * 0.5f,
-                    rim2 = center * center + 4,
-                    radius2 = (center - margin) * (center - margin),
-                    innerRadius2 = (center - padding - margin) * (center - padding - margin);
+            final float
+                    centerW = (temp.getWidth() - 1) * 0.5f,
+                    centerH = (temp.getHeight() - 1) * 0.5f,
+                    rim2 = centerW * centerH + 4,
+                    radius2 = (centerW - margin) * (centerH - margin),
+                    innerRadius2 = (centerW - padding - margin) * (centerH - padding - margin);
             if(SHADOW){
                 if((SPACE & 0xFF) == 0)
                     temp.setColor(ATMOSPHERE & 0xFFFFFF00);
@@ -419,9 +403,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                     for (int y = 0; y < bh; y++) {
                         int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
                                 ? cm[x - padding][y - padding] : 0;
-                        float xx = x - center, yy = y - center;
+                        float xx = x - centerW, yy = y - centerH;
                         if((mapColor & 0xFF) == 0){
-                            double distance2 = xx * xx + yy * yy;
+                            double distance2 = GLOBE_SPIN ? xx * xx + yy * yy : xx * xx * 0.5f + yy * yy * 2;
                             if(distance2 >= innerRadius2 && distance2 <= rim2) {
                                 mapColor = ATMOSPHERE;//(distance2 <= radius2) ? ATMOSPHERE : ATMOSPHERE & 0xFFFFFF00;
                             }
@@ -443,9 +427,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                     for (int y = 0; y < bh; y++) {
                         int mapColor = x >= padding && x < bw - padding && y >= padding && y < bh - padding
                                 ? cm[x - padding][y - padding] : 0;
-                        float xx = x - center, yy = y - center;
+                        float xx = x - centerW, yy = y - centerH;
                         if((mapColor & 0xFF) == 0){
-                            double distance2 = xx * xx + yy * yy;
+                            double distance2 = GLOBE_SPIN ? xx * xx + yy * yy : xx * xx * 0.5f + yy * yy * 2;
                             if(distance2 >= innerRadius2 && distance2 <= rim2) {
                                 mapColor = ATMOSPHERE;// (distance2 <= radius2) ? ATMOSPHERE : SPACE;
                             }
@@ -479,7 +463,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette.analyze(pms, 40.0);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 1);
+//        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
 //            e.printStackTrace();
