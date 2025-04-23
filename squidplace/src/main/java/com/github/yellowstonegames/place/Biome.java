@@ -284,12 +284,12 @@ public class Biome {
         if (heat != biome.heat) return false;
         if (moisture != biome.moisture) return false;
         if (!name.equals(biome.name)) return false;
-        return BitConversion.floatToIntBits(colorOklab) == BitConversion.floatToIntBits(biome.colorOklab);
+        return colorOklab == biome.colorOklab;
     }
 
     @Override
     public int hashCode() {
-        return (29 * 29 * 29) * heat.hashCode() + (29 * 29) * moisture.hashCode() + (29) * name.hashCode() + BitConversion.floatToIntBits(colorOklab);
+        return (29 * 29 * 29) * heat.hashCode() + (29 * 29) * moisture.hashCode() + (29) * name.hashCode() + colorOklab;
     }
 
     @Override

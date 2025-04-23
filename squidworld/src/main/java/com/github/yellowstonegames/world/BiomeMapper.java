@@ -132,7 +132,7 @@ public interface BiomeMapper {
      * contains the dryest biomes, the next 6 are medium-dry, the next are slightly-dry, the next slightly-wet, then
      * medium-wet, then wettest. After this first block of dry-to-wet groups, there is a group of 6 for coastlines, a
      * group of 6 for rivers, a group of 6 for lakes, a group of 6 for oceans, and then one element for space outside
-     * the map. The last 6 elements, starting with code 60, lead with the String "Empty", and the rest after that are
+     * the map. The last 6 elements, starting with code 60, lead with the String "Space", and the rest after that are
      * not expected to be encountered randomly on the surface of a world. This also assigns moisture codes and heat
      * codes from 0 to 5 for each cell, which may be useful to simplify logic that deals with those factors.
      */
@@ -215,7 +215,8 @@ public interface BiomeMapper {
          * heat and moisture for the first 36 of 66 elements (coldest to warmest for each group of 6, with the first
          * group as the dryest and the last group the wettest), then the next 6 are for coastlines (coldest to warmest),
          * then rivers (coldest to warmest), then lakes (coldest to warmest), then oceans (coldest to warmest), and
-         * lastly a single "biome" for empty space outside the map (meant for projections that don't fill a rectangle).
+         * lastly a row of unusual "biomes" such as empty space outside the map (meant for projections that don't fill a
+         * rectangle), underground biomes, volcanoes, and one for just any unknown terrain (called "Exotic").
          */
         public static final String[] biomeTable = {
                 //COLDEST //COLDER        //COLD            //HOT                  //HOTTER              //HOTTEST
@@ -229,7 +230,7 @@ public interface BiomeMapper {
                 "Ice",    "River",        "River",          "River",               "River",              "River",              //RIVERS
                 "Ice",    "River",        "River",          "River",               "River",              "River",              //LAKES
                 "Ocean",  "Ocean",        "Ocean",          "Ocean",               "Ocean",              "Ocean",              //OCEAN
-                "Empty",  "Moon",         "Cavern",         "Cavern",              "Exotic",             "Volcano"             //STRANGE
+                "Space",  "Moon",         "Cavern",         "Cavern",              "Exotic",             "Volcano"             //STRANGE
         };
 
         /**
@@ -503,7 +504,7 @@ public interface BiomeMapper {
         /**
          * Gets a String from {@link Biome#TABLE} that names the appropriate biome in part A of the given biome code.
          * @param biomeCode a biome code that was probably received from {@link #biomeCodeData}
-         * @return a String that names the biome in part A of biomeCode, or "Empty" if none can be found
+         * @return a String that names the biome in part A of biomeCode, or "Space" if none can be found
          */
         public Biome extractBiomeA(int biomeCode)
         {
