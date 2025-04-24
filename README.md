@@ -202,10 +202,10 @@ The other versions go up fairly often as things are fixed or improved, but they 
 
   - `digitalVersion`=0.6.2
   - `jdkgdxdsVersion`=1.8.1
-  - `juniperVersion`=0.6.5
-  - `regExodusVersion`=0.1.18
+  - `juniperVersion`=0.6.7
+  - `regExodusVersion`=0.1.19
   - `cruxVersion`=0.1.2
-  - `textraTypistVersion`=2.0.1
+  - `textraTypistVersion`=2.0.3
 
 # License
 

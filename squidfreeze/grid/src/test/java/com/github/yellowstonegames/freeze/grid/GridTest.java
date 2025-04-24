@@ -103,6 +103,7 @@ public class GridTest {
         for (int i = 0; i < 256; i++) {
             pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -131,6 +132,7 @@ public class GridTest {
         for (int i = 0; i < 256; i++) {
             pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -160,6 +162,7 @@ public class GridTest {
             pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
                     , random.nextFloat(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -189,6 +192,7 @@ public class GridTest {
             pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
                     , random.nextFloat(-100, 100), random.nextFloat(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -218,6 +222,7 @@ public class GridTest {
             pt.set(random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100)
                     , random.nextFloat(-100, 100), random.nextFloat(-100, 100), random.nextFloat(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -247,6 +252,7 @@ public class GridTest {
         for (int i = 0; i < 256; i++) {
             pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -275,6 +281,7 @@ public class GridTest {
         for (int i = 0; i < 256; i++) {
             pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -304,6 +311,7 @@ public class GridTest {
             pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
                     , random.nextInt(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -333,6 +341,7 @@ public class GridTest {
             pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
                     , random.nextInt(-100, 100), random.nextInt(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {
@@ -362,6 +371,7 @@ public class GridTest {
             pt.set(random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100)
                     , random.nextInt(-100, 100), random.nextInt(-100, 100), random.nextInt(-100, 100));
             output.flush();
+            output = new Output(32, -1);
             kryo.writeObject(output, pt);
             bytes = output.toBytes();
             try (Input input = new Input(bytes)) {

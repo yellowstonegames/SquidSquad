@@ -15,7 +15,6 @@ dependencies {
         exclude module: 'digital'
     }
 
-    testImplementation "org.slf4j:slf4j-nop:$slf4jVersion"
     testImplementation "junit:junit:$junitVersion"
 }
 
