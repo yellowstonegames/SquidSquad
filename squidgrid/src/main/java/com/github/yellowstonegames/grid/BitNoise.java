@@ -131,6 +131,19 @@ public class BitNoise implements INoise {
     }
 
     /**
+     * 4D bit noise; black and white much of the time but curving instead of angular.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     */
+    public long noise4D(long x, long y, long z, long w)
+    {
+        return noise4D(x, y, z, w, seed, resolution, bits);
+    }
+
+    /**
      * 3D bit noise; black and white much of the time but curving instead of angular.
      *
      * @param x x input
@@ -144,6 +157,20 @@ public class BitNoise implements INoise {
     }
 
     /**
+     * 4D bit noise; black and white much of the time but curving instead of angular.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param seed the seed to use to alter the generated noise
+     */
+    public long noise4D(long x, long y, long z, long w, long seed)
+    {
+        return noise4D(x, y, z, w, seed, resolution, bits);
+    }
+
+    /**
      * 2D bit noise; black and white much of the time but curving instead of angular.
      *
      * @param x x input
@@ -154,12 +181,12 @@ public class BitNoise implements INoise {
      * @return noise from {@code -(1L << bits)} to {@code (1L << bits) - 1L}, both inclusive
      */
     public static long noise2D(long x, long y, long state, int resolution, int bits) {
-        long xb = (x >> resolution) + state, yb = (y >> resolution) - state,
+        long xb = (x >> resolution) + (0xC13FA9A902A6328FL ^ state), yb = (y >> resolution) + (0x91E10DA5C79E7B1DL ^ state),
                 xr = (x & ~(-1L << resolution)), yr = (y & ~(-1L << resolution)),
                 x0 = Hasher.randomize3(xb), x1 = Hasher.randomize3(xb + 1),
                 y0 = Hasher.randomize3(yb), y1 = Hasher.randomize3(yb + 1),
-                x0y0 = (x0 * y0 ^ x0 - y0) >>> resolution, x1y0 = (x1 * y0 ^ x1 - y0) >>> resolution,
-                x0y1 = (x0 * y1 ^ x0 - y1) >>> resolution, x1y1 = (x1 * y1 ^ x1 - y1) >>> resolution;
+                x0y0 = (x0 * y0 ^ x0 + y0) >>> resolution, x1y0 = (x1 * y0 ^ x1 + y0) >>> resolution,
+                x0y1 = (x0 * y1 ^ x0 + y1) >>> resolution, x1y1 = (x1 * y1 ^ x1 + y1) >>> resolution;
         return lorp(lorp(x0y0, x1y0, xr, resolution), lorp(x0y1, x1y1, xr, resolution), yr, resolution)
                 >>> -resolution - bits; // >> (- bits - resolution & 63)
     }
@@ -176,19 +203,56 @@ public class BitNoise implements INoise {
      * @return noise from {@code -(1L << bits)} to {@code (1L << bits) - 1L}, both inclusive
      */
     public static long noise3D(long x, long y, long z, long state, int resolution, int bits) {
-        long xb = (x >> resolution) + state, yb = (y >> resolution) - state, zb = (z >> resolution) + (0x9E3779B97F4A7C15L ^ state),
+        long xb = (x >> resolution) + (0xD1B54A32D192ED03L ^ state), yb = (y >> resolution) + (0xABC98388FB8FAC03L ^ state), zb = (z >> resolution) + (0x8CB92BA72F3D8DD7L ^ state),
                 xr = x & ~(-1L << resolution), yr = y & ~(-1L << resolution), zr = z & ~(-1L << resolution),
                 x0 = Hasher.randomize3(xb), x1 = Hasher.randomize3(xb + 1),
                 y0 = Hasher.randomize3(yb), y1 = Hasher.randomize3(yb + 1),
                 z0 = Hasher.randomize3(zb), z1 = Hasher.randomize3(zb + 1),
-                x0y0z0 = (x0 * y0 * z0 ^ x0 - y0 + (z0 - x0 << 32 | y0 - z0 >>> 32)) >>> resolution, x1y0z0 = (x1 * y0 * z0 ^ x1 - y0 + (z0 - x1 << 32 | y0 - z0 >>> 32)) >>> resolution,
-                x0y1z0 = (x0 * y1 * z0 ^ x0 - y1 + (z0 - x0 << 32 | y1 - z0 >>> 32)) >>> resolution, x1y1z0 = (x1 * y1 * z0 ^ x1 - y1 + (z0 - x1 << 32 | y1 - z0 >>> 32)) >>> resolution,
-                x0y0z1 = (x0 * y0 * z1 ^ x0 - y0 + (z1 - x0 << 32 | y0 - z1 >>> 32)) >>> resolution, x1y0z1 = (x1 * y0 * z1 ^ x1 - y0 + (z1 - x1 << 32 | y0 - z1 >>> 32)) >>> resolution,
-                x0y1z1 = (x0 * y1 * z1 ^ x0 - y1 + (z1 - x0 << 32 | y1 - z1 >>> 32)) >>> resolution, x1y1z1 = (x1 * y1 * z1 ^ x1 - y1 + (z1 - x1 << 32 | y1 - z1 >>> 32)) >>> resolution;
+                x0y0z0 = (x0 * y0 * z0 ^ x0 + y0 + z0) >>> resolution, x1y0z0 = (x1 * y0 * z0 ^ x1 + y0 + z0) >>> resolution,
+                x0y1z0 = (x0 * y1 * z0 ^ x0 + y1 + z0) >>> resolution, x1y1z0 = (x1 * y1 * z0 ^ x1 + y1 + z0) >>> resolution,
+                x0y0z1 = (x0 * y0 * z1 ^ x0 + y0 + z1) >>> resolution, x1y0z1 = (x1 * y0 * z1 ^ x1 + y0 + z1) >>> resolution,
+                x0y1z1 = (x0 * y1 * z1 ^ x0 + y1 + z1) >>> resolution, x1y1z1 = (x1 * y1 * z1 ^ x1 + y1 + z1) >>> resolution;
 
         return lorp(lorp(lorp(x0y0z0, x1y0z0, xr, resolution), lorp(x0y1z0, x1y1z0, xr, resolution), yr, resolution),
                 lorp(lorp(x0y0z1, x1y0z1, xr, resolution), lorp(x0y1z1, x1y1z1, xr, resolution), yr, resolution), zr, resolution)
                 >>> -resolution - bits;
+    }
+
+
+    /**
+     * 4D bit noise.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param state state to adjust the output
+     * @param resolution the number of cells between "vertices" where one hashed value is used fully
+     * @param bits how many bits should be used for each (signed long) output; often this is 8 to output a byte
+     * @return noise from {@code -(1L << bits)} to {@code (1L << bits) - 1L}, both inclusive
+     */
+    public static long noise4D(long x, long y, long z, long w, long state, int resolution, int bits) {
+        long xb = (x >> resolution) + (0xDB4F0B9175AE2165L ^ state), yb = (y >> resolution) + (0xBBE0563303A4615FL ^ state), zb = (z >> resolution) + (0xA0F2EC75A1FE1575L ^ state), wb = (w >> resolution) + (0x89E182857D9ED689L ^ state),
+                xr = x & ~(-1L << resolution), yr = y & ~(-1L << resolution), zr = z & ~(-1L << resolution), wr = w & ~(-1L << resolution),
+                x0 = Hasher.randomize3(xb), x1 = Hasher.randomize3(xb + 1),
+                y0 = Hasher.randomize3(yb), y1 = Hasher.randomize3(yb + 1),
+                z0 = Hasher.randomize3(zb), z1 = Hasher.randomize3(zb + 1),
+                w0 = Hasher.randomize3(wb), w1 = Hasher.randomize3(wb + 1),
+                x0y0z0w0 = (x0 * y0 * z0 * w0 ^ x0 + y0 + z0 + w0) >>> resolution, x1y0z0w0 = (x1 * y0 * z0 * w0 ^ x1 + y0 + z0 + w0) >>> resolution,
+                x0y1z0w0 = (x0 * y1 * z0 * w0 ^ x0 + y1 + z0 + w0) >>> resolution, x1y1z0w0 = (x1 * y1 * z0 * w0 ^ x1 + y1 + z0 + w0) >>> resolution,
+                x0y0z1w0 = (x0 * y0 * z1 * w0 ^ x0 + y0 + z1 + w0) >>> resolution, x1y0z1w0 = (x1 * y0 * z1 * w0 ^ x1 + y0 + z1 + w0) >>> resolution,
+                x0y1z1w0 = (x0 * y1 * z1 * w0 ^ x0 + y1 + z1 + w0) >>> resolution, x1y1z1w0 = (x1 * y1 * z1 * w0 ^ x1 + y1 + z1 + w0) >>> resolution,
+                x0y0z0w1 = (x0 * y0 * z0 * w1 ^ x0 + y0 + z0 + w1) >>> resolution, x1y0z0w1 = (x1 * y0 * z0 * w1 ^ x1 + y0 + z0 + w1) >>> resolution,
+                x0y1z0w1 = (x0 * y1 * z0 * w1 ^ x0 + y1 + z0 + w1) >>> resolution, x1y1z0w1 = (x1 * y1 * z0 * w1 ^ x1 + y1 + z0 + w1) >>> resolution,
+                x0y0z1w1 = (x0 * y0 * z1 * w1 ^ x0 + y0 + z1 + w1) >>> resolution, x1y0z1w1 = (x1 * y0 * z1 * w1 ^ x1 + y0 + z1 + w1) >>> resolution,
+                x0y1z1w1 = (x0 * y1 * z1 * w1 ^ x0 + y1 + z1 + w1) >>> resolution, x1y1z1w1 = (x1 * y1 * z1 * w1 ^ x1 + y1 + z1 + w1) >>> resolution;
+
+        return lorp(
+                lorp(lorp(lorp(x0y0z0w0, x1y0z0w0, xr, resolution), lorp(x0y1z0w0, x1y1z0w0, xr, resolution), yr, resolution),
+                        lorp(lorp(x0y0z1w0, x1y0z1w0, xr, resolution), lorp(x0y1z1w0, x1y1z1w0, xr, resolution), yr, resolution), zr, resolution),
+                lorp(lorp(lorp(x0y0z0w1, x1y0z0w1, xr, resolution), lorp(x0y1z0w1, x1y1z0w1, xr, resolution), yr, resolution),
+                        lorp(lorp(x0y0z1w1, x1y0z1w1, xr, resolution), lorp(x0y1z1w1, x1y1z1w1, xr, resolution), yr, resolution), zr, resolution),
+                wr, resolution) >>> -resolution - bits;
     }
 
     @Override
@@ -218,7 +282,7 @@ public class BitNoise implements INoise {
 
     @Override
     public int getMaxDimension() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -228,7 +292,7 @@ public class BitNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        return 0;
+        return 1 - (noise4D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize), MathTools.longFloor(w * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
     }
 
     @Override
@@ -243,7 +307,7 @@ public class BitNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-        return INoise.super.getNoiseWithSeed(x, y, z, w, seed);
+        return 1 - (noise4D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize), MathTools.longFloor(w * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
     }
 
     @Override
