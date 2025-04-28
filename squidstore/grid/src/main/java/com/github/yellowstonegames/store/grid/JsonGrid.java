@@ -72,6 +72,7 @@ public final class JsonGrid {
         registerVisionFrameworkRgb(json);
 //        registerBasicHashNoise(json); // Cannot be serialized to JSON without IPointHash being serializable, too.
         registerBadgerNoise(json);
+        registerBitNoise(json);
         registerCyclicNoise(json);
         registerFlanNoise(json);
         registerFoamNoise(json);
@@ -1465,6 +1466,31 @@ public final class JsonGrid {
             public WhiteNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return WhiteNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers BitNoise with the given Json object, so BitNoise can be written to and read from JSON.
+     * This is a simple wrapper around BitNoise's built-in {@link BitNoise#stringSerialize()} and
+     * {@link BitNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerBitNoise(@NonNull Json json) {
+        json.addClassTag("BitN", BitNoise.class);
+        json.setSerializer(BitNoise.class, new Json.Serializer<BitNoise>() {
+            @Override
+            public void write(Json json, BitNoise object, Class knownType) {
+                json.writeObjectStart(BitNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public BitNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return BitNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
