@@ -1730,7 +1730,7 @@ public class Thesaurus {
 
     /**
      * Thesaurus preset that changes all text to sound like this speaker: "Desaurus preset dat changez all text to sound
-     * like dis speakah." You may be familiar with a certain sci-fi game that has orks who sound like this.
+     * liek dis speakah." You may be familiar with a certain sci-fi game that has orks who sound like this.
      */
     public static final Thesaurus ORK = new Thesaurus("WAAAAAGH!");
 
@@ -1756,16 +1756,22 @@ public class Thesaurus {
     static {
         ORK.alterations.add(new Language.Alteration("\\bth", "d"));
         ORK.alterations.add(new Language.Alteration("th", "dd"));
+        ORK.alterations.add(new Language.Alteration("rh", "r"));
         ORK.alterations.add(new Language.Alteration("er\\b", "ah"));
         ORK.alterations.add(new Language.Alteration("es\\b", "ez"));
         ORK.addReplacement("the", "da")
                 .addReplacement("their", "deyr")
-                .addReplacement("yes", "ya")
-                .addReplacement("your", "youse")
-                .addReplacement("yours", "youses")
+                .addReplacement("theirs", "deyrz")
+                .addReplacement("there", "dah")
+                .addReplacement("yes", "yeh")
+                .addReplacement("no", "nuh")
+                .addReplacement("you", "ya")
+                .addReplacement("your", "yaz")
+                .addReplacement("yours", "yazuz")
                 .addReplacement("going", "gon'")
                 .addReplacement("and", "an'")
                 .addReplacement("to", "*snort*")
+                .addReplacement("like", "liek")
                 .addReplacement("rhythm", "riddim")
                 .addReplacement("get", "git")
                 .addReplacement("good", "gud");
@@ -1792,7 +1798,7 @@ public class Thesaurus {
     }
     static {
 
-        // not related to ORK; this filters out synonyms that aren't in the appropriate list
+        // not related to the alterations; this filters out synonyms that aren't in the appropriate list
         Iterator<CharSequence> it = adjective.keySet().iterator();
         while (it.hasNext()){
             if(!StringTools.contains(it.next(), "`adj`"))
