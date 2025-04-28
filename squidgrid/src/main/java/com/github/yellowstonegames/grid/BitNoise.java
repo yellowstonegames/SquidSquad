@@ -254,6 +254,65 @@ public class BitNoise implements INoise {
                         lorp(lorp(x0y0z1w1, x1y0z1w1, xr, resolution), lorp(x0y1z1w1, x1y1z1w1, xr, resolution), yr, resolution), zr, resolution),
                 wr, resolution) >>> -resolution - bits;
     }
+    
+    /**
+     * 5D bit noise.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param u u input
+     * @param state state to adjust the output
+     * @param resolution the number of cells between "vertices" where one hashed value is used fully
+     * @param bits how many bits should be used for each (signed long) output; often this is 8 to output a byte
+     * @return noise from {@code -(1L << bits)} to {@code (1L << bits) - 1L}, both inclusive
+     */
+    public static long noise5D(long x, long y, long z, long w, long u, long state, int resolution, int bits) {
+        long xb = (x >> resolution) + (0xE19B01AA9D42C633L ^ state),
+                yb = (y >> resolution) + (0xC6D1D6C8ED0C9631L ^ state),
+                zb = (z >> resolution) + (0xAF36D01EF7518DBBL ^ state),
+                wb = (w >> resolution) + (0x9A69443F36F710E7L ^ state),
+                ub = (u >> resolution) + (0x881403B9339BD42DL ^ state),
+                xr = x & ~(-1L << resolution), yr = y & ~(-1L << resolution), zr = z & ~(-1L << resolution),
+                wr = w & ~(-1L << resolution), ur = u & ~(-1L << resolution),
+                x0 = Hasher.randomize3(xb), x1 = Hasher.randomize3(xb + 1),
+                y0 = Hasher.randomize3(yb), y1 = Hasher.randomize3(yb + 1),
+                z0 = Hasher.randomize3(zb), z1 = Hasher.randomize3(zb + 1),
+                w0 = Hasher.randomize3(wb), w1 = Hasher.randomize3(wb + 1),
+                u0 = Hasher.randomize3(ub), u1 = Hasher.randomize3(ub + 1),
+                x0y0z0w0u0 = (x0 * y0 * z0 * w0 * u0 ^ x0 + y0 + z0 + w0 + u0) >>> resolution, x1y0z0w0u0 = (x1 * y0 * z0 * w0 * u0 ^ x1 + y0 + z0 + w0 + u0) >>> resolution,
+                x0y1z0w0u0 = (x0 * y1 * z0 * w0 * u0 ^ x0 + y1 + z0 + w0 + u0) >>> resolution, x1y1z0w0u0 = (x1 * y1 * z0 * w0 * u0 ^ x1 + y1 + z0 + w0 + u0) >>> resolution,
+                x0y0z1w0u0 = (x0 * y0 * z1 * w0 * u0 ^ x0 + y0 + z1 + w0 + u0) >>> resolution, x1y0z1w0u0 = (x1 * y0 * z1 * w0 * u0 ^ x1 + y0 + z1 + w0 + u0) >>> resolution,
+                x0y1z1w0u0 = (x0 * y1 * z1 * w0 * u0 ^ x0 + y1 + z1 + w0 + u0) >>> resolution, x1y1z1w0u0 = (x1 * y1 * z1 * w0 * u0 ^ x1 + y1 + z1 + w0 + u0) >>> resolution,
+                x0y0z0w1u0 = (x0 * y0 * z0 * w1 * u0 ^ x0 + y0 + z0 + w1 + u0) >>> resolution, x1y0z0w1u0 = (x1 * y0 * z0 * w1 * u0 ^ x1 + y0 + z0 + w1 + u0) >>> resolution,
+                x0y1z0w1u0 = (x0 * y1 * z0 * w1 * u0 ^ x0 + y1 + z0 + w1 + u0) >>> resolution, x1y1z0w1u0 = (x1 * y1 * z0 * w1 * u0 ^ x1 + y1 + z0 + w1 + u0) >>> resolution,
+                x0y0z1w1u0 = (x0 * y0 * z1 * w1 * u0 ^ x0 + y0 + z1 + w1 + u0) >>> resolution, x1y0z1w1u0 = (x1 * y0 * z1 * w1 * u0 ^ x1 + y0 + z1 + w1 + u0) >>> resolution,
+                x0y1z1w1u0 = (x0 * y1 * z1 * w1 * u0 ^ x0 + y1 + z1 + w1 + u0) >>> resolution, x1y1z1w1u0 = (x1 * y1 * z1 * w1 * u0 ^ x1 + y1 + z1 + w1 + u0) >>> resolution,
+                x0y0z0w0u1 = (x0 * y0 * z0 * w0 * u1 ^ x0 + y0 + z0 + w0 + u1) >>> resolution, x1y0z0w0u1 = (x1 * y0 * z0 * w0 * u1 ^ x1 + y0 + z0 + w0 + u1) >>> resolution,
+                x0y1z0w0u1 = (x0 * y1 * z0 * w0 * u1 ^ x0 + y1 + z0 + w0 + u1) >>> resolution, x1y1z0w0u1 = (x1 * y1 * z0 * w0 * u1 ^ x1 + y1 + z0 + w0 + u1) >>> resolution,
+                x0y0z1w0u1 = (x0 * y0 * z1 * w0 * u1 ^ x0 + y0 + z1 + w0 + u1) >>> resolution, x1y0z1w0u1 = (x1 * y0 * z1 * w0 * u1 ^ x1 + y0 + z1 + w0 + u1) >>> resolution,
+                x0y1z1w0u1 = (x0 * y1 * z1 * w0 * u1 ^ x0 + y1 + z1 + w0 + u1) >>> resolution, x1y1z1w0u1 = (x1 * y1 * z1 * w0 * u1 ^ x1 + y1 + z1 + w0 + u1) >>> resolution,
+                x0y0z0w1u1 = (x0 * y0 * z0 * w1 * u1 ^ x0 + y0 + z0 + w1 + u1) >>> resolution, x1y0z0w1u1 = (x1 * y0 * z0 * w1 * u1 ^ x1 + y0 + z0 + w1 + u1) >>> resolution,
+                x0y1z0w1u1 = (x0 * y1 * z0 * w1 * u1 ^ x0 + y1 + z0 + w1 + u1) >>> resolution, x1y1z0w1u1 = (x1 * y1 * z0 * w1 * u1 ^ x1 + y1 + z0 + w1 + u1) >>> resolution,
+                x0y0z1w1u1 = (x0 * y0 * z1 * w1 * u1 ^ x0 + y0 + z1 + w1 + u1) >>> resolution, x1y0z1w1u1 = (x1 * y0 * z1 * w1 * u1 ^ x1 + y0 + z1 + w1 + u1) >>> resolution,
+                x0y1z1w1u1 = (x0 * y1 * z1 * w1 * u1 ^ x0 + y1 + z1 + w1 + u1) >>> resolution, x1y1z1w1u1 = (x1 * y1 * z1 * w1 * u1 ^ x1 + y1 + z1 + w1 + u1) >>> resolution;
+
+        return lorp(
+                lorp(
+                        lorp(lorp(lorp(x0y0z0w0u0, x1y0z0w0u0, xr, resolution), lorp(x0y1z0w0u0, x1y1z0w0u0, xr, resolution), yr, resolution),
+                                lorp(lorp(x0y0z1w0u0, x1y0z1w0u0, xr, resolution), lorp(x0y1z1w0u0, x1y1z1w0u0, xr, resolution), yr, resolution), zr, resolution),
+                        lorp(lorp(lorp(x0y0z0w1u0, x1y0z0w1u0, xr, resolution), lorp(x0y1z0w1u0, x1y1z0w1u0, xr, resolution), yr, resolution),
+                                lorp(lorp(x0y0z1w1u0, x1y0z1w1u0, xr, resolution), lorp(x0y1z1w1u0, x1y1z1w1u0, xr, resolution), yr, resolution), zr, resolution),
+                        wr, resolution),
+                lorp(
+                        lorp(lorp(lorp(x0y0z0w0u0, x1y0z0w0u0, xr, resolution), lorp(x0y1z0w0u0, x1y1z0w0u0, xr, resolution), yr, resolution),
+                                lorp(lorp(x0y0z1w0u0, x1y0z1w0u0, xr, resolution), lorp(x0y1z1w0u0, x1y1z1w0u0, xr, resolution), yr, resolution), zr, resolution),
+                        lorp(lorp(lorp(x0y0z0w1u0, x1y0z0w1u0, xr, resolution), lorp(x0y1z0w1u0, x1y1z0w1u0, xr, resolution), yr, resolution),
+                                lorp(lorp(x0y0z1w1u0, x1y0z1w1u0, xr, resolution), lorp(x0y1z1w1u0, x1y1z1w1u0, xr, resolution), yr, resolution), zr, resolution),
+                        wr, resolution),
+                ur, resolution) >>> -resolution - bits;
+    }
 
     @Override
     public float getNoise(float x, float y) {
@@ -282,7 +341,7 @@ public class BitNoise implements INoise {
 
     @Override
     public int getMaxDimension() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -297,7 +356,8 @@ public class BitNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        return 0;
+        return 1 - (noise5D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
+                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
     }
 
     @Override
@@ -312,7 +372,8 @@ public class BitNoise implements INoise {
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        return INoise.super.getNoiseWithSeed(x, y, z, w, u, seed);
+        return 1 - (noise5D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
+                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
     }
 
     @Override
