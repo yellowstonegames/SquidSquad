@@ -263,7 +263,7 @@ public class INoiseComparison extends ApplicationAdapter {
     private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
-    private boolean slice = false;
+    private boolean slice = true;
     private boolean hue = false;
 
     private ImmediateModeRenderer20 renderer;

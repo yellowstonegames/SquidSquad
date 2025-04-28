@@ -372,4 +372,31 @@ public class BitNoise implements INoise {
     public BitNoise copy() {
         return new BitNoise(seed, bits, resolution);
     }
+
+    @Override
+    public String toString() {
+        return "BitNoise{" +
+                "seed=" + seed +
+                ", bits=" + bits +
+                ", resolution=" + resolution +
+                '}';
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof BitNoise)) return false;
+
+        BitNoise bitNoise = (BitNoise) o;
+        return seed == bitNoise.seed && bits == bitNoise.bits && resolution == bitNoise.resolution;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Long.hashCode(seed);
+        result = 31 * result + bits;
+        result = 31 * result + resolution;
+        return result;
+    }
+
+
 }
