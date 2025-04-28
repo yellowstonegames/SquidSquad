@@ -3157,6 +3157,59 @@ public class Language {
      */
     public static final Language LATIN = latin().register("Latin");
 
+
+    private static Language feline(){
+        return new Language(
+                new String[]{"ia"
+                },
+                new String[]{"a", "a", "aa", "aa", "ao", "ao", "au",
+                        "e", "eu",
+                        "i", "i", "ia", "iao", "iao", "iau",
+                        "ou", "ou",
+                        "u", "u",
+                },
+                new String[]{"m", "m", "m", "m", "m", "m", "m", "m", "m",
+                        "my", "my", "my",
+                        "mr", "mr",
+                        "mrr", "mrr",
+                        "mw",
+                        "n", "n", "n", "n",
+                        "ny", "ny", "ny", "ny", "ny", "ny",
+                        "p", "p", "p", "py",
+                        "pr", "pr",
+                        "prr", "prr",
+                        "r", "r", "r", "ry",
+                        "h", "ch"
+                },
+                new String[]{
+                        "rr", "rr", "rr", "rr", "rrp", "rrp", "rrp", "rrp",
+                        "rp", "rp",
+                        "m", "m", "m", "m", "m", "m", "m", "m", "m", "m",
+                        "m", "m", "m", "m", "m", "m", "m", "m", "m", "m",
+                        "mr", "mr", "mr", "mrr", "mrr", "mrr", "mrr",
+                        "mr", "mr", "mr", "mrr", "mrr", "mrr", "mrr",
+                        "n", "n", "n", "n", "n", "n", "n", "n", "n", "n",
+                        "ny", "ny", "ny", "ny", "ny", "ny", "ny", "ny",
+                        "ny", "ny", "ny", "ny", "ny", "ny", "ny", "ny",
+                        "pr", "pr", "prr", "prr", "prr",
+                        "h"
+                },
+                new String[]{
+                        "w", "w", "w", "w", "w", "w", "wl", "wl", "wl",
+                        "r", "rp", "rp", "rr", "rr", "rr", "rr", "rr", "rr", "rr", "rrp", "rrp",
+                        "h", "h", "h",
+                },
+                new String[]{},
+                new String[]{}, new int[]{1, 2}, new double[]{7, 2}, 0, 0.5, 0.0, 0.0, genericSanityChecks, true);
+    }
+    /**
+     * Fantasy language that might be suitable for cats or cat-like humanoids. Uses almost exclusively consonants that
+     * sound like meowing and sometimes meowing while purring.
+     * <br>
+     * Nyeurr priawl mrriarp, mu prih pao pya mya!
+     */
+    public static final Language FELINE = feline().register("Feline");
+
     /**
      * An array that stores all the hand-made Language constants; it does not store randomly-generated languages
      * nor does it store modifications or mixes of languages. The order these are stored in is related to the numeric
@@ -3227,7 +3280,7 @@ public class Language {
      */
     public static final Language[] fantasyLanguages = {
             HLETKIP, FANTASY_NAME, ELF, GOBLIN, KOBOLD, DEEP_SPEECH, DRAGON, INSECT, CELESTIAL, INFERNAL,
-            DEMONIC, LOVECRAFT, FANCY_FANTASY_NAME, IMP, ALIEN_A, ALIEN_E, ALIEN_I, ALIEN_O, ALIEN_U,
+            DEMONIC, LOVECRAFT, FANCY_FANTASY_NAME, FELINE, IMP, ALIEN_A, ALIEN_E, ALIEN_I, ALIEN_O, ALIEN_U,
     };
 
     /**
@@ -3239,7 +3292,7 @@ public class Language {
             MAORI, GREEK_ROMANIZED, INUKTITUT, RUSSIAN_ROMANIZED, NAHUATL, JAPANESE_ROMANIZED, MONGOLIAN, SOMALI, CROW,
             ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE, LATIN,
             HLETKIP, FANTASY_NAME, ELF, GOBLIN, KOBOLD, DEEP_SPEECH, DRAGON, INSECT, CELESTIAL, INFERNAL,
-            DEMONIC, LOVECRAFT, FANCY_FANTASY_NAME, IMP, ALIEN_A, ALIEN_E, ALIEN_I, ALIEN_O, ALIEN_U,
+            DEMONIC, LOVECRAFT, FANCY_FANTASY_NAME, FELINE, IMP, ALIEN_A, ALIEN_E, ALIEN_I, ALIEN_O, ALIEN_U,
     };
 
     /**
