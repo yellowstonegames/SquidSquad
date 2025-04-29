@@ -64,7 +64,6 @@ public class LightingVFTest extends ApplicationAdapter {
     private final ObjectDeque<Coord> awaitedMoves = new ObjectDeque<>(50);
     private Coord cursor = Coord.get(-1, -1);
     private final Vector2 pos = new Vector2();
-    private Runnable post;
 
     private long startTime, lastMove;
 
@@ -124,7 +123,6 @@ public class LightingVFTest extends ApplicationAdapter {
         //            // adjacent to those cells.
         //            blockage.fringe8way();
         //            LineTools.pruneLines(dungeon, seen, prunedDungeon);
-        post = vision::finishChanges;
 
         dungeonProcessor = new DungeonProcessor(GRID_WIDTH, GRID_HEIGHT, random);
         dungeonProcessor.addBoulders(DungeonProcessor.ALL, 3);
@@ -201,25 +199,24 @@ public class LightingVFTest extends ApplicationAdapter {
     }
 
     public void move(Direction way){
-        lastMove = TimeUtils.millis();
 
         // this prevents movements from restarting while a slide is already in progress.
         if(playerGlyph.hasActions()) return;
+        lastMove = TimeUtils.millis();
         final Coord player = playerGlyph.getLocation();
         final Coord next = Coord.get(Math.round(playerGlyph.getX() + way.deltaX), Math.round(playerGlyph.getY() + way.deltaY));
         if(next.isWithin(GRID_WIDTH, GRID_HEIGHT) && bare[next.x][next.y] == '.') {
-            playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.2f, post));
+            playerGlyph.addAction(MoreActions.slideTo(next.x, next.y, 0.3125f));
             vision.moveViewer(player, next);
             // we can move the player's light now that we know there is no light for an enemy at next.
             vision.lighting.moveLight(player, next);
-
         }
         else{
 //            if(MathUtils.randomBoolean())
                 playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
                                         .append(Actions.rotateBy(360f, 1f))
 //                        .append(new GridAction.PulseAction(gg, 1.5f, inView, next, 5).useMistyColors())
-                        .conclude(post));
+                        );
 //            else
 //                playerGlyph.addAction(MoreActions.bump(way, 0.3f).append(MoreActions.wiggle(0.2f, 0.2f))
 //                    .append(new GridAction.CloudAction(gg, 1.5f, inView, next, 5).useToxicColors()).conclude(post));
@@ -231,6 +228,7 @@ public class LightingVFTest extends ApplicationAdapter {
 //            gg.summon(next.x, next.y, next.x, next.y + 0.5f, '?', 0xFF22CCAA, 0xFF22CC00, 0f, 0f, 1f);
 //            gg.addAction(gg.dyeFG(next.x, next.y, 0x992200FF, 1f, Float.POSITIVE_INFINITY, null));
         }
+        vision.finishChanges();
     }
 
     public void regenerate(){
@@ -272,6 +270,9 @@ public class LightingVFTest extends ApplicationAdapter {
     }
 
     public void recolor(){
+        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
+        vision.update(change);
+
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
 //        int rainbow = toRGBA8888(
 //                limitToGamut(100,
@@ -280,8 +281,10 @@ public class LightingVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.lighting.fovResult[x][y] > 0)
+                if (vision.lighting.fovResult[x][y] > 0) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
+                    gg.backgrounds[x][y] = DescriptiveColor.toRGBA8888(vision.backgroundColors[x][y]);
+                }
                 else if (vision.seen.contains(x, y)) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
                     gg.backgrounds[x][y] = MEMORY_RGBA;
@@ -291,7 +294,7 @@ public class LightingVFTest extends ApplicationAdapter {
         }
         Coord loc = playerGlyph.getLocation();
         gg.put(loc.x, loc.y, 0L);
-        vision.lighting.draw(gg.backgrounds);
+//        vision.lighting.draw(gg.backgrounds);
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(vision.inView.contains(curr))
@@ -325,10 +328,6 @@ public class LightingVFTest extends ApplicationAdapter {
 
     @Override
     public void render() {
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
-        vision.update(change);
-
-        recolor();
 
         if(!gg.areChildrenActing() && !awaitedMoves.isEmpty())
         {
@@ -361,6 +360,7 @@ public class LightingVFTest extends ApplicationAdapter {
         } else {
             handleHeldKeys();
         }
+        recolor();
 
         ScreenUtils.clear(Color.BLACK);
         Camera camera = gg.viewport.getCamera();
