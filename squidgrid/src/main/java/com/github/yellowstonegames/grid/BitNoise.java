@@ -131,19 +131,6 @@ public class BitNoise implements INoise {
     }
 
     /**
-     * 4D bit noise; black and white much of the time but curving instead of angular.
-     *
-     * @param x x input
-     * @param y y input
-     * @param z z input
-     * @param w w input
-     */
-    public long noise4D(long x, long y, long z, long w)
-    {
-        return noise4D(x, y, z, w, seed, resolution, bits);
-    }
-
-    /**
      * 3D bit noise; black and white much of the time but curving instead of angular.
      *
      * @param x x input
@@ -163,11 +150,84 @@ public class BitNoise implements INoise {
      * @param y y input
      * @param z z input
      * @param w w input
+     */
+    public long noise4D(long x, long y, long z, long w)
+    {
+        return noise4D(x, y, z, w, seed, resolution, bits);
+    }
+
+    /**
+     * 4D bit noise; black and white much of the time but curving instead of angular.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
      * @param seed the seed to use to alter the generated noise
      */
     public long noise4D(long x, long y, long z, long w, long seed)
     {
         return noise4D(x, y, z, w, seed, resolution, bits);
+    }
+
+    /**
+     * 5D bit noise; black and white much of the time but curving instead of angular.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param u u input
+     */
+    public long noise5D(long x, long y, long z, long w, long u)
+    {
+        return noise5D(x, y, z, w, u, seed, resolution, bits);
+    }
+
+    /**
+     * 5D bit noise; black and white much of the time but curving instead of angular.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param u u input
+     * @param seed the seed to use to alter the generated noise
+     */
+    public long noise5D(long x, long y, long z, long w, long u, long seed)
+    {
+        return noise5D(x, y, z, w, u, seed, resolution, bits);
+    }
+
+    /**
+     * 6D bit noise; black and white much of the time but curving instead of angular.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param u u input
+     * @param v v input
+     */
+    public long noise6D(long x, long y, long z, long w, long u, long v)
+    {
+        return noise6D(x, y, z, w, u, v, seed, resolution, bits);
+    }
+
+    /**
+     * 6D bit noise; black and white much of the time but curving instead of angular.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param u u input
+     * @param v v input
+     * @param seed the seed to use to alter the generated noise
+     */
+    public long noise6D(long x, long y, long z, long w, long u, long v, long seed)
+    {
+        return noise6D(x, y, z, w, u, v, seed, resolution, bits);
     }
 
     /**
@@ -314,6 +374,100 @@ public class BitNoise implements INoise {
                 ur, resolution) >>> -resolution - bits;
     }
 
+    /**
+     * 6D bit noise.
+     *
+     * @param x x input
+     * @param y y input
+     * @param z z input
+     * @param w w input
+     * @param u u input
+     * @param v v input
+     * @param state state to adjust the output
+     * @param resolution the number of cells between "vertices" where one hashed value is used fully
+     * @param bits how many bits should be used for each (signed long) output; often this is 8 to output a byte
+     * @return noise from {@code -(1L << bits)} to {@code (1L << bits) - 1L}, both inclusive
+     */
+    public static long noise6D(long x, long y, long z, long w, long u, long v, long state, int resolution, int bits) {
+        long xb = (x >> resolution) + (0xE60E2B722B53AEEBL ^ state),
+                yb = (y >> resolution) + (0xCEBD76D9EDB6A8EFL ^ state),
+                zb = (z >> resolution) + (0xB9C9AA3A51D00B65L ^ state),
+                wb = (w >> resolution) + (0xA6F5777F6F88983FL ^ state),
+                ub = (u >> resolution) + (0x9609C71EB7D03F7BL ^ state),
+                vb = (v >> resolution) + (0x86D516E50B04AB1BL ^ state),
+                xr = x & ~(-1L << resolution), yr = y & ~(-1L << resolution), zr = z & ~(-1L << resolution),
+                wr = w & ~(-1L << resolution), ur = u & ~(-1L << resolution), vr = v & ~(-1L << resolution),
+                x0 = Hasher.randomize3(xb), x1 = Hasher.randomize3(xb + 1),
+                y0 = Hasher.randomize3(yb), y1 = Hasher.randomize3(yb + 1),
+                z0 = Hasher.randomize3(zb), z1 = Hasher.randomize3(zb + 1),
+                w0 = Hasher.randomize3(wb), w1 = Hasher.randomize3(wb + 1),
+                u0 = Hasher.randomize3(ub), u1 = Hasher.randomize3(ub + 1),
+                v0 = Hasher.randomize3(vb), v1 = Hasher.randomize3(vb + 1),
+                x0y0z0w0u0v0 = (x0 * y0 * z0 * w0 * u0 * v0 ^ x0 + y0 + z0 + w0 + u0 + v0) >>> resolution, x1y0z0w0u0v0 = (x1 * y0 * z0 * w0 * u0 * v0 ^ x1 + y0 + z0 + w0 + u0 + v0) >>> resolution,
+                x0y1z0w0u0v0 = (x0 * y1 * z0 * w0 * u0 * v0 ^ x0 + y1 + z0 + w0 + u0 + v0) >>> resolution, x1y1z0w0u0v0 = (x1 * y1 * z0 * w0 * u0 * v0 ^ x1 + y1 + z0 + w0 + u0 + v0) >>> resolution,
+                x0y0z1w0u0v0 = (x0 * y0 * z1 * w0 * u0 * v0 ^ x0 + y0 + z1 + w0 + u0 + v0) >>> resolution, x1y0z1w0u0v0 = (x1 * y0 * z1 * w0 * u0 * v0 ^ x1 + y0 + z1 + w0 + u0 + v0) >>> resolution,
+                x0y1z1w0u0v0 = (x0 * y1 * z1 * w0 * u0 * v0 ^ x0 + y1 + z1 + w0 + u0 + v0) >>> resolution, x1y1z1w0u0v0 = (x1 * y1 * z1 * w0 * u0 * v0 ^ x1 + y1 + z1 + w0 + u0 + v0) >>> resolution,
+                x0y0z0w1u0v0 = (x0 * y0 * z0 * w1 * u0 * v0 ^ x0 + y0 + z0 + w1 + u0 + v0) >>> resolution, x1y0z0w1u0v0 = (x1 * y0 * z0 * w1 * u0 * v0 ^ x1 + y0 + z0 + w1 + u0 + v0) >>> resolution,
+                x0y1z0w1u0v0 = (x0 * y1 * z0 * w1 * u0 * v0 ^ x0 + y1 + z0 + w1 + u0 + v0) >>> resolution, x1y1z0w1u0v0 = (x1 * y1 * z0 * w1 * u0 * v0 ^ x1 + y1 + z0 + w1 + u0 + v0) >>> resolution,
+                x0y0z1w1u0v0 = (x0 * y0 * z1 * w1 * u0 * v0 ^ x0 + y0 + z1 + w1 + u0 + v0) >>> resolution, x1y0z1w1u0v0 = (x1 * y0 * z1 * w1 * u0 * v0 ^ x1 + y0 + z1 + w1 + u0 + v0) >>> resolution,
+                x0y1z1w1u0v0 = (x0 * y1 * z1 * w1 * u0 * v0 ^ x0 + y1 + z1 + w1 + u0 + v0) >>> resolution, x1y1z1w1u0v0 = (x1 * y1 * z1 * w1 * u0 * v0 ^ x1 + y1 + z1 + w1 + u0 + v0) >>> resolution,
+                x0y0z0w0u1v0 = (x0 * y0 * z0 * w0 * u1 * v0 ^ x0 + y0 + z0 + w0 + u1 + v0) >>> resolution, x1y0z0w0u1v0 = (x1 * y0 * z0 * w0 * u1 * v0 ^ x1 + y0 + z0 + w0 + u1 + v0) >>> resolution,
+                x0y1z0w0u1v0 = (x0 * y1 * z0 * w0 * u1 * v0 ^ x0 + y1 + z0 + w0 + u1 + v0) >>> resolution, x1y1z0w0u1v0 = (x1 * y1 * z0 * w0 * u1 * v0 ^ x1 + y1 + z0 + w0 + u1 + v0) >>> resolution,
+                x0y0z1w0u1v0 = (x0 * y0 * z1 * w0 * u1 * v0 ^ x0 + y0 + z1 + w0 + u1 + v0) >>> resolution, x1y0z1w0u1v0 = (x1 * y0 * z1 * w0 * u1 * v0 ^ x1 + y0 + z1 + w0 + u1 + v0) >>> resolution,
+                x0y1z1w0u1v0 = (x0 * y1 * z1 * w0 * u1 * v0 ^ x0 + y1 + z1 + w0 + u1 + v0) >>> resolution, x1y1z1w0u1v0 = (x1 * y1 * z1 * w0 * u1 * v0 ^ x1 + y1 + z1 + w0 + u1 + v0) >>> resolution,
+                x0y0z0w1u1v0 = (x0 * y0 * z0 * w1 * u1 * v0 ^ x0 + y0 + z0 + w1 + u1 + v0) >>> resolution, x1y0z0w1u1v0 = (x1 * y0 * z0 * w1 * u1 * v0 ^ x1 + y0 + z0 + w1 + u1 + v0) >>> resolution,
+                x0y1z0w1u1v0 = (x0 * y1 * z0 * w1 * u1 * v0 ^ x0 + y1 + z0 + w1 + u1 + v0) >>> resolution, x1y1z0w1u1v0 = (x1 * y1 * z0 * w1 * u1 * v0 ^ x1 + y1 + z0 + w1 + u1 + v0) >>> resolution,
+                x0y0z1w1u1v0 = (x0 * y0 * z1 * w1 * u1 * v0 ^ x0 + y0 + z1 + w1 + u1 + v0) >>> resolution, x1y0z1w1u1v0 = (x1 * y0 * z1 * w1 * u1 * v0 ^ x1 + y0 + z1 + w1 + u1 + v0) >>> resolution,
+                x0y1z1w1u1v0 = (x0 * y1 * z1 * w1 * u1 * v0 ^ x0 + y1 + z1 + w1 + u1 + v0) >>> resolution, x1y1z1w1u1v0 = (x1 * y1 * z1 * w1 * u1 * v0 ^ x1 + y1 + z1 + w1 + u1 + v0) >>> resolution,
+
+                x0y0z0w0u0v1 = (x0 * y0 * z0 * w0 * u0 * v1 ^ x0 + y0 + z0 + w0 + u0 + v1) >>> resolution, x1y0z0w0u0v1 = (x1 * y0 * z0 * w0 * u0 * v1 ^ x1 + y0 + z0 + w0 + u0 + v1) >>> resolution,
+                x0y1z0w0u0v1 = (x0 * y1 * z0 * w0 * u0 * v1 ^ x0 + y1 + z0 + w0 + u0 + v1) >>> resolution, x1y1z0w0u0v1 = (x1 * y1 * z0 * w0 * u0 * v1 ^ x1 + y1 + z0 + w0 + u0 + v1) >>> resolution,
+                x0y0z1w0u0v1 = (x0 * y0 * z1 * w0 * u0 * v1 ^ x0 + y0 + z1 + w0 + u0 + v1) >>> resolution, x1y0z1w0u0v1 = (x1 * y0 * z1 * w0 * u0 * v1 ^ x1 + y0 + z1 + w0 + u0 + v1) >>> resolution,
+                x0y1z1w0u0v1 = (x0 * y1 * z1 * w0 * u0 * v1 ^ x0 + y1 + z1 + w0 + u0 + v1) >>> resolution, x1y1z1w0u0v1 = (x1 * y1 * z1 * w0 * u0 * v1 ^ x1 + y1 + z1 + w0 + u0 + v1) >>> resolution,
+                x0y0z0w1u0v1 = (x0 * y0 * z0 * w1 * u0 * v1 ^ x0 + y0 + z0 + w1 + u0 + v1) >>> resolution, x1y0z0w1u0v1 = (x1 * y0 * z0 * w1 * u0 * v1 ^ x1 + y0 + z0 + w1 + u0 + v1) >>> resolution,
+                x0y1z0w1u0v1 = (x0 * y1 * z0 * w1 * u0 * v1 ^ x0 + y1 + z0 + w1 + u0 + v1) >>> resolution, x1y1z0w1u0v1 = (x1 * y1 * z0 * w1 * u0 * v1 ^ x1 + y1 + z0 + w1 + u0 + v1) >>> resolution,
+                x0y0z1w1u0v1 = (x0 * y0 * z1 * w1 * u0 * v1 ^ x0 + y0 + z1 + w1 + u0 + v1) >>> resolution, x1y0z1w1u0v1 = (x1 * y0 * z1 * w1 * u0 * v1 ^ x1 + y0 + z1 + w1 + u0 + v1) >>> resolution,
+                x0y1z1w1u0v1 = (x0 * y1 * z1 * w1 * u0 * v1 ^ x0 + y1 + z1 + w1 + u0 + v1) >>> resolution, x1y1z1w1u0v1 = (x1 * y1 * z1 * w1 * u0 * v1 ^ x1 + y1 + z1 + w1 + u0 + v1) >>> resolution,
+                x0y0z0w0u1v1 = (x0 * y0 * z0 * w0 * u1 * v1 ^ x0 + y0 + z0 + w0 + u1 + v1) >>> resolution, x1y0z0w0u1v1 = (x1 * y0 * z0 * w0 * u1 * v1 ^ x1 + y0 + z0 + w0 + u1 + v1) >>> resolution,
+                x0y1z0w0u1v1 = (x0 * y1 * z0 * w0 * u1 * v1 ^ x0 + y1 + z0 + w0 + u1 + v1) >>> resolution, x1y1z0w0u1v1 = (x1 * y1 * z0 * w0 * u1 * v1 ^ x1 + y1 + z0 + w0 + u1 + v1) >>> resolution,
+                x0y0z1w0u1v1 = (x0 * y0 * z1 * w0 * u1 * v1 ^ x0 + y0 + z1 + w0 + u1 + v1) >>> resolution, x1y0z1w0u1v1 = (x1 * y0 * z1 * w0 * u1 * v1 ^ x1 + y0 + z1 + w0 + u1 + v1) >>> resolution,
+                x0y1z1w0u1v1 = (x0 * y1 * z1 * w0 * u1 * v1 ^ x0 + y1 + z1 + w0 + u1 + v1) >>> resolution, x1y1z1w0u1v1 = (x1 * y1 * z1 * w0 * u1 * v1 ^ x1 + y1 + z1 + w0 + u1 + v1) >>> resolution,
+                x0y0z0w1u1v1 = (x0 * y0 * z0 * w1 * u1 * v1 ^ x0 + y0 + z0 + w1 + u1 + v1) >>> resolution, x1y0z0w1u1v1 = (x1 * y0 * z0 * w1 * u1 * v1 ^ x1 + y0 + z0 + w1 + u1 + v1) >>> resolution,
+                x0y1z0w1u1v1 = (x0 * y1 * z0 * w1 * u1 * v1 ^ x0 + y1 + z0 + w1 + u1 + v1) >>> resolution, x1y1z0w1u1v1 = (x1 * y1 * z0 * w1 * u1 * v1 ^ x1 + y1 + z0 + w1 + u1 + v1) >>> resolution,
+                x0y0z1w1u1v1 = (x0 * y0 * z1 * w1 * u1 * v1 ^ x0 + y0 + z1 + w1 + u1 + v1) >>> resolution, x1y0z1w1u1v1 = (x1 * y0 * z1 * w1 * u1 * v1 ^ x1 + y0 + z1 + w1 + u1 + v1) >>> resolution,
+                x0y1z1w1u1v1 = (x0 * y1 * z1 * w1 * u1 * v1 ^ x0 + y1 + z1 + w1 + u1 + v1) >>> resolution, x1y1z1w1u1v1 = (x1 * y1 * z1 * w1 * u1 * v1 ^ x1 + y1 + z1 + w1 + u1 + v1) >>> resolution;
+
+        return lorp(lorp(
+                        lorp(
+                                lorp(lorp(lorp(x0y0z0w0u0v0, x1y0z0w0u0v0, xr, resolution), lorp(x0y1z0w0u0v0, x1y1z0w0u0v0, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w0u0v0, x1y0z1w0u0v0, xr, resolution), lorp(x0y1z1w0u0v0, x1y1z1w0u0v0, xr, resolution), yr, resolution), zr, resolution),
+                                lorp(lorp(lorp(x0y0z0w1u0v0, x1y0z0w1u0v0, xr, resolution), lorp(x0y1z0w1u0v0, x1y1z0w1u0v0, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w1u0v0, x1y0z1w1u0v0, xr, resolution), lorp(x0y1z1w1u0v0, x1y1z1w1u0v0, xr, resolution), yr, resolution), zr, resolution),
+                                wr, resolution),
+                        lorp(
+                                lorp(lorp(lorp(x0y0z0w0u1v0, x1y0z0w0u1v0, xr, resolution), lorp(x0y1z0w0u1v0, x1y1z0w0u1v0, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w0u1v0, x1y0z1w0u1v0, xr, resolution), lorp(x0y1z1w0u1v0, x1y1z1w0u1v0, xr, resolution), yr, resolution), zr, resolution),
+                                lorp(lorp(lorp(x0y0z0w1u1v0, x1y0z0w1u1v0, xr, resolution), lorp(x0y1z0w1u1v0, x1y1z0w1u1v0, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w1u1v0, x1y0z1w1u1v0, xr, resolution), lorp(x0y1z1w1u1v0, x1y1z1w1u1v0, xr, resolution), yr, resolution), zr, resolution),
+                                wr, resolution),
+                        ur, resolution),
+                lorp(
+                        lorp(
+                                lorp(lorp(lorp(x0y0z0w0u0v1, x1y0z0w0u0v1, xr, resolution), lorp(x0y1z0w0u0v1, x1y1z0w0u0v1, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w0u0v1, x1y0z1w0u0v1, xr, resolution), lorp(x0y1z1w0u0v1, x1y1z1w0u0v1, xr, resolution), yr, resolution), zr, resolution),
+                                lorp(lorp(lorp(x0y0z0w1u0v1, x1y0z0w1u0v1, xr, resolution), lorp(x0y1z0w1u0v1, x1y1z0w1u0v1, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w1u0v1, x1y0z1w1u0v1, xr, resolution), lorp(x0y1z1w1u0v1, x1y1z1w1u0v1, xr, resolution), yr, resolution), zr, resolution),
+                                wr, resolution),
+                        lorp(
+                                lorp(lorp(lorp(x0y0z0w0u1v1, x1y0z0w0u1v1, xr, resolution), lorp(x0y1z0w0u1v1, x1y1z0w0u1v1, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w0u1v1, x1y0z1w0u1v1, xr, resolution), lorp(x0y1z1w0u1v1, x1y1z1w0u1v1, xr, resolution), yr, resolution), zr, resolution),
+                                lorp(lorp(lorp(x0y0z0w1u1v1, x1y0z0w1u1v1, xr, resolution), lorp(x0y1z0w1u1v1, x1y1z0w1u1v1, xr, resolution), yr, resolution),
+                                        lorp(lorp(x0y0z1w1u1v1, x1y0z1w1u1v1, xr, resolution), lorp(x0y1z1w1u1v1, x1y1z1w1u1v1, xr, resolution), yr, resolution), zr, resolution),
+                                wr, resolution),
+                        ur, resolution),
+                vr, resolution) >>> -resolution - bits;
+    }
+
     @Override
     public float getNoise(float x, float y) {
         return 1 - (noise2D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
@@ -358,12 +512,16 @@ public class BitNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        return 0;
+        return 1 - (noise6D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
+                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), MathTools.longFloor(v * resSize),
+                seed, resolution << 1, bits) * 4f) / (1 << bits);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        return INoise.super.getNoiseWithSeed(x, y, z, w, u, v, seed);
+        return 1 - (noise6D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
+                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), MathTools.longFloor(v * resSize),
+                seed, resolution << 1, bits) * 4f) / (1 << bits);
     }
 
     @Override
@@ -373,7 +531,7 @@ public class BitNoise implements INoise {
 
     @Override
     public int getMaxDimension() {
-        return 5;
+        return 6;
     }
 
     @Override
