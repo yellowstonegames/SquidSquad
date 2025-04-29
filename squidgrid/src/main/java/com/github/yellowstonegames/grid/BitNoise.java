@@ -306,10 +306,10 @@ public class BitNoise implements INoise {
                                 lorp(lorp(x0y0z1w1u0, x1y0z1w1u0, xr, resolution), lorp(x0y1z1w1u0, x1y1z1w1u0, xr, resolution), yr, resolution), zr, resolution),
                         wr, resolution),
                 lorp(
-                        lorp(lorp(lorp(x0y0z0w0u0, x1y0z0w0u0, xr, resolution), lorp(x0y1z0w0u0, x1y1z0w0u0, xr, resolution), yr, resolution),
-                                lorp(lorp(x0y0z1w0u0, x1y0z1w0u0, xr, resolution), lorp(x0y1z1w0u0, x1y1z1w0u0, xr, resolution), yr, resolution), zr, resolution),
-                        lorp(lorp(lorp(x0y0z0w1u0, x1y0z0w1u0, xr, resolution), lorp(x0y1z0w1u0, x1y1z0w1u0, xr, resolution), yr, resolution),
-                                lorp(lorp(x0y0z1w1u0, x1y0z1w1u0, xr, resolution), lorp(x0y1z1w1u0, x1y1z1w1u0, xr, resolution), yr, resolution), zr, resolution),
+                        lorp(lorp(lorp(x0y0z0w0u1, x1y0z0w0u1, xr, resolution), lorp(x0y1z0w0u1, x1y1z0w0u1, xr, resolution), yr, resolution),
+                                lorp(lorp(x0y0z1w0u1, x1y0z1w0u1, xr, resolution), lorp(x0y1z1w0u1, x1y1z1w0u1, xr, resolution), yr, resolution), zr, resolution),
+                        lorp(lorp(lorp(x0y0z0w1u1, x1y0z0w1u1, xr, resolution), lorp(x0y1z0w1u1, x1y1z0w1u1, xr, resolution), yr, resolution),
+                                lorp(lorp(x0y0z1w1u1, x1y0z1w1u1, xr, resolution), lorp(x0y1z1w1u1, x1y1z1w1u1, xr, resolution), yr, resolution), zr, resolution),
                         wr, resolution),
                 ur, resolution) >>> -resolution - bits;
     }
@@ -335,6 +335,38 @@ public class BitNoise implements INoise {
     }
 
     @Override
+    public float getNoise(float x, float y, float z, float w) {
+        return 1 - (noise4D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize), MathTools.longFloor(w * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+        return 1 - (noise4D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize), MathTools.longFloor(w * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u) {
+        return 1 - (noise5D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
+                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
+        return 1 - (noise5D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
+                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
+    }
+
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        return 0;
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
+        return INoise.super.getNoiseWithSeed(x, y, z, w, u, v, seed);
+    }
+
+    @Override
     public int getMinDimension() {
         return 2;
     }
@@ -347,38 +379,6 @@ public class BitNoise implements INoise {
     @Override
     public String getTag() {
         return "BitN";
-    }
-
-    @Override
-    public float getNoise(float x, float y, float z, float w) {
-        return 1 - (noise4D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize), MathTools.longFloor(w * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
-    }
-
-    @Override
-    public float getNoise(float x, float y, float z, float w, float u) {
-        return 1 - (noise5D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
-                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
-    }
-
-    @Override
-    public float getNoise(float x, float y, float z, float w, float u, float v) {
-        return 0;
-    }
-
-    @Override
-    public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-        return 1 - (noise4D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize), MathTools.longFloor(w * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
-    }
-
-    @Override
-    public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        return 1 - (noise5D(MathTools.longFloor(x * resSize), MathTools.longFloor(y * resSize), MathTools.longFloor(z * resSize),
-                MathTools.longFloor(w * resSize), MathTools.longFloor(u * resSize), seed, resolution << 1, bits) * 4f) / (1 << bits);
-    }
-
-    @Override
-    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        return INoise.super.getNoiseWithSeed(x, y, z, w, u, v, seed);
     }
 
     /**

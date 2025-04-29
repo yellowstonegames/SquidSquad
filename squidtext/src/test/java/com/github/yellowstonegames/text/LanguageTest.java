@@ -390,7 +390,8 @@ public class LanguageTest {
                 Language.ALIEN_O,
                 Language.ALIEN_U,
                 Language.INSECT,
-                Language.DEEP_SPEECH
+                Language.DEEP_SPEECH,
+                Language.FELINE,
         };
         String marked = "What the [?]heck?[?] Check that out will ya? It's probably nothing, but - OH [?]NO, THIS IS BAD!";
         String oz =
