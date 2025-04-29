@@ -36,18 +36,19 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
-import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
-import com.github.yellowstonegames.core.FullPalette;
+import com.github.yellowstonegames.core.FullPaletteRgb;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
-import static com.github.yellowstonegames.core.DescriptiveColor.*;
+import static com.github.yellowstonegames.core.DescriptiveColorRgb.SILVER;
+import static com.github.yellowstonegames.core.DescriptiveColorRgb.describe;
+import static com.github.yellowstonegames.core.DescriptiveColorRgb.offsetLightness;
 
-public class LightingVFTest extends ApplicationAdapter {
+public class LightingRgbVFTest extends ApplicationAdapter {
 
     private Stage stage;
     private GlyphGrid gg;
@@ -56,7 +57,7 @@ public class LightingVFTest extends ApplicationAdapter {
     /**
      * Handles field of view calculations as they change when the player moves around; also, lighting with colors.
      */
-    private final VisionFramework vision = new VisionFramework();
+    private final VisionFrameworkRgb vision = new VisionFrameworkRgb();
     private final Noise waves = new Noise(123, 0.5f, Noise.FOAM, 1);
     private GlyphActor playerGlyph;
     private DijkstraMap playerToCursor;
@@ -72,16 +73,16 @@ public class LightingVFTest extends ApplicationAdapter {
     private static final int CELL_WIDTH = 24;
     private static final int CELL_HEIGHT = 24;
 
-    private static final int DEEP_OKLAB = describeOklab("dark dull cobalt");
-    private static final int SHALLOW_OKLAB = describeOklab("dull denim");
-    private static final int GRASS_OKLAB = describeOklab("duller dark green");
-    private static final int DRY_OKLAB = describeOklab("dull light apricot sage");
-    private static final int STONE_OKLAB = describeOklab("darkmost gray dullest bronze");
-    private static final int deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
-    private static final int shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
-    private static final int grassText = toRGBA8888(offsetLightness(GRASS_OKLAB));
-    private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
-    private static final int SILVER_RGBA = toRGBA8888(SILVER);
+    private static final int DEEP_RGBA = describe("dark dull cobalt");
+    private static final int SHALLOW_RGBA = describe("dull denim");
+    private static final int GRASS_RGBA = describe("duller dark green");
+    private static final int DRY_RGBA = describe("dull light apricot sage");
+    private static final int STONE_RGBA = describe("darkmost gray dullest bronze");
+    private static final int deepText = (offsetLightness(DEEP_RGBA));
+    private static final int shallowText = (offsetLightness(SHALLOW_RGBA));
+    private static final int grassText = (offsetLightness(GRASS_RGBA));
+    private static final int stoneText = (describe("gray dullmost butter bronze"));
+    private static final int SILVER_RGBA = SILVER;
     private static final int MEMORY_RGBA = describe("darker gray black");
 
     public static void main(String[] args){
@@ -91,7 +92,7 @@ public class LightingVFTest extends ApplicationAdapter {
         config.disableAudio(true);
         config.setForegroundFPS(0); // how fast can this get, anyway?
         config.useVsync(false);
-        new Lwjgl3Application(new LightingVFTest(), config);
+        new Lwjgl3Application(new LightingRgbVFTest(), config);
     }
 
     @Override
@@ -103,13 +104,13 @@ public class LightingVFTest extends ApplicationAdapter {
         Gdx.app.log("SEED", "Initial seed is " + seed);
         EnhancedRandom random = new WhiskerRandom(seed);
         stage = new Stage();
-        Font font = KnownFonts.getIosevka(Font.DistanceFieldType.SDF).multiplyCrispness(0.5f);
+        Font font = KnownFonts.getIosevkaSlab(Font.DistanceFieldType.SDF).multiplyCrispness(0.5f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
         playerGlyph = new GlyphActor('@', "[red orange]", gg.font);
         gg.addActor(playerGlyph);
 
-        vision.rememberedColor = DescriptiveColor.describeOklab("darker gray black");
+        vision.rememberedColor = DescriptiveColorRgb.describe("darker gray black");
 
         //            lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
         //            blockage.refill(lighting.fovResult, 0f);
@@ -240,14 +241,14 @@ public class LightingVFTest extends ApplicationAdapter {
 
         vision.restart(dungeon, player, 8);
 
-//        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0f, 0f)); // constant light
-        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f)); // flickers
+//        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0f, 0f)); // constant light
+        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0.4f, 0f)); // flickers
         floors.remove(player);
 
         Coord[] lightPositions = floors.separatedBlue(0.075f);
         for (int i = 0; i < lightPositions.length; i++) {
             vision.lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,
-                    FullPalette.COLOR_WHEEL_PALETTE_BRIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_BRIGHT.length)], 0.5f, 0f));
+                    FullPaletteRgb.COLOR_WHEEL_PALETTE_BRIGHT[rng.nextInt(FullPaletteRgb.COLOR_WHEEL_PALETTE_BRIGHT.length)], 0.5f, 0f));
         }
 //        lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
 //        inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
@@ -281,7 +282,7 @@ public class LightingVFTest extends ApplicationAdapter {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 if (vision.lighting.fovResult[x][y] > 0) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
-                    gg.backgrounds[x][y] = DescriptiveColor.toRGBA8888(vision.backgroundColors[x][y]);
+                    gg.backgrounds[x][y] = vision.backgroundColors[x][y];
                 }
                 else if (vision.seen.contains(x, y)) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
@@ -292,7 +293,6 @@ public class LightingVFTest extends ApplicationAdapter {
         }
         Coord loc = playerGlyph.getLocation();
         gg.put(loc.x, loc.y, 0L);
-//        vision.lighting.draw(gg.backgrounds);
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
             if(vision.inView.contains(curr))
