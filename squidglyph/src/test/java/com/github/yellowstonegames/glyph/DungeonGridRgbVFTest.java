@@ -261,7 +261,7 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
     }
 
     public void recolor(){
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
+        float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 3.0, 0.0), 1000.0);
         vision.update(change);
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         // this could be used if you want the cursor highlight to be all one color.
@@ -273,7 +273,7 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.lighting.fovResult[x][y] > 0) {
+                if (light[x][y] > 0) {
                     switch (prunedDungeon[x][y]) {
                         case '~':
                             gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], lighten(DEEP_RGBA, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))), 0.5f));
