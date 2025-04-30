@@ -560,8 +560,6 @@ public class VisionFramework {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
                     backgroundColors[x][y] = DescriptiveColor.lerpColors(previousBackgroundColors[x][y],
                             rememberedColor, change);
-                    // TODO: Remove debug printfn, though it isn't ever printing in Lighting tests...
-//                    Stringf.printfn("x: %d, y: %d, previous color: %08X, current color: %08X", x, y, previousBackgroundColors[x][y], backgroundColors[x][y]);
                 } else if(seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
                     backgroundColors[x][y] = rememberedColor;

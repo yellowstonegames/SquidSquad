@@ -241,7 +241,7 @@ public class LightingVFTest extends ApplicationAdapter {
         vision.restart(dungeon, player, 8);
 
 //        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0f, 0f)); // constant light
-        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f)); // flickers
+        vision.lighting.addLight(player, new Radiance(8, FullPalette.SILVER_GREY, 0.4f, 0f)); // flickers
         floors.remove(player);
 
         Coord[] lightPositions = floors.separatedBlue(0.075f);
@@ -249,12 +249,6 @@ public class LightingVFTest extends ApplicationAdapter {
             vision.lighting.addLight(lightPositions[i], new Radiance(rng.nextFloat(3f) + 2f,
                     FullPalette.COLOR_WHEEL_PALETTE_BRIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_BRIGHT.length)], 0.5f, 0f));
         }
-//        lighting.calculateFOV(player.x, player.y, player.x - 10, player.y - 10, player.x + 11, player.y + 11);
-//        inView = inView == null ? new Region(lighting.fovResult, 0.01f, 2f) : inView.refill(lighting.fovResult, 0.01f, 2f);
-//        seen = seen == null ? inView.copy() : seen.remake(inView);
-//        blockage = blockage == null ? new Region(seen).fringe8way() : blockage.remake(seen).fringe8way();
-//        inView.remake(seen);
-//        LineTools.pruneLines(dungeon, seen, prunedDungeon);
         gg.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gg.map.clear();
         if(playerToCursor == null)
@@ -268,25 +262,16 @@ public class LightingVFTest extends ApplicationAdapter {
     }
 
     public void recolor(){
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
+        float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 2.0, 0.0), 1000.0);
         vision.update(change);
 
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
-//        int rainbow = toRGBA8888(
-//                limitToGamut(100,
-//                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
-//        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.lighting.fovResult[x][y] > 0) {
+                if (vision.seen.contains(x, y)) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
                     gg.backgrounds[x][y] = DescriptiveColor.toRGBA8888(vision.backgroundColors[x][y]);
-                }
-                else if (vision.seen.contains(x, y)) {
-                    gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
-                    gg.backgrounds[x][y] = MEMORY_RGBA;
-
                 }
             }
         }

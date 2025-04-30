@@ -627,8 +627,8 @@ public class SunriseDemo extends ApplicationAdapter {
                     monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getForegroundColor(i, j, change)));
                     monster.draw(batch);
                 } else {
-                    // TODO: in for debugging; without this, the packed color changes above can affect other tiles and
-                    // make them gradually fade without meaning to directly.
+                    // This is correct, since if a cell shouldn't be visible at all, we need to make sure
+                    // no batch color changes hold out from earlier visible cells.
                     batch.setPackedColor(0f);
                 }
             }

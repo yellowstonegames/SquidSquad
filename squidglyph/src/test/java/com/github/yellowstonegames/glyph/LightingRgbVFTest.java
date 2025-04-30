@@ -242,7 +242,7 @@ public class LightingRgbVFTest extends ApplicationAdapter {
         vision.restart(dungeon, player, 8);
 
 //        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0f, 0f)); // constant light
-        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0.4f, 0f)); // flickers
+        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.SILVER_GREY, 0.4f, 0f)); // flickers
         floors.remove(player);
 
         Coord[] lightPositions = floors.separatedBlue(0.075f);
@@ -269,14 +269,9 @@ public class LightingRgbVFTest extends ApplicationAdapter {
     }
 
     public void recolor(){
-        float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove), 0.0), 1000.0);
+        float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 2.0, 0.0), 1000.0);
         vision.update(change);
-        System.out.println(vision.viewers.size() + " viewers have " + vision.justHidden.size() + " just-hidden cells");
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
-//        int rainbow = toRGBA8888(
-//                limitToGamut(100,
-//                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
-//        FOV.reuseFOV(res, light, playerX, playerY, LineWobble.wobble(12345, modifiedTime) * 2.5f + 4f, Radius.CIRCLE);
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {

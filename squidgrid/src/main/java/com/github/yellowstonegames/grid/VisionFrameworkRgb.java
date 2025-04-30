@@ -155,6 +155,9 @@ public class VisionFrameworkRgb extends VisionFramework {
         rememberedColor = baseColor;
         if(backgroundColors == null) backgroundColors = ArrayTools.fill(rememberedColor, placeWidth, placeHeight);
         else ArrayTools.fill(backgroundColors, rememberedColor);
+        if(previousBackgroundColors == null) previousBackgroundColors = ArrayTools.copy(backgroundColors);
+        else ArrayTools.set(backgroundColors, previousBackgroundColors);
+
     }
 
     /**
@@ -240,7 +243,7 @@ public class VisionFrameworkRgb extends VisionFramework {
                     }
                 } else if(justHidden.contains(x, y)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
-                    backgroundColors[x][y] = DescriptiveColorRgb.lerpColors(backgroundColors[x][y],
+                    backgroundColors[x][y] = DescriptiveColorRgb.lerpColors(previousBackgroundColors[x][y],
                             rememberedColor, change);
                 } else if(seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
