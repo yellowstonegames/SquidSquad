@@ -245,8 +245,8 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
         playerGlyph.setPosition(player.x, player.y);
         vision.restart(dungeon, player, 8);
 
-//        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0f, 0f)); // constant light
-        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.SILVER_GREY, 0.4f, 0f)); // flickers
+//        vision.lighting.addLight(player, new Radiance(8, FullPalette.SILVER_GREY, 0f, 0f)); // constant light
+        vision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.SILVER_GREY, 0.4f, 0f, 0f, 0.4f)); // flickers
 
         gg.backgrounds = new int[GRID_WIDTH][GRID_HEIGHT];
         gg.map.clear();
@@ -269,51 +269,74 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
 //                limitToGamut(100,
 //                        (int) (TrigTools.sinTurns(modifiedTime * 0.2f) * 40f) + 128, (int) (TrigTools.cosTurns(modifiedTime * 0.2f) * 40f) + 128, 255));
         char[][] prunedDungeon = vision.prunedPlaceMap;
-        float[][] light = vision.lighting.fovResult;
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (light[x][y] > 0) {
+                if (vision.seen.contains(x, y)) {
+                    gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
                     switch (prunedDungeon[x][y]) {
                         case '~':
-                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], lighten(DEEP_RGBA, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))), 0.5f));
                             gg.put(x, y, prunedDungeon[x][y], deepText);
                             break;
                         case ',':
-                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], lighten(SHALLOW_RGBA, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))), 0.5f));
                             gg.put(x, y, prunedDungeon[x][y], shallowText);
                             break;
                         case '"':
-                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], darken(lerpColors(GRASS_RGBA, DRY_RGBA, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), 0.4f * Math.min(1.1f, Math.max(0, 1f - light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime * 0.7f)))), 0.5f));
                             gg.put(x, y, prunedDungeon[x][y], grassText);
                             break;
                         case ' ':
                             break;
                         default:
-                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], lighten(STONE_RGBA, 0.6f * light[x][y]), 0.5f));
                             gg.put(x, y, prunedDungeon[x][y], stoneText);
                     }
-                } else if (vision.seen.contains(x, y)) {
-                    switch (prunedDungeon[x][y]) {
-                        case '~':
-                            gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
-                            gg.put(x, y, prunedDungeon[x][y], deepText);
-                            break;
-                        case ',':
-                            gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
-                            gg.put(x, y, prunedDungeon[x][y], shallowText);
-                            break;
-                        case ' ':
-                            break;
-                        default:
-                            gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
-                            gg.put(x, y, prunedDungeon[x][y], stoneText);
-                    }
-                } else {
-                    gg.backgrounds[x][y] = 0;
                 }
             }
         }
+//        for (int y = 0; y < GRID_HEIGHT; y++) {
+//            for (int x = 0; x < GRID_WIDTH; x++) {
+//                if (light[x][y] > 0) {
+//                    switch (prunedDungeon[x][y]) {
+//                        case '~':
+//                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], lighten(DEEP_RGBA, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))), 0.25f));
+//                            gg.put(x, y, prunedDungeon[x][y], deepText);
+//                            break;
+//                        case ',':
+//                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], lighten(SHALLOW_RGBA, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))), 0.25f));
+//                            gg.put(x, y, prunedDungeon[x][y], shallowText);
+//                            break;
+//                        case '"':
+//                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], darken(lerpColors(GRASS_RGBA, DRY_RGBA, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), 0.4f * Math.min(1.1f, Math.max(0, 1f - light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime * 0.7f)))), 0.25f));
+//                            gg.put(x, y, prunedDungeon[x][y], grassText);
+//                            break;
+//                        case ' ':
+//                            break;
+//                        default:
+//                            gg.backgrounds[x][y] = (DescriptiveColorRgb.lerpColors(vision.backgroundColors[x][y], lighten(STONE_RGBA, 0.6f * light[x][y]), 0.25f));
+//                            gg.put(x, y, prunedDungeon[x][y], stoneText);
+//                    }
+//                } else if (vision.seen.contains(x, y)) {
+//                    switch (prunedDungeon[x][y]) {
+//                        case '~':
+//                            gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
+//                            gg.put(x, y, prunedDungeon[x][y], deepText);
+//                            break;
+//                        case ',':
+//                            gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
+//                            gg.put(x, y, prunedDungeon[x][y], shallowText);
+//                            break;
+//                        case '"':
+//                            gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
+//                            gg.put(x, y, prunedDungeon[x][y], grassText);
+//                            break;
+//                        case ' ':
+//                            break;
+//                        default:
+//                            gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
+//                            gg.put(x, y, prunedDungeon[x][y], stoneText);
+//                    }
+//                }
+//            }
+//        }
         Coord loc = playerGlyph.getLocation();
         gg.put(loc.x, loc.y, 0L);
         for (int i = 0; i < toCursor.size(); i++) {
