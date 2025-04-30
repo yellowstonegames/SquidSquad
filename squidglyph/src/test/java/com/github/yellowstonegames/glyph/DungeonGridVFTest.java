@@ -263,7 +263,7 @@ public class DungeonGridVFTest extends ApplicationAdapter {
     }
 
     public void recolor(){
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
+        float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 2.0, 0.0), 1000.0);
         vision.update(change);
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         // this could be used if you want the cursor highlight to be all one color.
@@ -275,35 +275,53 @@ public class DungeonGridVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.lighting.fovResult[x][y] > 0) {
+//                if (vision.lighting.fovResult[x][y] > 0) {
+//                    int from = TRANSPARENT;//vision.justSeen.contains(x, y) ? TRANSPARENT : vision.rememberedColor;
+//                    switch (prunedDungeon[x][y]) {
+//                        case '~':
+//                            gg.backgrounds[x][y] = toRGBA8888(lerpColors(
+//                                    from,
+//                                    lighten(DEEP_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))),
+//                                    vision.lighting.fovResult[x][y]));
+//                            gg.put(x, y, prunedDungeon[x][y], deepText);
+//                            break;
+//                        case ',':
+//                            gg.backgrounds[x][y] = toRGBA8888(DescriptiveColor.lerpColors(
+//                                    from,
+//                                    lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))),
+//                                    vision.lighting.fovResult[x][y]));
+//                            gg.put(x, y, prunedDungeon[x][y], shallowText);
+//                            break;
+//                        case '"':
+//                            gg.backgrounds[x][y] = toRGBA8888(lerpColors(
+//                                    from,
+//                                    darken(lerpColors(GRASS_OKLAB, DRY_OKLAB, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), 0.4f * Math.min(1.1f, Math.max(0, 1f - light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime * 0.7f)))),
+//                                    vision.lighting.fovResult[x][y]));
+//                            gg.put(x, y, prunedDungeon[x][y], grassText);
+//                            break;
+//                        case ' ':
+//                            break;
+//                        default:
+//                            gg.backgrounds[x][y] = toRGBA8888(lerpColors(
+//                                    from,
+//                                    lighten(STONE_OKLAB, 0.6f * light[x][y]),
+//                                    vision.lighting.fovResult[x][y]));
+//                            gg.put(x, y, prunedDungeon[x][y], stoneText);
+//                    }
+//                } else
+                    if (vision.seen.contains(x, y)) {
                     switch (prunedDungeon[x][y]) {
                         case '~':
-                            gg.backgrounds[x][y] = toRGBA8888(DescriptiveColor.lerpColors(vision.backgroundColors[x][y], lighten(DEEP_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))), 0.5f));
+                            gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
                             gg.put(x, y, prunedDungeon[x][y], deepText);
                             break;
                         case ',':
-                            gg.backgrounds[x][y] = toRGBA8888(DescriptiveColor.lerpColors(vision.backgroundColors[x][y], lighten(SHALLOW_OKLAB, 0.6f * Math.min(1.2f, Math.max(0, light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime)))), 0.5f));
+                            gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
                             gg.put(x, y, prunedDungeon[x][y], shallowText);
                             break;
                         case '"':
-                            gg.backgrounds[x][y] = toRGBA8888(DescriptiveColor.lerpColors(vision.backgroundColors[x][y], darken(lerpColors(GRASS_OKLAB, DRY_OKLAB, waves.getConfiguredNoise(x, y) * 0.5f + 0.5f), 0.4f * Math.min(1.1f, Math.max(0, 1f - light[x][y] + waves.getConfiguredNoise(x, y, modifiedTime * 0.7f)))), 0.5f));
+                            gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
                             gg.put(x, y, prunedDungeon[x][y], grassText);
-                            break;
-                        case ' ':
-                            break;
-                        default:
-                            gg.backgrounds[x][y] = toRGBA8888(DescriptiveColor.lerpColors(vision.backgroundColors[x][y], lighten(STONE_OKLAB, 0.6f * light[x][y]), 0.5f));
-                            gg.put(x, y, prunedDungeon[x][y], stoneText);
-                    }
-                } else if (vision.seen.contains(x, y)) {
-                    switch (prunedDungeon[x][y]) {
-                        case '~':
-                            gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
-                            gg.put(x, y, prunedDungeon[x][y], deepText);
-                            break;
-                        case ',':
-                            gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
-                            gg.put(x, y, prunedDungeon[x][y], shallowText);
                             break;
                         case ' ':
                             break;
