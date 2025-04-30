@@ -579,6 +579,7 @@ public class SunriseDemo extends ApplicationAdapter {
     {
         float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
         vision.update(change);
+//        System.out.println(vision.viewers.size() + " viewers have " + vision.justHidden.size() + " just-hidden cells");
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
 //        final float sun = 1f - ((time * 0.1f) - (int)(time * 0.1f)),
 //                blueYellow = TrigTools.sinTurns(sun),
@@ -625,6 +626,10 @@ public class SunriseDemo extends ApplicationAdapter {
                     monster = monster.animate(time);
                     monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getForegroundColor(i, j, change)));
                     monster.draw(batch);
+                } else {
+                    // TODO: in for debugging; without this, the packed color changes above can affect other tiles and
+                    // make them gradually fade without meaning to directly.
+                    batch.setPackedColor(0f);
                 }
             }
         }

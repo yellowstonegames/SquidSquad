@@ -269,9 +269,9 @@ public class LightingRgbVFTest extends ApplicationAdapter {
     }
 
     public void recolor(){
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
+        float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove), 0.0), 1000.0);
         vision.update(change);
-
+        System.out.println(vision.viewers.size() + " viewers have " + vision.justHidden.size() + " just-hidden cells");
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
 //        int rainbow = toRGBA8888(
 //                limitToGamut(100,
@@ -280,14 +280,9 @@ public class LightingRgbVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.lighting.fovResult[x][y] > 0) {
+                if (vision.seen.contains(x, y)) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
                     gg.backgrounds[x][y] = vision.backgroundColors[x][y];
-                }
-                else if (vision.seen.contains(x, y)) {
-                    gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
-                    gg.backgrounds[x][y] = MEMORY_RGBA;
-
                 }
             }
         }

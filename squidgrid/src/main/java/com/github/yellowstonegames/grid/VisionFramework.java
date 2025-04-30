@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.Stringf;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -114,6 +115,12 @@ public class VisionFramework {
      * In most roguelikes, there would be one of these per dungeon floor.
      */
     public int[][] backgroundColors;
+
+    /**
+     * The background color tints from just before the latest change; these are used to handle transitions out of
+     * view, when a cell has just become hidden.
+     */
+    public int[][] previousBackgroundColors;
 
     /**
      * A small rim of cells just beyond the player's vision that blocks pathfinding to areas we can't see a path to.
@@ -280,6 +287,8 @@ public class VisionFramework {
         rememberedColor = baseColor;
         if(backgroundColors == null) backgroundColors = ArrayTools.fill(rememberedColor, placeWidth, placeHeight);
         else ArrayTools.fill(backgroundColors, rememberedColor);
+        if(previousBackgroundColors == null) previousBackgroundColors = ArrayTools.copy(backgroundColors);
+        else ArrayTools.set(backgroundColors, previousBackgroundColors);
     }
 
     /**
@@ -437,6 +446,8 @@ public class VisionFramework {
         // store our current lightLevels value into previousLightLevels, since we will calculate a new lightLevels.
         // the previousLightLevels are used to smoothly change the visibility when a cell just becomes hidden.
         ArrayTools.set(lighting.fovResult, previousLightLevels);
+        // the previousBackgroundColors are used similarly to the previousLightLevels, but handle colors.
+        ArrayTools.set(backgroundColors, previousBackgroundColors);
         // assigns to justHidden all cells that were visible in lightLevels in the last turn.
         justHidden.refill(previousLightLevels, 0f).not();
         // recalculate all FOV fields for viewers, combine them, store it in lightLevels for the render to use.
@@ -547,8 +558,10 @@ public class VisionFramework {
                     }
                 } else if(justHidden.contains(x, y)) {
                     // if a cell was visible in the previous frame but isn't now, we fade it out to the seen color.
-                    backgroundColors[x][y] = DescriptiveColor.lerpColors(backgroundColors[x][y],
+                    backgroundColors[x][y] = DescriptiveColor.lerpColors(previousBackgroundColors[x][y],
                             rememberedColor, change);
+                    // TODO: Remove debug printfn, though it isn't ever printing in Lighting tests...
+//                    Stringf.printfn("x: %d, y: %d, previous color: %08X, current color: %08X", x, y, previousBackgroundColors[x][y], backgroundColors[x][y]);
                 } else if(seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
                     backgroundColors[x][y] = rememberedColor;
