@@ -44,6 +44,7 @@ public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
         while (it.hasNext()) {
             output.writeFloat32(it.nextFloat());
         }
+        output.writeFloat32(data.getDefaultValue());
     }
 
     @Override
@@ -58,6 +59,8 @@ public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
             vs[i] = input.readFloat32();
         }
 
-        return new CoordFloatMap(ks, vs);
+        CoordFloatMap data = new CoordFloatMap(ks, vs);
+        data.setDefaultValue(input.readFloat32());
+        return data;
     }
 }

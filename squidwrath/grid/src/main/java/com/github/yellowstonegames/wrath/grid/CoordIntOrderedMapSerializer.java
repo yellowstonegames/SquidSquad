@@ -44,6 +44,7 @@ public class CoordIntOrderedMapSerializer extends Serializer<CoordIntOrderedMap>
         while (it.hasNext()) {
             output.writeInt32(it.nextInt());
         }
+        output.writeInt32(data.getDefaultValue());
     }
 
     @Override
@@ -58,6 +59,8 @@ public class CoordIntOrderedMapSerializer extends Serializer<CoordIntOrderedMap>
             vs[i] = input.readInt32();
         }
 
-        return new CoordIntOrderedMap(ks, vs);
+        CoordIntOrderedMap data = new CoordIntOrderedMap(ks, vs);
+        data.setDefaultValue(input.readInt32());
+        return data;
     }
 }

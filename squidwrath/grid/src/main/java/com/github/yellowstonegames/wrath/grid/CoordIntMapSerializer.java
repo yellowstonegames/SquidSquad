@@ -44,6 +44,7 @@ public class CoordIntMapSerializer extends Serializer<CoordIntMap> {
         while (it.hasNext()) {
             output.writeInt32(it.nextInt());
         }
+        output.writeInt32(data.getDefaultValue());
     }
 
     @Override
@@ -58,6 +59,8 @@ public class CoordIntMapSerializer extends Serializer<CoordIntMap> {
             vs[i] = input.readInt32();
         }
 
-        return new CoordIntMap(ks, vs);
+        CoordIntMap data = new CoordIntMap(ks, vs);
+        data.setDefaultValue(input.readInt32());
+        return data;
     }
 }
