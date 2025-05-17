@@ -18,6 +18,7 @@ package com.github.yellowstonegames.freeze.grid;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.github.yellowstonegames.grid.CoordObjectMap;
 
@@ -32,12 +33,23 @@ public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap<?>> {
     }
 
     @Override
+    protected void writeHeader(Kryo kryo, Output output, CoordObjectMap<?> map) {
+        kryo.writeClassAndObject(output, map.getDefaultValue());
+    }
+
+    @Override
     protected CoordObjectMap<?> create(Kryo kryo, Input input, Class<? extends CoordObjectMap<?>> type, int size) {
-        return new CoordObjectMap<>(size);
+        CoordObjectMap data = new CoordObjectMap<>(size);
+        data.setDefaultValue(kryo.readClassAndObject(input));
+        return data;
+
     }
 
     @Override
     protected CoordObjectMap<?> createCopy(Kryo kryo, CoordObjectMap<?> original) {
-        return new CoordObjectMap<>(original.size(), original.getLoadFactor());
+        CoordObjectMap data = new CoordObjectMap<>(original.size(), original.getLoadFactor());
+        data.setDefaultValue(original.getDefaultValue());
+        return data;
+
     }
 }

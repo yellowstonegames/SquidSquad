@@ -41,6 +41,7 @@ public class CoordLongMapSerializer extends Serializer<CoordLongMap> {
             kryo.writeObject(output, ent.key);
             output.writeLong(ent.value);
         }
+        output.writeLong(data.getDefaultValue());
     }
 
     @Override
@@ -49,6 +50,7 @@ public class CoordLongMapSerializer extends Serializer<CoordLongMap> {
         CoordLongMap data = new CoordLongMap(length);
         for (int i = 0; i < length; i++)
             data.put(kryo.readObject(input, Coord.class), input.readLong());
+        data.setDefaultValue(input.readLong());
         return data;
     }
 
