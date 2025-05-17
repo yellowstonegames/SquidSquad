@@ -437,13 +437,16 @@ public final class JsonGrid {
                     json.setWriter(writer);
                     json.writeValue(k, e.getValue(), null);
                 }
+                json.writeValue("d", object.getDefaultValue(), null);
                 json.writeObjectEnd();
             }
 
             @Override
             public CoordObjectMap<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                CoordObjectMap<?> data = new CoordObjectMap<>(jsonData.size);
+                Object d = json.readValue(null, jsonData.remove("d"));
+                CoordObjectMap data = new CoordObjectMap<>(jsonData.size);
+                data.setDefaultValue(d);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(null, value));
                 }
@@ -473,13 +476,16 @@ public final class JsonGrid {
                     json.setWriter(writer);
                     json.writeValue(k, e.getValue(), null);
                 }
+                json.writeValue("d", object.getDefaultValue(), null);
                 json.writeObjectEnd();
             }
 
             @Override
             public CoordObjectOrderedMap<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                CoordObjectOrderedMap<?> data = new CoordObjectOrderedMap<>(jsonData.size);
+                Object d = json.readValue(null, jsonData.remove("d"));
+                CoordObjectOrderedMap data = new CoordObjectOrderedMap<>(jsonData.size);
+                data.setDefaultValue(d);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(null, value));
                 }
@@ -581,13 +587,16 @@ public final class JsonGrid {
                     json.setWriter(writer);
                     json.writeValue(k, e.getValue(), Long.TYPE);
                 }
+                json.writeValue("d", object.getDefaultValue(), Long.TYPE);
                 json.writeObjectEnd();
             }
 
             @Override
             public CoordLongMap read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
+                long d = jsonData.remove("d").asLong();
                 CoordLongMap data = new CoordLongMap(jsonData.size);
+                data.setDefaultValue(d);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(Long.TYPE, value));
                 }
@@ -617,13 +626,16 @@ public final class JsonGrid {
                     json.setWriter(writer);
                     json.writeValue(k, e.getValue(), Long.TYPE);
                 }
+                json.writeValue("d", object.getDefaultValue(), Long.TYPE);
                 json.writeObjectEnd();
             }
 
             @Override
             public CoordLongOrderedMap read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
+                long d = jsonData.remove("d").asLong();
                 CoordLongOrderedMap data = new CoordLongOrderedMap(jsonData.size);
+                data.setDefaultValue(d);
                 for (JsonValue value = jsonData.child; value != null; value = value.next) {
                     data.put(json.fromJson(Coord.class, value.name), json.readValue(Long.TYPE, value));
                 }
