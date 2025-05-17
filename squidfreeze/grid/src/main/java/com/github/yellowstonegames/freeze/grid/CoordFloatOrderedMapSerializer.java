@@ -41,6 +41,7 @@ public class CoordFloatOrderedMapSerializer extends Serializer<CoordFloatOrdered
             kryo.writeObject(output, ent.key);
             output.writeFloat(ent.value);
         }
+        output.writeFloat(data.getDefaultValue());
     }
 
     @Override
@@ -49,6 +50,7 @@ public class CoordFloatOrderedMapSerializer extends Serializer<CoordFloatOrdered
         CoordFloatOrderedMap data = new CoordFloatOrderedMap(length);
         for (int i = 0; i < length; i++)
             data.put(kryo.readObject(input, Coord.class), input.readFloat());
+        data.setDefaultValue(input.readFloat());
         return data;
     }
 
