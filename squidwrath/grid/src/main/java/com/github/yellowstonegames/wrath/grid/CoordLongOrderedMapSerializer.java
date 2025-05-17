@@ -44,6 +44,7 @@ public class CoordLongOrderedMapSerializer extends Serializer<CoordLongOrderedMa
         while (it.hasNext()) {
             output.writeInt64(it.nextLong());
         }
+        output.writeInt64(data.getDefaultValue());
     }
 
     @Override
@@ -58,6 +59,9 @@ public class CoordLongOrderedMapSerializer extends Serializer<CoordLongOrderedMa
             vs[i] = input.readInt64();
         }
 
-        return new CoordLongOrderedMap(ks, vs);
+        CoordLongOrderedMap data = new CoordLongOrderedMap(ks, vs);
+        data.setDefaultValue(input.readInt64());
+        return data;
+
     }
 }

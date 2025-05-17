@@ -43,6 +43,7 @@ public class CoordObjectMapSerializer extends Serializer<CoordObjectMap> {
         for(Object v : data.values()){
             fury.writeRef(output, v);
         }
+        fury.writeRef(output, data.getDefaultValue());
     }
 
     @Override
@@ -57,6 +58,8 @@ public class CoordObjectMapSerializer extends Serializer<CoordObjectMap> {
             vs[i] = fury.readRef(input);
         }
 
-        return new CoordObjectMap<>(ks, vs);
+        CoordObjectMap data = new CoordObjectMap<>(ks, vs);
+        data.setDefaultValue(fury.readRef(input));
+        return data;
     }
 }

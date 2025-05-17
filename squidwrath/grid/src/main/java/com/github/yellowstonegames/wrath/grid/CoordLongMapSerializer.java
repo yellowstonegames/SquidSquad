@@ -44,6 +44,7 @@ public class CoordLongMapSerializer extends Serializer<CoordLongMap> {
         while (it.hasNext()) {
             output.writeInt64(it.nextLong());
         }
+        output.writeInt64(data.getDefaultValue());
     }
 
     @Override
@@ -58,6 +59,9 @@ public class CoordLongMapSerializer extends Serializer<CoordLongMap> {
             vs[i] = input.readInt64();
         }
 
-        return new CoordLongMap(ks, vs);
+        CoordLongMap data = new CoordLongMap(ks, vs);
+        data.setDefaultValue(input.readInt64());
+        return data;
+
     }
 }

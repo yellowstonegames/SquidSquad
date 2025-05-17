@@ -43,6 +43,7 @@ public class CoordObjectOrderedMapSerializer extends Serializer<CoordObjectOrder
         for(Object v : data.values()){
             fury.writeRef(output, v);
         }
+        fury.writeRef(output, data.getDefaultValue());
     }
 
     @Override
@@ -57,6 +58,9 @@ public class CoordObjectOrderedMapSerializer extends Serializer<CoordObjectOrder
             vs[i] = fury.readRef(input);
         }
 
-        return new CoordObjectOrderedMap<>(ks, vs);
+        CoordObjectOrderedMap data = new CoordObjectOrderedMap<>(ks, vs);
+        data.setDefaultValue(fury.readRef(input));
+        return data;
+
     }
 }
