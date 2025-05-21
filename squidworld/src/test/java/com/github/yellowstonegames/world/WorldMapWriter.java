@@ -41,7 +41,7 @@ import java.util.Date;
  * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
-    private static final int AA = 1;
+    private static final int AA = 0;
 
 //    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
@@ -52,7 +52,9 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 128, height = 128; // space view, MimicLocal
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
-    private static final int width = 512, height = 256;
+//    private static final int width = 512, height = 256;
+//    private static final int width = 2000, height = 2000;
+    private static final int width = 2000, height = 1000;
 
 //    private static final int width = 512, height = 512;
 //    private static final int width = 512 >>> AA, height = 256 >>> AA; // mimic world
@@ -92,6 +94,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
         png = new FastPNG();
+        png.setCompression(2);
         png.setFlipY(false);
 
         pm = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
@@ -126,6 +129,11 @@ public class WorldMapWriter extends ApplicationAdapter {
 
 //        noise = new CyclicNoise(seed, 4, 1.9f);
         noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new PerlueNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new PerlinNoise(seed), seed, 1.5f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new ValueNoise(seed), seed, 2f, NoiseWrapper.FBM, 1);
+//        noise = new SimplexNoise(seed);
+//        noise = new CyclicNoise(seed, 2, 2.5f);
 
 //        if(FLOWING_LAND)
 //            noise = new Noise.Adapted3DFrom5D(fn);
@@ -140,7 +148,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 2f);
+        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 0.7f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
 //        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
@@ -261,29 +269,29 @@ public class WorldMapWriter extends ApplicationAdapter {
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
-        System.out.println("Remaking...");
+//        System.out.println("Remaking...");
         worldTime = System.currentTimeMillis();
-        String ser = world.stringSerialize();
-
-        world = StretchWorldMap.recreateFromString(ser);
-        wmv.setWorld(world);
-        wmv.getBiomeMapper().makeBiomes(world);
-        cm = wmv.show();
-        temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
-        temp.setFilter(Pixmap.Filter.BiLinear);
-        temp.setColor(INK);
-        temp.fill();
-
-        for (int x = 0; x < bw; x++) {
-            for (int y = 0; y < bh; y++) {
-                temp.drawPixel(x, y, cm[x][y]);
-            }
-        }
-        pm.setFilter(Pixmap.Filter.BiLinear);
-        pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
-        png.write(Gdx.files.local(path + name + "_remade.png"), pm);
-        temp.dispose();
-        System.out.println("Remake #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
+//        String ser = world.stringSerialize();
+//
+//        world = StretchWorldMap.recreateFromString(ser);
+//        wmv.setWorld(world);
+//        wmv.getBiomeMapper().makeBiomes(world);
+//        cm = wmv.show();
+//        temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
+//        temp.setFilter(Pixmap.Filter.BiLinear);
+//        temp.setColor(INK);
+//        temp.fill();
+//
+//        for (int x = 0; x < bw; x++) {
+//            for (int y = 0; y < bh; y++) {
+//                temp.drawPixel(x, y, cm[x][y]);
+//            }
+//        }
+//        pm.setFilter(Pixmap.Filter.BiLinear);
+//        pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
+//        png.write(Gdx.files.local(path + name + "_remade.png"), pm);
+//        temp.dispose();
+//        System.out.println("Remake #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }
 
     @Override

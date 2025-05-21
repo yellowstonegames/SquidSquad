@@ -60,7 +60,7 @@ public class NameGenerator {
             "Yngvar",
             "Xandor"
     };
-    //</editor-fold>
+//</editor-fold>
 //<editor-fold defaultstate="collapsed" desc="Star Wars Style static name list">
     public static final String[] STAR_WARS_STYLE_NAMES = new String[]{
             "Lutoif Vap",
@@ -93,7 +93,7 @@ public class NameGenerator {
             "Pago",
             "Kesha Diplo"
     };
-    //</editor-fold>
+//</editor-fold>
 //<editor-fold defaultstate="collapsed" desc="USA male names static name list">
     public static final String[] COMMON_USA_MALE_NAMES = new String[]{
             "James",
@@ -147,7 +147,7 @@ public class NameGenerator {
             "Ryan",
             "Roger"
     };
-    //</editor-fold>
+//</editor-fold>
 //<editor-fold defaultstate="collapsed" desc="USA female names static name list">
     public static final String[] COMMON_USA_FEMALE_NAMES = new String[]{
             "Mary",
@@ -210,7 +210,7 @@ public class NameGenerator {
             "Hannah",
             "Brittany"
     };
-    //</editor-fold>
+//</editor-fold>
 //<editor-fold defaultstate="collapsed" desc="USA last names static name list">
     public static final String[] COMMON_USA_LAST_NAMES = new String[]{
             "Smith",
@@ -246,7 +246,7 @@ public class NameGenerator {
             "Lorraine"
     };
 //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Lovecraft Mythos style static name list">
+//<editor-fold defaultstate="collapsed" desc="Lovecraft Mythos style static name list">
     public static final String[] LOVECRAFT_MYTHOS_NAMES = new String[]{
             "Koth",
             "Ghlatelilt",
