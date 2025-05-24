@@ -33,7 +33,7 @@ class AlgorithmPath<V> extends Path<V> {
     void setByBacktracking(Node<V> node) {
         int nodeCount = node.getIndex() + 1;
 
-        if (values.length < nodeCount) resize(nodeCount);
+        if (items.length < nodeCount) resize(nodeCount);
 
         Node<V> v = node;
         while(v != null) {

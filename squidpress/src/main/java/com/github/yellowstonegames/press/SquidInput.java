@@ -445,12 +445,12 @@ public class SquidInput extends InputAdapter {
     public void drain () {
         IntDeque qu = queue;
 
-        if (keyAction == null || qu.size <= 0) {
+        if (keyAction == null || qu.isEmpty()) {
             qu.clear();
             return;
         }
 
-        for (int i = 0, n = qu.size, t; i < n; ) {
+        for (int i = 0, n = qu.size(), t; i < n; ) {
             t = qu.get(i++);
             t = mapping.getOrDefault(t, t);
             keyAction.handle((char)t, (t & 0x10000) != 0, (t & 0x20000) != 0, (t & 0x40000) != 0);
@@ -508,7 +508,7 @@ public class SquidInput extends InputAdapter {
         {
             keyDown(heldCodes.keyAt(heldCodes.size() - 1));
         }
-        return queue.size > 0;
+        return queue.notEmpty();
     }
 
     /**
@@ -611,33 +611,33 @@ public class SquidInput extends InputAdapter {
 
     /**
      * Maps keycodes to Unicode chars, sometimes depending on whether the Shift key is held.
-     *
+     * <br>
      * It is strongly recommended that you refer to key combinations regarding non-alphabet keys by using, for example,
      * Ctrl-Shift-; instead of Ctrl-:, that is to use the unshifted key with Shift instead of assuming that all
      * keyboards will use the QWERTY layout. Pressing shift while pressing just about any representable symbol will map
      * to the shifted version as if on a QWERTY keyboard, and if you don't have a QWERTY keyboard, the mappings are
      * documented in full below.
-     *
+     * <br>
      * Keys 'a' to 'z' report 'A' to 'Z' when shift is held. Non-ASCII-Latin characters do not have this behavior, since
      * most keyboards would be unable to send keys for a particular language and A-Z are very common. You can still
      * allow a response to, e.g. 'ä' and 'Ä' separately by checking for whether Shift was pressed in conjunction with
      * 'ä' on a keyboard with that key, which can be useful when users can configure their own keyboard layouts.
-     *
+     * <br>
      * Top row numbers map as follows:
-     *
+     * <br>
      * {@literal '1' to '!', '2' to '@', '3' to '#', '4' to '$', '5' to '%',}
      * {@literal '6' to '^', '7' to '&amp;', '8' to '*', '9' to '(', '0' to ')'}
-     *
+     * <br>
      * Numpad numbers will report a SquidInput constant such as UP_LEFT_ARROW for Numpad 7, but only if numpadDirections
      * is true; otherwise they send the number (here, 7). Numpad 0 sends VERTICAL_ARROW or 0.
-     *
+     * <br>
      * Most symbol keys are mapped to a single Unicode char as a constant in SquidInput and disregard Shift. The
      * constant is usually the same as the name of the char; possible exceptions are Backspace (on PC) or Delete (on
      * Mac) mapping to BACKSPACE, Delete (on PC) mapping to FORWARD_DELETE, Esc mapping to ESCAPE, and Enter (on PC) or
      * Return (on Mac) mapping to ENTER.
-     *
+     * <br>
      * {@literal ':', '*', '#', '@'}, and space keys, if present, always map to themselves, regardless of Shift.
-     *
+     * <br>
      * Other characters map as follows when Shift is held, as they would on a QWERTY keyboard:
      * <ul>
      * <li>{@code ','} to {@code '<'}</li>
