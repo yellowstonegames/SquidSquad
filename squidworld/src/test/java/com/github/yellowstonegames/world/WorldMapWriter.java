@@ -145,20 +145,20 @@ public class WorldMapWriter extends ApplicationAdapter {
 
 //        world = new MimicWorldMap(seed, noise, 2f);
 //        world = new MimicLocalMap(seed, noise, 2f);
-//        world = new LocalMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f, 0.0625f, 2.5f);
-        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, 0f, 1f);
-//        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 0.7f);
-//        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
-//        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
+//        world = new LocalMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new TilingWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new RoundSideWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new HexagonalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, 0.0625f, 2.5f);
+//        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, 1f, 1f);
+//        world = new EllipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new LatLonWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1f);
+//        world = new RotatingGlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1.25f);
 //        wmv = new DetailedWorldMapView(world);
-//        wmv = new BlendedWorldMapView(world);
-        wmv = new SimpleWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
+//        wmv = new SimpleWorldMapView(world);
 
 //        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 
