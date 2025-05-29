@@ -53,8 +53,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
 //    private static final int width = 512, height = 256;
-    private static final int width = 1024, height = 512;
-//    private static final int width = 512, height = 512;
+//    private static final int width = 1024, height = 512;
+    private static final int width = 512, height = 512;
 //    private static final int width = 2000, height = 2000;
 //    private static final int width = 2000, height = 1000;
 //    private static final int width = 1000, height = 1000;
@@ -64,7 +64,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 256 >>> AA, height = 256 >>> AA; // mimic local
 //    private static final int width = 1024, height = 512; // elliptical
 
-    private static final int cellWidth = 16, cellHeight = 8;
+    private static final int cellWidth = 8, cellHeight = 8;
 
     private static final int LIMIT = 5;
 //    private static final boolean FLOWING_LAND = true;

@@ -186,28 +186,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      */
     public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise noiseGenerator,
                                    float octaveMultiplier, float alpha, float kappa) {
-        super(initialSeed, mapWidth, mapHeight);
-        xPositions = new float[width][height];
-        yPositions = new float[width][height];
-        zPositions = new float[width][height];
-        edges = new int[height << 1];
-
-        terrainRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainFreq,
-                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 8)); // was 10
-        terrainBasic = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), terrainLayeredFreq,
-                Noise.FBM, (int) (0.5f + octaveMultiplier * 3)); // was 8
-        heat = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), heatFreq,
-                Noise.FBM, (int) (0.5f + octaveMultiplier * 5)); // was 3, then 2
-        moisture = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), moistureFreq,
-                Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 4
-        otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
-                Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5)); // was 6
-
-        this.alpha = alpha;
-        this.kappa = kappa;
-        this.buffer = new float[height << 2];
-        this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0f, 1f, 0.25f / height, kappa);
-        ProjectionTools.simpsonODESolveHyperellipse(1, this.buffer, 0.25f / height, alpha, kappa, epsilon);
+        this(initialSeed, mapWidth, mapHeight, noiseGenerator, noiseGenerator, noiseGenerator, noiseGenerator, noiseGenerator, octaveMultiplier, alpha, kappa);
     }
 
     /**
@@ -238,8 +217,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
      * @param alpha            one of the Tobler parameters;  0.0625f is the default and this can range from 0f to 1f at least
      * @param kappa            one of the Tobler parameters; 2.5f is the default but 2f-5f range values are also often used
      */
-    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, Noise terrainRidgedNoise, Noise terrainBasicNoise,
-                                   Noise heatNoise, Noise moistureNoise, Noise otherRidgedNoise,
+    public HyperellipticalWorldMap(long initialSeed, int mapWidth, int mapHeight, INoise terrainRidgedNoise, INoise terrainBasicNoise,
+                                   INoise heatNoise, INoise moistureNoise, INoise otherRidgedNoise,
                                    float octaveMultiplier, float alpha, float kappa) {
         super(initialSeed, mapWidth, mapHeight);
         xPositions = new float[width][height];
@@ -262,7 +241,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         this.kappa = kappa;
         this.buffer = new float[height << 2];
         this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0f, 1f, 0.25f / height, kappa);
-        ProjectionTools.simpsonODESolveHyperellipse(1, this.buffer, 0.25f / height, alpha, kappa, epsilon);
+        ProjectionTools.simpsonODESolveHyperellipse(1f, this.buffer, 0.25f / height, alpha, kappa, epsilon);
     }
 
     /**
@@ -508,8 +487,8 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
             y = buffer[buffer.length - 1];
         else
             y = ((z0 - buffer[-i - 2]) / (buffer[-i - 1] - buffer[-i - 2]) + (-i - 2)) / (buffer.length - 1f);
-        final int xx = (int) (((longitude - getCenterLongitude() + 12.566370614359172f) % 6.283185307179586f) * Math.abs(alpha + (1 - alpha) * Math.pow(1 - Math.pow(Math.abs(y), kappa), 1 / kappa)) + 0.5f);
-        final int yy = (int) (y * Math.signum(latitude) * height * 0.5f + 0.5f);
+        final int xx = (int)(((longitude - getCenterLongitude() + TrigTools.TAU + TrigTools.TAU) % TrigTools.TAU) * Math.abs(alpha + (1.0 - alpha) * Math.pow(1.0 - Math.pow(Math.abs(y), kappa), 1.0 / kappa)) + 0.5);
+        final int yy = (int)(y * Math.signum(latitude) * height * 0.5 + 0.5);
         return Coord.get(wrapX(xx, yy), wrapY(xx, yy));
     }
 
@@ -560,7 +539,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
             xPos = startX - rx;
             for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
                 th = xPos * irx / Math.abs(alpha + (1 - alpha) * ProjectionTools.hyperellipse(yPos * iry, kappa));
-                if (th < -3.141592653589793f || th > 3.141592653589793f) {
+                if (th < -TrigTools.PI || th > TrigTools.PI) {
                     heightCodeData[x][y] = 10000;
                     inSpace = true;
                     continue;
