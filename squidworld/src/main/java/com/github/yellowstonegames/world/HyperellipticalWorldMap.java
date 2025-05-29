@@ -384,7 +384,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         sb.append(landData.toCompressedString()).append('\n');
         b.appendJoined2D(sb, "\t", " ", heightCodeData).append('\n');
 
-        // FIELDS Of this class:
+        // fields of this class:
         sb.append(terrainRidged.stringSerialize()).append('\n');
         sb.append(terrainBasic .stringSerialize()).append('\n');
         sb.append(heat         .stringSerialize()).append('\n');
