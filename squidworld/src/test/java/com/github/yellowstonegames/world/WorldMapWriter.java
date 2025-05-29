@@ -53,13 +53,18 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
 //    private static final int width = 512, height = 256;
+    private static final int width = 1024, height = 512;
+//    private static final int width = 512, height = 512;
 //    private static final int width = 2000, height = 2000;
-    private static final int width = 2000, height = 1000;
+//    private static final int width = 2000, height = 1000;
+//    private static final int width = 1000, height = 1000;
 
 //    private static final int width = 512, height = 512;
 //    private static final int width = 512 >>> AA, height = 256 >>> AA; // mimic world
 //    private static final int width = 256 >>> AA, height = 256 >>> AA; // mimic local
 //    private static final int width = 1024, height = 512; // elliptical
+
+    private static final int cellWidth = 16, cellHeight = 8;
 
     private static final int LIMIT = 5;
 //    private static final boolean FLOWING_LAND = true;
@@ -77,7 +82,6 @@ public class WorldMapWriter extends ApplicationAdapter {
 
     private Pixmap pm;
     private int counter;
-    private static final int cellWidth = 1, cellHeight = 1;
     private Viewport view;
     private DistinctRandom rng;
     private long seed;
@@ -91,13 +95,13 @@ public class WorldMapWriter extends ApplicationAdapter {
     private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
     @Override
     public void create() {
-        view = new StretchViewport(width * cellWidth, height * cellHeight);
+        view = new StretchViewport(width / cellWidth, height / cellHeight);
         date = DateFormat.getDateInstance().format(new Date());
         png = new FastPNG();
         png.setCompression(2);
         png.setFlipY(false);
 
-        pm = new Pixmap(width * cellWidth, height * cellHeight, Pixmap.Format.RGBA8888);
+        pm = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         pm.setBlending(Pixmap.Blending.None);
 
 
@@ -145,24 +149,16 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new TilingWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, noise, 2f);
-//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
+//        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, noise, 2f, 0.0625f, 2.5f);
+        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, 0f, 1f);
 //        world = new EllipticalWorldMap(seed, width << AA, height << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width << AA, height << AA, noise, 2f);
-        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 0.7f);
+//        world = new StretchWorldMap(seed, width << AA, height << AA, noise, 0.7f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 1f);
 //        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.25f);
-//        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-//        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
-//        world = new WorldMapGenerator.EllipticalHammerMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
-//        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
 //        wmv = new DetailedWorldMapView(world);
-        wmv = new BlendedWorldMapView(world);
+//        wmv = new BlendedWorldMapView(world);
+        wmv = new SimpleWorldMapView(world);
 
 //        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 
@@ -247,7 +243,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         }
         long hash = Hasher.balam.hash64(genName);
         worldTime = System.currentTimeMillis();
-        Pixmap temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
+        Pixmap temp = new Pixmap(wmv.getWidth(), wmv.getHeight(), Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
         generate(hash);
         wmv.getBiomeMapper().makeBiomes(world);
@@ -255,13 +251,14 @@ public class WorldMapWriter extends ApplicationAdapter {
         temp.setColor(INK);
         temp.fill();
 
-        final int bw = width << AA, bh = height << AA;
+        final int bw = wmv.getWidth(), bh = wmv.getHeight();
         for (int x = 0; x < bw; x++) {
             for (int y = 0; y < bh; y++) {
                 temp.drawPixel(x, y, cm[x][y]);
             }
         }
-        pm.setFilter(Pixmap.Filter.BiLinear);
+        pm.setFilter(Pixmap.Filter.NearestNeighbour);
+//        pm.setFilter(Pixmap.Filter.BiLinear);
         pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
         png.write(Gdx.files.local(path + name + ".png"), pm);
 //        PixmapIO.writePNG(Gdx.files.local(path + name + ".png"), pm);
