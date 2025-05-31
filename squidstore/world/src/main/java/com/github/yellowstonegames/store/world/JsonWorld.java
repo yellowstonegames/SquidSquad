@@ -46,6 +46,7 @@ public final class JsonWorld {
     }
 
     public static void registerWorldMapGenerators(@NonNull Json json) {
+        registerDiagonalWorldMap(json);
         registerEllipticalWorldMap(json);
         registerGlobeMap(json);
         registerHexagonalWorldMap(json);
@@ -156,6 +157,31 @@ public final class JsonWorld {
             public HyperellipticalWorldMap read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return HyperellipticalWorldMap.recreateFromString(jsonData.getString("v"));
+            }
+        });
+    }
+
+    /**
+     * Registers DiagonalWorldMap with the given Json object, so DiagonalWorldMap can be written to and read from JSON.
+     * This is a simple wrapper around DiagonalWorldMap's built-in {@link DiagonalWorldMap#stringSerialize()} and
+     * {@link DiagonalWorldMap#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDiagonalWorldMap(@NonNull Json json) {
+        json.addClassTag("DiaW", DiagonalWorldMap.class);
+        json.setSerializer(DiagonalWorldMap.class, new Json.Serializer<DiagonalWorldMap>() {
+            @Override
+            public void write(Json json, DiagonalWorldMap object, Class knownType) {
+                json.writeObjectStart(DiagonalWorldMap.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public DiagonalWorldMap read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return DiagonalWorldMap.recreateFromString(jsonData.getString("v"));
             }
         });
     }
@@ -479,8 +505,8 @@ public final class JsonWorld {
                 json.writeValue("m", object.getBiomeMapper(), DetailedBiomeMapper.class);
                 json.writeValue("r", object.getColorMap(), int[][].class);
                 json.writeValue("o", object.getColorMapOklab(), int[][].class);
-                json.writeValue("C", object.BIOME_COLOR_TABLE, int[].class);
-                json.writeValue("D", object.BIOME_DARK_COLOR_TABLE, int[].class);
+                json.writeValue("C", object.biomeColorTable, int[].class);
+                json.writeValue("D", object.biomeDarkColorTable, int[].class);
                 json.writeObjectEnd();
             }
 
@@ -492,8 +518,8 @@ public final class JsonWorld {
                 wmv.setBiomeMapper(json.readValue("m", DetailedBiomeMapper.class, jsonData));
                 wmv.setColorMap(json.readValue("r", int[][].class, jsonData));
                 wmv.setColorMapOklab(json.readValue("o", int[][].class, jsonData));
-                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.BIOME_COLOR_TABLE, 0, 66);
-                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.BIOME_DARK_COLOR_TABLE, 0, 66);
+                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.biomeColorTable, 0, 66);
+                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.biomeDarkColorTable, 0, 66);
 
                 return wmv;
             }

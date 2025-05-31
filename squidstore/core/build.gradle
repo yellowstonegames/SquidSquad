@@ -6,7 +6,8 @@ javadoc.destinationDir = file("../../docs/squidstore/$name/apidocs")
 
 dependencies {
     api project(':squidcore')
-	api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    //noinspection GDXOutdatedVersionGradleGroovy
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
     api("com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion"){
         exclude module: 'jdkgdxds'
         exclude module: 'juniper'
