@@ -54,8 +54,9 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 300, height = 300;
 //    private static final int width = 512, height = 256;
 //    private static final int width = 1024, height = 512;
-//    private static final int width = 400, height = 400;
-    private static final int width = 401, height = 401;
+    private static final int width = 400, height = 400;
+//    private static final int width = 401, height = 401;
+//    private static final int width = 400, height = 408;
 //    private static final int width = 2000, height = 2000;
 //    private static final int width = 2000, height = 1000;
 //    private static final int width = 1000, height = 1000;
@@ -65,7 +66,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 256 >>> AA, height = 256 >>> AA; // mimic local
 //    private static final int width = 1024, height = 512; // elliptical
 
-    private static final int cellWidth = 1, cellHeight = 1;
+    private static final int cellWidth = 4, cellHeight = 4;
 
     private static final int LIMIT = 5;
 //    private static final boolean FLOWING_LAND = true;
@@ -158,8 +159,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1f);
 //        world = new RotatingGlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1.25f);
 //        wmv = new DetailedWorldMapView(world);
-//        wmv = new BlendedWorldMapView(world);
-        wmv = new SimpleWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
+//        wmv = new SimpleWorldMapView(world);
 
 //        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 

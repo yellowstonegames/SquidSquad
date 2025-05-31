@@ -43,9 +43,8 @@ public class DiagonalWorldMap extends WorldMapGenerator {
     public final float[][] xPositions,
             yPositions,
             zPositions;
-    protected final int[] edges;
-    public final float alpha = 1f, kappa = 1f, epsilon;
-    private float[] buffer;
+    public final float alpha = Float.MIN_NORMAL, kappa = 1f, epsilon;
+    private final float[] buffer;
 
 
     /**
@@ -118,8 +117,7 @@ public class DiagonalWorldMap extends WorldMapGenerator {
                 Noise.FBM, (int) (0.5f + octaveMultiplier * 2)); // was 4
         otherRidged = new NoiseWrapper(noiseGenerator, noiseGenerator.getSeed(), otherFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5)); // was 6
-        int diag = MathTools.ceil(height * MathTools.ROOT2);
-        edges = new int[diag << 1];
+        int diag = height << 1;
         this.buffer = new float[diag << 2];
         this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0f, 1f, 0.25f / diag, kappa);
         ProjectionTools.simpsonODESolveHyperellipse(1f, this.buffer, 0.25f / diag, alpha, kappa, epsilon);
@@ -147,7 +145,6 @@ public class DiagonalWorldMap extends WorldMapGenerator {
         xPositions = ArrayTools.copy(other.xPositions);
         yPositions = ArrayTools.copy(other.yPositions);
         zPositions = ArrayTools.copy(other.zPositions);
-        edges = Arrays.copyOf(other.edges, other.edges.length);
         epsilon = other.epsilon;
         buffer = Arrays.copyOf(other.buffer, other.buffer.length);
     }
@@ -211,7 +208,6 @@ public class DiagonalWorldMap extends WorldMapGenerator {
         xPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
         yPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
         zPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
-        edges = Base.BASE86.intSplit(parts[i++], " ");
         epsilon = Base.BASE86.readFloatExact(parts[i++]);
         buffer = Base.BASE86.floatSplitExact(parts[i++], " ");
     }
@@ -275,7 +271,6 @@ public class DiagonalWorldMap extends WorldMapGenerator {
         b.appendJoinedExact2D(sb, "\t", " ", xPositions).append('\n');
         b.appendJoinedExact2D(sb, "\t", " ", yPositions).append('\n');
         b.appendJoinedExact2D(sb, "\t", " ", zPositions).append('\n');
-        b.appendJoined(sb, " ", edges).append('\n');
         b.appendUnsigned(sb, epsilon ).append('\n');
         b.appendJoinedExact(sb, " ", buffer);
 
@@ -310,6 +305,16 @@ public class DiagonalWorldMap extends WorldMapGenerator {
         if(x < 0) return 0;
         if(x >= width) return height - 1;
         return y;
+    }
+
+    @Override
+    public void zoomIn(int zoomAmount, int zoomCenterX, int zoomCenterY) {
+        throw new UnsupportedOperationException("Zooming is not supported by DiagonalWorldMap.");
+    }
+
+    @Override
+    public void zoomOut(int zoomAmount, int zoomCenterX, int zoomCenterY) {
+        throw new UnsupportedOperationException("Zooming is not supported by DiagonalWorldMap.");
     }
 
     /**
@@ -359,78 +364,124 @@ public class DiagonalWorldMap extends WorldMapGenerator {
         rng.setState(stateA, stateB);
         long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
 
-        landModifier = (landMod <= 0) ? rng.nextFloat(0.29f) + 0.91f : landMod;
+        landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
         heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat() - 0.5f) + 1.1f : heatMod;
 
+        int widthArray = this.width;
+        int heightArray = this.height;
+        int width = this.width << 1;
+        int height = this.height << 1;
         float p,
                 ps, pc,
                 qs, qc,
-                h, temp,
-                i_w = 6.283185307179586f / width, i_h = 2f / (height + 2f),//(3.141592653589793f) / (height+2f),
-                xPos = startX, yPos, i_uw = usedWidth / (float) width, i_uh = usedHeight * i_h / (height + 2f);
-        final float[] trigTable = new float[width << 1];
-        for (int x = 0; x < width; x++, xPos += i_uw) {
-            p = xPos * i_w + centerLongitude + TrigTools.PI;
-            // 0.7978845608028654f 1.2533141373155001f
-            trigTable[x << 1] = TrigTools.sinSmoother(p);// * 1.2533141373155001f;
-            trigTable[x << 1 | 1] = TrigTools.cosSmoother(p);// * 0.7978845608028654f;
-        }
-        yPos = startY * i_h + i_uh;
+                h, temp, yPos, xPos,
+                i_uw = 1f,
+                i_uh = 1f,
+                th, lat,
+                rx = width * 0.5f - 0.5f, irx = TrigTools.PI / rx,
+                ry = height * 0.5f, iry = 1f / ry;
+
+        yPos = startY - ry;
+        int ax = 0, ay = 0;
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            qs = -1 + yPos;//-1.5707963267948966f + yPos;
-            qc = TrigTools.cosSmoother(asin(qs));
-            for (int x = 0, xt = 0; x < width; x++) {
-                ps = trigTable[xt++] * qc;//TrigTools.sinSmoother(p);
-                pc = trigTable[xt++] * qc;//TrigTools.cosSmoother(p);
-                xPositions[x][y] = pc;
-                yPositions[x][y] = ps;
-                zPositions[x][y] = qs;
-                heightData[x][y] = (h = terrainBasic.getNoiseWithSeed(pc +
-                                terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
-                        ps, qs, seedA) + landModifier - 1f);
-                heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
-                                + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
-                        , qs, seedB));
-                moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
-                                + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
-                        , seedC));
+            lat = TrigTools.asin(buffer[(int) (0.5f + Math.abs(yPos * iry) * (buffer.length - 1))]) * Math.signum(yPos);
+            qs = TrigTools.sinSmoother(lat);
+            qc = TrigTools.cosSmoother(lat);
 
-                if (fresh) {
-                    minHeight = Math.min(minHeight, h);
-                    maxHeight = Math.max(maxHeight, h);
+            if(y > heightArray) {
+                ax = y - heightArray;
+                ay = heightArray - 1;
+            }
+            else {
+                ax = 0;
+                ay = y - 1;
+            }
+            int postHalf = 1;
+            xPos = startX - rx;
+            for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
+                th = xPos * irx / Math.abs(alpha + (1 - alpha) * ProjectionTools.hyperellipse(yPos * iry, kappa));
+                if (th < -TrigTools.PI || th > TrigTools.PI || ax < 0 || ay < 0) {
+                    continue;
+                }
+                postHalf ^= 1;
+                th += centerLongitude;
+                ps = TrigTools.sinSmoother(th) * qc;
+                pc = TrigTools.cosSmoother(th) * qc;
+                if(postHalf == 0) {
+                    xPositions[ax][ay] = pc;
+                    yPositions[ax][ay] = ps;
+                    zPositions[ax][ay] = qs;
+                    heightData[ax][ay] = (h = terrainBasic.getNoiseWithSeed(pc +
+                                    terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
+                            ps, qs, seedA) + landModifier - 1f);
+                    heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
+                            , qs, seedB));
+                    moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                            , seedC));
+                } else {
+                    heightData[ax][ay] = (h = (heightData[ax][ay] + terrainBasic.getNoiseWithSeed(pc +
+                                    terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
+                            ps, qs, seedA) + landModifier - 1f) * 0.5f);
+                    heatData[x][y] = (p = (heatData[x][y] + heat.getNoiseWithSeed(pc, ps
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
+                            , qs, seedB)) * 0.5f);
+                    moistureData[x][y] = (temp = (moistureData[x][y] + moisture.getNoiseWithSeed(pc, ps, qs
+                                    + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
+                            , seedC)) * 0.5f);
+                    ax--;
+                    ay--;
+                    if (fresh) {
+                        minHeight = Math.min(minHeight, h);
+                        maxHeight = Math.max(maxHeight, h);
 
-                    minHeat0 = Math.min(minHeat0, p);
-                    maxHeat0 = Math.max(maxHeat0, p);
+                        minHeat0 = Math.min(minHeat0, p);
+                        maxHeat0 = Math.max(maxHeat0, p);
 
-                    minWet0 = Math.min(minWet0, temp);
-                    maxWet0 = Math.max(maxWet0, temp);
+                        minWet0 = Math.min(minWet0, temp);
+                        maxWet0 = Math.max(maxWet0, temp);
+                    }
                 }
             }
-
         }
         float heatDiff = 0.8f / (maxHeat0 - minHeat0),
                 wetDiff = 1f / (maxWet0 - minWet0),
-                hMod;
-        yPos = startY * i_h + i_uh;
+                hMod,
+                halfHeight = (height - 1) * 0.5f, i_half = 1f / halfHeight;
+        yPos = startY + i_uh;
         ps = Float.POSITIVE_INFINITY;
         pc = Float.NEGATIVE_INFINITY;
 
         for (int y = 0; y < height; y++, yPos += i_uh) {
-            temp = (yPos - 1f);
+            temp = (yPos - halfHeight) * i_half;
             temp = RoughMath.expRough(-temp*temp) * 2.2f;
+            if(y > heightArray) {
+                ax = y - heightArray;
+                ay = heightArray - 1;
+            }
+            else {
+                ax = 0;
+                ay = y - 1;
+            }
+            int postHalf = 1;
+
             for (int x = 0; x < width; x++) {
-                if (heightCodeData[x][y] == 10000) {
-                    heightCodeData[x][y] = 1000;
+                if (ax < 0 || ay < 0) {
                     continue;
-                } else {
-                    heightCodeData[x][y] = codeHeight(h = heightData[x][y]);
                 }
-                hMod = (RoughMath.logisticRough(h*2.75f-1f)+0.18f);
-                h = 0.39f - RoughMath.logisticRough(h*4f) * (h+0.1f) * 0.82f;
-                heatData[x][y] = (h = (((heatData[x][y] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
-                if (fresh) {
-                    ps = Math.min(ps, h); //minHeat0
-                    pc = Math.max(pc, h); //maxHeat0
+                postHalf ^= 1;
+                if(postHalf == 1) {
+                    heightCodeData[ax][ay] = codeHeight(th = heightData[ax][ay]);
+                    hMod = (RoughMath.logisticRough(th * 2.75f - 1f) + 0.18f);
+                    h = 0.39f - RoughMath.logisticRough(th * 4f) * (th + 0.1f) * 0.82f;
+                    heatData[ax][ay] = (h = (((heatData[ax][ay] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
+                    ax--;
+                    ay--;
+                    if (fresh) {
+                        ps = Math.min(ps, h); //minHeat0
+                        pc = Math.max(pc, h); //maxHeat0
+                    }
                 }
             }
         }
@@ -445,9 +496,9 @@ public class DiagonalWorldMap extends WorldMapGenerator {
         pc = Float.NEGATIVE_INFINITY;
 
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                heatData[x][y] = (h = ((heatData[x][y] - minHeat1) * heatDiff));
+        for (int y = 0; y < heightArray; y++) {
+            for (int x = 0; x < widthArray; x++) {
+                heatData[x][y] = (h = (heatData[x][y] - minHeat1) * heatDiff);
                 moistureData[x][y] = (temp = (moistureData[x][y] - minWet0) * wetDiff);
                 if (fresh) {
                     qs = Math.min(qs, h);

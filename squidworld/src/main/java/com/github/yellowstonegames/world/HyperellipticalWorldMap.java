@@ -514,7 +514,6 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         }
         rng.setState(stateA, stateB);
         long seedA = rng.nextLong(), seedB = rng.nextLong(), seedC = rng.nextLong();
-        int t;
 
         landModifier = (landMod <= 0) ? rng.nextFloat(0.2f) + 0.91f : landMod;
         heatModifier = (heatMod <= 0) ? rng.nextFloat(0.45f) * (rng.nextFloat() - 0.5f) + 1.1f : heatMod;
