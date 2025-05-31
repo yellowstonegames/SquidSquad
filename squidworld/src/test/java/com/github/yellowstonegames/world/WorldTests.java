@@ -57,6 +57,22 @@ public class WorldTests {
     }
 
     @Test
+    public void testDiagonal() {
+        for (int i = 0; i < 10; i++) {
+            DiagonalWorldMap world = new DiagonalWorldMap(i, SIZE);
+            BlendedWorldMapView wmv = new BlendedWorldMapView(world);
+            wmv.generate();
+            int[][] cm0 = wmv.show();
+            String ser = world.stringSerialize();
+            System.out.println("Serialized data is " + ser.length() + " chars long.");
+            wmv.setWorld(DiagonalWorldMap.recreateFromString(ser));
+            wmv.generate();
+            int[][] cm1 = wmv.show();
+            Assert.assertEquals(Hasher.intArray2DHashBulk64.hash64(i, cm0), Hasher.intArray2DHashBulk64.hash64(i, cm1));
+        }
+    }
+
+    @Test
     public void testLatLon() {
         for (int i = 0; i < 10; i++) {
             LatLonWorldMap world = new LatLonWorldMap(i, SIZE * 2, SIZE);
