@@ -415,7 +415,7 @@ public class DisasterSimplexNoiseStandalone {
 
     //hash function: seed (any) + x (will be masked to fit in 0-255) -> 0-255
     static int perm(int seed, int x){
-        x = ((x >>> 16) ^ x) * 0x45d9f3b;
+        x = (x & 255) * 0x45d9f3b;
         x = ((x >>> 16) ^ x) * (0x45d9f3b + seed);
         x = (x >>> 16) ^ x;
         return x & 0xff;
