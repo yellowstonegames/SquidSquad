@@ -292,6 +292,25 @@ public class WorldTest {
     }
     
     @Test
+    public void testSimpleWorldMapView() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(SimpleWorldMapView.class, new SimpleWorldMapViewSerializer(fury));
+        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
+
+        SimpleWorldMapView data;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        data = new SimpleWorldMapView(world);
+        data.generate();
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            SimpleWorldMapView data2 = fury.deserializeJavaObject(bytes, SimpleWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+    
+    @Test
     public void testDetailedWorldMapView() {
         LoggerFactory.disableLogging();
         Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();

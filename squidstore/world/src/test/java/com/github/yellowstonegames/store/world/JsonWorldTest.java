@@ -78,6 +78,19 @@ public class JsonWorldTest {
     }
 
     @Test
+    public void testDiagonalWorldMap() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        DiagonalWorldMap wmg, wmg2;
+        wmg = new DiagonalWorldMap(12345, 200, 100);
+        wmg.generate();
+        JsonWorld.registerDiagonalWorldMap(json);
+        String data = json.toJson(wmg);
+        wmg2 = json.fromJson(DiagonalWorldMap.class, data);
+        Assert.assertEquals(wmg, wmg2);
+        System.out.println(TextTools.padRight(wmg.getClass().getSimpleName(), 24) + TextTools.padRight(": " + data.length(), 9) + " chars for a " + wmg.width + "x" + wmg.height + " map.");
+    }
+
+    @Test
     public void testLatLonWorldMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         LatLonWorldMap wmg, wmg2;
@@ -235,6 +248,20 @@ public class JsonWorldTest {
         String data = json.toJson(bm);
         bm2 = json.fromJson(UnrealisticBiomeMapper.class, data);
         Assert.assertEquals(bm, bm2);
+    }
+
+    @Test
+    public void testSimpleWorldMapView() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        SimpleWorldMapView wmv, wmv2;
+        GlobeMap world = new GlobeMap(1234567, 100, 100);
+        world.generate();
+        wmv = new SimpleWorldMapView(world);
+        wmv.generate();
+        JsonWorld.registerSimpleWorldMapView(json);
+        String data = json.toJson(wmv);
+        wmv2 = json.fromJson(SimpleWorldMapView.class, data);
+        Assert.assertEquals(wmv, wmv2);
     }
 
     @Test

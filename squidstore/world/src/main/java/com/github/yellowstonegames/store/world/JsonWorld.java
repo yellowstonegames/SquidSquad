@@ -40,6 +40,7 @@ public final class JsonWorld {
         registerBlendedBiomeMapper(json);
         registerUnrealisticBiomeMapper(json);
 
+        registerSimpleWorldMapView(json);
         registerDetailedWorldMapView(json);
         registerBlendedWorldMapView(json);
         registerUnrealisticWorldMapView(json);
@@ -516,6 +517,46 @@ public final class JsonWorld {
                 DetailedWorldMapView wmv = new DetailedWorldMapView();
                 wmv.setWorld(json.readValue("w", null, jsonData));
                 wmv.setBiomeMapper(json.readValue("m", DetailedBiomeMapper.class, jsonData));
+                wmv.setColorMap(json.readValue("r", int[][].class, jsonData));
+                wmv.setColorMapOklab(json.readValue("o", int[][].class, jsonData));
+                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.biomeColorTable, 0, 66);
+                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.biomeDarkColorTable, 0, 66);
+
+                return wmv;
+            }
+        });
+    }
+
+    /**
+     * Registers SimpleWorldMapView with the given Json object, so SimpleWorldMapView can be written to and read from JSON.
+     * This is a simple wrapper around the serialization for the WorldMapGenerator and BiomeMapper used here.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerSimpleWorldMapView(@NonNull Json json) {
+        json.addClassTag("SiWV", SimpleWorldMapView.class);
+        registerSimpleBiomeMapper(json);
+        registerWorldMapGenerators(json);
+        JsonCore.registerInt2D(json);
+        json.setSerializer(SimpleWorldMapView.class, new Json.Serializer<SimpleWorldMapView>() {
+            @Override
+            public void write(Json json, SimpleWorldMapView object, Class knownType) {
+                json.writeObjectStart(SimpleWorldMapView.class, knownType);
+                json.writeValue("w", object.getWorld(), null);
+                json.writeValue("m", object.getBiomeMapper(), SimpleBiomeMapper.class);
+                json.writeValue("r", object.getColorMap(), int[][].class);
+                json.writeValue("o", object.getColorMapOklab(), int[][].class);
+                json.writeValue("C", object.biomeColorTable, int[].class);
+                json.writeValue("D", object.biomeDarkColorTable, int[].class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public SimpleWorldMapView read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("w") || !jsonData.has("m")) return null;
+                SimpleWorldMapView wmv = new SimpleWorldMapView();
+                wmv.setWorld(json.readValue("w", null, jsonData));
+                wmv.setBiomeMapper(json.readValue("m", SimpleBiomeMapper.class, jsonData));
                 wmv.setColorMap(json.readValue("r", int[][].class, jsonData));
                 wmv.setColorMapOklab(json.readValue("o", int[][].class, jsonData));
                 System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.biomeColorTable, 0, 66);
