@@ -237,11 +237,11 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         this.otherRidged = new NoiseWrapper(otherRidgedNoise, otherRidgedNoise.getSeed(), otherFreq,
                 Noise.RIDGED_MULTI, (int) (0.5f + octaveMultiplier * 5f));
 
-        this.alpha = alpha;
+        this.alpha = Math.max(Float.MIN_NORMAL, alpha);
         this.kappa = kappa;
         this.buffer = new float[height << 2];
         this.epsilon = ProjectionTools.simpsonIntegrateHyperellipse(0f, 1f, 0.25f / height, kappa);
-        ProjectionTools.simpsonODESolveHyperellipse(1f, this.buffer, 0.25f / height, alpha, kappa, epsilon);
+        ProjectionTools.simpsonODESolveHyperellipse(1f, this.buffer, 0.25f / height, this.alpha, kappa, epsilon);
     }
 
     /**
@@ -267,7 +267,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         yPositions = ArrayTools.copy(other.yPositions);
         zPositions = ArrayTools.copy(other.zPositions);
         edges = Arrays.copyOf(other.edges, other.edges.length);
-        alpha = other.alpha;
+        alpha = Math.max(other.alpha, Float.MIN_NORMAL);
         kappa = other.kappa;
         epsilon = other.epsilon;
         buffer = Arrays.copyOf(other.buffer, other.buffer.length);
@@ -334,7 +334,7 @@ public class HyperellipticalWorldMap extends WorldMapGenerator {
         yPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
         zPositions = Base.BASE86.floatSplitExact2D(parts[i++], "\t", " ");
         edges = Base.BASE86.intSplit(parts[i++], " ");
-        alpha = Base.BASE86.readFloatExact(parts[i++]);
+        alpha = Math.max(Base.BASE86.readFloatExact(parts[i++]), Float.MIN_NORMAL);
         kappa = Base.BASE86.readFloatExact(parts[i++]);
         epsilon = Base.BASE86.readFloatExact(parts[i++]);
         buffer = Base.BASE86.floatSplitExact(parts[i++], " ");
