@@ -10,7 +10,6 @@ dependencies {
     api project(':squidtext')
 
     testImplementation "junit:junit:$junitVersion"
-    //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }

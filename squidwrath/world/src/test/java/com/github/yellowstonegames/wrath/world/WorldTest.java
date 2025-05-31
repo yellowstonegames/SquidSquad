@@ -83,6 +83,21 @@ public class WorldTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testDiagonalWorldMap() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(DiagonalWorldMap.class, new DiagonalWorldMapSerializer(fury));
+
+        DiagonalWorldMap data = new DiagonalWorldMap(123, 200, 100);
+        data.generate();
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            DiagonalWorldMap data2 = fury.deserializeJavaObject(bytes, DiagonalWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
     
     @Test
     public void testLatLonWorldMap() {
