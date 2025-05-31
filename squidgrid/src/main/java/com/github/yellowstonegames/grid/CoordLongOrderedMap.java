@@ -82,6 +82,8 @@ public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
      * Constructs an empty map.
      * This is usually less useful than just using the constructor, but can be handy
      * in some code-generation scenarios when you don't know how many arguments you will have.
+     * <br>
+     * This needs to be named differently because of shadowing issues with the parent class.
      *
      * @return a new map containing nothing
      */

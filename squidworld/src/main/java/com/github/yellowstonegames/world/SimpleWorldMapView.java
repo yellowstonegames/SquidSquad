@@ -22,7 +22,6 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.LongPointHash;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.world.BiomeMapper.SimpleBiomeMapper;
-import com.github.yellowstonegames.world.BiomeMapper.SimpleBiomeMapper;
 
 import java.util.Arrays;
 
@@ -119,17 +118,17 @@ public class SimpleWorldMapView implements WorldMapView {
         }
     }
 
-    public final int[] BIOME_COLOR_TABLE = new int[66], BIOME_DARK_COLOR_TABLE = new int[66];
+    public final int[] biomeColorTable = new int[66], biomeDarkColorTable = new int[66];
 
     @Override
     public void initialize()
     {
         int b;
         for (int i = 0; i < 66; i++) {
-            BIOME_COLOR_TABLE[i] = b = Biome.TABLE[i].colorOklab;
-            BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.12f);
+            biomeColorTable[i] = b = Biome.TABLE[i].colorOklab;
+            biomeDarkColorTable[i] = darken(b, 0.12f);
             if(i == 60)
-                BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i];
+                biomeColorTable[i] = biomeDarkColorTable[i];
         }
     }
 
@@ -148,17 +147,17 @@ public class SimpleWorldMapView implements WorldMapView {
         for (int i = 0; i < 66; i++) {
             b = (Biome.TABLE[i].colorOklab);
             if (i == 60)
-                BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i] = b;
+                biomeColorTable[i] = biomeDarkColorTable[i] = b;
             else {
                 b = oklabByHSL(hue + hue(b), saturation + saturation(b), brightness + channelL(b), 1f);
-                BIOME_COLOR_TABLE[i] = b;
-                BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f * contrast);
+                biomeColorTable[i] = b;
+                biomeDarkColorTable[i] = darken(b, 0.08f * contrast);
             }
         }
     }
 
     /**
-     * Uses the current colors in {@link #BIOME_COLOR_TABLE} to partly-randomize themselves, and also incorporates three
+     * Uses the current colors in {@link #biomeColorTable} to partly-randomize themselves, and also incorporates three
      * random floats from the {@link com.github.tommyettinger.random.FlowRandom} stored in {@link #getWorld()}.
      * This should map similar colors in the input color table, like varieties of dark green forest, into similar output
      * colors. It will not change color 60 (empty space), but will change everything else. Typically, colors like white
@@ -175,12 +174,12 @@ public class SimpleWorldMapView implements WorldMapView {
         int b;
         float h = world.rng.nextFloat(0.5f) + 1f, s = world.rng.nextFloat(0.5f) + 1f, l = world.rng.nextFloat(0.5f) + 1f;
         for (int i = 0; i < 66; i++) {
-            b = BIOME_COLOR_TABLE[i];
+            b = biomeColorTable[i];
             if (i != 60) {
                 float hue = hue(b), saturation = saturation(b), lightness = channelL(b);
                 b = oklabByHSL(zigzag((hue * h + saturation + lightness) * 0.5f), saturation + zigzag(lightness * s) * 0.1f, lightness + zigzag(saturation * l) * 0.1f, 1f);
-                BIOME_COLOR_TABLE[i] = b;
-                BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);
+                biomeColorTable[i] = b;
+                biomeDarkColorTable[i] = darken(b, 0.08f);
             }
         }
     }
@@ -213,11 +212,11 @@ public class SimpleWorldMapView implements WorldMapView {
     {
         int b;
         for (int i = 0; i < 66; i++) {
-            BIOME_COLOR_TABLE[i] = b = (similarColors[(Hasher.hash(seed, Biome.TABLE[i].name) >>> 1) % similarColors.length]
+            biomeColorTable[i] = b = (similarColors[(Hasher.hash(seed, Biome.TABLE[i].name) >>> 1) % similarColors.length]
             );
-            BIOME_DARK_COLOR_TABLE[i] = darken(b, 0.08f);
+            biomeDarkColorTable[i] = darken(b, 0.08f);
             if(i == 60)
-                BIOME_COLOR_TABLE[i] = BIOME_DARK_COLOR_TABLE[i] = darken(Biome.TABLE[60].colorOklab, 0.08f);
+                biomeColorTable[i] = biomeDarkColorTable[i] = darken(Biome.TABLE[60].colorOklab, 0.08f);
         }
     }
 
@@ -261,7 +260,7 @@ public class SimpleWorldMapView implements WorldMapView {
             for (int x = 0; x < width; x++) {
                 hc = heightCodeData[x][y];
                 if (hc == 1000) {
-                    colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = BIOME_COLOR_TABLE[60]);
+                    colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = biomeColorTable[60]);
                     continue;
                 }
                 tc = heatCodeData[x][y];
@@ -272,11 +271,11 @@ public class SimpleWorldMapView implements WorldMapView {
                         case 1:
                         case 2:
                         case 3:
-                            colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[50], BIOME_COLOR_TABLE[12],
+                            colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(biomeColorTable[50], biomeColorTable[12],
                                     ((heightData[x][y] + 1f) / (WorldMapGenerator.sandLower + 1f))));
                             continue;
                         case 4:
-                            colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[0], BIOME_COLOR_TABLE[12],
+                            colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(biomeColorTable[0], biomeColorTable[12],
                                     ((heightData[x][y] - WorldMapGenerator.sandLower) / (WorldMapGenerator.sandUpper - WorldMapGenerator.sandLower))));
                             continue;
                     }
@@ -287,12 +286,12 @@ public class SimpleWorldMapView implements WorldMapView {
                     case 2:
                     case 3:
                         colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(
-                                BIOME_COLOR_TABLE[56], BIOME_COLOR_TABLE[43],
+                                biomeColorTable[56], biomeColorTable[43],
                                 Math.min(Math.max(((heightData[x][y] + 0.1f) * 7f) / (WorldMapGenerator.sandLower + 1f), 0f), 1f)));
                         break;
                     default:
-                        colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(BIOME_COLOR_TABLE[bc],
-                                BIOME_DARK_COLOR_TABLE[bc],
+                        colorMap[x][y] = toRGBA8888(colorMapOklab[x][y] = lerpColors(biomeColorTable[bc],
+                                biomeDarkColorTable[bc],
                                 MathTools.barronSpline(Hasher.randomize3Float(LongPointHash.hashAll(x, y, (int)(heightData[x][y] * 1000), world.seedA, world.seedB)), 0.8f, 0.5f)
                         ));
                 }
@@ -307,7 +306,7 @@ public class SimpleWorldMapView implements WorldMapView {
         if (!(o instanceof SimpleWorldMapView)) return false;
 
         SimpleWorldMapView that = (SimpleWorldMapView) o;
-        return Arrays.deepEquals(colorMap, that.colorMap) && Arrays.deepEquals(colorMapOklab, that.colorMapOklab) && world.equals(that.world) && biomeMapper.equals(that.biomeMapper) && Arrays.equals(BIOME_COLOR_TABLE, that.BIOME_COLOR_TABLE) && Arrays.equals(BIOME_DARK_COLOR_TABLE, that.BIOME_DARK_COLOR_TABLE);
+        return Arrays.deepEquals(colorMap, that.colorMap) && Arrays.deepEquals(colorMapOklab, that.colorMapOklab) && world.equals(that.world) && biomeMapper.equals(that.biomeMapper) && Arrays.equals(biomeColorTable, that.biomeColorTable) && Arrays.equals(biomeDarkColorTable, that.biomeDarkColorTable);
     }
 
     @Override
@@ -316,8 +315,8 @@ public class SimpleWorldMapView implements WorldMapView {
         result = 31 * result + Hasher.intArray2DHashBulk.hash(1234, colorMapOklab);
         result = 31 * result + world.hashCode();
         result = 31 * result + biomeMapper.hashCode();
-        result = 31 * result + Arrays.hashCode(BIOME_COLOR_TABLE);
-        result = 31 * result + Arrays.hashCode(BIOME_DARK_COLOR_TABLE);
+        result = 31 * result + Arrays.hashCode(biomeColorTable);
+        result = 31 * result + Arrays.hashCode(biomeDarkColorTable);
         return result;
     }
 
