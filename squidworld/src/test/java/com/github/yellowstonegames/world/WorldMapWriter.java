@@ -152,7 +152,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new RoundSideWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new HexagonalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, 0.0625f, 2.5f);
-        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, Float.MIN_NORMAL, 1f);
+//        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, Float.MIN_NORMAL, 1f);
+        world = new DiagonalWorldMap(seed, width / cellWidth << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);

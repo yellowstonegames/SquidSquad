@@ -411,23 +411,23 @@ public class DiagonalWorldMap extends WorldMapGenerator {
                     xPositions[ax][ay] = pc;
                     yPositions[ax][ay] = ps;
                     zPositions[ax][ay] = qs;
-                    heightData[ax][ay] = (h = terrainBasic.getNoiseWithSeed(pc +
+                    heightData[ax][ay] = terrainBasic.getNoiseWithSeed(pc +
                                     terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
-                            ps, qs, seedA) + landModifier - 1f);
-                    heatData[x][y] = (p = heat.getNoiseWithSeed(pc, ps
+                            ps, qs, seedA) + landModifier - 1f;
+                    heatData[ax][ay] = heat.getNoiseWithSeed(pc, ps
                                     + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
-                            , qs, seedB));
-                    moistureData[x][y] = (temp = moisture.getNoiseWithSeed(pc, ps, qs
+                            , qs, seedB);
+                    moistureData[ax][ay] = moisture.getNoiseWithSeed(pc, ps, qs
                                     + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
-                            , seedC));
+                            , seedC);
                 } else {
                     heightData[ax][ay] = (h = (heightData[ax][ay] + terrainBasic.getNoiseWithSeed(pc +
                                     terrainRidged.getNoiseWithSeed(pc, ps, qs, seedB - seedA) * 0.5f,
                             ps, qs, seedA) + landModifier - 1f) * 0.5f);
-                    heatData[x][y] = (p = (heatData[x][y] + heat.getNoiseWithSeed(pc, ps
+                    heatData[ax][ay] = (p = (heatData[ax][ay] + heat.getNoiseWithSeed(pc, ps
                                     + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedB + seedC)
                             , qs, seedB)) * 0.5f);
-                    moistureData[x][y] = (temp = (moistureData[x][y] + moisture.getNoiseWithSeed(pc, ps, qs
+                    moistureData[ax][ay] = (temp = (moistureData[ax][ay] + moisture.getNoiseWithSeed(pc, ps, qs
                                     + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC)) * 0.5f);
                     ax--;
