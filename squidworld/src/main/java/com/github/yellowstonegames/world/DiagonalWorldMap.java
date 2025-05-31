@@ -399,8 +399,8 @@ public class DiagonalWorldMap extends WorldMapGenerator {
             int postHalf = 1;
             xPos = startX - rx;
             for (int x = 0/*, xt = 0*/; x < width; x++, xPos += i_uw) {
-                th = xPos * irx / Math.abs(alpha + (1 - alpha) * ProjectionTools.hyperellipse(yPos * iry, kappa));
-                if (th < -TrigTools.PI || th > TrigTools.PI || ax < 0 || ay < 0) {
+                th = xPos * irx / Math.abs(alpha + ProjectionTools.hyperellipse(yPos * iry, kappa));
+                if (th < -TrigTools.PI || th > TrigTools.PI || ax >= widthArray || ay < 0) {
                     continue;
                 }
                 postHalf ^= 1;
@@ -430,7 +430,7 @@ public class DiagonalWorldMap extends WorldMapGenerator {
                     moistureData[ax][ay] = (temp = (moistureData[ax][ay] + moisture.getNoiseWithSeed(pc, ps, qs
                                     + 0.375f * otherRidged.getNoiseWithSeed(pc, ps, qs, seedC + seedA)
                             , seedC)) * 0.5f);
-                    ax--;
+                    ax++;
                     ay--;
                     if (fresh) {
                         minHeight = Math.min(minHeight, h);
@@ -467,7 +467,7 @@ public class DiagonalWorldMap extends WorldMapGenerator {
             int postHalf = 1;
 
             for (int x = 0; x < width; x++) {
-                if (ax < 0 || ay < 0) {
+                if (ax >= widthArray || ay < 0) {
                     continue;
                 }
                 postHalf ^= 1;
@@ -476,7 +476,7 @@ public class DiagonalWorldMap extends WorldMapGenerator {
                     hMod = (RoughMath.logisticRough(th * 2.75f - 1f) + 0.18f);
                     h = 0.39f - RoughMath.logisticRough(th * 4f) * (th + 0.1f) * 0.82f;
                     heatData[ax][ay] = (h = (((heatData[ax][ay] - minHeat0) * heatDiff * hMod) + h + 0.6f) * temp);
-                    ax--;
+                    ax++;
                     ay--;
                     if (fresh) {
                         ps = Math.min(ps, h); //minHeat0

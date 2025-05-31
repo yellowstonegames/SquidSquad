@@ -66,7 +66,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 256 >>> AA, height = 256 >>> AA; // mimic local
 //    private static final int width = 1024, height = 512; // elliptical
 
-    private static final int cellWidth = 4, cellHeight = 4;
+    private static final int cellWidth = 1, cellHeight = 1;
 
     private static final int LIMIT = 5;
 //    private static final boolean FLOWING_LAND = true;
@@ -101,7 +101,7 @@ public class WorldMapWriter extends ApplicationAdapter {
         date = DateFormat.getDateInstance().format(new Date());
         png = new FastPNG();
         png.setCompression(2);
-        png.setFlipY(false);
+        png.setFlipY(true);
 
         pm = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         pm.setBlending(Pixmap.Blending.None);
