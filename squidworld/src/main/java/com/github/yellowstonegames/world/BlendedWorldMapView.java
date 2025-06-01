@@ -168,7 +168,7 @@ public class BlendedWorldMapView implements WorldMapView {
         final long landA = Hasher.randomize2(world.seedA), landB = Hasher.randomize2(landA ^ world.seedB);
         final long heat = Hasher.randomize2(landB);
         generate(world.seedA, world.seedB, 1f + ((landA & 0xFFFFFF) + (landA >>> 40) - (landB & 0xFFFFFF) - (landB >>> 40)) * 0x1p-27f,
-                (heat >>> 40) * 0x1p-24f * 0.375f + 1.0625f);
+                (heat >>> 40) * 0x3p-27f + 1.0625f);
     }
     @Override
     public void generate(float landMod, float heatMod)

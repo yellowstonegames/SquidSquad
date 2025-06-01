@@ -317,4 +317,80 @@ public class WorldTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testBlendedWorldMapView() {
+        Kryo kryo = new Kryo();
+        kryo.register(StretchWorldMap.class, new StretchWorldMapSerializer());
+        kryo.register(BlendedWorldMapView.class, new BlendedWorldMapViewSerializer());
+
+        BlendedWorldMapView data = new BlendedWorldMapView(new StretchWorldMap(123, 200, 100));
+        data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            BlendedWorldMapView data2 = kryo.readObject(input, BlendedWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testUnrealisticWorldMapView() {
+        Kryo kryo = new Kryo();
+        kryo.register(StretchWorldMap.class, new StretchWorldMapSerializer());
+        kryo.register(UnrealisticWorldMapView.class, new UnrealisticWorldMapViewSerializer());
+
+        UnrealisticWorldMapView data = new UnrealisticWorldMapView(new StretchWorldMap(123, 200, 100));
+        data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            UnrealisticWorldMapView data2 = kryo.readObject(input, UnrealisticWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testDetailedWorldMapView() {
+        Kryo kryo = new Kryo();
+        kryo.register(int[].class);
+        kryo.register(int[][].class);
+        kryo.register(StretchWorldMap.class, new StretchWorldMapSerializer());
+        kryo.register(DetailedWorldMapView.class, new DetailedWorldMapViewSerializer());
+
+        DetailedWorldMapView data = new DetailedWorldMapView(new StretchWorldMap(123, 200, 100));
+        data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            DetailedWorldMapView data2 = kryo.readObject(input, DetailedWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testSimpleWorldMapView() {
+        Kryo kryo = new Kryo();
+        kryo.register(int[].class);
+        kryo.register(int[][].class);
+        kryo.register(StretchWorldMap.class, new StretchWorldMapSerializer());
+        kryo.register(SimpleWorldMapView.class, new SimpleWorldMapViewSerializer());
+
+        SimpleWorldMapView data = new SimpleWorldMapView(new StretchWorldMap(123, 200, 100));
+        data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            SimpleWorldMapView data2 = kryo.readObject(input, SimpleWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
