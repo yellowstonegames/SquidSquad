@@ -22,6 +22,8 @@ import static com.badlogic.gdx.math.MathUtils.PI2;
 
 /**
  * Simplex noise code matching the "disaster class" from Arc, to try to see what causes discontinuities.
+ * This is not recommended for use outside of tests, as the name suggests! 4D noise doesn't support a seed for some
+ * reason, and perm() doesn't distribute gradient vectors at all evenly.
  */
 public class DisasterSimplexNoiseStandalone {
 
@@ -31,9 +33,9 @@ public class DisasterSimplexNoiseStandalone {
     protected int seed;
     /**
      * You will probably need to change the frequency to be much closer or much further from 0, depending on the scale
-     * of your noise.
+     * of your noise. 1.0 is a reasonable default if and only if the inputs change by very small amounts (under 0.25).
      */
-    protected double frequency = 1.0;
+    protected double frequency;
 
     public static final DisasterSimplexNoiseStandalone instance = new DisasterSimplexNoiseStandalone();
 
@@ -414,11 +416,29 @@ public class DisasterSimplexNoiseStandalone {
     }
 
     //hash function: seed (any) + x (will be masked to fit in 0-255) -> 0-255
-    static int perm(int seed, int x){
+    public static int perm(int seed, int x){
         x = (x & 255) * 0x45d9f3b;
         x = ((x >>> 16) ^ x) * (0x45d9f3b + seed);
         x = (x >>> 16) ^ x;
         return x & 0xff;
+    }
+
+    /**
+     * A better-distributed version of perm() that allows specifying a bound (usually an array size).
+     * When bound is 12 and x is given to this once for each 8-bit input possible, each of the 12 results happens with
+     * near-equal frequency (21 or 22 times, with the more-frequent results on multiples of 3). The seed does not change
+     * the frequency at which results are returned, just which inputs return them. Note that this avoids any need for
+     * the modulus operator, which (along with division) tends to be significantly slower than other math operators.
+     * @param seed can be any int; all bits are used
+     * @param x only the low 8 bits will be used, so this should usually be between 0 and 255, both inclusive
+     * @param bound exclusive upper bound; the lower bound is 0 (inclusive)
+     * @return an int between 0 (inclusive) and bound (exclusive)
+     */
+    public static int permBetter(int seed, int x, int bound) {
+        x = (x * 0x9E377 + seed) & 255;
+        x = ((x << 4 ^ x >>> 4) * 0x9E377 + (seed >>> 24)) & 255;
+        x = ((x << 4 ^ x >>> 4) * 0x9E377 + (seed >>> 16)) & 255;
+        return (((x << 4 ^ x >>> 4) + (seed >>> 8) & 255) * bound) >>> 8;
     }
 
     static int fastfloor(double x){
@@ -689,4 +709,29 @@ public class DisasterSimplexNoiseStandalone {
             {2, 0, 1, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {3, 0, 1, 2}, {3, 0, 2, 1}, {0, 0, 0, 0}, {3, 1, 2, 0},
             {2, 1, 0, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {3, 1, 0, 2}, {0, 0, 0, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}
     };
+
+    public static void main(String[] args) {
+        for (int s = 1; s != 0; s <<= 1) {
+            System.out.println("Seed " + s);
+            byte[] results = new byte[12];
+            for (int i = 0; i < 256; i++) {
+                results[perm(s, i) % 12]++;
+            }
+            for (int y = 0, idx = 0; y < 12; y++) {
+                System.out.printf("%02X ", results[idx++]);
+            }
+            System.out.println();
+        }
+        for (int s = 1; s != 0; s <<= 1) {
+            System.out.println("Seed " + s);
+            byte[] results = new byte[12];
+            for (int i = 0; i < 256; i++) {
+                results[permBetter(s, i, 12)]++;
+            }
+            for (int y = 0, idx = 0; y < 12; y++) {
+                System.out.printf("%02X ", results[idx++]);
+            }
+            System.out.println();
+        }
+    }
 }
