@@ -142,4 +142,106 @@ public class WorldTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testMimicLocalMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(MimicLocalMap.class, new MimicLocalMapSerializer());
+
+        MimicLocalMap data = new MimicLocalMap(123);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            MimicLocalMap data2 = kryo.readObject(input, MimicLocalMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testMimicWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(MimicWorldMap.class, new MimicWorldMapSerializer());
+
+        MimicWorldMap data = new MimicWorldMap(123);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            MimicWorldMap data2 = kryo.readObject(input, MimicWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testRotatingGlobeMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(RotatingGlobeMap.class, new RotatingGlobeMapSerializer());
+
+        RotatingGlobeMap data = new RotatingGlobeMap(123, 200, 200);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            RotatingGlobeMap data2 = kryo.readObject(input, RotatingGlobeMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testRoundSideWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(RoundSideWorldMap.class, new RoundSideWorldMapSerializer());
+
+        RoundSideWorldMap data = new RoundSideWorldMap(123, 200, 100);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            RoundSideWorldMap data2 = kryo.readObject(input, RoundSideWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testStretchWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(StretchWorldMap.class, new StretchWorldMapSerializer());
+
+        StretchWorldMap data = new StretchWorldMap(123, 200, 100);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            StretchWorldMap data2 = kryo.readObject(input, StretchWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testTilingWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(TilingWorldMap.class, new TilingWorldMapSerializer());
+
+        TilingWorldMap data = new TilingWorldMap(123, 200, 100);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            TilingWorldMap data2 = kryo.readObject(input, TilingWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
