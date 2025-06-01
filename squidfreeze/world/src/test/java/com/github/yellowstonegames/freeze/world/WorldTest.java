@@ -19,15 +19,28 @@ package com.github.yellowstonegames.freeze.world;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.tommyettinger.ds.ObjectObjectMap;
-import com.github.tommyettinger.kryo.jdkgdxds.ObjectObjectMapSerializer;
-import com.github.yellowstonegames.world.EllipticalWorldMap;
+import com.github.yellowstonegames.world.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-
 public class WorldTest {
+    @Test
+    public void testDiagonalWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(DiagonalWorldMap.class, new DiagonalWorldMapSerializer());
+
+        DiagonalWorldMap data = new DiagonalWorldMap(123, 200);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            DiagonalWorldMap data2 = kryo.readObject(input, DiagonalWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
     @Test
     public void testEllipticalWorldMap() {
         Kryo kryo = new Kryo();
@@ -41,6 +54,91 @@ public class WorldTest {
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
             EllipticalWorldMap data2 = kryo.readObject(input, EllipticalWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testGlobeMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(GlobeMap.class, new GlobeMapSerializer());
+
+        GlobeMap data = new GlobeMap(123, 200, 200);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            GlobeMap data2 = kryo.readObject(input, GlobeMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testHexagonalWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(HexagonalWorldMap.class, new HexagonalWorldMapSerializer());
+
+        HexagonalWorldMap data = new HexagonalWorldMap(123, 200, 100);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            HexagonalWorldMap data2 = kryo.readObject(input, HexagonalWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testHyperellipticalWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(HyperellipticalWorldMap.class, new HyperellipticalWorldMapSerializer());
+
+        HyperellipticalWorldMap data = new HyperellipticalWorldMap(123, 200, 100);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            HyperellipticalWorldMap data2 = kryo.readObject(input, HyperellipticalWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testLatLonWorldMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(LatLonWorldMap.class, new LatLonWorldMapSerializer());
+
+        LatLonWorldMap data = new LatLonWorldMap(123, 200, 100);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            LatLonWorldMap data2 = kryo.readObject(input, LatLonWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testLocalMap() {
+        Kryo kryo = new Kryo();
+        kryo.register(LocalMap.class, new LocalMapSerializer());
+
+        LocalMap data = new LocalMap(123, 200, 100);
+		data.generate();
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            LocalMap data2 = kryo.readObject(input, LocalMap.class);
             Assert.assertEquals(data, data2);
         }
     }
