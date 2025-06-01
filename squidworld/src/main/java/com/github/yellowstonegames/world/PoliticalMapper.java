@@ -274,14 +274,37 @@ public class PoliticalMapper {
         }
     }
 
-    public int width;
-    public int height;
+    /**
+     * Used for all random decisions this makes, including generating random Factions if needed.
+     */
     public EnhancedRandom rng;
+    /**
+     * The name of the world, like "Earth" or "Terra".
+     */
     public String name;
+    /**
+     * Stores individual Unicode chars per cell on the map's grid; each char will correspond to a Faction in
+     * {@link #atlas} after {@link #generate(long, WorldMapGenerator, BiomeMapper, int)} is called. You can look up any
+     * char present in this 2D array to find what Faction it means by consulting {@link #atlas}.
+     */
     public char[][] politicalMap;
+    /**
+     * After {@link #generate(long, WorldMapGenerator, BiomeMapper, int)} is called, this is identical to
+     * {@link #politicalMap}, but if {@link #adjustZoom()} is called after that, then this can be different from the
+     * normal politicalMap, and may refer to a different area of the map at a different scale.
+     */
     public char[][] zoomedMap;
+    /**
+     * Stored when {@link #generate(long, WorldMapGenerator, BiomeMapper, int)} is called, and is later reused if
+     * {@link #adjustZoom()} is called. This does not need to be set manually as a field.
+     */
     public WorldMapGenerator wmg;
+    /**
+     * This is usually stored when {@link #generate(long, WorldMapGenerator, BiomeMapper, int)} is called, and can be
+     * reused when {@link #adjustZoom()} is called, if ever. This does not need to be set manually as a field.
+     */
     public BiomeMapper biomeMapper;
+
     private static final IntList letters = IntList.with(
             '~', '%', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y',
             'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -295,16 +318,29 @@ public class PoliticalMapper {
             'Ț', 'ț', 'Γ', 'Δ', 'Θ', 'Λ', 'Ξ', 'Π', 'Σ', 'Φ', 'Ψ', 'Ω', 'α');
     /**
      * Maps chars, as found in the returned array from generate(), to Strings that store the full name of nations.
+     * Not related to the concept of a texture atlas, but actually an atlas as in cartography.
      */
     public IntObjectOrderedMap<Faction> atlas;
 
     /**
-     * Constructs a FantasyPoliticalMapper with a random seed, but doesn't do anything with a map; you need to call
+     * Constructs a PoliticalMapper with a random seed, but doesn't do anything with a map; you need to call
      * {@link #generate(long, WorldMapGenerator, BiomeMapper, Collection, int, float)} for results.
      */
     public PoliticalMapper()
     {
-        rng = new AceRandom();
+        this(new AceRandom());
+    }
+
+    /**
+     * Constructs a PoliticalMapper with the given {@link EnhancedRandom}, but doesn't do anything with a map; you need
+     * to call {@link #generate(long, WorldMapGenerator, BiomeMapper, Collection, int, float)} for results. The
+     * {@code random} parameter's initial state usually doesn't matter unless you use {@link #generate()} with no
+     * arguments; in most cases the EnhancedRandom has its {@link EnhancedRandom#setSeed(long) seed set} with an
+     * argument to generate(). This constructor allows you to specify the EnhancedRandom implementation.
+     */
+    public PoliticalMapper(EnhancedRandom random)
+    {
+        rng = random;
     }
 
     /**
@@ -411,8 +447,8 @@ public class PoliticalMapper {
         atlas = new IntObjectOrderedMap<>(subLetters, fact.subList(0, factionCount + 2));
         this.wmg = wmg;
         this.biomeMapper = biomeMapper;
-        width = wmg.width;
-        height = wmg.height;
+        int width = wmg.width;
+        int height = wmg.height;
         Region land = new Region(wmg.heightCodeData, 4, 999);
         politicalMap = land.toChars('%', '~');
         int controlled = (int) (land.size() * Math.max(0.0, Math.min(1.0, controlledFraction)));
@@ -553,6 +589,8 @@ public class PoliticalMapper {
         {
             return ArrayTools.insert(politicalMap, zoomedMap, 0, 0);
         }
+        int width = wmg.width;
+        int height = wmg.height;
         ArrayTools.fill(zoomedMap, ' ');
         char c;
         int stx = Math.min(Math.max((wmg.zoomStartX - (width  >> 1)) / ((2 << wmg.zoom) - 2), 0), width ),
