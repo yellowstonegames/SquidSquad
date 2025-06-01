@@ -20,6 +20,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.world.*;
+import com.github.yellowstonegames.world.BiomeMapper.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -241,6 +242,78 @@ public class WorldTest {
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
             TilingWorldMap data2 = kryo.readObject(input, TilingWorldMap.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testBlendedBiomeMapper() {
+        Kryo kryo = new Kryo();
+        kryo.register(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer());
+
+        BlendedBiomeMapper data = new BlendedBiomeMapper();
+		StretchWorldMap world = new StretchWorldMap(123, 200, 100);
+        data.makeBiomes(world);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            BlendedBiomeMapper data2 = kryo.readObject(input, BlendedBiomeMapper.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testDetailedBiomeMapper() {
+        Kryo kryo = new Kryo();
+        kryo.register(DetailedBiomeMapper.class, new DetailedBiomeMapperSerializer());
+
+        DetailedBiomeMapper data = new DetailedBiomeMapper();
+		StretchWorldMap world = new StretchWorldMap(123, 200, 100);
+        data.makeBiomes(world);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            DetailedBiomeMapper data2 = kryo.readObject(input, DetailedBiomeMapper.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testSimpleBiomeMapper() {
+        Kryo kryo = new Kryo();
+        kryo.register(SimpleBiomeMapper.class, new SimpleBiomeMapperSerializer());
+
+        SimpleBiomeMapper data = new SimpleBiomeMapper();
+		StretchWorldMap world = new StretchWorldMap(123, 200, 100);
+        data.makeBiomes(world);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            SimpleBiomeMapper data2 = kryo.readObject(input, SimpleBiomeMapper.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testUnrealisticBiomeMapper() {
+        Kryo kryo = new Kryo();
+        kryo.register(UnrealisticBiomeMapper.class, new UnrealisticBiomeMapperSerializer());
+
+        UnrealisticBiomeMapper data = new UnrealisticBiomeMapper();
+		StretchWorldMap world = new StretchWorldMap(123, 200, 100);
+        data.makeBiomes(world);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            UnrealisticBiomeMapper data2 = kryo.readObject(input, UnrealisticBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
