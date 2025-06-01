@@ -35,16 +35,11 @@ public class LatLonWorldMapSerializer extends Serializer<LatLonWorldMap> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final LatLonWorldMap data) {
-        String ser = data.stringSerialize();
-        byte[] byteStr = ser.getBytes(StandardCharsets.UTF_8);
-        output.writeInt(byteStr.length);
-        output.writeBytes(byteStr);
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public LatLonWorldMap read(final Kryo kryo, final Input input, final Class<? extends LatLonWorldMap> dataClass) {
-        int len = input.readInt();
-        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
-        return LatLonWorldMap.recreateFromString(str);
+        return LatLonWorldMap.recreateFromString(input.readString());
     }
 }

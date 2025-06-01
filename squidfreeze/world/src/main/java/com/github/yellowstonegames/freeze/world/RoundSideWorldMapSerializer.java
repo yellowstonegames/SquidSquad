@@ -35,16 +35,11 @@ public class RoundSideWorldMapSerializer extends Serializer<RoundSideWorldMap> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final RoundSideWorldMap data) {
-        String ser = data.stringSerialize();
-        byte[] byteStr = ser.getBytes(StandardCharsets.UTF_8);
-        output.writeInt(byteStr.length);
-        output.writeBytes(byteStr);
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public RoundSideWorldMap read(final Kryo kryo, final Input input, final Class<? extends RoundSideWorldMap> dataClass) {
-        int len = input.readInt();
-        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
-        return RoundSideWorldMap.recreateFromString(str);
+        return RoundSideWorldMap.recreateFromString(input.readString());
     }
 }

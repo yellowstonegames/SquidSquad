@@ -35,16 +35,11 @@ public class DiagonalWorldMapSerializer extends Serializer<DiagonalWorldMap> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final DiagonalWorldMap data) {
-        String ser = data.stringSerialize();
-        byte[] byteStr = ser.getBytes(StandardCharsets.UTF_8);
-        output.writeInt(byteStr.length);
-        output.writeBytes(byteStr);
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public DiagonalWorldMap read(final Kryo kryo, final Input input, final Class<? extends DiagonalWorldMap> dataClass) {
-        int len = input.readInt();
-        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
-        return DiagonalWorldMap.recreateFromString(str);
+        return DiagonalWorldMap.recreateFromString(input.readString());
     }
 }

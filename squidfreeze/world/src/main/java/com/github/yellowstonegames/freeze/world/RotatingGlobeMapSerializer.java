@@ -35,16 +35,11 @@ public class RotatingGlobeMapSerializer extends Serializer<RotatingGlobeMap> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final RotatingGlobeMap data) {
-        String ser = data.stringSerialize();
-        byte[] byteStr = ser.getBytes(StandardCharsets.UTF_8);
-        output.writeInt(byteStr.length);
-        output.writeBytes(byteStr);
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public RotatingGlobeMap read(final Kryo kryo, final Input input, final Class<? extends RotatingGlobeMap> dataClass) {
-        int len = input.readInt();
-        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
-        return RotatingGlobeMap.recreateFromString(str);
+        return RotatingGlobeMap.recreateFromString(input.readString());
     }
 }

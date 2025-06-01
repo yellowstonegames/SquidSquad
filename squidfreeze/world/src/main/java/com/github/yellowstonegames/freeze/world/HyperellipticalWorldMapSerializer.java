@@ -35,16 +35,11 @@ public class HyperellipticalWorldMapSerializer extends Serializer<Hyperelliptica
 
     @Override
     public void write(final Kryo kryo, final Output output, final HyperellipticalWorldMap data) {
-        String ser = data.stringSerialize();
-        byte[] byteStr = ser.getBytes(StandardCharsets.UTF_8);
-        output.writeInt(byteStr.length);
-        output.writeBytes(byteStr);
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public HyperellipticalWorldMap read(final Kryo kryo, final Input input, final Class<? extends HyperellipticalWorldMap> dataClass) {
-        int len = input.readInt();
-        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
-        return HyperellipticalWorldMap.recreateFromString(str);
+        return HyperellipticalWorldMap.recreateFromString(input.readString());
     }
 }

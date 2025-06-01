@@ -35,16 +35,11 @@ public class TilingWorldMapSerializer extends Serializer<TilingWorldMap> {
 
     @Override
     public void write(final Kryo kryo, final Output output, final TilingWorldMap data) {
-        String ser = data.stringSerialize();
-        byte[] byteStr = ser.getBytes(StandardCharsets.UTF_8);
-        output.writeInt(byteStr.length);
-        output.writeBytes(byteStr);
+        output.writeString(data.stringSerialize());
     }
 
     @Override
     public TilingWorldMap read(final Kryo kryo, final Input input, final Class<? extends TilingWorldMap> dataClass) {
-        int len = input.readInt();
-        String str = new String(input.readBytes(len), StandardCharsets.UTF_8);
-        return TilingWorldMap.recreateFromString(str);
+        return TilingWorldMap.recreateFromString(input.readString());
     }
 }
