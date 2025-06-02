@@ -319,4 +319,20 @@ public class JsonWorldTest {
         f2 = json.fromJson(Faction.class, data);
         Assert.assertEquals(f, f2);
     }
+
+    @Test
+    public void testPoliticalMapper() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        PoliticalMapper p, p2;
+        p = new PoliticalMapper();
+        StretchWorldMap w = new StretchWorldMap(123L, 20, 10, 1f);
+        w.generate(12, 34);
+        BlendedBiomeMapper bm = new BlendedBiomeMapper();
+        bm.makeBiomes(w);
+        p.generate(123L, w, bm, 5, 0.9f);
+        JsonWorld.registerPoliticalMapper(json);
+        String data = json.toJson(p);
+        p2 = json.fromJson(PoliticalMapper.class, data);
+        Assert.assertEquals(p, p2);
+    }
 }

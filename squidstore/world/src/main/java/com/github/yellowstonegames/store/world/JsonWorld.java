@@ -18,6 +18,9 @@ package com.github.yellowstonegames.store.world;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.ds.IntObjectOrderedMap;
+import com.github.tommyettinger.ds.interop.JsonSupport;
+import com.github.tommyettinger.random.Deserializer;
 import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
@@ -36,16 +39,11 @@ public final class JsonWorld {
      */
     public static void registerAll(@NonNull Json json) {
         registerWorldMapGenerators(json);
+        registerBiomeMappers(json);
+        registerWorldMapViews(json);
 
-        registerSimpleBiomeMapper(json);
-        registerDetailedBiomeMapper(json);
-        registerBlendedBiomeMapper(json);
-        registerUnrealisticBiomeMapper(json);
-
-        registerSimpleWorldMapView(json);
-        registerDetailedWorldMapView(json);
-        registerBlendedWorldMapView(json);
-        registerUnrealisticWorldMapView(json);
+        registerFaction(json);
+        registerPoliticalMapper(json);
     }
 
     public static void registerWorldMapGenerators(@NonNull Json json) {
@@ -62,6 +60,20 @@ public final class JsonWorld {
         registerRoundSideWorldMap(json);
         registerStretchWorldMap(json);
         registerTilingWorldMap(json);
+    }
+
+    public static void registerBiomeMappers(@NonNull Json json) {
+        registerSimpleBiomeMapper(json);
+        registerDetailedBiomeMapper(json);
+        registerBlendedBiomeMapper(json);
+        registerUnrealisticBiomeMapper(json);
+    }
+
+    public static void registerWorldMapViews(@NonNull Json json) {
+        registerSimpleWorldMapView(json);
+        registerDetailedWorldMapView(json);
+        registerBlendedWorldMapView(json);
+        registerUnrealisticWorldMapView(json);
     }
 
     /**
@@ -447,7 +459,7 @@ public final class JsonWorld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerBlendedBiomeMapper(@NonNull Json json) {
-        json.addClassTag("DeBM", BlendedBiomeMapper.class);
+        json.addClassTag("BlBM", BlendedBiomeMapper.class);
         json.setSerializer(BlendedBiomeMapper.class, new Json.Serializer<BlendedBiomeMapper>() {
             @Override
             public void write(Json json, BlendedBiomeMapper object, Class knownType) {
@@ -472,7 +484,7 @@ public final class JsonWorld {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerUnrealisticBiomeMapper(@NonNull Json json) {
-        json.addClassTag("DeBM", UnrealisticBiomeMapper.class);
+        json.addClassTag("UrBM", UnrealisticBiomeMapper.class);
         json.setSerializer(UnrealisticBiomeMapper.class, new Json.Serializer<UnrealisticBiomeMapper>() {
             @Override
             public void write(Json json, UnrealisticBiomeMapper object, Class knownType) {
@@ -663,6 +675,46 @@ public final class JsonWorld {
                         json.readValue("h", int[].class, jsonData),
                         json.readValue("m", int[].class, jsonData)
                 );
+            }
+        });
+    }
+
+    /**
+     * Registers PoliticalMapper with the given Json object, so PoliticalMapper can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPoliticalMapper(@NonNull Json json) {
+        json.addClassTag("PolM", PoliticalMapper.class);
+        JsonSupport.registerIntObjectOrderedMap(json);
+        registerFaction(json);
+        registerWorldMapGenerators(json);
+        registerBiomeMappers(json);
+        json.setSerializer(PoliticalMapper.class, new Json.Serializer<PoliticalMapper>() {
+            @Override
+            public void write(Json json, PoliticalMapper object, Class knownType) {
+                json.writeObjectStart(PoliticalMapper.class, knownType);
+                json.writeValue("r", object.rng.stringSerialize(), String.class);
+                json.writeValue("a", object.atlas, IntObjectOrderedMap.class);
+                json.writeValue("n", object.name, String.class);
+                json.writeValue("p", object.politicalMap, char[][].class);
+                json.writeValue("z", object.zoomedMap, char[][].class);
+                json.writeValue("w", object.wmg, null);
+                json.writeValue("m", object.biomeMapper, null);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public PoliticalMapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                PoliticalMapper pol = new PoliticalMapper(Deserializer.deserialize(jsonData.getString("r")));
+                pol.atlas = (IntObjectOrderedMap<Faction>) json.readValue("a", IntObjectOrderedMap.class, jsonData);
+                pol.name = json.readValue("n", String.class, jsonData);
+                pol.politicalMap = json.readValue("p", char[][].class, jsonData);
+                pol.zoomedMap = json.readValue("z", char[][].class, jsonData);
+                pol.wmg = json.readValue("w", null, jsonData);
+                pol.biomeMapper = json.readValue("m", null, jsonData);
+                return pol;
             }
         });
     }
