@@ -16,8 +16,11 @@
 
 package com.github.yellowstonegames.wrath.world;
 
+import com.github.yellowstonegames.place.Biome;
+import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
+import com.github.yellowstonegames.world.PoliticalMapper.Faction;
 import org.apache.fury.Fury;
 import org.apache.fury.logging.LoggerFactory;
 import org.junit.Assert;
@@ -363,6 +366,20 @@ public class WorldTest {
         {
             byte[] bytes = fury.serializeJavaObject(data);
             UnrealisticWorldMapView data2 = fury.deserializeJavaObject(bytes, UnrealisticWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testFaction() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(Faction.class, new FactionSerializer(fury));
+
+        Faction data = new Faction(Language.randomLanguage(123), "The Joyous Land of Tormentia", "Tormentia", new String[]{Biome.DESERT_BIOME});
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            Faction data2 = fury.deserializeJavaObject(bytes, Faction.class);
             Assert.assertEquals(data, data2);
         }
     }
