@@ -47,8 +47,8 @@ public class SimpleWorldMapViewSerializer extends Serializer<SimpleWorldMapView>
         wmv.setBiomeMapper(BiomeMapper.SimpleBiomeMapper.recreateFromString(fury.readJavaString(buffer)));
         wmv.setColorMap((int[][])fury.readRef(buffer));
         wmv.setColorMapOklab((int[][])fury.readRef(buffer));
-        System.arraycopy((int[])fury.readRef(buffer), 0, wmv.biomeColorTable, 0, 66);
-        System.arraycopy((int[])fury.readRef(buffer), 0, wmv.biomeDarkColorTable, 0, 66);
+        System.arraycopy(fury.readRef(buffer), 0, wmv.biomeColorTable, 0, 66);
+        System.arraycopy(fury.readRef(buffer), 0, wmv.biomeDarkColorTable, 0, 66);
 
         return wmv;
     }

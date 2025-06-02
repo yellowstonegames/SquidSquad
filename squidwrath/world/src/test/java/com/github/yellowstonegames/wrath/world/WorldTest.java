@@ -93,7 +93,7 @@ public class WorldTest {
         Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
         fury.registerSerializer(DiagonalWorldMap.class, new DiagonalWorldMapSerializer(fury));
 
-        DiagonalWorldMap data = new DiagonalWorldMap(123, 200, 100);
+        DiagonalWorldMap data = new DiagonalWorldMap(123, 200);
         data.generate();
         {
             byte[] bytes = fury.serializeJavaObject(data);

@@ -84,7 +84,7 @@ public class JsonWorldTest {
     public void testDiagonalWorldMap() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         DiagonalWorldMap wmg, wmg2;
-        wmg = new DiagonalWorldMap(12345, 200, 100);
+        wmg = new DiagonalWorldMap(12345, 200);
         wmg.generate();
         JsonWorld.registerDiagonalWorldMap(json);
         String data = json.toJson(wmg);
