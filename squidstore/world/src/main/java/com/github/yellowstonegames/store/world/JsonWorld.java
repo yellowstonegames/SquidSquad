@@ -19,8 +19,10 @@ package com.github.yellowstonegames.store.world;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.yellowstonegames.store.core.JsonCore;
+import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
+import com.github.yellowstonegames.world.PoliticalMapper.Faction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class JsonWorld {
@@ -623,6 +625,44 @@ public final class JsonWorld {
                 wmv.setWorld(json.readValue("w", null, jsonData));
                 wmv.setBiomeMapper(json.readValue("m", UnrealisticBiomeMapper.class, jsonData));
                 return wmv;
+            }
+        });
+    }
+
+    /**
+     * Registers PoliticalMapper.Faction with the given Json object, so Faction can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerFaction(@NonNull Json json) {
+        json.addClassTag("Facn", Faction.class);
+        json.setSerializer(Faction.class, new Json.Serializer<Faction>() {
+            @Override
+            public void write(Json json, Faction object, Class knownType) {
+                json.writeObjectStart(Faction.class, knownType);
+                json.writeValue("l", object.language.stringSerialize(), String.class);
+                json.writeValue("n", object.name, String.class);
+                json.writeValue("s", object.shortName, String.class);
+                json.writeValue("p", object.preferredBiomes == null ? null : object.preferredBiomes.toArray(new String[0]), String[].class);
+                json.writeValue("b", object.blockedBiomes == null ? null : object.blockedBiomes.toArray(new String[0]), String[].class);
+                json.writeValue("e", object.preferredHeight, int[].class);
+                json.writeValue("h", object.preferredHeat, int[].class);
+                json.writeValue("m", object.preferredMoisture, int[].class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Faction read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return new Faction(Language.stringDeserialize(json.readValue("l", String.class, jsonData)),
+                        json.readValue("n", String.class, jsonData),
+                        json.readValue("s", String.class, jsonData),
+                        json.readValue("p", String[].class, jsonData),
+                        json.readValue("b", String[].class, jsonData),
+                        json.readValue("e", int[].class, jsonData),
+                        json.readValue("h", int[].class, jsonData),
+                        json.readValue("m", int[].class, jsonData)
+                );
             }
         });
     }

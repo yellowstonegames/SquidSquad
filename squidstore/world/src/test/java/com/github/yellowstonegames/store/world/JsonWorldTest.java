@@ -19,8 +19,11 @@ package com.github.yellowstonegames.store.world;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.digital.TextTools;
+import com.github.yellowstonegames.place.Biome;
+import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
+import com.github.yellowstonegames.world.PoliticalMapper.Faction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -304,5 +307,16 @@ public class JsonWorldTest {
         String data = json.toJson(wmv);
         wmv2 = json.fromJson(UnrealisticWorldMapView.class, data);
         Assert.assertEquals(wmv, wmv2);
+    }
+
+    @Test
+    public void testFaction() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        Faction f, f2;
+        f = new Faction(Language.randomLanguage(123), "The Joyous Land of Tormentia", "Tormentia", new String[]{Biome.DESERT_BIOME});
+        JsonWorld.registerFaction(json);
+        String data = json.toJson(f);
+        f2 = json.fromJson(Faction.class, data);
+        Assert.assertEquals(f, f2);
     }
 }
