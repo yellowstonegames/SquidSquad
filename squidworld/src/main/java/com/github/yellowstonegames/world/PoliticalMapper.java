@@ -29,7 +29,9 @@ import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * When you have a world map as produced by {@link WorldMapGenerator}, you may want to fill it with claims by various
@@ -166,7 +168,7 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
+            this.preferredBiomes = preferredBiomes == null ? null : new ObjectSet<>(preferredBiomes);
             this.blockedBiomes = ObjectSet.with("Ocean");
         }
         /**
@@ -186,8 +188,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
+            this.preferredBiomes = preferredBiomes == null ? null : new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = blockedBiomes == null ? null : new ObjectSet<>(blockedBiomes);
         }
         /**
          * Constructor that sets the language to the specified Language, sets the name to the specified name and
@@ -208,8 +210,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
+            this.preferredBiomes = preferredBiomes == null ? null : new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = blockedBiomes == null ? null : new ObjectSet<>(blockedBiomes);
             this.preferredHeight = preferredHeight;
         }
 
@@ -236,8 +238,8 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
+            this.preferredBiomes = preferredBiomes == null ? null : new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = blockedBiomes == null ? null : new ObjectSet<>(blockedBiomes);
             this.preferredHeight = preferredHeight;
             this.preferredHeat = preferredHeat;
         }
@@ -266,11 +268,46 @@ public class PoliticalMapper {
             this.language = language;
             this.name = name;
             this.shortName = shortName;
-            this.preferredBiomes = new ObjectSet<>(preferredBiomes);
-            this.blockedBiomes = new ObjectSet<>(blockedBiomes);
+            this.preferredBiomes = preferredBiomes == null ? null : new ObjectSet<>(preferredBiomes);
+            this.blockedBiomes = blockedBiomes == null ? null : new ObjectSet<>(blockedBiomes);
             this.preferredHeight = preferredHeight;
             this.preferredHeat = preferredHeat;
             this.preferredMoisture = preferredMoisture;
+        }
+
+        @Override
+        public final boolean equals(Object o) {
+            if (!(o instanceof Faction)) return false;
+
+            Faction faction = (Faction) o;
+            return Objects.equals(name, faction.name) && Objects.equals(shortName, faction.shortName) && Objects.equals(language, faction.language) && Objects.equals(preferredBiomes, faction.preferredBiomes) && Objects.equals(blockedBiomes, faction.blockedBiomes) && Arrays.equals(preferredHeight, faction.preferredHeight) && Arrays.equals(preferredHeat, faction.preferredHeat) && Arrays.equals(preferredMoisture, faction.preferredMoisture);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hashCode(name);
+            result = 31 * result + Objects.hashCode(shortName);
+            result = 31 * result + Objects.hashCode(language);
+            result = 31 * result + Objects.hashCode(preferredBiomes);
+            result = 31 * result + Objects.hashCode(blockedBiomes);
+            result = 31 * result + Arrays.hashCode(preferredHeight);
+            result = 31 * result + Arrays.hashCode(preferredHeat);
+            result = 31 * result + Arrays.hashCode(preferredMoisture);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Faction{" +
+                    "name='" + name + '\'' +
+                    ", shortName='" + shortName + '\'' +
+                    ", language=" + (language == null ? "null" : language.getName()) +
+                    ", preferredBiomes=" + preferredBiomes +
+                    ", blockedBiomes=" + blockedBiomes +
+                    ", preferredHeight=" + Arrays.toString(preferredHeight) +
+                    ", preferredHeat=" + Arrays.toString(preferredHeat) +
+                    ", preferredMoisture=" + Arrays.toString(preferredMoisture) +
+                    '}';
         }
     }
 

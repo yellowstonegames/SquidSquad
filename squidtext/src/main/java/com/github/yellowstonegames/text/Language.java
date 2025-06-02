@@ -5095,7 +5095,7 @@ public class Language {
     }
 
     public static Language stringDeserialize(String data) {
-        if (data == null || data.equals(""))
+        if (data == null || data.isEmpty())
             return ENGLISH.copy();
         int poundIndex = data.indexOf('#'), snailIndex = data.indexOf('@'), tempBreak = data.indexOf('℗'),
                 breakIndex = (tempBreak < 0) ? data.length() : tempBreak,
