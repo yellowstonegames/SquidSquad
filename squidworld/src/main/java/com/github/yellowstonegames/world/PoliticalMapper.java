@@ -657,4 +657,30 @@ public class PoliticalMapper {
         return zoomedMap;
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof PoliticalMapper)) return false;
+
+        PoliticalMapper that = (PoliticalMapper) o;
+        return Objects.equals(rng, that.rng) && Objects.equals(name, that.name) && Arrays.deepEquals(politicalMap, that.politicalMap) && Arrays.deepEquals(zoomedMap, that.zoomedMap) && Objects.equals(wmg, that.wmg) && Objects.equals(biomeMapper, that.biomeMapper) && Objects.equals(atlas, that.atlas);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(rng);
+        result = 31 * result + Objects.hashCode(name);
+        result = 31 * result + Arrays.deepHashCode(politicalMap);
+        result = 31 * result + Arrays.deepHashCode(zoomedMap);
+        result = 31 * result + Objects.hashCode(wmg);
+        result = 31 * result + Objects.hashCode(biomeMapper);
+        result = 31 * result + Objects.hashCode(atlas);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PoliticalMapper{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

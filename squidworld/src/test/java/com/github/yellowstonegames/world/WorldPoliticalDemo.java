@@ -26,11 +26,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.random.DistinctRandom;
-import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.DigitTools;
+import com.github.yellowstonegames.core.*;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.grid.Noise;
+import com.github.yellowstonegames.grid.QuasiRandomTools;
 import com.github.yellowstonegames.place.Biome;
+import com.github.yellowstonegames.place.DungeonTools;
 
 /**
  * Port of <a href="https://github.com/zacharycarter/mapgen">Zachary Carter's world generation technique</a>, with
@@ -61,7 +62,7 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
     private WorldMapGenerator world;
     private WorldMapGenerator inner;
     private WorldMapView wmv;
-    private PoliticalMapper fpm;
+    private PoliticalMapper pm;
     private char[][] political;
     private boolean spinning;
     private float nation = 0f;
@@ -76,7 +77,9 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
     @Override
     public void create() {
         for (int i = 0; i < 49; i++) {
-            NATION_COLORS[i] = DescriptiveColor.COLORS_BY_HUE.get((i % 49) + 1);
+//            NATION_COLORS[i] = DescriptiveColor.COLORS_BY_HUE.get((i % 49) + 1);
+            NATION_COLORS[i] = FullPalette.VARIED_PALETTE[i];
+//            NATION_COLORS[i] = DescriptiveColorRgb.hsb2rgb(QuasiRandomTools.vanDerCorput(3, i), QuasiRandomTools.vanDerCorput(5, i) * 0.375f + 0.5f, QuasiRandomTools.vanDerCorput(7, i) * 0.35f + 0.6f, 1f);
         }
         //// you will probably want to change batch to use whatever rendering system is appropriate
         //// for your game; here it always renders pixels
@@ -100,7 +103,7 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
 //        world = new WorldMapGenerator.LocalMimicMap(seed, ((WorldMapGenerator.LocalMimicMap) world).earth.not(), WorldMapGenerator.DEFAULT_NOISE, 0.9);
         inner = new LocalMap(seed, width, height, new Noise(rng.nextInt(), 0.5f, Noise.FOAM_FRACTAL, 2), 0.8f);
         wmv = new BlendedWorldMapView(world);
-        fpm = new PoliticalMapper();
+        pm = new PoliticalMapper();
 //        wmv.initialize(SColor.CW_FADED_RED, SColor.AURORA_BRICK, SColor.DEEP_SCARLET, SColor.DARK_CORAL,
 //                SColor.LONG_SPRING, SColor.WATER_PERSIMMON, SColor.AURORA_HOT_SAUCE, SColor.PALE_CARMINE,
 //                SColor.AURORA_LIGHT_SKIN_3, SColor.AURORA_PINK_SKIN_2,
@@ -224,7 +227,9 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
         world.seedA = (int)(seed & 0xFFFFFFFFL);
         world.seedB = (int) (seed >>> 32);
         wmv.generate();
-        political = fpm.generate(seed + 1000L, world, wmv.getBiomeMapper(), null, 50, 1f);
+        political = pm.generate(seed + 1000L, world, wmv.getBiomeMapper(), null, 50, 1f);
+        System.out.println(pm.atlas.toString("\n"));
+        DungeonTools.debugPrint(pm.politicalMap);
         // earlier settings
 //        wmv.generate((int)(seed & 0xFFFFFFFFL), (int) (seed >>> 32),
 //                0.9 + NumberTools.formCurvedDouble((seed ^ 0x123456789ABCDL) * 0x12345689ABL) * 0.3,
@@ -261,10 +266,8 @@ public class WorldPoliticalDemo extends ApplicationAdapter {
                     c = DescriptiveColor.lerpColors(cm[x][y], NATION_COLORS[political[x][y] % 49], nation);
                 else
                     c = cm[x][y];
-                    batch.color(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.toRGBA8888(c)));
-                    batch.vertex(x, height - 1 - y, 0f);
-//                }
-                
+                batch.color(DescriptiveColor.rgbaIntToFloat(DescriptiveColor.toRGBA8888(c)));
+                batch.vertex(x, height - 1 - y, 0f);
             }
         }
         batch.end();
