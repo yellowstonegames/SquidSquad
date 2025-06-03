@@ -19,8 +19,11 @@ package com.github.yellowstonegames.freeze.world;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.yellowstonegames.place.Biome;
+import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
+import com.github.yellowstonegames.world.PoliticalMapper.Faction;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -390,6 +393,24 @@ public class WorldTest {
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
             SimpleWorldMapView data2 = kryo.readObject(input, SimpleWorldMapView.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testFaction() {
+        Kryo kryo = new Kryo();
+        kryo.register(int[].class);
+        kryo.register(String[].class);
+        kryo.register(Faction.class, new FactionSerializer());
+
+        Faction data = new Faction(Language.randomLanguage(123), "The Joyous Land of Tormentia", "Tormentia", new String[]{Biome.DESERT_BIOME});
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Faction data2 = kryo.readObject(input, Faction.class);
             Assert.assertEquals(data, data2);
         }
     }
