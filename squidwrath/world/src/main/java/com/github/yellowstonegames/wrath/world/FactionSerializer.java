@@ -17,9 +17,7 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.text.Language;
-import com.github.yellowstonegames.world.BiomeMapper;
 import com.github.yellowstonegames.world.PoliticalMapper.Faction;
-import com.github.yellowstonegames.world.WorldMapGenerator;
 import org.apache.fury.Fury;
 import org.apache.fury.memory.MemoryBuffer;
 import org.apache.fury.serializer.Serializer;
