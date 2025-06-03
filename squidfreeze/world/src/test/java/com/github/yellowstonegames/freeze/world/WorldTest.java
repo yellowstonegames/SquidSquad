@@ -19,6 +19,9 @@ package com.github.yellowstonegames.freeze.world;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.github.tommyettinger.ds.IntObjectOrderedMap;
+import com.github.tommyettinger.kryo.jdkgdxds.IntObjectOrderedMapSerializer;
+import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
@@ -411,6 +414,34 @@ public class WorldTest {
         byte[] bytes = output.toBytes();
         try (Input input = new Input(bytes)) {
             Faction data2 = kryo.readObject(input, Faction.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+        @Test
+    public void testPoliticalMapper() {
+        Kryo kryo = new Kryo();
+        kryo.register(String[].class);
+        kryo.register(int[].class);
+        kryo.register(char[].class);
+        kryo.register(char[][].class);
+        kryo.register(Faction.class, new FactionSerializer());
+        kryo.register(IntObjectOrderedMap.class, new IntObjectOrderedMapSerializer());
+        kryo.register(StretchWorldMap.class, new StretchWorldMapSerializer());
+        kryo.register(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer());
+        kryo.register(PoliticalMapper.class, new PoliticalMapperSerializer());
+        PoliticalMapper data = new PoliticalMapper(new WhiskerRandom(123));
+        StretchWorldMap w = new StretchWorldMap(123L, 20, 10, 1f);
+        w.generate(12, 34);
+        BlendedBiomeMapper bm = new BlendedBiomeMapper();
+        bm.makeBiomes(w);
+        data.generate(123L, w, bm, 5, 0.9f);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            PoliticalMapper data2 = kryo.readObject(input, PoliticalMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
