@@ -35,14 +35,14 @@ public class FactionSerializer extends Serializer<Faction> {
 
     @Override
     public void write(MemoryBuffer buffer, Faction data) {
-        fury.writeJavaString(buffer, data.language.stringSerialize());
-        fury.writeJavaString(buffer, data.name);
-        fury.writeJavaString(buffer, data.shortName);
-        fury.writeRef(buffer, data.preferredBiomes.toArray(new String[0]));
-        fury.writeRef(buffer, data.blockedBiomes.toArray(new String[0]));
-        fury.writeRef(buffer, data.preferredHeight);
-        fury.writeRef(buffer, data.preferredHeat);
-        fury.writeRef(buffer, data.preferredMoisture);
+        fury.writeJavaString(buffer, data.language == null ? null : data.language.stringSerialize());
+        fury.writeJavaString(buffer, data.name == null ? null : data.name);
+        fury.writeJavaString(buffer, data.shortName == null ? null : data.shortName);
+        fury.writeRef(buffer, data.preferredBiomes == null ? null : data.preferredBiomes.toArray(new String[0]));
+        fury.writeRef(buffer, data.blockedBiomes == null ? null : data.blockedBiomes.toArray(new String[0]));
+        fury.writeRef(buffer, data.preferredHeight == null ? null : data.preferredHeight);
+        fury.writeRef(buffer, data.preferredHeat == null ? null : data.preferredHeat);
+        fury.writeRef(buffer, data.preferredMoisture == null ? null : data.preferredMoisture);
     }
 
     @Override
