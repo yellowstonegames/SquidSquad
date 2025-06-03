@@ -54,7 +54,7 @@ public class PoliticalMapperSerializer extends Serializer<PoliticalMapper> {
     public PoliticalMapper read(MemoryBuffer buffer) {
         PoliticalMapper p = new PoliticalMapper(Deserializer.deserialize(fury.readJavaString(buffer)));
         p.atlas = (IntObjectOrderedMap<Faction>)fury.readRef(buffer);
-        p.name =fury.readJavaString(buffer);
+        p.name = fury.readJavaString(buffer);
         p.politicalMap = (char[][])fury.readRef(buffer);
         p.zoomedMap = (char[][])fury.readRef(buffer);
         p.wmg = (WorldMapGenerator)fury.readRef(buffer);
