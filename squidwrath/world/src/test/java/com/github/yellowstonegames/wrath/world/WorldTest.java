@@ -16,6 +16,9 @@
 
 package com.github.yellowstonegames.wrath.world;
 
+import com.github.tommyettinger.ds.IntObjectOrderedMap;
+import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.tantrum.jdkgdxds.IntObjectOrderedMapSerializer;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
@@ -380,6 +383,28 @@ public class WorldTest {
         {
             byte[] bytes = fury.serializeJavaObject(data);
             Faction data2 = fury.deserializeJavaObject(bytes, Faction.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testPoliticalMapper() {
+        LoggerFactory.disableLogging();
+        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
+        fury.registerSerializer(Faction.class, new FactionSerializer(fury));
+        fury.registerSerializer(IntObjectOrderedMap.class, new IntObjectOrderedMapSerializer(fury));
+        fury.registerSerializer(StretchWorldMap.class, new StretchWorldMapSerializer(fury));
+        fury.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fury));
+        fury.registerSerializer(PoliticalMapper.class, new PoliticalMapperSerializer(fury));
+        PoliticalMapper data = new PoliticalMapper(new WhiskerRandom(123));
+        StretchWorldMap w = new StretchWorldMap(123L, 20, 10, 1f);
+        w.generate(12, 34);
+        BlendedBiomeMapper bm = new BlendedBiomeMapper();
+        bm.makeBiomes(w);
+        data.generate(123L, w, bm, 5, 0.9f);
+        {
+            byte[] bytes = fury.serializeJavaObject(data);
+            PoliticalMapper data2 = fury.deserializeJavaObject(bytes, PoliticalMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
