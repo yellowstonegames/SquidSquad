@@ -41,7 +41,7 @@ import java.util.Date;
  * Writes one or more still globes to the out/ folder.
  */
 public class WorldMapWriter extends ApplicationAdapter {
-    private static final int AA = 0;
+    private static final int AA = 1;
 
 //    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
@@ -54,12 +54,12 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 300, height = 300;
 //    private static final int width = 512, height = 256;
 //    private static final int width = 1024, height = 512;
-    private static final int width = 400, height = 400;
+//    private static final int width = 400, height = 400;
 //    private static final int width = 401, height = 401;
 //    private static final int width = 400, height = 408;
 //    private static final int width = 2000, height = 2000;
 //    private static final int width = 2000, height = 1000;
-//    private static final int width = 1000, height = 1000;
+    private static final int width = 1000, height = 1000;
 
 //    private static final int width = 512, height = 512;
 //    private static final int width = 512 >>> AA, height = 256 >>> AA; // mimic world
@@ -134,8 +134,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        noise = fn;
 
 //        noise = new CyclicNoise(seed, 4, 1.9f);
-        noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
-//        noise = new NoiseWrapper(new PerlueNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
+        noise = new NoiseWrapper(new PerlueNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
 //        noise = new NoiseWrapper(new PerlinNoise(seed), seed, 1.5f, NoiseWrapper.FBM, 1);
 //        noise = new NoiseWrapper(new ValueNoise(seed), seed, 2f, NoiseWrapper.FBM, 1);
 //        noise = new SimplexNoise(seed);
@@ -153,11 +153,11 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new HexagonalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, 0.0625f, 2.5f);
 //        world = new HyperellipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f, Float.MIN_NORMAL, 1f);
-        world = new DiagonalWorldMap(seed, width / cellWidth << AA, noise, 2f);
+//        world = new DiagonalWorldMap(seed, width / cellWidth << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
-//        world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1f);
+        world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new RotatingGlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1.25f);
 //        wmv = new DetailedWorldMapView(world);
         wmv = new BlendedWorldMapView(world);

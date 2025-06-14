@@ -62,8 +62,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 0;
-    private final int modes = 37;
+    private int mode = 38;
+    private final int modes = 39;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -970,6 +970,12 @@ public static final float[] GRADIENTS_6D = {
             case 36:
                 showUniform5DMode();
                 break;
+            case 37:
+                diskPolarMode();
+                break;
+            case 38:
+                twoGaussianMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -1235,6 +1241,28 @@ public static final float[] GRADIENTS_6D = {
         }
         renderer.end();
     }
+    private void diskPolarMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        random.setSeed(1L);
+        for (int i = 0; i < 4096; i++) {
+            renderer.color(black);
+            float angle = random.nextExclusiveFloat(), s = TrigTools.sinSmootherTurns(angle), c = TrigTools.cosSmootherTurns(angle);
+            float distance = MathTools.signPreservingSqrt((float)random.nextGaussian()) * 100;
+//            float distance = ((float)random.nextGaussian()) * 128;
+            renderer.vertex(s * distance + 256, c * distance + 256, 0f);
+        }
+        renderer.end();
+    }
+    private void twoGaussianMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        random.setSeed(1L);
+        for (int i = 0; i < 4096; i++) {
+            renderer.color(black);
+            renderer.vertex(Distributor.probitI(random.nextInt()) * 50 + 256, Distributor.probitI(random.nextInt()) * 50 + 256, 0f);
+        }
+        renderer.end();
+    }
+
 
     private void uniform3DTo4DMode() {
         final float[] golden = GOLDEN_FLOATS[2]; // 3 elements
