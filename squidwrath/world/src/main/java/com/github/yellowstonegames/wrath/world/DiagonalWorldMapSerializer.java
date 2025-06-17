@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.DiagonalWorldMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class DiagonalWorldMapSerializer extends Serializer<DiagonalWorldMap> {
-    public DiagonalWorldMapSerializer(Fury fury) {
-        super(fury, DiagonalWorldMap.class);
+    public DiagonalWorldMapSerializer(Fory fory) {
+        super(fory, DiagonalWorldMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, DiagonalWorldMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public DiagonalWorldMap read(MemoryBuffer buffer) {
-        return DiagonalWorldMap.recreateFromString(fury.readJavaString(buffer));
+        return DiagonalWorldMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.text;
 
 import com.github.yellowstonegames.text.Language;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class LanguageSerializer extends Serializer<Language> {
-    public LanguageSerializer(Fury fury) {
-        super(fury, Language.class);
+    public LanguageSerializer(Fory fory) {
+        super(fory, Language.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, Language data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public Language read(MemoryBuffer buffer) {
-        return Language.stringDeserialize(fury.readJavaString(buffer));
+        return Language.stringDeserialize(fory.readJavaString(buffer));
     }
 }

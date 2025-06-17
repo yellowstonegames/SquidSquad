@@ -23,9 +23,9 @@ import com.github.yellowstonegames.world.BiomeMapper;
 import com.github.yellowstonegames.world.PoliticalMapper;
 import com.github.yellowstonegames.world.PoliticalMapper.Faction;
 import com.github.yellowstonegames.world.WorldMapGenerator;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
  * ALlows {@link PoliticalMapper} to be serialized.
@@ -35,30 +35,30 @@ import org.apache.fury.serializer.Serializer;
  * and the {@link BiomeMapper} to also be registered with a serializer here.
  */
 public class PoliticalMapperSerializer extends Serializer<PoliticalMapper> {
-    public PoliticalMapperSerializer(Fury fury) {
-        super(fury, PoliticalMapper.class);
+    public PoliticalMapperSerializer(Fory fory) {
+        super(fory, PoliticalMapper.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, PoliticalMapper data) {
-        fury.writeJavaString(buffer, data.rng.stringSerialize());
-        fury.writeRef(buffer, data.atlas);
-        fury.writeJavaString(buffer, data.name);
-        fury.writeRef(buffer, data.politicalMap);
-        fury.writeRef(buffer, data.zoomedMap);
-        fury.writeRef(buffer, data.wmg);
-        fury.writeRef(buffer, data.biomeMapper);
+        fory.writeJavaString(buffer, data.rng.stringSerialize());
+        fory.writeRef(buffer, data.atlas);
+        fory.writeJavaString(buffer, data.name);
+        fory.writeRef(buffer, data.politicalMap);
+        fory.writeRef(buffer, data.zoomedMap);
+        fory.writeRef(buffer, data.wmg);
+        fory.writeRef(buffer, data.biomeMapper);
     }
 
     @Override
     public PoliticalMapper read(MemoryBuffer buffer) {
-        PoliticalMapper p = new PoliticalMapper(Deserializer.deserialize(fury.readJavaString(buffer)));
-        p.atlas = (IntObjectOrderedMap<Faction>)fury.readRef(buffer);
-        p.name = fury.readJavaString(buffer);
-        p.politicalMap = (char[][])fury.readRef(buffer);
-        p.zoomedMap = (char[][])fury.readRef(buffer);
-        p.wmg = (WorldMapGenerator)fury.readRef(buffer);
-        p.biomeMapper = (BiomeMapper)fury.readRef(buffer);
+        PoliticalMapper p = new PoliticalMapper(Deserializer.deserialize(fory.readJavaString(buffer)));
+        p.atlas = (IntObjectOrderedMap<Faction>)fory.readRef(buffer);
+        p.name = fory.readJavaString(buffer);
+        p.politicalMap = (char[][])fory.readRef(buffer);
+        p.zoomedMap = (char[][])fory.readRef(buffer);
+        p.wmg = (WorldMapGenerator)fory.readRef(buffer);
+        p.biomeMapper = (BiomeMapper)fory.readRef(buffer);
         return p;
     }
 }

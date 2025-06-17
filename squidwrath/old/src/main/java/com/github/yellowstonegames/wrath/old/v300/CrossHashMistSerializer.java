@@ -17,14 +17,14 @@
 package com.github.yellowstonegames.wrath.old.v300;
 
 import com.github.yellowstonegames.old.v300.CrossHash;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class CrossHashMistSerializer extends Serializer<CrossHash.Mist> {
 
-    public CrossHashMistSerializer(Fury fury) {
-        super(fury, CrossHash.Mist.class);
+    public CrossHashMistSerializer(Fory fory) {
+        super(fory, CrossHash.Mist.class);
     }
 
     @Override

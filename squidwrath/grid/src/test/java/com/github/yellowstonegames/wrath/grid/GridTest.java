@@ -26,9 +26,9 @@ import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.grid.*;
-import org.apache.fury.Fury;
-import org.apache.fury.config.Language;
-import org.apache.fury.logging.LoggerFactory;
+import org.apache.fory.Fory;
+import org.apache.fory.config.Language;
+import org.apache.fory.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,26 +36,26 @@ public class GridTest {
     @Test
     public void testCoord() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(ObjectList.class, new ObjectListSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(ObjectList.class, new ObjectListSerializer(fory));
         ObjectList<Coord> data = ObjectList.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(-2, -3), Coord.get(100, 100));
 
-        byte[] bytes = fury.serializeJavaObject(data);
-        ObjectList<?> data2 = fury.deserializeJavaObject(bytes, ObjectList.class);
+        byte[] bytes = fory.serializeJavaObject(data);
+        ObjectList<?> data2 = fory.deserializeJavaObject(bytes, ObjectList.class);
         Assert.assertEquals(data, data2);
     }
 
     @Test
     public void testRegion() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(Region.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(Region.class);
         Region data = new Region(120, 120, Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            Region data2 = fury.deserializeJavaObject(bytes, Region.class);
+            Region data2 = fory.deserializeJavaObject(bytes, Region.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -63,14 +63,14 @@ public class GridTest {
     @Test
     public void testCoordSet() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordSet.class, new CoordSetSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordSet.class, new CoordSetSerializer(fory));
         CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordSet data2 = fury.deserializeJavaObject(bytes, CoordSet.class);
+            CoordSet data2 = fory.deserializeJavaObject(bytes, CoordSet.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -78,14 +78,14 @@ public class GridTest {
     @Test
     public void testCoordOrderedSet() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer(fory));
         CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordOrderedSet data2 = fury.deserializeJavaObject(bytes, CoordOrderedSet.class);
+            CoordOrderedSet data2 = fory.deserializeJavaObject(bytes, CoordOrderedSet.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -93,13 +93,13 @@ public class GridTest {
     @Test
     public void testCoordObjectMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fory));
         CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
-        byte[] bytes = fury.serializeJavaObject(data);
-        CoordObjectMap<?> data2 = fury.deserializeJavaObject(bytes, CoordObjectMap.class);
+        byte[] bytes = fory.serializeJavaObject(data);
+        CoordObjectMap<?> data2 = fory.deserializeJavaObject(bytes, CoordObjectMap.class);
 
         Assert.assertEquals(data, data2);
     }
@@ -107,14 +107,14 @@ public class GridTest {
     @Test
     public void testCoordObjectOrderedMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fory));
         CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordObjectOrderedMap<?> data2 = fury.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
+            CoordObjectOrderedMap<?> data2 = fory.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -122,14 +122,14 @@ public class GridTest {
     @Test
     public void testCoordFloatMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordFloatMap.class, new CoordFloatMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordFloatMap.class, new CoordFloatMapSerializer(fory));
         CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordFloatMap data2 = fury.deserializeJavaObject(bytes, CoordFloatMap.class);
+            CoordFloatMap data2 = fory.deserializeJavaObject(bytes, CoordFloatMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -137,14 +137,14 @@ public class GridTest {
     @Test
     public void testCoordFloatOrderedMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
         CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordFloatOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordFloatOrderedMap.class);
+            CoordFloatOrderedMap data2 = fory.deserializeJavaObject(bytes, CoordFloatOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -152,14 +152,14 @@ public class GridTest {
     @Test
     public void testCoordLongMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordLongMap.class, new CoordLongMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordLongMap.class, new CoordLongMapSerializer(fory));
         CoordLongMap data = CoordLongMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordLongMap data2 = fury.deserializeJavaObject(bytes, CoordLongMap.class);
+            CoordLongMap data2 = fory.deserializeJavaObject(bytes, CoordLongMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -167,14 +167,14 @@ public class GridTest {
     @Test
     public void testCoordLongOrderedMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer(fory));
         CoordLongOrderedMap data = CoordLongOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordLongOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordLongOrderedMap.class);
+            CoordLongOrderedMap data2 = fory.deserializeJavaObject(bytes, CoordLongOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -182,14 +182,14 @@ public class GridTest {
     @Test
     public void testCoordIntMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordIntMap.class, new CoordIntMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordIntMap.class, new CoordIntMapSerializer(fory));
         CoordIntMap data = CoordIntMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordIntMap data2 = fury.deserializeJavaObject(bytes, CoordIntMap.class);
+            CoordIntMap data2 = fory.deserializeJavaObject(bytes, CoordIntMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -197,14 +197,14 @@ public class GridTest {
     @Test
     public void testCoordIntOrderedMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer(fory));
         CoordIntOrderedMap data = CoordIntOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CoordIntOrderedMap data2 = fury.deserializeJavaObject(bytes, CoordIntOrderedMap.class);
+            CoordIntOrderedMap data2 = fory.deserializeJavaObject(bytes, CoordIntOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -269,19 +269,19 @@ public class GridTest {
     @Test
     public void testSpatialMap() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.register(IGI.class);
-        fury.registerSerializer(SpatialMap.class, new SpatialMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.register(IGI.class);
+        fory.registerSerializer(SpatialMap.class, new SpatialMapSerializer(fory));
         SpatialMap<IGI> data = new SpatialMap<>(8);
         data.add(new IGI(Coord.get(1, 2)));
         data.add(new IGI(Coord.get(2, 2)));
         data.add(new IGI(Coord.get(1, 3)));
         data.add(new IGI(Coord.get(2, 3)));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            SpatialMap<?> data2 = fury.deserializeJavaObject(bytes, SpatialMap.class);
+            SpatialMap<?> data2 = fory.deserializeJavaObject(bytes, SpatialMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -289,14 +289,14 @@ public class GridTest {
     @Test
     public void testRadiance() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
 
         Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            Radiance data2 = fury.deserializeJavaObject(bytes, Radiance.class);
+            Radiance data2 = fory.deserializeJavaObject(bytes, Radiance.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -304,16 +304,16 @@ public class GridTest {
     @Test
     public void testLightSource() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
-        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
 
         LightSource data = new LightSource(Coord.get(1, 10), new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123), 1f/6f, 0.125f);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            LightSource data2 = fury.deserializeJavaObject(bytes, LightSource.class);
+            LightSource data2 = fory.deserializeJavaObject(bytes, LightSource.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -321,24 +321,24 @@ public class GridTest {
     @Test
     public void testLightingManager() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(int[].class);
-        fury.register(int[][].class);
-        fury.register(float[].class);
-        fury.register(float[][].class);
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.register(Region.class);
-        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
-        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
-        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
-        fury.registerSerializer(LightingManager.class, new LightingManagerSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(int[].class);
+        fory.register(int[][].class);
+        fory.register(float[].class);
+        fory.register(float[][].class);
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.register(Region.class);
+        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializer(LightingManager.class, new LightingManagerSerializer(fory));
 
         LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            LightingManager data2 = fury.deserializeJavaObject(bytes, LightingManager.class);
+            LightingManager data2 = fory.deserializeJavaObject(bytes, LightingManager.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -346,24 +346,24 @@ public class GridTest {
     @Test
     public void testLightingManagerRgb() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(int[].class);
-        fury.register(int[][].class);
-        fury.register(float[].class);
-        fury.register(float[][].class);
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.register(Region.class);
-        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
-        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
-        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
-        fury.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(int[].class);
+        fory.register(int[][].class);
+        fory.register(float[].class);
+        fory.register(float[][].class);
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.register(Region.class);
+        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fory));
 
         LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            LightingManagerRgb data2 = fury.deserializeJavaObject(bytes, LightingManagerRgb.class);
+            LightingManagerRgb data2 = fory.deserializeJavaObject(bytes, LightingManagerRgb.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -371,29 +371,29 @@ public class GridTest {
     @Test
     public void testVisionFramework() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(int[].class);
-        fury.register(int[][].class);
-        fury.register(float[].class);
-        fury.register(float[][].class);
-        fury.register(char[].class);
-        fury.register(char[][].class);
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
-        fury.register(Region.class);
-        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
-        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
-        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
-        fury.registerSerializer(LightingManager.class, new LightingManagerSerializer(fury));
-        fury.registerSerializer(VisionFramework.class, new VisionFrameworkSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(int[].class);
+        fory.register(int[][].class);
+        fory.register(float[].class);
+        fory.register(float[][].class);
+        fory.register(char[].class);
+        fory.register(char[][].class);
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.register(Region.class);
+        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
+        fory.registerSerializer(LightingManager.class, new LightingManagerSerializer(fory));
+        fory.registerSerializer(VisionFramework.class, new VisionFrameworkSerializer(fory));
 
         VisionFramework data = new VisionFramework();
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColor.describeOklab("darker gray 9 yellow"));
         data.lighting.addLight(3, 3, new Radiance(3f, 0xFF9966AA, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            VisionFramework data2 = fury.deserializeJavaObject(bytes, VisionFramework.class);
+            VisionFramework data2 = fory.deserializeJavaObject(bytes, VisionFramework.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -401,29 +401,29 @@ public class GridTest {
     @Test
     public void testVisionFrameworkRgb() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(int[].class);
-        fury.register(int[][].class);
-        fury.register(float[].class);
-        fury.register(float[][].class);
-        fury.register(char[].class);
-        fury.register(char[][].class);
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(Radiance.class, new RadianceSerializer(fury));
-        fury.register(Region.class);
-        fury.registerSerializer(LightSource.class, new LightSourceSerializer(fury));
-        fury.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fury));
-        fury.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fury));
-        fury.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fury));
-        fury.registerSerializer(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(int[].class);
+        fory.register(int[][].class);
+        fory.register(float[].class);
+        fory.register(float[][].class);
+        fory.register(char[].class);
+        fory.register(char[][].class);
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.register(Region.class);
+        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
+        fory.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fory));
+        fory.registerSerializer(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer(fory));
 
         VisionFrameworkRgb data = new VisionFrameworkRgb();
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
         data.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            VisionFrameworkRgb data2 = fury.deserializeJavaObject(bytes, VisionFrameworkRgb.class);
+            VisionFrameworkRgb data2 = fory.deserializeJavaObject(bytes, VisionFrameworkRgb.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -431,15 +431,15 @@ public class GridTest {
     @Test
     public void testNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(Noise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(Noise.class);
 
         Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
         data.setFractalSpiral(true);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            Noise data2 = fury.deserializeJavaObject(bytes, Noise.class);
+            Noise data2 = fory.deserializeJavaObject(bytes, Noise.class);
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f), data2.getConfiguredNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f), data2.getConfiguredNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -453,14 +453,14 @@ public class GridTest {
     @Test
     public void testFoamNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(FoamNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(FoamNoise.class);
 
         FoamNoise data = new FoamNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            FoamNoise data2 = fury.deserializeJavaObject(bytes, FoamNoise.class);
+            FoamNoise data2 = fory.deserializeJavaObject(bytes, FoamNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -473,14 +473,14 @@ public class GridTest {
     @Test
     public void testFoamplexNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(FoamplexNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(FoamplexNoise.class);
 
         FoamplexNoise data = new FoamplexNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            FoamplexNoise data2 = fury.deserializeJavaObject(bytes, FoamplexNoise.class);
+            FoamplexNoise data2 = fory.deserializeJavaObject(bytes, FoamplexNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -493,14 +493,14 @@ public class GridTest {
     @Test
     public void testPhantomNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(PhantomNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(PhantomNoise.class);
 
         PhantomNoise data = new PhantomNoise(1234, 8, 7f);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            PhantomNoise data2 = fury.deserializeJavaObject(bytes, PhantomNoise.class);
+            PhantomNoise data2 = fory.deserializeJavaObject(bytes, PhantomNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -509,14 +509,14 @@ public class GridTest {
     @Test
     public void testTaffyNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(TaffyNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(TaffyNoise.class);
 
         TaffyNoise data = new TaffyNoise(1234, 8, 7f);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            TaffyNoise data2 = fury.deserializeJavaObject(bytes, TaffyNoise.class);
+            TaffyNoise data2 = fory.deserializeJavaObject(bytes, TaffyNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -525,14 +525,14 @@ public class GridTest {
     @Test
     public void testFlanNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(FlanNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(FlanNoise.class);
 
         FlanNoise data = new FlanNoise(1234, 8, 7f, 2);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            FlanNoise data2 = fury.deserializeJavaObject(bytes, FlanNoise.class);
+            FlanNoise data2 = fory.deserializeJavaObject(bytes, FlanNoise.class);
             Assert.assertEquals(data.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), data2.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -541,14 +541,14 @@ public class GridTest {
     @Test
     public void testCyclicNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(CyclicNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(CyclicNoise.class);
 
         CyclicNoise data = new CyclicNoise(-9876543210L, 8);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            CyclicNoise data2 = fury.deserializeJavaObject(bytes, CyclicNoise.class);
+            CyclicNoise data2 = fory.deserializeJavaObject(bytes, CyclicNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -557,14 +557,14 @@ public class GridTest {
     @Test
     public void testSorbetNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(SorbetNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(SorbetNoise.class);
 
         SorbetNoise data = new SorbetNoise(-9876543210L, 8);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            SorbetNoise data2 = fury.deserializeJavaObject(bytes, SorbetNoise.class);
+            SorbetNoise data2 = fory.deserializeJavaObject(bytes, SorbetNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -573,14 +573,14 @@ public class GridTest {
     @Test
     public void testSimplexNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(SimplexNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(SimplexNoise.class);
 
         SimplexNoise data = new SimplexNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            SimplexNoise data2 = fury.deserializeJavaObject(bytes, SimplexNoise.class);
+            SimplexNoise data2 = fory.deserializeJavaObject(bytes, SimplexNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -593,14 +593,14 @@ public class GridTest {
     @Test
     public void testSimplexNoiseScaled() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(SimplexNoiseScaled.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(SimplexNoiseScaled.class);
 
         SimplexNoiseScaled data = new SimplexNoiseScaled(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            SimplexNoiseScaled data2 = fury.deserializeJavaObject(bytes, SimplexNoiseScaled.class);
+            SimplexNoiseScaled data2 = fory.deserializeJavaObject(bytes, SimplexNoiseScaled.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -613,14 +613,14 @@ public class GridTest {
     @Test
     public void testSimplexNoiseHard() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(SimplexNoiseHard.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(SimplexNoiseHard.class);
 
         SimplexNoiseHard data = new SimplexNoiseHard(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            SimplexNoiseHard data2 = fury.deserializeJavaObject(bytes, SimplexNoiseHard.class);
+            SimplexNoiseHard data2 = fory.deserializeJavaObject(bytes, SimplexNoiseHard.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -633,14 +633,14 @@ public class GridTest {
     @Test
     public void testOpenSimplex2() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(OpenSimplex2.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(OpenSimplex2.class);
 
         OpenSimplex2 data = new OpenSimplex2(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            OpenSimplex2 data2 = fury.deserializeJavaObject(bytes, OpenSimplex2.class);
+            OpenSimplex2 data2 = fory.deserializeJavaObject(bytes, OpenSimplex2.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -651,14 +651,14 @@ public class GridTest {
     @Test
     public void testOpenSimplex2Smooth() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(OpenSimplex2Smooth.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(OpenSimplex2Smooth.class);
 
         OpenSimplex2Smooth data = new OpenSimplex2Smooth(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            OpenSimplex2Smooth data2 = fury.deserializeJavaObject(bytes, OpenSimplex2Smooth.class);
+            OpenSimplex2Smooth data2 = fory.deserializeJavaObject(bytes, OpenSimplex2Smooth.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -669,14 +669,14 @@ public class GridTest {
     @Test
     public void testPerlinNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(PerlinNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(PerlinNoise.class);
 
         PerlinNoise data = new PerlinNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            PerlinNoise data2 = fury.deserializeJavaObject(bytes, PerlinNoise.class);
+            PerlinNoise data2 = fory.deserializeJavaObject(bytes, PerlinNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -689,14 +689,14 @@ public class GridTest {
     @Test
     public void testValueNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(ValueNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(ValueNoise.class);
 
         ValueNoise data = new ValueNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            ValueNoise data2 = fury.deserializeJavaObject(bytes, ValueNoise.class);
+            ValueNoise data2 = fory.deserializeJavaObject(bytes, ValueNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -709,15 +709,15 @@ public class GridTest {
     @Test
     public void testBasicHashNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash.class);
-        fury.registerSerializer(BasicHashNoise.class, new BasicHashNoiseSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash.class);
+        fory.registerSerializer(BasicHashNoise.class, new BasicHashNoiseSerializer(fory));
 
         BasicHashNoise data = new BasicHashNoise(-987654321, new FlawedPointHash.FlowerHash(123456789));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            BasicHashNoise data2 = fury.deserializeJavaObject(bytes, BasicHashNoise.class);
+            BasicHashNoise data2 = fory.deserializeJavaObject(bytes, BasicHashNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -730,14 +730,14 @@ public class GridTest {
     @Test
     public void testHighDimensionalValueNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(HighDimensionalValueNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(HighDimensionalValueNoise.class);
 
         HighDimensionalValueNoise data = new HighDimensionalValueNoise(1234, 8);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            HighDimensionalValueNoise data2 = fury.deserializeJavaObject(bytes, HighDimensionalValueNoise.class);
+            HighDimensionalValueNoise data2 = fory.deserializeJavaObject(bytes, HighDimensionalValueNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -746,14 +746,14 @@ public class GridTest {
     @Test
     public void testWhiteNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(WhiteNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(WhiteNoise.class);
 
         WhiteNoise data = new WhiteNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            WhiteNoise data2 = fury.deserializeJavaObject(bytes, WhiteNoise.class);
+            WhiteNoise data2 = fory.deserializeJavaObject(bytes, WhiteNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -766,14 +766,14 @@ public class GridTest {
     @Test
     public void testPerlueNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(PerlueNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(PerlueNoise.class);
 
         PerlueNoise data = new PerlueNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            PerlueNoise data2 = fury.deserializeJavaObject(bytes, PerlueNoise.class);
+            PerlueNoise data2 = fory.deserializeJavaObject(bytes, PerlueNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -786,14 +786,14 @@ public class GridTest {
     @Test
     public void testBadgerNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(BadgerNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(BadgerNoise.class);
 
         BadgerNoise data = new BadgerNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            BadgerNoise data2 = fury.deserializeJavaObject(bytes, BadgerNoise.class);
+            BadgerNoise data2 = fory.deserializeJavaObject(bytes, BadgerNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -806,14 +806,14 @@ public class GridTest {
     @Test
     public void testSnakeNoise() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(SnakeNoise.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(SnakeNoise.class);
 
         SnakeNoise data = new SnakeNoise(-9876543210L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            SnakeNoise data2 = fury.deserializeJavaObject(bytes, SnakeNoise.class);
+            SnakeNoise data2 = fory.deserializeJavaObject(bytes, SnakeNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -826,15 +826,15 @@ public class GridTest {
     @Test
     public void testNoiseWrapper() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(Noise.class);
-        fury.register(NoiseWrapper.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(Noise.class);
+        fory.register(NoiseWrapper.class);
 
         NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            NoiseWrapper data2 = fury.deserializeJavaObject(bytes, NoiseWrapper.class);
+            NoiseWrapper data2 = fory.deserializeJavaObject(bytes, NoiseWrapper.class);
             Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -847,15 +847,15 @@ public class GridTest {
     @Test
     public void testRadialNoiseWrapper() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(Noise.class);
-        fury.register(RadialNoiseWrapper.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(Noise.class);
+        fory.register(RadialNoiseWrapper.class);
 
         RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 10f, 20.125f);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            RadialNoiseWrapper data2 = fury.deserializeJavaObject(bytes, RadialNoiseWrapper.class);
+            RadialNoiseWrapper data2 = fory.deserializeJavaObject(bytes, RadialNoiseWrapper.class);
             Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
@@ -865,15 +865,15 @@ public class GridTest {
     @Test
     public void testNoiseAdjustment() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.register(Noise.class);
-        fury.register(NoiseAdjustment.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(Noise.class);
+        fory.register(NoiseAdjustment.class);
 
         NoiseAdjustment data = new NoiseAdjustment(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), Interpolations.exp5In);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            NoiseAdjustment data2 = fury.deserializeJavaObject(bytes, NoiseAdjustment.class);
+            NoiseAdjustment data2 = fory.deserializeJavaObject(bytes, NoiseAdjustment.class);
             Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -886,14 +886,14 @@ public class GridTest {
     @Test
     public void testPointPair() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.registerSerializer(PointPair.class, new PointPairSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializer(PointPair.class, new PointPairSerializer(fory));
         PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            PointPair<?> data2 = fury.deserializeJavaObject(bytes, PointPair.class);
+            PointPair<?> data2 = fory.deserializeJavaObject(bytes, PointPair.class);
             Assert.assertEquals(data, data2);
         }
     }

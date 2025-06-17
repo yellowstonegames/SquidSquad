@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.EllipticalWorldMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class EllipticalWorldMapSerializer extends Serializer<EllipticalWorldMap> {
-    public EllipticalWorldMapSerializer(Fury fury) {
-        super(fury, EllipticalWorldMap.class);
+    public EllipticalWorldMapSerializer(Fory fory) {
+        super(fory, EllipticalWorldMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, EllipticalWorldMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public EllipticalWorldMap read(MemoryBuffer buffer) {
-        return EllipticalWorldMap.recreateFromString(fury.readJavaString(buffer));
+        return EllipticalWorldMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

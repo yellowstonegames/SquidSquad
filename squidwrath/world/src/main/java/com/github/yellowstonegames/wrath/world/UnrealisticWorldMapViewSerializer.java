@@ -19,28 +19,28 @@ package com.github.yellowstonegames.wrath.world;
 import com.github.yellowstonegames.world.BiomeMapper;
 import com.github.yellowstonegames.world.UnrealisticWorldMapView;
 import com.github.yellowstonegames.world.WorldMapGenerator;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
  * Needs the type of the WorldMapGenerator used in {@link UnrealisticWorldMapView#getWorld()} to be registered.
  */
 public class UnrealisticWorldMapViewSerializer extends Serializer<UnrealisticWorldMapView> {
-    public UnrealisticWorldMapViewSerializer(Fury fury) {
-        super(fury, UnrealisticWorldMapView.class);
+    public UnrealisticWorldMapViewSerializer(Fory fory) {
+        super(fory, UnrealisticWorldMapView.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, UnrealisticWorldMapView data) {
-        fury.writeRef(buffer, data.getWorld());
-        fury.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
+        fory.writeRef(buffer, data.getWorld());
+        fory.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
     }
 
     @Override
     public UnrealisticWorldMapView read(MemoryBuffer buffer) {
-        UnrealisticWorldMapView wmv = new UnrealisticWorldMapView((WorldMapGenerator) fury.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.UnrealisticBiomeMapper.recreateFromString(fury.readJavaString(buffer)));
+        UnrealisticWorldMapView wmv = new UnrealisticWorldMapView((WorldMapGenerator) fory.readRef(buffer));
+        wmv.setBiomeMapper(BiomeMapper.UnrealisticBiomeMapper.recreateFromString(fory.readJavaString(buffer)));
 
         return wmv;
     }

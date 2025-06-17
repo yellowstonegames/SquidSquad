@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.text;
 
 import com.github.yellowstonegames.text.Language;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class LanguageSentenceFormSerializer extends Serializer<Language.SentenceForm> {
-    public LanguageSentenceFormSerializer(Fury fury) {
-        super(fury, Language.SentenceForm.class);
+    public LanguageSentenceFormSerializer(Fory fory) {
+        super(fory, Language.SentenceForm.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, Language.SentenceForm data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public Language.SentenceForm read(MemoryBuffer buffer) {
-        return Language.SentenceForm.stringDeserialize(fury.readJavaString(buffer));
+        return Language.SentenceForm.stringDeserialize(fory.readJavaString(buffer));
     }
 }

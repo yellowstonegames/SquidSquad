@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.LatLonWorldMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class LatLonWorldMapSerializer extends Serializer<LatLonWorldMap> {
-    public LatLonWorldMapSerializer(Fury fury) {
-        super(fury, LatLonWorldMap.class);
+    public LatLonWorldMapSerializer(Fory fory) {
+        super(fory, LatLonWorldMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, LatLonWorldMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public LatLonWorldMap read(MemoryBuffer buffer) {
-        return LatLonWorldMap.recreateFromString(fury.readJavaString(buffer));
+        return LatLonWorldMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

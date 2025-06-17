@@ -19,9 +19,9 @@ package com.github.yellowstonegames.wrath.path;
 import com.github.yellowstonegames.wrath.grid.CoordSerializer;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.path.*;
-import org.apache.fury.Fury;
-import org.apache.fury.config.Language;
-import org.apache.fury.logging.LoggerFactory;
+import org.apache.fory.Fory;
+import org.apache.fory.config.Language;
+import org.apache.fory.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -61,17 +61,17 @@ public class PathTest {
     @Test
     public void testUndirectedGraph() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.register(UndirectedGraph.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.register(UndirectedGraph.class);
 
         int n = 5;
         Graph<Coord> data = makeGridGraph(new UndirectedGraph<>(), n);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         System.out.println("Undirected byte length: " + bytes.length);
         {
-            UndirectedGraph<?> data2 = fury.deserializeJavaObject(bytes, UndirectedGraph.class);
+            UndirectedGraph<?> data2 = fory.deserializeJavaObject(bytes, UndirectedGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
@@ -83,17 +83,17 @@ public class PathTest {
     @Test
     public void testDirectedGraph() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.register(DirectedGraph.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.register(DirectedGraph.class);
 
         int n = 5;
         Graph<Coord> data = makeGridGraph(new DirectedGraph<>(), n);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         System.out.println("Directed byte length: " + bytes.length);
         {
-            DirectedGraph<?> data2 = fury.deserializeJavaObject(bytes, DirectedGraph.class);
+            DirectedGraph<?> data2 = fory.deserializeJavaObject(bytes, DirectedGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
@@ -105,9 +105,9 @@ public class PathTest {
     @Test
     public void testDefaultGraph() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.register(DefaultGraph.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.register(DefaultGraph.class);
 
         Graph<Coord> data = new DefaultGraph(new char[][]{
                 "######".toCharArray(),
@@ -118,10 +118,10 @@ public class PathTest {
                 "######".toCharArray(),
         }, true);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         System.out.println("Default byte length: " + bytes.length);
         {
-            DefaultGraph data2 = fury.deserializeJavaObject(bytes, DefaultGraph.class);
+            DefaultGraph data2 = fory.deserializeJavaObject(bytes, DefaultGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
@@ -133,9 +133,9 @@ public class PathTest {
     @Test
     public void testCostlyGraph() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
-        fury.registerSerializer(Coord.class, new CoordSerializer(fury));
-        fury.register(CostlyGraph.class);
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.register(CostlyGraph.class);
 
         Graph<Coord> data = new CostlyGraph(new char[][]{
                 "######".toCharArray(),
@@ -146,10 +146,10 @@ public class PathTest {
                 "######".toCharArray(),
         }, true);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         System.out.println("Costly byte length: " + bytes.length);
         {
-            CostlyGraph data2 = fury.deserializeJavaObject(bytes, CostlyGraph.class);
+            CostlyGraph data2 = fory.deserializeJavaObject(bytes, CostlyGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),

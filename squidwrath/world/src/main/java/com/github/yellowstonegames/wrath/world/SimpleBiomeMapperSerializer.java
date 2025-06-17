@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.BiomeMapper.SimpleBiomeMapper;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class SimpleBiomeMapperSerializer extends Serializer<SimpleBiomeMapper> {
-    public SimpleBiomeMapperSerializer(Fury fury) {
-        super(fury, SimpleBiomeMapper.class);
+    public SimpleBiomeMapperSerializer(Fory fory) {
+        super(fory, SimpleBiomeMapper.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, SimpleBiomeMapper data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public SimpleBiomeMapper read(MemoryBuffer buffer) {
-        return SimpleBiomeMapper.recreateFromString(fury.readJavaString(buffer));
+        return SimpleBiomeMapper.recreateFromString(fory.readJavaString(buffer));
     }
 }

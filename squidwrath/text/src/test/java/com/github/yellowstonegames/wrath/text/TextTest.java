@@ -19,8 +19,8 @@ package com.github.yellowstonegames.wrath.text;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Mnemonic;
 import com.github.yellowstonegames.text.Translator;
-import org.apache.fury.Fury;
-import org.apache.fury.logging.LoggerFactory;
+import org.apache.fory.Fory;
+import org.apache.fory.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,26 +28,26 @@ public class TextTest {
     @Test
     public void testLanguage() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(Language.class, new LanguageSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(Language.class, new LanguageSerializer(fory));
 
         Language data = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            Language data2 = fury.deserializeJavaObject(bytes, Language.class);
+            Language data2 = fory.deserializeJavaObject(bytes, Language.class);
             Assert.assertEquals(data, data2);
         }
         data = Language.KOBOLD;
-        bytes = fury.serializeJavaObject(data);
+        bytes = fory.serializeJavaObject(data);
         {
-            Language data2 = fury.deserializeJavaObject(bytes, Language.class);
+            Language data2 = fory.deserializeJavaObject(bytes, Language.class);
             Assert.assertEquals(data, data2);
         }
         data = Language.randomLanguage(0x1337BEEFCAFEBABEL).mix(4, Language.ARABIC_ROMANIZED, 5, Language.JAPANESE_ROMANIZED, 3).addModifiers(Language.Modifier.LISP);
-        bytes = fury.serializeJavaObject(data);
+        bytes = fory.serializeJavaObject(data);
         {
-            Language data2 = fury.deserializeJavaObject(bytes, Language.class);
+            Language data2 = fory.deserializeJavaObject(bytes, Language.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -55,13 +55,13 @@ public class TextTest {
     @Test
     public void testLanguageSentenceForm() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(Language.SentenceForm.class, new LanguageSentenceFormSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(Language.SentenceForm.class, new LanguageSentenceFormSerializer(fory));
 
         Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8);
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            Language.SentenceForm data2 = fury.deserializeJavaObject(bytes, Language.SentenceForm.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            Language.SentenceForm data2 = fory.deserializeJavaObject(bytes, Language.SentenceForm.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -69,16 +69,16 @@ public class TextTest {
     @Test
     public void testTranslator() {        
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(Language.class, new LanguageSerializer(fury));
-        fury.registerSerializer(Translator.class, new TranslatorSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(Language.class, new LanguageSerializer(fory));
+        fory.registerSerializer(Translator.class, new TranslatorSerializer(fory));
 
         String sentence = "For you, I can translate; I will lower my steep rate; to something more affordable; since you are so adorable.";
         Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L);
 
-        byte[] bytes = fury.serializeJavaObject(data);
+        byte[] bytes = fory.serializeJavaObject(data);
         {
-            Translator data2 = fury.deserializeJavaObject(bytes, Translator.class);
+            Translator data2 = fory.deserializeJavaObject(bytes, Translator.class);
             Assert.assertEquals(data, data2);
             Assert.assertEquals(data.cipher(sentence), data2.cipher(sentence));
         }
@@ -87,13 +87,13 @@ public class TextTest {
     @Test
     public void testMnemonic() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(Mnemonic.class, new MnemonicSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(Mnemonic.class, new MnemonicSerializer(fory));
 
         Mnemonic data = new Mnemonic(1234567L);
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            Mnemonic data2 = fury.deserializeJavaObject(bytes, Mnemonic.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            Mnemonic data2 = fory.deserializeJavaObject(bytes, Mnemonic.class);
             Assert.assertEquals(data, data2);
         }
     }

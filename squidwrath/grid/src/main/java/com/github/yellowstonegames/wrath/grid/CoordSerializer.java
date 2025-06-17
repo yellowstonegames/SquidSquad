@@ -17,19 +17,19 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Coord;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
- * Fury {@link Serializer} for digital {@link Coord}s.
+ * Fory {@link Serializer} for digital {@link Coord}s.
  * You should expand the Coord pool first, if possible, if the maximum values for a Coord's x and y are known.
  * You can use {@link Coord#expandPoolTo(int, int)} to do this.
  */
 public class CoordSerializer extends Serializer<Coord> {
 
-    public CoordSerializer(Fury fury) {
-        super(fury, Coord.class);
+    public CoordSerializer(Fory fory) {
+        super(fory, Coord.class);
     }
 
     @Override

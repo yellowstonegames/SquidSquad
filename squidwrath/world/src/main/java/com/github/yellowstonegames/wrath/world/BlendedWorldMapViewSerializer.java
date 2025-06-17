@@ -20,28 +20,28 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.yellowstonegames.world.BiomeMapper;
 import com.github.yellowstonegames.world.BlendedWorldMapView;
 import com.github.yellowstonegames.world.WorldMapGenerator;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
  * Needs the type of the WorldMapGenerator used in {@link BlendedWorldMapView#getWorld()} to be registered.
  */
 public class BlendedWorldMapViewSerializer extends Serializer<BlendedWorldMapView> {
-    public BlendedWorldMapViewSerializer(Fury fury) {
-        super(fury, BlendedWorldMapView.class);
+    public BlendedWorldMapViewSerializer(Fory fory) {
+        super(fory, BlendedWorldMapView.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, BlendedWorldMapView data) {
-        fury.writeRef(buffer, data.getWorld());
-        fury.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
+        fory.writeRef(buffer, data.getWorld());
+        fory.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
     }
 
     @Override
     public BlendedWorldMapView read(MemoryBuffer buffer) {
-        BlendedWorldMapView wmv = new BlendedWorldMapView((WorldMapGenerator) fury.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.BlendedBiomeMapper.recreateFromString(fury.readJavaString(buffer)));
+        BlendedWorldMapView wmv = new BlendedWorldMapView((WorldMapGenerator) fory.readRef(buffer));
+        wmv.setBiomeMapper(BiomeMapper.BlendedBiomeMapper.recreateFromString(fory.readJavaString(buffer)));
 
         return wmv;
     }

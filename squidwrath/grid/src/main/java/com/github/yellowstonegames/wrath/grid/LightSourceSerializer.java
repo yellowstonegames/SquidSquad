@@ -17,30 +17,30 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.*;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
  * Needs {@link CoordSerializer} for {@link Coord} and {@link RadianceSerializer} for {@link Radiance} to be registered.
  */
 @SuppressWarnings({"unchecked"})
 public class LightSourceSerializer extends Serializer<LightSource> {
-    public LightSourceSerializer(Fury fury) {
-        super(fury, LightSource.class);
+    public LightSourceSerializer(Fory fory) {
+        super(fory, LightSource.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, LightSource data) {
-        fury.writeRef(buffer, data.position);
-        fury.writeRef(buffer, data.radiance);
+        fory.writeRef(buffer, data.position);
+        fory.writeRef(buffer, data.radiance);
         buffer.writeFloat32(data.span);
         buffer.writeFloat32(data.direction);
     }
 
     @Override
     public LightSource read(MemoryBuffer buffer) {
-        return new LightSource((Coord) fury.readRef(buffer), (Radiance)fury.readRef(buffer),
+        return new LightSource((Coord) fory.readRef(buffer), (Radiance)fory.readRef(buffer),
                 buffer.readFloat32(), buffer.readFloat32());
     }
 }

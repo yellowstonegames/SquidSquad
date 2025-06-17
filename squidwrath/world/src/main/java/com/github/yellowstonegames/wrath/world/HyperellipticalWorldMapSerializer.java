@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.HyperellipticalWorldMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class HyperellipticalWorldMapSerializer extends Serializer<HyperellipticalWorldMap> {
-    public HyperellipticalWorldMapSerializer(Fury fury) {
-        super(fury, HyperellipticalWorldMap.class);
+    public HyperellipticalWorldMapSerializer(Fory fory) {
+        super(fory, HyperellipticalWorldMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, HyperellipticalWorldMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public HyperellipticalWorldMap read(MemoryBuffer buffer) {
-        return HyperellipticalWorldMap.recreateFromString(fury.readJavaString(buffer));
+        return HyperellipticalWorldMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

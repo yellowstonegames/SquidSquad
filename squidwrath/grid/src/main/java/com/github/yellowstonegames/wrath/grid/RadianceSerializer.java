@@ -17,16 +17,16 @@
 package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Radiance;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
  * Serializes {@link Radiance}; doesn't need anything else registered.
  */
 public class RadianceSerializer extends Serializer<Radiance> {
-    public RadianceSerializer(Fury fury) {
-        super(fury, Radiance.class);
+    public RadianceSerializer(Fory fory) {
+        super(fory, Radiance.class);
     }
 
     @Override

@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.TilingWorldMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class TilingWorldMapSerializer extends Serializer<TilingWorldMap> {
-    public TilingWorldMapSerializer(Fury fury) {
-        super(fury, TilingWorldMap.class);
+    public TilingWorldMapSerializer(Fory fory) {
+        super(fory, TilingWorldMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, TilingWorldMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public TilingWorldMap read(MemoryBuffer buffer) {
-        return TilingWorldMap.recreateFromString(fury.readJavaString(buffer));
+        return TilingWorldMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

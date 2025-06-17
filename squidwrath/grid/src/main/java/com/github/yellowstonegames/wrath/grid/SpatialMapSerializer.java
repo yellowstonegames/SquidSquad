@@ -18,19 +18,19 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.IGridIdentified;
 import com.github.yellowstonegames.grid.SpatialMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**  
- * Fury {@link Serializer} for jdkgdxds {@link SpatialMap}s. Needs the value type of the SpatialMap to be registered
+ * Fory {@link Serializer} for jdkgdxds {@link SpatialMap}s. Needs the value type of the SpatialMap to be registered
  * (the class that implements IGridIdentified).
  */
 @SuppressWarnings({"rawtypes", "unchecked"}) 
 public class SpatialMapSerializer extends Serializer<SpatialMap> {
 
-    public SpatialMapSerializer(Fury fury) {
-        super(fury, SpatialMap.class);
+    public SpatialMapSerializer(Fory fory) {
+        super(fory, SpatialMap.class);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SpatialMapSerializer extends Serializer<SpatialMap> {
         final int len = data.size();
         output.writeVarUint32(len);
         for (Object item : data) {
-            fury.writeRef(output, item);
+            fory.writeRef(output, item);
         }
     }
 
@@ -47,7 +47,7 @@ public class SpatialMapSerializer extends Serializer<SpatialMap> {
         final int len = input.readVarUint32();
         SpatialMap data = new SpatialMap(len);
         for (int i = 0; i < len; i++) {
-            data.add((IGridIdentified) fury.readRef(input));
+            data.add((IGridIdentified) fory.readRef(input));
         }
         return data;
     }

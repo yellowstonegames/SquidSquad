@@ -17,14 +17,14 @@
 package com.github.yellowstonegames.wrath.old.v300;
 
 import com.github.yellowstonegames.old.v300.LowStorageShuffler;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class LowStorageShufflerSerializer extends Serializer<LowStorageShuffler> {
 
-    public LowStorageShufflerSerializer(Fury fury) {
-        super(fury, LowStorageShuffler.class);
+    public LowStorageShufflerSerializer(Fory fory) {
+        super(fory, LowStorageShuffler.class);
     }
 
     @Override

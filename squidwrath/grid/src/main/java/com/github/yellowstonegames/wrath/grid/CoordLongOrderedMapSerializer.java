@@ -20,17 +20,17 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.tommyettinger.ds.support.util.LongIterator;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordLongOrderedMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
- * Fury {@link Serializer} for jdkgdxds {@link CoordLongOrderedMap}s.
+ * Fory {@link Serializer} for jdkgdxds {@link CoordLongOrderedMap}s.
  */
 public class CoordLongOrderedMapSerializer extends Serializer<CoordLongOrderedMap> {
 
-    public CoordLongOrderedMapSerializer(Fury fury) {
-        super(fury, CoordLongOrderedMap.class);
+    public CoordLongOrderedMapSerializer(Fory fory) {
+        super(fory, CoordLongOrderedMap.class);
     }
 
     @Override

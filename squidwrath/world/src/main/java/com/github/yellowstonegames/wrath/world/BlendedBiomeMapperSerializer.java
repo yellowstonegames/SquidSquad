@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.BiomeMapper.BlendedBiomeMapper;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class BlendedBiomeMapperSerializer extends Serializer<BlendedBiomeMapper> {
-    public BlendedBiomeMapperSerializer(Fury fury) {
-        super(fury, BlendedBiomeMapper.class);
+    public BlendedBiomeMapperSerializer(Fory fory) {
+        super(fory, BlendedBiomeMapper.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, BlendedBiomeMapper data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public BlendedBiomeMapper read(MemoryBuffer buffer) {
-        return BlendedBiomeMapper.recreateFromString(fury.readJavaString(buffer));
+        return BlendedBiomeMapper.recreateFromString(fory.readJavaString(buffer));
     }
 }

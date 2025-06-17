@@ -20,17 +20,17 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.tommyettinger.ds.support.util.FloatIterator;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordFloatMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
- * Fury {@link Serializer} for jdkgdxds {@link CoordFloatMap}s.
+ * Fory {@link Serializer} for jdkgdxds {@link CoordFloatMap}s.
  */
 public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
 
-    public CoordFloatMapSerializer(Fury fury) {
-        super(fury, CoordFloatMap.class);
+    public CoordFloatMapSerializer(Fory fory) {
+        super(fory, CoordFloatMap.class);
     }
 
     @Override

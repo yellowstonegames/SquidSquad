@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.GlobeMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class GlobeMapSerializer extends Serializer<GlobeMap> {
-    public GlobeMapSerializer(Fury fury) {
-        super(fury, GlobeMap.class);
+    public GlobeMapSerializer(Fory fory) {
+        super(fory, GlobeMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, GlobeMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public GlobeMap read(MemoryBuffer buffer) {
-        return GlobeMap.recreateFromString(fury.readJavaString(buffer));
+        return GlobeMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

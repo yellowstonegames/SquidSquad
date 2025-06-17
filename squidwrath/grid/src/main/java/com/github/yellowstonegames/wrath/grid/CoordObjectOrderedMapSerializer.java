@@ -19,18 +19,18 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
- * Fury {@link Serializer} for jdkgdxds {@link CoordObjectOrderedMap}s.
+ * Fory {@link Serializer} for jdkgdxds {@link CoordObjectOrderedMap}s.
  */
 @SuppressWarnings("rawtypes")
 public class CoordObjectOrderedMapSerializer extends Serializer<CoordObjectOrderedMap> {
 
-    public CoordObjectOrderedMapSerializer(Fury fury) {
-        super(fury, CoordObjectOrderedMap.class);
+    public CoordObjectOrderedMapSerializer(Fory fory) {
+        super(fory, CoordObjectOrderedMap.class);
     }
 
     @Override
@@ -41,9 +41,9 @@ public class CoordObjectOrderedMapSerializer extends Serializer<CoordObjectOrder
             output.writeInt16(((Coord)k).y);
         }
         for(Object v : data.values()){
-            fury.writeRef(output, v);
+            fory.writeRef(output, v);
         }
-        fury.writeRef(output, data.getDefaultValue());
+        fory.writeRef(output, data.getDefaultValue());
     }
 
     @Override
@@ -55,11 +55,11 @@ public class CoordObjectOrderedMapSerializer extends Serializer<CoordObjectOrder
             ks[i] = Coord.get(input.readInt16(), input.readInt16());
         }
         for (int i = 0; i < len; i++) {
-            vs[i] = fury.readRef(input);
+            vs[i] = fory.readRef(input);
         }
 
         CoordObjectOrderedMap data = new CoordObjectOrderedMap<>(ks, vs);
-        data.setDefaultValue(fury.readRef(input));
+        data.setDefaultValue(fory.readRef(input));
         return data;
 
     }

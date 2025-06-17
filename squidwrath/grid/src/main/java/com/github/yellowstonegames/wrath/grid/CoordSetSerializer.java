@@ -18,17 +18,17 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordSet;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
- * Fury {@link Serializer} for jdkgdxds {@link CoordSet}s.
+ * Fory {@link Serializer} for jdkgdxds {@link CoordSet}s.
  */
 public class CoordSetSerializer extends Serializer<CoordSet> {
 
-    public CoordSetSerializer(Fury fury) {
-        super(fury, CoordSet.class);
+    public CoordSetSerializer(Fory fory) {
+        super(fory, CoordSet.class);
     }
 
     @Override

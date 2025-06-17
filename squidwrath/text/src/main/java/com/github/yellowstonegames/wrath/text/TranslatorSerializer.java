@@ -19,33 +19,33 @@ package com.github.yellowstonegames.wrath.text;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Translator;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class TranslatorSerializer extends Serializer<Translator> {
-    public TranslatorSerializer(Fury fury) {
-        super(fury, Translator.class);
+    public TranslatorSerializer(Fory fory) {
+        super(fory, Translator.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, Translator data) {
-        fury.writeJavaString(buffer, data.language.stringSerialize());
+        fory.writeJavaString(buffer, data.language.stringSerialize());
         buffer.writeInt64(data.shift);
         buffer.writeVarUint32(data.cacheLevel);
         buffer.writeVarUint32(data.table.size());
         for(String k : data.table.keySet()){
-            fury.writeJavaString(buffer, k);
+            fory.writeJavaString(buffer, k);
         }
         for(String v : data.table.values()){
-            fury.writeJavaString(buffer, v);
+            fory.writeJavaString(buffer, v);
         }
 
     }
 
     @Override
     public Translator read(MemoryBuffer buffer) {
-        Language lang = Language.stringDeserialize(fury.readJavaString(buffer));
+        Language lang = Language.stringDeserialize(fory.readJavaString(buffer));
         long shift = buffer.readInt64();
         int cacheLevel = buffer.readVarUint32();
         int tableSize = buffer.readVarUint32();
@@ -53,10 +53,10 @@ public class TranslatorSerializer extends Serializer<Translator> {
         String[] vs = new String[tableSize];
 
         for (int i = 0; i < tableSize; i++) {
-            ks[i] = fury.readJavaString(buffer);
+            ks[i] = fory.readJavaString(buffer);
         }
         for (int i = 0; i < tableSize; i++) {
-            vs[i] = fury.readJavaString(buffer);
+            vs[i] = fory.readJavaString(buffer);
         }
         return new Translator(lang, shift, cacheLevel, new ObjectObjectMap<>(ks, vs), new ObjectObjectMap<>(vs, ks));
     }

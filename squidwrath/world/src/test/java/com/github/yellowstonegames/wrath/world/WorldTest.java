@@ -24,8 +24,8 @@ import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
 import com.github.yellowstonegames.world.PoliticalMapper.Faction;
-import org.apache.fury.Fury;
-import org.apache.fury.logging.LoggerFactory;
+import org.apache.fory.Fory;
+import org.apache.fory.logging.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,14 +33,14 @@ public class WorldTest {
     @Test
     public void testEllipticalWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(EllipticalWorldMap.class, new EllipticalWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(EllipticalWorldMap.class, new EllipticalWorldMapSerializer(fory));
 
         EllipticalWorldMap data = new EllipticalWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            EllipticalWorldMap data2 = fury.deserializeJavaObject(bytes, EllipticalWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            EllipticalWorldMap data2 = fory.deserializeJavaObject(bytes, EllipticalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -48,14 +48,14 @@ public class WorldTest {
     @Test
     public void testGlobeMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
 
         GlobeMap data = new GlobeMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            GlobeMap data2 = fury.deserializeJavaObject(bytes, GlobeMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            GlobeMap data2 = fory.deserializeJavaObject(bytes, GlobeMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -63,14 +63,14 @@ public class WorldTest {
     @Test
     public void testHexagonalWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(HexagonalWorldMap.class, new HexagonalWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(HexagonalWorldMap.class, new HexagonalWorldMapSerializer(fory));
 
         HexagonalWorldMap data = new HexagonalWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            HexagonalWorldMap data2 = fury.deserializeJavaObject(bytes, HexagonalWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            HexagonalWorldMap data2 = fory.deserializeJavaObject(bytes, HexagonalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -78,14 +78,14 @@ public class WorldTest {
     @Test
     public void testHyperellipticalWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(HyperellipticalWorldMap.class, new HyperellipticalWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(HyperellipticalWorldMap.class, new HyperellipticalWorldMapSerializer(fory));
 
         HyperellipticalWorldMap data = new HyperellipticalWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            HyperellipticalWorldMap data2 = fury.deserializeJavaObject(bytes, HyperellipticalWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            HyperellipticalWorldMap data2 = fory.deserializeJavaObject(bytes, HyperellipticalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -93,14 +93,14 @@ public class WorldTest {
     @Test
     public void testDiagonalWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(DiagonalWorldMap.class, new DiagonalWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(DiagonalWorldMap.class, new DiagonalWorldMapSerializer(fory));
 
         DiagonalWorldMap data = new DiagonalWorldMap(123, 200);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            DiagonalWorldMap data2 = fury.deserializeJavaObject(bytes, DiagonalWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            DiagonalWorldMap data2 = fory.deserializeJavaObject(bytes, DiagonalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -108,14 +108,14 @@ public class WorldTest {
     @Test
     public void testLatLonWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(LatLonWorldMap.class, new LatLonWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(LatLonWorldMap.class, new LatLonWorldMapSerializer(fory));
 
         LatLonWorldMap data = new LatLonWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            LatLonWorldMap data2 = fury.deserializeJavaObject(bytes, LatLonWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            LatLonWorldMap data2 = fory.deserializeJavaObject(bytes, LatLonWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -123,14 +123,14 @@ public class WorldTest {
     @Test
     public void testLocalMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(LocalMap.class, new LocalMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(LocalMap.class, new LocalMapSerializer(fory));
 
         LocalMap data = new LocalMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            LocalMap data2 = fury.deserializeJavaObject(bytes, LocalMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            LocalMap data2 = fory.deserializeJavaObject(bytes, LocalMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -138,14 +138,14 @@ public class WorldTest {
     @Test
     public void testMimicLocalMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(MimicLocalMap.class, new MimicLocalMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(MimicLocalMap.class, new MimicLocalMapSerializer(fory));
 
         MimicLocalMap data = new MimicLocalMap(123);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            MimicLocalMap data2 = fury.deserializeJavaObject(bytes, MimicLocalMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            MimicLocalMap data2 = fory.deserializeJavaObject(bytes, MimicLocalMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -153,14 +153,14 @@ public class WorldTest {
     @Test
     public void testMimicWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(MimicWorldMap.class, new MimicWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(MimicWorldMap.class, new MimicWorldMapSerializer(fory));
 
         MimicWorldMap data = new MimicWorldMap(123);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            MimicWorldMap data2 = fury.deserializeJavaObject(bytes, MimicWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            MimicWorldMap data2 = fory.deserializeJavaObject(bytes, MimicWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -168,14 +168,14 @@ public class WorldTest {
     @Test
     public void testRotatingGlobeMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(RotatingGlobeMap.class, new RotatingGlobeMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(RotatingGlobeMap.class, new RotatingGlobeMapSerializer(fory));
 
         RotatingGlobeMap data = new RotatingGlobeMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            RotatingGlobeMap data2 = fury.deserializeJavaObject(bytes, RotatingGlobeMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            RotatingGlobeMap data2 = fory.deserializeJavaObject(bytes, RotatingGlobeMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -183,14 +183,14 @@ public class WorldTest {
     @Test
     public void testRoundSideWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(RoundSideWorldMap.class, new RoundSideWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(RoundSideWorldMap.class, new RoundSideWorldMapSerializer(fory));
 
         RoundSideWorldMap data = new RoundSideWorldMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            RoundSideWorldMap data2 = fury.deserializeJavaObject(bytes, RoundSideWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            RoundSideWorldMap data2 = fory.deserializeJavaObject(bytes, RoundSideWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -198,14 +198,14 @@ public class WorldTest {
     @Test
     public void testStretchWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(StretchWorldMap.class, new StretchWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(StretchWorldMap.class, new StretchWorldMapSerializer(fory));
 
         StretchWorldMap data = new StretchWorldMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            StretchWorldMap data2 = fury.deserializeJavaObject(bytes, StretchWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            StretchWorldMap data2 = fory.deserializeJavaObject(bytes, StretchWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -213,14 +213,14 @@ public class WorldTest {
     @Test
     public void testTilingWorldMap() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(TilingWorldMap.class, new TilingWorldMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(TilingWorldMap.class, new TilingWorldMapSerializer(fory));
 
         TilingWorldMap data = new TilingWorldMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            TilingWorldMap data2 = fury.deserializeJavaObject(bytes, TilingWorldMap.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            TilingWorldMap data2 = fory.deserializeJavaObject(bytes, TilingWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -228,8 +228,8 @@ public class WorldTest {
     @Test
     public void testSimpleBiomeMapper() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(SimpleBiomeMapper.class, new SimpleBiomeMapperSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(SimpleBiomeMapper.class, new SimpleBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -237,8 +237,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            SimpleBiomeMapper data2 = fury.deserializeJavaObject(bytes, SimpleBiomeMapper.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            SimpleBiomeMapper data2 = fory.deserializeJavaObject(bytes, SimpleBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -246,8 +246,8 @@ public class WorldTest {
     @Test
     public void testDetailedBiomeMapper() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(DetailedBiomeMapper.class, new DetailedBiomeMapperSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(DetailedBiomeMapper.class, new DetailedBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -255,8 +255,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            DetailedBiomeMapper data2 = fury.deserializeJavaObject(bytes, DetailedBiomeMapper.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            DetailedBiomeMapper data2 = fory.deserializeJavaObject(bytes, DetailedBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -264,8 +264,8 @@ public class WorldTest {
     @Test
     public void testBlendedBiomeMapper() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -273,8 +273,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            BlendedBiomeMapper data2 = fury.deserializeJavaObject(bytes, BlendedBiomeMapper.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            BlendedBiomeMapper data2 = fory.deserializeJavaObject(bytes, BlendedBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -282,8 +282,8 @@ public class WorldTest {
     @Test
     public void testUnrealisticBiomeMapper() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(UnrealisticBiomeMapper.class, new UnrealisticBiomeMapperSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(UnrealisticBiomeMapper.class, new UnrealisticBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -291,8 +291,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            UnrealisticBiomeMapper data2 = fury.deserializeJavaObject(bytes, UnrealisticBiomeMapper.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            UnrealisticBiomeMapper data2 = fory.deserializeJavaObject(bytes, UnrealisticBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -300,9 +300,9 @@ public class WorldTest {
     @Test
     public void testSimpleWorldMapView() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(SimpleWorldMapView.class, new SimpleWorldMapViewSerializer(fury));
-        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(SimpleWorldMapView.class, new SimpleWorldMapViewSerializer(fory));
+        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
 
         SimpleWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -310,8 +310,8 @@ public class WorldTest {
         data = new SimpleWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            SimpleWorldMapView data2 = fury.deserializeJavaObject(bytes, SimpleWorldMapView.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            SimpleWorldMapView data2 = fory.deserializeJavaObject(bytes, SimpleWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -319,9 +319,9 @@ public class WorldTest {
     @Test
     public void testDetailedWorldMapView() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(DetailedWorldMapView.class, new DetailedWorldMapViewSerializer(fury));
-        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(DetailedWorldMapView.class, new DetailedWorldMapViewSerializer(fory));
+        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
 
         DetailedWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -329,8 +329,8 @@ public class WorldTest {
         data = new DetailedWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            DetailedWorldMapView data2 = fury.deserializeJavaObject(bytes, DetailedWorldMapView.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            DetailedWorldMapView data2 = fory.deserializeJavaObject(bytes, DetailedWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -338,9 +338,9 @@ public class WorldTest {
     @Test
     public void testBlendedWorldMapView() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(BlendedWorldMapView.class, new BlendedWorldMapViewSerializer(fury));
-        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(BlendedWorldMapView.class, new BlendedWorldMapViewSerializer(fory));
+        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
 
         BlendedWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -348,8 +348,8 @@ public class WorldTest {
         data = new BlendedWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            BlendedWorldMapView data2 = fury.deserializeJavaObject(bytes, BlendedWorldMapView.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            BlendedWorldMapView data2 = fory.deserializeJavaObject(bytes, BlendedWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -357,9 +357,9 @@ public class WorldTest {
     @Test
     public void testUnrealisticWorldMapView() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(UnrealisticWorldMapView.class, new UnrealisticWorldMapViewSerializer(fury));
-        fury.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(UnrealisticWorldMapView.class, new UnrealisticWorldMapViewSerializer(fory));
+        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
 
         UnrealisticWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -367,8 +367,8 @@ public class WorldTest {
         data = new UnrealisticWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            UnrealisticWorldMapView data2 = fury.deserializeJavaObject(bytes, UnrealisticWorldMapView.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            UnrealisticWorldMapView data2 = fory.deserializeJavaObject(bytes, UnrealisticWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -376,13 +376,13 @@ public class WorldTest {
     @Test
     public void testFaction() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(Faction.class, new FactionSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(Faction.class, new FactionSerializer(fory));
 
         Faction data = new Faction(Language.randomLanguage(123), "The Joyous Land of Tormentia", "Tormentia", new String[]{Biome.DESERT_BIOME});
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            Faction data2 = fury.deserializeJavaObject(bytes, Faction.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            Faction data2 = fory.deserializeJavaObject(bytes, Faction.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -390,12 +390,12 @@ public class WorldTest {
     @Test
     public void testPoliticalMapper() {
         LoggerFactory.disableLogging();
-        Fury fury = Fury.builder().withLanguage(org.apache.fury.config.Language.JAVA).build();
-        fury.registerSerializer(Faction.class, new FactionSerializer(fury));
-        fury.registerSerializer(IntObjectOrderedMap.class, new IntObjectOrderedMapSerializer(fury));
-        fury.registerSerializer(StretchWorldMap.class, new StretchWorldMapSerializer(fury));
-        fury.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fury));
-        fury.registerSerializer(PoliticalMapper.class, new PoliticalMapperSerializer(fury));
+        Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
+        fory.registerSerializer(Faction.class, new FactionSerializer(fory));
+        fory.registerSerializer(IntObjectOrderedMap.class, new IntObjectOrderedMapSerializer(fory));
+        fory.registerSerializer(StretchWorldMap.class, new StretchWorldMapSerializer(fory));
+        fory.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fory));
+        fory.registerSerializer(PoliticalMapper.class, new PoliticalMapperSerializer(fory));
         PoliticalMapper data = new PoliticalMapper(new WhiskerRandom(123));
         StretchWorldMap w = new StretchWorldMap(123L, 20, 10, 1f);
         w.generate(12, 34);
@@ -403,8 +403,8 @@ public class WorldTest {
         bm.makeBiomes(w);
         data.generate(123L, w, bm, 5, 0.9f);
         {
-            byte[] bytes = fury.serializeJavaObject(data);
-            PoliticalMapper data2 = fury.deserializeJavaObject(bytes, PoliticalMapper.class);
+            byte[] bytes = fory.serializeJavaObject(data);
+            PoliticalMapper data2 = fory.deserializeJavaObject(bytes, PoliticalMapper.class);
             Assert.assertEquals(data, data2);
         }
     }

@@ -18,28 +18,28 @@ package com.github.yellowstonegames.wrath.text;
 
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.yellowstonegames.text.Mnemonic;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class MnemonicSerializer extends Serializer<Mnemonic> {
-    public MnemonicSerializer(Fury fury) {
-        super(fury, Mnemonic.class);
+    public MnemonicSerializer(Fory fory) {
+        super(fory, Mnemonic.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, Mnemonic data) {
         buffer.writeVarUint32(data.items.size());
         for(String k : data.items.order()){
-            fury.writeJavaString(buffer, k);
+            fory.writeJavaString(buffer, k);
         }
         buffer.writeVarUint32(data.allAdjectives.size());
         for(String k : data.allAdjectives.order()){
-            fury.writeJavaString(buffer, k);
+            fory.writeJavaString(buffer, k);
         }
         buffer.writeVarUint32(data.allNouns.size());
         for(String k : data.allNouns.order()){
-            fury.writeJavaString(buffer, k);
+            fory.writeJavaString(buffer, k);
         }
     }
 
@@ -48,17 +48,17 @@ public class MnemonicSerializer extends Serializer<Mnemonic> {
         int itemSize = buffer.readVarUint32();
         NumberedSet<String> items = new NumberedSet<>(itemSize);
         for (int i = 0; i < itemSize; i++) {
-            items.add(fury.readJavaString(buffer));
+            items.add(fory.readJavaString(buffer));
         }
         int adjSize = buffer.readVarUint32();
         NumberedSet<String> adj = new NumberedSet<>(adjSize);
         for (int i = 0; i < adjSize; i++) {
-            adj.add(fury.readJavaString(buffer));
+            adj.add(fory.readJavaString(buffer));
         }
         int nounSize = buffer.readVarUint32();
         NumberedSet<String> noun = new NumberedSet<>(nounSize);
         for (int i = 0; i < nounSize; i++) {
-            noun.add(fury.readJavaString(buffer));
+            noun.add(fory.readJavaString(buffer));
         }
         return new Mnemonic(items, adj, noun);
     }

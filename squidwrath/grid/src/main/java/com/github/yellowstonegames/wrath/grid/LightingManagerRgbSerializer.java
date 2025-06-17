@@ -19,9 +19,9 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.grid.*;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
  * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@link Region}, {@link CoordSerializer}
@@ -30,35 +30,35 @@ import org.apache.fury.serializer.Serializer;
  */
 @SuppressWarnings({"unchecked"})
 public class LightingManagerRgbSerializer extends Serializer<LightingManagerRgb> {
-    public LightingManagerRgbSerializer(Fury fury) {
-        super(fury, LightingManagerRgb.class);
+    public LightingManagerRgbSerializer(Fory fory) {
+        super(fory, LightingManagerRgb.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, LightingManagerRgb data) {
-        fury.writeRef(buffer, data.resistances);
+        fory.writeRef(buffer, data.resistances);
         buffer.writeInt32(data.backgroundColor);
         buffer.writeVarUint32(data.radiusStrategy.ordinal());
         buffer.writeFloat32(data.viewerRange);
-        fury.writeRef(buffer, data.noticeable);
-        fury.writeRef(buffer, data.lights);
-        fury.writeRef(buffer, data.colorLighting);
-        fury.writeRef(buffer, data.lightingStrength);
-        fury.writeRef(buffer, data.fovResult);
-        fury.writeRef(buffer, data.lightFromFOV);
-        fury.writeRef(buffer, data.losResult);
+        fory.writeRef(buffer, data.noticeable);
+        fory.writeRef(buffer, data.lights);
+        fory.writeRef(buffer, data.colorLighting);
+        fory.writeRef(buffer, data.lightingStrength);
+        fory.writeRef(buffer, data.fovResult);
+        fory.writeRef(buffer, data.lightFromFOV);
+        fory.writeRef(buffer, data.losResult);
     }
 
     @Override
     public LightingManagerRgb read(MemoryBuffer buffer) {
-        LightingManagerRgb lm = new LightingManagerRgb((float[][]) fury.readRef(buffer), buffer.readInt32(), Radius.ALL[buffer.readVarUint32()], buffer.readFloat32());
-        lm.noticeable = (Region) fury.readRef(buffer);
-        lm.lights = (ObjectDeque<LightSource>) fury.readRef(buffer);
-        lm.colorLighting = (int[][]) fury.readRef(buffer);
-        lm.lightingStrength = (float[][]) fury.readRef(buffer);
-        lm.fovResult = (float[][]) fury.readRef(buffer);
-        lm.lightFromFOV = (float[][]) fury.readRef(buffer);
-        lm.losResult = (float[][]) fury.readRef(buffer);
+        LightingManagerRgb lm = new LightingManagerRgb((float[][]) fory.readRef(buffer), buffer.readInt32(), Radius.ALL[buffer.readVarUint32()], buffer.readFloat32());
+        lm.noticeable = (Region) fory.readRef(buffer);
+        lm.lights = (ObjectDeque<LightSource>) fory.readRef(buffer);
+        lm.colorLighting = (int[][]) fory.readRef(buffer);
+        lm.lightingStrength = (float[][]) fory.readRef(buffer);
+        lm.fovResult = (float[][]) fory.readRef(buffer);
+        lm.lightFromFOV = (float[][]) fory.readRef(buffer);
+        lm.losResult = (float[][]) fory.readRef(buffer);
         return lm;
     }
 }

@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.StretchWorldMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class StretchWorldMapSerializer extends Serializer<StretchWorldMap> {
-    public StretchWorldMapSerializer(Fury fury) {
-        super(fury, StretchWorldMap.class);
+    public StretchWorldMapSerializer(Fory fory) {
+        super(fory, StretchWorldMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, StretchWorldMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public StretchWorldMap read(MemoryBuffer buffer) {
-        return StretchWorldMap.recreateFromString(fury.readJavaString(buffer));
+        return StretchWorldMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

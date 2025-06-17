@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.MimicLocalMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class MimicLocalMapSerializer extends Serializer<MimicLocalMap> {
-    public MimicLocalMapSerializer(Fury fury) {
-        super(fury, MimicLocalMap.class);
+    public MimicLocalMapSerializer(Fory fory) {
+        super(fory, MimicLocalMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, MimicLocalMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public MimicLocalMap read(MemoryBuffer buffer) {
-        return MimicLocalMap.recreateFromString(fury.readJavaString(buffer));
+        return MimicLocalMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

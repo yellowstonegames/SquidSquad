@@ -17,22 +17,22 @@
 package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.RoundSideWorldMap;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 public class RoundSideWorldMapSerializer extends Serializer<RoundSideWorldMap> {
-    public RoundSideWorldMapSerializer(Fury fury) {
-        super(fury, RoundSideWorldMap.class);
+    public RoundSideWorldMapSerializer(Fory fory) {
+        super(fory, RoundSideWorldMap.class);
     }
 
     @Override
     public void write(MemoryBuffer buffer, RoundSideWorldMap data) {
-        fury.writeJavaString(buffer, data.stringSerialize());
+        fory.writeJavaString(buffer, data.stringSerialize());
     }
 
     @Override
     public RoundSideWorldMap read(MemoryBuffer buffer) {
-        return RoundSideWorldMap.recreateFromString(fury.readJavaString(buffer));
+        return RoundSideWorldMap.recreateFromString(fory.readJavaString(buffer));
     }
 }

@@ -19,9 +19,9 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.grid.*;
-import org.apache.fury.Fury;
-import org.apache.fury.memory.MemoryBuffer;
-import org.apache.fury.serializer.Serializer;
+import org.apache.fory.Fory;
+import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.serializer.Serializer;
 
 /**
  * Needs {@code int[]}, {@code int[][]},  {@code float[]}, {@code float[][]}, {@code char[]}, {@code char[][]},
@@ -32,8 +32,8 @@ import org.apache.fury.serializer.Serializer;
  */
 @SuppressWarnings({"unchecked"})
 public class VisionFrameworkRgbSerializer extends Serializer<VisionFrameworkRgb> {
-    public VisionFrameworkRgbSerializer(Fury fury) {
-        super(fury, VisionFrameworkRgb.class);
+    public VisionFrameworkRgbSerializer(Fory fory) {
+        super(fory, VisionFrameworkRgb.class);
     }
 
     @Override
@@ -41,18 +41,18 @@ public class VisionFrameworkRgbSerializer extends Serializer<VisionFrameworkRgb>
         buffer.writeVarUint32(data.placeWidth);
         buffer.writeVarUint32(data.placeHeight);
         buffer.writeInt32(data.rememberedColor);
-        fury.writeRef(buffer, data.linePlaceMap);
-        fury.writeRef(buffer, data.prunedPlaceMap);
-        fury.writeRef(buffer, data.backgroundColors);
-        fury.writeRef(buffer, data.previousLightLevels);
-        fury.writeRef(buffer, data.blockage);
-        fury.writeRef(buffer, data.inView);
-        fury.writeRef(buffer, data.justHidden);
-        fury.writeRef(buffer, data.justSeen);
-        fury.writeRef(buffer, data.seen);
-        fury.writeRef(buffer, data.newlyVisible);
-        fury.writeRef(buffer, data.lighting);
-        fury.writeRef(buffer, data.viewers);
+        fory.writeRef(buffer, data.linePlaceMap);
+        fory.writeRef(buffer, data.prunedPlaceMap);
+        fory.writeRef(buffer, data.backgroundColors);
+        fory.writeRef(buffer, data.previousLightLevels);
+        fory.writeRef(buffer, data.blockage);
+        fory.writeRef(buffer, data.inView);
+        fory.writeRef(buffer, data.justHidden);
+        fory.writeRef(buffer, data.justSeen);
+        fory.writeRef(buffer, data.seen);
+        fory.writeRef(buffer, data.newlyVisible);
+        fory.writeRef(buffer, data.lighting);
+        fory.writeRef(buffer, data.viewers);
     }
 
     @Override
@@ -61,18 +61,18 @@ public class VisionFrameworkRgbSerializer extends Serializer<VisionFrameworkRgb>
         vf.placeWidth = input.readVarUint32();
         vf.placeHeight = input.readVarUint32();
         vf.rememberedColor = input.readInt32();
-        vf.linePlaceMap = (char[][])fury.readRef(input);
-        vf.prunedPlaceMap = (char[][])fury.readRef(input);
-        vf.backgroundColors = (int[][])fury.readRef(input);
-        vf.previousLightLevels = (float[][])fury.readRef(input);
-        vf.blockage = (Region)fury.readRef(input);
-        vf.inView = (Region)fury.readRef(input);
-        vf.justHidden = (Region)fury.readRef(input);
-        vf.justSeen = (Region)fury.readRef(input);
-        vf.seen = (Region)fury.readRef(input);
-        vf.newlyVisible = (Region)fury.readRef(input);
-        vf.lighting = (LightingManagerRgb)fury.readRef(input);
-        vf.viewers = (CoordFloatOrderedMap)fury.readRef(input);
+        vf.linePlaceMap = (char[][])fory.readRef(input);
+        vf.prunedPlaceMap = (char[][])fory.readRef(input);
+        vf.backgroundColors = (int[][])fory.readRef(input);
+        vf.previousLightLevels = (float[][])fory.readRef(input);
+        vf.blockage = (Region)fory.readRef(input);
+        vf.inView = (Region)fory.readRef(input);
+        vf.justHidden = (Region)fory.readRef(input);
+        vf.justSeen = (Region)fory.readRef(input);
+        vf.seen = (Region)fory.readRef(input);
+        vf.newlyVisible = (Region)fory.readRef(input);
+        vf.lighting = (LightingManagerRgb)fory.readRef(input);
+        vf.viewers = (CoordFloatOrderedMap)fory.readRef(input);
         return vf;
     }
 }
