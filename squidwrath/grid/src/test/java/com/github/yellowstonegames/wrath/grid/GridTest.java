@@ -95,10 +95,13 @@ public class GridTest {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fory));
+//        fory.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fory));
+        fory.register(CoordObjectMap.class);
         CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
         byte[] bytes = fory.serializeJavaObject(data);
+        //Serialized length is 82
+        System.out.println("Serialized length is " + bytes.length);
         CoordObjectMap<?> data2 = fory.deserializeJavaObject(bytes, CoordObjectMap.class);
 
         Assert.assertEquals(data, data2);
@@ -109,10 +112,13 @@ public class GridTest {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fory));
+//        fory.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fory));
+        fory.register(ObjectList.class);
+        fory.register(CoordObjectOrderedMap.class);
         CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
-
         byte[] bytes = fory.serializeJavaObject(data);
+        //Serialized length is 105
+        System.out.println("Serialized length is " + bytes.length);
         {
             CoordObjectOrderedMap<?> data2 = fory.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
             Assert.assertEquals(data, data2);
