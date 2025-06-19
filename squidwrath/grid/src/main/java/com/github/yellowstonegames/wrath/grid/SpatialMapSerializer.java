@@ -21,13 +21,14 @@ import com.github.yellowstonegames.grid.SpatialMap;
 import org.apache.fory.Fory;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
+import org.apache.fory.serializer.collection.CollectionSerializer;
 
 /**  
  * Fory {@link Serializer} for jdkgdxds {@link SpatialMap}s. Needs the value type of the SpatialMap to be registered
  * (the class that implements IGridIdentified).
  */
 @SuppressWarnings({"rawtypes", "unchecked"}) 
-public class SpatialMapSerializer extends Serializer<SpatialMap> {
+public class SpatialMapSerializer extends CollectionSerializer<SpatialMap> {
 
     public SpatialMapSerializer(Fory fory) {
         super(fory, SpatialMap.class);

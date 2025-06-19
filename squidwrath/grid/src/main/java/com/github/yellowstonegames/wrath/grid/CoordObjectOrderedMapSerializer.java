@@ -22,12 +22,13 @@ import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import org.apache.fory.Fory;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
+import org.apache.fory.serializer.collection.MapSerializer;
 
 /**
  * Fory {@link Serializer} for jdkgdxds {@link CoordObjectOrderedMap}s.
  */
 @SuppressWarnings("rawtypes")
-public class CoordObjectOrderedMapSerializer extends Serializer<CoordObjectOrderedMap> {
+public class CoordObjectOrderedMapSerializer extends MapSerializer<CoordObjectOrderedMap> {
 
     public CoordObjectOrderedMapSerializer(Fory fory) {
         super(fory, CoordObjectOrderedMap.class);

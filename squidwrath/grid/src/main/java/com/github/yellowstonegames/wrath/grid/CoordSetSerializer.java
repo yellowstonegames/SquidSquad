@@ -21,11 +21,12 @@ import com.github.yellowstonegames.grid.CoordSet;
 import org.apache.fory.Fory;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
+import org.apache.fory.serializer.collection.CollectionSerializer;
 
 /**
  * Fory {@link Serializer} for jdkgdxds {@link CoordSet}s.
  */
-public class CoordSetSerializer extends Serializer<CoordSet> {
+public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
 
     public CoordSetSerializer(Fory fory) {
         super(fory, CoordSet.class);
