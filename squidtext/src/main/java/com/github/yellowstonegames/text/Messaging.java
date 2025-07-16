@@ -317,7 +317,7 @@ public final class Messaging {
     }
 
 
-    protected static final Pattern
+    private static final Pattern
             userPattern = Pattern.compile("({at_sign}\\\\@)|({caret_sign}\\\\\\^)|({dollar_sign}\\\\\\$)|({tilde_sign}\\\\~)|" +
             "({$$$}\\$\\$\\$)|({$$}\\$\\$)|({$}\\$)|({sss}@sss\\b)|({ss}@ss\\b)|({s}@s\\b)|({usi}@usi\\b)|({fves}@fves\\b)|" +
             "({name_s}@name_s\\b)|({Name_s}@Name_s\\b)|({name}@name\\b)|({Name}@Name\\b)|({i}@i\\b)|({I}@I\\b)|({me}@me\\b)|({Me}@Me\\b)|" +
