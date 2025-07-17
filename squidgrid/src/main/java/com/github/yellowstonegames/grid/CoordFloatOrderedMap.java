@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.ObjectFloatOrderedMap;
+import com.github.tommyettinger.ds.OrderType;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 
@@ -38,6 +39,41 @@ import java.util.Collection;
  * keys' iteration order. There is code for this in {@link #fromArray2D(float[][], float, float)}.
  */
 public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
+    public CoordFloatOrderedMap(OrderType type) {
+        this(51, 0.9f, type);
+    }
+
+    public CoordFloatOrderedMap(int initialCapacity, OrderType type) {
+        super(initialCapacity, 0.9f, type);
+    }
+
+    public CoordFloatOrderedMap(int initialCapacity, float loadFactor, OrderType type) {
+        super(initialCapacity, loadFactor, type);
+    }
+
+    public CoordFloatOrderedMap(ObjectFloatOrderedMap<? extends Coord> map, OrderType type) {
+        super(map, type);
+    }
+
+    public CoordFloatOrderedMap(ObjectFloatMap<? extends Coord> map, OrderType type) {
+        super(map, type);
+    }
+
+    public CoordFloatOrderedMap(Coord[] keys, float[] values, OrderType type) {
+        this(Math.min(keys.length, values.length), type);
+        this.putAll(keys, values);
+    }
+
+    public CoordFloatOrderedMap(Collection<? extends Coord> keys, PrimitiveCollection.OfFloat values, OrderType type) {
+        this(Math.min(keys.size(), values.size()), type);
+        this.putAll(keys, values);
+    }
+
+    public CoordFloatOrderedMap(ObjectFloatOrderedMap<? extends Coord> other, int offset, int count, OrderType type) {
+        this(count, type);
+        this.putAll(0, other, offset, count);
+    }
+
     public CoordFloatOrderedMap() {
         this(51, 0.9f);
     }
