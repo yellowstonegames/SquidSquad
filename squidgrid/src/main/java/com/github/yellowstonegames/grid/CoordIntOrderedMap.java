@@ -33,6 +33,41 @@ import java.util.Collection;
  * want to get the positions within some range of values.
  */
 public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
+    public CoordIntOrderedMap(OrderType type) {
+        this(51, 0.9f, type);
+    }
+
+    public CoordIntOrderedMap(int initialCapacity, OrderType type) {
+        super(initialCapacity, 0.9f, type);
+    }
+
+    public CoordIntOrderedMap(int initialCapacity, float loadFactor, OrderType type) {
+        super(initialCapacity, loadFactor, type);
+    }
+
+    public CoordIntOrderedMap(ObjectIntOrderedMap<? extends Coord> map, OrderType type) {
+        super(map, type);
+    }
+
+    public CoordIntOrderedMap(ObjectIntMap<? extends Coord> map, OrderType type) {
+        super(map, type);
+    }
+
+    public CoordIntOrderedMap(Coord[] keys, int[] values, OrderType type) {
+        this(Math.min(keys.length, values.length), type);
+        this.putAll(keys, values);
+    }
+
+    public CoordIntOrderedMap(Collection<? extends Coord> keys, PrimitiveCollection.OfInt values, OrderType type) {
+        this(Math.min(keys.size(), values.size()), type);
+        this.putAll(keys, values);
+    }
+
+    public CoordIntOrderedMap(ObjectIntOrderedMap<? extends Coord> other, int offset, int count, OrderType type) {
+        this(count, type);
+        this.putAll(0, other, offset, count);
+    }
+
     public CoordIntOrderedMap() {
         this(51, 0.9f);
     }
