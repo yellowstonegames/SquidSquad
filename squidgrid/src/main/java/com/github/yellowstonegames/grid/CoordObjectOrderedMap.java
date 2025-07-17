@@ -19,6 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 
+import com.github.tommyettinger.ds.OrderType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 import java.util.Map;
@@ -31,6 +32,37 @@ import java.util.Map;
  * the pool.
  */
 public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
+    public CoordObjectOrderedMap(OrderType type) {
+        this(51, 0.9f, type);
+    }
+
+    public CoordObjectOrderedMap(int initialCapacity, OrderType type) {
+        super(initialCapacity, 0.9f, type);
+    }
+
+    public CoordObjectOrderedMap(int initialCapacity, float loadFactor, OrderType type) {
+        super(initialCapacity, loadFactor, type);
+    }
+
+    public CoordObjectOrderedMap(ObjectObjectOrderedMap<? extends Coord, ? extends V> map, OrderType type) {
+        super(map, type);
+    }
+
+    public CoordObjectOrderedMap(Map<? extends Coord, ? extends V> map, OrderType type) {
+        this(map.size(), type);
+        putAll(map);
+    }
+
+    public CoordObjectOrderedMap(Coord[] keys, V[] values, OrderType type) {
+        this(Math.min(keys.length, values.length), type);
+        this.putAll(keys, values);
+    }
+
+    public CoordObjectOrderedMap(Collection<? extends Coord> keys, Collection<? extends V> values, OrderType type) {
+        this(Math.min(keys.size(), values.size()), type);
+        this.putAll(keys, values);
+    }
+
     public CoordObjectOrderedMap() {
         this(51, 0.9f);
     }
@@ -186,12 +218,7 @@ public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
     public static <V> CoordObjectOrderedMap<V> with(Coord key0, V value0, Object... rest){
         CoordObjectOrderedMap<V> map = new CoordObjectOrderedMap<>(1 + (rest.length >>> 1));
         map.put(key0, value0);
-        for (int i = 1; i < rest.length; i += 2) {
-            try {
-                map.put((Coord) rest[i - 1], (V)rest[i]);
-            }catch (ClassCastException ignored){
-            }
-        }
+        map.putPairs(rest);
         return map;
     }
 
