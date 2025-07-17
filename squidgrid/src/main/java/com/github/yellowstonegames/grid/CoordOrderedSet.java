@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 
+import com.github.tommyettinger.ds.OrderType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.Collection;
 
@@ -29,6 +30,36 @@ import java.util.Collection;
  * pool.
  */
 public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
+    public CoordOrderedSet(OrderType type) {
+        this(51, 0.9f, type);
+    }
+
+    public CoordOrderedSet(int initialCapacity, float loadFactor, OrderType type) {
+        super(initialCapacity, loadFactor, type);
+    }
+
+    public CoordOrderedSet(int initialCapacity, OrderType type) {
+        super(initialCapacity, 0.9f, type);
+    }
+
+    public CoordOrderedSet(ObjectOrderedSet<? extends Coord> set, OrderType type) {
+        super(set, type);
+    }
+
+    public CoordOrderedSet(Collection<? extends Coord> coll, OrderType type) {
+        this(coll.size(), type);
+        this.addAll(coll);
+    }
+
+    public CoordOrderedSet(Coord[] array, int offset, int length, OrderType type) {
+        this(length, type);
+        this.addAll(array, offset, length);
+    }
+
+    public CoordOrderedSet(Coord[] items, OrderType type) {
+        this(items.length, type);
+        this.addAll(items);
+    }
     public CoordOrderedSet() {
         this(51, 0.9f);
     }
@@ -208,7 +239,6 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
      * @param varargs a Coord varargs or Coord array; remember that varargs allocate
      * @return a new CoordOrderedSet that holds the given items
      */
-    @SafeVarargs
     public static CoordOrderedSet with (Coord... varargs) {
         return new CoordOrderedSet(varargs);
     }
