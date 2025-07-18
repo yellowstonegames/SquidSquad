@@ -17,11 +17,13 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.crux.Point2;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.util.IntIterator;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -1272,4 +1274,14 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     public Coord seti(int x, int y) {
         return Coord.get(x, y);
     }
+
+    /**
+     * A constant PartialParser that can read in the {@link Coord#toString()} of a printed Coord to get that Coord back.
+     * This is mostly useful with {@link CoordSet#addLegible(String, String, PartialParser)} and similar methods on
+     * Coord-based data structures.
+     */
+    public static final PartialParser<Coord> COORD_PARSER = (text, start, end) -> {
+        final int comma = text.indexOf(',');
+        return Coord.get(Base.BASE10.readShort(text, start + 1, comma), Base.BASE10.readShort(text, comma + 1, text.indexOf(')')));
+    };
 }
