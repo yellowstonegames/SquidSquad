@@ -13,49 +13,52 @@
 	* See the License for the specific language governing permissions and
 	* limitations under the License.
 	*/
-package it.unimi.dsi.fastutil.floats;
+package it.unimi.dsi.fastutil.doubles;
 
-import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.tommyettinger.ds.support.sort.DoubleComparator;
+import it.unimi.dsi.fastutil.doubles.DoubleSemiIndirectHeaps;
 import it.unimi.dsi.fastutil.ints.IntArrays;
-import java.util.Arrays;
+
 import java.util.NoSuchElementException;
 
 /**
- * A type-specific heap-based indirect priority queue.
+ * A type-specific heap-based semi-indirect priority queue.
  *
  * <p>
- * Instances of this class use an additional <em>inversion array</em>, of the same length of the
- * reference array, to keep track of the heap position containing a given element of the reference
- * array. The priority queue is represented using a heap. The heap is enlarged as needed, but it is
- * never shrunk. Use the {@link #trim()} method to reduce its size, if necessary.
- *
- * @implSpec This implementation does <em>not</em> allow one to enqueue several times the same
- *           index.
+ * Instances of this class use as reference list a <em>reference array</em>, which must be provided
+ * to each constructor. The priority queue is represented using a heap. The heap is enlarged as
+ * needed, but it is never shrunk. Use the {@link #trim()} method to reduce its size, if necessary.
  */
-public class FloatHeapIndirectPriorityQueue extends FloatHeapSemiIndirectPriorityQueue {
-	/** The inversion array. */
-	protected final int inv[];
+public class DoubleHeapSemiIndirectPriorityQueue {
+	/** The reference array. */
+	protected final double refArray[];
+	/** The semi-indirect heap. */
+	protected int heap[] = IntArrays.EMPTY_ARRAY;
+	/** The number of elements in this queue. */
+	protected int size;
+	/** The type-specific comparator used in this queue. */
+	protected DoubleComparator c;
 
 	/**
-	 * Creates a new empty queue with a given capacity and comparator.
+	 * Creates a new empty queue without elements with a given capacity and comparator.
 	 *
 	 * @param refArray the reference array.
 	 * @param capacity the initial capacity of this queue.
 	 * @param c the comparator used in this queue, or {@code null} for the natural order.
 	 */
-	public FloatHeapIndirectPriorityQueue(float[] refArray, int capacity, FloatComparator c) {
-		super(refArray, capacity, c);
-		this.inv = new int[refArray.length];
-		Arrays.fill(inv, -1);
+	public DoubleHeapSemiIndirectPriorityQueue(double[] refArray, int capacity, DoubleComparator c) {
+		if (capacity > 0) this.heap = new int[capacity];
+		this.refArray = refArray;
+		this.c = c;
 	}
 
 	/**
-	 * Creates a new empty queue with a given capacity and using the natural order.
+	 * Creates a new empty queue with given capacity and using the natural order.
 	 *
 	 * @param refArray the reference array.
 	 * @param capacity the initial capacity of this queue.
 	 */
-	public FloatHeapIndirectPriorityQueue(float[] refArray, int capacity) {
+	public DoubleHeapSemiIndirectPriorityQueue(double[] refArray, int capacity) {
 		this(refArray, capacity, null);
 	}
 
@@ -66,7 +69,7 @@ public class FloatHeapIndirectPriorityQueue extends FloatHeapSemiIndirectPriorit
 	 * @param refArray the reference array.
 	 * @param c the comparator used in this queue, or {@code null} for the natural order.
 	 */
-	public FloatHeapIndirectPriorityQueue(float[] refArray, FloatComparator c) {
+	public DoubleHeapSemiIndirectPriorityQueue(double[] refArray, DoubleComparator c) {
 		this(refArray, refArray.length, c);
 	}
 
@@ -76,7 +79,7 @@ public class FloatHeapIndirectPriorityQueue extends FloatHeapSemiIndirectPriorit
 	 * 
 	 * @param refArray the reference array.
 	 */
-	public FloatHeapIndirectPriorityQueue(float[] refArray) {
+	public DoubleHeapSemiIndirectPriorityQueue(final double[] refArray) {
 		this(refArray, refArray.length, null);
 	}
 
@@ -93,16 +96,11 @@ public class FloatHeapIndirectPriorityQueue extends FloatHeapSemiIndirectPriorit
 	 * @param size the number of elements to be included in the queue.
 	 * @param c the comparator used in this queue, or {@code null} for the natural order.
 	 */
-	public FloatHeapIndirectPriorityQueue(final float[] refArray, final int[] a, final int size, final FloatComparator c) {
+	public DoubleHeapSemiIndirectPriorityQueue(final double[] refArray, final int[] a, int size, final DoubleComparator c) {
 		this(refArray, 0, c);
 		this.heap = a;
 		this.size = size;
-		int i = size;
-		while (i-- != 0) {
-			if (inv[a[i]] != -1) throw new IllegalArgumentException("Index " + a[i] + " appears twice in the heap");
-			inv[a[i]] = i;
-		}
-		FloatIndirectHeaps.makeHeap(refArray, a, inv, size, c);
+		DoubleSemiIndirectHeaps.makeHeap(refArray, a, size, c);
 	}
 
 	/**
@@ -117,7 +115,7 @@ public class FloatHeapIndirectPriorityQueue extends FloatHeapSemiIndirectPriorit
 	 * @param a an array of indices into {@code refArray}.
 	 * @param c the comparator used in this queue, or {@code null} for the natural order.
 	 */
-	public FloatHeapIndirectPriorityQueue(final float[] refArray, final int[] a, final FloatComparator c) {
+	public DoubleHeapSemiIndirectPriorityQueue(final double[] refArray, final int[] a, final DoubleComparator c) {
 		this(refArray, a, a.length, c);
 	}
 
@@ -133,7 +131,7 @@ public class FloatHeapIndirectPriorityQueue extends FloatHeapSemiIndirectPriorit
 	 * @param a an array of indices into {@code refArray}.
 	 * @param size the number of elements to be included in the queue.
 	 */
-	public FloatHeapIndirectPriorityQueue(final float[] refArray, final int[] a, int size) {
+	public DoubleHeapSemiIndirectPriorityQueue(final double[] refArray, final int[] a, int size) {
 		this(refArray, a, size, null);
 	}
 
@@ -148,68 +146,81 @@ public class FloatHeapIndirectPriorityQueue extends FloatHeapSemiIndirectPriorit
 	 * @param refArray the reference array.
 	 * @param a an array of indices into {@code refArray}.
 	 */
-	public FloatHeapIndirectPriorityQueue(final float[] refArray, final int[] a) {
+	public DoubleHeapSemiIndirectPriorityQueue(final double[] refArray, final int[] a) {
 		this(refArray, a, a.length);
 	}
 
-	@Override
-	public void enqueue(final int x) {
-		if (inv[x] >= 0) throw new IllegalArgumentException("Index " + x + " belongs to the queue");
+	/**
+	 * Ensures that the given index is a valid reference.
+	 *
+	 * @param index an index in the reference array.
+	 * @throws IndexOutOfBoundsException if the given index is negative or larger than the reference
+	 *             array length.
+	 */
+	protected void ensureElement(final int index) {
+		if (index < 0) throw new IndexOutOfBoundsException("Index (" + index + ") is negative");
+		if (index >= refArray.length) throw new IndexOutOfBoundsException("Index (" + index + ") is larger than or equal to reference array size (" + refArray.length + ")");
+	}
+
+	public void enqueue(int x) {
+		ensureElement(x);
 		if (size == heap.length) heap = IntArrays.grow(heap, size + 1);
-		inv[heap[size] = x] = size++;
-		FloatIndirectHeaps.upHeap(refArray, heap, inv, size, size - 1, c);
+		heap[size++] = x;
+		DoubleSemiIndirectHeaps.upHeap(refArray, heap, size, size - 1, c);
 	}
 
-	@Override
-	public boolean contains(final int index) {
-		return inv[index] >= 0;
-	}
-
-	@Override
 	public int dequeue() {
 		if (size == 0) throw new NoSuchElementException();
 		final int result = heap[0];
-		if (--size != 0) inv[heap[0] = heap[size]] = 0;
-		inv[result] = -1;
-		if (size != 0) FloatIndirectHeaps.downHeap(refArray, heap, inv, size, 0, c);
+		heap[0] = heap[--size];
+		if (size != 0) DoubleSemiIndirectHeaps.downHeap(refArray, heap, size, 0, c);
 		return result;
 	}
+	
+	public int first() {
+		if (size == 0) throw new NoSuchElementException();
+		return heap[0];
+	}
 
-	@Override
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>
+	 * The caller <strong>must</strong> guarantee that when this method is called the index of the first
+	 * element appears just once in the queue. Failure to do so will bring the queue in an inconsistent
+	 * state, and will cause unpredictable behaviour.
+	 */
 	public void changed() {
-		FloatIndirectHeaps.downHeap(refArray, heap, inv, size, 0, c);
+		DoubleSemiIndirectHeaps.downHeap(refArray, heap, size, 0, c);
 	}
 
-	@Override
-	public void changed(final int index) {
-		final int pos = inv[index];
-		if (pos < 0) throw new IllegalArgumentException("Index " + index + " does not belong to the queue");
-		final int newPos = FloatIndirectHeaps.upHeap(refArray, heap, inv, size, pos, c);
-		FloatIndirectHeaps.downHeap(refArray, heap, inv, size, newPos, c);
-	}
-
-	/** Rebuilds this queue in a bottom-up fashion (in linear time). */
-	@Override
+	/** Rebuilds this heap in a bottom-up fashion (in linear time). */
 	public void allChanged() {
-		FloatIndirectHeaps.makeHeap(refArray, heap, inv, size, c);
+		DoubleSemiIndirectHeaps.makeHeap(refArray, heap, size, c);
 	}
 
-	@Override
-	public boolean remove(final int index) {
-		final int result = inv[index];
-		if (result < 0) return false;
-		inv[index] = -1;
-		if (result < --size) {
-			inv[heap[result] = heap[size]] = result;
-			final int newPos = FloatIndirectHeaps.upHeap(refArray, heap, inv, size, result, c);
-			FloatIndirectHeaps.downHeap(refArray, heap, inv, size, newPos, c);
-		}
-		return true;
+	public int size() {
+		return size;
 	}
 
-	@Override
 	public void clear() {
 		size = 0;
-		Arrays.fill(inv, -1);
+	}
+
+    /** Trims the backing array so that it has exactly {@link #size()} elements. */
+	public void trim() {
+		heap = IntArrays.trim(heap, size);
+	}
+
+    @Override
+	public String toString() {
+		StringBuffer s = new StringBuffer();
+		s.append("[");
+		for (int i = 0; i < size; i++) {
+			if (i != 0) s.append(", ");
+			s.append(refArray[heap[i]]);
+		}
+		s.append("]");
+		return s.toString();
 	}
 }
