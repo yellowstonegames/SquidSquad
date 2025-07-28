@@ -78,18 +78,18 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = false;
+    private static final boolean isTriangular = true;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 10;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -140,6 +140,9 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
     private final AceRandom random = new AceRandom(1, 2, 3, 4, 5);
     @Override
     public void create() {
+        // with triangular=true, shift=8, sectorShift=2:
+        // Took 53056ms to process.
+        final long startTime = System.currentTimeMillis();
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
         path = "out/blueNoise/" + date + "_" + System.currentTimeMillis() + "/";
@@ -173,6 +176,7 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
         generate();
         getThresholdAndFFT(pm);
 //        getThresholdAndFFT(new Pixmap(Gdx.files.local("2025/BlueNoiseOmniTiling512x512.png")));
+        System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to process.");
         Gdx.app.exit();
     }
 

@@ -83,11 +83,11 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 10;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -131,6 +131,16 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
 
     @Override
     public void create() {
+        // with triangular=true, shift=8, sectorShift=2:
+        // using parallelRadixSortIndirect:
+        // Took 75969ms to process.
+        // using radixSortIndirect:
+        // Took 82311ms to process.
+        // using parallelQuickSortIndirect:
+        // Took 42030ms to process.
+        // using parallelQuickSortIndirect but also parallelQuickSort for post...
+        // Took 59216ms to process.
+        final long startTime = System.currentTimeMillis();
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
         path = "out/blueNoise/" + date + "_" + System.currentTimeMillis() + "/";
@@ -161,6 +171,7 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
 
         generate();
         getThresholdAndFFT(pm);
+        System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to process.");
         Gdx.app.exit();
     }
 
@@ -238,8 +249,10 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             }
             //Took 5714ms to generate. (7,3)
 //            order.sortJDK((a, b) -> Float.floatToIntBits(energy.get(a) - energy.get(b)));
-            // only faster with large shifts, like 10
-            FloatArrays.parallelRadixSortIndirect(inv, energy, true);
+            // parallel is only faster with large shifts, like 10
+//            FloatArrays.parallelRadixSortIndirect(inv, energy, true);
+//            FloatArrays.radixSortIndirect(inv, energy, true);
+            FloatArrays.parallelQuickSortIndirect(inv, energy);
             int low = inv[0];
             int k = 1;
             while(lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)] >= lightOccurrence){
@@ -320,8 +333,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
     }
 
     public void getThresholdAndFFT(Pixmap pm) {
-        long startTime = System.currentTimeMillis();
-
         final double[][] real = new double[size][size], imag = new double[size][size];
         final float[][] colors = new float[size][size];
         for (int threshold = 0; threshold < 255; threshold++) {
@@ -356,8 +367,6 @@ public class BlueNoiseFastOmniTilingGenerator extends ApplicationAdapter {
             thr.dispose();
 
         }
-
-        System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to get FFT.");
     }
 
     @Override

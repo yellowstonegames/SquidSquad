@@ -33,7 +33,8 @@ public class CellularAutomatonDemo {
         ca.current.remake(region.removeEdges().largestPart());
         region.remake(ca.runDiagonalGapCleanup());
         char[][] map = region.toChars('.', '#');
-        map = LineTools.hashesToLines(new DungeonProcessor(40, 40, rng).generate(map, region.toInts(DungeonTools.ROOM_FLOOR, DungeonTools.ROOM_WALL)));
+        map = //LineTools.hashesToLines
+                (new DungeonProcessor(40, 40, rng).generate(map, region.toInts(DungeonTools.ROOM_FLOOR, DungeonTools.ROOM_WALL)));
         DungeonTools.debugPrint(map);
     }
 }

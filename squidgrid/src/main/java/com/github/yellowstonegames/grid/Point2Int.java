@@ -7,6 +7,9 @@ import com.github.tommyettinger.ds.PrimitiveCollection;
 /**
  * A mutable 2D point with int components implementing {@link Point2}, {@link PrimitiveCollection.OfInt},
  * and {@link PointNInt}.
+ * <br>
+ * Contrast with {@link Coord}, which is immutable, stores values in a pool, and only allows {@code short} components.
+ * Coord, being immutable, works better as a key in hashed maps and sets.
  */
 public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2<?>>, PrimitiveCollection.OfInt {
 
