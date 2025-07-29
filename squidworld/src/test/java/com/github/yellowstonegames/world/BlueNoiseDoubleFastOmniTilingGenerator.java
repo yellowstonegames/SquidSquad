@@ -70,7 +70,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * True if this should produce triangular-mapped blue noise.
      */
-    private static final boolean isTriangular = true;
+    private static final boolean isTriangular = false;
 
     private static final double sigma = 1.9, sigma2 = sigma * sigma;
 
@@ -128,6 +128,9 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
         // with triangular=true, shift=8, sectorShift=2:
         // using parallelQuickSortIndirect:
         // Took 37947ms to process.
+        // Using triangular=false, shift=10, sectorShift=3:
+        // using parallelQuickSortIndirect:
+        // Took 24956823ms to process.
         final long startTime = System.currentTimeMillis();
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
