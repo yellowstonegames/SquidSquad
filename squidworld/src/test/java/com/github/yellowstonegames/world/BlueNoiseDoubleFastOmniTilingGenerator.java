@@ -139,6 +139,9 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
         // Using triangular=false, shift=9, sectorShift=2:
         // using parallelQuickSortIndirect:
         // Took 1309960ms to process.
+        // Using triangular=false, shift=8, sectorShift=2:
+        // using parallelQuickSortIndirect and stabilize:
+        // Took 54515ms to process.
         final long startTime = System.currentTimeMillis();
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
@@ -250,7 +253,9 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
             // parallel is only faster with large shifts, like 10
 //            DoubleArrays.parallelRadixSortIndirect(inv, energy, true);
 //            DoubleArrays.radixSortIndirect(inv, energy, true);
+
             DoubleArrays.parallelQuickSortIndirect(inv, energy);
+            DoubleArrays.stabilize(inv, energy);
             int low = inv[0];
             int k = 1;
             while(lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)] >= lightOccurrence){
