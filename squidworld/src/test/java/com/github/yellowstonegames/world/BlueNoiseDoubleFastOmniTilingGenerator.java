@@ -79,11 +79,11 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 8;
+    private static final int shift = 10;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 2;
+    private static final int sectorShift = 3;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -142,6 +142,9 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
         // Using triangular=false, shift=8, sectorShift=2:
         // using parallelQuickSortIndirect and stabilize:
         // Took 54515ms to process.
+        // Using triangular=false, shift=10, sectorShift=3:
+        // using parallelQuickSortIndirect and stabilize:
+        // Took 33925661ms to process.
         final long startTime = System.currentTimeMillis();
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
