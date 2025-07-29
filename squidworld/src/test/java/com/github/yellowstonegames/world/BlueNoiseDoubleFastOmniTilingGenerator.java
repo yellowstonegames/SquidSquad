@@ -32,6 +32,8 @@ import com.github.yellowstonegames.grid.Coord;
 import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -77,11 +79,11 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    private static final int shift = 10;
+    private static final int shift = 8;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    private static final int sectorShift = 3;
+    private static final int sectorShift = 2;
 
     private static final int blockShift = shift - sectorShift;
 
@@ -131,6 +133,12 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
         // Using triangular=false, shift=10, sectorShift=3:
         // using parallelQuickSortIndirect:
         // Took 24956823ms to process.
+        // Using triangular=false, shift=8, sectorShift=1:
+        // using parallelQuickSortIndirect:
+        // Took 40086ms to process.
+        // Using triangular=false, shift=9, sectorShift=2:
+        // using parallelQuickSortIndirect:
+        // Took 1309960ms to process.
         final long startTime = System.currentTimeMillis();
         Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
@@ -209,7 +217,8 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
     {
         long startTime = System.currentTimeMillis();
 
-        final int limit = totalSectors << 3;
+        final int limit = totalSectors;
+//        final int limit = totalSectors << 3;
         int[] initial = new int[limit];
         int idx = 1;
         for (int i = 0; i < limit; i++) {
@@ -253,6 +262,9 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
 
         }
 
+        ByteBuffer bytes = ByteBuffer.allocate(sizeSq << 2);
+        IntBuffer buffer = bytes.asIntBuffer();
+
         int[] histogram = new int[256];
 
         if(isTriangular) {
@@ -280,6 +292,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
                 IntArrays.stableSort(inv, from, from + sectorSize, (a, b) -> done[a] - done[b]);
                 for (int i = 0; i < sectorSize; i++) {
                     final int pt = inv[from + i];
+                    buffer.put(pt, i);
                     final int color = colorMap[i];
                     pm.drawPixel(pt>>>shift, pt&mask, color);
                     histogram[color>>>24]++;
@@ -296,6 +309,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
                 IntArrays.stableSort(inv, from, from + sectorSize, (a, b) -> done[a] - done[b]);
                 for (int i = 0; i < sectorSize; i++) {
                     final int pt = inv[from+i];
+                    buffer.put(pt, i);
                     final double r = (i * (256.0 / sectorSize));
                     final int level = ((int) (r) & 0xFF);
                     histogram[level]++;
@@ -311,6 +325,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
 
         String name = path + "BlueNoise" + (isTriangular ? "TriFast" : "Fast") + "Tiling";
         writer.write(Gdx.files.local(name + size + "x" + size + ".png"), pm);
+        Gdx.files.local(name + size + "x" + size + ".dat").writeBytes(bytes.array(), false);
         for (int y = 0; y < sectors; y++) {
             for (int x = 0; x < sectors; x++) {
                 pmSection.drawPixmap(pm, x * sector, y * sector, sector, sector, 0, 0, sector, sector);
