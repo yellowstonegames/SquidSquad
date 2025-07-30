@@ -25,17 +25,14 @@ import com.github.tommyettinger.anim8.FastPNG;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
-import com.github.yellowstonegames.grid.Coord;
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
-import it.unimi.dsi.fastutil.ints.IntArrays;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.util.Date;
+
+import static com.github.yellowstonegames.world.BlueNoiseDoubleFastOmniTilingGenerator.*;
 
 /**
  * Porting Bart Wronski's blue noise generator from NumPy to Java, see
@@ -67,47 +64,16 @@ import java.util.Date;
  * <br>
  * Higher precision doesn't seem to help with grid artifacts when using triangular mapping...
  */
-public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
+public class BlueNoiseTentDatProcessor extends ApplicationAdapter {
 
     /**
-     * True if this should produce triangular-mapped blue noise.
+     * True if this should produce triangular-mapped blue noise (always).
      */
-    private static final boolean isTriangular = false;
-
-    private static final double sigma = 1.9, sigma2 = sigma * sigma;
-
-    /**
-     * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
-     */
-    public static final int shift = 8;
-    /**
-     * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
-     */
-    public static final int sectorShift = 1;
-
-    public static final int blockShift = shift - sectorShift;
-
-    public static final int size = 1 << shift;
-    public static final int sizeSq = size * size;
-    public static final int sectors = 1 << sectorShift;
-    public static final int totalSectors = sectors * sectors;
-    public static final int sector = size >>> sectorShift;
-    public static final int sectorSize = sector * sector;
-    public static final int mask = size - 1;
-    private static final int sectorMask = sector - 1;
-    private static final int wrapMask = sector >>> 1;
-    private static final double fraction = 1.0 / (totalSectors);
-    private static final int lightOccurrenceBase = sizeSq >>> 8 + sectorShift + sectorShift;
-    private static int lightOccurrence = lightOccurrenceBase;
-
-    private final double[] energy = new double[sizeSq];
-    private final double[][] lut = new double[sector][sector];
-    private final int[] done = new int[sizeSq];
-    private final int[] inv = ArrayTools.range(sizeSq);
+    private static final boolean isTriangular = true;
     private Pixmap pm, pmSection;
     private FastPNG writer;
     private String path;
-    private final int[] lightCounts = new int[sectors * sectors];
+    private static final String datPath = "squidworld/src/test/resources/2025/BlueNoiseOmniTiling256x256_Jul_29.dat";
 
     public final AceRandom random = new AceRandom(1, 2, 3, 4, 5);
 
@@ -115,38 +81,9 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
         return x << shift | y;
     }
 
-    private void update(final int x, final int y, final double value) {
-        final int idx = x << shift | y;
-        energy[idx] = value;
-    }
-
-    private void add(final int x, final int y, final double value) {
-        final int idx = x << shift | y;
-        energy[idx] += value;
-    }
-
     @Override
     public void create() {
-        // with triangular=true, shift=8, sectorShift=2:
-        // using parallelQuickSortIndirect:
-        // Took 37947ms to process.
-        // Using triangular=false, shift=10, sectorShift=3:
-        // using parallelQuickSortIndirect:
-        // Took 24956823ms to process.
-        // Using triangular=false, shift=8, sectorShift=1:
-        // using parallelQuickSortIndirect:
-        // Took 40086ms to process.
-        // Using triangular=false, shift=9, sectorShift=2:
-        // using parallelQuickSortIndirect:
-        // Took 1309960ms to process.
-        // Using triangular=false, shift=8, sectorShift=2:
-        // using parallelQuickSortIndirect and stabilize:
-        // Took 54515ms to process.
-        // Using triangular=false, shift=10, sectorShift=3:
-        // using parallelQuickSortIndirect and stabilize:
-        // Took 33925661ms to process.
         final long startTime = System.currentTimeMillis();
-        Coord.expandPoolTo(size, size);
         String date = DateFormat.getDateInstance().format(new Date());
         path = "out/blueNoise/" + date + "_" + System.currentTimeMillis() + "/";
         random.setSeed(Hasher.bune.hashBulk64(date));
@@ -155,123 +92,29 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
         pm = new Pixmap(size, size, Pixmap.Format.RGBA8888);
         pm.setBlending(Pixmap.Blending.None);
         pmSection = new Pixmap(sector, sector, Pixmap.Format.RGBA8888);
-        pm.setBlending(Pixmap.Blending.None);
+        pmSection.setBlending(Pixmap.Blending.None);
 
         writer = new FastPNG((int)(pm.getWidth() * pm.getHeight() * 2f)); // Guess at deflated size.
         writer.setFlipY(false);
         writer.setCompression(6);
-
-        final int hs = sector >>> 1;
-        double[] column = new double[sector];
-        for (int i = 1; i < hs; i++) {
-            column[sector - i] = column[i] = Math.exp(-0.5 * i * i / sigma2);
-        }
-        column[0] = 1f;
-        for (int x = 0; x < sector; x++) {
-            for (int y = 0; y < sector; y++) {
-                lut[x][y] = column[x] * column[y];
-            }
-        }
-        lut[0][0] = Double.MAX_VALUE;
-
         generate();
         getThresholdAndFFT(pm);
         System.out.println("Took " + (System.currentTimeMillis() - startTime) + "ms to process.");
         Gdx.app.exit();
     }
 
-    private void energize(int point) {
-        final int pointX = point >>> shift, pointY = point & mask;
-        final int outerX = pointX & ~sectorMask, outerY = pointY & ~sectorMask;
-        for (int x = 0; x < sector; x++) {
-            for (int y = 0; y < sector; y++) {
-                if((pointX & sectorMask) <= x + wrapMask && (pointX & sectorMask) + wrapMask >= x &&
-                        (pointY & sectorMask) <= y + wrapMask && (pointY & sectorMask) + wrapMask >= y)
-                {
-                    add(outerX + x, outerY + y, lut[x - pointX & sectorMask][y - pointY & sectorMask]);
-                }
-                else
-                {
-                    for (int ex = 0; ex < sectors; ex++) {
-                        for (int ey = 0; ey < sectors; ey++) {
-                            add((ex << blockShift) + x, (ey << blockShift) + y,
-                                    lut[x - pointX & sectorMask][y - pointY & sectorMask] * fraction);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static int vdc(final int base, int index)
-    {
-        return (int)(MathTools.GOLDEN_LONGS[base & 1023] * index >>> 64 - shift);
-//        if(base <= 2) {
-//            return (Integer.reverse(index) >>> 32 - shift);
-//        }
-//        double denominator = base, res = 0.0;
-//        while (index > 0)
-//        {
-//            res += (index % base) / denominator;
-//            index /= base;
-//            denominator *= base;
-//        }
-//        return (int) (res * sector);
-    }
-
     public void generate()
     {
         long startTime = System.currentTimeMillis();
 
-        final int limit = totalSectors;
-//        final int limit = totalSectors << 3;
-        int[] initial = new int[limit];
-        int idx = 1;
-        for (int i = 0; i < limit; i++) {
-            int runningLimit = (i >>> sectorShift + sectorShift);
-            int pt;
-            do{
-                pt = get(vdc(1, idx), vdc(2, idx));
-                idx++;
-                int loc = ((pt >>> shift) >>> blockShift) << sectorShift | (pt & mask) >>> blockShift;
-                if(lightCounts[loc] <= runningLimit) {
-                    lightCounts[loc]++;
-                    break;
-                }
-            } while (true);
-            initial[i] = pt;
-        }
-        int ctr = 0;
+        ByteBuffer bytes = ByteBuffer.wrap(Gdx.files.local(datPath).readBytes());
+        int[] inv = new int[sizeSq];
+        bytes.asIntBuffer().get(inv);
 
-        for(int c : initial) {
-            energize(c);
-            done[c] = ctr++;
-        }
-
-        for (int n = sizeSq; ctr < n; ctr++) {
-            if((ctr & (lightOccurrenceBase << sectorShift + sectorShift) - 1) == 0) {
-                lightOccurrence += lightOccurrenceBase;
-                System.out.println("Completed " + ctr + " out of " + n + " in " + (System.currentTimeMillis() - startTime) + "ms.");
-            }
-            // parallel is only faster with large shifts, like 10
-//            DoubleArrays.parallelRadixSortIndirect(inv, energy, true);
-//            DoubleArrays.radixSortIndirect(inv, energy, true);
-
-            DoubleArrays.parallelQuickSortIndirect(inv, energy);
-            DoubleArrays.stabilize(inv, energy);
-            int low = inv[0];
-            int k = 1;
-            while(lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)] >= lightOccurrence){
-                low = inv[k++];
-            }
-            lightCounts[((low>>>shift) >>> blockShift) << sectorShift | ((low&mask) >>> blockShift)]++;
-            energize(low);
-            done[low] = ctr;
-
-        }
-
-        ByteBuffer bytes = ByteBuffer.allocate(sizeSq << 2);
-        IntBuffer buffer = bytes.asIntBuffer();
+        System.out.println(inv[0]);
+        System.out.println(inv[1]);
+        System.out.println(inv[2]);
+        System.out.println(inv[3]);
 
         int[] histogram = new int[256];
 
@@ -291,13 +134,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
                 span += (-63 + i | 63 - i) >>> 31 & boost;
             }
 
-            IntArrays.unstableSort(inv, (a, b) ->
-                    (((a>>>shift) >>> blockShift) << sectorShift | ((a&mask) >>> blockShift))
-                    - (((b>>>shift) >>> blockShift) << sectorShift | ((b&mask) >>> blockShift))
-            );
             for (int from = 0; from < sizeSq; from += sectorSize) {
-                random.shuffle(inv, from, sectorSize);
-                IntArrays.stableSort(inv, from, from + sectorSize, (a, b) -> done[a] - done[b]);
                 for (int i = 0; i < sectorSize; i++) {
                     final int pt = inv[from + i];
                     final int color = colorMap[i];
@@ -305,20 +142,11 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
                     histogram[color>>>24]++;
                 }
             }
-            buffer.put(inv);
-            buffer.flip();
         }
         else {
-            IntArrays.unstableSort(inv, (a, b) ->
-                    (((a>>>shift) >>> blockShift) << sectorShift | ((a&mask) >>> blockShift))
-                            - (((b>>>shift) >>> blockShift) << sectorShift | ((b&mask) >>> blockShift))
-            );
             for (int from = 0; from < sizeSq; from += sectorSize) {
-                random.shuffle(inv, from, sectorSize);
-                IntArrays.stableSort(inv, from, from + sectorSize, (a, b) -> done[a] - done[b]);
                 for (int i = 0; i < sectorSize; i++) {
                     final int pt = inv[from+i];
-                    buffer.put(pt, i);
                     final double r = (i * (256.0 / sectorSize));
                     final int level = ((int) (r) & 0xFF);
                     histogram[level]++;
@@ -334,7 +162,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
 
         String name = path + "BlueNoise" + (isTriangular ? "TriFast" : "Fast") + "Tiling";
         writer.write(Gdx.files.local(name + size + "x" + size + ".png"), pm);
-        Gdx.files.local(name + size + "x" + size + ".dat").writeBytes(bytes.array(), false);
+//        Gdx.files.local(name + size + "x" + size + ".dat").writeBytes(bytes.array(), false);
         for (int y = 0; y < sectors; y++) {
             for (int x = 0; x < sectors; x++) {
                 pmSection.drawPixmap(pm, x * sector, y * sector, sector, sector, 0, 0, sector, sector);
@@ -397,9 +225,9 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("SquidSquad Tool: LARGE Blue Noise Tiling Generator");
+        config.setTitle("SquidSquad Tool: Tent Blue Noise DAT Processor");
         config.setWindowedMode(size, size);
         config.disableAudio(true);
-        new Lwjgl3Application(new BlueNoiseDoubleFastOmniTilingGenerator(), config);
+        new Lwjgl3Application(new BlueNoiseTentDatProcessor(), config);
     }
 }
