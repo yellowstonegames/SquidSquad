@@ -80,11 +80,11 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
     /**
      * Affects the size of the parent noise; typically 8 or 9 for a 256x256 or 512x512 parent image.
      */
-    public static final int shift = 8;
+    public static final int shift = 10;
     /**
      * Affects how many sectors are cut out of the full size; this is an exponent (with a base of 2).
      */
-    public static final int sectorShift = 1;
+    public static final int sectorShift = 3;
 
     public static final int blockShift = shift - sectorShift;
 

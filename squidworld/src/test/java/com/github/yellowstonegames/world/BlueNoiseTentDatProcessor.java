@@ -74,7 +74,7 @@ public class BlueNoiseTentDatProcessor extends ApplicationAdapter {
     private Pixmap pm, pmSection;
     private FastPNG writer;
     private String path;
-    private static final String datPath = "squidworld/src/test/resources/2025/BlueNoiseOmniTiling256x256_Jul_30.dat";
+    private static final String datPath = "squidworld/src/test/resources/2025/BlueNoiseOmniTiling1024x1024_Jul_31.dat";
 
     public final AceRandom random = new AceRandom(1, 2, 3, 4, 5);
 
