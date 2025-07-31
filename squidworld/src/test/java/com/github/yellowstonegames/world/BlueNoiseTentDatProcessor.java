@@ -29,6 +29,7 @@ import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.grid.BlueNoise;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -73,7 +74,7 @@ public class BlueNoiseTentDatProcessor extends ApplicationAdapter {
     private Pixmap pm, pmSection;
     private FastPNG writer;
     private String path;
-    private static final String datPath = "squidworld/src/test/resources/2025/BlueNoiseOmniTiling256x256_Jul_29.dat";
+    private static final String datPath = "squidworld/src/test/resources/2025/BlueNoiseOmniTiling256x256_Jul_30.dat";
 
     public final AceRandom random = new AceRandom(1, 2, 3, 4, 5);
 
@@ -107,14 +108,14 @@ public class BlueNoiseTentDatProcessor extends ApplicationAdapter {
     {
         long startTime = System.currentTimeMillis();
 
-        ByteBuffer bytes = ByteBuffer.wrap(Gdx.files.local(datPath).readBytes());
+        ByteBuffer bytes = ByteBuffer.wrap(Gdx.files.local(datPath).readBytes()).order(ByteOrder.nativeOrder());;
         int[] inv = new int[sizeSq];
         bytes.asIntBuffer().get(inv);
 
-        System.out.println(inv[0]);
-        System.out.println(inv[1]);
-        System.out.println(inv[2]);
-        System.out.println(inv[3]);
+//        System.out.println(inv[0]);
+//        System.out.println(inv[1]);
+//        System.out.println(inv[2]);
+//        System.out.println(inv[3]);
 
         int[] histogram = new int[256];
 

@@ -33,6 +33,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.util.Date;
@@ -270,7 +271,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
 
         }
 
-        ByteBuffer bytes = ByteBuffer.allocate(sizeSq << 2);
+        ByteBuffer bytes = ByteBuffer.allocate(sizeSq << 2).order(ByteOrder.nativeOrder());
         IntBuffer buffer = bytes.asIntBuffer();
 
         int[] histogram = new int[256];
@@ -309,7 +310,7 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
             buffer.flip();
         }
         else {
-            IntArrays.unstableSort(inv, (a, b) ->
+            IntArrays.parallelQuickSort(inv, (a, b) ->
                     (((a>>>shift) >>> blockShift) << sectorShift | ((a&mask) >>> blockShift))
                             - (((b>>>shift) >>> blockShift) << sectorShift | ((b&mask) >>> blockShift))
             );
@@ -318,13 +319,18 @@ public class BlueNoiseDoubleFastOmniTilingGenerator extends ApplicationAdapter {
                 IntArrays.stableSort(inv, from, from + sectorSize, (a, b) -> done[a] - done[b]);
                 for (int i = 0; i < sectorSize; i++) {
                     final int pt = inv[from+i];
-                    buffer.put(pt, i);
                     final double r = (i * (256.0 / sectorSize));
                     final int level = ((int) (r) & 0xFF);
                     histogram[level]++;
                     pm.drawPixel(pt>>>shift, pt&mask, level * 0x01010100 | 0xFF);
                 }
             }
+            buffer.put(inv);
+            buffer.flip();
+//            System.out.println(inv[0]);
+//            System.out.println(inv[1]);
+//            System.out.println(inv[2]);
+//            System.out.println(inv[3]);
         }
 
         System.out.println("HISTOGRAM:");
