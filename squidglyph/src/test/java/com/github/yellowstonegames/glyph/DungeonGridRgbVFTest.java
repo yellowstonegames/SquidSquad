@@ -272,7 +272,24 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.seen.contains(x, y)) {
+                if (vision.justSeen.contains(x, y)) {
+                    gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
+                    switch (prunedDungeon[x][y]) {
+                        case '~':
+                            gg.put(x, y, prunedDungeon[x][y], setAlpha(deepText, alpha(vision.getForegroundColor(x,y, change))));
+                            break;
+                        case ',':
+                            gg.put(x, y, prunedDungeon[x][y], setAlpha(shallowText, alpha(vision.getForegroundColor(x,y, change))));
+                            break;
+                        case '"':
+                            gg.put(x, y, prunedDungeon[x][y], setAlpha(grassText, alpha(vision.getForegroundColor(x,y, change))));
+                            break;
+                        case ' ':
+                            break;
+                        default:
+                            gg.put(x, y, prunedDungeon[x][y], setAlpha(stoneText, alpha(vision.getForegroundColor(x,y, change))));
+                    }
+                } else if (vision.seen.contains(x, y)) {
                     gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
                     switch (prunedDungeon[x][y]) {
                         case '~':
