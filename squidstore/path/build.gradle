@@ -31,7 +31,7 @@ mavenPublishing {
     configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
 }
 
-mavenPlainJavadocJar.archiveBaseName.set(project.name)
+plainJavadocJar.archiveBaseName.set(project.name)
 
 jar {
     archiveBaseName.set(project.name)
