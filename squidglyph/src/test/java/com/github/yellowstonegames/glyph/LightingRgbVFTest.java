@@ -44,9 +44,7 @@ import com.github.yellowstonegames.place.DungeonProcessor;
 
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
-import static com.github.yellowstonegames.core.DescriptiveColorRgb.SILVER;
-import static com.github.yellowstonegames.core.DescriptiveColorRgb.describe;
-import static com.github.yellowstonegames.core.DescriptiveColorRgb.offsetLightness;
+import static com.github.yellowstonegames.core.DescriptiveColorRgb.*;
 
 public class LightingRgbVFTest extends ApplicationAdapter {
 
@@ -83,6 +81,7 @@ public class LightingRgbVFTest extends ApplicationAdapter {
     private static final int grassText = (offsetLightness(GRASS_RGBA));
     private static final int stoneText = (describe("gray dullmost butter bronze"));
     private static final int SILVER_RGBA = SILVER;
+    private static final int MEMORY_FG_RGBA = describe("silver black");
     private static final int MEMORY_RGBA = describe("darker gray black");
 
     public static void main(String[] args){
@@ -275,9 +274,15 @@ public class LightingRgbVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.seen.contains(x, y)) {
+                if (vision.justSeen.contains(x, y)) {
+                    gg.put(x, y, vision.prunedPlaceMap[x][y], setAlpha(SILVER_RGBA, alpha(vision.getForegroundColor(x, y, change))));
+                    gg.backgrounds[x][y] = vision.backgroundColors[x][y];
+                } else if (vision.inView.contains(x, y)) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
                     gg.backgrounds[x][y] = vision.backgroundColors[x][y];
+                } else if (vision.seen.contains(x, y)) {
+                    gg.put(x, y, vision.prunedPlaceMap[x][y], MEMORY_FG_RGBA);
+                    gg.backgrounds[x][y] = MEMORY_RGBA;
                 }
             }
         }
