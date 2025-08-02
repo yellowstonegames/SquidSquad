@@ -82,7 +82,9 @@ public class LightingVFTest extends ApplicationAdapter {
     private static final int grassText = toRGBA8888(offsetLightness(GRASS_OKLAB));
     private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
     private static final int SILVER_RGBA = toRGBA8888(SILVER);
+    private static final int MEMORY_FG_RGBA = describe("silver black");
     private static final int MEMORY_RGBA = describe("darker gray black");
+    private static final int MEMORY_OKLAB = describeOklab("darker gray black");
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -269,9 +271,19 @@ public class LightingVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.seen.contains(x, y)) {
+                if (vision.justSeen.contains(x, y)) {
+                    gg.put(x, y, vision.prunedPlaceMap[x][y], DescriptiveColorRgb.setAlpha(SILVER_RGBA, alpha(vision.getForegroundColor(x, y, change))));
+                    gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
+                } else if (vision.justHidden.contains(x, y)) {
+                    final float fraction = change * 0.001f;
+                    gg.put(x, y, vision.prunedPlaceMap[x][y], DescriptiveColorRgb.lerpColors(SILVER_RGBA, MEMORY_FG_RGBA, fraction));
+                    gg.backgrounds[x][y] = toRGBA8888(lerpColors(vision.previousBackgroundColors[x][y], MEMORY_OKLAB, fraction));
+                } else if (vision.inView.contains(x, y)) {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], SILVER_RGBA);
-                    gg.backgrounds[x][y] = DescriptiveColor.toRGBA8888(vision.backgroundColors[x][y]);
+                    gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
+                } else if (vision.seen.contains(x, y)) {
+                    gg.put(x, y, vision.prunedPlaceMap[x][y], MEMORY_FG_RGBA);
+                    gg.backgrounds[x][y] = MEMORY_RGBA;
                 }
             }
         }
