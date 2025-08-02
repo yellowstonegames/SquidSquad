@@ -77,10 +77,12 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
     private static final int GRASS_RGBA = describe("duller dark green");
     private static final int DRY_RGBA = describe("dull light apricot sage");
     private static final int STONE_RGBA = describe("darkmost gray dullest bronze");
-    private static final int deepText = (offsetLightness(DEEP_RGBA));
-    private static final int shallowText = (offsetLightness(SHALLOW_RGBA));
-    private static final int grassText = (offsetLightness(GRASS_RGBA));
-    private static final int stoneText = (describe("gray dullmost butter bronze"));
+    private static final int MEMORY_RGBA = describe("darker gray black");
+    private static final int MEMORY_FG_RGBA = describe("silver black");
+    private static final int deepText = offsetLightness(DEEP_RGBA);
+    private static final int shallowText = offsetLightness(SHALLOW_RGBA);
+    private static final int grassText = offsetLightness(GRASS_RGBA);
+    private static final int stoneText = describe("gray dullmost butter bronze");
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -263,6 +265,7 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
     public void recolor(){
         float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 3.0, 0.0), 1000.0);
         vision.update(change);
+        final float fraction = change * 0.001f;
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         // this could be used if you want the cursor highlight to be all one color.
 //        int rainbow = toRGBA8888(
@@ -289,7 +292,24 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
                         default:
                             gg.put(x, y, prunedDungeon[x][y], setAlpha(stoneText, alpha(vision.getForegroundColor(x,y, change))));
                     }
-                } else if (vision.seen.contains(x, y)) {
+                } else if (vision.justHidden.contains(x, y)) {
+                    gg.backgrounds[x][y] = lerpColors(vision.previousBackgroundColors[x][y], MEMORY_RGBA, fraction);
+                    switch (prunedDungeon[x][y]) {
+                        case '~':
+                            gg.put(x, y, prunedDungeon[x][y], lerpColors(deepText, MEMORY_FG_RGBA, fraction));
+                            break;
+                        case ',':
+                            gg.put(x, y, prunedDungeon[x][y], lerpColors(shallowText, MEMORY_FG_RGBA, fraction));
+                            break;
+                        case '"':
+                            gg.put(x, y, prunedDungeon[x][y], lerpColors(grassText, MEMORY_FG_RGBA, fraction));
+                            break;
+                        case ' ':
+                            break;
+                        default:
+                            gg.put(x, y, prunedDungeon[x][y], lerpColors(stoneText, MEMORY_FG_RGBA, fraction));
+                    }
+                } else if (vision.inView.contains(x, y)) {
                     gg.backgrounds[x][y] = (vision.backgroundColors[x][y]);
                     switch (prunedDungeon[x][y]) {
                         case '~':
@@ -305,6 +325,11 @@ public class DungeonGridRgbVFTest extends ApplicationAdapter {
                             break;
                         default:
                             gg.put(x, y, prunedDungeon[x][y], stoneText);
+                    }
+                } else if (vision.seen.contains(x, y)) {
+                    gg.backgrounds[x][y] = MEMORY_RGBA;
+                    if (prunedDungeon[x][y] != ' ') {
+                        gg.put(x, y, prunedDungeon[x][y], MEMORY_FG_RGBA);
                     }
                 }
             }

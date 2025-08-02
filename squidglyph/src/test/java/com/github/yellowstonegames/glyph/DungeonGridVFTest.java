@@ -78,10 +78,14 @@ public class DungeonGridVFTest extends ApplicationAdapter {
     private static final int GRASS_OKLAB = describeOklab("duller dark green");
     private static final int DRY_OKLAB = describeOklab("dull light apricot sage");
     private static final int STONE_OKLAB = describeOklab("darkmost gray dullest bronze");
+    private static final int MEMORY_FG_OKLAB = describeOklab("silver black");
+    private static final int MEMORY_OKLAB = describeOklab("darker gray black");
+    private static final int MEMORY_FG_RGBA = toRGBA8888(MEMORY_FG_OKLAB);
+    private static final int MEMORY_RGBA = toRGBA8888(MEMORY_OKLAB);
     private static final int deepText = toRGBA8888(offsetLightness(DEEP_OKLAB));
     private static final int shallowText = toRGBA8888(offsetLightness(SHALLOW_OKLAB));
     private static final int grassText = toRGBA8888(offsetLightness(GRASS_OKLAB));
-    private static final int stoneText = toRGBA8888(describeOklab("gray dullmost butter bronze"));
+    private static final int stoneText = describe("gray dullmost butter bronze");
 
     public static void main(String[] args){
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
@@ -264,6 +268,7 @@ public class DungeonGridVFTest extends ApplicationAdapter {
     public void recolor(){
         float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 3.0, 0.0), 1000.0);
         vision.update(change);
+        final float fraction = change * 0.001f;
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         // this could be used if you want the cursor highlight to be all one color.
 //        int rainbow = toRGBA8888(
@@ -294,7 +299,24 @@ public class DungeonGridVFTest extends ApplicationAdapter {
                         default:
                             gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.setAlpha(stoneText, alpha(vision.getForegroundColor(x,y, change))));
                     }
-                } else if (vision.seen.contains(x, y)) {
+                } else if (vision.justHidden.contains(x, y)) {
+                    gg.backgrounds[x][y] = toRGBA8888(lerpColors(vision.previousBackgroundColors[x][y], MEMORY_OKLAB, fraction));
+                    switch (prunedDungeon[x][y]) {
+                        case '~':
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.lerpColors(deepText, MEMORY_FG_RGBA, fraction));
+                            break;
+                        case ',':
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.lerpColors(shallowText, MEMORY_FG_RGBA, fraction));
+                            break;
+                        case '"':
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.lerpColors(grassText, MEMORY_FG_RGBA, fraction));
+                            break;
+                        case ' ':
+                            break;
+                        default:
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.lerpColors(stoneText, MEMORY_FG_RGBA, fraction));
+                    }
+                } else if (vision.inView.contains(x, y)) {
                     gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
                     switch (prunedDungeon[x][y]) {
                         case '~':
@@ -310,6 +332,11 @@ public class DungeonGridVFTest extends ApplicationAdapter {
                             break;
                         default:
                             gg.put(x, y, prunedDungeon[x][y], stoneText);
+                    }
+                } else if(vision.seen.contains(x, y)){
+                    gg.backgrounds[x][y] = MEMORY_RGBA;
+                    if(prunedDungeon[x][y] != ' ') {
+                        gg.put(x, y, prunedDungeon[x][y], MEMORY_FG_RGBA);
                     }
                 }
             }

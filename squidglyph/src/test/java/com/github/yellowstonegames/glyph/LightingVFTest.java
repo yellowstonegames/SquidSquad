@@ -266,7 +266,7 @@ public class LightingVFTest extends ApplicationAdapter {
     public void recolor(){
         float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 2.0, 0.0), 1000.0);
         vision.update(change);
-
+        final float fraction = change * 0.001f;
         float modifiedTime = (TimeUtils.millis() & 0xFFFFFL) * 0x1p-9f;
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
@@ -275,7 +275,6 @@ public class LightingVFTest extends ApplicationAdapter {
                     gg.put(x, y, vision.prunedPlaceMap[x][y], DescriptiveColorRgb.setAlpha(SILVER_RGBA, alpha(vision.getForegroundColor(x, y, change))));
                     gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
                 } else if (vision.justHidden.contains(x, y)) {
-                    final float fraction = change * 0.001f;
                     gg.put(x, y, vision.prunedPlaceMap[x][y], DescriptiveColorRgb.lerpColors(SILVER_RGBA, MEMORY_FG_RGBA, fraction));
                     gg.backgrounds[x][y] = toRGBA8888(lerpColors(vision.previousBackgroundColors[x][y], MEMORY_OKLAB, fraction));
                 } else if (vision.inView.contains(x, y)) {
