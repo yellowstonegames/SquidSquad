@@ -273,7 +273,28 @@ public class DungeonGridVFTest extends ApplicationAdapter {
         ArrayTools.fill(gg.backgrounds, 0);
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
-                if (vision.seen.contains(x, y)) {
+                if (vision.justSeen.contains(x, y)) {
+                    gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
+                    switch (prunedDungeon[x][y]) {
+                        // deepText, shallowText, grassText, and stoneText are already RGBA8888 ints.
+                        // vision.getForegroundColor will return an Oklab int color, so we use DescriptiveColor to get its alpha.
+                        // We use DescriptiveColorRgb.setAlpha with the "thingText" RGBA8888 color and our new alpha to fade in
+                        // any just-seen foreground cells, without converting the "thingText" to Oklab and back.
+                        case '~':
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.setAlpha(deepText, alpha(vision.getForegroundColor(x,y, change))));
+                            break;
+                        case ',':
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.setAlpha(shallowText, alpha(vision.getForegroundColor(x,y, change))));
+                            break;
+                        case '"':
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.setAlpha(grassText, alpha(vision.getForegroundColor(x,y, change))));
+                            break;
+                        case ' ':
+                            break;
+                        default:
+                            gg.put(x, y, prunedDungeon[x][y], DescriptiveColorRgb.setAlpha(stoneText, alpha(vision.getForegroundColor(x,y, change))));
+                    }
+                } else if (vision.seen.contains(x, y)) {
                     gg.backgrounds[x][y] = toRGBA8888(vision.backgroundColors[x][y]);
                     switch (prunedDungeon[x][y]) {
                         case '~':
