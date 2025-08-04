@@ -69,19 +69,67 @@ public class PhantomNoise implements INoise {
      * It can be raised to make the noise more starkly black and white, or lowered to have more mid-gray values.
      */
     public float sharpness;
+    /**
+     * Just {@code 1f / (dim + 1f)} .
+     */
     protected float inverse;
-    protected transient float[] working, points, input;
+    /**
+     * Assigned in getNoise() to a rotated version of the input, and used in valueNoise() to get the rotated-grid value
+     * noise result. Has {@code dim + 1} elements, but one is effectively a changing "seed-like" input to differentiate
+     * each rotation.
+     */
+    protected transient float[] working;
+    /**
+     * Stores the {@code dim + 1} dot-products of each vertex with each input.
+     */
+    protected transient float[] points;
+    /**
+     * Used with the INoise methods to assign individual arguments into a saved array, rather than allocating a new one.
+     */
+    protected transient float[] input;
+    /**
+     * Stores {@code dim + 1} vertices, each an array made of {@code dim} floats. These are the vertices of a simplex
+     * (an analogue to a triangle or tetrahedron) in {@code dim} dimensions.
+     */
     protected transient float[][] vertices;
-    protected transient int[] floors, hashFloors;
+    /**
+     * Stores the floors of each input to valueNoise(). These are used to compute cubic interpolations of
+     * {@code working} to smooth the value noise. This has {@code dim + 1} items, because {@code working} stores an
+     * extra float to differentiate rotations.
+     */
+    protected transient int[] floors;
+    /**
+     * Passed to {@link Hasher#hash(long, float[])} after modifications to get a random-seeming int for each vertex on
+     * the square-like grid in valueNoise(). Has {@code dim + 1} items, because {@code working} stores an
+     * extra float to differentiate rotations.
+     */
+    protected transient int[] hashFloors;
 
+    /**
+     * Builds a PhantomNoise with the {@code 0xFEEDBEEF1337CAFEL} as its seed, that takes 3 inputs per noise call, and
+     * uses {@code 0.825f * 3} as the sharpness (for contrast).
+     */
     public PhantomNoise() {
         this(0xFEEDBEEF1337CAFEL, 3);
     }
 
+    /**
+     * Builds a PhantomNoise with the specified {@code seed}, that takes {@code dimension} inputs per noise call, and
+     * uses {@code 0.825f * dimension} to determine the sharpness (for contrast).
+     * @param seed may be any long; if the seed is the same and the same inputs are given, the noise will be identical
+     * @param dimension how many inputs it will take each time {@link #getNoise(float...)} is called
+     */
     public PhantomNoise(long seed, int dimension) {
         this(seed, dimension, 0.825f * Math.max(2, dimension));
     }
 
+    /**
+     * Builds a PhantomNoise with the specified {@code seed}, that takes {@code dimension} inputs per noise call, and
+     * uses the given {@code sharpness} to determine contrast.
+     * @param seed may be any long; if the seed is the same and the same inputs are given, the noise will be identical
+     * @param dimension how many inputs it will take each time {@link #getNoise(float...)} is called
+     * @param sharpness typically about {@code 0.825f * dimension}; higher makes more contrasting noise
+     */
     public PhantomNoise(long seed, int dimension, float sharpness) {
         dim = Math.max(2, dimension);
         this.sharpness = sharpness;
@@ -123,9 +171,9 @@ public class PhantomNoise implements INoise {
     /**
      * Reassigns all members of this class at once, doing the same work the constructor does, but without creating a new
      * PhantomNoise. This can also avoid recreating arrays if {@link #dim} is equal to {@code dimension}.
-     * @param seed
-     * @param dimension
-     * @param sharpness
+     * @param seed may be any long; if the seed is the same and the same inputs are given, the noise will be identical
+     * @param dimension how many inputs it will take each time {@link #getNoise(float...)} is called
+     * @param sharpness typically about {@code 0.825f * dimension}; higher makes more contrasting noise
      * @return this PhantonNoise, after modification
      */
     public PhantomNoise reassign(long seed, int dimension, float sharpness) {
@@ -207,9 +255,9 @@ public class PhantomNoise implements INoise {
     protected float valueNoise(int dim) {
         hashFloors[dim] = BitConversion.floatToRawIntBits(working[dim]);
         for (int i = 0; i < dim; i++) {
-            floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
+            floors[i] = working[i] >= 0f ? (int)working[i] : (int)working[i] - 1;
             working[i] -= floors[i];
-            working[i] *= working[i] * (3.0 - 2.0 * working[i]);
+            working[i] *= working[i] * (3f - 2f * working[i]);
         }
         float sum = 0f, temp;
         final int limit = 1 << dim;
@@ -229,9 +277,9 @@ public class PhantomNoise implements INoise {
     protected float valueNoise2D() {
         hashFloors[2] = BitConversion.floatToRawIntBits(working[2]);
         for (int i = 0; i < 2; i++) {
-            floors[i] = working[i] >= 0.0 ? (int)working[i] : (int)working[i] - 1;
+            floors[i] = working[i] >= 0f ? (int)working[i] : (int)working[i] - 1;
             working[i] -= floors[i];
-            working[i] *= working[i] * (3.0 - 2.0 * working[i]);
+            working[i] *= working[i] * (3f - 2f * working[i]);
         }
         float sum = 0f, temp;
         int bit;
@@ -276,6 +324,7 @@ public class PhantomNoise implements INoise {
             working[dim] += -0.423310825130748f; // e - pi
         }
         result *= inverse;
+        // Barron Spline with turning = 0.5 and shape = sharpness
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharpness * diff) * one) - sign - sign) - 1f;
@@ -307,6 +356,7 @@ public class PhantomNoise implements INoise {
             working[2] += -0.423310825130748f;
         }
         result *= inverse;
+        // Barron Spline with turning = 0.5 and shape = sharpness
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharpness * diff) * one) - sign - sign) - 1f;
@@ -331,11 +381,10 @@ public class PhantomNoise implements INoise {
             System.out.print("final float p" + v + " = ");
 //            System.out.print("points[" + v + "] = ");
             for (int i = 0; i < dim; i++) {
-                if(vertices[v][i] != 0.0) 
-                {
+                if(vertices[v][i] != 0f) {
                     if(i > 0)
                         System.out.print(" + ");
-                    if(vertices[v][i] == 1.0)
+                    if(vertices[v][i] == 1f)
                         System.out.print(dimNames.charAt(i % dimNames.length()));
                     else 
                         System.out.print(dimNames.charAt(i % dimNames.length()) + " * " + vertices[v][i] + "f");
