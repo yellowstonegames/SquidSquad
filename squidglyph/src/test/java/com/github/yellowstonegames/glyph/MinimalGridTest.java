@@ -16,7 +16,6 @@
 
 package com.github.yellowstonegames.glyph;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -59,12 +58,11 @@ public class MinimalGridTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Gdx.app.setLogLevel(Application.LOG_INFO);
         stage = new Stage();
         Font font = KnownFonts.getInconsolata(Font.DistanceFieldType.SDF).scaleTo(15f, 25f).multiplyCrispness(0.5f);
         gg = new GlyphGrid(font, GRID_WIDTH, GRID_HEIGHT, true);
         //use Ă to test glyph height
-        playerGlyph = new GlyphActor("[red orange][%?blacken]@", gg.font);
+        playerGlyph = new GlyphActor("[lighter violet purple][?neon]@", gg.font);
         gg.addActor(playerGlyph);
 
         input.setInputProcessor(new InputAdapter(){
@@ -81,20 +79,6 @@ public class MinimalGridTest extends ApplicationAdapter {
                     default: return false;
                 }
                 return true;
-            }
-            @Override
-            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                return false;
-            }
-
-            @Override
-            public boolean touchDragged(int screenX, int screenY, int pointer) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseMoved(int screenX, int screenY) {
-                return false;
             }
         });
 
@@ -161,6 +145,7 @@ public class MinimalGridTest extends ApplicationAdapter {
                 "#########################".toCharArray(),
         };
         dungeon = LineTools.hashesToLines(bare);
+/* Prints source code that can replace the LineTools call above. */
 //        dungeonProcessor.setPlaceGrid(dungeon = LineTools.hashesToLines(dungeonProcessor.generate(), true));
 //        System.out.println("new char[][]{");
 //        for (int x = 0; x < dungeon.length; x++) {
@@ -186,13 +171,11 @@ public class MinimalGridTest extends ApplicationAdapter {
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 char c = dungeon[x][y];
-                switch (c){
-                    case ' ':
-                        gg.backgrounds[x][y] = 0;
-                        break;
-                    default:
-                        gg.backgrounds[x][y] = 0xBBBBBBFF;
-                        gg.put(x, y, c, 0x444444FF);
+                if (c == ' ') {
+                    gg.backgrounds[x][y] = 0;
+                } else {
+                    gg.backgrounds[x][y] = 0xBBBBBBFF;
+                    gg.put(x, y, c, 0x444444FF);
                 }
             }
         }
@@ -243,10 +226,4 @@ public class MinimalGridTest extends ApplicationAdapter {
         super.resize(width, height);
         gg.resize(width, height);
     }
-
-    private boolean onGrid(int screenX, int screenY)
-    {
-        return screenX >= 0 && screenX < GRID_WIDTH && screenY >= 0 && screenY < GRID_HEIGHT;
-    }
-
 }
