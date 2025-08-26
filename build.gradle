@@ -2,7 +2,7 @@ buildscript {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+//		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
         classpath 'com.vanniktech:gradle-maven-publish-plugin:0.34.0'
@@ -39,8 +39,8 @@ subprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-        maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+//        maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
+//		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 		maven { url 'https://jitpack.io' }
 	}
     javadoc.options.source("17")
