@@ -4,32 +4,25 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.QualityPalette;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.textra.*;
+import com.github.yellowstonegames.grid.FoamNoise;
+import com.github.yellowstonegames.grid.NoiseWrapper;
 
 import java.nio.ByteBuffer;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-
 public class AnimatedLogoGenerator extends ApplicationAdapter {
     public static final int WIDTH = 400;
-    public static final int HEIGHT = 200;
+    public static final int HEIGHT = 150;
     public static final int FRAMERATE = 60;
     public static final int FRAMES = FRAMERATE * 3;
     int frame = 0;
@@ -40,9 +33,13 @@ public class AnimatedLogoGenerator extends ApplicationAdapter {
     Array<Pixmap> pms = new Array<>(Pixmap.class);
     String squid = " Squid....";
     String squad = " Squad....";
+    NoiseWrapper noise;
+    NoiseWrapper noiseStretch;
 
     @Override
     public void create() {
+        noise = new NoiseWrapper(new FoamNoise(123456789L), 0x1p-5f, NoiseWrapper.FBM, 3);
+        noiseStretch = new NoiseWrapper(new FoamNoise(123456L), 0x1p-4f, NoiseWrapper.BILLOW, 2);
         viewport = new ScreenViewport();
         gif = new AnimatedGif();
 
@@ -74,14 +71,17 @@ public class AnimatedLogoGenerator extends ApplicationAdapter {
 //        viewport.apply(true);
         batch.begin();
 
-        float x0 = 10, x1 = 10, y = 150;
+        float x0 = 10, x1 = 10, y = 110;
         for (int i = 0, n = squid.length(); i < n; i++) {
+            float effect = TrigTools.sinSmootherTurns(time + (i / (float)n));
+            float c = TrigTools.cosSmootherTurns(time) * i * 0.4f;
+            float s = TrigTools.sinSmootherTurns(time) * i * 0.4f;
             long glyph0 = fonts[i].markupGlyph(squid.charAt(i), "[#B9F][#]");
             long glyph1 = fonts[i].markupGlyph(squad.charAt(i), "[#B9F][#]");
             fonts[i].enableShader(batch);
 //            fonts[i].resizeDistanceField(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), viewport);
-            x0 += fonts[i].drawGlyph(batch, glyph0, x0, y + TrigTools.sinSmootherTurns(time + (i / (float)n)) * i, 0, 1, 1, 0, 2f);
-            x1 += fonts[i].drawGlyph(batch, glyph1, x1, y + TrigTools.sinSmootherTurns(time + (i / (float)n)) * i - 100, 0, 1, 1, 0, 2f);
+            x0 += fonts[i].drawGlyph(batch, glyph0, x0, y + noise.getNoiseWithSeed(c, s, 12345L) * effect * 5f * i, 0, 1, 1, 0, 2f + noiseStretch.getNoiseWithSeed(c, s, 54321L) * effect * 0.5f);
+            x1 += fonts[i].drawGlyph(batch, glyph1, x1, y + noise.getNoiseWithSeed(c, s, -1234567L) * effect * 5f * i - 70, 0, 1, 1, 0, 2f + noiseStretch.getNoiseWithSeed(c, s, -7654321L) * effect * 0.5f);
         }
         batch.end();
 
