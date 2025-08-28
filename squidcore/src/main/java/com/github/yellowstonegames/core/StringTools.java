@@ -144,10 +144,9 @@ public final class StringTools {
     }
 
     /**
-     * Like {@link com.github.tommyettinger.digital.Base#join(String, long[])}, but this appends an 'L' to each number,
+     * Like {@link com.github.tommyettinger.digital.Base#join(CharSequence, long[])}, but this appends an 'L' to each number,
      * so they can be read in by Java.
-     * Replaced by {@link com.github.tommyettinger.digital.Base#joinReadable(String, long[])} in most circumstances (the
-     * replacement needs a String delimiter, while this takes a CharSequence).
+     * Replaced by {@link com.github.tommyettinger.digital.Base#joinReadable(CharSequence, long[])} in most circumstances.
      *
      * @param delimiter
      * @param elements
@@ -164,11 +163,9 @@ public final class StringTools {
     }
 
     /**
-     * Like {@link com.github.tommyettinger.digital.Base#appendJoined(StringBuilder, String, long[])}, but this appends an 'L' to each number so they
+     * Like {@link com.github.tommyettinger.digital.Base#appendJoined(CharSequence, CharSequence, long[])} , but this appends an 'L' to each number so they
      * can be read in by Java.
-     * Replaced by {@link com.github.tommyettinger.digital.Base#appendJoinedReadable(StringBuilder, String, long[])} in
-     * most circumstances (the replacement needs a String delimiter, while this takes a CharSequence).
-     * @param sb
+     * Replaced by {@link com.github.tommyettinger.digital.Base#appendJoinedReadable(CharSequence, CharSequence, long[])}.     * @param sb
      * @param delimiter
      * @param elements
      * @return
@@ -302,7 +299,7 @@ public final class StringTools {
     /**
      * Joins the boolean array {@code elements} without delimiters into a StringBuilder, using "1" for true and "0" for
      * false. This is "dense" because it doesn't have any delimiters between elements.
-     * Using {@link TextTools#appendJoinedDense(StringBuilder, boolean...)} is recommended instead.
+     * Using {@link TextTools#appendJoinedDense(CharSequence, boolean...)} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param elements an array or vararg of booleans
      * @return sb after modifications (if elements was non-null)
@@ -317,7 +314,7 @@ public final class StringTools {
      * Joins the boolean array {@code elements} without delimiters into a StringBuilder, using the char {@code t} for
      * true and the char {@code f} for false. This is "dense" because it doesn't have any delimiters between
      * elements.
-     * Using {@link TextTools#appendJoinedDense(StringBuilder, char, char, boolean...)} is recommended instead.
+     * Using {@link TextTools#appendJoinedDense(CharSequence, char, char, boolean...)} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param t the char to write for true values
      * @param f the char to write for false values
@@ -389,7 +386,7 @@ public final class StringTools {
      * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
      * not take a vararg of Object items, since that would cause confusion with the overloads that take one object; it
      * takes a non-vararg Object array instead.
-     * Using {@link TextTools#appendJoined(StringBuilder, CharSequence, Object[])} is recommended instead.
+     * Using {@link TextTools#appendJoined(CharSequence, CharSequence, Object[])} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
@@ -412,7 +409,7 @@ public final class StringTools {
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
      * {@code elements} parameter.
-     * Using {@link TextTools#appendJoined(StringBuilder, CharSequence, Iterable)} is recommended instead.
+     * Using {@link TextTools#appendJoined(CharSequence, CharSequence, Iterable)} is recommended instead.
      * @param sb a StringBuilder that will be modified in-place
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
