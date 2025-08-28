@@ -157,6 +157,7 @@ dependency will usually pull in a few others. The full list is:
     - Unlike most other modules here, `squidwrath` is not GWT-compatible, because Fory isn't either.
 
 # Why?
+
 Various issues cropped up repeatedly over the five-year development of SquidLib 3.0.0, such as the desire by users to be
 able to only use part of the library instead of needing the monolithic squidlib-util JAR. Other issues were more
 problematic during development, like how squidlib-util defined its own (elaborate) data structures based on
@@ -164,6 +165,17 @@ heavily-altered code from an older version of [fastutil](https://github.com/vign
 to add new types of those data structures. All of SquidLib depended and still (sort-of) depends on Java 7; now with
 virtually all targets permitting at least some of Java 8 or even Java 11, there's not much reason to reach back 13 years
 to July 2011, when Java 7 came out.
+
+SquidSquad development started in 2020, not long after development started on
+[jdkgdxds](https://github.com/tommyettinger/jdkgdxds). As jdkgdxds evolved, it spread out so its random number generator
+code could be in a different project, [juniper](https://github.com/tommyettinger/juniper), and its core shared code
+could be in [digital](https://github.com/tommyettinger/digital). SquidSquad evolved with this family of libraries,
+making heavy use of jdkgdxds' primitive-backed and ordered data structures. Having so many options for ordered maps and
+sets was very refreshing coming from SquidLib's development, where each of its primitive-backed data structures had to
+be built specially from [FastUtil](https://github.com/vigna/fastutil) sources and adapted to the lack of FastUtil
+interfaces and adapter classes (not to mention the lack of Java 8 code). As development slowed down on SquidSquad, it
+essentially can be considered mature now, even though the 4.0.0 release is considered the first stable release of the
+library. Any bugfixes should be posted quickly and increment all submodule versions, even if they were unchanged.
 
 # How?
 
@@ -190,10 +202,10 @@ changes to those files to keep things like scene2d.ui from libGDX.
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
-released version such as the current `4.0.0-beta2`, which can be obtained from the main source for dependencies on the
+released version such as the current `4.0.0`, which can be obtained from the main source for dependencies on the
 JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
 dependencies [can be seen for each version here](https://search.maven.org/search?q=g:com.squidpony), and look like
-`implementation 'com.squidpony:squidcore:4.0.0-beta2'`.
+`implementation 'com.squidpony:squidcore:4.0.0'`.
 
 As an alternative, [the JitPack page is here](https://jitpack.io/#yellowstonegames/squidsquad); go to the Commits tab, choose any commit
 except for `-SNAPSHOT`, click "Get It", and wait to see if it built successfully. Maybe get yourself some of your
@@ -201,14 +213,15 @@ beverage of choice during this time. If it built successfully, "Get It" will be 
 changed to "Report" in red. You probably don't have to report a build failure; these often are caused by the build
 timing out, rather than any glitch on JitPack's side. If you refresh the page (you might have to click "Get It" again,
 though this time it won't take any time at all) and scroll down, all the dependencies will be in a drop-down for you
-to select as you see fit. The first Gradle code section isn't needed here; even year-old gdx-setup and gdx-liftoff
+to select as you see fit. The first Gradle code section isn't needed here; even years-old gdx-setup and gdx-liftoff
 projects can download from JitPack like they can from anywhere else, without extra configuration. Dependencies using
 JitPack look like `implementation 'com.github.yellowstonegames.squidsquad:squidcore:0123456789'`, where `0123456789`
 is a commit version (usually 10 hex digits). Older versions use PascalCase for the names of modules, such as `SquidCore`
 instead of `squidcore`.
 
-For GWT... OK. Deep breaths. Please use [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff). Do not use
-gdx-setup. Use Maven only if you are an absolute wizard. Select SquidSquad dependencies here, and gdx-liftoff will take
+For GWT... OK. Deep breaths. First, consider if you want to use TeaVM instead, which is probably simpler because it
+doesn't need `sources` dependencies. In any case, use [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff) to
+create your project. Use Maven only if you are a wizard. Select SquidSquad dependencies here, and gdx-liftoff will take
 care of their dependencies on and off GWT. Generate the project. Relax. If you need to add another dependency, from
 SquidSquad or somewhere else, my usual recommendation is to generate an empty project with all dependencies you want
 selected, then to compare the `gradle.properties` and all `build.gradle` files between your empty and original projects.
@@ -216,8 +229,8 @@ Copy over any changes you want, reload your Gradle project, and you're done. The
 they will probably all be in the dependencies, but this ensures all the versions are up-to-date and necessary other
 projects are present.
 
-Liftoff fetches SquidSquad from Maven Central, and need a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.0-beta2`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+Liftoff fetches SquidSquad from Maven Central, and needs a fixed release for `squidSquadVersion`. Right now, the best
+such release is `4.0.0`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
 commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
 The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
 `com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are
