@@ -24,6 +24,8 @@ import java.util.Objects;
 /**
  * A small class to store the area that a creature is perceived by other creatures to threaten.
  * Composed only of a {@link Coord} position and a {@link Reach} reach.
+ * <br>
+ * The code for techniques, including Threat, is a work-in-progress.
  */
 public class Threat {
     public Coord position;

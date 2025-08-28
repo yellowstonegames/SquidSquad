@@ -44,27 +44,38 @@ dependency will usually pull in a few others. The full list is:
  - squidcore
    - Needed by all other modules, this provides core functionality used everywhere else, like utilities for handling
      Strings, conversions between numbers and text, dice and probability tables, and compression for Strings and byte
-     arrays. It also importantly contains the code to describe colors, even if it can't display them.
+     arrays. It also importantly contains the code to describe colors, even if it can't display them. All color code in
+     SquidSquad is available in a default format, which uses the Oklab color space to blend smoothly, and also in the
+     RGB format, which generally makes more sense to programmers because we use RGB colors so much. A game typically
+     will choose one of these to use internally, and will use RGB colors when rendering. Some classes here
+     aren't directly used by SquidSquad much, like `UniqueIdentifier`, but make sense to use in game code (in the case
+     of `UniqueIdentifier`, it can replace `UUID` on Google Web Toolkit targets, where UUID isn't available).
      - Much of the functionality that was in squidcore has been moved to the external `digital` library. 
  - squidgrid
    - Needed by many of the other modules, this provides tools for handling 2D positions on grids, such as the vital
-     `Coord` and `Region` classes, but also `FOV` (Field of Vision), `BresenhamLine` and `OrthoLine` (for line of
-     sight), `Radiance` and `LightingManager` (for light sources), and `LineTools` (for getting box drawing characters
-     to represent walls, which can be useful in graphical games as well as text-based ones). These are all grouped into
+     `Coord` and `Region` classes (for 2D points and regions on a 2D grid), but also `FOV` (Field Of View),
+     `BresenhamLine` and `OrthoLine` (for line of sight), `Radiance`, `LightSource`, and `LightingManager` (for handling
+     lighting), and `LineTools` (for getting box drawing characters to represent walls, which can be useful in graphical
+     games as well as text-based ones by looking up a sprite to draw for a given char). These are all grouped into
      one place in `VisionFramework`, which does a lot of the work that would otherwise be repeated in different
      codebases. `squidgrid` also provides the `Noise` class, which is a large and highly-configurable way of producing
-     continuous noise, such as Perlin noise, plus many single-purpose noise classes that implement `INoise`. On top of
-     this, there are `Coord`-based collections, such as `CoordObjectMap`, based on the `jdkgdxds` collections but
-     specialized for Coord keys.
+     continuous noise, such as Perlin noise, plus many single-purpose noise classes that also implement `INoise`. You
+     can use a `NoiseWrapper` to handle octaves, frequency, etc. for any `INoise`. On top of this, there are
+     `Coord`-based collections, such as `CoordObjectMap`, based on the `jdkgdxds` collections but specialized for Coord
+     keys. `Region` can also be considered a `Coord`-based collection.
      - This module depends on [crux](https://github.com/tommyettinger/crux), allowing other libraries to share the same
        point interfaces.
+       - There are implementations of all the crux interfaces here, such as `Point2Float` and `Point4Int` that are
+         mutable and meant to act like the mutable points in libGDX, such as `Vector2`. `Coord` is an immutable version
+         of `Point2` from Crux, with a resizable pool of all `Coord`s that are likely to be used. 
  - squidtext
    - This only uses `squidcore`, and has various tools for procedurally-generating text. This text could be readable, as
     `Thesaurus` produces, or could be complete gibberish, as `Language` produces. `Translator` offers a middle ground,
      for text that seems to be unintelligible but can be translated in bits and pieces back to English. `Messaging`
      allows conjugating present-tense text to use singular and/or plural pronouns, and is as correct as its input is at
      the conjugation quality. `MarkovText` allows mixing text from a large original source to make gibberish that sounds
-     somewhat like the original.
+     somewhat like the original. `NameGenerator` and `StringDistance` work together to try to generate names that are
+     reasonably like an input corpus, like common names in the USA or Norse mythology.
  - squidsmooth
    - This depends on `squidcore` and `squidgrid`. It provides smooth interpolation for various kinds of `Glider`s, all
      managed by a `Director` that can be paused, resumed, stopped, and restarted. Example `Glider`s are `VectorGlider`,
@@ -72,15 +83,15 @@ dependency will usually pull in a few others. The full list is:
      colors as time goes on, and `AngleGlider`, which is usually used to make rotations turn taking the shorter
      distance. You can chain multiple gliders in a sequence with `SequenceGlider`, and can make multiple Gliders run at
      the same time by merging them.
-   - `squidsmooth` can be useful for graphical games, but is less useful for text-based ones.
+     - `squidsmooth` can be useful for graphical games, but is less useful for text-based ones.
  - squidglyph
    - This depends on `squidcore` and `squidgrid`. It provides text-based display (meant for classical
      roguelikes and games like them) using the external library `TextraTypist`. Right now it only provides `GlyphGrid`,
      which makes it somewhat easier to handle a grid of text with smoothly-moving glyphs over it, `GlyphActor`, which
      is a scene2d `Actor` drawn with just one (potentially colorful or styled) glyph, and some classes for `Action`s,
      which can be applied to a `GlyphGrid` or `GlyphActor`.
-   - On platforms other than GWT, this module can load [REXPaint](https://www.gridsagegames.com/rexpaint/) .xp files. It
-     can also save a `GlyphGrid` to a new .xp file. These use the small `XPIO` class.
+     - On platforms other than GWT, this module can load [REXPaint](https://www.gridsagegames.com/rexpaint/) .xp files. It
+       can also save a `GlyphGrid` to a new .xp file. These use the small `XPIO` class.
  - squidpath
    - Pathfinding, mostly using a modified older version of [simple-graphs](https://github.com/earlygrey/simple-graphs). There
      is also `DijkstraMap` here, which is good for some types of pathfinding that simple-graphs' `A*` algorithm can't
@@ -88,15 +99,20 @@ dependency will usually pull in a few others. The full list is:
      which is based on the current simple-graphs release instead of an older one, has most relevant classes marked
      as `Json.Serializable` using libGDX `Json`, and also has path smoothing compatible with `squidgrid`'s `Coord`
      class. Gand also has a backport of `DijkstraMap`, called `GradientGrid`. This depends on `squidgrid`.
+     - You may want to use `squidseek` with Gand instead; it provides an alternative `DijkstraMap` and `ZoneOfInfluence`
+       but otherwise delegates to Gand.
  - squidplace
    - Dungeon generation, mostly, with some code for other type of person-scale map generation as well. Most of the maps
      are produced as `char[][]` grids, and `DungeonTools` provides various utilities for handling such grids. The large
      `DungeonProcessor` class can be used to ensure only the connected areas of a map are preserved, and can place
-     doors, water, grass, boulders, and so on, using an environment 2D array to know what can be placed where. This
-     depends on `squidgrid`.
+     doors, water, grass, boulders, and so on, using an environment 2D array to know what can be placed where. A slight
+     outlier here is the `Biome` class, which is mostly used by the `squidworld` module for world maps, but can be
+     useful for categorizing generated places at the local level, too.
+     - This depends on `squidgrid`.
  - squidpress
    - Input handling, wrapping libGDX input classes to match the features SquidLib offers already. This depends on
      libGDX. This supports key rebinding in `SquidInput`, and there's an existing vi-keys rebind in `keymaps/`.
+     `SquidMouse` allows mouse input to be mapped to grid cells for games that want that.
  - squidworld
    - World map generation; this can be rather complex, but see the demos and tests in this project for ideas on how to
      use it. This depends on `squidcore`, `squidgrid`, and `squidplace`.

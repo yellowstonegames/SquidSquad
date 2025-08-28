@@ -22,6 +22,8 @@ package com.github.yellowstonegames.seek.technique;
  * the user. AimLimit.DIAGONAL does the same but for northeast, southeast, southwest, or northwest. AimLimit.EIGHT_WAY
  * limits the same things, but is less restrictive, allowing all cells AimLimit.ORTHOGONAL does as well as all cells
  * AimLimit.DIAGONAL allows. AimLimit.FREE allows all cells within any range limit an ability may have.
+ * <br>
+ * The code for techniques, including AimLimit, is a work-in-progress.
  */
 public enum AimLimit {
     FREE,

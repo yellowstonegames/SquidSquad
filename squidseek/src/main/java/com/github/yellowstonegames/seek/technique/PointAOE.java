@@ -28,6 +28,8 @@ import java.util.Collection;
  * An AOE type that has a center Coord only and only affects that single Coord. Useful if you need an AOE implementation
  * for something that does not actually affect an area.
  * This will produce floats for its {@link #findArea()} method which are equal to 1.0.
+ * <br>
+ * The code for techniques, including PointAOE, is a work-in-progress.
  */
 public class PointAOE implements AOE {
     private Coord center, origin;

@@ -22,6 +22,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A struct-like class that holds information about targeting rules for actions or other effects that reach from one
  * square into another one, with certain potential restrictions.
+ * <br>
+ * The code for techniques, including Reach, is a work-in-progress.
  *
  * @see AreaUtils AreaUtils and its verifyReach method may be useful with this.
  */

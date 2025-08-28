@@ -24,6 +24,8 @@ import java.util.Collection;
 
 /**
  * Static utilities for use in AOE and anything else that might need CoordFloatOrderedMaps.
+ * <br>
+ * The code for techniques, including AreaUtils, is a work-in-progress.
  */
 public class AreaUtils {
     /**
