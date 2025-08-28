@@ -115,7 +115,8 @@ dependency will usually pull in a few others. The full list is:
      `SquidMouse` allows mouse input to be mapped to grid cells for games that want that.
  - squidworld
    - World map generation; this can be rather complex, but see the demos and tests in this project for ideas on how to
-     use it. This depends on `squidcore`, `squidgrid`, and `squidplace`.
+     use it. See [these previews](docs/worlds/index.html) for the types of map this can produce.
+     - This depends on `squidcore`, `squidgrid`, and `squidplace`.
  - squidold
    - Compatibility with older versions of SquidLib (and potentially SquidSquad). This tries to exactly replicate the
      results of some core classes from older SquidLib, such as random number generators and `CrossHash`, but support the
