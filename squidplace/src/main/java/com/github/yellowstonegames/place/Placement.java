@@ -30,12 +30,12 @@ public class Placement {
     /**
      * The RoomFinder this uses internally to find placement areas only where they are appropriate.
      */
-    public RoomFinder finder;
+    protected RoomFinder finder;
 
-    private Region allRooms, allCorridors, allCaves, allFloors, nonRoom;
-    private ObjectOrderedSet<CoordOrderedSet> alongStraightWalls,
+    protected Region allRooms, allCorridors, allCaves, allFloors, nonRoom;
+    protected ObjectOrderedSet<CoordOrderedSet> alongStraightWalls,
             corners, centers;
-    private CoordOrderedSet hidingPlaces;
+    protected CoordOrderedSet hidingPlaces;
     private Placement()
     {
 
@@ -192,6 +192,30 @@ public class Placement {
             hidingPlaces = new CoordOrderedSet(new Region(composite, 0.25f).and(allFloors));
         }
         return hidingPlaces;
+    }
+
+    public RoomFinder getFinder() {
+        return finder;
+    }
+
+    public Region getAllRooms() {
+        return allRooms;
+    }
+
+    public Region getAllCorridors() {
+        return allCorridors;
+    }
+
+    public Region getAllCaves() {
+        return allCaves;
+    }
+
+    public Region getAllFloors() {
+        return allFloors;
+    }
+
+    public Region getNonRoom() {
+        return nonRoom;
     }
 
     @Override
