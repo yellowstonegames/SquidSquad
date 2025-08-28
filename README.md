@@ -95,12 +95,17 @@ dependency will usually pull in a few others. The full list is:
  - squidpath
    - Pathfinding, mostly using a modified older version of [simple-graphs](https://github.com/earlygrey/simple-graphs). There
      is also `DijkstraMap` here, which is good for some types of pathfinding that simple-graphs' `A*` algorithm can't
-     do as easily. If you're using `A*`, you might want to consider [gand](https://github.com/tommyettinger/gand),
+     do as easily. If you're using `A*`, you might want to consider [Gand](https://github.com/tommyettinger/gand),
      which is based on the current simple-graphs release instead of an older one, has most relevant classes marked
      as `Json.Serializable` using libGDX `Json`, and also has path smoothing compatible with `squidgrid`'s `Coord`
      class. Gand also has a backport of `DijkstraMap`, called `GradientGrid`. This depends on `squidgrid`.
      - You may want to use `squidseek` with Gand instead; it provides an alternative `DijkstraMap` and `ZoneOfInfluence`
        but otherwise delegates to Gand.
+ - squidseek
+   - A trimmed-down version of the above `squidpath` that uses `Gand` for a lot more, including its parent class that
+     handles most of `DijkstraMap` here. Other than a `ZoneOfInfluence` class and some work-in-progress code for
+     techniques (which shouldn't currently be used...), that's all there is here.
+     - This depends on `squidcore`, `squidgrid`, and [Gand](https://github.com/tommyettinger/gand). 
  - squidplace
    - Dungeon generation, mostly, with some code for other type of person-scale map generation as well. Most of the maps
      are produced as `char[][]` grids, and `DungeonTools` provides various utilities for handling such grids. The large
@@ -120,27 +125,36 @@ dependency will usually pull in a few others. The full list is:
  - squidold
    - Compatibility with older versions of SquidLib (and potentially SquidSquad). This tries to exactly replicate the
      results of some core classes from older SquidLib, such as random number generators and `CrossHash`, but support the
-     newer APIs here. This depends on `squidcore`.
+     newer APIs here.
+     - Note that the older classes have generally been replaced for good reasons... The newer random number generators
+       in `juniper` and the hashing algorithm in `digital`'s `Hasher` class (especially "Bulk" methods there) tend to be
+       much more robust, and are also often faster.
+     - This depends on `squidcore`.
 - squidstore
-    - Split up into a few submodules: `squidstorecore`, `squidstoregrid`, `squidstoreold`, and `squidstoretext`, with
-      each one containing the necessary registration code to save and load their corresponding module to JSON. This uses
-      libGDX Json and its custom serializers.
+    - Split up into a few submodules: `squidstorecore`, `squidstoregrid`, `squidstoreold`, `squidstorepath`,
+      `squidstoretext`, and `squidstoreworld`, with each one containing the necessary registration code to save and load
+      their corresponding module to JSON. This uses libGDX Json and its custom serializers. This is the only module
+      meant for serialization that is GWT-compatible, or browser-compatible via TeaVM for that matter. It makes heavy
+      use of [jdkgdxds_interop](https://github.com/tommyettinger/jdkgdxds_interop).
  - squidfreeze
     - Like `squidstore`, but using [Kryo](https://github.com/EsotericSoftware/kryo) instead of libGDX Json. Kryo uses
       a binary format, rather than somewhat-human-readable JSON code, and can produce much smaller serialized data in
-      most cases, while both serializing and deserializing more quickly than any JSON library I've tried.
+      most cases, while both serializing and deserializing more quickly than any JSON library I've tried. Kryo is an
+      older, more mature format than Fory (see squidwrath, below), which may make it better-suited to saving data you
+      want to keep in a stable format for a long time. It typically isn't as fast at serialization or deserialization
+      as Fory, as a counterpoint.
     - Unlike most other modules here, `squidfreeze` is not GWT-compatible, because Kryo isn't either.
  - squidwrath
-    - Like `squidstore` or `squidfreeze`, but using [Apache Fury](https://fury.apache.org) instead of libGDX Json. Fury
+    - Like `squidstore` or `squidfreeze`, but using [Apache Fory](https://fory.apache.org) instead of libGDX Json. Fory
       uses a binary format, like Kryo but incompatible, and can produce generally smaller serialized data in
       most cases, while both serializing and deserializing even more quickly than Kryo.
     - Unlike `squidfreeze`, many classes can be serialized by `squidwrath` without needing a special serializer
-      (the class still needs to be registered with Fury, just not with `registerSerializer()`). If a serializer isn't
+      (the class still needs to be registered with Fory, just not with `registerSerializer()`). If a serializer isn't
       present in `squidwrath`, that usually means you don't need a serializer when registering it.
       - All random number generators in `juniper` and any classes in `squidcore` or `squidpath` that can be serialized
         don't need any serializer to be registered. That means `squidwrathcore` and `squidwrathpath` are empty other
         than their tests.
-    - Unlike most other modules here, `squidwrath` is not GWT-compatible, because Fury isn't either.
+    - Unlike most other modules here, `squidwrath` is not GWT-compatible, because Fory isn't either.
 
 # Why?
 Various issues cropped up repeatedly over the five-year development of SquidLib 3.0.0, such as the desire by users to be
