@@ -28,7 +28,7 @@ public class ConnectingMapGeneratorDemo {
         /*
         ConnectingMapGenerator gen = new ConnectingMapGenerator(101, 101, 1, 1, random, 1, 1.0);
          */
-        ConnectingMapGenerator gen = new ConnectingMapGenerator(41, 41, 1, 1, random, 1, 0);
+        ConnectingMapGenerator gen = new ConnectingMapGenerator(41, 41, 5, 5, random, 1, 0.0);
         //// Use when you want '#' to indicate "no connection" and '.' to indicate a connection
 //        char[][] map = gen.generate();
         //// Use when you want box-drawing character lines to indicate "no connection"; '.' indicates a connection
