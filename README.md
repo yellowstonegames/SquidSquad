@@ -245,7 +245,7 @@ because they can change without warning and don't tell you what commit you are a
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
   - `digitalVersion`=0.9.2
-  - `jdkgdxdsVersion`=1.12.1
+  - `jdkgdxdsVersion`=1.12.2
   - `juniperVersion`=0.8.2
   - `regExodusVersion`=0.1.19
   - `cruxVersion`=0.1.2
