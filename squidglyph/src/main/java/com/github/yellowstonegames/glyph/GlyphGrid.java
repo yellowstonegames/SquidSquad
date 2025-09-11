@@ -38,7 +38,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Coord;
 
 import com.github.yellowstonegames.grid.CoordLongOrderedMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores a sparse map of (unmoving) glyphs by their positions, as a dense grid of background colors, and potentially

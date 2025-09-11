@@ -18,7 +18,7 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class SilkRNG extends LegacyRandom implements StatefulRandomness {
 
@@ -195,7 +195,7 @@ public class SilkRNG extends LegacyRandom implements StatefulRandomness {
      *
      * @return a copy of this SilkRNG
      */
-    @NonNull
+    @NotNull
     @Override
     public SilkRNG copy() {
         return new SilkRNG(stateA, stateB);

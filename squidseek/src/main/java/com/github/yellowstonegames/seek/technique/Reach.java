@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.seek.technique;
 
 import com.github.yellowstonegames.grid.Radius;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A struct-like class that holds information about targeting rules for actions or other effects that reach from one

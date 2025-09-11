@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.path.*;
 import com.github.yellowstonegames.store.grid.JsonGrid;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -36,7 +36,7 @@ public final class JsonPath {
      *
      * @param json a libGDX Json object that will have serializers registered for all SquidPath types.
      */
-    public static void registerAll(@NonNull Json json) {
+    public static void registerAll(@NotNull Json json) {
         registerDirectedGraph(json);
         registerUndirectedGraph(json);
         registerCostlyGraph(json);
@@ -49,7 +49,7 @@ public final class JsonPath {
 	 *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDirectedGraph(@NonNull Json json) {
+    public static void registerDirectedGraph(@NotNull Json json) {
         json.addClassTag("DirG", DirectedGraph.class);
         json.setSerializer(DirectedGraph.class, new Json.Serializer<DirectedGraph>() {
             @Override
@@ -95,7 +95,7 @@ public final class JsonPath {
 	 *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerUndirectedGraph(@NonNull Json json) {
+    public static void registerUndirectedGraph(@NotNull Json json) {
         json.addClassTag("UdrG", UndirectedGraph.class);
         json.setSerializer(UndirectedGraph.class, new Json.Serializer<UndirectedGraph>() {
             @Override
@@ -141,7 +141,7 @@ public final class JsonPath {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCostlyGraph(@NonNull Json json) {
+    public static void registerCostlyGraph(@NotNull Json json) {
         json.addClassTag("CosG", CostlyGraph.class);
         JsonGrid.registerCoord(json);
         json.setSerializer(CostlyGraph.class, new Json.Serializer<CostlyGraph>() {
@@ -192,7 +192,7 @@ public final class JsonPath {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDefaultGraph(@NonNull Json json) {
+    public static void registerDefaultGraph(@NotNull Json json) {
         json.addClassTag("DftG", DefaultGraph.class);
         JsonGrid.registerCoord(json);
         json.setSerializer(DefaultGraph.class, new Json.Serializer<DefaultGraph>() {

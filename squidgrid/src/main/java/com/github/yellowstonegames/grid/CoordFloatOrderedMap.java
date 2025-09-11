@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.OrderType;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**

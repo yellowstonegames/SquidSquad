@@ -19,7 +19,7 @@ package com.github.yellowstonegames.old.v300.squidmath;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.old.v300.CrossHash;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.*;
@@ -349,7 +349,7 @@ public class RNG implements Serializable, IRNG {
 
         return new Iterable<T>() {
             @Override
-            public @NonNull Iterator<T> iterator() {
+            public @NotNull Iterator<T> iterator() {
                 return new Iterator<T>() {
 
                     int next = -1;

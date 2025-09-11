@@ -23,8 +23,8 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.function.FloatToFloatFunction;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import regexodus.MatchResult;
 import regexodus.Pattern;
 import regexodus.Replacer;
@@ -2374,8 +2374,7 @@ public final class DescriptiveColor {
      * @param mixCount how many color names this will use in the returned description
      * @return a description that can be fed to {@link #describe(String)} to get a similar color
      */
-    @NonNull
-    public static String bestMatch(final int oklab, int mixCount) {
+    public static @NotNull String bestMatch(final int oklab, int mixCount) {
         mixCount = Math.max(1, mixCount);
         float bestDistance = Float.POSITIVE_INFINITY;
         final int paletteSize = namesByHue.size(), colorTries = (int)Math.pow(paletteSize, mixCount), totalTries = colorTries * 81;

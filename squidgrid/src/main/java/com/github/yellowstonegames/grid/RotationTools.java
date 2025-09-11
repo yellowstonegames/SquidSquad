@@ -20,7 +20,7 @@ import com.github.tommyettinger.digital.Distributor;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -1920,7 +1920,7 @@ public final class RotationTools {
      */
     public static class Rotator {
         public final int dimension;
-        public @NonNull Random random;
+        public @NotNull Random random;
         // size is dimension
         private final float[] gauss;
         // size of each is dimension*dimension

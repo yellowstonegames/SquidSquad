@@ -18,7 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 

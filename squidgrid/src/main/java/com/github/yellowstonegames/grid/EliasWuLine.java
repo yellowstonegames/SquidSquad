@@ -18,7 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectDeque;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Contains methods to draw anti-aliased lines based on floating-point coordinates.
@@ -298,7 +298,7 @@ public class EliasWuLine implements LineDrawer {
     }
 
     @Override
-    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap, ObjectDeque<Coord> buffer) {
+    public boolean isReachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap, ObjectDeque<Coord> buffer) {
         return false;
     }
 
@@ -313,7 +313,7 @@ public class EliasWuLine implements LineDrawer {
     }
 
     @Override
-    public boolean isReachable(@NonNull Coord start, @NonNull Coord target, float[][] resistanceMap) {
+    public boolean isReachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap) {
         return false;
     }
 

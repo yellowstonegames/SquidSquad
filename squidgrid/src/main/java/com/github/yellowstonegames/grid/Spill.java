@@ -18,7 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Performs randomized flood-fill operations on arbitrarily-shaped areas, until a volume is reached.

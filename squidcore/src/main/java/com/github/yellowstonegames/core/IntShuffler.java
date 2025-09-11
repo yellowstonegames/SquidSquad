@@ -20,7 +20,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.MathTools;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.tommyettinger.digital.Hasher;
 
@@ -245,7 +245,7 @@ public class IntShuffler {
         return sb.append('`').toString();
     }
 
-    public static IntShuffler stringDeserialize(@NonNull String data) {
+    public static IntShuffler stringDeserialize(@NotNull String data) {
         if(data.length() < 13) return null;
         int idx = 0;
         int bound = Base.BASE36.readInt(data, idx + 1, idx = data.indexOf('~', idx + 1));

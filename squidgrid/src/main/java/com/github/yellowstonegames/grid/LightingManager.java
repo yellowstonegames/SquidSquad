@@ -23,7 +23,7 @@ import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -540,7 +540,7 @@ public class LightingManager {
      * @param position the position to look up LightSources at
      * @return buffer, potentially after modification
      */
-    public Collection<LightSource> lightsAt(@NonNull Collection<LightSource> buffer, Coord position) {
+    public Collection<LightSource> lightsAt(@NotNull Collection<LightSource> buffer, Coord position) {
         LightSource ls;
         for (int i = 0; i < lights.size; i++) {
             if ((ls = lights.get(i)).position.equals(position)) {

@@ -19,7 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 
 import com.github.tommyettinger.ds.OrderType;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**

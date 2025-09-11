@@ -8,6 +8,10 @@ javadoc.exclude("emu")
 dependencies {
     api project(':squidcore')
     api "com.github.tommyettinger:crux:$cruxVersion"
+
+    compileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
+    testCompileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
+
     testImplementation project(':squidplace')
     testImplementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     testImplementation "junit:junit:$junitVersion"

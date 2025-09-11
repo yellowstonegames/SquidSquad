@@ -19,7 +19,7 @@ package com.github.yellowstonegames.smooth;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.grid.Coord;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Allows specifying a smoothly-changing float position using an exact Coord for the start and the end, with a change
@@ -32,30 +32,30 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
 public class CoordGlider extends Glider {
-    protected @NonNull Coord start;
-    protected @NonNull Coord end;
+    protected @NotNull Coord start;
+    protected @NotNull Coord end;
 
     public CoordGlider() {
         super(new Changer("x", 0f, 0f), new Changer("y", 0f, 0f));
         end = start = Coord.get(0, 0);
     }
-    public CoordGlider(@NonNull Coord start) {
+    public CoordGlider(@NotNull Coord start) {
         super(new Changer("x", start.x, start.x), new Changer("y", start.y, start.y));
         this.start = start;
         this.end = start;
     }
-    public CoordGlider(@NonNull Coord start, @NonNull Coord end) {
+    public CoordGlider(@NotNull Coord start, @NotNull Coord end) {
         super(new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;
     }
-    public CoordGlider(Interpolations.@NonNull Interpolator interpolation, Runnable completeRunner, @NonNull Coord start, @NonNull Coord end) {
+    public CoordGlider(Interpolations.@NotNull Interpolator interpolation, Runnable completeRunner, @NotNull Coord start, @NotNull Coord end) {
         super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;
     }
 
-    public CoordGlider(@NonNull CoordGlider other) {
+    public CoordGlider(@NotNull CoordGlider other) {
         super(other);
         this.start = other.start;
         this.end = other.end;
@@ -74,24 +74,24 @@ public class CoordGlider extends Glider {
         return getFloat("y");
     }
 
-    @NonNull
+    @NotNull
     public Coord getStart() {
         return start;
     }
 
-    public void setStart(@NonNull Coord start) {
+    public void setStart(@NotNull Coord start) {
         this.start = start;
         setStartFloat("x", start.x);
         setStartFloat("y", start.y);
         change = 0f;
     }
 
-    @NonNull
+    @NotNull
     public Coord getEnd() {
         return end;
     }
 
-    public void setEnd(@NonNull Coord end) {
+    public void setEnd(@NotNull Coord end) {
         this.end = end;
         setEndFloat("x", end.x);
         setEndFloat("y", end.y);

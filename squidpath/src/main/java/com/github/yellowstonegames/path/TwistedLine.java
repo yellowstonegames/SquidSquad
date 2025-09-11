@@ -23,7 +23,7 @@ import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordOrderedSet;
 import com.github.yellowstonegames.grid.Direction;
 import com.github.yellowstonegames.grid.DrunkenWalk;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,11 +36,11 @@ import java.util.List;
  * {@link DefaultGraph#findShortestPath(Coord, Coord, ObjectDeque, Heuristic)}.
  */
 public class TwistedLine {
-    @NonNull
+    @NotNull
     public EnhancedRandom rng;
-    @NonNull
+    @NotNull
     public final DefaultGraph graph;
-    @NonNull
+    @NotNull
     public final ObjectDeque<Coord> lastPath;
 
     public TwistedLine() {
@@ -258,7 +258,7 @@ public class TwistedLine {
         return graph.height;
     }
 
-    @NonNull
+    @NotNull
     public EnhancedRandom getRng() {
         return rng;
     }
@@ -273,7 +273,7 @@ public class TwistedLine {
      * into another list if you want to keep its contents.
      * @return the most recent path of Coord, as an ObjectDeque, this found.
      */
-    @NonNull
+    @NotNull
     public ObjectDeque<Coord> getLastPath() {
         return lastPath;
     }

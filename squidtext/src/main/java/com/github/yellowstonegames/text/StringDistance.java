@@ -22,7 +22,7 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.IntIntMap;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -126,7 +126,7 @@ public class StringDistance {
      * @param target the goal String; we are measuring the edit distance to get from source to target
      * @return the edit distance from source to target with the configured costs, as an int
      */
-    public int distance(@NonNull CharSequence source, @NonNull CharSequence target) {
+    public int distance(@NotNull CharSequence source, @NotNull CharSequence target) {
         if (source.length() == 0) {
             return target.length() * insertCost;
         }

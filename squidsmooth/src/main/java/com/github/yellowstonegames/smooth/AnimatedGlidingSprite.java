@@ -21,8 +21,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.yellowstonegames.grid.Coord;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Extends {@link Sprite}, but uses an {@link Animation} of {@link TextureRegion} for its visuals and a
@@ -39,9 +39,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class AnimatedGlidingSprite extends ParentSprite {
     public Animation<? extends TextureRegion> animation;
-    @NonNull
+    @NotNull
     public CoordGlider location;
-    @NonNull
+    @NotNull
     public VectorSequenceGlider smallMotion;
     /**
      * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
@@ -49,7 +49,7 @@ public class AnimatedGlidingSprite extends ParentSprite {
      * It is here so {@link #smallMotion} can be easily set to an empty sequence.
      * You can also use {@code setSmallMotion(null)} to stop any small motion.
      */
-    @NonNull
+    @NotNull
     public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private AnimatedGlidingSprite()
@@ -109,16 +109,16 @@ public class AnimatedGlidingSprite extends ParentSprite {
         this.animation = animation;
     }
 
-    @NonNull
+    @NotNull
     public CoordGlider getLocation() {
         return location;
     }
 
-    public void setLocation(@NonNull CoordGlider location) {
+    public void setLocation(@NotNull CoordGlider location) {
         this.location = location;
     }
 
-    @NonNull
+    @NotNull
     public VectorSequenceGlider getSmallMotion() {
         return smallMotion;
     }

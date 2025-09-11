@@ -18,7 +18,7 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class DiverRNG extends LegacyRandom implements StatefulRandomness {
     @Override
@@ -81,7 +81,7 @@ public class DiverRNG extends LegacyRandom implements StatefulRandomness {
      *
      * @return a copy of this RandomnessSource
      */
-    @NonNull
+    @NotNull
     @Override
     public DiverRNG copy() {
         return new DiverRNG(state);

@@ -2,7 +2,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A tiny data wrapper around a {@link #radiance} and a Coord {@link #position} for that Radiance, as well as,
@@ -25,10 +25,10 @@ public class LightSource {
         this(Coord.get(0,0), new Radiance(), 1f, 0f);
     }
 
-    public LightSource(@NonNull Coord position, @NonNull Radiance radiance) {
+    public LightSource(@NotNull Coord position, @NotNull Radiance radiance) {
         this(position, radiance, 1f, 0f);
     }
-    public LightSource(@NonNull Coord position, @NonNull Radiance radiance, float spanTurns, float directionTurns) {
+    public LightSource(@NotNull Coord position, @NotNull Radiance radiance, float spanTurns, float directionTurns) {
         this.radiance = radiance;
         this.position = position;
         this.span = spanTurns;
@@ -39,7 +39,7 @@ public class LightSource {
         return radiance;
     }
 
-    public void setRadiance(@NonNull Radiance radiance) {
+    public void setRadiance(@NotNull Radiance radiance) {
         this.radiance = radiance;
     }
 
@@ -47,7 +47,7 @@ public class LightSource {
         return position;
     }
 
-    public void setPosition(@NonNull Coord position) {
+    public void setPosition(@NotNull Coord position) {
         this.position = position;
     }
 

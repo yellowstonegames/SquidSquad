@@ -22,7 +22,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.Hasher;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,8 +45,8 @@ import java.util.List;
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
 public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
-    public @NonNull EnhancedRandom random;
-    protected @NonNull ObjectList<T> elements;
+    public @NotNull EnhancedRandom random;
+    protected @NotNull ObjectList<T> elements;
     protected int index;
     public GapShuffler() {
         random = new AceRandom();
@@ -303,7 +303,7 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
      * @return an infinite Iterator over elements of type T.
      */
     @Override
-    public @NonNull Iterator<T> iterator() {
+    public @NotNull Iterator<T> iterator() {
         return this;
     }
 

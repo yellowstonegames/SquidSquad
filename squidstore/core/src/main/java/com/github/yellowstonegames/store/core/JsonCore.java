@@ -27,7 +27,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.TricycleRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.core.*;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import regexodus.Pattern;
 
 @SuppressWarnings("rawtypes")
@@ -41,7 +41,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have serializers registered for all jdkgdxds and SquidSquad types this is aware of
      */
-    public static void registerAll(@NonNull Json json) {
+    public static void registerAll(@NotNull Json json) {
         registerChar2D(json);
         registerInt2D(json);
         registerLong2D(json);
@@ -63,7 +63,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerChar2D(@NonNull Json json) {
+    public static void registerChar2D(@NotNull Json json) {
         json.addClassTag("c##", char[][].class);
         json.setSerializer(char[][].class, new Json.Serializer<char[][]>() {
             @Override
@@ -101,7 +101,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerInt2D(@NonNull Json json) {
+    public static void registerInt2D(@NotNull Json json) {
         json.addClassTag("i##", int[][].class);
         json.setSerializer(int[][].class, new Json.Serializer<int[][]>() {
             @Override
@@ -139,7 +139,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerFloat2D(@NonNull Json json) {
+    public static void registerFloat2D(@NotNull Json json) {
         json.addClassTag("f##", float[][].class);
         json.setSerializer(float[][].class, new Json.Serializer<float[][]>() {
             @Override
@@ -177,7 +177,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLong2D(@NonNull Json json) {
+    public static void registerLong2D(@NotNull Json json) {
         json.addClassTag("l##", long[][].class);
         json.setSerializer(long[][].class, new Json.Serializer<long[][]>() {
             @Override
@@ -220,7 +220,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDiceRule(@NonNull Json json) {
+    public static void registerDiceRule(@NotNull Json json) {
         json.addClassTag("DiRu", Dice.Rule.class);
         json.setSerializer(Dice.Rule.class, new Json.Serializer<Dice.Rule>() {
             @Override
@@ -245,7 +245,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerGapShuffler(@NonNull Json json) {
+    public static void registerGapShuffler(@NotNull Json json) {
         json.addClassTag("GShu", GapShuffler.class);
         JsonSupport.registerEnhancedRandom(json);
         JsonSupport.registerObjectList(json);
@@ -281,7 +281,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerProbabilityTable(@NonNull Json json) {
+    public static void registerProbabilityTable(@NotNull Json json) {
         json.addClassTag("PTab", ProbabilityTable.class);
         JsonSupport.registerEnhancedRandom(json);
         JsonSupport.registerObjectList(json);
@@ -324,7 +324,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerWeightedTable(@NonNull Json json) {
+    public static void registerWeightedTable(@NotNull Json json) {
         json.addClassTag("WTab", WeightedTable.class);
         json.setSerializer(WeightedTable.class, new Json.Serializer<WeightedTable>() {
             @Override
@@ -347,7 +347,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerUniqueIdentifier(@NonNull Json json) {
+    public static void registerUniqueIdentifier(@NotNull Json json) {
         json.addClassTag("UIdn", UniqueIdentifier.class);
         json.setSerializer(UniqueIdentifier.class, new Json.Serializer<UniqueIdentifier>() {
             @Override
@@ -370,7 +370,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerUniqueIdentifierGenerator(@NonNull Json json) {
+    public static void registerUniqueIdentifierGenerator(@NotNull Json json) {
         json.addClassTag("UIdG", UniqueIdentifier.Generator.class);
         json.setSerializer(UniqueIdentifier.Generator.class, new Json.Serializer<UniqueIdentifier.Generator>() {
             @Override
@@ -393,7 +393,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerIntShuffler(@NonNull Json json) {
+    public static void registerIntShuffler(@NotNull Json json) {
         json.addClassTag("IShu", IntShuffler.class);
         json.setSerializer(IntShuffler.class, new Json.Serializer<IntShuffler>() {
             @Override
@@ -416,7 +416,7 @@ public final class JsonCore {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPattern(@NonNull Json json) {
+    public static void registerPattern(@NotNull Json json) {
         json.addClassTag("Patt", Pattern.class);
         json.setSerializer(Pattern.class, new Json.Serializer<Pattern>() {
             @Override

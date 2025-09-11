@@ -25,7 +25,7 @@ import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.store.core.JsonCore;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Writer;
 import java.util.Iterator;
@@ -41,7 +41,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have serializers registered for all SquidGrid types.
      */
-    public static void registerAll(@NonNull Json json) {
+    public static void registerAll(@NotNull Json json) {
         registerCoord(json);
         registerPoint2Int(json);
         registerPoint3Int(json);
@@ -105,7 +105,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoord(@NonNull Json json) {
+    public static void registerCoord(@NotNull Json json) {
         json.addClassTag("Coor", Coord.class);
         json.setSerializer(Coord.class, new Json.Serializer<Coord>() {
             @Override
@@ -129,7 +129,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint2Int(@NonNull Json json) {
+    public static void registerPoint2Int(@NotNull Json json) {
         json.addClassTag("Pt2I", Point2Int.class);
         json.setSerializer(Point2Int.class, new Json.Serializer<Point2Int>() {
             @Override
@@ -153,7 +153,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint3Int(@NonNull Json json) {
+    public static void registerPoint3Int(@NotNull Json json) {
         json.addClassTag("Pt3I", Point3Int.class);
         json.setSerializer(Point3Int.class, new Json.Serializer<Point3Int>() {
             @Override
@@ -178,7 +178,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint4Int(@NonNull Json json) {
+    public static void registerPoint4Int(@NotNull Json json) {
         json.addClassTag("Pt4I", Point4Int.class);
         json.setSerializer(Point4Int.class, new Json.Serializer<Point4Int>() {
             @Override
@@ -205,7 +205,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint5Int(@NonNull Json json) {
+    public static void registerPoint5Int(@NotNull Json json) {
         json.addClassTag("Pt5I", Point5Int.class);
         json.setSerializer(Point5Int.class, new Json.Serializer<Point5Int>() {
             @Override
@@ -233,7 +233,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint6Int(@NonNull Json json) {
+    public static void registerPoint6Int(@NotNull Json json) {
         json.addClassTag("Pt6I", Point6Int.class);
         json.setSerializer(Point6Int.class, new Json.Serializer<Point6Int>() {
             @Override
@@ -264,7 +264,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint2Float(@NonNull Json json) {
+    public static void registerPoint2Float(@NotNull Json json) {
         json.addClassTag("Pt2F", Point2Float.class);
         json.setSerializer(Point2Float.class, new Json.Serializer<Point2Float>() {
             @Override
@@ -288,7 +288,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint3Float(@NonNull Json json) {
+    public static void registerPoint3Float(@NotNull Json json) {
         json.addClassTag("Pt3F", Point3Float.class);
         json.setSerializer(Point3Float.class, new Json.Serializer<Point3Float>() {
             @Override
@@ -313,7 +313,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint4Float(@NonNull Json json) {
+    public static void registerPoint4Float(@NotNull Json json) {
         json.addClassTag("Pt4F", Point4Float.class);
         json.setSerializer(Point4Float.class, new Json.Serializer<Point4Float>() {
             @Override
@@ -340,7 +340,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint5Float(@NonNull Json json) {
+    public static void registerPoint5Float(@NotNull Json json) {
         json.addClassTag("Pt5F", Point5Float.class);
         json.setSerializer(Point5Float.class, new Json.Serializer<Point5Float>() {
             @Override
@@ -368,7 +368,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoint6Float(@NonNull Json json) {
+    public static void registerPoint6Float(@NotNull Json json) {
         json.addClassTag("Pt6F", Point6Float.class);
         json.setSerializer(Point6Float.class, new Json.Serializer<Point6Float>() {
             @Override
@@ -400,7 +400,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerRegion(@NonNull Json json) {
+    public static void registerRegion(@NotNull Json json) {
         json.addClassTag("Regi", Region.class);
         json.setSerializer(Region.class, new Json.Serializer<Region>() {
             @Override
@@ -422,7 +422,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordObjectMap(@NonNull Json json) {
+    public static void registerCoordObjectMap(@NotNull Json json) {
         json.addClassTag("CoM", CoordObjectMap.class);
         registerCoord(json);
         json.setSerializer(CoordObjectMap.class, new Json.Serializer<CoordObjectMap>() {
@@ -461,7 +461,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordObjectOrderedMap(@NonNull Json json) {
+    public static void registerCoordObjectOrderedMap(@NotNull Json json) {
         json.addClassTag("CoOM", CoordObjectOrderedMap.class);
         registerCoord(json);
         json.setSerializer(CoordObjectOrderedMap.class, new Json.Serializer<CoordObjectOrderedMap>() {
@@ -500,7 +500,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordFloatMap(@NonNull Json json) {
+    public static void registerCoordFloatMap(@NotNull Json json) {
         json.addClassTag("CfM", CoordFloatMap.class);
         registerCoord(json);
         json.setSerializer(CoordFloatMap.class, new Json.Serializer<CoordFloatMap>() {
@@ -539,7 +539,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordFloatOrderedMap(@NonNull Json json) {
+    public static void registerCoordFloatOrderedMap(@NotNull Json json) {
         json.addClassTag("CfOM", CoordFloatOrderedMap.class);
         registerCoord(json);
         json.setSerializer(CoordFloatOrderedMap.class, new Json.Serializer<CoordFloatOrderedMap>() {
@@ -578,7 +578,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordLongMap(@NonNull Json json) {
+    public static void registerCoordLongMap(@NotNull Json json) {
         json.addClassTag("ClM", CoordLongMap.class);
         registerCoord(json);
         json.setSerializer(CoordLongMap.class, new Json.Serializer<CoordLongMap>() {
@@ -617,7 +617,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordLongOrderedMap(@NonNull Json json) {
+    public static void registerCoordLongOrderedMap(@NotNull Json json) {
         json.addClassTag("ClOM", CoordLongOrderedMap.class);
         registerCoord(json);
         json.setSerializer(CoordLongOrderedMap.class, new Json.Serializer<CoordLongOrderedMap>() {
@@ -657,7 +657,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordIntMap(@NonNull Json json) {
+    public static void registerCoordIntMap(@NotNull Json json) {
         json.addClassTag("CiM", CoordIntMap.class);
         registerCoord(json);
         json.setSerializer(CoordIntMap.class, new Json.Serializer<CoordIntMap>() {
@@ -696,7 +696,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordIntOrderedMap(@NonNull Json json) {
+    public static void registerCoordIntOrderedMap(@NotNull Json json) {
         json.addClassTag("CiOM", CoordIntOrderedMap.class);
         registerCoord(json);
         json.setSerializer(CoordIntOrderedMap.class, new Json.Serializer<CoordIntOrderedMap>() {
@@ -735,7 +735,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordSet(@NonNull Json json) {
+    public static void registerCoordSet(@NotNull Json json) {
         json.addClassTag("CS", CoordSet.class);
         registerCoord(json);
         json.setSerializer(CoordSet.class, new Json.Serializer<CoordSet>() {
@@ -766,7 +766,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCoordOrderedSet(@NonNull Json json) {
+    public static void registerCoordOrderedSet(@NotNull Json json) {
         json.addClassTag("COS", CoordOrderedSet.class);
         registerCoord(json);
         json.setSerializer(CoordOrderedSet.class, new Json.Serializer<CoordOrderedSet>() {
@@ -798,7 +798,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerRadiance(@NonNull Json json) {
+    public static void registerRadiance(@NotNull Json json) {
         json.addClassTag("Rada", Radiance.class);
         json.setSerializer(Radiance.class, new Json.Serializer<Radiance>() {
             @Override
@@ -823,7 +823,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLightSource(@NonNull Json json) {
+    public static void registerLightSource(@NotNull Json json) {
         json.addClassTag("LiSo", LightSource.class);
         json.setSerializer(LightSource.class, new Json.Serializer<LightSource>() {
             @Override
@@ -848,7 +848,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerINoise(@NonNull Json json) {
+    public static void registerINoise(@NotNull Json json) {
         json.addClassTag("INoi", INoise.class);
         json.setSerializer(INoise.class, new Json.Serializer<INoise>() {
             @Override
@@ -873,7 +873,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerNoise(@NonNull Json json) {
+    public static void registerNoise(@NotNull Json json) {
         json.addClassTag("Nois", Noise.class);
         json.setSerializer(Noise.class, new Json.Serializer<Noise>() {
             @Override
@@ -898,7 +898,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerNoiseWrapper(@NonNull Json json) {
+    public static void registerNoiseWrapper(@NotNull Json json) {
         json.addClassTag("NoWr", NoiseWrapper.class);
         json.setSerializer(NoiseWrapper.class, new Json.Serializer<NoiseWrapper>() {
             @Override
@@ -923,7 +923,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerNoiseAdjustment(@NonNull Json json) {
+    public static void registerNoiseAdjustment(@NotNull Json json) {
         json.addClassTag("NAdj", NoiseAdjustment.class);
         json.setSerializer(NoiseAdjustment.class, new Json.Serializer<NoiseAdjustment>() {
             @Override
@@ -948,7 +948,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerRadialNoiseWrapper(@NonNull Json json) {
+    public static void registerRadialNoiseWrapper(@NotNull Json json) {
         json.addClassTag("RaNW", RadialNoiseWrapper.class);
         json.setSerializer(RadialNoiseWrapper.class, new Json.Serializer<RadialNoiseWrapper>() {
             @Override
@@ -973,7 +973,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPhantomNoise(@NonNull Json json) {
+    public static void registerPhantomNoise(@NotNull Json json) {
         json.addClassTag("PhaN", PhantomNoise.class);
         json.setSerializer(PhantomNoise.class, new Json.Serializer<PhantomNoise>() {
             @Override
@@ -998,7 +998,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerTaffyNoise(@NonNull Json json) {
+    public static void registerTaffyNoise(@NotNull Json json) {
         json.addClassTag("TafN", TaffyNoise.class);
         json.setSerializer(TaffyNoise.class, new Json.Serializer<TaffyNoise>() {
             @Override
@@ -1023,7 +1023,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerFlanNoise(@NonNull Json json) {
+    public static void registerFlanNoise(@NotNull Json json) {
         json.addClassTag("FlaN", FlanNoise.class);
         json.setSerializer(FlanNoise.class, new Json.Serializer<FlanNoise>() {
             @Override
@@ -1048,7 +1048,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerBadgerNoise(@NonNull Json json) {
+    public static void registerBadgerNoise(@NotNull Json json) {
         json.addClassTag("BdgN", BadgerNoise.class);
         json.setSerializer(BadgerNoise.class, new Json.Serializer<BadgerNoise>() {
             @Override
@@ -1073,7 +1073,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSnakeNoise(@NonNull Json json) {
+    public static void registerSnakeNoise(@NotNull Json json) {
         json.addClassTag("SnkN", SnakeNoise.class);
         json.setSerializer(SnakeNoise.class, new Json.Serializer<SnakeNoise>() {
             @Override
@@ -1098,7 +1098,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCyclicNoise(@NonNull Json json) {
+    public static void registerCyclicNoise(@NotNull Json json) {
         json.addClassTag("CycN", CyclicNoise.class);
         json.setSerializer(CyclicNoise.class, new Json.Serializer<CyclicNoise>() {
             @Override
@@ -1123,7 +1123,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerFoamNoise(@NonNull Json json) {
+    public static void registerFoamNoise(@NotNull Json json) {
         json.addClassTag("FoaN", FoamNoise.class);
         json.setSerializer(FoamNoise.class, new Json.Serializer<FoamNoise>() {
             @Override
@@ -1148,7 +1148,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerFoamplexNoise(@NonNull Json json) {
+    public static void registerFoamplexNoise(@NotNull Json json) {
         json.addClassTag("FoaN", FoamplexNoise.class);
         json.setSerializer(FoamplexNoise.class, new Json.Serializer<FoamplexNoise>() {
             @Override
@@ -1172,7 +1172,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerShapedFoamNoise(@NonNull Json json) {
+    public static void registerShapedFoamNoise(@NotNull Json json) {
         json.addClassTag("SFoN", ShapedFoamNoise.class);
         json.setSerializer(ShapedFoamNoise.class, new Json.Serializer<ShapedFoamNoise>() {
             @Override
@@ -1197,7 +1197,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerHoneyNoise(@NonNull Json json) {
+    public static void registerHoneyNoise(@NotNull Json json) {
         json.addClassTag("FoaN", HoneyNoise.class);
         json.setSerializer(HoneyNoise.class, new Json.Serializer<HoneyNoise>() {
             @Override
@@ -1222,7 +1222,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSimplexNoise(@NonNull Json json) {
+    public static void registerSimplexNoise(@NotNull Json json) {
         json.addClassTag("SimN", SimplexNoise.class);
         json.setSerializer(SimplexNoise.class, new Json.Serializer<SimplexNoise>() {
             @Override
@@ -1247,7 +1247,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSimplexNoiseScaled(@NonNull Json json) {
+    public static void registerSimplexNoiseScaled(@NotNull Json json) {
         json.addClassTag("SiSN", SimplexNoiseScaled.class);
         json.setSerializer(SimplexNoiseScaled.class, new Json.Serializer<SimplexNoiseScaled>() {
             @Override
@@ -1273,7 +1273,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSimplexNoiseHard(@NonNull Json json) {
+    public static void registerSimplexNoiseHard(@NotNull Json json) {
         json.addClassTag("SiHN", SimplexNoiseHard.class);
         json.setSerializer(SimplexNoiseHard.class, new Json.Serializer<SimplexNoiseHard>() {
             @Override
@@ -1299,7 +1299,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerOpenSimplex2(@NonNull Json json) {
+    public static void registerOpenSimplex2(@NotNull Json json) {
         json.addClassTag("OSFN", OpenSimplex2.class);
         json.setSerializer(OpenSimplex2.class, new Json.Serializer<OpenSimplex2>() {
             @Override
@@ -1325,7 +1325,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerOpenSimplex2Smooth(@NonNull Json json) {
+    public static void registerOpenSimplex2Smooth(@NotNull Json json) {
         json.addClassTag("OSSN", OpenSimplex2Smooth.class);
         json.setSerializer(OpenSimplex2Smooth.class, new Json.Serializer<OpenSimplex2Smooth>() {
             @Override
@@ -1351,7 +1351,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerHighDimensionalValueNoise(@NonNull Json json) {
+    public static void registerHighDimensionalValueNoise(@NotNull Json json) {
         json.addClassTag("HDVN", HighDimensionalValueNoise.class);
         json.setSerializer(HighDimensionalValueNoise.class, new Json.Serializer<HighDimensionalValueNoise>() {
             @Override
@@ -1376,7 +1376,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerValueNoise(@NonNull Json json) {
+    public static void registerValueNoise(@NotNull Json json) {
         json.addClassTag("ValN", ValueNoise.class);
         json.setSerializer(ValueNoise.class, new Json.Serializer<ValueNoise>() {
             @Override
@@ -1401,7 +1401,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPerlinNoise(@NonNull Json json) {
+    public static void registerPerlinNoise(@NotNull Json json) {
         json.addClassTag("PerN", PerlinNoise.class);
         json.setSerializer(PerlinNoise.class, new Json.Serializer<PerlinNoise>() {
             @Override
@@ -1426,7 +1426,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPerlueNoise(@NonNull Json json) {
+    public static void registerPerlueNoise(@NotNull Json json) {
         json.addClassTag("PluN", PerlueNoise.class);
         json.setSerializer(PerlueNoise.class, new Json.Serializer<PerlueNoise>() {
             @Override
@@ -1451,7 +1451,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSorbetNoise(@NonNull Json json) {
+    public static void registerSorbetNoise(@NotNull Json json) {
         json.addClassTag("SorN", SorbetNoise.class);
         json.setSerializer(SorbetNoise.class, new Json.Serializer<SorbetNoise>() {
             @Override
@@ -1476,7 +1476,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerWhiteNoise(@NonNull Json json) {
+    public static void registerWhiteNoise(@NotNull Json json) {
         json.addClassTag("WhtN", WhiteNoise.class);
         json.setSerializer(WhiteNoise.class, new Json.Serializer<WhiteNoise>() {
             @Override
@@ -1501,7 +1501,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerBitNoise(@NonNull Json json) {
+    public static void registerBitNoise(@NotNull Json json) {
         json.addClassTag("BitN", BitNoise.class);
         json.setSerializer(BitNoise.class, new Json.Serializer<BitNoise>() {
             @Override
@@ -1528,7 +1528,7 @@ public final class JsonGrid {
 //     *
 //     * @param json a libGDX Json object that will have a serializer registered
 //     */
-//    public static void registerBasicHashNoise(@NonNull Json json) {
+//    public static void registerBasicHashNoise(@NotNull Json json) {
 //        json.addClassTag("ValN", BasicHashNoise.class);
 //        json.setSerializer(BasicHashNoise.class, new Json.Serializer<BasicHashNoise>() {
 //            @Override
@@ -1553,7 +1553,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSpatialMap(@NonNull Json json) {
+    public static void registerSpatialMap(@NotNull Json json) {
         json.addClassTag("SpaM", SpatialMap.class);
         registerCoordObjectOrderedMap(json);
         JsonSupport.registerIntObjectOrderedMap(json);
@@ -1584,7 +1584,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLightingManager(@NonNull Json json) {
+    public static void registerLightingManager(@NotNull Json json) {
         json.addClassTag("LiMo", LightingManager.class);
         registerRegion(json);
         registerLightSource(json);
@@ -1654,7 +1654,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLightingManagerRgb(@NonNull Json json) {
+    public static void registerLightingManagerRgb(@NotNull Json json) {
         json.addClassTag("LiMr", LightingManagerRgb.class);
         registerRegion(json);
         registerLightSource(json);
@@ -1724,7 +1724,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerVisionFramework(@NonNull Json json) {
+    public static void registerVisionFramework(@NotNull Json json) {
         json.addClassTag("ViFo", VisionFramework.class);
         registerLightingManager(json);
         JsonCore.registerChar2D(json);
@@ -1781,7 +1781,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerVisionFrameworkRgb(@NonNull Json json) {
+    public static void registerVisionFrameworkRgb(@NotNull Json json) {
         json.addClassTag("ViFr", VisionFrameworkRgb.class);
         registerLightingManagerRgb(json);
         JsonCore.registerChar2D(json);
@@ -1840,7 +1840,7 @@ public final class JsonGrid {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPointPair(@NonNull Json json) {
+    public static void registerPointPair(@NotNull Json json) {
         json.addClassTag("PntP", PointPair.class);
         json.setSerializer(PointPair.class, new Json.Serializer<PointPair>() {
             @Override

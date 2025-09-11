@@ -22,7 +22,7 @@ import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.digital.Hasher;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 /**
@@ -45,7 +45,7 @@ public class WaveFunctionCollapse {
     private int[] stack;
     private int stacksize;
 
-    @NonNull public EnhancedRandom random;
+    @NotNull public EnhancedRandom random;
     private int targetWidth, targetHeight, totalOptions;
     private boolean periodic;
 
@@ -99,7 +99,7 @@ public class WaveFunctionCollapse {
      * @param symmetry the level of symmetry to consider when imitating areas; between 1 and 8, inclusive, but usually 1
      * @param ground not sure what this does, to be honest; should usually be 0
      */
-    public WaveFunctionCollapse(int[][] itemGrid, int order, int width, int height, @NonNull EnhancedRandom random,
+    public WaveFunctionCollapse(int[][] itemGrid, int order, int width, int height, @NotNull EnhancedRandom random,
                                 boolean periodicInput, boolean periodicOutput, int symmetry, int ground)
     {
         targetWidth = width;
@@ -128,12 +128,12 @@ public class WaveFunctionCollapse {
 
         ObjectIntOrderedMap<int[]> weights = new ObjectIntOrderedMap<int[]>(){
             @Override
-            protected int place(@NonNull Object item) {
+            protected int place(@NotNull Object item) {
                 return item instanceof int[] ? Hasher.focalor.hash((int[])item) & mask : super.place(item);
             }
 
             @Override
-            protected int locateKey(@NonNull Object key) {
+            protected int locateKey(@NotNull Object key) {
                 if(key instanceof int[])
                 {
                     Object[] keyTable = this.keyTable;

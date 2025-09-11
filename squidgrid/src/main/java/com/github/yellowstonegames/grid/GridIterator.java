@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.yellowstonegames.core.annotations.Beta;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

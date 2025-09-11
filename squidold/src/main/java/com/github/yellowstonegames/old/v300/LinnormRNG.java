@@ -18,7 +18,7 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class LinnormRNG extends LegacyRandom implements StatefulRandomness {
     @Override
@@ -79,7 +79,7 @@ public class LinnormRNG extends LegacyRandom implements StatefulRandomness {
      *
      * @return a copy of this LinnormRNG
      */
-    @NonNull
+    @NotNull
     @Override
     public LinnormRNG copy() {
         return new LinnormRNG(state);

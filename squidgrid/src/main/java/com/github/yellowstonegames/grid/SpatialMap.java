@@ -23,8 +23,8 @@ import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.yellowstonegames.core.annotations.Beta;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.Collection;
@@ -63,7 +63,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         idMap = new IntObjectOrderedMap<>(other.idMap);
     }
 
-    public boolean add(@NonNull V value){
+    public boolean add(@NotNull V value){
         Coord pos = value.getCoordPosition();
         int id = value.getIdentifier();
         if(idMap.containsKey(id)){
@@ -97,7 +97,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
     }
 
     @Override
-    public @NonNull Iterator<V> iterator() {
+    public @NotNull Iterator<V> iterator() {
         return idMap.values().iterator();
     }
 
