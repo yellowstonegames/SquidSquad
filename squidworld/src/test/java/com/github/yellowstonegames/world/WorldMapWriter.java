@@ -59,7 +59,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 400, height = 408;
 //    private static final int width = 2000, height = 2000;
 //    private static final int width = 2000, height = 1000;
-    private static final int width = 1000, height = 1000;
+//    private static final int width = 1000, height = 1000;
+    private static final int width = 1800, height = 900;
 
 //    private static final int width = 512, height = 512;
 //    private static final int width = 512 >>> AA, height = 256 >>> AA; // mimic world
@@ -118,9 +119,9 @@ public class WorldMapWriter extends ApplicationAdapter {
 
 //        final Noise fn = new Noise((int) seed, 1.5f, Noise.TAFFY_FRACTAL, 1);
 //        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-        Noise fn = new Noise((int) seed, 1.35f, Noise.VALUE_FRACTAL, 3);
+//        Noise fn = new Noise((int) seed, 1.35f, Noise.VALUE_FRACTAL, 3);
 //        final Noise fn = new Noise((int) seed, 0.625f, Noise.SIMPLEX_FRACTAL, 2);
-//        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2);
+        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.666f, Noise.FOAM_FRACTAL, 2, 3f, 1f/3f);
 //        Noise fn = new Noise((int) seed, 0.9f, Noise.HONEY_FRACTAL, 2);
 //        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 2);
@@ -135,7 +136,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 
 //        noise = new CyclicNoise(seed, 4, 1.9f);
 //        noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
-        noise = new NoiseWrapper(new PerlueNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
+        noise = new NoiseWrapper(new HoneyNoise(seed), seed, 0.9f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new PerlueNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
 //        noise = new NoiseWrapper(new PerlinNoise(seed), seed, 1.5f, NoiseWrapper.FBM, 1);
 //        noise = new NoiseWrapper(new ValueNoise(seed), seed, 2f, NoiseWrapper.FBM, 1);
 //        noise = new SimplexNoise(seed);
@@ -156,8 +158,8 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new DiagonalWorldMap(seed, width / cellWidth << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
-//        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
-        world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new RotatingGlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1.25f);
 //        wmv = new DetailedWorldMapView(world);
         wmv = new BlendedWorldMapView(world);

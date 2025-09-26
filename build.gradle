@@ -45,7 +45,6 @@ subprojects {
 	}
     javadoc.options.source("17")
     javadoc.destinationDir = file("../docs/$name/apidocs")
-
 }
 
 // Disable JDK 8's doclint

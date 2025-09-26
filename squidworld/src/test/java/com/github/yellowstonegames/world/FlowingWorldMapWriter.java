@@ -63,21 +63,24 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     // World #1, BrownsapAlder, completed in       241347 ms
     // with a detailed world map and Perlin noise:
     // World #1, TuftedBudEucalyptus, completed in  57233 ms
-    // with blended world map and Cyclic noise (3 octaves, 2f frequency):
-    // World #1, GrayLarch, completed in           111201 ms
+    // with blended world map and Cyclic noise (3 octaves, 2.7f frequency), size 256x256:
+    // World #1, OrangeThistle, completed in 26848 ms
 
     private static final boolean FLOWING_LAND = true;
-    private static final boolean GLOBE_SPIN = false;
+    private static final boolean GLOBE_SPIN = true;
     private static final boolean ALIEN_COLORS = false;
     private static final boolean SHADOW = false;
 
 //    private static final int width = 256, height = 256;
 //    private static final int width = 300, height = 300;
-    private static final int width = GLOBE_SPIN ? 300 : 400, height = GLOBE_SPIN ? 300 : 200;
+    private static final int width = GLOBE_SPIN ? 256 : 360, height = GLOBE_SPIN ? 256 : 180;
 
 //    private static final int FRAMES = 100;
-//    private static final int FRAMES = 240;
-    private static final int FRAMES = 8;
+    private static final int FRAMES = 240;
+//    private static final int FRAMES = 8;
+    // How many frames should be rendered between still PNGs being saved; if 0, no PNGs will be saved;
+    // if >= FRAMES, will save only one frame; or if 1, will save every frame.
+    private static final int STILLS_EVERY = 8;
     private static final int LIMIT = 3;
     private static float SPEED = 0.25f;
     private int baseSeed = 1234567890;
@@ -99,7 +102,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     private WorldMapView wmv;
     private AnimatedGif writer;
 //    private AnimatedPNG apng;
-//    private PixmapIO.PNG pngWriter;
+    private FastPNG pngWriter;
 
     private String date, path;
 
@@ -255,8 +258,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        apng.setFlipY(false);
 //        apng.setCompression(2);
 
-//        pngWriter = new PixmapIO.PNG();
-//        pngWriter.setFlipY(false);
+        pngWriter = new FastPNG();
+        pngWriter.setFlipY(false);
         rng = new DistinctRandom(Hasher.balam.hash64(date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         seed = rng.getSelectedState(0);
@@ -264,9 +267,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         thesaurus = new Thesaurus(rng);
 
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
-        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new CyclicNoise(seed, 3, 3f), seed, 0.75f, NoiseWrapper.FBM, 2));
-//        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 2, 3f)); SPEED *= 0.7f;
+        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 2.7f)); SPEED *= 0.75f;
 //        iNoise = new Noise3DFrom5D(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 1));
@@ -298,9 +301,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
 
-        wmv = new SimpleWorldMapView(world);
+//        wmv = new SimpleWorldMapView(world);
 //        wmv = new UnrealisticWorldMapView(world);
-//        wmv = new BlendedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
 //        wmv = new DetailedWorldMapView(world);
 
         //generate(seed);
@@ -445,15 +448,15 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
             pm[i].setFilter(Pixmap.Filter.BiLinear);
             pm[i].setBlending(Pixmap.Blending.SourceOver);
             pm[i].drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm[i].getWidth(), pm[i].getHeight());
-//            if((SPACE & 0xFE) != 0xFE) {
-                ByteBuffer buf = pm[i].getPixels();
-                for (int pos = 0, lim = buf.limit(); pos < lim; pos += 4) {
-                    int color = buf.getInt(pos);
-                    if((color & 0xFF) == 0)
-                        buf.putInt(pos, SPACE);
-                }
-//            }
 
+//            ByteBuffer buf = pm[i].getPixels();
+//            for (int pos = 0, lim = buf.limit(); pos < lim; pos += 4) {
+//                int color = buf.getInt(pos);
+//                if((color & 0xFE) != 0xFE)
+//                    buf.putInt(pos, SPACE);
+//            }
+            if(STILLS_EVERY > 0 && i % STILLS_EVERY == 0)
+                pngWriter.write(Gdx.files.local(path + "stills/" + name + "_" + (i / STILLS_EVERY) + ".png"), pm[i]);
 
             if(FRAMES >= 10)
                 if(i % (FRAMES / 10) == (FRAMES / 10) - 1) System.out.print(((i + 1) * 100 / FRAMES) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
@@ -463,8 +466,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette.analyze(pms, 40.0);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 1);
-//        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
+//        writer.write(Gdx.files.local(path + name + ".gif"), pms, 1);
+        writer.write(Gdx.files.local(path + name + ".gif"), pms, 24);
 //        apng.write(Gdx.files.local(path + name + ".png"), pms, 24);
 //        } catch (IOException e) {
 //            e.printStackTrace();
