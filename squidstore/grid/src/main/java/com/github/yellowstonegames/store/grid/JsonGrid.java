@@ -87,6 +87,7 @@ public final class JsonGrid {
         registerPerlinNoise(json);
         registerPerlueNoise(json);
         registerPhantomNoise(json);
+        registerPuffyNoise(json);
         registerRadialNoiseWrapper(json);
         registerShapedFoamNoise(json);
         registerSimplexNoise(json);
@@ -1112,6 +1113,31 @@ public final class JsonGrid {
             public CyclicNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return CyclicNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers PuffyNoise with the given Json object, so PuffyNoise can be written to and read from JSON.
+     * This is a simple wrapper around PuffyNoise's built-in {@link PuffyNoise#stringSerialize()} and
+     * {@link PuffyNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPuffyNoise(@NotNull Json json) {
+        json.addClassTag("PufN", PuffyNoise.class);
+        json.setSerializer(PuffyNoise.class, new Json.Serializer<PuffyNoise>() {
+            @Override
+            public void write(Json json, PuffyNoise object, Class knownType) {
+                json.writeObjectStart(PuffyNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public PuffyNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return PuffyNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }

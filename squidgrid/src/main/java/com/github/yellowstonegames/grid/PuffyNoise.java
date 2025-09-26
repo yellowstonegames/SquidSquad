@@ -61,6 +61,7 @@ public class PuffyNoise implements INoise {
     public PuffyNoise(long seed, int octaves, float frequency) {
         setOctaves(octaves);
         setFrequency(frequency);
+        this.seed = seed;
         for (int i = 0; i < 4; i++) {
             rotations[i] = new RotationTools.Rotator(7, new DistinctRandom(seed ^ i));
         }
