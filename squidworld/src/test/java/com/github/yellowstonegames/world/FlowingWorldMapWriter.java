@@ -292,8 +292,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         if(GLOBE_SPIN)
             world = new GlobeMap(seed, width, height, iNoise, 0.6f);
         else
-//            world = new RoundSideWorldMap(seed, width, height, iNoise, 0.7f);
             world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
+//            world = new RoundSideWorldMap(seed, width, height, iNoise, 0.7f);
 //            world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.5f);
 
         path = "out/worldsFlowing/" + date + "/" +

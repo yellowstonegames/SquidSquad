@@ -135,7 +135,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //        };
         int[] gray256 = new int[256];
         for (int i = 0; i < 256; i++) {
-            gray256[i] = i * 0x010101 << 8 | 0xFF;
+            gray256[i] = i * 0x01010100 | 0xFF;
         }
 
         gif = new AnimatedGif();
