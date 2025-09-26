@@ -216,46 +216,48 @@ public class INoiseComparison extends ApplicationAdapter {
     private int prep1 = 0;//PREPARATIONS.length - 1;
 
     private final INoise[] noises = new INoise[]{
-            new SimplexNoise(1L),
-            new BitNoise(1L, 1, 2),
-            new ShapedFoamNoise(1L, 3f),
-            new ShapedFoamNoise(1L, 2f),
-            new ShapedFoamNoise(1L, 1f),
-            new ShapedFoamNoise(1L, 0.5f),
-            new ShapedFoamNoise(1L, 0.25f),
-            new FoamNoise(1L),
-            new FoamplexNoise(1L),
-            new SimplexNoiseHard(1L),
-            new SimplexNoiseScaled(1L),
-            new PerlinNoise(1L),
-            new PerlueNoise(1L),
-            new NoiseAdjustment(new PerlinNoise(1L), watcher),
-            new CyclicNoise(1L, 5, 4),
-            new FlanNoise(1L, 6),
-            new TaffyNoise(1L, 6),
-            new ValueNoise(1L),
-            new HighDimensionalValueNoise(1L, 6),
-            new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),
-            new CyclicNoise(1L, 1),
-            new CyclicNoise(1L, 3),
-            new SorbetNoise(1L, 1),
-            new SorbetNoise(1L, 3),
-            new NoiseAdjustment(analysis, Interpolations.linear), // limits output range
-            new HoneyNoise(1L, 0.3f),
-            new HoneyNoise(1L, 0.4f),
-            new HoneyNoise(1L, 0.5f),
-            new HoneyNoise(1L, 0.6f),
-            new HoneyNoise(1L, 0.7f),
-            new ColorNoise(1L),
-            new TriplexNoise(1L),
-            new BadgerNoise(1L),
-            new SnakeNoise(1L),
-            new Noise(1),
-            new WavyNoise(1, 1),
-            new WavyNoise(1, 3),
+            new SimplexNoise(1L),                                      // 0
+            new BitNoise(1L, 1, 2),                                    // 1
+            new ShapedFoamNoise(1L, 3f),                               // 2
+            new ShapedFoamNoise(1L, 2f),                               // 3
+            new ShapedFoamNoise(1L, 1f),                               // 4
+            new ShapedFoamNoise(1L, 0.5f),                             // 5
+            new ShapedFoamNoise(1L, 0.25f),                            // 6
+            new FoamNoise(1L),                                         // 7
+            new FoamplexNoise(1L),                                     // 8
+            new SimplexNoiseHard(1L),                                  // 9
+            new SimplexNoiseScaled(1L),                                // 10
+            new PerlinNoise(1L),                                       // 11
+            new PerlueNoise(1L),                                       // 12
+            new NoiseAdjustment(new PerlinNoise(1L), watcher),         // 13
+            new CyclicNoise(1L, 5, 4),                                 // 14
+            new FlanNoise(1L, 6),                                      // 15
+            new TaffyNoise(1L, 6),                                     // 16
+            new ValueNoise(1L),                                        // 17
+            new HighDimensionalValueNoise(1L, 6),                      // 18
+            new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),  // 19
+            new CyclicNoise(1L, 1),                                    // 20
+            new CyclicNoise(1L, 3),                                    // 21
+            new SorbetNoise(1L, 1),                                    // 22
+            new SorbetNoise(1L, 3),                                    // 23
+            new PuffyNoise(1L, 1),                                     // 24
+            new PuffyNoise(1L, 3),                                     // 25
+            new NoiseAdjustment(analysis, Interpolations.linear),      // 26
+            new HoneyNoise(1L, 0.3f),                                  // 27
+            new HoneyNoise(1L, 0.4f),                                  // 28
+            new HoneyNoise(1L, 0.5f),                                  // 29
+            new HoneyNoise(1L, 0.6f),                                  // 30
+            new HoneyNoise(1L, 0.7f),                                  // 31
+            new ColorNoise(1L),                                        // 32
+            new TriplexNoise(1L),                                      // 33
+            new BadgerNoise(1L),                                       // 34
+            new SnakeNoise(1L),                                        // 35
+            new Noise(1),                                              // 36
+            new WavyNoise(1, 1),                                       // 37
+            new WavyNoise(1, 3),                                       // 38
     };
-    private int index0 = 1;
-    private int index1 = 35;
+    private int index0 = 20;
+    private int index1 = 24;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);

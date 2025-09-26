@@ -360,7 +360,7 @@ public interface INoise extends Externalizable {
             register(new BasicHashNoise());
             register(new BitNoise());
             register(new CellularNoise());
-            register(new CyclicNoise());
+            register(new CyclicNoise(1));
             register(new FlanNoise());
             register(new FoamNoise());
             register(new FoamplexNoise());
@@ -372,12 +372,13 @@ public interface INoise extends Externalizable {
             register(new PerlinNoise());
             register(new PerlueNoise());
             register(new PhantomNoise());
+            register(new PuffyNoise(1));
             register(new ShapedFoamNoise());
             register(new SimplexNoise());
             register(new SimplexNoiseHard());
             register(new SimplexNoiseScaled());
             register(new SnakeNoise());
-            register(new SorbetNoise());
+            register(new SorbetNoise(1));
             register(new TaffyNoise());
             register(new ValueNoise());
 
