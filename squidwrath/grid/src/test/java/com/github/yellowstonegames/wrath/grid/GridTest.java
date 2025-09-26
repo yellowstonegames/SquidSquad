@@ -557,6 +557,23 @@ public class GridTest {
         }
     }
 
+
+    @Test
+    public void testPuffyNoise() {        
+        LoggerFactory.disableLogging();
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(PuffyNoise.class);
+
+        PuffyNoise data = new PuffyNoise(-9876543210L, 8);
+
+        byte[] bytes = fory.serializeJavaObject(data);
+        {
+            PuffyNoise data2 = fory.deserializeJavaObject(bytes, PuffyNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
     @Test
     public void testSorbetNoise() {        
         LoggerFactory.disableLogging();
