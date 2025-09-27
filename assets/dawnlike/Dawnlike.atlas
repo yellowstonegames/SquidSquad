@@ -1,8 +1,6 @@
 Dawnlike.png
 size:2048,1024
 repeat:none
-PlainAndSimplePlus
-bounds:2,887,256,128
 acid beam h
 index:1
 bounds:1502,981,16,16
@@ -5589,6 +5587,8 @@ bounds:1718,891,16,16
 fog cloud
 index:0
 bounds:1154,639,16,16
+font
+bounds:2,887,256,128
 food ration
 bounds:650,765,16,16
 food shelves

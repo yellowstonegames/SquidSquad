@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2024 See AUTHORS file.
+ * Copyright (c) 2022-2023 See AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -33,18 +30,18 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.IntObjectMap;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
-import com.github.tommyettinger.random.ChopRandom;
+import com.github.tommyettinger.random.Xoshiro160RoadroxoRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.FullPalette;
-import com.github.yellowstonegames.core.FullPaletteRgb;
 import com.github.yellowstonegames.grid.*;
-import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.place.DungeonProcessor;
+import com.github.yellowstonegames.path.DijkstraMap;
 import com.github.yellowstonegames.smooth.AnimatedGlidingSprite;
 import com.github.yellowstonegames.smooth.CoordGlider;
 import com.github.yellowstonegames.smooth.Director;
@@ -54,15 +51,19 @@ import com.github.yellowstonegames.text.Language;
 import static com.badlogic.gdx.Gdx.input;
 import static com.badlogic.gdx.Input.Keys.*;
 
-public class PairedDemo extends ApplicationAdapter {
+public class DawnSquad extends ApplicationAdapter {
     private static final float DURATION = 0.375f;
     private long startTime, lastMove;
+
     private enum Phase {WAIT, PLAYER_ANIM, MONSTER_ANIM}
+
     private SpriteBatch batch;
     private Phase phase = Phase.WAIT;
 
     // random number generator; this one is more efficient on GWT, but less-so on desktop.
-    private ChopRandom rng;
+    private Xoshiro160RoadroxoRandom rng;
+
+    public long seed;
 
     // Stores all images we use here efficiently, as well as the font image
     private TextureAtlas atlas;
@@ -82,43 +83,52 @@ public class PairedDemo extends ApplicationAdapter {
     /**
      * Handles field of view calculations as they change when the player moves around; also, lighting with colors.
      */
-    private final VisionFrameworkRgb rgbVision = new VisionFrameworkRgb();
-    private final VisionFramework oklabVision = new VisionFramework();
+    private final VisionFramework vision = new VisionFramework();
     /**
      * The 2D position of the player (the moving character who the FOV centers upon).
      */
     private Coord player;
 
-    private final Coord[] playerArray = new Coord[1];
+    private final Coord[] playerList = {Coord.get(0, 0)};
 
     private final Vector2 pos = new Vector2();
 
-    /** In number of cells */
+    /**
+     * In number of cells
+     */
     public static final int shownWidth = 32;
-    /** In number of cells */
+    /**
+     * In number of cells
+     */
     public static final int shownHeight = 24;
 
-    /** In number of cells */
+    /**
+     * In number of cells
+     */
     public static final int placeWidth = shownWidth * 2;
-    /** In number of cells */
+    /**
+     * In number of cells
+     */
     public static final int placeHeight = shownHeight * 2;
 
-    /** The pixel width of a cell */
-    public static final int cellWidth = 16;
-    /** The pixel height of a cell */
-    public static final int cellHeight = 16;
+    /**
+     * The pixel width of a cell
+     */
+    public static final int cellWidth = 32;
+    /**
+     * The pixel height of a cell
+     */
+    public static final int cellHeight = 32;
 
-    private boolean onGrid(int screenX, int screenY)
-    {
+    private boolean onGrid(int screenX, int screenY) {
         return screenX >= 0 && screenX < placeWidth && screenY >= 0 && screenY < placeHeight;
     }
 
-    private Color bgColor;
     private BitmapFont font;
-    private Viewport rgbViewport;
-    private Viewport oklabViewport;
-    private Camera rgbCamera;
-    private Camera oklabCamera;
+    private GlyphLayout gameOver;
+    private Viewport mainViewport;
+    private Viewport guiViewport;
+    private Camera camera;
 
     private CoordObjectOrderedMap<AnimatedGlidingSprite> monsters;
     private AnimatedGlidingSprite playerSprite;
@@ -133,9 +143,27 @@ public class PairedDemo extends ApplicationAdapter {
     private TextureAtlas.AtlasRegion solid;
     private int health = 9;
 
-    private static final float RGB_BLOOD = DescriptiveColorRgb.toFloat(DescriptiveColorRgb.describe("deepest red"));
-    private static final float OKLAB_BLOOD = DescriptiveColor.oklabIntToFloat(DescriptiveColor.describe("deepest red"));
+    /**
+     * Used to tint the player for a round when they suffer damage. Very dark red, slightly dull.
+     */
+    private static final int OKLAB_BLOOD = DescriptiveColor.describeOklab("darkest brick");
+    /**
+     * Used as the color for remembered cells that can't be currently seen. Slightly-yellow-brown,
+     * with 30% lightness; fully opaque. The A and B arguments are 0.515f and 0.52f, which makes
+     * the color more red than green (with 0.515f A) and more yellow than blue (with 0.52 B).
+     * Lowering A to less than 0.5f would make the color more of a gross greenish-yellow vomit
+     * color. Lowering B to less than 0.5f would make the color slightly purplish. Lowering both
+     * would make it cyan or sea green.
+     */
+    private static final int OKLAB_MEMORY = DescriptiveColor.oklab(0.3f, 0.515f, 0.52f, 1f);
 
+    public DawnSquad() {
+        this(1L);
+    }
+
+    public DawnSquad(long seed) {
+        this.seed = seed;
+    }
 
     /**
      * Just the parts of create() that can be called again if the game is reloaded.
@@ -143,6 +171,7 @@ public class PairedDemo extends ApplicationAdapter {
     public void restart() {
         restart(TimeUtils.millis() ^ System.identityHashCode(this));
     }
+
     /**
      * Just the parts of create() that can be called again if the game is reloaded.
      */
@@ -155,6 +184,8 @@ public class PairedDemo extends ApplicationAdapter {
         // Starting time for the game; other times are measured relative to this so that they aren't huge numbers.
         startTime = TimeUtils.millis();
         lastMove = startTime;
+
+        Gdx.app.log("RNG", "Seed is " + seed);
         // We just need to have a random number generator.
         // This is seeded the same every time.
         rng.setSeed(seed);
@@ -251,10 +282,10 @@ public class PairedDemo extends ApplicationAdapter {
                 atlas.findRegions(rng.randomElement(Data.possibleCharacters)), Animation.PlayMode.LOOP), player);
         playerSprite.setSize(1f, 1f);
         playerDirector = new Director<>(AnimatedGlidingSprite::getLocation, ObjectList.with(playerSprite), 150);
-        rgbVision.restart(linePlaceMap, player, 8);
-        rgbVision.lighting.addLight(player, new Radiance(8, FullPaletteRgb.COSMIC_LATTE, 0.4f, 0f, 0f, 0f, 123));
-        oklabVision.restart(linePlaceMap, player, 8);
-        oklabVision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.4f, 0f, 0f, 0f, 123));
+
+        vision.restart(linePlaceMap, player, 8);
+//        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0f, 0f));
+        vision.lighting.addLight(player, new Radiance(8, FullPalette.COSMIC_LATTE, 0.3f, 0f));
         floors.remove(player);
         int numMonsters = 100;
         monsters = new CoordObjectOrderedMap<>(numMonsters);
@@ -267,13 +298,9 @@ public class PairedDemo extends ApplicationAdapter {
                             atlas.findRegions(enemy), Animation.PlayMode.LOOP), monPos);
             monster.setSize(1f, 1f);
             monsters.put(monPos, monster);
-            float range = rng.nextFloat(3f) + 2f;
-            int colorIndex = rng.nextInt(FullPaletteRgb.COLOR_WHEEL_PALETTE_RICH.length);
-            int sd = rng.nextInt();
-            rgbVision.lighting.addLight(monPos, new Radiance(range,
-                    FullPaletteRgb.COLOR_WHEEL_PALETTE_RICH[colorIndex], 0.45f, 0f, 0f, 0f, sd));
-            oklabVision.lighting.addLight(monPos, new Radiance(range,
-                    FullPalette.COLOR_WHEEL_PALETTE_RICH[colorIndex], 0.45f, 0f, 0f, 0f, sd));
+            vision.lighting.addLight(monPos, new Radiance(rng.nextFloat(3f) + 2f,
+//                    FullPalette.COLOR_WHEEL_PALETTE_LIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_LIGHT.length)], 0f, 0f));
+                    FullPalette.COLOR_WHEEL_PALETTE_LIGHT[rng.nextInt(FullPalette.COLOR_WHEEL_PALETTE_LIGHT.length)], 0.5f, 0f));
         }
 //        monsterDirector = new Director<>((e) -> e.getValue().getLocation(), monsters, 125);
         monsterDirector = new Director<>(c -> monsters.get(c).getLocation(), monsters.order(), 150);
@@ -293,35 +320,31 @@ public class PairedDemo extends ApplicationAdapter {
         // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
         // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
         // Region that contains the cells just past the edge of the player's FOV area.
-        playerToCursor.partialScan(13, rgbVision.blockage);
+        playerToCursor.partialScan(13, vision.blockage);
 
         lang = '"' + Language.DEMONIC.sentence(rng, 4, 7,
-                new String[]{",", ",", ",", " -"}, new String[]{"...\"", ", heh...\"", ", nyehehe...\"",  "!\"", "!\"", "!\"", "!\" *PTOOEY!*",}, 0.2);
+                new String[]{",", ",", ",", " -"}, new String[]{"...\"", ", heh...\"", ", nyehehe...\"", "!\"", "!\"", "!\"", "!\" *PTOOEY!*",}, 0.2);
 
+
+        gameOver.reset();
+        gameOver.setText(font, "[RED]YOUR CRAWL IS OVER!\n" +
+                "[GRAY]A monster sniffs your corpse and says,\n[FOREST]"+
+                lang + "\n[GRAY]q to quit.\n[YELLOW]r to restart.", Color.WHITE, shownWidth * cellWidth, Align.center, true);
     }
 
     @Override
-    public void create () {
-
+    public void create() {
         Gdx.app.setLogLevel(Application.LOG_ERROR);
         // We need access to a batch to render most things.
         batch = new SpriteBatch();
 
-        rng = new ChopRandom(123, -456, 789, 987654321);
+        rng = new Xoshiro160RoadroxoRandom(seed);
 
-        rgbViewport = new ScalingViewport(Scaling.stretch, shownWidth, shownHeight);
-        rgbViewport.setScreenBounds(0, 0, shownWidth * cellWidth, shownHeight * cellHeight);
-        rgbViewport.setScreenPosition(0, 0);
-
-        rgbCamera = rgbViewport.getCamera();
-        rgbCamera.update();
-
-        oklabViewport = new ScalingViewport(Scaling.stretch, shownWidth, shownHeight);
-        oklabViewport.setScreenBounds(0, 0, shownWidth * cellWidth, shownHeight * cellHeight);
-        oklabViewport.setScreenPosition(shownWidth * cellWidth, 0);
-
-        oklabCamera = oklabViewport.getCamera();
-        oklabCamera.update();
+        guiViewport = new ScreenViewport();
+        mainViewport = new ScalingViewport(Scaling.fill, shownWidth, shownHeight);
+        mainViewport.setScreenBounds(0, 0, shownWidth * cellWidth, shownHeight * cellHeight);
+        camera = mainViewport.getCamera();
+        camera.update();
 
         //This is used to allow clicks or taps to take the player to the desired area.
         toCursor = new ObjectDeque<>(200);
@@ -332,16 +355,14 @@ public class PairedDemo extends ApplicationAdapter {
 
         // Stores all images we use here efficiently, as well as the font image
         atlas = new TextureAtlas(Gdx.files.internal("dawnlike/Dawnlike.atlas"), Gdx.files.internal("dawnlike"));
-//        font = new BitmapFont(Gdx.files.internal("dawnlike/font.fnt"), atlas.findRegion("font"));
         font = new BitmapFont(Gdx.files.internal("dawnlike/PlainAndSimplePlus.fnt"), atlas.findRegion("font"));
         font.setUseIntegerPositions(false);
-        font.getData().setScale(1f/cellWidth, 1f/cellHeight);
-//        font.getData().setScale(2f/cellWidth, 2f/cellHeight);
+        font.getData().setScale(3f, 3f);
         font.getData().markupEnabled = true;
-        // 0xFF848350 is fully opaque yellowish-brownish-gray, with about 30% lightness.
-        // It affects the default color each cell has before lighting affects it.
-//        rgbVision.rememberedColor = 0x654235FF;
-//        oklabVision.rememberedColor = 0xFF7F7F50;
+
+        gameOver = new GlyphLayout(font, "");
+
+        vision.rememberedColor = OKLAB_MEMORY;
 
 //        Pixmap pCursor = new Pixmap(cellWidth, cellHeight, Pixmap.Format.RGBA8888);
 //        Pixmap pAtlas = new Pixmap(Gdx.files.classpath("dawnlike/Dawnlike.png"));
@@ -356,25 +377,25 @@ public class PairedDemo extends ApplicationAdapter {
         charMapping = new IntObjectMap<>(64);
 
         charMapping.put('.', atlas.findRegion("day tile floor c"));
-        charMapping.put(',', atlas.findRegion("brick clear pool center"      ));
-        charMapping.put('~', atlas.findRegion("brick murky pool center"      ));
-        charMapping.put('"', atlas.findRegion("dusk grass floor c"      ));
-        charMapping.put('#', atlas.findRegion("lit brick wall center"     ));
+        charMapping.put(',', atlas.findRegion("brick clear pool center"));
+        charMapping.put('~', atlas.findRegion("brick murky pool center"));
+        charMapping.put('"', atlas.findRegion("dusk grass floor c"));
+        charMapping.put('#', atlas.findRegion("lit brick wall center"));
         charMapping.put('+', atlas.findRegion("closed wooden door front")); //front
-        charMapping.put('/', atlas.findRegion("open wooden door side"  )); //side
-        charMapping.put('┌', atlas.findRegion("lit brick wall right down"            ));
-        charMapping.put('└', atlas.findRegion("lit brick wall right up"            ));
-        charMapping.put('┴', atlas.findRegion("lit brick wall left right up"           ));
-        charMapping.put('┬', atlas.findRegion("lit brick wall left right down"           ));
-        charMapping.put('─', atlas.findRegion("lit brick wall left right"            ));
-        charMapping.put('│', atlas.findRegion("lit brick wall up down"            ));
-        charMapping.put('├', atlas.findRegion("lit brick wall right up down"           ));
-        charMapping.put('┼', atlas.findRegion("lit brick wall left right up down"          ));
-        charMapping.put('┤', atlas.findRegion("lit brick wall left up down"           ));
-        charMapping.put('┘', atlas.findRegion("lit brick wall left up"            ));
-        charMapping.put('┐', atlas.findRegion("lit brick wall left down"            ));
+        charMapping.put('/', atlas.findRegion("open wooden door side")); //side
+        charMapping.put('┌', atlas.findRegion("lit brick wall right down"));
+        charMapping.put('└', atlas.findRegion("lit brick wall right up"));
+        charMapping.put('┴', atlas.findRegion("lit brick wall left right up"));
+        charMapping.put('┬', atlas.findRegion("lit brick wall left right down"));
+        charMapping.put('─', atlas.findRegion("lit brick wall left right"));
+        charMapping.put('│', atlas.findRegion("lit brick wall up down"));
+        charMapping.put('├', atlas.findRegion("lit brick wall right up down"));
+        charMapping.put('┼', atlas.findRegion("lit brick wall left right up down"));
+        charMapping.put('┤', atlas.findRegion("lit brick wall left up down"));
+        charMapping.put('┘', atlas.findRegion("lit brick wall left up"));
+        charMapping.put('┐', atlas.findRegion("lit brick wall left down"));
 
-        charMapping.put(' ', atlas.findRegion("lit brick wall up down"            ));
+        charMapping.put(' ', atlas.findRegion("lit brick wall up down"));
         charMapping.put('1', atlas.findRegion("red liquid drizzle"));
         charMapping.put('2', atlas.findRegion("red liquid spatter"));
         charMapping.put('s', atlas.findRegion("little shine", 1));
@@ -385,9 +406,7 @@ public class PairedDemo extends ApplicationAdapter {
         // can call Coord.expandPool() or Coord.expandPoolTo() if you need larger maps to be just as fast.
         cursor = Coord.get(-1, -1);
 
-        bgColor = Color.BLACK;
-
-        restart(0);
+        restart(seed);
 
         //+1 is up on the screen
         //-1 is down on the screen
@@ -412,7 +431,7 @@ public class PairedDemo extends ApplicationAdapter {
                     case F:
                         // this probably isn't needed currently, since the FPS is shown on-screen.
                         // it could be useful in the future.
-                        System.out.println(Gdx.graphics.getFramesPerSecond());
+                        Gdx.app.log("FPS", String.valueOf(Gdx.graphics.getFramesPerSecond()));
                         break;
                     case ESCAPE:
                         Gdx.app.exit();
@@ -426,8 +445,7 @@ public class PairedDemo extends ApplicationAdapter {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 pos.set(screenX, screenY);
-                rgbViewport.unproject(pos);
-                pos.x %= shownWidth;
+                mainViewport.unproject(pos);
                 if (onGrid(MathUtils.floor(pos.x), MathUtils.floor(pos.y))) {
                     mouseMoved(screenX, screenY);
                     awaitedMoves.addAll(toCursor);
@@ -448,8 +466,7 @@ public class PairedDemo extends ApplicationAdapter {
                 if (!awaitedMoves.isEmpty())
                     return false;
                 pos.set(screenX, screenY);
-                rgbViewport.unproject(pos);
-                pos.x %= shownWidth;
+                mainViewport.unproject(pos);
                 if (onGrid(screenX = MathUtils.floor(pos.x), screenY = MathUtils.floor(pos.y))) {
                     // we also need to check if screenX or screenY is the same cell.
                     if (cursor.x == screenX && cursor.y == screenY) {
@@ -477,9 +494,41 @@ public class PairedDemo extends ApplicationAdapter {
         Gdx.input.setInputProcessor(input);
     }
 
+//    private BitmapFont generateFreetypeFont(int size) {
+//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("NugothicA.ttf"));
+//        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+//        parameter.characters =
+//                " !\"%'(),-." +
+//                        "0123456789" +
+//                        ":;=?ABCDEF" +
+//                        "GHIJKLMNOP" +
+//                        "QRSTUVWXYZ" +
+//                        "[]_abcdefg" +
+//                        "hijklmnopq" +
+//                        "rstuvwxyz{" +
+//                        "}©ÀÁÂÃÄÈÉÊ" +
+//                        "ËÌÍÎÏÑÒÓÔÖ" +
+//                        "ÙÚÛÜÝàáâãä" +
+//                        "èéêëìíîïñò" +
+//                        "óôõöùúûüýÿ" +
+//                        "Ÿ—\n";
+//        parameter.size = size;
+//        parameter.hinting = FreeTypeFontGenerator.Hinting.Medium;
+//        parameter.magFilter = Texture.TextureFilter.Linear;
+//        parameter.minFilter = Texture.TextureFilter.Linear;
+//        font = generator.generateFont(parameter);
+//        generator.dispose(); // don't forget to dispose to avoid memory leaks!
+//
+//        font.setUseIntegerPositions(false);
+////        font.getData().setScale(1f / cellWidth, 1f / cellHeight);
+//        font.getData().markupEnabled = true;
+//        return font;
+//    }
+
     /**
      * Move the player if he isn't bumping into a wall or trying to go off the map somehow.
      * In a fully-fledged game, this would not be organized like this, but this is a one-file demo.
+     *
      * @param next where to move
      */
     private void move(Coord next) {
@@ -487,62 +536,53 @@ public class PairedDemo extends ApplicationAdapter {
         if (health <= 0) return;
         CoordGlider cg = playerSprite.location;
         // this prevents movements from restarting while a slide is already in progress.
-        if(cg.getChange() != 0f && cg.getChange() != 1f) return;
+        if (cg.getChange() != 0f && cg.getChange() != 1f) return;
 
         int newX = next.x, newY = next.y;
         playerSprite.setPackedColor(Color.WHITE_FLOAT_BITS);
         if (newX >= 0 && newY >= 0 && newX < placeWidth && newY < placeHeight
                 && barePlaceMap[newX][newY] != '#') {
             // '+' is a door.
-            if (rgbVision.prunedPlaceMap[newX][newY] == '+') {
-                rgbVision.editSingle(next, '/');
-                oklabVision.editSingle(next, '/');
+            if (vision.prunedPlaceMap[newX][newY] == '+') {
+                vision.editSingle(next, '/');
             } else {
                 // if a monster was at the position we moved into, and so was successfully removed...
-                if(monsters.containsKey(next))
-                {
+                if (monsters.containsKey(next)) {
                     monsters.remove(next);
                     // remove any light present at the now-dead enemy's location
-                    rgbVision.lighting.removeLight(next);
-                    oklabVision.lighting.removeLight(next);
+                    vision.lighting.removeLight(next);
                     for (int x = -1; x <= 1; x++) {
                         for (int y = -1; y <= 1; y++) {
-                            if(rgbVision.prunedPlaceMap[newX+x][newY+y] == '.' && rng.nextBoolean()) {
-                                rgbVision.prunedPlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
-                                oklabVision.prunedPlaceMap[newX+x][newY+y] = rng.next(2) != 0 ? '1' : '2';
-                            }
+                            if (vision.prunedPlaceMap[newX + x][newY + y] == '.' && rng.nextBoolean())
+                                vision.prunedPlaceMap[newX + x][newY + y] = rng.next(2) != 0 ? '1' : '2';
                         }
                     }
                 }
-                rgbVision.moveViewer(player, next);
-                oklabVision.moveViewer(player, next);
+                vision.moveViewer(player, next);
                 // we can move the player's light now that we know there is no light for an enemy at next.
-                rgbVision.lighting.moveLight(player, next);
-                oklabVision.lighting.moveLight(player, next);
+                vision.lighting.moveLight(player, next);
 
                 playerSprite.location.setStart(player);
                 playerSprite.location.setEnd(player = next);
                 phase = Phase.PLAYER_ANIM;
                 playerDirector.play();
             }
-            rgbVision.finishChanges();
-            oklabVision.finishChanges();
+            vision.finishChanges();
             phase = Phase.PLAYER_ANIM;
         }
     }
 
-    private void afterChange()
-    {
+    private void afterChange() {
         phase = Phase.MONSTER_ANIM;
         // updates our mutable player array in-place, because a Coord like player is immutable.
-        playerArray[0] = player;
+        playerList[0] = player;
         int monCount = monsters.size();
         // handle monster turns
-        float[][] lightLevels = rgbVision.lighting.fovResult;
-        for(int ci = 0; ci < monCount; ci++) {
+        float[][] lightLevels = vision.lighting.fovResult;
+        for (int ci = 0; ci < monCount; ci++) {
             Coord pos = monsters.keyAt(ci);
             AnimatedGlidingSprite mon = monsters.getAt(ci);
-            if(mon == null) continue;
+            if (mon == null) continue;
             // monster values are used to store their aggression, 1 for actively stalking the player, 0 for not.
             if (lightLevels[pos.x][pos.y] > 0.01) {
                 // the player's position is set as a goal by findPath(), later.
@@ -557,16 +597,16 @@ public class PairedDemo extends ApplicationAdapter {
                 // again to reduce allocations, the target position (and there could be more than one in many games) is
                 // stored in a one-element array that gets modified, instead of using a new varargs every time (which
                 // silently creates an array each time it is called).
-                getToPlayer.findPath(nextMovePositions, 1, 7, monsters.keySet(), null, pos, playerArray);
+                getToPlayer.findPath(nextMovePositions, 1, 7, monsters.keySet(), null, pos, playerList);
                 if (nextMovePositions.notEmpty()) {
                     Coord tmp = nextMovePositions.get(0);
-                    if(tmp == null) continue;
+                    if (tmp == null) continue;
                     // if we would move into the player, instead damage the player and animate a bump motion.
                     if (tmp.x == player.x && tmp.y == player.y) {
-                        playerSprite.setPackedColor(RGB_BLOOD);
+                        playerSprite.setPackedColor(DescriptiveColor.oklabIntToFloat(OKLAB_BLOOD));
                         health--;
                         VectorSequenceGlider small = VectorSequenceGlider.BUMPS.getOrDefault(pos.toGoTo(player), null);
-                        if(small != null) {
+                        if (small != null) {
                             small = small.copy();
                             small.setCompleteRunner(() -> mon.setSmallMotion(null));
                         }
@@ -580,8 +620,7 @@ public class PairedDemo extends ApplicationAdapter {
                         mon.location.setEnd(tmp);
                         // this changes the key from pos to tmp without affecting its value.
                         monsters.alter(pos, tmp);
-                        rgbVision.lighting.moveLight(pos, tmp);
-                        oklabVision.lighting.moveLight(pos, tmp);
+                        vision.lighting.moveLight(pos, tmp);
                     }
                 }
             }
@@ -593,31 +632,36 @@ public class PairedDemo extends ApplicationAdapter {
     /**
      * Draws the map, applies any highlighting for the path to the cursor, and then draws the player.
      */
-    public void putMapRgb()
-    {
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
-        rgbVision.update(change);
+    public void putMap() {
+        float change = (float) Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4.0, 0.0), 1000.0);
+        vision.update(change);
         final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
-//        int rainbow = hsl2rgb((time * 0.25f), 1f, 0.55f, 1f);
+//        final float sun = 1f - ((time * 0.1f) - (int)(time * 0.1f)),
+//                blueYellow = TrigTools.sinTurns(sun),
+//                greenRed = TrigTools.cosTurns(sun);
+//        vision.rememberedOklabColor = DescriptiveColor.oklab(0.45f + blueYellow * 0.15f, blueYellow * 0.02f + 0.5f, greenRed * 0.03f + 0.51f, 1f);
+
+        int rainbow = DescriptiveColor.maximizeSaturation(160,
+                (int) (TrigTools.sinTurns(time * 0.5f) * 30f) + 128, (int) (TrigTools.cosTurns(time * 0.5f) * 30f) + 128, 255);
 
         for (int i = 0; i < toCursor.size(); i++) {
             Coord curr = toCursor.get(i);
-            if(rgbVision.inView.contains(curr))
-                rgbVision.backgroundColors[curr.x][curr.y] = DescriptiveColorRgb.hsb2rgb(time * 0.5f - i * 0.0625f, 0.9f, 1f, 1f);
+            if (curr != null && vision.inView.contains(curr))
+                vision.backgroundColors[curr.x][curr.y] = rainbow;
         }
 
-        float[][] lightLevels = rgbVision.lighting.fovResult;
+        float[][] lightLevels = vision.lighting.fovResult;
 
         for (int x = 0; x < placeWidth; x++) {
             for (int y = 0; y < placeHeight; y++) {
-                char glyph = rgbVision.prunedPlaceMap[x][y];
-                if(rgbVision.seen.contains(x, y)) {
+                char glyph = vision.prunedPlaceMap[x][y];
+                if (vision.seen.contains(x, y)) {
                     // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
-                    batch.setPackedColor(DescriptiveColorRgb.toFloat(rgbVision.backgroundColors[x][y]));
-                    if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
+                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.backgroundColors[x][y]));
+                    if (glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
                         batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
                     batch.draw(charMapping.getOrDefault(glyph, solid), x, y, 1f, 1f);
-                    // visual debugging; show all cells w
+                    // visual debugging; show all cells that were just taken out of view
 //                    if(vision.justHidden.contains(x, y)) batch.draw(charMapping.getOrDefault('s', solid), x, y, 1f, 1f);
                 }
             }
@@ -629,75 +673,18 @@ public class PairedDemo extends ApplicationAdapter {
                 if (lightLevels[i][j] > 0.01) {
                     if ((monster = monsters.get(Coord.get(i, j))) != null) {
                         monster = monster.animate(time);
-                        monster.setPackedColor(DescriptiveColorRgb.toFloat(rgbVision.getForegroundColor(i, j, change)));
+                        monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getForegroundColor(i, j, change)));
                         monster.draw(batch);
                     }
-                }
-                else if(rgbVision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
+                } else if (vision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
                     monster = monster.animate(time);
-                    monster.setPackedColor(DescriptiveColorRgb.toFloat(rgbVision.getForegroundColor(i, j, change)));
+                    monster.setPackedColor(DescriptiveColor.oklabIntToFloat(vision.getForegroundColor(i, j, change)));
                     monster.draw(batch);
                 }
             }
         }
         batch.setPackedColor(Color.WHITE_FLOAT_BITS);
         playerSprite.animate(time).draw(batch);
-//        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
-    }
-
-    /**
-     * Draws the map, applies any highlighting for the path to the cursor, and then draws the player.
-     */
-    public void putMapOklab()
-    {
-        float change = Math.min(Math.max(TimeUtils.timeSinceMillis(lastMove) * 4f, 0f), 1000f);
-        oklabVision.update(change);
-        final float time = TimeUtils.timeSinceMillis(startTime) * 0.001f;
-//        int rainbow = DescriptiveColor.oklabByHSL((time * 0.25f), 1f, 0.45f, 1f);
-
-        for (int i = 0; i < toCursor.size(); i++) {
-            Coord curr = toCursor.get(i);
-            if(oklabVision.inView.contains(curr))
-                oklabVision.backgroundColors[curr.x][curr.y] = DescriptiveColor.oklabByHSL(time * 0.5f - i * 0.0625f, 1f, 0.625f, 1f);
-        }
-
-        float[][] lightLevels = oklabVision.lighting.fovResult;
-
-        for (int x = 0; x < placeWidth; x++) {
-            for (int y = 0; y < placeHeight; y++) {
-                char glyph = oklabVision.prunedPlaceMap[x][y];
-                if(oklabVision.seen.contains(x, y)) {
-                    // cells that were seen more than one frame ago, and aren't visible now, appear as a gray memory.
-                    batch.setPackedColor(DescriptiveColor.oklabIntToFloat(oklabVision.backgroundColors[x][y]));
-                    if(glyph == '/' || glyph == '+' || glyph == '1' || glyph == '2') // doors expect a floor drawn beneath them
-                        batch.draw(charMapping.getOrDefault('.', solid), x, y, 1f, 1f);
-                    batch.draw(charMapping.getOrDefault(glyph, solid), x, y, 1f, 1f);
-                    // visual debugging; show all cells w
-//                    if(vision.justHidden.contains(x, y)) batch.draw(charMapping.getOrDefault('s', solid), x, y, 1f, 1f);
-                }
-            }
-        }
-        AnimatedGlidingSprite monster;
-
-        for (int i = 0; i < placeWidth; i++) {
-            for (int j = 0; j < placeHeight; j++) {
-                if (lightLevels[i][j] > 0.01) {
-                    if ((monster = monsters.get(Coord.get(i, j))) != null) {
-                        monster = monster.animate(time);
-                        monster.setPackedColor(DescriptiveColor.oklabIntToFloat(oklabVision.getForegroundColor(i, j, change)));
-                        monster.draw(batch);
-                    }
-                }
-                else if(oklabVision.justHidden.contains(i, j) && (monster = monsters.get(Coord.get(i, j))) != null) {
-                    monster = monster.animate(time);
-                    monster.setPackedColor(DescriptiveColor.oklabIntToFloat(oklabVision.getForegroundColor(i, j, change)));
-                    monster.draw(batch);
-                }
-            }
-        }
-        batch.setPackedColor(Color.WHITE_FLOAT_BITS);
-        playerSprite.animate(time).draw(batch);
-//        Gdx.graphics.setTitle(Gdx.graphics.getFramesPerSecond() + " FPS");
     }
 
     /**
@@ -705,24 +692,24 @@ public class PairedDemo extends ApplicationAdapter {
      */
     public void handleHeldKeys() {
         float c = playerSprite.location.getChange();
-        if(c != 0f && c != 1f) return;
-        if(input.isKeyPressed(A)  || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
+        if (c != 0f && c != 1f) return;
+        if (input.isKeyPressed(A) || input.isKeyPressed(H) || input.isKeyPressed(LEFT) || input.isKeyPressed(NUMPAD_4))
             move(Direction.LEFT);
-        else if(input.isKeyPressed(S)  || input.isKeyPressed(J) || input.isKeyPressed(DOWN) || input.isKeyPressed(NUMPAD_2))
+        else if (input.isKeyPressed(S) || input.isKeyPressed(J) || input.isKeyPressed(DOWN) || input.isKeyPressed(NUMPAD_2))
             move(Direction.DOWN);
-        else if(input.isKeyPressed(W)  || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
+        else if (input.isKeyPressed(W) || input.isKeyPressed(K) || input.isKeyPressed(UP) || input.isKeyPressed(NUMPAD_8))
             move(Direction.UP);
-        else if(input.isKeyPressed(D)  || input.isKeyPressed(L) || input.isKeyPressed(RIGHT) || input.isKeyPressed(NUMPAD_6))
+        else if (input.isKeyPressed(D) || input.isKeyPressed(L) || input.isKeyPressed(RIGHT) || input.isKeyPressed(NUMPAD_6))
             move(Direction.RIGHT);
-        else if(input.isKeyPressed(Y) || input.isKeyPressed(NUMPAD_7))
+        else if (input.isKeyPressed(Y) || input.isKeyPressed(NUMPAD_7))
             move(Direction.UP_LEFT);
-        else if(input.isKeyPressed(U) || input.isKeyPressed(NUMPAD_9))
+        else if (input.isKeyPressed(U) || input.isKeyPressed(NUMPAD_9))
             move(Direction.UP_RIGHT);
-        else if(input.isKeyPressed(B) || input.isKeyPressed(NUMPAD_1))
+        else if (input.isKeyPressed(B) || input.isKeyPressed(NUMPAD_1))
             move(Direction.DOWN_LEFT);
-        else if(input.isKeyPressed(N) || input.isKeyPressed(NUMPAD_3))
+        else if (input.isKeyPressed(N) || input.isKeyPressed(NUMPAD_3))
             move(Direction.DOWN_RIGHT);
-        else if(input.isKeyPressed(PERIOD) || input.isKeyPressed(NUMPAD_5) || input.isKeyPressed(NUMPAD_DOT))
+        else if (input.isKeyPressed(PERIOD) || input.isKeyPressed(NUMPAD_5) || input.isKeyPressed(NUMPAD_DOT))
             move(Direction.NONE);
     }
 
@@ -733,39 +720,34 @@ public class PairedDemo extends ApplicationAdapter {
     }
 
     @Override
-    public void render () {
-        if(input.isKeyJustPressed(R))
+    public void render() {
+        if (input.isKeyJustPressed(R))
             restart(lang.hashCode());
 
         // standard clear the background routine for libGDX
-        ScreenUtils.clear(bgColor);
+        ScreenUtils.clear(0f, 0f, 0f, 1f);
         // center the camera on the player's position
-        rgbCamera.position.x = playerSprite.getX();
-        rgbCamera.position.y =  playerSprite.getY();
-        rgbCamera.update();
-        
-        oklabCamera.position.x = playerSprite.getX();
-        oklabCamera.position.y =  playerSprite.getY();
-        oklabCamera.update();
+        camera.position.x = playerSprite.getX();
+        camera.position.y = playerSprite.getY();
+        camera.update();
 
-        rgbViewport.apply(false);
-        batch.setProjectionMatrix(rgbCamera.combined);
+
+        mainViewport.apply(false);
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
 
         // you done bad. you done real bad.
         if (health <= 0) {
             // still need to display the map, then write over it with a message.
-            batch.begin();
-            putMapRgb();
-            float wide = rgbViewport.getWorldWidth(),
-                    x = playerSprite.getX() - rgbViewport.getWorldWidth() * 0.5f,
-                    y = playerSprite.getY();
-            font.draw(batch, "[RED]YOUR CRAWL IS OVER!", x, y + 2, wide, Align.center, true);
-            font.draw(batch, "[GRAY]A monster sniffs your corpse and says,", x, y + 1, wide, Align.center, true);
-            font.draw(batch, "[FOREST]" + lang, x, y, wide, Align.center, true);
-            font.draw(batch, "[GRAY]q to quit.", x, y - 2, wide, Align.center, true);
-            font.draw(batch, "[YELLOW]r to restart.", x, y - 4, wide, Align.center, true);
+            putMap();
             batch.end();
-            if(input.isKeyPressed(Q))
+            guiViewport.apply(false);
+            batch.setProjectionMatrix(guiViewport.getCamera().combined);
+            batch.begin();
+            float y = playerSprite.getY();
+            font.draw(batch, gameOver, shownWidth * cellWidth / -2, y + 2 * font.getLineHeight());
+            batch.end();
+            if (input.isKeyPressed(Q))
                 Gdx.app.exit();
             return;
         }
@@ -773,7 +755,7 @@ public class PairedDemo extends ApplicationAdapter {
         monsterDirector.step();
         directorSmall.step();
 
-        if(phase == Phase.MONSTER_ANIM) {
+        if (phase == Phase.MONSTER_ANIM) {
             if (!monsterDirector.isPlaying()) {
                 phase = Phase.WAIT;
                 if (!awaitedMoves.isEmpty()) {
@@ -783,15 +765,12 @@ public class PairedDemo extends ApplicationAdapter {
                     move(m);
                 }
             }
-        }
-        else if(phase == Phase.WAIT && !awaitedMoves.isEmpty())
-        {
+        } else if (phase == Phase.WAIT && !awaitedMoves.isEmpty()) {
             Coord m = awaitedMoves.removeFirst();
             if (!toCursor.isEmpty())
                 toCursor.removeFirst();
             move(m);
-        }
-        else if(phase == Phase.PLAYER_ANIM) {
+        } else if (phase == Phase.PLAYER_ANIM) {
             if (!playerDirector.isPlaying() && !monsterDirector.isPlaying()) {
                 phase = Phase.MONSTER_ANIM;
                 afterChange();
@@ -812,55 +791,60 @@ public class PairedDemo extends ApplicationAdapter {
                     // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
                     // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
                     // Region that contains the cells just past the edge of the player's FOV area.
-                    playerToCursor.partialScan(13, rgbVision.blockage);
+                    playerToCursor.partialScan(13, vision.blockage);
                 }
             }
-        }
-        else {
+        } else {
             handleHeldKeys();
         }
+        putMap();
+        batch.end();
+        guiViewport.apply(false);
+        batch.setProjectionMatrix(guiViewport.getCamera().combined);
         batch.begin();
-        putMapRgb();
-        pos.set(10, Gdx.graphics.getHeight() - cellHeight - cellHeight);
-        rgbViewport.unproject(pos);
+        pos.set(10, Gdx.graphics.getHeight() - font.getLineHeight());
+        guiViewport.unproject(pos);
         font.draw(batch, "[GRAY]Current Health: [RED]" + health + "[WHITE] at "
                 + Gdx.graphics.getFramesPerSecond() + " FPS", pos.x, pos.y);
-        batch.end();
 
-        oklabViewport.apply(false);
-        batch.setProjectionMatrix(oklabCamera.combined);
-        batch.begin();
-        putMapOklab();
+//        pos.set(input.getDeltaX(), -input.getDeltaY());
+//        if(!pos.isZero())
+//        {
+//            mouseDirection.setAngleDeg(pos.angleDeg());
+//        }
+//        batch.draw(solid, 0f, 0f, 0f, 0f, mouseDirection.len() * 100f, 4f, 1f, 1f, mouseDirection.angleDeg());
+
         batch.end();
     }
+
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        rgbViewport.update(width>>1, height, false);
-        rgbViewport.setScreenPosition(0, 0);
-        oklabViewport.update(width>>1, height, false);
-        oklabViewport.setScreenPosition(width>>1, 0);
+        mainViewport.update(width, height, false);
+        guiViewport.update(width, height, false);
     }
 
+
     public static void main(String[] args) {
-        new Lwjgl3Application(new PairedDemo(), getDefaultConfiguration());
+        new Lwjgl3Application(new DawnSquad(), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         configuration.setResizable(true);
         configuration.useVsync(true);
-        // this matches the maximum foreground FPS to the refresh rate of the active monitor.
+        //// this matches the maximum foreground FPS to the refresh rate of the active monitor.
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate);
-        configuration.setTitle("SquidSquad VisionFramework Demo");
-        // useful to know if something's wrong in a shader.
-        // you should remove the next line for a release.
+        configuration.setTitle("SquidSquad Dawnlike Demo");
+        configuration.disableAudio(true);
+        //// useful to know if something's wrong in a shader.
+        //// you should remove the next line for a release.
 //        configuration.enableGLDebugOutput(true, System.out);
         ShaderProgram.prependVertexCode = "#version 110\n";
         ShaderProgram.prependFragmentCode = "#version 110\n";
         // these are constants in the main game class; they should match your
         // initial viewport size in pixels before it gets resized to fullscreen.
-        configuration.setWindowedMode(shownWidth * cellWidth * 2, shownHeight * cellHeight);
+        configuration.setWindowedMode(shownWidth * cellWidth, shownHeight * cellHeight);
         return configuration;
     }
 }
