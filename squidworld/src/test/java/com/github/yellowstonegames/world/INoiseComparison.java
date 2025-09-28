@@ -238,8 +238,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),  // 19
             new CyclicNoise(1L, 1),                                    // 20
             new CyclicNoise(1L, 3),                                    // 21
-            new SorbetNoise(1L, 1),                                    // 22
-            new SorbetNoise(1L, 3),                                    // 23
+            new HuskyNoise(1L, 1),                                     // 22
+            new HuskyNoise(1L, 3),                                     // 23
             new PuffyNoise(1L, 1),                                     // 24
             new PuffyNoise(1L, 3),                                     // 25
             new NoiseAdjustment(analysis, Interpolations.linear),      // 26
@@ -255,8 +255,10 @@ public class INoiseComparison extends ApplicationAdapter {
             new Noise(1),                                              // 36
             new WavyNoise(1, 1),                                       // 37
             new WavyNoise(1, 3),                                       // 38
+            new SorbetNoise(1L, 1),                                    // 39
+            new SorbetNoise(1L, 3),                                    // 40
     };
-    private int index0 = 20;
+    private int index0 = 22;
     private int index1 = 24;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
