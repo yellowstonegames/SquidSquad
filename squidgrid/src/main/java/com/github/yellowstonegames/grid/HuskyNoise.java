@@ -36,7 +36,7 @@ public class HuskyNoise implements INoise {
     protected static final float LACUNARITY = 1.6f;
     protected static final float GAIN = 0.625f;
 
-    protected int octaves;
+    protected int octaves = 1;
     protected float total = 1f;
     protected float start = 1f;
     protected float frequency = 1f;
@@ -198,12 +198,12 @@ public class HuskyNoise implements INoise {
         inputs[5] = v;
         inputs[6] = m;
 
-        long cSeed = seed, iSeed = ~seed;
+        long cSeed = seed, sSeed = 1001 - seed;
 
 //        float xx, yy, zz, ww, uu, vv, mm;
         for (int i = 0; i < octaves;) {
-            cSeed = Hasher.randomizeH(cSeed + i);
-            iSeed += 7;
+            cSeed = Hasher.randomizeH(cSeed);
+            sSeed -= cSeed;
 //            xx = LineWobble.bicubicWobble(++iSeed, (x-2) * warpTrk) * warp;
 //            yy = LineWobble.bicubicWobble(++iSeed, (y-2) * warpTrk) * warp;
 //            zz = LineWobble.bicubicWobble(++iSeed, (z-2) * warpTrk) * warp;
@@ -229,16 +229,17 @@ public class HuskyNoise implements INoise {
             v = outputs[5];
             m = outputs[6];
 
-            noise += RoughMath.tanhRough(2f * (
-                                    + LineWobble.bicubicWobble(cSeed, x) * LineWobble.bicubicWobble(iSeed, m)
-                                    + LineWobble.bicubicWobble(cSeed, y) * LineWobble.bicubicWobble(iSeed, x)
-                                    + LineWobble.bicubicWobble(cSeed, z) * LineWobble.bicubicWobble(iSeed, y)
-                                    + LineWobble.bicubicWobble(cSeed, w) * LineWobble.bicubicWobble(iSeed, z)
-                                    + LineWobble.bicubicWobble(cSeed, u) * LineWobble.bicubicWobble(iSeed, w)
-                                    + LineWobble.bicubicWobble(cSeed, v) * LineWobble.bicubicWobble(iSeed, u)
-                                    + LineWobble.bicubicWobble(cSeed, m) * LineWobble.bicubicWobble(iSeed, v)
-                    )
-            ) * amp;
+            float t =
+                            LineWobble.bicubicWobble(++cSeed, x) * LineWobble.bicubicWobble(++sSeed, m) +
+                            LineWobble.bicubicWobble(++cSeed, y) * LineWobble.bicubicWobble(++sSeed, x) +
+                            LineWobble.bicubicWobble(++cSeed, z) * LineWobble.bicubicWobble(++sSeed, y) +
+                            LineWobble.bicubicWobble(++cSeed, w) * LineWobble.bicubicWobble(++sSeed, z) +
+                            LineWobble.bicubicWobble(++cSeed, u) * LineWobble.bicubicWobble(++sSeed, w) +
+                            LineWobble.bicubicWobble(++cSeed, v) * LineWobble.bicubicWobble(++sSeed, u) +
+                            LineWobble.bicubicWobble(++cSeed, m) * LineWobble.bicubicWobble(++sSeed, v)
+            ;
+//            noise += t * amp;
+            noise += (t / (float)Math.sqrt(t * t + 0.25f)) * amp;
 
             if(++i == octaves) break;
 
