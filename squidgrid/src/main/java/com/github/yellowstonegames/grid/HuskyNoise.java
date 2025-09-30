@@ -217,14 +217,15 @@ public class HuskyNoise implements INoise {
             v = outputs[5];
             m = outputs[6];
 
-            float t =
-                            LineWobble.bicubicWobble(++cSeed, x) * LineWobble.bicubicWobble(++sSeed, m) +
-                            LineWobble.bicubicWobble(++cSeed, y) * LineWobble.bicubicWobble(++sSeed, x) +
-                            LineWobble.bicubicWobble(++cSeed, z) * LineWobble.bicubicWobble(++sSeed, y) +
-                            LineWobble.bicubicWobble(++cSeed, w) * LineWobble.bicubicWobble(++sSeed, z) +
-                            LineWobble.bicubicWobble(++cSeed, u) * LineWobble.bicubicWobble(++sSeed, w) +
-                            LineWobble.bicubicWobble(++cSeed, v) * LineWobble.bicubicWobble(++sSeed, u) +
-                            LineWobble.bicubicWobble(++cSeed, m) * LineWobble.bicubicWobble(++sSeed, v) ;
+// repeatedly changing t and incorporating it into the output does a domain warp effect
+            float t = 0f;
+            t += LineWobble.bicubicWobble(++cSeed, x + t) * LineWobble.bicubicWobble(++sSeed, m - t);
+            t += LineWobble.bicubicWobble(++cSeed, y + t) * LineWobble.bicubicWobble(++sSeed, x - t);
+            t += LineWobble.bicubicWobble(++cSeed, z + t) * LineWobble.bicubicWobble(++sSeed, y - t);
+            t += LineWobble.bicubicWobble(++cSeed, w + t) * LineWobble.bicubicWobble(++sSeed, z - t);
+            t += LineWobble.bicubicWobble(++cSeed, u + t) * LineWobble.bicubicWobble(++sSeed, w - t);
+            t += LineWobble.bicubicWobble(++cSeed, v + t) * LineWobble.bicubicWobble(++sSeed, u - t);
+            t += LineWobble.bicubicWobble(++cSeed, m + t) * LineWobble.bicubicWobble(++sSeed, v - t);
 
 // t is run through a sigmoid function, which limits it to the -1 to 1 range, then multiplied by amp and added to noise
             noise += (t / (float)Math.sqrt(t * t + 0.25f)) * amp;

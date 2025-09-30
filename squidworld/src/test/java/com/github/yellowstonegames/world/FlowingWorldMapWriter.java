@@ -269,7 +269,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new CyclicNoise(seed, 3, 3f), seed, 0.75f, NoiseWrapper.FBM, 2));
-        iNoise = new Noise3DFrom5D(new PuffyNoise(seed, 3, 3f));
+        iNoise = new Noise3DFrom5D(new HuskyNoise(seed, 1, 2f));
+//        iNoise = new Noise3DFrom5D(new PuffyNoise(seed, 3, 3f));
 //        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 2.7f)); SPEED *= 0.75f;
 //        iNoise = new Noise3DFrom5D(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
@@ -290,7 +291,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        ((NoiseWrapper)iNoise.noise).setFractalSpiral(true);
 
         if(GLOBE_SPIN)
-            world = new GlobeMap(seed, width, height, iNoise, 0.6f);
+            world = new GlobeMap(seed, width, height, iNoise, 0.75f);
         else
             world = new EllipticalWorldMap(seed, width, height, iNoise, 0.6f);
 //            world = new RoundSideWorldMap(seed, width, height, iNoise, 0.7f);
