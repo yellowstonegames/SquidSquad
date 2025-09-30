@@ -178,10 +178,6 @@ public class HuskyNoise implements INoise {
 
         float amp = start;
 
-//        final float warp = 0.1f;
-//        float warpTrk = 0.31415f;
-//        final float warpTrkGain = 1.5f;
-
         x *= frequency;
         y *= frequency;
         z *= frequency;
@@ -198,27 +194,19 @@ public class HuskyNoise implements INoise {
         inputs[5] = v;
         inputs[6] = m;
 
-        long cSeed = seed, sSeed = 1001 - seed;
+        long cSeed = seed, sSeed = 5555555555555555555L - seed;
 
-//        float xx, yy, zz, ww, uu, vv, mm;
         for (int i = 0; i < octaves;) {
-            cSeed = Hasher.randomizeH(cSeed);
+            cSeed += 0x9E3779B97F4A7C15L; // 2 to the 64 divided by golden ratio
             sSeed -= cSeed;
-//            xx = LineWobble.bicubicWobble(++iSeed, (x-2) * warpTrk) * warp;
-//            yy = LineWobble.bicubicWobble(++iSeed, (y-2) * warpTrk) * warp;
-//            zz = LineWobble.bicubicWobble(++iSeed, (z-2) * warpTrk) * warp;
-//            ww = LineWobble.bicubicWobble(++iSeed, (w-2) * warpTrk) * warp;
-//            uu = LineWobble.bicubicWobble(++iSeed, (u-2) * warpTrk) * warp;
-//            vv = LineWobble.bicubicWobble(++iSeed, (v-2) * warpTrk) * warp;
-//            mm = LineWobble.bicubicWobble(++iSeed, (m-2) * warpTrk) * warp;
-//
-            inputs[0] = x;// + mm;
-            inputs[1] = y;// + xx;
-            inputs[2] = z;// + yy;
-            inputs[3] = w;// + zz;
-            inputs[4] = u;// + ww;
-            inputs[5] = v;// + uu;
-            inputs[6] = m;// + vv;
+
+            inputs[0] = x;
+            inputs[1] = y;
+            inputs[2] = z;
+            inputs[3] = w;
+            inputs[4] = u;
+            inputs[5] = v;
+            inputs[6] = m;
             Arrays.fill(outputs, 0f);
             rotations[i & 3].rotate(inputs, outputs);
             x = outputs[0];
@@ -236,9 +224,9 @@ public class HuskyNoise implements INoise {
                             LineWobble.bicubicWobble(++cSeed, w) * LineWobble.bicubicWobble(++sSeed, z) +
                             LineWobble.bicubicWobble(++cSeed, u) * LineWobble.bicubicWobble(++sSeed, w) +
                             LineWobble.bicubicWobble(++cSeed, v) * LineWobble.bicubicWobble(++sSeed, u) +
-                            LineWobble.bicubicWobble(++cSeed, m) * LineWobble.bicubicWobble(++sSeed, v)
-            ;
-//            noise += t * amp;
+                            LineWobble.bicubicWobble(++cSeed, m) * LineWobble.bicubicWobble(++sSeed, v) ;
+
+// t is run through a sigmoid function, which limits it to the -1 to 1 range, then multiplied by amp and added to noise
             noise += (t / (float)Math.sqrt(t * t + 0.25f)) * amp;
 
             if(++i == octaves) break;
@@ -251,7 +239,6 @@ public class HuskyNoise implements INoise {
             v *= LACUNARITY;
             m *= LACUNARITY;
 
-//            warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
         return noise * total;
