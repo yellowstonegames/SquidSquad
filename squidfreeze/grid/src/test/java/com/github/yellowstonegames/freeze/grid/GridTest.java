@@ -903,6 +903,23 @@ public class GridTest {
     }
 
     @Test
+    public void testHuskyNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(HuskyNoise.class, new HuskyNoiseSerializer());
+
+        HuskyNoise data = new HuskyNoise(-9876543210L, 8);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            HuskyNoise data2 = kryo.readObject(input, HuskyNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testSorbetNoise() {
         Kryo kryo = new Kryo();
         kryo.register(SorbetNoise.class, new SorbetNoiseSerializer());
