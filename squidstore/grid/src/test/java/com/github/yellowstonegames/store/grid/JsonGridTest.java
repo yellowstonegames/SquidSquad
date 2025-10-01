@@ -698,6 +698,20 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testHuskyNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerHuskyNoise(json);
+        HuskyNoise noise, noise2;
+        noise = new HuskyNoise(-9876543210L, 4, 0.9f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(HuskyNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
     public void testSimplexNoise() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerSimplexNoise(json);

@@ -79,6 +79,7 @@ public final class JsonGrid {
         registerFoamplexNoise(json);
         registerHighDimensionalValueNoise(json);
         registerHoneyNoise(json);
+        registerHuskyNoise(json);
         registerNoiseAdjustment(json);
         registerNoise(json);
         registerNoiseWrapper(json);
@@ -1138,6 +1139,31 @@ public final class JsonGrid {
             public PuffyNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return PuffyNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers HuskyNoise with the given Json object, so HuskyNoise can be written to and read from JSON.
+     * This is a simple wrapper around HuskyNoise's built-in {@link HuskyNoise#stringSerialize()} and
+     * {@link HuskyNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerHuskyNoise(@NotNull Json json) {
+        json.addClassTag("PufN", HuskyNoise.class);
+        json.setSerializer(HuskyNoise.class, new Json.Serializer<HuskyNoise>() {
+            @Override
+            public void write(Json json, HuskyNoise object, Class knownType) {
+                json.writeObjectStart(HuskyNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public HuskyNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return HuskyNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
