@@ -557,7 +557,6 @@ public class GridTest {
         }
     }
 
-
     @Test
     public void testPuffyNoise() {        
         LoggerFactory.disableLogging();
@@ -569,6 +568,22 @@ public class GridTest {
         byte[] bytes = fory.serializeJavaObject(data);
         {
             PuffyNoise data2 = fory.deserializeJavaObject(bytes, PuffyNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testHuskyNoise() {        
+        LoggerFactory.disableLogging();
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(HuskyNoise.class);
+
+        HuskyNoise data = new HuskyNoise(-9876543210L, 8);
+
+        byte[] bytes = fory.serializeJavaObject(data);
+        {
+            HuskyNoise data2 = fory.deserializeJavaObject(bytes, HuskyNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
