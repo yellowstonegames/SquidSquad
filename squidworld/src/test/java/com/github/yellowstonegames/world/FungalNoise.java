@@ -189,8 +189,8 @@ public class FungalNoise implements INoise {
 
         float amp = start;
 
-        final float warp = 0.3f;
-        float warpTrk = 1.2f;
+        final float warp = 1.2f;
+        float warpTrk = 0.421f;
         final float warpTrkGain = 1.5f;
 
         x *= frequency;
@@ -203,13 +203,14 @@ public class FungalNoise implements INoise {
 
         float xx, yy, zz, ww, uu, vv, mm;
         for (int i = 0; i < octaves;) {
-            xx = TrigTools.sin((x-2) * warpTrk) * warp;
-            yy = TrigTools.sin((y-2) * warpTrk) * warp;
-            zz = TrigTools.sin((z-2) * warpTrk) * warp;
-            ww = TrigTools.sin((w-2) * warpTrk) * warp;
-            uu = TrigTools.sin((u-2) * warpTrk) * warp;
-            vv = TrigTools.sin((v-2) * warpTrk) * warp;
-            mm = TrigTools.sin((m-2) * warpTrk) * warp;
+            long iSeed = i + seed;
+            xx = LineWobble.bicubicWobble(iSeed, (x-1.618f) * warpTrk) * warp;
+            yy = LineWobble.bicubicWobble(iSeed, (y-1.618f) * warpTrk) * warp;
+            zz = LineWobble.bicubicWobble(iSeed, (z-1.618f) * warpTrk) * warp;
+            ww = LineWobble.bicubicWobble(iSeed, (w-1.618f) * warpTrk) * warp;
+            uu = LineWobble.bicubicWobble(iSeed, (u-1.618f) * warpTrk) * warp;
+            vv = LineWobble.bicubicWobble(iSeed, (v-1.618f) * warpTrk) * warp;
+            mm = LineWobble.bicubicWobble(iSeed, (m-1.618f) * warpTrk) * warp;
 
             inputs[0] = x + mm;
             inputs[1] = y + xx;
@@ -228,31 +229,24 @@ public class FungalNoise implements INoise {
             vv = outputs[5];
             mm = outputs[6];
 
-//            int xs = radiansToTableIndex(xx);
-//            int ys = radiansToTableIndex(yy);
-//            int zs = radiansToTableIndex(zz);
-//            int ws = radiansToTableIndex(ww);
-//            int us = radiansToTableIndex(uu);
-//            int vs = radiansToTableIndex(vv);
-//            int ms = radiansToTableIndex(mm);
-//
-//            float work =    ( COS_TABLE[xs] * SIN_TABLE[ms]
-//                            + COS_TABLE[ys] * SIN_TABLE[xs]
-//                            + COS_TABLE[zs] * SIN_TABLE[ys]
-//                            + COS_TABLE[ws] * SIN_TABLE[zs]
-//                            + COS_TABLE[us] * SIN_TABLE[ws]
-//                            + COS_TABLE[vs] * SIN_TABLE[us]
-//                            + COS_TABLE[ms] * SIN_TABLE[vs]);
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
+            int ws = radiansToTableIndex(ww);
+            int us = radiansToTableIndex(uu);
+            int vs = radiansToTableIndex(vv);
+            int ms = radiansToTableIndex(mm);
 
-            long iSeed = seed + i, nSeed = ~iSeed;
             noise += TrigTools.sinSmootherTurns((
-                            LineWobble.bicubicWobble(iSeed, xx) * LineWobble.bicubicWobble(nSeed, mm) +
-                            LineWobble.bicubicWobble(iSeed, yy) * LineWobble.bicubicWobble(nSeed, xx) +
-                            LineWobble.bicubicWobble(iSeed, zz) * LineWobble.bicubicWobble(nSeed, yy) +
-                            LineWobble.bicubicWobble(iSeed, ww) * LineWobble.bicubicWobble(nSeed, zz) +
-                            LineWobble.bicubicWobble(iSeed, uu) * LineWobble.bicubicWobble(nSeed, ww) +
-                            LineWobble.bicubicWobble(iSeed, vv) * LineWobble.bicubicWobble(nSeed, uu) +
-                            LineWobble.bicubicWobble(iSeed, mm) * LineWobble.bicubicWobble(nSeed, vv)  )) * amp;
+                            + COS_TABLE[xs] * SIN_TABLE[ms]
+                                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                                    + COS_TABLE[ws] * SIN_TABLE[zs]
+                                    + COS_TABLE[us] * SIN_TABLE[ws]
+                                    + COS_TABLE[vs] * SIN_TABLE[us]
+                                    + COS_TABLE[ms] * SIN_TABLE[vs]
+                    ) * (0.5f/7f)
+            ) * amp;
 
             if(++i == octaves) break;
 
