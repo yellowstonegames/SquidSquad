@@ -16,7 +16,9 @@
 
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.*;
+import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
@@ -27,7 +29,8 @@ import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
  * A variant on {@link CyclicNoise} that always uses 7D noise internally, filling in any dimensions that it doesn't have
- * with 1s, and uses {@link LineWobble#bicubicWobble(long, float)} instead of sine/cosine waves.
+ * with 1s. This looks much better at low frequencies than high ones; large-scale patterns dominate with high
+ * frequencies, but when "zoomed in," there's lots of small details.
  * <br>
  * Called HuskyNoise because it's a variant on PuffyNoise, and husky dogs are puffy or fluffy.
  */
@@ -36,10 +39,10 @@ public class HuskyNoise implements INoise {
     protected static final float LACUNARITY = 1.6f;
     protected static final float GAIN = 0.625f;
 
-    protected int octaves = 1;
+    protected int octaves;
     protected float total = 1f;
     protected float start = 1f;
-    protected float frequency = 1f;
+    protected float frequency = 2f;
     protected long seed;
     protected transient RotationTools.Rotator[] rotations = new RotationTools.Rotator[4];
     protected transient float[] inputs = new float[7];
@@ -48,11 +51,11 @@ public class HuskyNoise implements INoise {
         this(3);
     }
     public HuskyNoise(int octaves) {
-        this(0xBEEF1E57, octaves, 1f);
+        this(0xBEEF1E57, octaves, 2f);
     }
 
     public HuskyNoise(long seed, int octaves) {
-        this(seed, octaves, 1f);
+        this(seed, octaves, 2f);
     }
 
     public HuskyNoise(long seed, int octaves, float frequency) {
@@ -60,7 +63,7 @@ public class HuskyNoise implements INoise {
         setFrequency(frequency);
         this.seed = seed;
         for (int i = 0; i < 4; i++) {
-            rotations[i] = new RotationTools.Rotator(7, new DistinctRandom((i ^ 5L) * 5555555555555555555L));
+            rotations[i] = new RotationTools.Rotator(7, new DistinctRandom(i));
         }
     }
 
@@ -97,6 +100,10 @@ public class HuskyNoise implements INoise {
      */
     public void setSeed(long seed) {
         this.seed = seed;
+//        for (int i = 0; i < 4; i++) {
+//            rotations[i].random.setSeed(seed ^ i);
+//            rotations[i].randomize();
+//        }
     }
 
     public float getFrequency() {
@@ -104,7 +111,7 @@ public class HuskyNoise implements INoise {
     }
 
     /**
-     * Sets the frequency; the default is 1. Higher frequencies produce output that changes more quickly.
+     * Sets the frequency; the default is 2. Higher frequencies produce output that changes more quickly.
      * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
      */
     public void setFrequency(float frequency) {
@@ -178,6 +185,10 @@ public class HuskyNoise implements INoise {
 
         float amp = start;
 
+        final float warp = 1.2f;
+        float warpTrk = 0.421f;
+        final float warpTrkGain = 1.5f;
+
         x *= frequency;
         y *= frequency;
         z *= frequency;
@@ -186,60 +197,64 @@ public class HuskyNoise implements INoise {
         v *= frequency;
         m *= frequency;
 
-        inputs[0] = x;
-        inputs[1] = y;
-        inputs[2] = z;
-        inputs[3] = w;
-        inputs[4] = u;
-        inputs[5] = v;
-        inputs[6] = m;
-
-        long cSeed = seed, sSeed = 5555555555555555555L - seed;
-
+        float xx, yy, zz, ww, uu, vv, mm;
         for (int i = 0; i < octaves;) {
-            cSeed += 0x9E3779B97F4A7C15L; // 2 to the 64 divided by golden ratio
-            sSeed -= cSeed;
+            long iSeed = i + seed;
+            xx = LineWobble.bicubicWobble(iSeed, (x-3.618f) * warpTrk) * warp;
+            yy = LineWobble.bicubicWobble(iSeed, (y-3.618f) * warpTrk) * warp;
+            zz = LineWobble.bicubicWobble(iSeed, (z-3.618f) * warpTrk) * warp;
+            ww = LineWobble.bicubicWobble(iSeed, (w-3.618f) * warpTrk) * warp;
+            uu = LineWobble.bicubicWobble(iSeed, (u-3.618f) * warpTrk) * warp;
+            vv = LineWobble.bicubicWobble(iSeed, (v-3.618f) * warpTrk) * warp;
+            mm = LineWobble.bicubicWobble(iSeed, (m-3.618f) * warpTrk) * warp;
 
-            inputs[0] = x;
-            inputs[1] = y;
-            inputs[2] = z;
-            inputs[3] = w;
-            inputs[4] = u;
-            inputs[5] = v;
-            inputs[6] = m;
+            inputs[0] = x + mm;
+            inputs[1] = y + xx;
+            inputs[2] = z + yy;
+            inputs[3] = w + zz;
+            inputs[4] = u + ww;
+            inputs[5] = v + uu;
+            inputs[6] = m + vv;
             Arrays.fill(outputs, 0f);
             rotations[i & 3].rotate(inputs, outputs);
-            x = outputs[0];
-            y = outputs[1];
-            z = outputs[2];
-            w = outputs[3];
-            u = outputs[4];
-            v = outputs[5];
-            m = outputs[6];
+            xx = outputs[0];
+            yy = outputs[1];
+            zz = outputs[2];
+            ww = outputs[3];
+            uu = outputs[4];
+            vv = outputs[5];
+            mm = outputs[6];
 
-// repeatedly changing t and incorporating it into the output does a domain warp effect
-            float t = 0f;
-            t += LineWobble.bicubicWobble(++cSeed, x + t) * LineWobble.bicubicWobble(++sSeed, m - t);
-            t += LineWobble.bicubicWobble(++cSeed, y + t) * LineWobble.bicubicWobble(++sSeed, x - t);
-            t += LineWobble.bicubicWobble(++cSeed, z + t) * LineWobble.bicubicWobble(++sSeed, y - t);
-            t += LineWobble.bicubicWobble(++cSeed, w + t) * LineWobble.bicubicWobble(++sSeed, z - t);
-            t += LineWobble.bicubicWobble(++cSeed, u + t) * LineWobble.bicubicWobble(++sSeed, w - t);
-            t += LineWobble.bicubicWobble(++cSeed, v + t) * LineWobble.bicubicWobble(++sSeed, u - t);
-            t += LineWobble.bicubicWobble(++cSeed, m + t) * LineWobble.bicubicWobble(++sSeed, v - t);
+            int xs = radiansToTableIndex(xx);
+            int ys = radiansToTableIndex(yy);
+            int zs = radiansToTableIndex(zz);
+            int ws = radiansToTableIndex(ww);
+            int us = radiansToTableIndex(uu);
+            int vs = radiansToTableIndex(vv);
+            int ms = radiansToTableIndex(mm);
 
-// t is run through a sigmoid function, which limits it to the -1 to 1 range, then multiplied by amp and added to noise
-            noise += (t / (float)Math.sqrt(t * t + 0.25f)) * amp;
+            noise += TrigTools.sinSmootherTurns((
+                            + COS_TABLE[xs] * SIN_TABLE[ms]
+                                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                                    + COS_TABLE[ws] * SIN_TABLE[zs]
+                                    + COS_TABLE[us] * SIN_TABLE[ws]
+                                    + COS_TABLE[vs] * SIN_TABLE[us]
+                                    + COS_TABLE[ms] * SIN_TABLE[vs]
+                    ) * (0.5f/7f)
+            ) * amp;
 
             if(++i == octaves) break;
 
-            x *= LACUNARITY;
-            y *= LACUNARITY;
-            z *= LACUNARITY;
-            w *= LACUNARITY;
-            u *= LACUNARITY;
-            v *= LACUNARITY;
-            m *= LACUNARITY;
+            x = xx * LACUNARITY;
+            y = yy * LACUNARITY;
+            z = zz * LACUNARITY;
+            w = ww * LACUNARITY;
+            u = uu * LACUNARITY;
+            v = vv * LACUNARITY;
+            m = mm * LACUNARITY;
 
+            warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
         return noise * total;

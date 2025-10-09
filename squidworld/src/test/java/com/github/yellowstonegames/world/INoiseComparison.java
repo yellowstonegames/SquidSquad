@@ -36,6 +36,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
+import com.github.yellowstonegames.grid.HuskyNoise;
 
 import java.util.Arrays;
 
@@ -238,8 +239,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),  // 19
             new CyclicNoise(1L, 1),                                    // 20
             new CyclicNoise(1L, 3),                                    // 21
-            new HuskyNoise(1L, 1),                                     // 22
-            new HuskyNoise(1L, 3),                                     // 23
+            new com.github.yellowstonegames.grid.HuskyNoise(1L, 1),                                     // 22
+            new com.github.yellowstonegames.grid.HuskyNoise(1L, 3),                                     // 23
             new PuffyNoise(1L, 1),                                     // 24
             new PuffyNoise(1L, 3),                                     // 25
             new NoiseAdjustment(analysis, Interpolations.linear),      // 26
@@ -256,18 +257,18 @@ public class INoiseComparison extends ApplicationAdapter {
             new WavyNoise(1, 1),                                       // 37
             new WavyNoise(1, 3),                                       // 38
             new CyclicNoise(1L, 1),                                    // 39
-            new CyclicNoise(1L, 3),                                    // 40
-            new SorbetNoise(1L, 1),                                    // 41
-            new SorbetNoise(1L, 3),                                    // 42
-            new HuskyNoise(1L, 1),                                     // 43
+            new CyclicNoise(1L, 2),                                    // 40
+            new CyclicNoise(1L, 3),                                    // 41
+            new HuskyNoise(1L, 1),                                     // 42
+            new HuskyNoise(1L, 2),                                     // 43
             new HuskyNoise(1L, 3),                                     // 44
             new PuffyNoise(1L, 1),                                     // 45
             new PuffyNoise(1L, 3),                                     // 46
-            new FungalNoise(1L, 1),                                    // 47
-            new FungalNoise(1L, 3),                                    // 48
+            new SorbetNoise(1L, 1),                                    // 47
+            new SorbetNoise(1L, 3),                                    // 48
     };
     private int index0 = 39;
-    private int index1 = 47;
+    private int index1 = 42;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
