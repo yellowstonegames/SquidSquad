@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.LineWobble;
@@ -204,7 +205,7 @@ public class HuskyNoise implements INoise {
 
         float xx, yy, zz, ww, uu, vv, mm;
         for (int i = 0; i < octaves;) {
-            long iSeed = i + seed;
+            long iSeed = Hasher.randomize1(i + seed);
             xx = LineWobble.bicubicWobble(iSeed, (x-3.618f) * warpTrk) * warp;
             yy = LineWobble.bicubicWobble(iSeed, (y-3.618f) * warpTrk) * warp;
             zz = LineWobble.bicubicWobble(iSeed, (z-3.618f) * warpTrk) * warp;
@@ -221,7 +222,7 @@ public class HuskyNoise implements INoise {
             inputs[5] = v + uu;
             inputs[6] = m + vv;
             Arrays.fill(outputs, 0f);
-            rotations[i & 3].rotate(inputs, outputs);
+            rotations[(int)iSeed & 3].rotate(inputs, outputs);
             xx = outputs[0];
             yy = outputs[1];
             zz = outputs[2];
