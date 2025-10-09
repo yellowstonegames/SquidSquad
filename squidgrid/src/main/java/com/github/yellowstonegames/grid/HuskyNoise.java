@@ -32,7 +32,10 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * with 1s. This looks much better at low frequencies than high ones; large-scale patterns dominate with high
  * frequencies, but when "zoomed in," there's lots of small details.
  * <br>
- * Called HuskyNoise because it's a variant on PuffyNoise, and husky dogs are puffy or fluffy.
+ * Called HuskyNoise because it's a variant on PuffyNoise, and husky dogs are puffy or fluffy. Unlike PuffyNoise, this
+ * only uses four {@link com.github.yellowstonegames.grid.RotationTools.Rotator} instances with the same state every
+ * time, and relies on {@link LineWobble#bicubicWobble(long, float)} to generate different results per seed. This allows
+ * {@link #hasEfficientSetSeed()} to be true here.
  */
 @Beta
 public class HuskyNoise implements INoise {
@@ -42,29 +45,31 @@ public class HuskyNoise implements INoise {
     protected int octaves;
     protected float total = 1f;
     protected float start = 1f;
-    protected float frequency = 2f;
+    protected float frequency = 3f;
     protected long seed;
-    protected transient RotationTools.Rotator[] rotations = new RotationTools.Rotator[4];
+    private static final RotationTools.Rotator[] rotations = new RotationTools.Rotator[4];
+    static {
+        for (int i = 0; i < 4; i++) {
+            rotations[i] = new RotationTools.Rotator(7, new DistinctRandom(i));
+        }
+    }
     protected transient float[] inputs = new float[7];
     protected transient float[] outputs = new float[7];
     public HuskyNoise() {
         this(3);
     }
     public HuskyNoise(int octaves) {
-        this(0xBEEF1E57, octaves, 2f);
+        this(0xBEEF1E57F00L, octaves, 3f);
     }
 
     public HuskyNoise(long seed, int octaves) {
-        this(seed, octaves, 2f);
+        this(seed, octaves, 3f);
     }
 
     public HuskyNoise(long seed, int octaves, float frequency) {
         setOctaves(octaves);
         setFrequency(frequency);
         this.seed = seed;
-        for (int i = 0; i < 4; i++) {
-            rotations[i] = new RotationTools.Rotator(7, new DistinctRandom(i));
-        }
     }
 
     public int getOctaves() {
@@ -111,7 +116,7 @@ public class HuskyNoise implements INoise {
     }
 
     /**
-     * Sets the frequency; the default is 2. Higher frequencies produce output that changes more quickly.
+     * Sets the frequency; the default is 3. Higher frequencies produce output that changes more quickly.
      * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
      */
     public void setFrequency(float frequency) {
