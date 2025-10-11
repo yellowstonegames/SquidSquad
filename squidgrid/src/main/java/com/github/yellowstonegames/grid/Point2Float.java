@@ -586,4 +586,40 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    public Point2Float sinCosSmoother(float radians) {
+        radians *= TrigTools.radToIndex;
+        final int floor = (int)(radians + 16384f) - 16384;
+        radians -= floor;
+        final int masked = floor & TrigTools.TABLE_MASK;
+        final float cFrom = TrigTools.COS_TABLE[masked], cTo = TrigTools.COS_TABLE[masked+1];
+        x = cFrom + (cTo - cFrom) * (radians);
+        final float sFrom = TrigTools.SIN_TABLE[masked], sTo = TrigTools.SIN_TABLE[masked+1];
+        y = sFrom + (sTo - sFrom) * (radians);
+        return this;
+    }
+
+    public Point2Float sinCosSmootherDeg(float degrees) {
+        degrees *= TrigTools.degToIndex;
+        final int floor = (int)(degrees + 16384f) - 16384;
+        degrees -= floor;
+        final int masked = floor & TrigTools.TABLE_MASK;
+        final float cFrom = TrigTools.COS_TABLE[masked], cTo = TrigTools.COS_TABLE[masked+1];
+        x = cFrom + (cTo - cFrom) * (degrees);
+        final float sFrom = TrigTools.SIN_TABLE[masked], sTo = TrigTools.SIN_TABLE[masked+1];
+        y = sFrom + (sTo - sFrom) * (degrees);
+        return this;
+    }
+
+    public Point2Float sinCosSmootherTurns(float turns) {
+        turns *= TrigTools.turnToIndex;
+        final int floor = (int)(turns + 16384f) - 16384;
+        turns -= floor;
+        final int masked = floor & TrigTools.TABLE_MASK;
+        final float cFrom = TrigTools.COS_TABLE[masked], cTo = TrigTools.COS_TABLE[masked+1];
+        x = cFrom + (cTo - cFrom) * (turns);
+        final float sFrom = TrigTools.SIN_TABLE[masked], sTo = TrigTools.SIN_TABLE[masked+1];
+        y = sFrom + (sTo - sFrom) * (turns);
+        return this;
+    }
+
 }
