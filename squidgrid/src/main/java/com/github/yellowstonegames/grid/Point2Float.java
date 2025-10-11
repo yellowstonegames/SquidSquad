@@ -565,4 +565,25 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return new PointNFloatIterator(this);
     }
 
+    public Point2Float sinCos(float radians) {
+        final int index = (int) (radians * TrigTools.radToIndex + 16384.5f) & TrigTools.TABLE_MASK;
+        x = TrigTools.COS_TABLE[index];
+        y = TrigTools.SIN_TABLE[index];
+        return this;
+    }
+
+    public Point2Float sinCosDeg(float degrees) {
+        final int index = (int) (degrees * TrigTools.degToIndex + 16384.5f) & TrigTools.TABLE_MASK;
+        x = TrigTools.COS_TABLE[index];
+        y = TrigTools.SIN_TABLE[index];
+        return this;
+    }
+
+    public Point2Float sinCosTurns(float turns) {
+        final int index = (int) (turns * TrigTools.turnToIndex + 16384.5f) & TrigTools.TABLE_MASK;
+        x = TrigTools.COS_TABLE[index];
+        y = TrigTools.SIN_TABLE[index];
+        return this;
+    }
+
 }
