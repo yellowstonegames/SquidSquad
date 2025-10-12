@@ -565,6 +565,13 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return new PointNFloatIterator(this);
     }
 
+    /**
+     * Calculates {@link TrigTools#cos(float)} and {@link TrigTools#sin(float)} simultaneously and stores their results
+     * in x and y, respectively.
+     * This is expected to be only slightly faster than calling cos() and sin() separately.
+     * @param radians the angle to calculate cos() and sin() of
+     * @return this, after reassignment, for chaining
+     */
     public Point2Float sinCos(float radians) {
         final int index = (int) (radians * TrigTools.radToIndex + 16384.5f) & TrigTools.TABLE_MASK;
         x = TrigTools.COS_TABLE[index];
@@ -572,6 +579,13 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    /**
+     * Calculates {@link TrigTools#cosDeg(float)} and {@link TrigTools#sinDeg(float)} simultaneously and stores
+     * their results in x and y, respectively.
+     * This is expected to be only slightly faster than calling cosDeg() and sinDeg() separately.
+     * @param degrees the angle to calculate cosDeg() and sinDeg() of
+     * @return this, after reassignment, for chaining
+     */
     public Point2Float sinCosDeg(float degrees) {
         final int index = (int) (degrees * TrigTools.degToIndex + 16384.5f) & TrigTools.TABLE_MASK;
         x = TrigTools.COS_TABLE[index];
@@ -579,6 +593,13 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    /**
+     * Calculates {@link TrigTools#cosTurns(float)} and {@link TrigTools#sinTurns(float)} simultaneously and stores
+     * their results in x and y, respectively.
+     * This is expected to be only slightly faster than calling cosTurns() and sinTurns() separately.
+     * @param turns the angle to calculate cosTurns() and sinTurns() of
+     * @return this, after reassignment, for chaining
+     */
     public Point2Float sinCosTurns(float turns) {
         final int index = (int) (turns * TrigTools.turnToIndex + 16384.5f) & TrigTools.TABLE_MASK;
         x = TrigTools.COS_TABLE[index];
@@ -586,6 +607,13 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    /**
+     * Calculates {@link TrigTools#cosSmoother(float)} and {@link TrigTools#sinSmoother(float)}
+     * simultaneously and stores their results in x and y, respectively.
+     * This is expected to be somewhat faster than calling cosSmoother() and sinSmoother() separately.
+     * @param radians the angle to calculate cosSmoother() and sinSmoother() of
+     * @return this, after reassignment, for chaining
+     */
     public Point2Float sinCosSmoother(float radians) {
         radians *= TrigTools.radToIndex;
         final int floor = (int)(radians + 16384f) - 16384;
@@ -598,6 +626,13 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    /**
+     * Calculates {@link TrigTools#cosSmootherDeg(float)} and {@link TrigTools#sinSmootherDeg(float)}
+     * simultaneously and stores their results in x and y, respectively.
+     * This is expected to be somewhat faster than calling cosSmootherDeg() and sinSmootherDeg() separately.
+     * @param degrees the angle to calculate cosSmootherDeg() and sinSmootherDeg() of
+     * @return this, after reassignment, for chaining
+     */
     public Point2Float sinCosSmootherDeg(float degrees) {
         degrees *= TrigTools.degToIndex;
         final int floor = (int)(degrees + 16384f) - 16384;
@@ -610,6 +645,13 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return this;
     }
 
+    /**
+     * Calculates {@link TrigTools#cosSmootherTurns(float)} and {@link TrigTools#sinSmootherTurns(float)}
+     * simultaneously and stores their results in x and y, respectively.
+     * This is expected to be somewhat faster than calling cosSmootherTurns() and sinSmootherTurns() separately.
+     * @param turns the angle to calculate cosSmootherTurns() and sinSmootherTurns() on
+     * @return this, after reassignment, for chaining
+     */
     public Point2Float sinCosSmootherTurns(float turns) {
         turns *= TrigTools.turnToIndex;
         final int floor = (int)(turns + 16384f) - 16384;
