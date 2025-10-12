@@ -741,16 +741,43 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
         throw new IllegalArgumentException("Not a valid format for a Point6Int: " + s);
     }
 
+    /**
+     * Not supported; this collection is fixed-size.
+     * @param c ignored
+     * @return never returns
+     * @throws UnsupportedOperationException always
+     */
     @Override
     public boolean add(int c) {
         throw new UnsupportedOperationException("Point6Int is fixed-size.");
     }
 
+    /**
+     * Not supported; this collection is fixed-size.
+     * @param c ignored
+     * @return never returns
+     * @throws UnsupportedOperationException always
+     */
     @Override
     public boolean remove(int c) {
         throw new UnsupportedOperationException("Point6Int is fixed-size.");
     }
 
+    /**
+     * Not supported; this collection is fixed-size.
+     * @throws UnsupportedOperationException always
+     */
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Point6Int is fixed-size.");
+    }
+
+    /**
+     * Compares {@code c} with the components of this collection using {@code ==}; if any are considered equal, this
+     * returns true.
+     * @param c an int to be compared using {@code ==}
+     * @return true if any component of this collection is equal to {@code c} via {@code ==} comparison
+     */
     @Override
     public boolean contains(int c) {
         return (x == c || y == c || z == c || w == c || u == c || v == c);
@@ -759,11 +786,6 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
     @Override
     public int size() {
         return 6;
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException("Point6Int is fixed-size.");
     }
 
     @Override
