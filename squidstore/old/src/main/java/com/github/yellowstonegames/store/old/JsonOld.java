@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.old.v300.*;
 
-import org.jetbrains.annotations.NotNull;
 
 public final class JsonOld {
     private JsonOld() {
@@ -32,7 +31,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have serializers registered for all SquidOld types.
      */
-    public static void registerAll(@NotNull Json json) {
+    public static void registerAll(Json json) {
         registerLightRNG(json);
         registerDiverRNG(json);
         registerGWTRNG(json);
@@ -49,7 +48,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLightRNG(@NotNull Json json) {
+    public static void registerLightRNG(Json json) {
         json.addClassTag("LigR", LightRNG.class);
         json.setSerializer(LightRNG.class, new Json.Serializer<LightRNG>() {
             @Override
@@ -73,7 +72,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDiverRNG(@NotNull Json json) {
+    public static void registerDiverRNG(Json json) {
         json.addClassTag("DivR", DiverRNG.class);
         json.setSerializer(DiverRNG.class, new Json.Serializer<DiverRNG>() {
             @Override
@@ -97,7 +96,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerGWTRNG(@NotNull Json json) {
+    public static void registerGWTRNG(Json json) {
         json.addClassTag("GWTR", GWTRNG.class);
         json.setSerializer(GWTRNG.class, new Json.Serializer<GWTRNG>() {
             @Override
@@ -121,7 +120,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLinnormRNG(@NotNull Json json) {
+    public static void registerLinnormRNG(Json json) {
         json.addClassTag("LinR", LinnormRNG.class);
         json.setSerializer(LinnormRNG.class, new Json.Serializer<LinnormRNG>() {
             @Override
@@ -145,7 +144,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSilkRNG(@NotNull Json json) {
+    public static void registerSilkRNG(Json json) {
         json.addClassTag("SilR", SilkRNG.class);
         json.setSerializer(SilkRNG.class, new Json.Serializer<SilkRNG>() {
             @Override
@@ -169,7 +168,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerThrustAltRNG(@NotNull Json json) {
+    public static void registerThrustAltRNG(Json json) {
         json.addClassTag("ThAR", ThrustAltRNG.class);
         json.setSerializer(ThrustAltRNG.class, new Json.Serializer<ThrustAltRNG>() {
             @Override
@@ -193,7 +192,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLongPeriodRNG(@NotNull Json json) {
+    public static void registerLongPeriodRNG(Json json) {
         json.addClassTag("LPeR", LongPeriodRNG.class);
         json.setSerializer(LongPeriodRNG.class, new Json.Serializer<LongPeriodRNG>() {
             @Override
@@ -227,7 +226,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerXoshiroStarPhi32RNG(@NotNull Json json) {
+    public static void registerXoshiroStarPhi32RNG(Json json) {
         json.addClassTag("XSPR", XoshiroStarPhi32RNG.class);
         json.setSerializer(XoshiroStarPhi32RNG.class, new Json.Serializer<XoshiroStarPhi32RNG>() {
             @Override
@@ -263,7 +262,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLowStorageShuffler(@NotNull Json json) {
+    public static void registerLowStorageShuffler(Json json) {
         json.addClassTag("LSSh", LowStorageShuffler.class);
         json.setSerializer(LowStorageShuffler.class, new Json.Serializer<LowStorageShuffler>() {
             @Override
@@ -300,7 +299,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCrossHashYolk(@NotNull Json json) {
+    public static void registerCrossHashYolk(Json json) {
         json.addClassTag("CHYo", CrossHash.Yolk.class);
         json.setSerializer(CrossHash.Yolk.class, new Json.Serializer<CrossHash.Yolk>() {
             @Override
@@ -326,7 +325,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCrossHashCurlup(@NotNull Json json) {
+    public static void registerCrossHashCurlup(Json json) {
         json.addClassTag("CHCu", CrossHash.Curlup.class);
         json.setSerializer(CrossHash.Curlup.class, new Json.Serializer<CrossHash.Curlup>() {
             @Override
@@ -352,7 +351,7 @@ public final class JsonOld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerCrossHashMist(@NotNull Json json) {
+    public static void registerCrossHashMist(Json json) {
         json.addClassTag("CHMi", CrossHash.Mist.class);
         json.setSerializer(CrossHash.Mist.class, new Json.Serializer<CrossHash.Mist>() {
             @Override

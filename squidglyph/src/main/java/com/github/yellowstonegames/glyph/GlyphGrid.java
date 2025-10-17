@@ -38,7 +38,6 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.Coord;
 
 import com.github.yellowstonegames.grid.CoordLongOrderedMap;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Stores a sparse map of (unmoving) glyphs by their positions, as a dense grid of background colors, and potentially
@@ -463,7 +462,7 @@ public class GlyphGrid extends Group {
      */
     public void summon(float delay, float startX, float startY, float endX, float endY, char shown,
                        final int startColor, final int endColor, final float startRotation, final float endRotation,
-                       float duration, @Nullable Runnable postRunnable){
+                       float duration, Runnable postRunnable){
         summon(delay, startX, startY, endX, endY, shown, startColor, endColor, startRotation, endRotation, duration,
                 Interpolation.linear, postRunnable);
     }
@@ -490,7 +489,7 @@ public class GlyphGrid extends Group {
      */
     public void summon(float delay, float startX, float startY, float endX, float endY, char shown,
                        final int startColor, final int endColor, final float startRotation, final float endRotation,
-                       float duration, Interpolation moveInterpolation, @Nullable Runnable postRunnable)
+                       float duration, Interpolation moveInterpolation, Runnable postRunnable)
     {
         final int nbActions = 2 + (0 < delay ? 1 : 0) + (postRunnable == null ? 0 : 1);
         int index = 0;
@@ -567,7 +566,7 @@ public class GlyphGrid extends Group {
      */
     public void burst(float delay, float startX, float startY, float distance, int count, char shown,
                        final int startColor, final int endColor, final float startRotation, final float endRotation,
-                       float duration, @Nullable Runnable postRunnable) {
+                       float duration, Runnable postRunnable) {
                     for (int i = 0; i < count; i++) {
                         float angle = 360f * i / count + 90f;
                         summon(delay, startX, startY, startX + TrigTools.cosDeg(angle) * distance, startY + TrigTools.sinDeg(angle) * distance,

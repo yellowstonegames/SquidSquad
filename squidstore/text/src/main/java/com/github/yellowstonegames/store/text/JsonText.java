@@ -27,7 +27,6 @@ import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Language.SentenceForm;
 import com.github.yellowstonegames.text.Mnemonic;
 import com.github.yellowstonegames.text.Translator;
-import org.jetbrains.annotations.NotNull;
 
 public final class JsonText {
     private JsonText() {
@@ -38,7 +37,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have serializers registered for all SquidText types.
      */
-    public static void registerAll(@NotNull Json json) {
+    public static void registerAll(Json json) {
         registerLanguage(json);
         registerLanguageSentenceForm(json);
         registerTranslator(json);
@@ -56,7 +55,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLanguage(@NotNull Json json) {
+    public static void registerLanguage(Json json) {
         json.addClassTag("Lang", Language.class);
         JsonCore.registerPattern(json);
         json.setSerializer(Language.class, new Json.Serializer<Language>() {
@@ -80,7 +79,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLanguageSentenceForm(@NotNull Json json) {
+    public static void registerLanguageSentenceForm(Json json) {
         json.addClassTag("LaSF", SentenceForm.class);
         JsonSupport.registerEnhancedRandom(json);
         registerLanguage(json);
@@ -108,7 +107,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerTranslator(@NotNull Json json) {
+    public static void registerTranslator(Json json) {
         json.addClassTag("Tran", Translator.class);
         json.addClassTag("str", String.class);
         JsonSupport.registerObjectObjectMap(json);
@@ -151,7 +150,7 @@ public final class JsonText {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerMnemonic(@NotNull Json json) {
+    public static void registerMnemonic(Json json) {
         json.addClassTag("Mnem", Mnemonic.class);
         json.setSerializer(Mnemonic.class, new Json.Serializer<Mnemonic>() {
             @Override

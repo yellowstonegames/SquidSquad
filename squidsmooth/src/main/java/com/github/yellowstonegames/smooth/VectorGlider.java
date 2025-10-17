@@ -20,7 +20,6 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
 import com.github.tommyettinger.digital.Interpolations;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Allows specifying a smoothly-changing float position using a libGDX Vector2 for the start and the end, with a change
@@ -36,8 +35,8 @@ import org.jetbrains.annotations.NotNull;
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
 public class VectorGlider extends Glider {
-    protected @NotNull Vector2 start;
-    protected @NotNull Vector2 end;
+    protected Vector2 start;
+    protected Vector2 end;
 
     public VectorGlider() {
         super();
@@ -49,7 +48,7 @@ public class VectorGlider extends Glider {
      * Assigns {@link Vector2#Zero} into start and end into end; does not continue to use the reference to the parameter end, or Zero.
      * @param end will be copied into end
      */
-    public VectorGlider(@NotNull Vector2 end) {
+    public VectorGlider(Vector2 end) {
         super(new Changer("x", 0f, end.x), new Changer("y", 0f, end.y));
         this.start = new Vector2(0f, 0f);
         this.end = end.cpy();
@@ -60,7 +59,7 @@ public class VectorGlider extends Glider {
      * @param start will be copied into start
      * @param end will be copied into end
      */
-    public VectorGlider(@NotNull Vector2 start, @NotNull Vector2 end) {
+    public VectorGlider(Vector2 start, Vector2 end) {
         super(new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start.cpy();
         this.end = end.cpy();
@@ -73,7 +72,7 @@ public class VectorGlider extends Glider {
      * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolation}
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public VectorGlider(@NotNull Vector2 start, @NotNull Vector2 end, Interpolations.@NotNull Interpolator interpolation, Runnable completeRunner) {
+    public VectorGlider(Vector2 start, Vector2 end, Interpolations.Interpolator interpolation, Runnable completeRunner) {
         super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start.cpy();
         this.end = end.cpy();
@@ -107,24 +106,22 @@ public class VectorGlider extends Glider {
         return getFloat("y");
     }
 
-    @NotNull
     public Vector2 getStart() {
         return start;
     }
 
-    public void setStart(@NotNull Vector2 start) {
+    public void setStart(Vector2 start) {
         this.start.set(start);
         setStartFloat("x", start.x);
         setStartFloat("y", start.y);
         change = 0f;
     }
 
-    @NotNull
     public Vector2 getEnd() {
         return end;
     }
 
-    public void setEnd(@NotNull Vector2 end) {
+    public void setEnd(Vector2 end) {
         this.end.set(end);
         setEndFloat("x", end.x);
         setEndFloat("y", end.y);

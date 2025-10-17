@@ -19,7 +19,6 @@ package com.github.yellowstonegames.old.v300.squidmath;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.old.v300.CrossHash;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.*;
@@ -349,7 +348,7 @@ public class RNG implements Serializable, IRNG {
 
         return new Iterable<T>() {
             @Override
-            public @NotNull Iterator<T> iterator() {
+            public Iterator<T> iterator() {
                 return new Iterator<T>() {
 
                     int next = -1;
@@ -492,7 +491,7 @@ public class RNG implements Serializable, IRNG {
      * @return a shuffled ArrayList containing the whole of elements in pseudo-random order.
      */
     @Override
-    public <T> ArrayList<T> shuffle(Collection<T> elements, /*@Nullable*/ ArrayList<T> buf) {
+    public <T> ArrayList<T> shuffle(Collection<T> elements, /**/ ArrayList<T> buf) {
         final ArrayList<T> al;
         if (buf == null || !buf.isEmpty())
             al = new ArrayList<>(elements);

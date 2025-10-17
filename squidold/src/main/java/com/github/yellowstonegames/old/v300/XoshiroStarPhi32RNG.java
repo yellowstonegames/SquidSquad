@@ -18,7 +18,6 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import org.jetbrains.annotations.NotNull;
 
 public class XoshiroStarPhi32RNG extends LegacyRandom {
     @Override
@@ -121,7 +120,6 @@ public class XoshiroStarPhi32RNG extends LegacyRandom {
      *
      * @return a copy of this RandomnessSource
      */
-    @NotNull
     @Override
     public XoshiroStarPhi32RNG copy() {
         return new XoshiroStarPhi32RNG(stateA, stateB, stateC, stateD);

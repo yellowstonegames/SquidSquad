@@ -20,7 +20,6 @@ import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 
 import com.github.tommyettinger.ds.OrderType;
-import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -100,7 +99,7 @@ public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
     }
 
     @Override
-    protected boolean equate(Object left, @Nullable Object right) {
+    protected boolean equate(Object left, Object right) {
         return left == right;
     }
 

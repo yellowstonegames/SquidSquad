@@ -19,8 +19,6 @@ package com.github.yellowstonegames.smooth;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.core.DescriptiveColor;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Allows specifying a smoothly-changing color using an int-based color (often RGBA8888, but possibly produced by
@@ -68,7 +66,7 @@ public class IntColorGlider extends Glider {
      * @param end the end color, as an int (this could be RGBA or Oklab, but should be the same kind as start)
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public IntColorGlider(int start, int end, @Nullable Runnable completeRunner) {
+    public IntColorGlider(int start, int end, Runnable completeRunner) {
         super(Interpolations.linear, completeRunner, new Changer("color", start, end, IntSmoother.COLOR));
     }
 
@@ -80,7 +78,7 @@ public class IntColorGlider extends Glider {
      * @param interpolation how to interpolate from start to end; typically a constant from {@link Interpolations}
      * @param completeRunner a Runnable that, if non-null, will be run when the glide completes
      */
-    public IntColorGlider(int start, int end, Interpolations.@NotNull Interpolator interpolation, @Nullable Runnable completeRunner) {
+    public IntColorGlider(int start, int end, Interpolations.Interpolator interpolation, Runnable completeRunner) {
         super(interpolation, completeRunner, new Changer("color", start, end, IntSmoother.COLOR));
     }
 

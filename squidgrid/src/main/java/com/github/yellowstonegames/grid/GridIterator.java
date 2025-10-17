@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.yellowstonegames.core.annotations.Beta;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -42,7 +41,7 @@ public abstract class GridIterator implements Iterator<Coord> {
      * @author smelC
      */
     public static class CenteredSquare extends GridIterator {
-        protected @Nullable Coord previous;
+        protected Coord previous;
 
         protected int xStart;
         protected int yStart;
@@ -118,7 +117,7 @@ public abstract class GridIterator implements Iterator<Coord> {
             throw new UnsupportedOperationException();
         }
 
-        protected @Nullable Coord findNext(boolean mutate) {
+        protected Coord findNext(boolean mutate) {
             while (!done) {
                 final Coord result = findNextCandidate();
                 if (result != null) {
@@ -141,7 +140,7 @@ public abstract class GridIterator implements Iterator<Coord> {
         /*
          * This method doesn't care about validity, findNext(boolean) handles it
          */
-        protected @Nullable Coord findNextCandidate() {
+        protected Coord findNextCandidate() {
             if (previous == null) {
                 /* Init */
                 /* We're in SquidSquad coordinates here ((0,0) is bottom left) */
@@ -175,7 +174,7 @@ public abstract class GridIterator implements Iterator<Coord> {
      * out of bounds.
      */
     public static class SquareSpiral extends GridIterator {
-        protected @Nullable Coord previous;
+        protected Coord previous;
 
         protected int xStart;
         protected int yStart;
@@ -244,7 +243,7 @@ public abstract class GridIterator implements Iterator<Coord> {
             throw new UnsupportedOperationException();
         }
 
-        protected @Nullable Coord findNext(boolean mutate) {
+        protected Coord findNext(boolean mutate) {
             final Coord result = findNextCandidate();
             if (isInGrid(result.x, result.y)) {
                 if (mutate)

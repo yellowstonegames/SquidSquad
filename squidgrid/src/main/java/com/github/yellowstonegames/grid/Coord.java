@@ -24,7 +24,6 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.tommyettinger.ds.support.util.PartialParser;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A 2D coordinate with (constant) x and y fields. Coord objects are immutable; a single pool of Coord values, with
@@ -118,7 +117,6 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
                 , 0x9E3779B9);
     }
 
-    @NotNull
     public static Coord get(final int x, final int y) {
         if (x >= -3 && y >= -3 && x < POOL_WIDTH && y < POOL_HEIGHT)
             return POOL[ORIGIN + y * PADDED_POOL_WIDTH + x];
@@ -1072,7 +1070,6 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * The index for the point 0,0 .
      */
     private static int ORIGIN = PADDED_POOL_WIDTH * 3 + 3;
-    @NotNull
     private static Coord[] POOL = new Coord[PADDED_POOL_WIDTH * PADDED_POOL_HEIGHT];
 
     static {

@@ -22,7 +22,6 @@ import com.github.tommyettinger.ds.OrderType;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -115,7 +114,7 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
     }
 
     @Override
-    protected boolean equate(Object left, @Nullable Object right) {
+    protected boolean equate(Object left, Object right) {
         return left == right;
     }
 

@@ -17,7 +17,6 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import org.jetbrains.annotations.NotNull;
 
 /**
  * This is a SplittableRandom-style generator, meant to have a tiny state
@@ -88,7 +87,6 @@ public class LightRNG extends LegacyRandom implements StatefulRandomness {
      *
      * @return a copy of this RandomnessSource
      */
-    @NotNull
     @Override
     public LightRNG copy() {
         return new LightRNG(state);

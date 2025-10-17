@@ -14,9 +14,6 @@ dependencies {
         exclude module: 'digital'
     }
 
-    compileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-    testCompileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-
     testImplementation "junit:junit:$junitVersion"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"

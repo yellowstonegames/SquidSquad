@@ -20,7 +20,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import com.github.tommyettinger.function.ObjToObjFunction;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles multiple objects that are each associated with a {@link Glider}, and allows starting and stopping the
@@ -38,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <C> a type that contains or is otherwise associated with a {@link Glider}, such as a {@link CoordGlider}
  */
 public class Director<C> {
-    public @NotNull ObjToObjFunction<? super C, Glider> extractor;
+    public ObjToObjFunction<? super C, Glider> extractor;
     public Iterable<C> container;
 
     protected long playTime = Long.MAX_VALUE;
@@ -46,16 +45,16 @@ public class Director<C> {
     protected long duration = 500L;
     protected long elapsed = 0L;
 
-    public Director(@NotNull ObjToObjFunction<? super C, Glider> fun){
+    public Director(ObjToObjFunction<? super C, Glider> fun){
         extractor = fun;
     }
 
-    public Director(@NotNull ObjToObjFunction<? super C, Glider> fun, Iterable<C> coll){
+    public Director(ObjToObjFunction<? super C, Glider> fun, Iterable<C> coll){
         this(fun);
         container = coll;
     }
 
-    public Director(@NotNull ObjToObjFunction<? super C, Glider> fun, Iterable<C> coll, long durationMillis){
+    public Director(ObjToObjFunction<? super C, Glider> fun, Iterable<C> coll, long durationMillis){
         this(fun);
         container = coll;
         duration = durationMillis;

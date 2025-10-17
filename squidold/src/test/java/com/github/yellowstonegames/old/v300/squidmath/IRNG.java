@@ -269,7 +269,7 @@ public interface IRNG extends RandomnessSource {
      * @param <T>      can be any non-primitive type.
      * @return a shuffled ArrayList containing the whole of elements in pseudo-random order, which may be {@code buf}
      */
-    <T> ArrayList<T> shuffle(Collection<T> elements, /*@Nullable*/ ArrayList<T> buf);
+    <T> ArrayList<T> shuffle(Collection<T> elements, /**/ ArrayList<T> buf);
     /**
      * Shuffles a Collection of T items in-place using the Fisher-Yates algorithm.
      * This only shuffles List data structures.

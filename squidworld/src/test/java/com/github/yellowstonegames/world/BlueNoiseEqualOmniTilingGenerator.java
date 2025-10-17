@@ -119,14 +119,14 @@ public class BlueNoiseEqualOmniTilingGenerator extends ApplicationAdapter {
 //      // It may also make it collide less, but the computation is much simpler here than the default.
 //      // This makes a roughly 3x difference in runtime. (!)
 //        @Override
-//        protected int place(@NotNull Object item) {
+//        protected int place(Object item) {
 //            final int x = ((Coord)item).x, y = ((Coord)item).y;
 //            // Cantor pairing function
 //            return y + ((x + y) * (x + y + 1) >> 1) & mask;
 //        }
 //
 //        @Override
-//        protected boolean equate(@NotNull Object left, @Nullable Object right) {
+//        protected boolean equate(Object left, Object right) {
 //            return left == right;
 //        }
 //    };

@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -109,7 +108,7 @@ public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
     }
 
     @Override
-    protected boolean equate(Object left, @Nullable Object right) {
+    protected boolean equate(Object left, Object right) {
         return left == right;
     }
 

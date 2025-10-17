@@ -24,7 +24,6 @@ import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import regexodus.Matcher;
 import regexodus.Pattern;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -100,7 +99,7 @@ public class Dice {
      *
      * @param rng an EnhancedRandom as the source of randomness
      */
-    public void setRandom(@NotNull EnhancedRandom rng) {
+    public void setRandom(EnhancedRandom rng) {
         this.rng = rng;
     }
 
@@ -622,8 +621,8 @@ public class Dice {
      * {@link Dice#runRollRule(Rule)}. This avoids overhead from repeated parsing.
      */
     public static class Rule implements Externalizable {
-        public @NotNull String rollCode;
-        public @NotNull IntList instructions;
+        public String rollCode;
+        public IntList instructions;
 
         public Rule(){
             rollCode = "";
@@ -635,7 +634,7 @@ public class Dice {
          * See the Dice method for more info.
          * @param rollCode a dice string using the notation described in {@link Dice#parseRollRule(String)}
          */
-        public Rule(@NotNull String rollCode){
+        public Rule(String rollCode){
             this.rollCode = rollCode; // not strictly necessary because it is assigned later, but avoids a warning.
             instructions = new IntList(10);
             Dice.parseRollRuleInto(this, rollCode);
@@ -656,7 +655,7 @@ public class Dice {
          * @param rollCode a dice string using the notation described in {@link Dice#parseRollRuleInto(Rule, String)}
          * @return this, for chaining
          */
-        public Rule reset(@NotNull String rollCode){
+        public Rule reset(String rollCode){
             instructions.clear();
             Dice.parseRollRuleInto(this, rollCode);
             return this;

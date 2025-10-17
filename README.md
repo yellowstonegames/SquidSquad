@@ -34,12 +34,10 @@ overhaul but not a total rewrite. Like SquidLib, it provides tools for all sorts
 particularly focused on the needs of roguelike games. It is a group of loosely-linked modules, where you only need to
 depend on the modules you need. All the modules depend on `squidcore`, which always depends on
 [jdkgdxds](https://github.com/tommyettinger/jdkgdxds) for data structures, the
-[checker-qual](https://github.com/typetools/checker-framework) annotations library,
 [digital](https://github.com/tommyettinger/digital) for various number and digit stuff,
 [juniper](https://github.com/tommyettinger/juniper) for random number generation, and
 [regexodus](https://github.com/tommyettinger/RegExodus) for cross-platform regular expressions with an expanded API. This is already quite a few dependencies,
-but checker-qual is rarely needed by user code, and the rest mostly have roles that were moved out of squidlib-util in
-earlier versions.
+but these mostly have roles that were moved out of squidlib-util in earlier versions.
 
 The important `squidgrid` module has an extra dependency on [crux](https://github.com/tommyettinger/crux), which
 mostly provides interfaces that other libraries can use without needing `squidgrid` (instead needing `crux`). Some

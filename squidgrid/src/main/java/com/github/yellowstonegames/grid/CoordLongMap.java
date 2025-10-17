@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -65,7 +64,7 @@ public class CoordLongMap extends ObjectLongMap<Coord> {
     }
 
     @Override
-    protected boolean equate(Object left, @Nullable Object right) {
+    protected boolean equate(Object left, Object right) {
         return left == right;
     }
 

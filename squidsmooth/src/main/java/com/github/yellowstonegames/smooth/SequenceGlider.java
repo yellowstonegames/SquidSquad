@@ -22,8 +22,6 @@ import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.Interpolations.Interpolator;
 import com.github.yellowstonegames.core.annotations.Beta;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 /**
@@ -45,8 +43,8 @@ public class SequenceGlider extends Glider {
     public SequenceGlider(Glider[] gliders, float[] lengths){
         this(gliders, lengths, Interpolations.linear, null);
     }
-    public SequenceGlider(Glider[] gliders, float[] lengths, @NotNull Interpolator interpolation,
-                          @Nullable Runnable completeRunner){
+    public SequenceGlider(Glider[] gliders, float[] lengths, Interpolator interpolation,
+                          Runnable completeRunner){
         this.interpolation = interpolation;
         this.completeRunner = completeRunner;
         final int len = Math.min(gliders.length, lengths.length);
@@ -64,28 +62,28 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public float getFloat(@NotNull String name) {
+    public float getFloat(String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Float.NaN;
         return c.interpolatorF.apply(c.startF, c.endF, interpolation.apply(sequence[active].getChange()));
     }
 
     @Override
-    public int getInt(@NotNull String name) {
+    public int getInt(String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.interpolatorI.apply(c.startI, c.endI, interpolation.apply(sequence[active].getChange()));
     }
 
     @Override
-    public float getStartFloat(@NotNull String name) {
+    public float getStartFloat(String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Float.NaN;
         return c.startF;
     }
 
     @Override
-    public void setStartFloat(@NotNull String name, float start) {
+    public void setStartFloat(String name, float start) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.startF = start;
@@ -94,14 +92,14 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public float getEndFloat(@NotNull String name) {
+    public float getEndFloat(String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Float.NaN;
         return c.endF;
     }
 
     @Override
-    public void setEndFloat(@NotNull String name, float end) {
+    public void setEndFloat(String name, float end) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.endF = end;
@@ -110,14 +108,14 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public int getStartInt(@NotNull String name) {
+    public int getStartInt(String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.startI;
     }
 
     @Override
-    public void setStartInt(@NotNull String name, int start) {
+    public void setStartInt(String name, int start) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.startI = start;
@@ -126,14 +124,14 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public int getEndInt(@NotNull String name) {
+    public int getEndInt(String name) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return Integer.MIN_VALUE;
         return c.endI;
     }
 
     @Override
-    public void setEndInt(@NotNull String name, int end) {
+    public void setEndInt(String name, int end) {
         Changer c = sequence[active].changers.get(name);
         if(c == null) return;
         c.endI = end;
@@ -159,12 +157,12 @@ public class SequenceGlider extends Glider {
     }
 
     @Override
-    public @NotNull Interpolator getInterpolation() {
+    public Interpolator getInterpolation() {
         return interpolation;
     }
 
     @Override
-    public void setInterpolation(@NotNull Interpolator interpolation) {
+    public void setInterpolation(Interpolator interpolation) {
         super.setInterpolation(interpolation);
         active = 0;
         passed = 0f;

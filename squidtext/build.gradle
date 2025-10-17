@@ -5,9 +5,6 @@ eclipse.project.name = ext.projectName
 dependencies {
     api project(':squidcore')
 
-    compileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-    testCompileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-
     testImplementation "junit:junit:$junitVersion"
     //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }

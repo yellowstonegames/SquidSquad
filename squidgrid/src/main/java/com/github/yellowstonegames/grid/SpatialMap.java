@@ -23,8 +23,6 @@ import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.yellowstonegames.core.annotations.Beta;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractCollection;
 import java.util.Collection;
@@ -63,7 +61,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         idMap = new IntObjectOrderedMap<>(other.idMap);
     }
 
-    public boolean add(@NotNull V value){
+    public boolean add(V value){
         Coord pos = value.getCoordPosition();
         int id = value.getIdentifier();
         if(idMap.containsKey(id)){
@@ -97,7 +95,7 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
     }
 
     @Override
-    public @NotNull Iterator<V> iterator() {
+    public Iterator<V> iterator() {
         return idMap.values().iterator();
     }
 
@@ -156,20 +154,16 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
         return true;
     }
 
-    @Nullable
     public V getAt(int index) {
         if(index < 0 || index >= idMap.size()) return null;
         return idMap.getAt(index);
     }
-    @Nullable
     public V getById(int id) {
         return idMap.get(id);
     }
-    @Nullable
     public V getByPosition(Coord position) {
         return positionMap.get(position);
     }
-    @Nullable
     public V getByPosition(int x, int y) {
         return positionMap.get(Coord.get(x, y));
     }
@@ -185,7 +179,6 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
      * @return on success, the moved V; on failure because newPosition is occupied, that occupant; on failure because
      * there wasn't a V present to move, null
      */
-    @Nullable
     public V move(Coord oldPosition, Coord newPosition) {
         V occupant = positionMap.getOrDefault(newPosition, null);
         if(occupant != null) return occupant;
@@ -206,7 +199,6 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
      * @return on success, the moved V; on failure because newPosition is occupied, that occupant; on failure because
      * there wasn't a V present to move, null
      */
-    @Nullable
     public V move(int id, Coord newPosition){
         V mover = idMap.get(id);
         if(mover == null) return null;
@@ -223,7 +215,6 @@ public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V>
      * @return on success, the moved V; on failure because newPosition is occupied, that occupant; on failure because
      * there the index was out of bounds, null
      */
-    @Nullable
     public V moveAt(int index, Coord newPosition){
         if(index < 0 || index >= positionMap.size()) return null;
         Coord pos = positionMap.keyAt(index);

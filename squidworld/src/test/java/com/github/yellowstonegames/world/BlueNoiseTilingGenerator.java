@@ -31,8 +31,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Coord;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
@@ -63,14 +61,14 @@ public class BlueNoiseTilingGenerator extends ApplicationAdapter {
     private final ObjectFloatOrderedMap<Coord> energy = new ObjectFloatOrderedMap<Coord>(size * size, 0.5f)
     {
         @Override
-        protected int place(@NotNull Object item) {
+        protected int place(Object item) {
             final int x = ((Coord) item).x, y = ((Coord) item).y;
             // Cantor pairing function
             return y + ((x + y) * (x + y + 1) >> 1) & mask;
         }
 
         @Override
-        protected boolean equate(@NotNull Object left, @Nullable Object right) {
+        protected boolean equate(Object left, Object right) {
             return left == right;
         }
     };

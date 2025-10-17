@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Performs randomized flood-fill operations on arbitrarily-shaped areas, until a volume is reached.
@@ -75,7 +74,7 @@ public class Spill {
      * @param passable a rectangular 2D char array where {@code '.'} represents a walkable cell
      * @param random the random number generator to use; if null, this will use a random seed
      */
-    public Spill(char[][] passable, @Nullable EnhancedRandom random) {
+    public Spill(char[][] passable, EnhancedRandom random) {
         this(new Region(passable, '.'), random);
     }
 
@@ -87,7 +86,7 @@ public class Spill {
      * @param floorChar the char that is considered walkable in {@code passable}
      * @param random the random number generator to use; if null, this will use a random seed
      */
-    public Spill(char[][] passable, char floorChar,  @Nullable EnhancedRandom random) {
+    public Spill(char[][] passable, char floorChar,  EnhancedRandom random) {
         this(new Region(passable, floorChar), random);
     }
 
@@ -108,7 +107,7 @@ public class Spill {
      * @param passable a Region where "on" cells can be moved through; will be referenced but not modified
      * @param random the random number generator to use; if null, this will use a random seed
      */
-    public Spill(Region passable,  @Nullable EnhancedRandom random) {
+    public Spill(Region passable,  EnhancedRandom random) {
         this.random = random == null ? new WhiskerRandom() : random;
         this.passable = passable == null ? new Region(32, 32) : passable;
         this.spillMap = new Region(this.passable.width, this.passable.height);

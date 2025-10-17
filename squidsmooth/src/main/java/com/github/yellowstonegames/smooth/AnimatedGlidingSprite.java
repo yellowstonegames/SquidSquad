@@ -21,8 +21,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.yellowstonegames.grid.Coord;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Extends {@link Sprite}, but uses an {@link Animation} of {@link TextureRegion} for its visuals and a
@@ -39,9 +37,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class AnimatedGlidingSprite extends ParentSprite {
     public Animation<? extends TextureRegion> animation;
-    @NotNull
     public CoordGlider location;
-    @NotNull
     public VectorSequenceGlider smallMotion;
     /**
      * A VectorSequenceGlider that is empty (has no motions) and belongs to this AnimatedGlidingSprite.
@@ -49,7 +45,6 @@ public class AnimatedGlidingSprite extends ParentSprite {
      * It is here so {@link #smallMotion} can be easily set to an empty sequence.
      * You can also use {@code setSmallMotion(null)} to stop any small motion.
      */
-    @NotNull
     public final VectorSequenceGlider ownEmptyMotion = VectorSequenceGlider.EMPTY.copy();
 
     private AnimatedGlidingSprite()
@@ -109,21 +104,19 @@ public class AnimatedGlidingSprite extends ParentSprite {
         this.animation = animation;
     }
 
-    @NotNull
     public CoordGlider getLocation() {
         return location;
     }
 
-    public void setLocation(@NotNull CoordGlider location) {
+    public void setLocation(CoordGlider location) {
         this.location = location;
     }
 
-    @NotNull
     public VectorSequenceGlider getSmallMotion() {
         return smallMotion;
     }
 
-    public void setSmallMotion(@Nullable VectorSequenceGlider smallMotion) {
+    public void setSmallMotion(VectorSequenceGlider smallMotion) {
         if(smallMotion == null) this.smallMotion = ownEmptyMotion;
         else this.smallMotion = smallMotion;
     }

@@ -19,7 +19,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 
 import com.github.tommyettinger.ds.OrderType;
-import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -97,7 +96,7 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     }
 
     @Override
-    protected boolean equate(Object left, @Nullable Object right) {
+    protected boolean equate(Object left, Object right) {
         return left == right;
     }
 

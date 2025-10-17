@@ -19,7 +19,6 @@ package com.github.yellowstonegames.old.v300;
 
 import com.github.yellowstonegames.core.DigitTools;
 
-import org.jetbrains.annotations.NotNull;
 
 public class GWTRNG extends LegacyRandom implements StatefulRandomness {
     public int stateA, stateB;
@@ -201,7 +200,6 @@ public class GWTRNG extends LegacyRandom implements StatefulRandomness {
      * 
      * @return a copy of this GWTRNG
      */
-    @NotNull
     @Override
     public GWTRNG copy() {
         return new GWTRNG(stateA, stateB);

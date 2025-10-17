@@ -18,8 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectDeque;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides a means to generate Bresenham lines in 2D.
@@ -346,8 +344,8 @@ public class BresenhamLine implements LineDrawer {
      * @param buffer an ObjectDeque of Coord that will be reused and cleared if not null; if null, will be ignored
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean reachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap,
-                                    @Nullable ObjectDeque<Coord> buffer){
+    public static boolean reachable(Coord start, Coord target, float[][] resistanceMap,
+                                    ObjectDeque<Coord> buffer){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
@@ -369,7 +367,7 @@ public class BresenhamLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY,
-                                    float[][] resistanceMap, @Nullable ObjectDeque<Coord> buffer){
+                                    float[][] resistanceMap, ObjectDeque<Coord> buffer){
         return reachable(startX, startY, targetX, targetY, 0x7FFFFFFF, resistanceMap, buffer);
     }
 
@@ -394,7 +392,7 @@ public class BresenhamLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachable(int startX, int startY, int targetX, int targetY, int maxLength,
-                                    float[][] resistanceMap, @Nullable ObjectDeque<Coord> buffer) {
+                                    float[][] resistanceMap, ObjectDeque<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -508,7 +506,7 @@ public class BresenhamLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     public static boolean reachableEuclidean(int startX, int startY, int targetX, int targetY, int maxLength,
-                                             float[][] resistanceMap, @Nullable ObjectDeque<Coord> buffer) {
+                                             float[][] resistanceMap, ObjectDeque<Coord> buffer) {
         int dx = targetX - startX;
         int dy = targetY - startY;
 
@@ -615,7 +613,7 @@ public class BresenhamLine implements LineDrawer {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    public static boolean reachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap){
+    public static boolean reachable(Coord start, Coord target, float[][] resistanceMap){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
     /**
@@ -945,7 +943,7 @@ public class BresenhamLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     @Override
-    public boolean isReachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap,
+    public boolean isReachable(Coord start, Coord target, float[][] resistanceMap,
                                ObjectDeque<Coord> buffer){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap, buffer);
     }
@@ -1041,7 +1039,7 @@ public class BresenhamLine implements LineDrawer {
      * @return true if the starting point can see the target point; false otherwise
      */
     @Override
-    public boolean isReachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap){
+    public boolean isReachable(Coord start, Coord target, float[][] resistanceMap){
         return reachable(start.x, start.y, target.x, target.y, 0x7FFFFFFF, resistanceMap);
     }
 

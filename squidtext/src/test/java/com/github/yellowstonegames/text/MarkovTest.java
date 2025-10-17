@@ -154,7 +154,7 @@ public class MarkovTest {
 //            }
 //
 //            @Override
-//            protected boolean equate(Object left, @Nullable Object right) {
+//            protected boolean equate(Object left, Object right) {
 //                if (left == right)
 //                    return true;
 //                if(right == null) return false;

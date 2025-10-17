@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectDeque;
 
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A shared interface for line-drawing classes, so instances can be interchanged.
@@ -129,7 +128,7 @@ public interface LineDrawer {
      * @param buffer        an ObjectDeque of Coord that will be reused and cleared if not null; will be modified
      * @return true if the starting point can see the target point; false otherwise
      */
-    boolean isReachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap,
+    boolean isReachable(Coord start, Coord target, float[][] resistanceMap,
                         ObjectDeque<Coord> buffer);
 
     /**
@@ -216,7 +215,7 @@ public interface LineDrawer {
      * @param resistanceMap a resistance map as produced by {@link FOV#generateResistances(char[][])}; 0 is visible and 1 is blocked
      * @return true if the starting point can see the target point; false otherwise
      */
-    boolean isReachable(@NotNull Coord start, @NotNull Coord target, float[][] resistanceMap);
+    boolean isReachable(Coord start, Coord target, float[][] resistanceMap);
 
     /**
      * Checks whether the starting point can see the target point, using the {@code resistanceMap}

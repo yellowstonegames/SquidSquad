@@ -19,7 +19,6 @@ package com.github.yellowstonegames.smooth;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.yellowstonegames.grid.Coord;
 
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Allows specifying a smoothly-changing float position using an exact Coord for the start and the end, with a change
@@ -32,30 +31,30 @@ import org.jetbrains.annotations.NotNull;
  * This is a type of Glider, and so is compatible with other Gliders (it can also be merged with them).
  */
 public class CoordGlider extends Glider {
-    protected @NotNull Coord start;
-    protected @NotNull Coord end;
+    protected Coord start;
+    protected Coord end;
 
     public CoordGlider() {
         super(new Changer("x", 0f, 0f), new Changer("y", 0f, 0f));
         end = start = Coord.get(0, 0);
     }
-    public CoordGlider(@NotNull Coord start) {
+    public CoordGlider(Coord start) {
         super(new Changer("x", start.x, start.x), new Changer("y", start.y, start.y));
         this.start = start;
         this.end = start;
     }
-    public CoordGlider(@NotNull Coord start, @NotNull Coord end) {
+    public CoordGlider(Coord start, Coord end) {
         super(new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;
     }
-    public CoordGlider(Interpolations.@NotNull Interpolator interpolation, Runnable completeRunner, @NotNull Coord start, @NotNull Coord end) {
+    public CoordGlider(Interpolations.Interpolator interpolation, Runnable completeRunner, Coord start, Coord end) {
         super(interpolation, completeRunner, new Changer("x", start.x, end.x), new Changer("y", start.y, end.y));
         this.start = start;
         this.end = end;
     }
 
-    public CoordGlider(@NotNull CoordGlider other) {
+    public CoordGlider(CoordGlider other) {
         super(other);
         this.start = other.start;
         this.end = other.end;
@@ -74,24 +73,22 @@ public class CoordGlider extends Glider {
         return getFloat("y");
     }
 
-    @NotNull
     public Coord getStart() {
         return start;
     }
 
-    public void setStart(@NotNull Coord start) {
+    public void setStart(Coord start) {
         this.start = start;
         setStartFloat("x", start.x);
         setStartFloat("y", start.y);
         change = 0f;
     }
 
-    @NotNull
     public Coord getEnd() {
         return end;
     }
 
-    public void setEnd(@NotNull Coord end) {
+    public void setEnd(Coord end) {
         this.end = end;
         setEndFloat("x", end.x);
         setEndFloat("y", end.y);

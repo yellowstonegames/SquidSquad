@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectSet;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**
@@ -64,7 +63,7 @@ public class CoordSet extends ObjectSet<Coord> {
     }
 
     @Override
-    protected boolean equate(Object left, @Nullable Object right) {
+    protected boolean equate(Object left, Object right) {
         return left == right;
     }
     /**

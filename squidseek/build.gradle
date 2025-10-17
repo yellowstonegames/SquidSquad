@@ -7,9 +7,6 @@ dependencies {
     api project(':squidgrid')
     api "com.github.tommyettinger:gand:$gandVersion"
 
-    compileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-    testCompileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-
     testImplementation "junit:junit:$junitVersion"
 }
 

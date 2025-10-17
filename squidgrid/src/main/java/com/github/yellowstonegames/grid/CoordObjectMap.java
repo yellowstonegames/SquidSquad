@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 
@@ -67,7 +66,7 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
     }
 
     @Override
-    protected boolean equate(Object left, @Nullable Object right) {
+    protected boolean equate(Object left, Object right) {
         return left == right;
     }
 

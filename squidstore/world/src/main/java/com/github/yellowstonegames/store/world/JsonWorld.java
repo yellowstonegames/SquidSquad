@@ -26,7 +26,6 @@ import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.*;
 import com.github.yellowstonegames.world.BiomeMapper.*;
 import com.github.yellowstonegames.world.PoliticalMapper.Faction;
-import org.jetbrains.annotations.NotNull;
 
 public final class JsonWorld {
     private JsonWorld() {
@@ -37,7 +36,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have serializers registered for all SquidWorld types.
      */
-    public static void registerAll(@NotNull Json json) {
+    public static void registerAll(Json json) {
         registerWorldMapGenerators(json);
         registerBiomeMappers(json);
         registerWorldMapViews(json);
@@ -46,7 +45,7 @@ public final class JsonWorld {
         registerPoliticalMapper(json);
     }
 
-    public static void registerWorldMapGenerators(@NotNull Json json) {
+    public static void registerWorldMapGenerators(Json json) {
         registerDiagonalWorldMap(json);
         registerEllipticalWorldMap(json);
         registerGlobeMap(json);
@@ -62,14 +61,14 @@ public final class JsonWorld {
         registerTilingWorldMap(json);
     }
 
-    public static void registerBiomeMappers(@NotNull Json json) {
+    public static void registerBiomeMappers(Json json) {
         registerSimpleBiomeMapper(json);
         registerDetailedBiomeMapper(json);
         registerBlendedBiomeMapper(json);
         registerUnrealisticBiomeMapper(json);
     }
 
-    public static void registerWorldMapViews(@NotNull Json json) {
+    public static void registerWorldMapViews(Json json) {
         registerSimpleWorldMapView(json);
         registerDetailedWorldMapView(json);
         registerBlendedWorldMapView(json);
@@ -83,7 +82,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerEllipticalWorldMap(@NotNull Json json) {
+    public static void registerEllipticalWorldMap(Json json) {
         json.addClassTag("EllW", EllipticalWorldMap.class);
         json.setSerializer(EllipticalWorldMap.class, new Json.Serializer<EllipticalWorldMap>() {
             @Override
@@ -108,7 +107,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerGlobeMap(@NotNull Json json) {
+    public static void registerGlobeMap(Json json) {
         json.addClassTag("GlbW", GlobeMap.class);
         json.setSerializer(GlobeMap.class, new Json.Serializer<GlobeMap>() {
             @Override
@@ -133,7 +132,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerHexagonalWorldMap(@NotNull Json json) {
+    public static void registerHexagonalWorldMap(Json json) {
         json.addClassTag("HexW", HexagonalWorldMap.class);
         json.setSerializer(HexagonalWorldMap.class, new Json.Serializer<HexagonalWorldMap>() {
             @Override
@@ -158,7 +157,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerHyperellipticalWorldMap(@NotNull Json json) {
+    public static void registerHyperellipticalWorldMap(Json json) {
         json.addClassTag("HyeW", HyperellipticalWorldMap.class);
         json.setSerializer(HyperellipticalWorldMap.class, new Json.Serializer<HyperellipticalWorldMap>() {
             @Override
@@ -183,7 +182,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDiagonalWorldMap(@NotNull Json json) {
+    public static void registerDiagonalWorldMap(Json json) {
         json.addClassTag("DiaW", DiagonalWorldMap.class);
         json.setSerializer(DiagonalWorldMap.class, new Json.Serializer<DiagonalWorldMap>() {
             @Override
@@ -208,7 +207,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLatLonWorldMap(@NotNull Json json) {
+    public static void registerLatLonWorldMap(Json json) {
         json.addClassTag("LaLW", LatLonWorldMap.class);
         json.setSerializer(LatLonWorldMap.class, new Json.Serializer<LatLonWorldMap>() {
             @Override
@@ -233,7 +232,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerLocalMap(@NotNull Json json) {
+    public static void registerLocalMap(Json json) {
         json.addClassTag("LocW", LocalMap.class);
         json.setSerializer(LocalMap.class, new Json.Serializer<LocalMap>() {
             @Override
@@ -258,7 +257,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerMimicLocalMap(@NotNull Json json) {
+    public static void registerMimicLocalMap(Json json) {
         json.addClassTag("MmLW", MimicLocalMap.class);
         json.setSerializer(MimicLocalMap.class, new Json.Serializer<MimicLocalMap>() {
             @Override
@@ -283,7 +282,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerMimicWorldMap(@NotNull Json json) {
+    public static void registerMimicWorldMap(Json json) {
         json.addClassTag("MmWW", MimicWorldMap.class);
         json.setSerializer(MimicWorldMap.class, new Json.Serializer<MimicWorldMap>() {
             @Override
@@ -308,7 +307,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerRotatingGlobeMap(@NotNull Json json) {
+    public static void registerRotatingGlobeMap(Json json) {
         json.addClassTag("RoGW", RotatingGlobeMap.class);
         json.setSerializer(RotatingGlobeMap.class, new Json.Serializer<RotatingGlobeMap>() {
             @Override
@@ -333,7 +332,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerRoundSideWorldMap(@NotNull Json json) {
+    public static void registerRoundSideWorldMap(Json json) {
         json.addClassTag("RoSW", RoundSideWorldMap.class);
         json.setSerializer(RoundSideWorldMap.class, new Json.Serializer<RoundSideWorldMap>() {
             @Override
@@ -358,7 +357,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerStretchWorldMap(@NotNull Json json) {
+    public static void registerStretchWorldMap(Json json) {
         json.addClassTag("SteW", StretchWorldMap.class);
         json.setSerializer(StretchWorldMap.class, new Json.Serializer<StretchWorldMap>() {
             @Override
@@ -383,7 +382,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerTilingWorldMap(@NotNull Json json) {
+    public static void registerTilingWorldMap(Json json) {
         json.addClassTag("TilW", TilingWorldMap.class);
         json.setSerializer(TilingWorldMap.class, new Json.Serializer<TilingWorldMap>() {
             @Override
@@ -408,7 +407,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSimpleBiomeMapper(@NotNull Json json) {
+    public static void registerSimpleBiomeMapper(Json json) {
         json.addClassTag("SiBM", SimpleBiomeMapper.class);
         json.setSerializer(SimpleBiomeMapper.class, new Json.Serializer<SimpleBiomeMapper>() {
             @Override
@@ -433,7 +432,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDetailedBiomeMapper(@NotNull Json json) {
+    public static void registerDetailedBiomeMapper(Json json) {
         json.addClassTag("DeBM", DetailedBiomeMapper.class);
         json.setSerializer(DetailedBiomeMapper.class, new Json.Serializer<DetailedBiomeMapper>() {
             @Override
@@ -458,7 +457,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerBlendedBiomeMapper(@NotNull Json json) {
+    public static void registerBlendedBiomeMapper(Json json) {
         json.addClassTag("BlBM", BlendedBiomeMapper.class);
         json.setSerializer(BlendedBiomeMapper.class, new Json.Serializer<BlendedBiomeMapper>() {
             @Override
@@ -483,7 +482,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerUnrealisticBiomeMapper(@NotNull Json json) {
+    public static void registerUnrealisticBiomeMapper(Json json) {
         json.addClassTag("UrBM", UnrealisticBiomeMapper.class);
         json.setSerializer(UnrealisticBiomeMapper.class, new Json.Serializer<UnrealisticBiomeMapper>() {
             @Override
@@ -507,7 +506,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerDetailedWorldMapView(@NotNull Json json) {
+    public static void registerDetailedWorldMapView(Json json) {
         json.addClassTag("DeWV", DetailedWorldMapView.class);
         registerDetailedBiomeMapper(json);
         registerWorldMapGenerators(json);
@@ -547,7 +546,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerSimpleWorldMapView(@NotNull Json json) {
+    public static void registerSimpleWorldMapView(Json json) {
         json.addClassTag("SiWV", SimpleWorldMapView.class);
         registerSimpleBiomeMapper(json);
         registerWorldMapGenerators(json);
@@ -587,7 +586,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerBlendedWorldMapView(@NotNull Json json) {
+    public static void registerBlendedWorldMapView(Json json) {
         json.addClassTag("BlWV", BlendedWorldMapView.class);
         registerBlendedBiomeMapper(json);
         registerWorldMapGenerators(json);
@@ -617,7 +616,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerUnrealisticWorldMapView(@NotNull Json json) {
+    public static void registerUnrealisticWorldMapView(Json json) {
         json.addClassTag("UnWV", UnrealisticWorldMapView.class);
         registerUnrealisticBiomeMapper(json);
         registerWorldMapGenerators(json);
@@ -646,7 +645,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerFaction(@NotNull Json json) {
+    public static void registerFaction(Json json) {
         json.addClassTag("Facn", Faction.class);
         json.setSerializer(Faction.class, new Json.Serializer<Faction>() {
             @Override
@@ -684,7 +683,7 @@ public final class JsonWorld {
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
-    public static void registerPoliticalMapper(@NotNull Json json) {
+    public static void registerPoliticalMapper(Json json) {
         json.addClassTag("PolM", PoliticalMapper.class);
         JsonSupport.registerIntObjectOrderedMap(json);
         registerFaction(json);

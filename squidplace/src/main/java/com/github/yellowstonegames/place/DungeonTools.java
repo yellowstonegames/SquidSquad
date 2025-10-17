@@ -442,7 +442,7 @@ public class DungeonTools {
      * diameter is {@code (radius * 2) + 1}.
      * @see Radius#inCircle(int, int, int, boolean, int, int, List) if you want to keep the Coords within the bounds of the map
      */
-    public static List<Coord> circle(int x, int y, int radius, /* @Nullable */ List<Coord> buf) {
+    public static List<Coord> circle(int x, int y, int radius, /* */ List<Coord> buf) {
         final List<Coord> result = buf == null ? new ObjectList<>() : buf;
         radius = Math.max(0, radius);
         for (int dx = -radius; dx <= radius; ++dx) {

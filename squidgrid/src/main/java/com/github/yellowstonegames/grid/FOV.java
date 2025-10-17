@@ -24,7 +24,6 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
 import com.github.yellowstonegames.core.annotations.Beta;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 
 import static com.github.yellowstonegames.grid.OrthoLine.reachable;
@@ -381,7 +380,7 @@ public final class FOV {
      * @param startY        the vertical component of the starting location
      * @return the computed light grid, which is the same 2D array as the value assigned to {@code light}
      */
-    public static Region reuseLOS(@NotNull Region blockingMap, @NotNull Region light, int startX, int startY)
+    public static Region reuseLOS(Region blockingMap, Region light, int startX, int startY)
     {
         return reuseLOS(blockingMap, light, startX, startY, 0, 0, light.width, light.height);
     }
@@ -410,7 +409,7 @@ public final class FOV {
      * @param maxY exclusive highest y position to assign to or process in {@code light}
      * @return the computed light grid, which is the same 2D array as the value assigned to {@code light}
      */
-    public static Region reuseLOS(@NotNull Region blockingMap, @NotNull Region light, int startX, int startY,
+    public static Region reuseLOS(Region blockingMap, Region light, int startX, int startY,
                                   int minX, int minY, int maxX, int maxY)
     {
         float radius = (maxX - minX) + (maxY - minY);

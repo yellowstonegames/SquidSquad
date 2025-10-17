@@ -10,9 +10,6 @@ dependencies {
     api project(':squidplace')
     api project(':squidtext')
 
-//    compileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-    testCompileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-
     testImplementation project(':squidglyph')
     testImplementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
 

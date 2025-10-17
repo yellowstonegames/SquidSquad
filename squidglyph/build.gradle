@@ -9,9 +9,6 @@ dependencies {
     api "com.github.tommyettinger:textratypist:$typistVersion"
 	api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-    compileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-    testCompileOnly "org.jetbrains:annotations:$jbAnnotations"  // provides nullity annotations
-
     testImplementation project(':squidplace')
     testImplementation project(':squidtext')
     testImplementation project(':squidpath')

@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.seek.technique;
 
 import com.github.yellowstonegames.grid.Radius;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A struct-like class that holds information about targeting rules for actions or other effects that reach from one
@@ -44,7 +43,7 @@ public class Reach {
      * than those from distance), but can also be set to ORTHOGONAL (rook move in chess), DIAGONAL (bishop move in
      * chess), EIGHT_WAY (queen or king move in chess), or null (which usually is equivalent to FREE).
      */
-    public @Nullable AimLimit limit;
+    public AimLimit limit;
     /**
      * Determines how distance will be measured. SQUARE or CUBE correspond to 8-way or Chebyshev movement, DIAMOND or
      * OCTAHEDRON correspond to 4-way or Manhattan movement, and CIRCLE or SPHERE correspond to Euclidean movement.

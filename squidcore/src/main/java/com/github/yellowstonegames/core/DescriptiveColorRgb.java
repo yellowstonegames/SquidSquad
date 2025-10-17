@@ -23,7 +23,6 @@ import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.function.FloatToFloatFunction;
 import com.github.yellowstonegames.core.annotations.Beta;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A palette, the same as the one in {@link DescriptiveColor}, just using RGBA8888 ints instead of Oklab ints for
@@ -2481,9 +2480,9 @@ public final class DescriptiveColorRgb {
      */
     @Beta
     public static int evaluateHsl(final int rgba,
-                                  @Nullable FloatToFloatFunction hueTransform,
-                                  @Nullable FloatToFloatFunction saturationTransform,
-                                  @Nullable FloatToFloatFunction lightnessTransform) {
+                                  FloatToFloatFunction hueTransform,
+                                  FloatToFloatFunction saturationTransform,
+                                  FloatToFloatFunction lightnessTransform) {
         float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float x, y, z, w;
         if (g < b) {
@@ -2547,9 +2546,9 @@ public final class DescriptiveColorRgb {
      */
     @Beta
     public static int evaluateHcl(final int rgba,
-                                  @Nullable FloatToFloatFunction hueTransform,
-                                  @Nullable FloatToFloatFunction chromaTransform,
-                                  @Nullable FloatToFloatFunction lightnessTransform) {
+                                  FloatToFloatFunction hueTransform,
+                                  FloatToFloatFunction chromaTransform,
+                                  FloatToFloatFunction lightnessTransform) {
         float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float x, y, z, w;
         if (g < b) {
@@ -2612,9 +2611,9 @@ public final class DescriptiveColorRgb {
      */
     @Beta
     public static int evaluateHsb(final int rgba,
-                                  @Nullable FloatToFloatFunction hueTransform,
-                                  @Nullable FloatToFloatFunction saturationTransform,
-                                  @Nullable FloatToFloatFunction brightnessTransform) {
+                                  FloatToFloatFunction hueTransform,
+                                  FloatToFloatFunction saturationTransform,
+                                  FloatToFloatFunction brightnessTransform) {
         float r = (rgba >>> 24) / 255f, g = (rgba >>> 16 & 255) / 255f, b = (rgba >>> 8 & 255) / 255f;
         float v = Math.max(Math.max(r, g), b);
         float n = Math.min(Math.min(r, g), b);
