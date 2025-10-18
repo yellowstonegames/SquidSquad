@@ -164,6 +164,13 @@ public final class MoreActions {
             return this;
         }
     }
+
+    static {
+        // required since libGDX 1.14.0
+        Actions.ACTION_POOLS.addPool(LenientParallelAction::new);
+        Actions.ACTION_POOLS.addPool(LenientSequenceAction::new);
+    }
+
     public static LenientSequenceAction sequence (Action action1) {
         LenientSequenceAction action = action(LenientSequenceAction.class);
         action.addAction(action1);
