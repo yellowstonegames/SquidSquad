@@ -313,23 +313,19 @@ public class TwistTest extends ApplicationAdapter {
         recolor();
         handleHeldKeys();
 
-        if(!gg.areChildrenActing() && !awaitedMoves.isEmpty())
-        {
-            Coord m = awaitedMoves.removeFirst();
-            if (!toCursor.isEmpty())
-                toCursor.removeFirst();
-            move(playerGlyph.getLocation().toGoTo(m));
-        }
-        else {
-            if (!gg.areChildrenActing()) {
+        if(!gg.areChildrenActing()) {
+            if (!awaitedMoves.isEmpty()) {
+                Coord m = awaitedMoves.removeFirst();
+                if (!toCursor.isEmpty())
+                    toCursor.removeFirst();
+                move(playerGlyph.getLocation().toGoTo(m));
+            } else {
 //                postMove();
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
                 // re-calculate the distances from all cells to the player. We don't need to calculate this information on
                 // each part of a many-cell move (just the end), nor do we need to calculate it whenever the mouse moves.
-                if (awaitedMoves.isEmpty()) {
-                    // randomize the TwistedLine once the path is complete
-                    playerToCursor.randomize();
-                }
+                // randomize the TwistedLine once the path is complete
+                playerToCursor.randomize();
             }
         }
 

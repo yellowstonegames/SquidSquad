@@ -325,20 +325,19 @@ public class LightingRgbVFTest extends ApplicationAdapter {
 
     @Override
     public void render() {
+        recolor();
+        handleHeldKeys();
 
-        if(!gg.areChildrenActing() && !awaitedMoves.isEmpty())
-        {
-            Coord m = awaitedMoves.removeFirst();
-            if (!toCursor.isEmpty())
-                toCursor.removeFirst();
-            move(playerGlyph.getLocation().toGoTo(m));
-        }
-        else if (!gg.areChildrenActing()) {
-//                postMove();
-            // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
-            // re-calculate the distances from all cells to the player. We don't need to calculate this information on
-            // each part of a many-cell move (just the end), nor do we need to calculate it whenever the mouse moves.
-            if (awaitedMoves.isEmpty()) {
+        if (!gg.areChildrenActing()) {
+            if (!awaitedMoves.isEmpty()) {
+                Coord m = awaitedMoves.removeFirst();
+                if (!toCursor.isEmpty())
+                    toCursor.removeFirst();
+                move(playerGlyph.getLocation().toGoTo(m));
+            } else {
+                // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
+                // re-calculate the distances from all cells to the player. We don't need to calculate this information on
+                // each part of a many-cell move (just the end), nor do we need to calculate it whenever the mouse moves.
                 // the next two lines remove any lingering data needed for earlier paths
                 playerToCursor.clearGoals();
                 playerToCursor.resetMap();
@@ -354,10 +353,7 @@ public class LightingRgbVFTest extends ApplicationAdapter {
                 // GreasedRegion that contains the cells just past the edge of the player's FOV area.
                 playerToCursor.partialScan(13, vision.blockage);
             }
-        } else {
-            handleHeldKeys();
         }
-        recolor();
 
         ScreenUtils.clear(Color.BLACK);
         Camera camera = gg.viewport.getCamera();

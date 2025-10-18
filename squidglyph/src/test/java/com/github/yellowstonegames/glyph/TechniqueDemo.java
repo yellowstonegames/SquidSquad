@@ -347,8 +347,6 @@ public class TechniqueDemo extends ApplicationAdapter {
     @Override
     public void render () {
         ScreenUtils.clear(0.13333334f, 0.1254902f, 0.20392157f, 1f); // DB_INK
-        // not sure if this is always needed...
-        Gdx.gl.glEnable(GL20.GL_BLEND);
 
         putMap();
 

@@ -305,26 +305,24 @@ public class TwistVFTest extends ApplicationAdapter {
 
     @Override
     public void render() {
-        if(!gg.areChildrenActing() && !awaitedMoves.isEmpty())
-        {
-            Coord m = awaitedMoves.removeFirst();
-            if (!toCursor.isEmpty())
-                toCursor.removeFirst();
-            move(playerGlyph.getLocation().toGoTo(m));
-        }
-        else if (!gg.areChildrenActing()) {
-//                postMove();
+        recolor();
+        handleHeldKeys();
+
+        if (!gg.areChildrenActing()) {
+            if (!awaitedMoves.isEmpty()) {
+                Coord m = awaitedMoves.removeFirst();
+                if (!toCursor.isEmpty())
+                    toCursor.removeFirst();
+                move(playerGlyph.getLocation().toGoTo(m));
+            } else {
                 // this only happens if we just removed the last Coord from awaitedMoves, and it's only then that we need to
                 // re-calculate the distances from all cells to the player. We don't need to calculate this information on
                 // each part of a many-cell move (just the end), nor do we need to calculate it whenever the mouse moves.
-                if (awaitedMoves.isEmpty()) {
-                    // randomize the TwistedLine once the path is complete
-                    playerToCursor.randomize();
-                }
-        } else {
-            handleHeldKeys();
+                // randomize the TwistedLine once the path is complete
+                playerToCursor.randomize();
+
+            }
         }
-        recolor();
 
         ScreenUtils.clear(Color.BLACK);
         Camera camera = gg.viewport.getCamera();
