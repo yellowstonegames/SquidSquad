@@ -27,6 +27,12 @@ import com.github.yellowstonegames.grid.*;
 
 import java.util.List;
 
+/**
+ * {@link com.badlogic.gdx.scenes.scene2d.Action} types that operate on potentially multiple {@link GlyphGrid} cells.
+ * These are not pooled and are not compatible with the pooling done by
+ * {@link com.badlogic.gdx.scenes.scene2d.actions.Actions}; create a GridAction type with a constructor, which always
+ * requires a GlyphGrid to operate upon.
+ */
 public abstract class GridAction extends TemporalAction {
     /**
      * A randomly-seeded random number generator that is meant to be used only for visual effects that don't change
@@ -57,7 +63,14 @@ public abstract class GridAction extends TemporalAction {
         setDuration(duration);
         this.valid = valid == null ? new Region(targeting.gridWidth, targeting.gridHeight).allOn() : valid;
     }
-    
+
+    /**
+     * A GridAction that draws a blast of changing background colors in a given radius, potentially avoiding changing
+     * the colors of solid obstacles defined by a {@link #lightMap}. Various preset color options are available and
+     * can be called on a newly-created ExplosionAction before it is drawn, such as {@link #useMistyColors()},
+     * {@link #useElectricColors()}, and {@link #useAcridColors()}. You can also pass in completely custom colors to
+     * the constructor
+     */
     public static class ExplosionAction extends GridAction {
         /**
          * Normally you should set this in the constructor, and not change it later.
@@ -68,12 +81,13 @@ public abstract class GridAction extends TemporalAction {
          */
         public int radius = 2;
         /**
+         * Exactly seven (7) colors as RGBA8888 ints to use for the different phases and intensities of the blast.
          * The default explosion colors are normal for (non-chemical, non-electrical) fire and smoke, going from orange
          * at the start to yellow, very light yellow, and then back to a different orange before going to smoke and
          * fading out to translucent and then transparent by the end.
          * <br>
          * If you want to change the colors the explosion uses, you can either pass an IntList of RGBA8888 colors to the
-         * constructor or change this array directly.
+         * constructor or change this array directly. The constructors can use different sizes of color arrays/lists.
          */
         public int[] colors = {
                 (0xFF4F00FF), // SColor.INTERNATIONAL_ORANGE
@@ -645,6 +659,11 @@ public abstract class GridAction extends TemporalAction {
             }
         }
     }
+
+    /**
+     * A variant on {@link ExplosionAction} that uses continuous noise to remove a set of cells from the affected area
+     * that changes over time. This makes a more foggy or gas-like appearance and works well with longer durations.
+     */
     public static class CloudAction extends ExplosionAction
     {
         public CloudAction(GlyphGrid targeting, Coord center, int radius) {
@@ -696,6 +715,11 @@ public abstract class GridAction extends TemporalAction {
             }
         }
     }
+
+    /**
+     * A variant on {@link ExplosionAction} that shows waves of different colors extend in circles from the center
+     * of the burst.
+     */
     public static class PulseAction extends ExplosionAction
     {
         public PulseAction(GlyphGrid targeting, Coord center, int radius) {
@@ -747,6 +771,9 @@ public abstract class GridAction extends TemporalAction {
         }
     }
 
+    /**
+     * Changes the color tint of one or more cells on a GlyphGrid for some amount of time.
+     */
     public static class TintAction extends GridAction {
         /**
          * A 2D array of what RGBA8888 colors to tint what cells; alpha is used to determine how much each cell is
