@@ -20,6 +20,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.function.IntIntPredicate;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.ArrayTools;
@@ -944,6 +945,31 @@ public class Region implements Collection<Coord> {
             tallied = false;
             return this;
         }
+    }
+
+    /**
+     * Constructs a Region with the given width and height by calling {@code decider}'s functional method on each x,y
+     * position for x from 0 (inclusive) to width (exclusive) and for y from 0 (inclusive) to height (exclusive). If
+     * {@code decider} returns true for an x,y position, that position will be "on", otherwise it will be "off".
+     *
+     * @param decider a function that takes an int x and an int y and returns true if that position should be "on"
+     * @param width the width of the desired Region
+     * @param height the height of the desired Region
+     */
+    public Region(final IntIntPredicate decider, final int width, final int height)
+    {
+        this.width = width;
+        this.height = height;
+        ySections = (height + 63) >> 6;
+        yEndMask = -1L >>> (64 - (height & 63));
+        data = new long[width * ySections];
+        for (int x = 0, xs = 0; x < width; x++, xs += ySections) {
+            for (int y = 0; y < height; y++) {
+                if(decider.test(x, y)) data[xs + (y >> 6)] |= 1L << (y & 63);
+            }
+        }
+        counts = new int[width * ySections];
+        tallied = false;
     }
 
     /**
