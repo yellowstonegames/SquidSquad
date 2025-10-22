@@ -727,7 +727,7 @@ public class Region implements Collection<Coord> {
      * @param map a float[][] that probably relates in some way to DijkstraMap.
      * @param lowerBound lower inclusive; any float lower than this will be off, any equal to or greater than this,
      *                   but less than upper, will be on
-     * @param upperBound upper exclusive; any float greater than or equal to this this will be off, any doubles both
+     * @param upperBound upper exclusive; any float greater than or equal to this will be off, any floats both
      *                   less than this and equal to or greater than lower will be on
      */
     public Region(final float[][] map, final float lowerBound, final float upperBound)
@@ -795,7 +795,7 @@ public class Region implements Collection<Coord> {
      * @param map a float[][]; depending on scale, the Region may have different width and height
      * @param lowerBound lower inclusive; any float lower than this will be off, any equal to or greater than this,
      *                   but less than upper, will be on
-     * @param upperBound upper exclusive; any float greater than or equal to this this will be off, any doubles both
+     * @param upperBound upper exclusive; any float greater than or equal to this will be off, any floats both
      *                   less than this and equal to or greater than lower will be on
      * @param scale      the size of the square of cells in this that each "on" value in map will correspond to
      */
@@ -834,7 +834,7 @@ public class Region implements Collection<Coord> {
      * @param map a float[][]; depending on scale, the Region may have different width and height
      * @param lowerBound lower inclusive; any float lower than this will be off, any equal to or greater than this,
      *                   but less than upper, will be on
-     * @param upperBound upper exclusive; any float greater than or equal to this this will be off, any doubles both
+     * @param upperBound upper exclusive; any float greater than or equal to this will be off, any floats both
      *                   less than this and equal to or greater than lower will be on
      * @param scale      the size of the square of cells in this that each "on" value in map will correspond to
      * @return this for chaining
@@ -2533,13 +2533,13 @@ public class Region implements Collection<Coord> {
         if(map == null || map.length == 0)
             return new float[0][0];
         int width2 = Math.min(width, map.length), height2 = Math.min(height, map[0].length);
-        float[][] doubles = new float[width2][height2];
+        float[][] floats = new float[width2][height2];
         for (int x = 0; x < width2; x++) {
             for (int y = 0; y < height2; y++) {
-                doubles[x][y] = (data[x * ySections + (y >> 6)] & (1L << (y & 63))) != 0 ? toWrite : map[x][y];
+                floats[x][y] = (data[x * ySections + (y >> 6)] & (1L << (y & 63))) != 0 ? toWrite : map[x][y];
             }
         }
-        return doubles;
+        return floats;
     }
 
     /**
@@ -4312,6 +4312,7 @@ public class Region implements Collection<Coord> {
      * is called. This method is useful for imitating the movement of fluids like water or smoke within some boundaries.
      * <br>
      * This method allocates two temporary Regions used by {@link #spill(Region, int, EnhancedRandom, Region, Region)}.
+     *
      * @param bounds this Region will only expand to cells that are "on" in bounds; bounds should overlap with this
      * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
      * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
@@ -4328,6 +4329,7 @@ public class Region implements Collection<Coord> {
      * <br>
      * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating new Regions if
      * you have two with the same size as this, to use as working space.
+     *
      * @param bounds this Region will only expand to cells that are "on" in bounds; bounds should overlap with this
      * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
      * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
@@ -5873,7 +5875,7 @@ public class Region implements Collection<Coord> {
      * {@code 1, 10, 100, 1000}, then the results can vary between 0 and 1111, where 1111 is only if all Regions
      * have a cell as "on." The weights array must have a length at least equal to the length of the regions array.
      * @param regions an array of Regions; must all have the same width and height
-     * @param weights an array of doubles; must have length at least equal to regions' length
+     * @param weights an array of floats; must have length at least equal to regions' length
      * @return a 2D float array with the same width and height as the regions, where an float cell equals the sum of the weights corresponding to Regions that had an "on" cell at that position
      */
     public static float[][] sumWeightedFloat(Region[] regions, float[] weights)
