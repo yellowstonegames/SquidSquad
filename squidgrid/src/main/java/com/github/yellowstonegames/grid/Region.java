@@ -961,12 +961,12 @@ public class Region implements Collection<Coord> {
         ySections = (this.height + 63) >> 6;
         yEndMask = -1L >>> (64 - (this.height & 63));
         data = new long[this.width * ySections];
-        if(decider != null)
-        {for (int x = 0, xs = 0; x < this.width; x++, xs += ySections) {
-            for (int y = 0; y < this.height; y++) {
-                if(decider.test(x, y)) data[xs + (y >> 6)] |= 1L << (y & 63);
+        if(decider != null) {
+            for (int x = 0, xs = 0; x < this.width; x++, xs += ySections) {
+                for (int y = 0; y < this.height; y++) {
+                    if (decider.test(x, y)) data[xs + (y >> 6)] |= 1L << (y & 63);
+                }
             }
-        }
         }
         counts = new int[this.width * ySections];
         tallied = false;
@@ -996,6 +996,73 @@ public class Region implements Collection<Coord> {
             for (int x = 0, xs = 0; x < this.width; x++, xs += ySections) {
                 for (int y = 0; y < this.height; y++) {
                     if (decider.test(x, y)) data[xs + (y >> 6)] |= 1L << (y & 63);
+                }
+            }
+        }
+        tallied = false;
+        return this;
+    }
+
+
+    /**
+     * Constructs a Region with the given width and height by calling {@link INoise#getNoise(float, float)}
+     * position for x from 0 (inclusive) to width (exclusive) and for y from 0 (inclusive) to height (exclusive). If
+     * this returns a float between {@code lower} (inclusive) and {@code upper} (exclusive) for an x,y position, that
+     * position will be "on", otherwise it will be "off".
+     *
+     * @param noise a noise generator that will have 2D noise queried from it with its default seed
+     * @param lower inclusive lower bound on noise results that will be considered "on"; usually between -1 and 1
+     * @param upper exclusive upper bound on noise results that will be considered "on"; usually between -1 and 1
+     * @param width the width of the desired Region
+     * @param height the height of the desired Region
+     */
+    public Region(final INoise noise, final float lower, final float upper, final int width, final int height)
+    {
+        this.width = Math.max(width, 0);
+        this.height = Math.max(height, 0);
+        ySections = (this.height + 63) >> 6;
+        yEndMask = -1L >>> (64 - (this.height & 63));
+        data = new long[this.width * ySections];
+        if(noise != null) {
+            for (int x = 0, xs = 0; x < this.width; x++, xs += ySections) {
+                for (int y = 0; y < this.height; y++) {
+                    float n = noise.getNoise(x, y);
+                    if (n >= lower && n < upper) data[xs + (y >> 6)] |= 1L << (y & 63);
+                }
+            }
+        }
+        counts = new int[this.width * ySections];
+        tallied = false;
+    }
+    /**
+     * Reassigns this Region with the given function to decide which positions will be "on", reusing the current data
+     * storage (without extra allocations) if this.width == width and this.height == height. If
+     * this returns a float between {@code lower} (inclusive) and {@code upper} (exclusive) for an x,y position, that
+     * position will be "on", otherwise it will be "off".
+     *
+     * @param noise a noise generator that will have 2D noise queried from it with its default seed
+     * @param lower inclusive lower bound on noise results that will be considered "on"; usually between -1 and 1
+     * @param upper exclusive upper bound on noise results that will be considered "on"; usually between -1 and 1
+     * @param width the width of the desired Region
+     * @param height the height of the desired Region
+     * @return this for chaining
+     */
+    public Region refill(final INoise noise, final float lower, final float upper, final int width, final int height) {
+        if (this.width == width && this.height == height) {
+            Arrays.fill(data, 0L);
+        } else {
+            this.width = Math.max(width, 0);
+            this.height = Math.max(height, 0);
+            ySections = (this.height + 63) >> 6;
+            yEndMask = -1L >>> (64 - (this.height & 63));
+            data = new long[this.width * ySections];
+            counts = new int[this.width * ySections];
+        }
+        if(noise != null) {
+            for (int x = 0, xs = 0; x < this.width; x++, xs += ySections) {
+                for (int y = 0; y < this.height; y++) {
+                    float n = noise.getNoise(x, y);
+                    if (n >= lower && n < upper) data[xs + (y >> 6)] |= 1L << (y & 63);
                 }
             }
         }
