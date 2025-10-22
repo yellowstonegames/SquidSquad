@@ -928,11 +928,9 @@ public class Region implements Collection<Coord> {
             for (int a = 0, x = 0, y = 0; a < bits.length; a++, x = a / height, y = a % height) {
                 data[x * ySections + (y >> 6)] |= (bits[a] ? 1L : 0L) << (y & 63);
             }
-            tallied = false;
-            return this;
         } else {
             this.width = (bits == null || width < 0) ? 0 : width;
-            this.height = (bits == null || bits.length <= 0 || height < 0) ? 0 : height;
+            this.height = (bits == null || bits.length == 0 || height < 0) ? 0 : height;
             ySections = (this.height + 63) >> 6;
             yEndMask = -1L >>> (64 - (this.height & 63));
             data = new long[this.width * ySections];
@@ -941,10 +939,10 @@ public class Region implements Collection<Coord> {
                     if (bits[a]) data[x * ySections + (y >> 6)] |= 1L << (y & 63);
                 }
             }
-            counts = new int[width * ySections];
-            tallied = false;
-            return this;
+            counts = new int[this.width * ySections];
         }
+        tallied = false;
+        return this;
     }
 
     /**
@@ -958,18 +956,51 @@ public class Region implements Collection<Coord> {
      */
     public Region(final IntIntPredicate decider, final int width, final int height)
     {
-        this.width = width;
-        this.height = height;
-        ySections = (height + 63) >> 6;
-        yEndMask = -1L >>> (64 - (height & 63));
-        data = new long[width * ySections];
-        for (int x = 0, xs = 0; x < width; x++, xs += ySections) {
-            for (int y = 0; y < height; y++) {
+        this.width = Math.max(width, 0);
+        this.height = Math.max(height, 0);
+        ySections = (this.height + 63) >> 6;
+        yEndMask = -1L >>> (64 - (this.height & 63));
+        data = new long[this.width * ySections];
+        if(decider != null)
+        {for (int x = 0, xs = 0; x < this.width; x++, xs += ySections) {
+            for (int y = 0; y < this.height; y++) {
                 if(decider.test(x, y)) data[xs + (y >> 6)] |= 1L << (y & 63);
             }
         }
-        counts = new int[width * ySections];
+        }
+        counts = new int[this.width * ySections];
         tallied = false;
+    }
+    /**
+     * Reassigns this Region with the given function to decide which positions will be "on", reusing the current data
+     * storage (without extra allocations) if this.width == width and this.height == height. If
+     * {@code decider} returns true for an x,y position, that position will be "on", otherwise it will be "off".
+     *
+     * @param decider a function that takes an int x and an int y and returns true if that position should be "on"
+     * @param width the width of the desired Region
+     * @param height the height of the desired Region
+     * @return this for chaining
+     */
+    public Region refill(final IntIntPredicate decider, final int width, final int height) {
+        if (this.width == width && this.height == height) {
+            Arrays.fill(data, 0L);
+        } else {
+            this.width = Math.max(width, 0);
+            this.height = Math.max(height, 0);
+            ySections = (this.height + 63) >> 6;
+            yEndMask = -1L >>> (64 - (this.height & 63));
+            data = new long[this.width * ySections];
+            counts = new int[this.width * ySections];
+        }
+        if(decider != null) {
+            for (int x = 0, xs = 0; x < this.width; x++, xs += ySections) {
+                for (int y = 0; y < this.height; y++) {
+                    if (decider.test(x, y)) data[xs + (y >> 6)] |= 1L << (y & 63);
+                }
+            }
+        }
+        tallied = false;
+        return this;
     }
 
     /**
