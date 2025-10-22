@@ -4285,6 +4285,8 @@ public class Region implements Collection<Coord> {
      * the "on" cells of {@code bounds}, until {@link #size()} is equal to {@code volume} or there are no more cells
      * this can expand into. This Region acts as the initial state, and often contains just one cell before this
      * is called. This method is useful for imitating the movement of fluids like water or smoke within some boundaries.
+     * <br>
+     * This method allocates two temporary Regions used by {@link #spill(Region, int, EnhancedRandom, Region, Region)}.
      * @param bounds this Region will only expand to cells that are "on" in bounds; bounds should overlap with this
      * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
      * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
@@ -4299,8 +4301,8 @@ public class Region implements Collection<Coord> {
      * this can expand into. This Region acts as the initial state, and often contains just one cell before this
      * is called. This method is useful for imitating the movement of fluids like water or smoke within some boundaries.
      * <br>
-     * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating a new Region if
-     * you have one with the same size as this, to use as working space.
+     * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating new Regions if
+     * you have two with the same size as this, to use as working space.
      * @param bounds this Region will only expand to cells that are "on" in bounds; bounds should overlap with this
      * @param volume the maximum {@link #size()} this Region can reach before this stops expanding
      * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
@@ -4319,8 +4321,8 @@ public class Region implements Collection<Coord> {
                 else temp2.remake(this);
                 temp.notAnd(bounds);
                 long[] boundsData = temp.data;
-                temp2.remake(this).fringe().and(bounds).tally();
-                if (temp2.ct > 0) {
+                temp2.remake(this).fringe().and(bounds);
+                if (temp2.size() > 0) {
                     Coord c;
                     int x, y, p;
                     for (int i = current; i < volume; i++) {
@@ -4346,8 +4348,7 @@ public class Region implements Collection<Coord> {
                             if (x > 0 && (boundsData[p = (x - 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
                                 temp2.data[p] |= 1L << (y & 63);
                             }
-                            temp2.tally();
-                            if (temp2.ct <= 0) break;
+                            if (temp2.size() == 0) break;
                         }
                     }
                     tallied = false;
@@ -5033,8 +5034,7 @@ public class Region implements Collection<Coord> {
     public Region randomScatter(EnhancedRandom rng, int minimumDistance, int limit) {
         Region result = this;
         int tmp, total = 0, ct;
-        tally();
-        if (this.ct == 0) {
+        if (this.size() == 0) {
         } else if (limit == 0) {
             result = empty();
         } else {
@@ -5044,9 +5044,7 @@ public class Region implements Collection<Coord> {
             long[] data2 = new long[data.length];
             MAIN_LOOP:
             while (total < limit) {
-                if (!tallied)
-                    tally();
-                tmp = rng.nextInt(this.ct);
+                tmp = rng.nextInt(this.size());
 
                 for (int s = 0; s < ySections; s++) {
                     for (int x = 0; x < width; x++) {
