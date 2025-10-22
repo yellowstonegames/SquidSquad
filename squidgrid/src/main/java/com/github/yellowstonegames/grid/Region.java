@@ -4269,13 +4269,38 @@ public class Region implements Collection<Coord> {
      * inside the "on" cells of {@code bounds}. This Region acts as the initial state, and often contains just one cell
      * before this is called. This method is useful for imitating the movement of fluids like water or smoke within some
      * boundaries, stepping one-cell-at-a-time instead of how {@link #spill(Region, int, EnhancedRandom)} fills a whole volume.
+     * <br>
+     * This overload allocates a Region used by {@link #splash(Region, EnhancedRandom, Region)}.
+     *
      * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
      * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
      * @return this, after expanding randomly once, for chaining
      */
     public Region splash(Region bounds, EnhancedRandom rng) {
+        return splash(bounds, rng, null);
+    }
+
+    /**
+     * A randomized flood-fill that modifies this Region so it randomly adds one adjacent cell if it can while staying
+     * inside the "on" cells of {@code bounds}. This Region acts as the initial state, and often contains just one cell
+     * before this is called. This method is useful for imitating the movement of fluids like water or smoke within some
+     * boundaries, stepping one-cell-at-a-time instead of how {@link #spill(Region, int, EnhancedRandom)} fills a whole volume.
+     * <br>
+     * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating a new Region if
+     * you have one with the same size as this, to use as working space.
+     *
+     * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
+     * @param rng a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
+     * @param temp another Region that will be cleared and used as a temporary buffer; optimally the same size as this
+     * @return this, after expanding randomly once, for chaining
+     */
+    public Region splash(Region bounds, EnhancedRandom rng, Region temp) {
         if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
-            insert(new Region(this).fringe().and(bounds).singleRandom(rng));
+            if(temp == null) temp = new Region(this);
+            else temp.remake(this);
+            // even if the fringe doesn't overlap with bounds, singleRandom() will produce a Coordthat won't be a
+            // problem: it would produce (-1,-1), which won't change this during insert().
+            insert(temp.fringe().and(bounds).singleRandom(rng));
         }
         return this;
     }
