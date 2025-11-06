@@ -4566,7 +4566,7 @@ public class Region implements Collection<Coord> {
                     {
                         w = BitConversion.lowestOneBit(t);
                         while (w != 0) {
-                            y = (s << 6) | Long.numberOfTrailingZeros(w));
+                            y = (s << 6) | Long.numberOfTrailingZeros(w);
                             if(decider.test(x, y))
                                 insert(x, y);
                             t ^= w;
