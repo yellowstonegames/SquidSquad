@@ -147,6 +147,11 @@ public interface INoise extends Externalizable {
      * {@link #stringDeserialize(String)} to identify the portion of a String that can be read back. The
      * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
      * <br>
+     * If you use {@link com.github.tommyettinger.digital.Base} to produce String representations for numeric fields
+     * in an INoise, {@link com.github.tommyettinger.digital.Base#BASE10} is strongly recommended; in most cases, you
+     * can just use string concatenation with the fields separated by the tilde character, {@code "~"}. For printing
+     * a float {@code field} with Base to a StringBuilder {@code sb}, use {@code Base.BASE10.appendGeneral(sb, field)}.
+     * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in
      * {@link Serializer} unless they do implement this, {@link #getTag()}, {@link #stringDeserialize(String)}, and
@@ -160,6 +165,10 @@ public interface INoise extends Externalizable {
     /**
      * Given a serialized String produced by {@link #stringSerialize()}, reassigns this INoise to have the described
      * state from the given String. The serialized String must have been produced by the same class as this object is.
+     * <br>
+     * Any class that implements {@link #stringSerialize()} should also implement this method in a compatible way. Using
+     * base-10 is expected for most uses. Using {@code Base.BASE10.readFloat(data, start, end)} may be useful to parse
+     * only the part of data between start and end.
      * <br>
      * The default implementation throws an {@link UnsupportedOperationException} only. INoise classes do not have to
      * implement any serialization methods, but they aren't serializable by the methods in this class or in

@@ -28,8 +28,15 @@ import static com.github.yellowstonegames.grid.IntPointHash.*;
 
 /**
  * A wide range of noise functions that can all be called from one configurable object. Originally from Jordan Peck's
- * FastNoise library (these functions are sometimes, but not always, very fast for noise that doesn't use the GPU). This
- * This also allows a lot of configuration, and the API is large. Some key parts to keep in mind:
+ * FastNoise library (these functions are sometimes, but not always, very fast for noise that doesn't use the GPU).
+ * This also allows a lot of configuration, and the API is large. This file is over 10,000 lines long (including Java
+ * source, comments, and blank lines), and navigating it is a challenge. If you are reading the source here, the newer
+ * approach for noise code added more recently is to implement {@link INoise}, like this, but to only implement one
+ * noise algorithm per INoise class, and to use {@link NoiseWrapper} to handle most of what this class does to produce
+ * a wider variety of noise "flavors." You can still use this class like any other INoise, including modifying its
+ * output with a {@link NoiseAdjustment} or even using a Noise in a NoiseWrapper.
+ * <br>
+ * Some key parts to keep in mind when using this class:
  * <ul>
  *     <li>The noise type, set with {@link #setNoiseType(int)}, controls what algorithm this uses to generate noise, and
  *     affects most of the other options. Choose a "_FRACTAL" noise type like {@link #SIMPLEX_FRACTAL} (the default) if

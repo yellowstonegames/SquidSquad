@@ -39,7 +39,15 @@ public class NoiseWrapper implements INoise {
     /**
      * A less common way to layer octaves of noise, where most results are biased toward higher values,
      * but "valleys" show up filled with much lower values.
-     * This probably has some good uses in 3D or higher noise, but it isn't used too frequently.
+     * <br>
+     * This works by finding "ridges" where the original noise produced values near 0.0, per octave, and
+     * producing outputs closer to -1.0 for original values closer to 0.0, but any original values further
+     * from 0.0 will produce outputs closer to 1.0. If a particular type of noise has a tendency to emit
+     * very mid-range output normally, using this fractal type will produce more low values, while if the
+     * original noise mostly emits extreme values (near 1.0 or -1.0), then this will produce more high ones.
+     * <br>
+     * This probably has some good uses in 3D or higher noise, but it isn't used too frequently. It can be
+     * seen as the inverse of the {@link #RIDGED_MULTI} fractal type.
      * <br>
      * Meant to be used with {@link #setFractalType(int)}.
      */
@@ -50,8 +58,18 @@ public class NoiseWrapper implements INoise {
      * some kinds of noise; {@link PerlinNoise} has mostly ridges along 45-degree angles,
      * {@link SimplexNoise} has many ridges along a triangular grid, and so on. {@link FoamNoise}
      * and {@link HoneyNoise} do well with this mode, though, and look something like lightning or
-     * bubbling fluids, respectively. Using FOAM or HONEY will have this look natural, but PERLIN in
-     * particular will look unnatural if the grid is visible.
+     * bubbling fluids, respectively. Some other INoise types based on Perlin or Simplex noise are meant
+     * to break up patterns in their ancestor, such as {@link PerlueNoise}, which gets rid of most
+     * "unnatural" artifacts from PerlinNoise.
+     * <br>
+     * This works by finding "ridges" where the original noise produced values near 0.0, per octave, and
+     * producing outputs closer to 1.0 for original values closer to 0.0, but any original values further
+     * from 0.0 will produce outputs closer to -1.0. If a particular type of noise has a tendency to emit
+     * very mid-range output normally, using this fractal type will produce more high values, while if the
+     * original noise mostly emits extreme values (near 1.0 or -1.0), then this will produce more low ones.
+     * <br>
+     * This is frequently used in terrain generation to produce mountain ridges. It can be seed as the
+     * inverse of the {@link #BILLOW} fractal type.
      * <br>
      * Meant to be used with {@link #setFractalType(int)}.
      */
