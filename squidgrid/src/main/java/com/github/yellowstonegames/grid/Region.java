@@ -4422,7 +4422,7 @@ public class Region implements Collection<Coord> {
         if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             if(temp == null) temp = new Region(this);
             else temp.remake(this);
-            // even if the fringe doesn't overlap with bounds, singleRandom() will produce a Coordthat won't be a
+            // even if the fringe doesn't overlap with bounds, singleRandom() will produce a Coord that won't be a
             // problem: it would produce (-1,-1), which won't change this during insert().
             insert(temp.fringe().and(bounds).singleRandom(rng));
         }
@@ -4507,6 +4507,76 @@ public class Region implements Collection<Coord> {
             }
         }
         return result;
+    }
+
+    /**
+     * A selective flood-fill that modifies this Region so it adds adjacent cells that {@code decider}
+     * evaluates to {@code true} for, if it can while staying inside the "on" cells of {@code bounds}. This Region acts
+     * as the initial state, and often contains just one cell before this is called. This method is useful for imitating
+     * the movement of fluids like water or smoke within some boundaries, stepping only to adjacent cells instead of how
+     * {@link #spill(Region, int, EnhancedRandom)} fills a whole volume, or how {@link #splash(Region, EnhancedRandom)}
+     * only steps to one random cell. The {@code decider} is often a lambda that calls an {@link INoise} type's 2D or 3D
+     * noise methods and compares to a threshold. If using 3D noise, changing {@code z} between calls will usually allow
+     * all cells to eventually be reached, but this can't be guaranteed, especially for extreme thresholds.
+     * <br>
+     * This only calls the decider's {@link IntIntPredicate#test(int, int)} method on cells adjacent to "on" cells in
+     * this that are also within {@code bounds}.
+     * <br>
+     * This overload allocates a Region used by {@link #stir(Region, IntIntPredicate, Region)}.
+     *
+     * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
+     * @param decider a function that takes two ints (x, y) and returns true if that position should be kept
+     * @return this, after expanding to adjacent cells where decider returned true, for chaining
+     */
+    public Region stir(Region bounds, IntIntPredicate decider) {
+        return stir(bounds, decider, null);
+    }
+
+    /**
+     * A selective flood-fill that modifies this Region so it adds adjacent cells that {@code decider}
+     * evaluates to {@code true} for, if it can while staying inside the "on" cells of {@code bounds}. This Region acts
+     * as the initial state, and often contains just one cell before this is called. This method is useful for imitating
+     * the movement of fluids like water or smoke within some boundaries, stepping only to adjacent cells instead of how
+     * {@link #spill(Region, int, EnhancedRandom)} fills a whole volume, or how {@link #splash(Region, EnhancedRandom)}
+     * only steps to one random cell. The {@code decider} is often a lambda that calls an {@link INoise} type's 2D or 3D
+     * noise methods and compares to a threshold. If using 3D noise, changing {@code z} between calls will usually allow
+     * all cells to eventually be reached, but this can't be guaranteed, especially for extreme thresholds.
+     * <br>
+     * This only calls the decider's {@link IntIntPredicate#test(int, int)} method on cells adjacent to "on" cells in
+     * this that are also within {@code bounds}.
+     * <br>
+     * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating a new Region if
+     * you have one with the same size as this, to use as working space.
+     *
+     * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
+     * @param decider a function that takes two ints (x, y) and returns true if that position should be kept
+     * @param temp another Region that will be cleared and used as a temporary buffer; optimally the same size as this
+     * @return this, after expanding to adjacent cells where decider returned true, for chaining
+     */
+    public Region stir(Region bounds, IntIntPredicate decider, Region temp) {
+        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+            if(temp == null) temp = new Region(this);
+            else temp.remake(this);
+            temp.fringe().and(bounds);
+            int y;
+            long t, w;
+            for (int x = 0; x < width; x++) {
+                for (int s = 0; s < ySections; s++) {
+                    if((t = data[x * ySections + s]) != 0)
+                    {
+                        w = BitConversion.lowestOneBit(t);
+                        while (w != 0) {
+                            y = (s << 6) | Long.numberOfTrailingZeros(w));
+                            if(decider.test(x, y))
+                                insert(x, y);
+                            t ^= w;
+                            w = BitConversion.lowestOneBit(t);
+                        }
+                    }
+                }
+            }
+        }
+        return this;
     }
 
     /**
