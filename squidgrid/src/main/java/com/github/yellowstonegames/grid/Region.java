@@ -4599,8 +4599,8 @@ public class Region implements Collection<Coord> {
      *
      * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
      * @param noise an INoise that will have its {@link INoise#getNoise(float, float)} method called per adjacent cell
-     * @param lowerBound between -1 and 1; if a result from noise at a cell is less than lowerBound, that cell won't be added
-     * @param upperBound between -1 and 1; if a result from noise at a cell is greater than or equal to upperBound, that cell won't be added
+     * @param lowerBound usually between -1 and 1; if a result from noise at a cell is less than lowerBound, that cell won't be added
+     * @param upperBound usually between -1 and 1; if a result from noise at a cell is greater than or equal to upperBound, that cell won't be added
      * @return this, after expanding to adjacent cells where the noise was within range, for chaining
      */
     public Region stir(Region bounds, INoise noise, float lowerBound, float upperBound) {
@@ -4620,7 +4620,7 @@ public class Region implements Collection<Coord> {
      * between -1.0 and 1.0, so both bounds are typically in that range or just outside it (to allow all low values or
      * all high values).
      * <br>
-     * This only calls the decider's {@link IntIntPredicate#test(int, int)} method on cells adjacent to "on" cells in
+     * This only calls noise's {@link INoise#getNoise(float, float)} method on cells adjacent to "on" cells in
      * this that are also within {@code bounds}.
      * <br>
      * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating a new Region if
@@ -4628,8 +4628,8 @@ public class Region implements Collection<Coord> {
      *
      * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
      * @param noise an INoise that will have its {@link INoise#getNoise(float, float)} method called per adjacent cell
-     * @param lowerBound if a result from noise at a cell is less than lowerBound, that cell won't be added
-     * @param upperBound if a result from noise at a cell is greater than or equal to upperBound, that cell won't be added
+     * @param lowerBound usually between -1 and 1; if a result from noise at a cell is less than lowerBound, that cell won't be added
+     * @param upperBound usually between -1 and 1; if a result from noise at a cell is greater than or equal to upperBound, that cell won't be added
      * @param temp another Region that will be cleared and used as a temporary buffer; optimally the same size as this
      * @return this, after expanding to adjacent cells where the noise was within range, for chaining
      */
@@ -4648,6 +4648,89 @@ public class Region implements Collection<Coord> {
                         while (w != 0) {
                             y = (s << 6) | Long.numberOfTrailingZeros(w);
                             float n = noise.getNoise(x, y);
+                            if(n >= lowerBound && n < upperBound)
+                                insert(x, y);
+                            t ^= w;
+                            w = BitConversion.lowestOneBit(t);
+                        }
+                    }
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * A selective flood-fill that modifies this Region so it adds adjacent cells where {@code noise.getNoise(x, y, z)}
+     * evaluates between {@code lowerBound} (inclusive) and {@code upperBound} (exclusive), if it can while staying
+     * inside the "on" cells of {@code bounds}. This allows specifying the z parameter here. This Region acts
+     * as the initial state, and often contains just one cell before this is called. This method is useful for imitating
+     * the movement of fluids like water or smoke within some boundaries, stepping only to adjacent cells instead of how
+     * {@link #spill(Region, int, EnhancedRandom)} fills a whole volume, or how {@link #splash(Region, EnhancedRandom)}
+     * only steps to one random cell. This requests 3D noise from noise, and the z parameter can change between calls;
+     * this can allow the noise to gradually change over multiple calls or multiple frames, which could allow spaces
+     * that previously couldn't be filled to become fillable. The result from each call to getNoise() should be
+     * between -1.0 and 1.0, so both bounds are typically in that range or just outside it (to allow all low values or
+     * all high values).
+     * <br>
+     * This only calls noise's {@link INoise#getNoise(float, float, float)} method on cells adjacent to "on" cells in
+     * this that are also within {@code bounds}.
+     * <br>
+     * This overload allocates a Region used by {@link #stir(Region, IntIntPredicate, Region)}.
+     *
+     * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
+     * @param noise an INoise that will have its {@link INoise#getNoise(float, float, float)} method called per adjacent cell
+     * @param z the third parameter to be passed to getNoise()
+     * @param lowerBound usually between -1 and 1; if a result from noise at a cell is less than lowerBound, that cell won't be added
+     * @param upperBound usually between -1 and 1; if a result from noise at a cell is greater than or equal to upperBound, that cell won't be added
+     * @return this, after expanding to adjacent cells where the noise was within range, for chaining
+     */
+    public Region stir(Region bounds, INoise noise, float z, float lowerBound, float upperBound) {
+        return stir(bounds, noise, z, lowerBound, upperBound, null);
+    }
+
+    /**
+     * A selective flood-fill that modifies this Region so it adds adjacent cells where {@code noise.getNoise(x, y, z)}
+     * evaluates between {@code lowerBound} (inclusive) and {@code upperBound} (exclusive), if it can while staying
+     * inside the "on" cells of {@code bounds}. This allows specifying the z parameter here. This Region acts
+     * as the initial state, and often contains just one cell before this is called. This method is useful for imitating
+     * the movement of fluids like water or smoke within some boundaries, stepping only to adjacent cells instead of how
+     * {@link #spill(Region, int, EnhancedRandom)} fills a whole volume, or how {@link #splash(Region, EnhancedRandom)}
+     * only steps to one random cell. This requests 3D noise from noise, and the z parameter can change between calls;
+     * this can allow the noise to gradually change over multiple calls or multiple frames, which could allow spaces
+     * that previously couldn't be filled to become fillable. The result from each call to getNoise() should be
+     * between -1.0 and 1.0, so both bounds are typically in that range or just outside it (to allow all low values or
+     * all high values).
+     * <br>
+     * This only calls noise's {@link INoise#getNoise(float, float, float)} method on cells adjacent to "on" cells in
+     * this that are also within {@code bounds}.
+     * <br>
+     * This overload is just like the one that doesn't take a temp Region, but it can avoid allocating a new Region if
+     * you have one with the same size as this, to use as working space.
+     *
+     * @param bounds this Region will only expand to a cell that is "on" in bounds; bounds should overlap with this
+     * @param noise an INoise that will have its {@link INoise#getNoise(float, float, float)} method called per adjacent cell
+     * @param z the third parameter to be passed to getNoise()
+     * @param lowerBound usually between -1 and 1; if a result from noise at a cell is less than lowerBound, that cell won't be added
+     * @param upperBound usually between -1 and 1; if a result from noise at a cell is greater than or equal to upperBound, that cell won't be added
+     * @param temp another Region that will be cleared and used as a temporary buffer; optimally the same size as this
+     * @return this, after expanding to adjacent cells where the noise was within range, for chaining
+     */
+    public Region stir(Region bounds, INoise noise, float z, float lowerBound, float upperBound, Region temp) {
+        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+            if(temp == null) temp = new Region(this);
+            else temp.remake(this);
+            temp.fringe().and(bounds);
+            int y;
+            long t, w;
+            for (int x = 0; x < width; x++) {
+                for (int s = 0; s < ySections; s++) {
+                    if((t = data[x * ySections + s]) != 0)
+                    {
+                        w = BitConversion.lowestOneBit(t);
+                        while (w != 0) {
+                            y = (s << 6) | Long.numberOfTrailingZeros(w);
+                            float n = noise.getNoise(x, y, z);
                             if(n >= lowerBound && n < upperBound)
                                 insert(x, y);
                             t ^= w;
