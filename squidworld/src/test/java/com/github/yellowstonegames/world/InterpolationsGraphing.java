@@ -87,14 +87,14 @@ public class InterpolationsGraphing extends ApplicationAdapter {
 //        Interpolator pow0_666In = new Interpolator("pow0_666In", Interpolations.powInFunction(0.666f));
 //        Interpolator pow1_5In = new Interpolator("pow1_5In", Interpolations.powInFunction(1.5f));
 
-//        interpolators = Interpolations.getInterpolatorArray();
-        interpolators = new Interpolator[]{
-                new Interpolator("hue1_6exp1_25shape0_4turn", (a) -> MathTools.barronSpline((float) Math.pow(a, 1.6f), 1.25f, 0.4f)),
-                new Interpolator("hueCurve1_6exp", (a) -> (float) Math.pow(a, 1.6f)),
-                new Interpolator("hueCurve1_65exp", (a) -> (float) Math.pow(a, 1.65f)),
-                new Interpolator("hueCurve1_7exp", (a) -> (float) Math.pow(a, 1.7f)),
-                new Interpolator("hueCurve1_75exp", (a) -> (float) Math.pow(a, 1.75f)),
-        };
+        interpolators = Interpolations.getInterpolatorArray();
+//        interpolators = new Interpolator[]{
+//                new Interpolator("hue1_6exp1_25shape0_4turn", (a) -> MathTools.barronSpline((float) Math.pow(a, 1.6f), 1.25f, 0.4f)),
+//                new Interpolator("hueCurve1_6exp", (a) -> (float) Math.pow(a, 1.6f)),
+//                new Interpolator("hueCurve1_65exp", (a) -> (float) Math.pow(a, 1.65f)),
+//                new Interpolator("hueCurve1_7exp", (a) -> (float) Math.pow(a, 1.7f)),
+//                new Interpolator("hueCurve1_75exp", (a) -> (float) Math.pow(a, 1.75f)),
+//        };
 
 //        for (int i = 0; i < interpolators.length; i++) {
 //            System.out.println(i + " " + interpolators[i].tag);

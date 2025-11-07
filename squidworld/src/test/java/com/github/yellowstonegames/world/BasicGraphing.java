@@ -156,12 +156,12 @@ public class BasicGraphing extends ApplicationAdapter {
 //            for (int i = -400 + f; i <= 400; i+= functions.size()) {
                 float pt = i * SCALE_X / 200f;
                 h0 = h1;
-                if(i * i == 1){
-                    System.out.println("applying function " + functions.keyAt(f));
-                    float result = functions.getAt(f).applyAsFloat(Float.MAX_VALUE);
-                    System.out.printf("Calling on %1.10f (0x%08X), the result is %1.20f (0x%08X)\n", Float.MAX_VALUE, BitConversion.floatToIntBits(Float.MAX_VALUE),
-                            result, BitConversion.floatToIntBits(result));
-                }
+//                if(i * i == 1){
+//                    System.out.println("applying function " + functions.keyAt(f));
+//                    float result = functions.getAt(f).applyAsFloat(Float.MAX_VALUE);
+//                    System.out.printf("Calling on %1.10f (0x%08X), the result is %1.20f (0x%08X)\n", Float.MAX_VALUE, BitConversion.floatToIntBits(Float.MAX_VALUE),
+//                            result, BitConversion.floatToIntBits(result));
+//                }
                 h1 = functions.getAt(f).applyAsFloat(pt) * 200 * SCALE_Y + 81;
                 sd.setColor(gradient);
                 sd.line(399 + i, h0, 400 + i, h1, 1f);
