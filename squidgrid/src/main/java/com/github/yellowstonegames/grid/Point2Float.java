@@ -482,6 +482,19 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
     public Point2Float fractional () {
         return fract();
     }
+
+    /**
+     * Assigns to each component of this point {@code 1f} divided by its original value.
+     * If a component is 0.0f, its value after this will be positive infinity.
+     * If a component is -0.0f, its value after this will be negative infinity.
+     * @return 1f divided by this point, assigned in-place to this
+     */
+    public Point2Float inverse () {
+        x = 1f / x;
+        y = 1f / y;
+        return this;
+    }
+
     /**
      * Gets the component at the specified index.
      * Kotlin-compatible using square-bracket indexing.
