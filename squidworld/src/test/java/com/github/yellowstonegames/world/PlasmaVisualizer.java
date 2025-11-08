@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
@@ -45,8 +46,7 @@ public class PlasmaVisualizer extends ApplicationAdapter {
 
     private ElfPlasma elf;
     private Point3Float inPt = new Point3Float(), outPt = new Point3Float();
-    private Color color = new Color();
-    private int octaves = 1;
+    private final Color color = new Color();
     private float freq = 0x1p-10f;
     private ImmediateModeRenderer20 renderer;
 
@@ -74,14 +74,14 @@ public class PlasmaVisualizer extends ApplicationAdapter {
 
     @Override
     public void create() {
-        elf = new ElfPlasma(0.2f, 0.4f, 0.6f);
+        elf = new ElfPlasma();
 
         renderer = new ImmediateModeRenderer20(width * height, false, true, 0);
         view = new ScreenViewport();
 
         gif = new AnimatedGif();
-        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.GOURD);
-        gif.setDitherStrength(0.3f);
+        gif.setDitherAlgorithm(Dithered.DitherAlgorithm.PATTERN);
+        gif.setDitherStrength(1f);
         gif.palette = new QualityPalette();
 
         input = new InputAdapter(){
@@ -112,7 +112,7 @@ public class PlasmaVisualizer extends ApplicationAdapter {
 
                         String ser = elf.stringSerialize() + "_" + System.currentTimeMillis();
                         System.out.println(ser);
-                        gif.palette.analyzeHueWise(frames);
+                        gif.palette.analyze(frames, 250);
                         gif.write(Gdx.files.local("out/" + ser + ".gif"), frames, 16);
                         for (int i = 0; i < frames.size; i++) {
                             frames.get(i).dispose();
@@ -184,8 +184,7 @@ public class PlasmaVisualizer extends ApplicationAdapter {
         Gdx.graphics.setTitle(String.valueOf(Gdx.graphics.getFramesPerSecond()));
         if (keepGoing) {
             // standard clear the background routine for libGDX
-            Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            ScreenUtils.clear(0f, 0f, 0f, 1f);
             ctr++;
             putMap();
         }

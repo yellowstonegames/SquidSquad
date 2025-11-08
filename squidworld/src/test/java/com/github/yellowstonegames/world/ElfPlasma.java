@@ -75,7 +75,7 @@ public class ElfPlasma {
      * @return out, after changes
      */
     public Point3Float plasma(Point3Float out, Point3Float in) {
-        float time = TrigTools.sinSmoother(tA.z = in.z * 0.01f);
+        float time = TrigTools.sinSmoother(tA.z = in.z * 0.75f);
         float x = tA.x = in.x * 128f + (time); // U.x
         float y = tA.y = in.y * 128f + (time); // U.y
         out.set(tA.z, tA.z, tA.z).div(seed); // out = time / d
