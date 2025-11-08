@@ -137,6 +137,21 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         return scl(point);
     }
 
+
+    public Point2Float div(Point2Float point) {
+        x /= point.x;
+        y /= point.y;
+        return this;
+    }
+    public Point2Float div(Point2<?> point) {
+        x /= point.x();
+        y /= point.y();
+        return this;
+    }
+    public Point2Float divide(Point2<?> point) {
+        return div(point);
+    }
+
     @Override
     public float dst2(Point2Float point) {
         return (point.x - x) * (point.x - x) + (point.y - y) * (point.y - y);
@@ -269,6 +284,12 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
      */
     public Point2Float multiply(float x, float y) {
         return scl(x, y);
+    }
+
+    public Point2Float divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        return this;
     }
 
     public Point2Float addProduct(Point2<?> vec, float scalar) {
