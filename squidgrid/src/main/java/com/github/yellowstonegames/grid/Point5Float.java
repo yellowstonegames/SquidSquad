@@ -149,6 +149,26 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
         return scl(point);
     }
 
+    public Point5Float div(Point5Float point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        w /= point.w;
+        u /= point.u;
+        return this;
+    }
+    public Point5Float div(Point5<?> point) {
+        x /= point.x();
+        y /= point.y();
+        z /= point.z();
+        w /= point.w();
+        u /= point.u();
+        return this;
+    }
+    public Point5Float divide(Point5<?> point) {
+        return div(point);
+    }
+
     @Override
     public float dst2(Point5Float point) {
         return
@@ -362,6 +382,15 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
      */
     public Point5Float multiply(float x, float y, float z, float w, float u) {
         return scl(x, y, z, w, u);
+    }
+
+    public Point5Float divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        w /= scalar;
+        u /= scalar;
+        return this;
     }
 
     public Point5Float addProduct(Point5<?> vec, float scalar) {
