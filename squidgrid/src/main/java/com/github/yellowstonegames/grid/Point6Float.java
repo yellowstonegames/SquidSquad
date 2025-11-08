@@ -159,6 +159,28 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
         return scl(point);
     }
 
+    public Point6Float div(Point6Float point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        w /= point.w;
+        u /= point.u;
+        v /= point.v;
+        return this;
+    }
+    public Point6Float div(Point6<?> point) {
+        x /= point.x();
+        y /= point.y();
+        z /= point.z();
+        w /= point.w();
+        u /= point.u();
+        v /= point.v();
+        return this;
+    }
+    public Point6Float divide(Point6<?> point) {
+        return div(point);
+    }
+
     @Override
     public float dst2(Point6Float point) {
         return
@@ -393,6 +415,16 @@ public class Point6Float implements Point6<Point6Float>, PointNFloat<Point6Float
      */
     public Point6Float multiply(float x, float y, float z, float w, float u, float v) {
         return scl(x, y, z, w, u, v);
+    }
+
+    public Point6Float divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        w /= scalar;
+        u /= scalar;
+        v /= scalar;
+        return this;
     }
 
     public Point6Float addProduct(Point6<?> vec, float scalar) {
