@@ -129,6 +129,22 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
         return scl(point);
     }
 
+    public Point3Float div(Point3Float point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        return this;
+    }
+    public Point3Float div(Point3<?> point) {
+        x /= point.x();
+        y /= point.y();
+        z /= point.z();
+        return this;
+    }
+    public Point3Float divide(Point3<?> point) {
+        return div(point);
+    }
+
     @Override
     public float dst2(Point3Float point) {
         return
@@ -302,6 +318,13 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
      */
     public Point3Float multiply(float x, float y, float z) {
         return scl(x, y, z);
+    }
+
+    public Point3Float divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return this;
     }
 
     public Point3Float addProduct(Point3<?> vec, float scalar) {
