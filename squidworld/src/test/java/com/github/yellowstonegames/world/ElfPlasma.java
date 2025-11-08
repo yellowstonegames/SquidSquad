@@ -38,8 +38,11 @@ public class ElfPlasma {
     private static final Point3Float fixedC3 = new Point3Float(6, 8, 9);
     private static final Point3Float fixedCphi = new Point3Float(4.618f, 6.618f, 7.618f);
 
+    public ElfPlasma() {
+        this(11.1f, 14.3f, 8.2f);
+    }
     public ElfPlasma(float sx, float sy, float sz) {
-        seed = new Point3Float(sx, sy, sz).fract().mul(0.25f).add(0.1f, 0.1f, 0.1f);
+        seed = new Point3Float(sx, sy, sz);
     }
     /**
      * Was called H.
@@ -51,9 +54,17 @@ public class ElfPlasma {
      */
     public Point3Float sway(Point3Float out, Point3Float s, Point3Float v) {
         return out.set(
-                TrigTools.sinSmoother(s.x + v.z - cosSmoother(s.z + v.y) + cosSmoother(s.y + v.x)), //LineWobble.wobble(0x12341234,
-                TrigTools.sinSmoother(s.y + v.x - cosSmoother(s.x + v.z) + cosSmoother(s.z + v.y)), //LineWobble.wobble(0x56785678,
-                TrigTools.sinSmoother(s.z + v.y - cosSmoother(s.y + v.x) + cosSmoother(s.x + v.z))  //LineWobble.wobble(0x9ABC9ABC,
+                TrigTools.sinSmoother(s.x + v.z - cosSmoother(s.z + v.y) + cosSmoother(s.y + v.x)),
+                TrigTools.sinSmoother(s.y + v.x - cosSmoother(s.x + v.z) + cosSmoother(s.z + v.y)),
+                TrigTools.sinSmoother(s.z + v.y - cosSmoother(s.y + v.x) + cosSmoother(s.x + v.z)) 
+        );
+    }
+    
+    public Point3Float sway(Point3Float out, float sx, float sy, float sz, float vx, float vy, float vz) {
+        return out.set(
+                TrigTools.sinSmoother(sx + vz - cosSmoother(sz + vy) + cosSmoother(sy + vx)),
+                TrigTools.sinSmoother(sy + vx - cosSmoother(sx + vz) + cosSmoother(sz + vy)),
+                TrigTools.sinSmoother(sz + vy - cosSmoother(sy + vx) + cosSmoother(sx + vz)) 
         );
     }
 
@@ -64,10 +75,10 @@ public class ElfPlasma {
      * @return out, after changes
      */
     public Point3Float plasma(Point3Float out, Point3Float in) {
-        float time = TrigTools.sinSmoother(tA.z = in.z * 0.75f);
-        float x = tA.x = in.x * 4f + (time); // U.x
-        float y = tA.y = in.y * 4f + (time); // U.y
-        out.set(seed).mul(tA.z);        // out = t.xyz
+        float time = TrigTools.sinSmoother(tA.z = in.z * 0.01f);
+        float x = tA.x = in.x * 128f + (time); // U.x
+        float y = tA.y = in.y * 128f + (time); // U.y
+        out.set(tA.z, tA.z, tA.z).div(seed); // out = time / d
         tB.set(out).add(seed);          // tB = t + d
         out.sub(seed.y, seed.z, seed.x);// out = t - d.yzx
         sway(tA, fixedA, out).mul(x);   // tA is an unnamed value
@@ -75,7 +86,7 @@ public class ElfPlasma {
         out.set(tA).add(tB).mul(0.25f); // out = v
         sway(tA, fixedC, out).add(out).mul(0.5f); // tA = (v+H(K,v))/2.
         sway(tB, fixedCphi, tA).mul(3f); // tB = H(1.62+K, (v+H(K,v))/2. ) *3.
-        sway(out, fixedC3, tA.add(tB).mul(out)).mul(0.5f).plus(0.5f);
+        sway(out, fixedC3, tA.add(tB)).mul(0.5f).plus(0.5f);
         return out;
     }
 /*
