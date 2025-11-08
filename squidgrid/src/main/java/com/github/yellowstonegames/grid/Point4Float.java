@@ -139,6 +139,24 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
         return scl(point);
     }
 
+    public Point4Float div(Point4Float point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        w /= point.w;
+        return this;
+    }
+    public Point4Float div(Point4<?> point) {
+        x /= point.x();
+        y /= point.y();
+        z /= point.z();
+        w /= point.w();
+        return this;
+    }
+    public Point4Float divide(Point4<?> point) {
+        return div(point);
+    }
+
     @Override
     public float dst2(Point4Float point) {
         return
@@ -331,6 +349,14 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
      */
     public Point4Float multiply(float x, float y, float z, float w) {
         return scl(x, y, z, w);
+    }
+
+    public Point4Float divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        w /= scalar;
+        return this;
     }
 
     public Point4Float addProduct(Point4<?> vec, float scalar) {
