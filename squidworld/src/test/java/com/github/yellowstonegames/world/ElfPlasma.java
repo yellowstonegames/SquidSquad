@@ -38,6 +38,10 @@ public class ElfPlasma {
     private static final Point3Float fixedC3 = new Point3Float(6, 8, 9);
     private static final Point3Float fixedCphi = new Point3Float(4.618f, 6.618f, 7.618f);
 
+    private float time = 0f;
+    private final Point3Float waveA = new Point3Float();
+    private final Point3Float waveB = new Point3Float();
+
     public ElfPlasma() {
         this(11.1f, 14.3f, 8.2f);
     }
@@ -69,20 +73,67 @@ public class ElfPlasma {
     }
 
     /**
+     * Uses the given point {@code in} as an x,y,time input, and overwrites {@code out} with continuous noise.
      *
      * @param out will be overwritten
      * @param in the input x,y,time point; will not be changed
      * @return out, after changes
      */
     public Point3Float plasma(Point3Float out, Point3Float in) {
-        float time = TrigTools.sinSmoother(tA.z = in.z * 0.75f);
-        float x = tA.x = in.x * 128f + (time); // U.x
-        float y = tA.y = in.y * 128f + (time); // U.y
-        out.set(tA.z, tA.z, tA.z).div(seed); // out = time / d
+        time = in.z * 0.75f;
+        float x = in.x * 128f + TrigTools.cosSmoother(time); // U.x
+        float y = in.y * 128f + TrigTools.sinSmoother(time); // U.y
+
+        out.set(time, time, time).div(seed); // out = time / d
         tB.set(out).add(seed);          // tB = t + d
         out.sub(seed.y, seed.z, seed.x);// out = t - d.yzx
-        sway(tA, fixedA, out).mul(x);   // tA is an unnamed value
-        sway(tB, fixedB, tB).mul(y);    // tB is an unnamed value
+        sway(tA, fixedA, out);
+        sway(tB, fixedB, tB);
+
+        tA.mul(x);   // tA is an unnamed value
+        tB.mul(y);    // tB is an unnamed value
+        out.set(tA).add(tB).mul(0.25f); // out = v
+        sway(tA, fixedC, out).add(out).mul(0.5f); // tA = (v+H(K,v))/2.
+        sway(tB, fixedCphi, tA).mul(3f); // tB = H(1.62+K, (v+H(K,v))/2. ) *3.
+        sway(out, fixedC3, tA.add(tB)).mul(0.5f).plus(0.5f);
+        return out;
+    }
+
+    /**
+     * Stores the time and performs some calculations that depend only on time and seed, to avoid having to
+     * recalculate them in every call to {@link #plasmaWave(Point3Float, float, float)}.
+     *
+     * @param t the time for this wave; should increase linearly and continuously
+     * @return this, for chaining
+     */
+    public ElfPlasma wave(float t) {
+        time = t * 0.75f;
+        tA.set(time, time, time).div(seed); // t = time / d
+        tB.set(tA).add(seed);               // tB = t + d
+        tA.sub(seed.y, seed.z, seed.x);     // tA = t - d.yzx
+        sway(waveA, fixedA, tA);
+        sway(waveB, fixedB, tB);
+        return this;
+    }
+    /**
+     * Requires {@link #wave(float)} to be called before a batch of these calls with the same time t.
+     * If x and y change by only small amounts, the different values returned in {@code out} will
+     * also change continuously.
+     *
+     * @param out will be overwritten
+     * @param x position
+     * @param y position
+     * @return out, after changes
+     */
+    public Point3Float plasmaWave(Point3Float out, float x, float y) {
+        x = x * 128f + TrigTools.cosSmoother(time); // U.x
+        y = y * 128f + TrigTools.sinSmoother(time); // U.y
+
+        tA.set(waveA);
+        tB.set(waveB);
+
+        tA.mul(x);   // tA is an unnamed value
+        tB.mul(y);    // tB is an unnamed value
         out.set(tA).add(tB).mul(0.25f); // out = v
         sway(tA, fixedC, out).add(out).mul(0.5f); // tA = (v+H(K,v))/2.
         sway(tB, fixedCphi, tA).mul(3f); // tB = H(1.62+K, (v+H(K,v))/2. ) *3.
