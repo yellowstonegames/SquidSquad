@@ -18,17 +18,25 @@ void mainImage( out vec4 O, vec2 U )
 }
  */
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.Point3Float;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
- * From <a href="https://www.shadertoy.com/view/7sdSz7">this ShaderToy</a>.
+ * A Plasma, which is like an {@link com.github.yellowstonegames.grid.INoise}, but naturally operates on multiple
+ * float components at once, typically to render colors (but not necessarily).
+ * <br>
+ * From <a href="https://www.shadertoy.com/view/7sdSz7">this ShaderToy</a> mostly by Fabrice Neyret.
  */
 public class ElfPlasma {
 
-    public Point3Float seed;
+    /**
+     * Can be {@link Point3Float#set(float, float, float)} to any finite, non-zero values, but the recommended
+     * range is between 5.0f and 20.0f for each component.
+     */
+    public final Point3Float seed = new Point3Float();
     private transient final Point3Float tA = new Point3Float();
     private transient final Point3Float tB = new Point3Float();
 
@@ -38,18 +46,41 @@ public class ElfPlasma {
     private static final Point3Float fixedC3 = new Point3Float(6, 8, 9);
     private static final Point3Float fixedCphi = new Point3Float(4.618f, 6.618f, 7.618f);
 
-    private float time = 0f;
-    private final Point3Float waveA = new Point3Float();
-    private final Point3Float waveB = new Point3Float();
+    private transient float time = 0f;
+    private transient final Point3Float waveA = new Point3Float();
+    private transient final Point3Float waveB = new Point3Float();
 
+    /**
+     * Constructs an ElfPlasma with default parameters in a recommended range, {@code 11.1f, 14.3f, 8.2f} .
+     */
     public ElfPlasma() {
         this(11.1f, 14.3f, 8.2f);
     }
-    public ElfPlasma(float sx, float sy, float sz) {
-        seed = new Point3Float(sx, sy, sz);
+
+    /**
+     * Uses and discards the given long seed {@code s} to generate three random floats between 7 and 18 each, using
+     * them as the three-part seed.
+     * @param s any long
+     */
+    public ElfPlasma(long s) {
+        this(Hasher.randomize1Float(s) * 11f + 7f,
+                Hasher.randomize1Float(s + 1) * 11f + 7f,
+                Hasher.randomize1Float(s + 2) * 11f + 7f);
     }
     /**
-     * Was called H.
+     * Constructs an ElfPlasma with the given three floats as seeds. Each s parameter should usually be
+     * between about 5 and 20, but this isn't a requirement. No parameter should be 0, NaN, or infinite.
+     * @param sx should be between 5.0f and 20.0f
+     * @param sy should be between 5.0f and 20.0f
+     * @param sz should be between 5.0f and 20.0f
+     */
+    public ElfPlasma(float sx, float sy, float sz) {
+        seed.set(sx, sy, sz);
+    }
+    /**
+     * Performs various trigonometry operations on a mix of coordinates from s and from v, using each component
+     * of s and each component of v to affect each component of out. Each resulting component of {@code out} will
+     * be between -1 and 1, both inclusive.
      *
      * @param out will be overwritten
      * @param s   seed vector
@@ -63,12 +94,46 @@ public class ElfPlasma {
                 TrigTools.sinSmoother(s.z + v.y - cosSmoother(s.y + v.x) + cosSmoother(s.x + v.z)) 
         );
     }
-    
+
+    /**
+     * Sets {@code out} to the result of trigonometry operations on a mix of all other parameters, using each
+     * float parameter to affect each component of out. Each resulting component of {@code out} will
+     * be between -1 and 1, both inclusive.
+     * @param out will be overwritten
+     * @param sx seed x
+     * @param sy seed y
+     * @param sz seed z
+     * @param vx value x
+     * @param vy value y
+     * @param vz value z
+     * @return out, after changes
+     */
     public Point3Float sway(Point3Float out, float sx, float sy, float sz, float vx, float vy, float vz) {
         return out.set(
                 TrigTools.sinSmoother(sx + vz - cosSmoother(sz + vy) + cosSmoother(sy + vx)),
                 TrigTools.sinSmoother(sy + vx - cosSmoother(sx + vz) + cosSmoother(sz + vy)),
                 TrigTools.sinSmoother(sz + vy - cosSmoother(sy + vx) + cosSmoother(sx + vz)) 
+        );
+    }
+
+    /**
+     * Adds {@code out} with the result of trigonometry operations on a mix of all other parameters, using each
+     * float parameter to affect each component of out. Each resulting component of {@code out} will have a value
+     * added to it between -1 and 1, both inclusive.
+     * @param out will be overwritten
+     * @param sx seed x
+     * @param sy seed y
+     * @param sz seed z
+     * @param vx value x
+     * @param vy value y
+     * @param vz value z
+     * @return out, after changes
+     */
+    public Point3Float addSway(Point3Float out, float sx, float sy, float sz, float vx, float vy, float vz) {
+        return out.add(
+                TrigTools.sinSmoother(sx + vz - cosSmoother(sz + vy) + cosSmoother(sy + vx)),
+                TrigTools.sinSmoother(sy + vx - cosSmoother(sx + vz) + cosSmoother(sz + vy)),
+                TrigTools.sinSmoother(sz + vy - cosSmoother(sy + vx) + cosSmoother(sx + vz))
         );
     }
 
@@ -102,6 +167,7 @@ public class ElfPlasma {
     /**
      * Stores the time and performs some calculations that depend only on time and seed, to avoid having to
      * recalculate them in every call to {@link #plasmaWave(Point3Float, float, float)}.
+     * This is analogous to setting uniforms in a shader based on the current time.
      *
      * @param t the time for this wave; should increase linearly and continuously
      * @return this, for chaining
@@ -126,14 +192,11 @@ public class ElfPlasma {
      * @return out, after changes
      */
     public Point3Float plasmaWave(Point3Float out, float x, float y) {
-        x = x * 128f + TrigTools.cosSmoother(time); // U.x
-        y = y * 128f + TrigTools.sinSmoother(time); // U.y
-
         tA.set(waveA);
         tB.set(waveB);
 
-        tA.mul(x);   // tA is an unnamed value
-        tB.mul(y);    // tB is an unnamed value
+        tA.mul(x * 128f + TrigTools.cosSmoother(time));
+        tB.mul(y * 128f + TrigTools.sinSmoother(time));
         out.set(tA).add(tB).mul(0.25f); // out = v
         sway(tA, fixedC, out).add(out).mul(0.5f); // tA = (v+H(K,v))/2.
         sway(tB, fixedCphi, tA).mul(3f); // tB = H(1.62+K, (v+H(K,v))/2. ) *3.
@@ -156,7 +219,6 @@ void mainImage( out vec4 O, vec2 U )
 }
  */
 
-    //(in.z + LineWobble.bicubicWobble(0x12341234, in.x) + LineWobble.bicubicWobble(0x56785678, in.y)));
     public String stringSerialize() {
         return seed.toString();
     }
