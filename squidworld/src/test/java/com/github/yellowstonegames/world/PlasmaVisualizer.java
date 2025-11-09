@@ -95,14 +95,14 @@ public class PlasmaVisualizer extends ApplicationAdapter {
                         for (int c = 0; c < 128; c++) {
                             int w = 256, h = 256;
                             float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f, tm = c * 0x1p-13f, xf, yf;
+                            elf.wave(tm);
                             Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
                             for (int x = 0; x < w; x++) {
                                 xf = x * freq - halfW;
                                 for (int y = 0; y < h; y++) {
                                     yf = y * freq - halfH;
-                                    elf.plasma(outPt, inPt.set(xf, yf, tm));
-                                    color.set(outPt.x, outPt.y, outPt.z, 1f);
-                                    p.setColor(color);
+                                    elf.plasmaWave(outPt, xf, yf);
+                                    p.setColor(outPt.x, outPt.y, outPt.z, 1f);
                                     p.drawPixel(x, y);
                                 }
                             }
@@ -162,14 +162,15 @@ public class PlasmaVisualizer extends ApplicationAdapter {
 
     public void putMap() {
         renderer.begin(view.getCamera().combined, GL_POINTS);
-        float bright, tm = ctr * 0x1p-4f * freq, xf, yf;
+        float tm = ctr * 0x1p-4f * freq, xf, yf;
+        elf.wave(tm);
         for (int x = 0; x < width; x++) {
             xf = x * freq - width * 0.5f;
             for (int y = 0; y < height; y++) {
                 yf = y * freq - height * 0.5f;
-                elf.plasma(outPt, inPt.set(xf, yf, tm));
-                color.set(outPt.x, outPt.y, outPt.z, 1f);
-                renderer.color(color);
+//                elf.plasma(outPt, inPt.set(xf, yf, tm));
+                elf.plasmaWave(outPt, xf, yf);
+                renderer.color(outPt.x, outPt.y, outPt.z, 1f);
                 renderer.vertex(x, y, 0);
             }
         }
