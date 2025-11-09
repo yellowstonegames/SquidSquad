@@ -4,7 +4,6 @@ import com.github.tommyettinger.crux.PointN;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.ds.support.util.FloatIterator;
 
 import java.util.Random;
 
@@ -23,6 +22,8 @@ public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> e
      * Assigns to each component of this point {@code 1f} divided by its original value.
      * If a component is 0.0f, its value after this will be positive infinity.
      * If a component is -0.0f, its value after this will be negative infinity.
+     * If a component is NaN, its value after this will be NaN.
+     *
      * @return 1f divided by this point, assigned in-place to this
      */
     P inverse ();
@@ -42,31 +43,6 @@ public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> e
      * @return this, for chaining
      */
     P setAt(int index, float value);
-
-    /**
-     * Iterates over the components in this PointNFloat using {@link #get(int)}.
-     */
-    class PointNFloatIterator implements FloatIterator {
-        public PointNFloat<?,?> pt;
-        public int index;
-        public PointNFloatIterator(PointNFloat<?,?> pt){
-            this.pt = pt;
-            index = 0;
-        }
-        @Override
-        public float nextFloat() {
-            return pt.get(index++);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return index < pt.rank();
-        }
-
-        public void reset(){
-            index = 0;
-        }
-    }
 
     /**
      * Sets this PointNFloat to a randomly chosen unit vector.
