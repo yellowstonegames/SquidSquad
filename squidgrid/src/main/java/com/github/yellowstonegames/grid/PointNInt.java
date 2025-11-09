@@ -30,28 +30,6 @@ public interface PointNInt<P extends PointNInt<P, R>, R extends PointN<?>> exten
      */
     P setAt(int index, int value);
 
-    class PointNIntIterator implements IntIterator {
-        public PointNInt<?, ?> pt;
-        public int index;
-        public PointNIntIterator(PointNInt<?, ?> pt){
-            this.pt = pt;
-            index = 0;
-        }
-        @Override
-        public int nextInt() {
-            return pt.get(index++);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return index < pt.rank();
-        }
-
-        public void reset(){
-            index = 0;
-        }
-    }
-
     /**
      * Linear-interpolates from this point toward target, moving a distance proportional to alpha and changing this
      * point in-place if possible. If this point is not {@link #mutable()}, this will return a new or pooled point.
