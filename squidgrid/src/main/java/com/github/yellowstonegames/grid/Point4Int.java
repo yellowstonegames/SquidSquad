@@ -580,10 +580,10 @@ public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4
     @SuppressWarnings({"DefaultNotLastCaseInSwitch"})
     public Point4Int setAt(int index, int value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
-            case 2 : z = value;
-            case 3 : w = value;
+            default: x = value; break;
+            case 1 : y = value; break;
+            case 2 : z = value; break;
+            case 3 : w = value; break;
         }
         return this;
     }

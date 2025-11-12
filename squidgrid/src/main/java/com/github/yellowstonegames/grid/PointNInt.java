@@ -2,10 +2,10 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.crux.PointN;
 import com.github.tommyettinger.digital.Interpolations;
-import com.github.tommyettinger.ds.support.util.IntIterator;
 
 /**
  * Groups functionality common to points with int components, in any dimension.
+ *
  * @param <P> should be the subclassing type itself
  * @param <R> should be a wildcard-generic type for a sub-interface of {@link PointN}, such as {@code Point3<?>}
  */

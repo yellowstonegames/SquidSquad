@@ -529,9 +529,9 @@ public class Point3Int implements Point3<Point3Int>, PointNInt<Point3Int, Point3
     @SuppressWarnings({"DefaultNotLastCaseInSwitch"})
     public Point3Int setAt(int index, int value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
-            case 2 : z = value;
+            default: x = value; break;
+            case 1 : y = value; break;
+            case 2 : z = value; break;
         }
         return this;
     }

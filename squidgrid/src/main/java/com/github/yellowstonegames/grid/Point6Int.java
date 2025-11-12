@@ -684,12 +684,12 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
     @SuppressWarnings({"DefaultNotLastCaseInSwitch"})
     public Point6Int setAt(int index, int value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
-            case 2 : z = value;
-            case 3 : w = value;
-            case 4 : u = value;
-            case 5 : v = value;
+            default: x = value; break;
+            case 1 : y = value; break;
+            case 2 : z = value; break;
+            case 3 : w = value; break;
+            case 4 : u = value; break;
+            case 5 : v = value; break;
         }
         return this;
     }

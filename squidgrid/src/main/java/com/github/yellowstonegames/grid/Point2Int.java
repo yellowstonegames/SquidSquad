@@ -435,8 +435,8 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2
     @Override
     public Point2Int setAt(int index, int value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
+            default: x = value; break;
+            case 1 : y = value; break;
         }
         return this;
     }

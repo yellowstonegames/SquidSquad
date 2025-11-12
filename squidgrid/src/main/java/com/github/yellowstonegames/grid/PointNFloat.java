@@ -9,6 +9,7 @@ import java.util.Random;
 
 /**
  * Groups functionality common to points with float components, in any dimension.
+ *
  * @param <P> should be the subclassing type itself
  * @param <R> should be a wildcard-generic type for a sub-interface of {@link PointN}, such as {@code Point3<?>}
  */
@@ -26,7 +27,12 @@ public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> e
      *
      * @return 1f divided by this point, assigned in-place to this
      */
-    P inverse ();
+    default PointNFloat<P, R> inverse () {
+        for (int i = 0, r = rank(); i < r; i++) {
+            setAt(i, 1f / get(i));
+        }
+        return this;
+    }
 
     /**
      * Gets the component at the specified index.
@@ -47,14 +53,14 @@ public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> e
     /**
      * Sets this PointNFloat to a randomly chosen unit vector.
      * The exact algorithm is expected to vary between dimensions.
-     * In 2D, for instance, it is sufficient to get a random float and call
+     * In 2D, for instance, it is sufficient to get a random float between 0 and 1, and call
      * {@link TrigTools#cosTurns(float)} and {@link TrigTools#sinTurns(float)}
      * to get x and y. In higher dimensions, this gets more complex. A
      * solution that works for any dimension, but is only the best option for
      * 4D and up, is to assign to each component a normal-distributed float
      * using {@link com.github.tommyettinger.digital.Distributor#probitF(float)}
      * with random inputs, then normalize the PointNFloat with {@link #nor()}.
-     * @param random any Random or subclass thereof, such as one from juniper
+     * @param random any Random or subclass thereof
      * @return this point after modifications, if possible, or a new PointNFloat if this is immutable
      */
     P setToRandomDirection(Random random);
