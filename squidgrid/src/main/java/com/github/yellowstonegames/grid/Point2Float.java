@@ -516,8 +516,8 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
     @SuppressWarnings({"DefaultNotLastCaseInSwitch", "SwitchStatementWithTooFewBranches"})
     public Point2Float setAt(int index, float value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
+            default: x = value; break;
+            case 1 : y = value; break;
         }
         return this;
     }

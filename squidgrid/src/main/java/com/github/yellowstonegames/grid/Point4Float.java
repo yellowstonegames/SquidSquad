@@ -524,10 +524,10 @@ public class Point4Float implements Point4<Point4Float>, PointNFloat<Point4Float
     @SuppressWarnings({"DefaultNotLastCaseInSwitch"})
     public Point4Float setAt(int index, float value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
-            case 2 : z = value;
-            case 3 : w = value;
+            default: x = value; break;
+            case 1 : y = value; break;
+            case 2 : z = value; break;
+            case 3 : w = value; break;
         }
         return this;
     }

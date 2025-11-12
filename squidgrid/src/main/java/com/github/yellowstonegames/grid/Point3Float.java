@@ -599,9 +599,9 @@ public class Point3Float implements Point3<Point3Float>, PointNFloat<Point3Float
     @SuppressWarnings({"DefaultNotLastCaseInSwitch"})
     public Point3Float setAt(int index, float value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
-            case 2 : z = value;
+            default: x = value; break;
+            case 1 : y = value; break;
+            case 2 : z = value; break;
         }
         return this;
     }

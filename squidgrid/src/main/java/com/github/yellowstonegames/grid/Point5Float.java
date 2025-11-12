@@ -566,11 +566,11 @@ public class Point5Float implements Point5<Point5Float>, PointNFloat<Point5Float
     @SuppressWarnings({"DefaultNotLastCaseInSwitch"})
     public Point5Float setAt(int index, float value){
         switch (index){
-            default: x = value;
-            case 1 : y = value;
-            case 2 : z = value;
-            case 3 : w = value;
-            case 4 : u = value;
+            default: x = value; break;
+            case 1 : y = value; break;
+            case 2 : z = value; break;
+            case 3 : w = value; break;
+            case 4 : u = value; break;
         }
         return this;
     }
