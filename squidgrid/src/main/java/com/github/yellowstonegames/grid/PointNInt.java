@@ -9,7 +9,7 @@ import com.github.tommyettinger.digital.Interpolations;
  * @param <P> should be the subclassing type itself
  * @param <R> should be a wildcard-generic type for a sub-interface of {@link PointN}, such as {@code Point3<?>}
  */
-public interface PointNInt<P extends PointNInt<P, R>, R extends PointN<?>> extends PointN<P> {
+public interface PointNInt<P extends PointNInt<P, R>, R extends PointN<?>> extends com.github.tommyettinger.crux.PointNInt<P, R> {
     @Override
     default boolean floatingPoint() {
         return false;

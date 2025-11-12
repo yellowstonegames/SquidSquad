@@ -13,7 +13,7 @@ import java.util.Random;
  * @param <P> should be the subclassing type itself
  * @param <R> should be a wildcard-generic type for a sub-interface of {@link PointN}, such as {@code Point3<?>}
  */
-public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> extends PointN<P> {
+public interface PointNFloat<P extends PointNFloat<P, R>, R extends PointN<?>> extends com.github.tommyettinger.crux.PointNFloat<P, R> {
     @Override
     default boolean floatingPoint() {
         return true;

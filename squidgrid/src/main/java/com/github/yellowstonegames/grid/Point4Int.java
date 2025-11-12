@@ -463,6 +463,22 @@ public class Point4Int implements Point4<Point4Int>, PointNInt<Point4Int, Point4
         return scl(x, y, z, w);
     }
 
+    public Point4Int div(Point4Int point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        w /= point.w;
+        return this;
+    }
+
+    public Point4Int divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        w /= scalar;
+        return this;
+    }
+
     public Point4Int addProduct(Point4<?> vec, float scalar) {
         return mulAdd(vec, scalar);
     }

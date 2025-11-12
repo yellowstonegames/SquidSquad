@@ -511,6 +511,24 @@ public class Point5Int implements Point5<Point5Int>, PointNInt<Point5Int, Point5
         return scl(x, y, z, w, u);
     }
 
+    public Point5Int div(Point5Int point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        w /= point.w;
+        u /= point.u;
+        return this;
+    }
+
+    public Point5Int divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        w /= scalar;
+        u /= scalar;
+        return this;
+    }
+
     public Point5Int addProduct(Point5<?> vec, float scalar) {
         return mulAdd(vec, scalar);
     }

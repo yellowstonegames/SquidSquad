@@ -327,6 +327,18 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2
         return scl(x, y);
     }
 
+    public Point2Int div(Point2Int point) {
+        x /= point.x;
+        y /= point.y;
+        return this;
+    }
+
+    public Point2Int divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        return this;
+    }
+
     public Point2Int addProduct(Point2<?> vec, float scalar) {
         return mulAdd(vec, scalar);
     }

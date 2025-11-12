@@ -417,6 +417,20 @@ public class Point3Int implements Point3<Point3Int>, PointNInt<Point3Int, Point3
         return scl(x, y, z);
     }
 
+    public Point3Int div(Point3Int point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        return this;
+    }
+
+    public Point3Int divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return this;
+    }
+
     public Point3Int addProduct(Point3<?> vec, float scalar) {
         return mulAdd(vec, scalar);
     }

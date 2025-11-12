@@ -292,6 +292,11 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     }
 
     @Override
+    public Coord div(Coord point) {
+        return get(x / point.x, y / point.y);
+    }
+
+    @Override
     public float dst2(Coord coord) {
         return distanceSq(coord);
     }

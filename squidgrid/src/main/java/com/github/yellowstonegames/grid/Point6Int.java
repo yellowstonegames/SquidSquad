@@ -557,6 +557,26 @@ public class Point6Int implements Point6<Point6Int>, PointNInt<Point6Int, Point6
         return scl(x, y, z, w, u, v);
     }
 
+    public Point6Int div(Point6Int point) {
+        x /= point.x;
+        y /= point.y;
+        z /= point.z;
+        w /= point.w;
+        u /= point.u;
+        v /= point.v;
+        return this;
+    }
+
+    public Point6Int divide(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        w /= scalar;
+        u /= scalar;
+        v /= scalar;
+        return this;
+    }
+
     public Point6Int addProduct(Point6<?> vec, float scalar) {
         return mulAdd(vec, scalar);
     }
