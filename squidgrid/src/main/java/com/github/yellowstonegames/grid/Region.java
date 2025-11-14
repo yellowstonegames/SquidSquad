@@ -4472,21 +4472,22 @@ public class Region implements Collection<Coord> {
                 else temp2.remake(this);
                 temp.notAnd(bounds);
                 long[] boundsData = temp.data;
-                temp2.remake(this).fringe().and(bounds);
+                temp2.fringe().and(bounds);
                 if (temp2.size() > 0) {
                     Coord c;
                     int x, y, p;
-                    for (int i = current; i < volume; i++) {
+                    // we shouldn't get closer to volume if we don't assign anything.
+                    // but, right now moving the i++, so it only executes if we make a change,
+                    // results in an infinite loop.
+                    for (int i = current; i < volume;) {
                         c = temp2.singleRandom(rng);
                         x = c.x;
                         y = c.y;
-                        if (data[p = x * ySections + (y >> 6)] != (data[p] |= 1L << (y & 63))) {
-                            counts[p]++;
-                            for (int j = p + 1; j < data.length; j++) {
-                                if (counts[j] > 0) ++counts[j];
-                            }
-                            ct++;
+                        p = x * ySections + (y >> 6);
+                        if (data[p] != (data[p] |= 1L << (y & 63))) {
+                            i++;
                             temp2.data[p] &= ~(1L << (y & 63));
+                            boundsData[p] &= ~(1L << (y & 63));
                             if (x < width - 1 && (boundsData[p = (x + 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
                                 temp2.data[p] |= 1L << (y & 63);
                             }
@@ -4499,6 +4500,7 @@ public class Region implements Collection<Coord> {
                             if (x > 0 && (boundsData[p = (x - 1) * ySections + (y >> 6)] & 1L << (y & 63)) != 0) {
                                 temp2.data[p] |= 1L << (y & 63);
                             }
+                            temp2.tallied = false;
                             if (temp2.size() == 0) break;
                         }
                     }
@@ -5802,7 +5804,7 @@ public class Region implements Collection<Coord> {
         for (int s = 0; s < ySections; s++) {
             for (int x = 0; x < width; x++) {
                 if ((ct = counts[x * ySections + s]) > tmp) {
-                    t = data[x * ySections + s] | 0L;
+                    t = data[x * ySections + s];
                     for (--ct; t != 0; ct--) {
                         w = BitConversion.lowestOneBit(t);
                         if (ct == tmp)

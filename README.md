@@ -274,7 +274,7 @@ The other versions go up fairly often as things are fixed or improved, but they 
   - `juniperVersion`=0.8.5
   - `regExodusVersion`=0.1.19
   - `cruxVersion`=0.1.3
-  - `textraTypistVersion`=2.2.3
+  - `textraTypistVersion`=2.2.4
   - `gdxVersion`=1.14.0
 
 # License
