@@ -3874,17 +3874,100 @@ public class Region implements Collection<Coord> {
         return regions;
     }
 
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't adjacent to an existing "off" cell. This
+     * uses 4-way adjacency, and will never add "on" cells to the Region (it can only remove them or leave them as-is).
+     * This method acts like {@link #fringe()} but only produces "on" cells where there were "on" cells at the edge of
+     * this Region's existing "on" cells.
+     * <br>
+     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
+     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
+     * very well by operating in bulk on up to 64 cells at a time. The surface and fringe methods do allocate one
+     * temporary Region to store the original before modification, but the others generally don't. There is an overload
+     * of this method, {@link #surface(Region)}, that takes a temporary buffer Region to avoid allocations; it can be
+     * preferable if you intend to call surface() repeatedly.
+     *
+     * @return this for chaining
+     */
     public Region surface()
     {
         Region cpy = new Region(this).retract();
         return xor(cpy);
     }
+
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't adjacent to an existing "off" cell. This
+     * uses 4-way adjacency, and will never add "on" cells to the Region (it can only remove them or leave them as-is).
+     * This method acts like {@link #fringe()} but only produces "on" cells where there were "on" cells at the edge of
+     * this Region's existing "on" cells.
+     * <br>
+     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
+     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
+     * very well by operating in bulk on up to 64 cells at a time. This overload of surface allows taking a {@code temp}
+     * Region that should be the same size as this Region, and won't allocate by modifying temp in-place. All values
+     * in temp will be eliminated, so it really should be considered temporary. If temp is a different size from this
+     * Region, some memory will be allocated.
+     *
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call
+     * @return this for chaining
+     */
+    public Region surface(Region temp)
+    {
+        temp.remake(this);
+        return retract().xor(temp);
+    }
+
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't within {@code amount} distance of an
+     * existing "off" cell. This uses 4-way adjacency, and will never add "on" cells to the Region (it can only remove
+     * them or leave them as-is). This method acts like {@link #fringe(int)} but only produces "on" cells where there
+     * were "on" cells at the edge of this Region's existing "on" cells.
+     * <br>
+     * This overload allocates a temporary buffer Region; {@link #surface(int, Region)} does not.
+     *
+     * @param amount how thick the bordering area should be
+     * @return this for chaining
+     */
     public Region surface(int amount)
     {
         Region cpy = new Region(this).retract(amount);
         return xor(cpy);
     }
 
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't within {@code amount} distance of an
+     * existing "off" cell. This uses 4-way adjacency, and will never add "on" cells to the Region (it can only remove
+     * them or leave them as-is). This method acts like {@link #fringe(int, Region)} but only produces "on" cells where
+     * there were "on" cells at the edge of this Region's existing "on" cells.
+     * <br>
+     * This overload uses {@code temp} as a buffer Region, which should be the same size as this Region. The temp Region
+     * will have its contents erased and replaced with this Region's contents before this call.
+     * If you use {@link #surface(int)}, it allocates a new Region identical to this Region itself.
+     *
+     * @param amount how thick the bordering area should be
+     * @return this for chaining
+     */
+    public Region surface(int amount, Region temp)
+    {
+        temp.remake(this);
+        return retract(amount).xor(temp);
+    }
+
+    /**
+     * Takes the "on" cells in this Region and produces amount Regions, each one a smaller and smaller result of
+     * {@link #surface()} by 1 cell in the 4 orthogonal directions relative to the previous Region.
+     * After producing the expansions, this removes the previous Region from the next Region
+     * in the array, making each "surface" in the series have 1 "thickness," which can be useful for finding which layer
+     * of surfacing a cell lies in. This returns an array of Regions with progressively smaller perimeters
+     * taken from the cells of this Region, and does not modify this Region.
+     * <br>
+     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
+     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
+     * very well by operating in bulk on up to 64 cells at a time. This method allocates multiple copied Regions and
+     * returns most of them in an array.
+     *
+     * @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
+     */
     public Region[] surfaceSeries(int amount)
     {
         if(amount <= 0) return new Region[0];
@@ -3900,21 +3983,25 @@ public class Region implements Collection<Coord> {
         regions[amount - 1].surface();
         return regions;
     }
-
+    /**
+     * Returns an ObjectList of progressively further-retracted copied surfaces of this Region. This works like
+     * {@link #retractSeriesToLimit()}, but produces one more Region copy than that method, and only retains the changed
+     * surface of the just-retracted area.
+     *
+     * @return a new ObjectList of copies of this Region, each retracted more and more until only a surface is left,
+     * and with everything but the latest change removed from each copy
+     */
     public ObjectList<Region> surfaceSeriesToLimit() {
-        ObjectList<Region> result;
         ObjectList<Region> regions = retractSeriesToLimit();
-        if (regions.isEmpty()) {
-            result = regions;
-        } else {
+        if (!regions.isEmpty()) {
             regions.add(0, regions.get(0).copy().xor(this));
             for (int i = 1; i < regions.size() - 1; i++) {
                 regions.get(i).xor(regions.get(i + 1));
             }
-            result = regions;
         }
-        return result;
+        return regions;
     }
+
     public Region expand8way() {
         Region result = this;
         if (width < 2 || ySections <= 0) {
