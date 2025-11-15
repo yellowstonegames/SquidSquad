@@ -3586,6 +3586,8 @@ public class Region implements Collection<Coord> {
      * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
      * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
      * very well by operating in bulk on up to 64 cells at a time.
+     * This method allocates multiple copied Regions and returns most of them in an array.
+     *
      * @return an array of new Regions, length == amount, where each one is expanded by 1 relative to the last
      */
     public Region[] expandSeries(int amount) {
@@ -3603,6 +3605,11 @@ public class Region implements Collection<Coord> {
         return result;
     }
 
+    /**
+     * Returns a new ObjectList of Region where each item is a progressively more and more {@link #expand()}-ed copy of
+     * this Region, until just before the entire Region is "on" cells.
+     * @return a new ObjectList of copies of this Region, each expanded more and more until expansion can't add cells
+     */
     public ObjectList<Region> expandSeriesToLimit()
     {
         ObjectList<Region> regions = new ObjectList<>();
@@ -3614,14 +3621,17 @@ public class Region implements Collection<Coord> {
     }
     /**
      * Takes the "on" cells in this Region and expands them by one cell in the 4 orthogonal directions, producing
-     * a diamoond shape, then removes the original area before expansion, producing only the cells that were "off" in
+     * a diamond shape, then removes the original area before expansion, producing only the cells that were "off" in
      * this and within 1 cell (orthogonal-only) of an "on" cell. This method is similar to {@link #surface()}, but
      * surface finds cells inside the current Region, while fringe finds cells outside it.
      * <br>
      * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
      * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
      * very well by operating in bulk on up to 64 cells at a time. The surface and fringe methods do allocate one
-     * temporary Region to store the original before modification, but the others generally don't.
+     * temporary Region to store the original before modification, but the others generally don't. There is an overload
+     * of this method, {@link #fringe(Region)}, that takes a temporary buffer Region to avoid allocations; it can be
+     * preferable if you intend to call fringe() repeatedly.
+     *
      * @return this for chaining
      */
     public Region fringe()
@@ -3632,7 +3642,7 @@ public class Region implements Collection<Coord> {
     }
     /**
      * Takes the "on" cells in this Region and expands them by one cell in the 4 orthogonal directions, producing
-     * a diamoond shape, then removes the original area before expansion, producing only the cells that were "off" in
+     * a diamond shape, then removes the original area before expansion, producing only the cells that were "off" in
      * this and within 1 cell (orthogonal-only) of an "on" cell. This method is similar to {@link #surface()}, but
      * surface finds cells inside the current Region, while fringe finds cells outside it.
      * <br>
@@ -3663,6 +3673,7 @@ public class Region implements Collection<Coord> {
      * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
      * very well by operating in bulk on up to 64 cells at a time. The surface and fringe methods do allocate one
      * temporary Region to store the original before modification, but the others generally don't.
+     * 
      * @param amount how thick the bordering area should be
      * @return this for chaining
      */
@@ -3699,8 +3710,8 @@ public class Region implements Collection<Coord> {
 
     /**
      * Takes the "on" cells in this Region and produces amount Regions, each one expanded by 1 cell in
-     * the 4 orthogonal directions relative to the previous Region, making each "on" cell take up a diamond-
-     * shaped area. After producing the expansions, this removes the previous Region from the next Region
+     * the 4 orthogonal directions relative to the previous Region, making each "on" cell take up a
+     * diamond-shaped area. After producing the expansions, this removes the previous Region from the next Region
      * in the array, making each "fringe" in the series have 1 "thickness," which can be useful for finding which layer
      * of expansion a cell lies in. This returns an array of Regions with progressively greater expansions
      * without the cells of this Region, and does not modify this Region.
@@ -3708,7 +3719,9 @@ public class Region implements Collection<Coord> {
      * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
      * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
      * very well by operating in bulk on up to 64 cells at a time.
-     * @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
+     * This method allocates multiple copied Regions and returns most of them in an array.
+     *
+     *  @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
      */
     public Region[] fringeSeries(int amount) {
         Region[] result;
@@ -3729,6 +3742,15 @@ public class Region implements Collection<Coord> {
         }
         return result;
     }
+
+    /**
+     * Returns an ObjectList of progressively further-expanded copied fringes of this Region. This works like
+     * {@link #expandSeriesToLimit()}, and produces the same number of Region copies as that method, but removes
+     * everything but the edge of each copy.
+     *
+     * @return a new ObjectList of copies of this Region, each expanded more and more until expansion can't add cells,
+     * and with everything but the latest expansion removed
+     */
     public ObjectList<Region> fringeSeriesToLimit()
     {
         ObjectList<Region> regions = expandSeriesToLimit();
@@ -3797,7 +3819,7 @@ public class Region implements Collection<Coord> {
 
     /**
      * Takes the "on" cells in this Region and retracts them by one cell in the 4 orthogonal directions, doing
-     * this iteeratively amount times, making each "on" cell that was within amount orthogonal distance to an "off" cell
+     * this iteratively amount times, making each "on" cell that was within amount orthogonal distance to an "off" cell
      * into an "off" cell.
      * <br>
      * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
@@ -3813,6 +3835,14 @@ public class Region implements Collection<Coord> {
         return this;
     }
 
+    /**
+     * Creates an array of {@code amount} Regions, each a copy of this Region that has been {@link #retract()}-ed by a
+     * progressively greater amount starting at 1 and ending at a retraction of {@code amount} from the edges.
+     * This method allocates multiple copied Regions and returns most of them in an array.
+     *
+     * @param amount how many Region copies should be in the returned array; should be non-negative
+     * @return a new Region array containing progressively more and more retract()-ed copies of this Region
+     */
     public Region[] retractSeries(int amount) {
         Region[] result;
         if (amount <= 0) {
@@ -3828,6 +3858,12 @@ public class Region implements Collection<Coord> {
         return result;
     }
 
+    /**
+     * Creates an ObjectList of Regions, each a copy of this Region that has been retracted by a progressively
+     * greater amount starting at 1 and ending at the smallest possible non-empty Region that can produce.
+     *
+     * @return a new Region ObjectList containing progressively more and more retract()-ed copies of this Region
+     */
     public ObjectList<Region> retractSeriesToLimit()
     {
         ObjectList<Region> regions = new ObjectList<>();
