@@ -12,11 +12,15 @@ public class RegionTest {
 
     @Test
     public void testConstructors() {
-        Region r;
+        Region r, rf;
         r = new Region();
         Assert.assertEquals(4, r.width);
         Assert.assertEquals(64, r.height);
         Assert.assertEquals(0, r.size());
+        rf = new Region().remake(r);
+        Assert.assertEquals(4, rf.width);
+        Assert.assertEquals(64, rf.height);
+        Assert.assertEquals(0, rf.size());
         r.insert(2, 32);
         Assert.assertEquals(1, r.size());
         r.insertRectangle(2, 2, 2, 4);
@@ -26,6 +30,10 @@ public class RegionTest {
         Assert.assertEquals(4, r.width);
         Assert.assertEquals(64, r.height);
         Assert.assertEquals(9, r.size());
+        rf.empty().remake(r);
+        Assert.assertEquals(4, rf.width);
+        Assert.assertEquals(64, rf.height);
+        Assert.assertEquals(9, rf.size());
 
         boolean[][] booleans = new boolean[6][6];
         booleans[5][5] = true;
@@ -34,6 +42,12 @@ public class RegionTest {
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+        rf.refill(booleans);
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
 
@@ -44,6 +58,12 @@ public class RegionTest {
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+        rf.empty().refill(ints, 1);
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
         
@@ -55,6 +75,12 @@ public class RegionTest {
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+        rf.empty().refill(ints, 1, 3);
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
 
@@ -65,16 +91,29 @@ public class RegionTest {
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+        rf.empty().refill(chars, '!');
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
 
         chars = new char[6][6];
         chars[5][5] = '~';
         chars[4][5] = '.';
-        r = new Region(chars, new char[]{'.', '~', '!'});
+        char[] choices = new char[]{'.', '~', '!'};
+        r = new Region(chars, choices);
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+        rf.empty().refill(chars, choices);
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
 
@@ -90,6 +129,13 @@ public class RegionTest {
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+
+        rf.empty().refill(lines, '!');
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
         Assert.assertTrue(r.contains(4, 5));
@@ -98,6 +144,12 @@ public class RegionTest {
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+        rf.empty().refill((x, y) -> x >= 4 && y == 5, 6, 6);
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
         Assert.assertTrue(r.contains(4, 5));
@@ -107,6 +159,12 @@ public class RegionTest {
         Assert.assertEquals(6, r.width);
         Assert.assertEquals(6, r.height);
         Assert.assertEquals(2, r.size());
+
+        rf.resizeAndEmpty(6, 6).insertSeveral(Coord.get(4, 5), Coord.get(5, 5));
+        Assert.assertEquals(6, rf.width);
+        Assert.assertEquals(6, rf.height);
+        Assert.assertEquals(2, rf.size());
+
         r.insertRectangle(1, 1, 2, 4);
         Assert.assertEquals(10, r.size());
         Assert.assertTrue(r.contains(4, 5));

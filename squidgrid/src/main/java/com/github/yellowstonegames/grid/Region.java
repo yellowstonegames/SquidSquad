@@ -4476,9 +4476,6 @@ public class Region implements Collection<Coord> {
                 if (temp2.size() > 0) {
                     Coord c;
                     int x, y, p;
-                    // we shouldn't get closer to volume if we don't assign anything.
-                    // but, right now moving the i++, so it only executes if we make a change,
-                    // results in an infinite loop.
                     for (int i = current; i < volume;) {
                         c = temp2.singleRandom(rng);
                         x = c.x;
