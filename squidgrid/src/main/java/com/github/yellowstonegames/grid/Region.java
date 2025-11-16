@@ -3878,20 +3878,99 @@ public class Region implements Collection<Coord> {
         return this;
     }
 
+
+    /**
+     * Takes the "on" cells in this Region and retracts them by one cell in the 4 orthogonal directions,
+     * making each "on" cell that was orthogonally adjacent to an "off" cell into an "off" cell.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp a temporary Region that should be the same size as this one
+     * @return this for chaining
+     */
+    public Region retract(Region temp) {
+        if(width <= 2 || height <= 2) {
+            clear();
+        } else {
+            if(temp == null) temp = new Region(this);
+            else temp.remake(this);
+            final long[] self = this.data;
+            final long[] copy = temp.data;
+            System.arraycopy(copy, ySections, self, ySections, (width - 2) * ySections);
+            for (int a = 0; a < ySections; a++) {
+                if (a > 0 && a < ySections - 1) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= ((copy[i] << 1) | ((copy[i - 1] & 0x8000000000000000L) >>> 63))
+                                & ((copy[i] >>> 1) | ((copy[i + 1] & 1L) << 63))
+                                & copy[i - ySections]
+                                & copy[i + ySections];
+                    }
+                } else if (a > 0) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= ((copy[i] << 1) | ((copy[i - 1] & 0x8000000000000000L) >>> 63))
+                                & (copy[i] >>> 1)
+                                & copy[i - ySections]
+                                & copy[i + ySections];
+                    }
+                } else if (a < ySections - 1) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= (copy[i] << 1)
+                                & ((copy[i] >>> 1) | ((copy[i + 1] & 1L) << 63))
+                                & copy[i - ySections]
+                                & copy[i + ySections];
+                    }
+                } else // only the case when ySections == 1
+                {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= (copy[i] << 1) & (copy[i] >>> 1) & copy[i - ySections] & copy[i + ySections];
+                    }
+                }
+            }
+            if (yEndMask != -1) {
+                for (int a = ySections - 1; a < self.length; a += ySections) {
+                    self[a] &= yEndMask;
+                }
+            }
+            tallied = false;
+        }
+
+        return this;
+    }
+
     /**
      * Takes the "on" cells in this Region and retracts them by one cell in the 4 orthogonal directions, doing
      * this iteratively amount times, making each "on" cell that was within amount orthogonal distance to an "off" cell
      * into an "off" cell.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time.
+     * This operates in bulk on up to 64 cells at a time.
+     * This allocates and discards a temporary Region with the same size as this one.
+     *
      * @return this for chaining
      */
     public Region retract(int amount)
     {
+        return retract(amount, null);
+    }
+
+    /**
+     * Takes the "on" cells in this Region and retracts them by one cell in the 4 orthogonal directions, doing
+     * this iteratively amount times, making each "on" cell that was within amount orthogonal distance to an "off" cell
+     * into an "off" cell.
+     * <br>
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp a temporary Region that should be the same size as this one
+     * @return this for chaining
+     */
+    public Region retract(int amount, Region temp)
+    {
+        if(temp == null) temp = new Region(this);
+
         for (int i = 0; i < amount; i++) {
-            retract();
+            retract(temp);
         }
         return this;
     }
@@ -3909,12 +3988,11 @@ public class Region implements Collection<Coord> {
         if (amount <= 0) {
             result = new Region[0];
         } else {
-            Region[] regions = new Region[amount];
-            Region temp = new Region(this);
+            result = new Region[amount];
+            Region work = new Region(this), temp = new Region(this);
             for (int i = 0; i < amount; i++) {
-                regions[i] = new Region(temp.retract());
+                result[i] = new Region(work.retract(temp));
             }
-            result = regions;
         }
         return result;
     }
@@ -3928,9 +4006,9 @@ public class Region implements Collection<Coord> {
     public ObjectList<Region> retractSeriesToLimit()
     {
         ObjectList<Region> regions = new ObjectList<>();
-        Region temp = new Region(this);
-        while (!temp.retract().isEmpty()) {
-            regions.add(new Region(temp));
+        Region work = new Region(this), temp = new Region(this);
+        while (!work.retract(temp).isEmpty()) {
+            regions.add(new Region(work));
         }
         return regions;
     }
