@@ -3518,9 +3518,7 @@ public class Region implements Collection<Coord> {
      * each "on" cell take up a plus-shaped area that may overlap with other "on" cells (which is just a normal "on"
      * cell then).
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including expand(), {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time.
+     * This operates in bulk on up to 64 cells at a time.
      * @return this for chaining
      */
     public Region expand() {
@@ -3565,9 +3563,7 @@ public class Region implements Collection<Coord> {
      * making each "on" cell take up a plus-shaped area that may overlap with other "on" cells (which is just a normal
      * "on" cell then).
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time.
+     * This operates in bulk on up to 64 cells at a time.
      * @return this for chaining
      */
     public Region expand(int amount)
@@ -3583,9 +3579,7 @@ public class Region implements Collection<Coord> {
      * area that may overlap with other "on" cells (which is just a normal "on" cell then). This returns an array of
      * Regions with progressively greater expansions, and does not modify this Region.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time.
+     * This operates in bulk on up to 64 cells at a time.
      * This method allocates multiple copied Regions and returns most of them in an array.
      *
      * @return an array of new Regions, length == amount, where each one is expanded by 1 relative to the last
@@ -3658,7 +3652,8 @@ public class Region implements Collection<Coord> {
      */
     public Region fringe(Region temp)
     {
-        temp.remake(this);
+        if(temp == null) temp = new Region(this);
+        else temp.remake(this);
         expand();
         return andNot(temp);
     }
@@ -3703,7 +3698,8 @@ public class Region implements Collection<Coord> {
      */
     public Region fringe(int amount, Region temp)
     {
-        temp.remake(this);
+        if(temp == null) temp = new Region(this);
+        else temp.remake(this);
         expand(amount);
         return andNot(temp);
     }
@@ -3913,7 +3909,8 @@ public class Region implements Collection<Coord> {
      */
     public Region surface(Region temp)
     {
-        temp.remake(this);
+        if(temp == null) temp = new Region(this);
+        else temp.remake(this);
         return retract().xor(temp);
     }
 
@@ -3949,7 +3946,8 @@ public class Region implements Collection<Coord> {
      */
     public Region surface(int amount, Region temp)
     {
-        temp.remake(this);
+        if(temp == null) temp = new Region(this);
+        else temp.remake(this);
         return retract(amount).xor(temp);
     }
 
