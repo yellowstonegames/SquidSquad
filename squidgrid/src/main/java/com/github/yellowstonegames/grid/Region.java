@@ -3616,18 +3616,15 @@ public class Region implements Collection<Coord> {
      * "on" cell then).
      * <br>
      * This operates in bulk on up to 64 cells at a time.
-     * This overload allocates an array the same size as the one used internally in this Region.
-     * To avoid allocating anything, you can reuse a Region the same size as this one and pass it to
-     * {@link #expand(int, Region)}.
+     * This method allocates and discards a temporary copy of this Region.
+     * There is an overload of this method, {@link #expand(int, Region)}, that takes a reusable buffer Region to avoid
+     * allocations; it can be preferable if you intend to call expand(int) repeatedly.
      *
      * @return this for chaining
      */
     public Region expand(int amount)
     {
-        for (int i = 0; i < amount; i++) {
-            expand();
-        }
-        return this;
+        return expand(amount, null);
     }
     /**
      * Takes the "on" cells in this Region and expands them by amount cells in the 4 orthogonal directions,
@@ -3697,12 +3694,10 @@ public class Region implements Collection<Coord> {
      * this and within 1 cell (orthogonal-only) of an "on" cell. This method is similar to {@link #surface()}, but
      * surface finds cells inside the current Region, while fringe finds cells outside it.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time. The surface and fringe methods do allocate one
-     * temporary Region to store the original before modification, but the others generally don't. There is an overload
-     * of this method, {@link #fringe(Region)}, that takes a temporary buffer Region to avoid allocations; it can be
-     * preferable if you intend to call fringe() repeatedly.
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates and discards a temporary copy of this Region.
+     * There is an overload of this method, {@link #fringe(Region)}, that takes a reusable buffer Region to avoid
+     * allocations; it can be preferable if you intend to call fringe() repeatedly.
      *
      * @return this for chaining
      */
@@ -3718,21 +3713,17 @@ public class Region implements Collection<Coord> {
      * this and within 1 cell (orthogonal-only) of an "on" cell. This method is similar to {@link #surface()}, but
      * surface finds cells inside the current Region, while fringe finds cells outside it.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time. This overload of fringe allows taking a {@code temp}
-     * Region that should be the same size as this Region, and won't allocate by modifying temp in-place. All values
-     * in temp will be eliminated, so it really should be considered temporary. If temp is a different size from this
-     * Region, some memory will be allocated.
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
      *
-     * @param temp another Region that will be erased and replaced with the contents of this Region before this call
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
      * @return this for chaining
      */
     public Region fringe(Region temp)
     {
         if(temp == null) temp = new Region(this);
-        else temp.remake(this);
-        expand();
+        expand(temp);
         return andNot(temp);
     }
     /**
@@ -3742,43 +3733,41 @@ public class Region implements Collection<Coord> {
      * to {@link #surface()}, but surface finds cells inside the current Region, while fringe finds cells outside
      * it.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time. The surface and fringe methods do allocate one
-     * temporary Region to store the original before modification, but the others generally don't.
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates and discards a temporary copy of this Region.
+     * There is an overload of this method, {@link #fringe(Region)}, that takes a reusable buffer Region to avoid
+     * allocations; it can be preferable if you intend to call fringe() repeatedly.
      * 
      * @param amount how thick the bordering area should be
      * @return this for chaining
      */
     public Region fringe(int amount)
     {
-        Region cpy = new Region(this);
-        expand(amount);
-        return andNot(cpy);
+        return fringe(amount, null, null);
     }
     /**
      * Takes the "on" cells in this Region and expands them by amount cells in the 4 orthogonal directions
      * (iteratively, producing a diamond shape), then removes the original area before expansion, producing only the
      * cells that were "off" in this and within amount cells (orthogonal-only) of an "on" cell. This method is similar
-     * to {@link #surface()}, but surface finds cells inside the current Region, while fringe finds cells outside
-     * it.
+     * to {@link #surface()}, but surface finds cells inside the current Region, while fringe finds cells outside it.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time. This overload of fringe allows taking a {@code temp}
-     * Region that should be the same size as this Region, and won't allocate by modifying temp in-place. All values
-     * in temp will be eliminated, so it really should be considered temporary. If temp is a different size from this
-     * Region, some memory will be allocated.
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload of fringe allows taking a {@code temp} and {@code temp2} Region that should be the same size as
+     * this Region, and won't allocate by modifying temp and temp2 in-place. While temp, if non-null, will reliably
+     * contain the same contents as this Region before this method call, temp2 won't have any guarantee. All values
+     * in temp2 will be eliminated, so it really should be considered temporary. If temp or temp2 is a different size
+     * from this Region, some memory will be allocated; allocation will also occur if any of temp or temp2 is null.
      *
      * @param amount how thick the bordering area should be
-     * @param temp another Region that will be erased and replaced with the contents of this Region before this call
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @param temp2 another Region that will be erased and replaced with undefined contents; should be the same size as this
      * @return this for chaining
      */
-    public Region fringe(int amount, Region temp)
+    public Region fringe(int amount, Region temp, Region temp2)
     {
         if(temp == null) temp = new Region(this);
         else temp.remake(this);
-        expand(amount);
+        expand(amount, temp2);
         return andNot(temp);
     }
 
@@ -4012,8 +4001,8 @@ public class Region implements Collection<Coord> {
     /**
      * Takes the "on" cells in this Region and turns them "off" if they aren't within {@code amount} distance of an
      * existing "off" cell. This uses 4-way adjacency, and will never add "on" cells to the Region (it can only remove
-     * them or leave them as-is). This method acts like {@link #fringe(int, Region)} but only produces "on" cells where
-     * there were "on" cells at the edge of this Region's existing "on" cells.
+     * them or leave them as-is). This method acts like {@link #fringe(int, Region, Region)} but only produces "on"
+     * cells where there were "on" cells at the edge of this Region's existing "on" cells.
      * <br>
      * This overload uses {@code temp} as a buffer Region, which should be the same size as this Region. The temp Region
      * will have its contents erased and replaced with this Region's contents before this call.
