@@ -3519,12 +3519,14 @@ public class Region implements Collection<Coord> {
      * cell then).
      * <br>
      * This operates in bulk on up to 64 cells at a time.
+     * This overload allocates an array the same size as the one used internally in this Region.
+     * To avoid allocating anything, you can reuse a Region the same size as this one and pass it to
+     * {@link #expand(Region)}.
+     *
      * @return this for chaining
      */
     public Region expand() {
-        Region result = this;
-        if (width < 2 || ySections == 0) {
-        } else {
+        if (width > 0 && ySections != 0) {
             final long[] next = new long[width * ySections];
             System.arraycopy(data, 0, next, 0, width * ySections);
             for (int a = 0; a < ySections; a++) {
@@ -3556,7 +3558,57 @@ public class Region implements Collection<Coord> {
             tallied = false;
         }
 
-        return result;
+        return this;
+    }
+
+    /**
+     * Takes the "on" cells in this Region and expands them by one cell in the 4 orthogonal directions, making
+     * each "on" cell take up a plus-shaped area that may overlap with other "on" cells (which is just a normal "on"
+     * cell then).
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp a temporary Region that should be the same size as this one
+     * @return this for chaining
+     */
+    public Region expand(Region temp) {
+        if(temp == null) temp = new Region(this);
+        else temp.remake(this);
+
+        if (width > 0 && ySections != 0) {
+            final long[] self = this.data;
+            final long[] copy = temp.data;
+            for (int a = 0; a < ySections; a++) {
+                self[a] |= (copy[a] << 1) | (copy[a] >>> 1) | copy[a + ySections];
+                self[(width - 1) * ySections + a] |= (copy[(width - 1) * ySections + a] << 1) | (copy[(width - 1) * ySections + a] >>> 1) | copy[(width - 2) * ySections + a];
+
+                for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                    self[i] |= (copy[i] << 1) | (copy[i] >>> 1) | copy[i - ySections] | copy[i + ySections];
+                }
+
+                if (a > 0) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] |= (copy[i - 1] & 0x8000000000000000L) >>> 63;
+                    }
+                }
+
+                if (a < ySections - 1) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] |= (copy[i + 1] & 1L) << 63;
+                    }
+                }
+            }
+            if (ySections > 0 && yEndMask != -1) {
+                for (int a = ySections - 1; a < self.length; a += ySections) {
+                    self[a] &= yEndMask;
+                }
+            }
+            tallied = false;
+        }
+
+        return this;
     }
     /**
      * Takes the "on" cells in this Region and expands them by amount cells in the 4 orthogonal directions,
@@ -3564,12 +3616,38 @@ public class Region implements Collection<Coord> {
      * "on" cell then).
      * <br>
      * This operates in bulk on up to 64 cells at a time.
+     * This overload allocates an array the same size as the one used internally in this Region.
+     * To avoid allocating anything, you can reuse a Region the same size as this one and pass it to
+     * {@link #expand(int, Region)}.
+     *
      * @return this for chaining
      */
     public Region expand(int amount)
     {
         for (int i = 0; i < amount; i++) {
             expand();
+        }
+        return this;
+    }
+    /**
+     * Takes the "on" cells in this Region and expands them by amount cells in the 4 orthogonal directions,
+     * making each "on" cell take up a plus-shaped area that may overlap with other "on" cells (which is just a normal
+     * "on" cell then).
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp a temporary Region that should be the same size as this one
+     * @return this for chaining
+     */
+    public Region expand(int amount, Region temp)
+    {
+        if(temp == null) temp = new Region(this);
+        // remake is called automatically on the temp region in expand(Region) .
+
+        for (int i = 0; i < amount; i++) {
+            expand(temp);
         }
         return this;
     }
@@ -3590,9 +3668,9 @@ public class Region implements Collection<Coord> {
             result = new Region[0];
         } else {
             Region[] regions = new Region[amount];
-            Region temp = new Region(this);
+            Region work = new Region(this), temp = new Region(this);
             for (int i = 0; i < amount; i++) {
-                regions[i] = new Region(temp.expand());
+                regions[i] = new Region(work.expand(temp));
             }
             result = regions;
         }
@@ -3607,9 +3685,9 @@ public class Region implements Collection<Coord> {
     public ObjectList<Region> expandSeriesToLimit()
     {
         ObjectList<Region> regions = new ObjectList<>();
-        Region temp = new Region(this);
-        while (temp.size() != temp.expand().size()) {
-            regions.add(new Region(temp));
+        Region work = new Region(this), temp = new Region(this);
+        while (work.size() != work.expand(temp).size()) {
+            regions.add(new Region(work));
         }
         return regions;
     }
