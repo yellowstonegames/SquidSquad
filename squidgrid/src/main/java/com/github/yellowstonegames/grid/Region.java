@@ -3779,9 +3779,7 @@ public class Region implements Collection<Coord> {
      * of expansion a cell lies in. This returns an array of Regions with progressively greater expansions
      * without the cells of this Region, and does not modify this Region.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time.
+     * This operates in bulk on up to 64 cells at a time.
      * This method allocates multiple copied Regions and returns most of them in an array.
      *
      *  @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
@@ -3792,15 +3790,15 @@ public class Region implements Collection<Coord> {
             result = new Region[0];
         } else {
             Region[] regions = new Region[amount];
-            Region temp = new Region(this);
-            regions[0] = new Region(temp);
+            Region work = new Region(this), temp = new Region(this);
+            regions[0] = new Region(work);
             for (int i = 1; i < amount; i++) {
-                regions[i] = new Region(temp.expand());
+                regions[i] = new Region(work.expand(temp));
             }
             for (int i = 0; i < amount - 1; i++) {
                 regions[i].xor(regions[i + 1]);
             }
-            regions[amount - 1].fringe();
+            regions[amount - 1].fringe(temp);
             result = regions;
         }
         return result;
@@ -3828,14 +3826,14 @@ public class Region implements Collection<Coord> {
      * Takes the "on" cells in this Region and retracts them by one cell in the 4 orthogonal directions,
      * making each "on" cell that was orthogonally adjacent to an "off" cell into an "off" cell.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, retract(), {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time.
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload allocates an array the same size as the one used internally in this Region.
+     *
      * @return this for chaining
      */
     public Region retract() {
-        Region result = this;
-        if (width <= 2 || ySections <= 0) {
+        if(width <= 2 || height <= 2) {
+            clear();
         } else {
             final long[] next = new long[width * ySections];
             System.arraycopy(data, ySections, next, ySections, (width - 2) * ySections);
@@ -3877,7 +3875,7 @@ public class Region implements Collection<Coord> {
             tallied = false;
         }
 
-        return result;
+        return this;
     }
 
     /**
