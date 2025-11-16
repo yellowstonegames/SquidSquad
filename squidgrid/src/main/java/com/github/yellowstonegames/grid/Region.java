@@ -3704,8 +3704,7 @@ public class Region implements Collection<Coord> {
     public Region fringe()
     {
         Region cpy = new Region(this);
-        expand();
-        return andNot(cpy);
+        return expand(cpy).andNot(cpy);
     }
     /**
      * Takes the "on" cells in this Region and expands them by one cell in the 4 orthogonal directions, producing
@@ -3723,8 +3722,7 @@ public class Region implements Collection<Coord> {
     public Region fringe(Region temp)
     {
         if(temp == null) temp = new Region(this);
-        expand(temp);
-        return andNot(temp);
+        return expand(temp).andNot(temp);
     }
     /**
      * Takes the "on" cells in this Region and expands them by amount cells in the 4 orthogonal directions
@@ -4019,19 +4017,17 @@ public class Region implements Collection<Coord> {
      * This method acts like {@link #fringe()} but only produces "on" cells where there were "on" cells at the edge of
      * this Region's existing "on" cells.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time. The surface and fringe methods do allocate one
-     * temporary Region to store the original before modification, but the others generally don't. There is an overload
-     * of this method, {@link #surface(Region)}, that takes a temporary buffer Region to avoid allocations; it can be
-     * preferable if you intend to call surface() repeatedly.
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates and discards a temporary copy of this Region.
+     * There is an overload of this method, {@link #surface(Region)}, that takes a reusable buffer Region to avoid
+     * allocations; it can be preferable if you intend to call surface() repeatedly.
      *
      * @return this for chaining
      */
     public Region surface()
     {
-        Region cpy = new Region(this).retract();
-        return xor(cpy);
+        Region cpy = new Region(this);
+        return retract(cpy).xor(cpy);
     }
 
     /**
@@ -4040,21 +4036,17 @@ public class Region implements Collection<Coord> {
      * This method acts like {@link #fringe()} but only produces "on" cells where there were "on" cells at the edge of
      * this Region's existing "on" cells.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time. This overload of surface allows taking a {@code temp}
-     * Region that should be the same size as this Region, and won't allocate by modifying temp in-place. All values
-     * in temp will be eliminated, so it really should be considered temporary. If temp is a different size from this
-     * Region, some memory will be allocated.
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
      *
-     * @param temp another Region that will be erased and replaced with the contents of this Region before this call
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
      * @return this for chaining
      */
     public Region surface(Region temp)
     {
         if(temp == null) temp = new Region(this);
-        else temp.remake(this);
-        return retract().xor(temp);
+        return retract(temp).xor(temp);
     }
 
     /**
@@ -4063,7 +4055,7 @@ public class Region implements Collection<Coord> {
      * them or leave them as-is). This method acts like {@link #fringe(int)} but only produces "on" cells where there
      * were "on" cells at the edge of this Region's existing "on" cells.
      * <br>
-     * This overload allocates a temporary buffer Region; {@link #surface(int, Region)} does not.
+     * This overload allocates a temporary buffer Region; {@link #surface(int, Region, Region)} does not.
      *
      * @param amount how thick the bordering area should be
      * @return this for chaining
@@ -4077,21 +4069,27 @@ public class Region implements Collection<Coord> {
     /**
      * Takes the "on" cells in this Region and turns them "off" if they aren't within {@code amount} distance of an
      * existing "off" cell. This uses 4-way adjacency, and will never add "on" cells to the Region (it can only remove
-     * them or leave them as-is). This method acts like {@link #fringe(int, Region, Region)} but only produces "on"
-     * cells where there were "on" cells at the edge of this Region's existing "on" cells.
+     * them or leave them as-is). This method acts like {@link #fringe(int)} but only produces "on" cells where there
+     * were "on" cells at the edge of this Region's existing "on" cells.
      * <br>
-     * This overload uses {@code temp} as a buffer Region, which should be the same size as this Region. The temp Region
-     * will have its contents erased and replaced with this Region's contents before this call.
-     * If you use {@link #surface(int)}, it allocates a new Region identical to this Region itself.
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload of fringe allows taking a {@code temp} and {@code temp2} Region that should be the same size as
+     * this Region, and won't allocate by modifying temp and temp2 in-place. While temp, if non-null, will reliably
+     * contain the same contents as this Region before this method call, temp2 won't have any guarantee. All values
+     * in temp2 will be eliminated, so it really should be considered temporary. If temp or temp2 is a different size
+     * from this Region, some memory will be allocated; allocation will also occur if any of temp or temp2 is null.
      *
      * @param amount how thick the bordering area should be
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @param temp2 another Region that will be erased and replaced with undefined contents; should be the same size as this
      * @return this for chaining
      */
-    public Region surface(int amount, Region temp)
+    public Region surface(int amount, Region temp, Region temp2)
     {
         if(temp == null) temp = new Region(this);
         else temp.remake(this);
-        return retract(amount).xor(temp);
+        temp.retract(amount, temp2);
+        return xor(temp);
     }
 
     /**
@@ -4102,10 +4100,8 @@ public class Region implements Collection<Coord> {
      * of surfacing a cell lies in. This returns an array of Regions with progressively smaller perimeters
      * taken from the cells of this Region, and does not modify this Region.
      * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time. This method allocates multiple copied Regions and
-     * returns most of them in an array.
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates multiple copied Regions and returns most of them in an array.
      *
      * @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
      */
@@ -4113,15 +4109,15 @@ public class Region implements Collection<Coord> {
     {
         if(amount <= 0) return new Region[0];
         Region[] regions = new Region[amount];
-        Region temp = new Region(this);
-        regions[0] = new Region(temp);
+        Region work = new Region(this), temp = new Region(this);
+        regions[0] = new Region(work);
         for (int i = 1; i < amount; i++) {
-            regions[i] = new Region(temp.retract());
+            regions[i] = new Region(work.retract(temp));
         }
         for (int i = 0; i < amount - 1; i++) {
             regions[i].xor(regions[i + 1]);
         }
-        regions[amount - 1].surface();
+        regions[amount - 1].surface(temp);
         return regions;
     }
     /**
