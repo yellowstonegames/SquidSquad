@@ -3805,6 +3805,7 @@ public class Region implements Collection<Coord> {
      * Returns an ObjectList of progressively further-expanded copied fringes of this Region. This works like
      * {@link #expandSeriesToLimit()}, and produces the same number of Region copies as that method, but removes
      * everything but the edge of each copy.
+     * Uses 4-way adjacency, adding only orthogonally-adjacent cells.
      *
      * @return a new ObjectList of copies of this Region, each expanded more and more until expansion can't add cells,
      * and with everything but the latest expansion removed
@@ -4328,38 +4329,130 @@ public class Region implements Collection<Coord> {
         return regions;
     }
 
+    /**
+     * Takes the "on" cells in this Region and expands them by one cell in the 8 orthogonal and diagonal directions,
+     * producing a square shape, then removes the original area before expansion, producing only the cells that were
+     * "off" in this and within 1 cell (8-way) of an "on" cell. This method is similar to {@link #surface8way()}, but
+     * surface finds cells inside the current Region, while fringe finds cells outside it.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates and discards a temporary copy of this Region.
+     * There is an overload of this method, {@link #fringe8way(Region)}, that takes a reusable buffer Region to avoid
+     * allocations; it can be preferable if you intend to call fringe8way() repeatedly.
+     *
+     * @return this for chaining
+     */
     public Region fringe8way()
     {
         Region cpy = new Region(this);
-        expand8way();
-        return andNot(cpy);
+        return expand8way(cpy).andNot(cpy);
     }
+    /**
+     * Takes the "on" cells in this Region and expands them by one cell in the 8 orthogonal and diagonal directions,
+     * producing a square shape, then removes the original area before expansion, producing only the cells that were
+     * "off" in this and within 1 cell (8-way) of an "on" cell. This method is similar to {@link #surface8way()}, but
+     * surface finds cells inside the current Region, while fringe finds cells outside it.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region fringe8way(Region temp)
+    {
+        if(temp == null) temp = new Region(this);
+        return expand8way(temp).andNot(temp);
+    }
+    /**
+     * Takes the "on" cells in this Region and expands them by amount cells in the 8 orthogonal and diagonal directions
+     * (iteratively, producing a square shape), then removes the original area before expansion, producing only the
+     * cells that were "off" in this and within amount cells (8-way) of an "on" cell. This method is similar
+     * to {@link #surface8way()}, but surface finds cells inside the current Region, while fringe finds cells outside
+     * it.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates and discards a temporary copy of this Region.
+     * There is an overload of this method, {@link #fringe8way(int, Region, Region)}, that takes reusable buffer Regions
+     * to avoid allocations; it can be preferable if you intend to call fringe8way() repeatedly.
+     *
+     * @param amount how thick the bordering area should be
+     * @return this for chaining
+     */
     public Region fringe8way(int amount)
     {
-        Region cpy = new Region(this);
-        expand8way(amount);
-        return andNot(cpy);
+        return fringe8way(amount, null, null);
+    }
+    /**
+     * Takes the "on" cells in this Region and expands them by amount cells in the 8 orthogonal and diagonal directions
+     * (iteratively, producing a square shape), then removes the original area before expansion, producing only the
+     * cells that were "off" in this and within {@code amount} cells (8-way) of an "on" cell. This method is similar
+     * to {@link #surface8way()}, but surface finds cells inside the current Region, while fringe finds cells outside
+     * it.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload of fringe8way allows taking a {@code temp} and {@code temp2} Region that should be the same size as
+     * this Region, and won't allocate by modifying temp and temp2 in-place. While temp, if non-null, will reliably
+     * contain the same contents as this Region before this method call, temp2 won't have any guarantee. All values
+     * in temp2 will be eliminated, so it really should be considered temporary. If temp or temp2 is a different size
+     * from this Region, some memory will be allocated; allocation will also occur if any of temp or temp2 is null.
+     *
+     * @param amount how thick the bordering area should be
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @param temp2 another Region that will be erased and replaced with undefined contents; should be the same size as this
+     * @return this for chaining
+     */
+    public Region fringe8way(int amount, Region temp, Region temp2)
+    {
+        if(temp == null) temp = new Region(this);
+        else temp.remake(this);
+        expand8way(amount, temp2);
+        return andNot(temp);
     }
 
+    /**
+     * Takes the "on" cells in this Region and produces amount Regions, each one expanded by 1 cell in the 8 orthogonal
+     * and diagonal directions relative to the previous Region, making each "on" cell take up a
+     * square-shaped area. After producing the expansions, this removes the previous Region from the next Region
+     * in the array, making each "fringe" in the series have 1 "thickness," which can be useful for finding which layer
+     * of expansion a cell lies in. This returns an array of Regions with progressively greater expansions
+     * without the cells of this Region, and does not modify this Region.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates multiple copied Regions and returns most of them in an array.
+     *
+     *  @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
+     */
     public Region[] fringeSeries8way(int amount) {
         Region[] result;
         if (amount <= 0) {
             result = new Region[0];
         } else {
             Region[] regions = new Region[amount];
-            Region temp = new Region(this);
-            regions[0] = new Region(temp);
+            Region work = new Region(this), temp = new Region(this);
+            regions[0] = new Region(work);
             for (int i = 1; i < amount; i++) {
-                regions[i] = new Region(temp.expand8way());
+                regions[i] = new Region(work.expand8way(temp));
             }
             for (int i = 0; i < amount - 1; i++) {
                 regions[i].xor(regions[i + 1]);
             }
-            regions[amount - 1].fringe8way();
+            regions[amount - 1].fringe8way(temp);
             result = regions;
         }
         return result;
     }
+
+    /**
+     * Returns an ObjectList of progressively further-expanded copied fringes of this Region. This works like
+     * {@link #expandSeriesToLimit8way()}, and produces the same number of Region copies as that method, but removes
+     * everything but the edge of each copy.
+     * Uses 8-way adjacency, adding orthogonally- and diagonally-adjacent cells.
+     *
+     * @return a new ObjectList of copies of this Region, each expanded more and more until expansion can't add cells,
+     * and with everything but the latest expansion removed
+     */
     public ObjectList<Region> fringeSeriesToLimit8way()
     {
         ObjectList<Region> regions = expandSeriesToLimit8way();
