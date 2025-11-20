@@ -3938,8 +3938,8 @@ public class Region implements Collection<Coord> {
 
     /**
      * Takes the "on" cells in this Region and retracts them by one cell in the 4 orthogonal directions, doing
-     * this iteratively amount times, making each "on" cell that was within amount orthogonal distance to an "off" cell
-     * into an "off" cell.
+     * this iteratively {@code amount} times, making each "on" cell that was within amount orthogonal distance to an
+     * "off" cell into an "off" cell.
      * <br>
      * This operates in bulk on up to 64 cells at a time.
      * This allocates and discards a temporary Region with the same size as this one.
@@ -3953,8 +3953,8 @@ public class Region implements Collection<Coord> {
 
     /**
      * Takes the "on" cells in this Region and retracts them by one cell in the 4 orthogonal directions, doing
-     * this iteratively amount times, making each "on" cell that was within amount orthogonal distance to an "off" cell
-     * into an "off" cell.
+     * this iteratively {@code amount} times, making each "on" cell that was within amount orthogonal distance to an
+     * "off" cell into an "off" cell.
      * <br>
      * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
      * non-null, it will be cleared and receive the contents of this Region before this method call.
@@ -4462,6 +4462,17 @@ public class Region implements Collection<Coord> {
         return regions;
     }
 
+    /**
+     * Takes the "on" cells in this Region and retracts them by one cell in the 8 orthogonal and diagonal directions,
+     * making each "on" cell that was orthogonally or diagonally adjacent to an "off" cell into an "off" cell.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload allocates an array the same size as the one used internally in this Region.
+     * To avoid allocating anything, you can reuse a Region the same size as this one and pass it to
+     * {@link #retract8way(Region)}.
+     *
+     * @return this for chaining
+     */
     public Region retract8way() {
         if(width <= 2 || height <= 2) {
             clear();
@@ -4528,6 +4539,17 @@ public class Region implements Collection<Coord> {
         return this;
     }
 
+    /**
+     * Takes the "on" cells in this Region and retracts them by one cell in the 8 orthogonal and diagonal directions,
+     * making each "on" cell that was orthogonally or diagonally adjacent to an "off" cell into an "off" cell.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp a temporary Region that should be the same size as this one
+     * @return this for chaining
+     */
     public Region retract8way(Region temp) {
         if(width <= 2 || height <= 2) {
             clear();
@@ -4595,10 +4617,33 @@ public class Region implements Collection<Coord> {
         return this;
     }
 
+
+    /**
+     * Takes the "on" cells in this Region and retracts them by one cell in the 8 orthogonal and diagonal directions,
+     * doing this iteratively {@code amount} times, making each "on" cell that was within amount orthogonal or diagonal
+     * distance to an "off" cell into an "off" cell.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This allocates and discards a temporary Region with the same size as this one.
+     *
+     * @return this for chaining
+     */
     public Region retract8way(int amount)
     {
         return retract8way(amount, null);
     }
+
+    /**
+     * Takes the "on" cells in this Region and retracts them by one cell in the 8 orthogonal and diagonal directions,
+     * doing this iteratively {@code amount} times, making each "on" cell that was within amount orthogonal or diagonal
+     * distance to an "off" cell into an "off" cell.
+     * <br>
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp a temporary Region that should be the same size as this one
+     * @return this for chaining
+     */
     public Region retract8way(int amount, Region temp)
     {
         if(temp == null) temp = new Region(this);
@@ -4609,6 +4654,14 @@ public class Region implements Collection<Coord> {
         return this;
     }
 
+    /**
+     * Creates an array of {@code amount} Regions, each a copy of this Region that has been {@link #retract8way()}-ed by
+     * a progressively greater amount starting at 1 and ending at a retraction of {@code amount} from the edges.
+     * This method allocates multiple copied Regions and returns most of them in an array.
+     *
+     * @param amount how many Region copies should be in the returned array; should be non-negative
+     * @return a new Region array containing progressively more and more retract()-ed copies of this Region
+     */
     public Region[] retractSeries8way(int amount) {
         Region[] result;
         if (amount <= 0) {
@@ -4623,6 +4676,12 @@ public class Region implements Collection<Coord> {
         return result;
     }
 
+    /**
+     * Creates an ObjectList of Regions, each a copy of this Region that has been {@link #retract8way()}-ed by a
+     * progressively greater amount starting at 1 and ending at the smallest possible non-empty Region that can produce.
+     *
+     * @return a new Region ObjectList containing progressively more and more retract8way()-ed copies of this Region
+     */
     public ObjectList<Region> retractSeriesToLimit8way()
     {
         ObjectList<Region> regions = new ObjectList<>();
