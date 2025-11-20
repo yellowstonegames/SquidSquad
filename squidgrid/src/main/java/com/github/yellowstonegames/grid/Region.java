@@ -3896,7 +3896,6 @@ public class Region implements Collection<Coord> {
             else temp.remake(this);
             final long[] self = this.data;
             final long[] copy = temp.data;
-            System.arraycopy(copy, ySections, self, ySections, (width - 2) * ySections);
             for (int a = 0; a < ySections; a++) {
                 if (a > 0 && a < ySections - 1) {
                     for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
@@ -4464,8 +4463,8 @@ public class Region implements Collection<Coord> {
     }
 
     public Region retract8way() {
-        Region result = this;
-        if (width <= 2 || ySections <= 0) {
+        if(width <= 2 || height <= 2) {
+            clear();
         } else {
             final long[] next = new long[width * ySections];
             System.arraycopy(data, ySections, next, ySections, (width - 2) * ySections);
@@ -4526,7 +4525,74 @@ public class Region implements Collection<Coord> {
             tallied = false;
         }
 
-        return result;
+        return this;
+    }
+
+    public Region retract8way(Region temp) {
+        if(width <= 2 || height <= 2) {
+            clear();
+        } else {
+            if(temp == null) temp = new Region(this);
+            else temp.remake(this);
+            final long[] self = this.data;
+            final long[] copy = temp.data;
+            for (int a = 0; a < ySections; a++) {
+                if (a > 0 && a < ySections - 1) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= ((copy[i] << 1) | ((copy[i - 1] & 0x8000000000000000L) >>> 63))
+                                & ((copy[i] >>> 1) | ((copy[i + 1] & 1L) << 63))
+                                & copy[i - ySections]
+                                & copy[i + ySections]
+                                & ((copy[i - ySections] << 1) | ((copy[i - 1 - ySections] & 0x8000000000000000L) >>> 63))
+                                & ((copy[i + ySections] << 1) | ((copy[i - 1 + ySections] & 0x8000000000000000L) >>> 63))
+                                & ((copy[i - ySections] >>> 1) | ((copy[i + 1 - ySections] & 1L) << 63))
+                                & ((copy[i + ySections] >>> 1) | ((copy[i + 1 + ySections] & 1L) << 63));
+                    }
+                } else if (a > 0) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= ((copy[i] << 1) | ((copy[i - 1] & 0x8000000000000000L) >>> 63))
+                                & (copy[i] >>> 1)
+                                & copy[i - ySections]
+                                & copy[i + ySections]
+                                & ((copy[i - ySections] << 1) | ((copy[i - 1 - ySections] & 0x8000000000000000L) >>> 63))
+                                & ((copy[i + ySections] << 1) | ((copy[i - 1 + ySections] & 0x8000000000000000L) >>> 63))
+                                & (copy[i - ySections] >>> 1)
+                                & (copy[i + ySections] >>> 1);
+                    }
+                } else if (a < ySections - 1) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= (copy[i] << 1)
+                                & ((copy[i] >>> 1) | ((copy[i + 1] & 1L) << 63))
+                                & copy[i - ySections]
+                                & copy[i + ySections]
+                                & (copy[i - ySections] << 1)
+                                & (copy[i + ySections] << 1)
+                                & ((copy[i - ySections] >>> 1) | ((copy[i + 1 - ySections] & 1L) << 63))
+                                & ((copy[i + ySections] >>> 1) | ((copy[i + 1 + ySections] & 1L) << 63));
+                    }
+                } else // only the case when ySections == 1
+                {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] &= (copy[i] << 1)
+                                & (copy[i] >>> 1)
+                                & copy[i - ySections]
+                                & copy[i + ySections]
+                                & (copy[i - ySections] << 1)
+                                & (copy[i + ySections] << 1)
+                                & (copy[i - ySections] >>> 1)
+                                & (copy[i + ySections] >>> 1);
+                    }
+                }
+            }
+            if (yEndMask != -1) {
+                for (int a = ySections - 1; a < self.length; a += ySections) {
+                    self[a] &= yEndMask;
+                }
+            }
+            tallied = false;
+        }
+
+        return this;
     }
 
     public Region retract8way(int amount)
