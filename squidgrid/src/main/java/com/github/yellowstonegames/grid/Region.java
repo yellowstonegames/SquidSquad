@@ -4597,8 +4597,14 @@ public class Region implements Collection<Coord> {
 
     public Region retract8way(int amount)
     {
+        return retract8way(amount, null);
+    }
+    public Region retract8way(int amount, Region temp)
+    {
+        if(temp == null) temp = new Region(this);
+
         for (int i = 0; i < amount; i++) {
-            retract8way();
+            retract8way(temp);
         }
         return this;
     }
@@ -4608,12 +4614,11 @@ public class Region implements Collection<Coord> {
         if (amount <= 0) {
             result = new Region[0];
         } else {
-            Region[] regions = new Region[amount];
-            Region temp = new Region(this);
+            result = new Region[amount];
+            Region work = new Region(this), temp = new Region(this);
             for (int i = 0; i < amount; i++) {
-                regions[i] = new Region(temp.retract8way());
+                result[i] = new Region(work.retract8way(temp));
             }
-            result = regions;
         }
         return result;
     }
@@ -4621,9 +4626,9 @@ public class Region implements Collection<Coord> {
     public ObjectList<Region> retractSeriesToLimit8way()
     {
         ObjectList<Region> regions = new ObjectList<>();
-        Region temp = new Region(this);
-        while (!temp.retract8way().isEmpty()) {
-            regions.add(new Region(temp));
+        Region work = new Region(this), temp = new Region(this);
+        while (!work.retract8way(temp).isEmpty()) {
+            regions.add(new Region(work));
         }
         return regions;
     }
