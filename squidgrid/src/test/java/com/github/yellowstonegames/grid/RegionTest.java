@@ -172,6 +172,36 @@ public class RegionTest {
     }
 
     @Test
+    public void testExpand() {
+        String[] lines = new String[]{
+                "      ",
+                "   !! ",
+                "  !!!!",
+                "  !!!!",
+                "  !!!!",
+                "   !! ",
+        };
+        Region r = new Region(lines, '!');
+        String[] targetLines = new String[]{
+                "   !! ",
+                "  !!!!",
+                " !!!!!",
+                " !!!!!",
+                " !!!!!",
+                "  !!!!",
+        };
+        Region t = new Region(targetLines, '!');
+        r.expand();
+        Assert.assertEquals(r, t);
+
+        r.refill(lines, '!');
+        Region old = new Region(t);
+        r.expand(old);
+        Assert.assertEquals(r, t);
+        Assert.assertEquals(r.refill(lines, '!'), old);
+    }
+
+    @Test
     public void testFloodFills() {
         EnhancedRandom rng = new AceRandom(123456789);
         Region r = new Region(9, 9, Coord.get(5, 5));
