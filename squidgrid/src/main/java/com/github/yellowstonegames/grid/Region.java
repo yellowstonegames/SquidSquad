@@ -4564,6 +4564,12 @@ public class Region implements Collection<Coord> {
             else temp.remake(this);
             final long[] self = this.data;
             final long[] copy = temp.data;
+            // Wipe any "on" cells from the first and last columns.
+            // Equivalent to the unusual arraycopy call in zero-argument retract8way().
+            for (int a = 0; a < ySections; a++) {
+                self[a] = 0L;
+                self[a + width - 1] = 0L;
+            }
             for (int a = 0; a < ySections; a++) {
                 if (a > 0 && a < ySections - 1) {
                     for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
