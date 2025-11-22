@@ -1,5 +1,6 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import org.junit.Assert;
@@ -199,6 +200,21 @@ public class RegionTest {
         r.expand(old);
         Assert.assertEquals(r, t);
         Assert.assertEquals(r.refill(lines, '!'), old);
+
+        System.out.println("expandSeries(3)");
+        r.refill(lines, '!');
+        Region[] series = r.expandSeries(3);
+        for (int i = 0; i < series.length; i++) {
+            System.out.println(series[i]);
+            System.out.println();
+        }
+        System.out.println("expandSeriesToLimit()");
+        r.refill(lines, '!');
+        ObjectList<Region> limited = r.expandSeriesToLimit();
+        for(Region reg : limited) {
+            System.out.println(reg);
+            System.out.println();
+        }
     }
 
     @Test

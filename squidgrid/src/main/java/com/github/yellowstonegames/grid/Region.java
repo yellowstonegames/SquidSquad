@@ -3675,8 +3675,8 @@ public class Region implements Collection<Coord> {
 
     /**
      * Returns a new ObjectList of Region where each item is a progressively more and more {@link #expand()}-ed copy of
-     * this Region, until just before the entire Region is "on" cells.
-     * @return a new ObjectList of copies of this Region, each expanded more and more until expansion can't add cells
+     * this Region, until ending where the entire Region is "on" cells.
+     * @return a new ObjectList of copies of this Region, each expanded more and more until every cell is "on"
      */
     public ObjectList<Region> expandSeriesToLimit()
     {
