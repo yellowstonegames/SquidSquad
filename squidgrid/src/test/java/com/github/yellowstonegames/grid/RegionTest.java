@@ -217,6 +217,52 @@ public class RegionTest {
         }
     }
 
+
+    @Test
+    public void testRetract() {
+        String[] lines = new String[]{
+                "      ",
+                "   !! ",
+                "  !!!!",
+                "  !!!!",
+                "  !!!!",
+                "   !! ",
+        };
+        Region r = new Region(lines, '!');
+        String[] targetLines = new String[]{
+                "      ",
+                "      ",
+                "   !! ",
+                "   !! ",
+                "   !! ",
+                "      ",
+        };
+        Region t = new Region(targetLines, '!');
+        r.retract();
+        Assert.assertEquals(r, t);
+
+        r.refill(lines, '!');
+        Region old = new Region(t);
+        r.retract(old);
+        Assert.assertEquals(r, t);
+        Assert.assertEquals(r.refill(lines, '!'), old);
+
+        System.out.println("retractSeries(3)");
+        r.refill(lines, '!');
+        Region[] series = r.retractSeries(3);
+        for (int i = 0; i < series.length; i++) {
+            System.out.println(series[i]);
+            System.out.println();
+        }
+        System.out.println("retractSeriesToLimit()");
+        r.refill(lines, '!');
+        ObjectList<Region> limited = r.retractSeriesToLimit();
+        for(Region reg : limited) {
+            System.out.println(reg);
+            System.out.println();
+        }
+    }
+
     @Test
     public void testFloodFills() {
         EnhancedRandom rng = new AceRandom(123456789);
