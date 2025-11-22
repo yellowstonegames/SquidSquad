@@ -263,6 +263,51 @@ public class RegionTest {
     }
 
     @Test
+    public void testFringe() {
+        String[] lines = new String[]{
+                "      ",
+                "   !! ",
+                "  !!!!",
+                "  !!!!",
+                "  !!!!",
+                "   !! ",
+        };
+        Region r = new Region(lines, '!');
+        String[] targetLines = new String[]{
+                "   !! ",
+                "  !  !",
+                " !    ",
+                " !    ",
+                " !    ",
+                "  !  !",
+        };
+        Region t = new Region(targetLines, '!');
+        r.fringe();
+        Assert.assertEquals(r, t);
+
+        r.refill(lines, '!');
+        Region old = new Region(t);
+        r.fringe(old);
+        Assert.assertEquals(r, t);
+        Assert.assertEquals(r.refill(lines, '!'), old);
+
+        System.out.println("fringeSeries(3)");
+        r.refill(lines, '!');
+        Region[] series = r.fringeSeries(3);
+        for (int i = 0; i < series.length; i++) {
+            System.out.println(series[i]);
+            System.out.println();
+        }
+        System.out.println("fringeSeriesToLimit()");
+        r.refill(lines, '!');
+        ObjectList<Region> limited = r.fringeSeriesToLimit();
+        for(Region reg : limited) {
+            System.out.println(reg);
+            System.out.println();
+        }
+    }
+    
+    @Test
     public void testExpand8way() {
         String[] lines = new String[]{
                 "      ",
@@ -306,7 +351,6 @@ public class RegionTest {
             System.out.println();
         }
     }
-
 
     @Test
     public void testRetract8way() {
