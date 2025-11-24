@@ -4799,25 +4799,21 @@ public class Region implements Collection<Coord> {
      *
      * @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
      */
-    public Region[] surfaceSeries8way(int amount) {
-        Region[] result;
-        if (amount <= 0) {
-            result = new Region[0];
-        } else {
-            Region[] regions = new Region[amount];
-            Region temp = new Region(this);
-            regions[0] = new Region(temp);
-            for (int i = 1; i < amount; i++) {
-                regions[i] = new Region(temp.retract8way());
-            }
-            for (int i = 0; i < amount - 1; i++) {
-                regions[i].xor(regions[i + 1]);
-            }
-            regions[amount - 1].surface8way();
-            result = regions;
+    public Region[] surfaceSeries8way(int amount)     {
+        if(amount <= 0) return new Region[0];
+        Region[] regions = new Region[amount];
+        Region work = new Region(this), temp = new Region(this);
+        regions[0] = new Region(work);
+        for (int i = 1; i < amount; i++) {
+            regions[i] = new Region(work.retract8way(temp));
         }
-        return result;
+        for (int i = 0; i < amount - 1; i++) {
+            regions[i].xor(regions[i + 1]);
+        }
+        regions[amount - 1].surface8way(temp);
+        return regions;
     }
+
 
     /**
      * Returns an ObjectList of progressively further-retracted copied surfaces of this Region. This works like
@@ -4828,18 +4824,14 @@ public class Region implements Collection<Coord> {
      * and with everything but the latest change removed from each copy
      */
     public ObjectList<Region> surfaceSeriesToLimit8way() {
-        ObjectList<Region> result;
         ObjectList<Region> regions = retractSeriesToLimit8way();
-        if (regions.isEmpty()) {
-            result = regions;
-        } else {
+        if (!regions.isEmpty()) {
             regions.add(0, regions.get(0).copy().xor(this));
             for (int i = 1; i < regions.size() - 1; i++) {
                 regions.get(i).xor(regions.get(i + 1));
             }
-            result = regions;
         }
-        return result;
+        return regions;
     }
 
     /**
