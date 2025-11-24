@@ -4078,7 +4078,7 @@ public class Region implements Collection<Coord> {
      * were "on" cells at the edge of this Region's existing "on" cells.
      * <br>
      * This operates in bulk on up to 64 cells at a time.
-     * This overload of fringe allows taking a {@code temp} and {@code temp2} Region that should be the same size as
+     * This overload of surface allows taking a {@code temp} and {@code temp2} Region that should be the same size as
      * this Region, and won't allocate by modifying temp and temp2 in-place. While temp, if non-null, will reliably
      * contain the same contents as this Region before this method call, temp2 won't have any guarantee. All values
      * in temp2 will be eliminated, so it really should be considered temporary. If temp or temp2 is a different size
@@ -4125,10 +4125,11 @@ public class Region implements Collection<Coord> {
         regions[amount - 1].surface(temp);
         return regions;
     }
+
     /**
      * Returns an ObjectList of progressively further-retracted copied surfaces of this Region. This works like
      * {@link #retractSeriesToLimit()}, but produces one more Region copy than that method, and only retains the changed
-     * surface of the just-retracted area.
+     * surface of the just-retracted area. This uses 4-way adjacency.
      *
      * @return a new ObjectList of copies of this Region, each retracted more and more until only a surface is left,
      * and with everything but the latest change removed from each copy
@@ -4704,18 +4705,100 @@ public class Region implements Collection<Coord> {
         return regions;
     }
 
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't adjacent to an existing "off" cell. This
+     * uses 8-way adjacency, and will never add "on" cells to the Region (it can only remove them or leave them as-is).
+     * This method acts like {@link #fringe8way()} but only produces "on" cells where there were "on" cells at the edge
+     * of this Region's existing "on" cells.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates and discards a temporary copy of this Region.
+     * There is an overload of this method, {@link #surface8way(Region)}, that takes a reusable buffer Region to avoid
+     * allocations; it can be preferable if you intend to call surface8way() repeatedly.
+     *
+     * @return this for chaining
+     */
     public Region surface8way()
     {
         Region cpy = new Region(this).retract8way();
         return xor(cpy);
     }
 
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't adjacent to an existing "off" cell. This
+     * uses 8-way adjacency, and will never add "on" cells to the Region (it can only remove them or leave them as-is).
+     * This method acts like {@link #fringe()} but only produces "on" cells where there were "on" cells at the edge of
+     * this Region's existing "on" cells.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload takes a temporary Region {@code temp} that should be the same size as this Region. If temp is
+     * non-null, it will be cleared and receive the contents of this Region before this method call.
+     *
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region surface8way(Region temp)
+    {
+        if(temp == null) temp = new Region(this);
+        return retract8way(temp).xor(temp);
+    }
+
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't within {@code amount} distance of an
+     * existing "off" cell. This uses 8-way adjacency, and will never add "on" cells to the Region (it can only remove
+     * them or leave them as-is). This method acts like {@link #fringe8way(int)} but only produces "on" cells where
+     * there were "on" cells at the edge of this Region's existing "on" cells.
+     * <br>
+     * This overload allocates a temporary buffer Region; {@link #surface8way(int, Region, Region)} does not.
+     *
+     * @param amount how thick the bordering area should be
+     * @return this for chaining
+     */
     public Region surface8way(int amount)
     {
         Region cpy = new Region(this).retract8way(amount);
         return xor(cpy);
     }
 
+    /**
+     * Takes the "on" cells in this Region and turns them "off" if they aren't within {@code amount} distance of an
+     * existing "off" cell. This uses 8-way adjacency, and will never add "on" cells to the Region (it can only remove
+     * them or leave them as-is). This method acts like {@link #fringe8way(int)} but only produces "on" cells where
+     * there were "on" cells at the edge of this Region's existing "on" cells.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This overload of surface8way allows taking a {@code temp} and {@code temp2} Region that should be the same size
+     * as this Region, and won't allocate by modifying temp and temp2 in-place. While temp, if non-null, will reliably
+     * contain the same contents as this Region before this method call, temp2 won't have any guarantee. All values
+     * in temp2 will be eliminated, so it really should be considered temporary. If temp or temp2 is a different size
+     * from this Region, some memory will be allocated; allocation will also occur if any of temp or temp2 is null.
+     *
+     * @param amount how thick the bordering area should be
+     * @param temp another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @param temp2 another Region that will be erased and replaced with undefined contents; should be the same size as this
+     * @return this for chaining
+     */
+    public Region surface8way(int amount, Region temp, Region temp2)
+    {
+        if(temp == null) temp = new Region(this);
+        else temp.remake(this);
+        temp.retract8way(amount, temp2);
+        return xor(temp);
+    }
+
+    /**
+     * Takes the "on" cells in this Region and produces amount Regions, each one a smaller and smaller result of
+     * {@link #surface8way()} by 1 cell in the 8 orthogonal and diagonal directions relative to the previous Region.
+     * After producing the expansions, this removes the previous Region from the next Region
+     * in the array, making each "surface" in the series have 1 "thickness," which can be useful for finding which layer
+     * of surfacing a cell lies in. This returns an array of Regions with progressively smaller perimeters
+     * taken from the cells of this Region, and does not modify this Region.
+     * <br>
+     * This operates in bulk on up to 64 cells at a time.
+     * This method allocates multiple copied Regions and returns most of them in an array.
+     *
+     * @return an array of new Regions, length == amount, where each one is a 1-depth fringe pushed further out from this
+     */
     public Region[] surfaceSeries8way(int amount) {
         Region[] result;
         if (amount <= 0) {
@@ -4735,6 +4818,15 @@ public class Region implements Collection<Coord> {
         }
         return result;
     }
+
+    /**
+     * Returns an ObjectList of progressively further-retracted copied surfaces of this Region. This works like
+     * {@link #retractSeriesToLimit8way()}, but produces one more Region copy than that method, and only retains the
+     * changed surface of the just-retracted area. This uses 8-way adjacency.
+     *
+     * @return a new ObjectList of copies of this Region, each retracted more and more until only a surface is left,
+     * and with everything but the latest change removed from each copy
+     */
     public ObjectList<Region> surfaceSeriesToLimit8way() {
         ObjectList<Region> result;
         ObjectList<Region> regions = retractSeriesToLimit8way();
