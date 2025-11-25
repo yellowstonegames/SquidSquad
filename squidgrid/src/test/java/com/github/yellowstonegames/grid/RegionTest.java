@@ -306,7 +306,52 @@ public class RegionTest {
             System.out.println();
         }
     }
-    
+
+    @Test
+    public void testSurface() {
+        String[] lines = new String[]{
+                "      ",
+                "   !! ",
+                "  !!!!",
+                "  !!!!",
+                "  !!!!",
+                "   !! ",
+        };
+        Region r = new Region(lines, '!');
+        String[] targetLines = new String[]{
+                "      ",
+                "   !! ",
+                "  !  !",
+                "  !  !",
+                "  !  !",
+                "   !! ",
+        };
+        Region t = new Region(targetLines, '!');
+        r.surface();
+        Assert.assertEquals(r, t);
+
+        r.refill(lines, '!');
+        Region old = new Region(t);
+        r.surface(old);
+        Assert.assertEquals(r, t);
+        Assert.assertEquals(r.refill(lines, '!'), old);
+
+        System.out.println("surfaceSeries(3)");
+        r.refill(lines, '!');
+        Region[] series = r.surfaceSeries(3);
+        for (int i = 0; i < series.length; i++) {
+            System.out.println(series[i]);
+            System.out.println();
+        }
+        System.out.println("surfaceSeriesToLimit()");
+        r.refill(lines, '!');
+        ObjectList<Region> limited = r.surfaceSeriesToLimit();
+        for(Region reg : limited) {
+            System.out.println(reg);
+            System.out.println();
+        }
+    }
+
     @Test
     public void testExpand8way() {
         String[] lines = new String[]{
