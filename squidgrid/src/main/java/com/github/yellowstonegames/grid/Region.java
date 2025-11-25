@@ -4959,8 +4959,7 @@ public class Region implements Collection<Coord> {
      */
     public Region flood(Region bounds) {
         Region result = this;
-        if (width < 2 || ySections <= 0 || bounds == null || bounds.width < 2 || bounds.ySections <= 0) {
-        } else {
+        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             final long[] next = new long[width * ySections];
             for (int a = 0; a < ySections && a < bounds.ySections; a++) {
                 next[a] |= (data[a] | (data[a] << 1) | (data[a] >>> 1) | data[a + ySections]) & bounds.data[a];
@@ -5100,8 +5099,7 @@ public class Region implements Collection<Coord> {
      */
     public Region flood8way(Region bounds) {
         Region result = this;
-        if (width < 2 || ySections <= 0 || bounds == null || bounds.width < 2 || bounds.ySections <= 0) {
-        } else {
+        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             final long[] next = new long[width * ySections];
             for (int a = 0; a < ySections && a < bounds.ySections; a++) {
                 next[a] |= (data[a] | (data[a] << 1) | (data[a] >>> 1)
@@ -5666,6 +5664,82 @@ public class Region implements Collection<Coord> {
             }
         }
         data = next;
+        tallied = false;
+        return this;
+    }
+
+    /**
+     * Where a cell is "on" but forms a right-angle with exactly two orthogonally-adjacent "on" cells and exactly two
+     * orthogonally-adjacent "off" cells, this turns each of those cells "off." This won't affect east-west lines of
+     * flat "on" cells, nor north-south lines.
+     * @return this, after removing right-angle corner "on" cells, for chaining
+     */
+    public Region removeCorners(Region buffer)
+    {
+        if(width <= 1 || ySections <= 0)
+            return this;
+
+        if(buffer == null) buffer = new Region(this);
+        else buffer.remake(this);
+        long[] self = this.data;
+        long[] copy = buffer.data;
+        for (int a = 0; a < ySections; a++) {
+            if(a > 0 && a < ySections - 1) {
+                self[a] &= (((copy[a] << 1) | ((copy[a - 1] & 0x8000000000000000L) >>> 63))
+                        & ((copy[a] >>> 1) | ((copy[a + 1] & 1L) << 63)));
+                self[(width - 1) * ySections + a] &= (((copy[(width - 1) * ySections + a] << 1)
+                        | ((copy[(width - 1) * ySections + a - 1] & 0x8000000000000000L) >>> 63))
+                        & ((copy[(width - 1) * ySections + a] >>> 1)
+                        | ((copy[(width - 1) * ySections + a + 1] & 1L) << 63)));
+                for (int i = ySections+a; i < (width - 1) * ySections; i+= ySections) {
+                    self[i] &= (((copy[i] << 1) | ((copy[i - 1] & 0x8000000000000000L) >>> 63))
+                            & ((copy[i] >>> 1) | ((copy[i + 1] & 1L) << 63)))
+                            | (copy[i - ySections]
+                            & copy[i + ySections]);
+                }
+            }
+            else if(a > 0) {
+                self[a] &= (((copy[a] << 1) | ((copy[a - 1] & 0x8000000000000000L) >>> 63))
+                        & (copy[a] >>> 1));
+                self[(width - 1) * ySections + a] &= (((copy[(width - 1) * ySections + a] << 1)
+                        | ((copy[(width - 1) * ySections + a - 1] & 0x8000000000000000L) >>> 63))
+                        & (copy[(width - 1) * ySections + a] >>> 1));
+                for (int i = ySections+a; i < (width - 1) * ySections; i+= ySections) {
+                    self[i] &= (((copy[i] << 1) | ((copy[i - 1] & 0x8000000000000000L) >>> 63))
+                            & (copy[i] >>> 1))
+                            | (copy[i - ySections]
+                            & copy[i + ySections]);
+                }
+            }
+            else if(a < ySections - 1) {
+                self[a] &= ((copy[a] << 1)
+                        & ((copy[a] >>> 1)
+                        | ((copy[a + 1] & 1L) << 63)));
+                self[(width - 1) * ySections + a] &= ((copy[(width - 1) * ySections + a] << 1)
+                        & ((copy[(width - 1) * ySections + a] >>> 1)
+                        | ((copy[(width - 1) * ySections + a + 1] & 1L) << 63)));
+                for (int i = ySections+a; i < (width - 1) * ySections; i+= ySections) {
+                    self[i] &= ((copy[i] << 1)
+                            & ((copy[i] >>> 1) | ((copy[i + 1] & 1L) << 63)))
+                            | (copy[i - ySections]
+                            & copy[i + ySections]);
+                }
+            }
+            else // only the case when ySections == 1
+            {
+                self[0] &= (copy[0] << 1) & (copy[0] >>> 1);
+                self[width-1] &= (copy[width-1] << 1) & (copy[width-1] >>> 1);
+                for (int i = 1+a; i < (width - 1); i++) {
+                    self[i] &= ((copy[i] << 1) & (copy[i] >>> 1)) | (copy[i - ySections] & copy[i + ySections]);
+                }
+            }
+        }
+
+        if(yEndMask != -1) {
+            for (int a = ySections - 1; a < self.length; a += ySections) {
+                self[a] &= yEndMask;
+            }
+        }
         tallied = false;
         return this;
     }
