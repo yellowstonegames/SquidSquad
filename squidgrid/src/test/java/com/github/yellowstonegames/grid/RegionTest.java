@@ -531,6 +531,36 @@ public class RegionTest {
             System.out.println();
         }
     }
+    
+    @Test
+    public void testRemoveCorners() {
+        String[] lines = new String[]{
+                "      ",
+                "      ",
+                "  !!!!",
+                "  !!!!",
+                "  !!!!",
+                "      ",
+        };
+        Region r = new Region(lines, '!');
+        String[] targetLines = new String[]{
+                "      ",
+                "      ",
+                "   !! ",
+                "  !!!!",
+                "   !! ",
+                "      ",
+        };
+        Region t = new Region(targetLines, '!');
+        r.removeCorners();
+        Assert.assertEquals(r, t);
+
+        r.refill(lines, '!');
+        Region old = new Region(t);
+        r.removeCorners(old);
+        Assert.assertEquals(r, t);
+        Assert.assertEquals(r.refill(lines, '!'), old);
+    }
 
     @Test
     public void testFloodFills() {
