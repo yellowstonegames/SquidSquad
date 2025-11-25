@@ -3370,7 +3370,36 @@ public class Region implements Collection<Coord> {
      */
     public Region thinFully()
     {
-        while (size() != thin().size());
+        Region bufferA = new Region(width, height);
+        Region bufferB = new Region(width, height);
+        Region bufferC = new Region(width, height);
+        //noinspection StatementWithEmptyBody
+        while (size() != thin(bufferA, bufferB, bufferC).size());
+        return this;
+    }
+
+    /**
+     * Calls {@link #thin()} repeatedly, until the result is unchanged from the last call. Consider using the idiom
+     * {@code expand8way().retract().thinFully()} to help change a possibly-strange appearance when the Region
+     * this is called on touches the edges of the grid. In general, this method is likely to go too far when it tries to
+     * thin a round or irregular area, and this often results in many diagonal lines spanning the formerly-thick area.
+     * <br>
+     * This uses 4-way adjacency. This overload allows reusing temporary "buffer" Regions to avoid allocation. Each
+     * buffer Region should be the same size as this one; otherwise some allocation is still needed.
+     *
+     * @param bufferA a temporary Region that should be the same size as this Region
+     * @param bufferB a temporary Region that should be the same size as this Region
+     * @param bufferC a temporary Region that should be the same size as this Region
+     * @return this for chaining
+     */
+    public Region thinFully(Region bufferA, Region bufferB, Region bufferC)
+    {
+        if(bufferA == null) bufferA = new Region(width, height);
+        if(bufferB == null) bufferB = new Region(width, height);
+        if(bufferC == null) bufferC = new Region(width, height);
+
+        //noinspection StatementWithEmptyBody
+        while (size() != thin(bufferA, bufferB, bufferC).size());
         return this;
     }
 
@@ -3437,7 +3466,37 @@ public class Region implements Collection<Coord> {
      */
     public Region thinFully8way()
     {
-        while (size() != thin8way().size());
+        Region bufferA = new Region(width, height);
+        Region bufferB = new Region(width, height);
+        Region bufferC = new Region(width, height);
+        //noinspection StatementWithEmptyBody
+        while (size() != thin8way(bufferA, bufferB, bufferC).size());
+        return this;
+    }
+
+    /**
+     * Calls {@link #thin8way()} repeatedly, until the result is unchanged from the last call. Consider using the idiom
+     * {@code expand8way(bufferA).retract(bufferA).thinFully8way(bufferA, bufferB, bufferC)} to help change a
+     * possibly-strange appearance when the Region this is called on touches the edges of the grid. In general, this
+     * method is likely to go too far when it tries to thin a round or irregular area, and this often results in many
+     * diagonal lines spanning the formerly-thick area.
+     * <br>
+     * This uses 8-way adjacency. This overload allows reusing temporary "buffer" Regions to avoid allocation. Each
+     * buffer Region should be the same size as this one; otherwise, some allocation is still needed.
+     *
+     * @param bufferA a temporary Region that should be the same size as this Region
+     * @param bufferB a temporary Region that should be the same size as this Region
+     * @param bufferC a temporary Region that should be the same size as this Region
+     * @return this for chaining
+     */
+    public Region thinFully8way(Region bufferA, Region bufferB, Region bufferC)
+    {
+        if(bufferA == null) bufferA = new Region(width, height);
+        if(bufferB == null) bufferB = new Region(width, height);
+        if(bufferC == null) bufferC = new Region(width, height);
+
+        //noinspection StatementWithEmptyBody
+        while (size() != thin8way(bufferA, bufferB, bufferC).size());
         return this;
     }
 
