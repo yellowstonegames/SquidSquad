@@ -488,6 +488,51 @@ public class RegionTest {
     }
 
     @Test
+    public void testSurface8way() {
+        String[] lines = new String[]{
+                "      ",
+                "   !! ",
+                "  !!!!",
+                "  !!!!",
+                "  !!!!",
+                "   !! ",
+        };
+        Region r = new Region(lines, '!');
+        String[] targetLines = new String[]{
+                "      ",
+                "   !! ",
+                "  !!!!",
+                "  !  !",
+                "  !!!!",
+                "   !! ",
+        };
+        Region t = new Region(targetLines, '!');
+        r.surface8way();
+        Assert.assertEquals(r, t);
+
+        r.refill(lines, '!');
+        Region old = new Region(t);
+        r.surface8way(old);
+        Assert.assertEquals(r, t);
+        Assert.assertEquals(r.refill(lines, '!'), old);
+
+        System.out.println("surfaceSeries8way(3)");
+        r.refill(lines, '!');
+        Region[] series = r.surfaceSeries8way(3);
+        for (int i = 0; i < series.length; i++) {
+            System.out.println(series[i]);
+            System.out.println();
+        }
+        System.out.println("surfaceSeriesToLimit8way()");
+        r.refill(lines, '!');
+        ObjectList<Region> limited = r.surfaceSeriesToLimit8way();
+        for(Region reg : limited) {
+            System.out.println(reg);
+            System.out.println();
+        }
+    }
+
+    @Test
     public void testFloodFills() {
         EnhancedRandom rng = new AceRandom(123456789);
         Region r = new Region(9, 9, Coord.get(5, 5));
