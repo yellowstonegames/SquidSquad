@@ -20,10 +20,12 @@ import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.yellowstonegames.grid.*;
 
 /**
- * Utility class for finding areas where game-specific terrain features might be suitable to place.
- * Example placement for alongStraightWalls, using all regions where there's an extended straight wall in a room to
- * place a rack of bows (as curly braces): <a href="https://gist.github.com/tommyettinger/2b69a265bd93304f091b">here</a>.
- * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
+ * Helps find areas where game-specific terrain features might be suitable to place.
+ * Example placement for {@link #getAlongStraightWalls()}, using all regions where there's an extended straight wall in
+ * a room to place a rack of bows (as curly braces):
+ * <a href="https://gist.github.com/tommyettinger/2b69a265bd93304f091b">here</a>. You can use
+ * {@link #getHidingPlaces(Radius, float)} to place stealthy enemies in locations that are not easily visible from doors
+ * or other narrow entry points (as evaluated by {@link FOV}).
  */
 public class Placement {
 
@@ -55,25 +57,6 @@ public class Placement {
 
         this.finder = finder;
 
-        /*
-        allRooms = new Region(finder.width, finder.height);
-        allCorridors = new Region(finder.width, finder.height);
-        allCaves = new Region(finder.width, finder.height);
-        allFloors = new Region(finder.width, finder.height);
-
-        for(Region region : finder.rooms.keySet())
-        {
-            allRooms.or(region);
-        }
-        for(Region region : finder.corridors.keySet())
-        {
-            allCorridors.or(region);
-        }
-        for(Region region : finder.caves.keySet())
-        {
-            allCaves.or(region);
-        }
-        */
         allCorridors = finder.allCorridors;
         allRooms = finder.allRooms;
         allCaves = finder.allCaves;
@@ -94,7 +77,7 @@ public class Placement {
             alongStraightWalls = new ObjectOrderedSet<>(32);
             Region working = new Region(finder.width, finder.height);
             for(Region region : finder.rooms.keySet()) {
-                working.remake(region).retract().fringe().andNot(nonRoom);
+                working.remake(region).retract(region).fringe(region).andNot(nonRoom);
                 for (Region sp : working.split()) {
                     if (sp.size() >= 3)
                         alongStraightWalls.add(new CoordOrderedSet(sp));
@@ -117,7 +100,7 @@ public class Placement {
             corners = new ObjectOrderedSet<>(32);
             Region working = new Region(finder.width, finder.height);
             for(Region region : finder.rooms.keySet()) {
-                working.remake(region).expand().retract8way().xor(region).andNot(nonRoom);
+                working.remake(region).expand(region).retract8way(region).xor(region).andNot(nonRoom);
                 CoordOrderedSet os = new CoordOrderedSet(working);
                 corners.add(os);
             }
@@ -137,24 +120,19 @@ public class Placement {
         if(centers == null)
         {
             centers = new ObjectOrderedSet<>(32);
-            Region working, working2;
+            Region working = finder.allRooms.copy(), working2 = finder.allRooms.copy();
             for(Region region : finder.rooms.keySet()) {
 
-                working = null;
-                working2 = region.copy().retract();
+                working.clear();
+                working2.remake(region).retract(region);
                 for (int i = 2; i < 7; i++) {
                     if(working2.isEmpty())
                         break;
-                    working = working2.copy();
-                    working2.retract();
+                    working2.retract(working);
                 }
-                if(working == null)
+                if(working.isEmpty())
                     continue;
 
-                //working =
-                //        differencePacked(
-                //                working,
-                //                nonRoom);
                 centers.add(new CoordOrderedSet(working));
 
             }
