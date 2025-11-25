@@ -3333,6 +3333,9 @@ public class Region implements Collection<Coord> {
      * This currently uses 4-way adjacency, but had previously used 8-way; if you want the behavior this previously had,
      * you can use {@link #thin8way()}, but it may be a good idea to try this method as well (some of the old behavior
      * had problems where it yielded significantly larger minimum widths in some areas).
+     * <br>
+     * This overload allows reusing temporary "buffer" Regions to avoid allocation. Each
+     * buffer Region should be the same size as this one; otherwise some allocation is still needed.
      *
      * @param bufferA a temporary Region that should be the same size as this Region
      * @param bufferB a temporary Region that should be the same size as this Region
@@ -3384,14 +3387,43 @@ public class Region implements Collection<Coord> {
      * @return this for chaining
      */
     public Region thin8way() {
-        Region result = this;
-        if (width <= 2 || ySections <= 0) {
-        } else {
+        if (width > 2 && ySections > 0) {
             Region c1 = new Region(this).retract8way(),
-                    c2 = new Region(c1).expand8way().xor(this).expand8way().and(this);
+                    c2 = new Region(c1).expand8way(c1).xor(this).expand8way().and(this);
             remake(c1).or(c2);
         }
-        return result;
+        return this;
+    }
+
+    /**
+     * Like {@link #retract8way()}, this reduces the width of thick areas of this Region, but thin8way() will not
+     * remove areas that would be identical in a subsequent call to retract8way(), such as if the area would be
+     * eliminated. This is useful primarily for adjusting areas so they do not exceed a width of 2 cells, though their
+     * length (the longer of the two dimensions) will be unaffected by this. Especially wide, irregularly-shaped areas
+     * may have unintended appearances if you call this repeatedly or use {@link #thinFully8way()}; consider using this
+     * sparingly, or primarily when an area has just gotten thicker than desired.
+     * <br>
+     * This uses 8-way adjacency. This overload allows reusing temporary "buffer" Regions to avoid allocation. Each
+     * buffer Region should be the same size as this one; otherwise, some allocation is still needed.
+     *
+     * @param bufferA a temporary Region that should be the same size as this Region
+     * @param bufferB a temporary Region that should be the same size as this Region
+     * @param bufferC a temporary Region that should be the same size as this Region
+     * @return this for chaining
+     */
+    public Region thin8way(Region bufferA, Region bufferB, Region bufferC) {
+        if (width > 2 && ySections > 0) {
+            if(bufferA == null) bufferA = new Region(this);
+            else bufferA.remake(this);
+            bufferA.retract8way();
+
+            if(bufferB == null) bufferB = new Region(bufferA);
+            else bufferB.remake(bufferA);
+            bufferB.expand8way(bufferA).xor(this).expand8way(bufferC).and(this);
+
+            remake(bufferA).or(bufferB);
+        }
+        return this;
     }
 
     /**
