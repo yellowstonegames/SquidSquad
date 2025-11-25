@@ -3314,18 +3314,44 @@ public class Region implements Collection<Coord> {
      * @return this for chaining
      */
     public Region thin() {
-        Region result = this;
-        if (width <= 2 || ySections <= 0) {
-        } else {
+        if (width > 2 && ySections > 0) {
             Region c1 = new Region(this).retract(),
-                    c2 = new Region(c1).expand().xor(this).expand().and(this);
-            remake(c1).or(c2);/*
-        System.out.println("\n\nc1:\n" + c1.toString() + "\n");
-        System.out.println("\n\nc2:\n" + c2.toString() + "\n");
-        System.out.println("\n\nthis:\n" + toString() + "\n");
-        */
+                    c2 = new Region(c1).expand(c1).xor(this).expand().and(this);
+            remake(c1).or(c2);
         }
-        return result;
+        return this;
+    }
+
+    /**
+     * Like {@link #retract()}, this reduces the width of thick areas of this Region, but thin() will not remove
+     * areas that would be identical in a subsequent call to retract(), such as if the area would be eliminated. This
+     * is useful primarily for adjusting areas so they do not exceed a width of 2 cells, though their length (the longer
+     * of the two dimensions) will be unaffected by this. Especially wide, irregularly-shaped areas may have unintended
+     * appearances if you call this repeatedly or use {@link #thinFully()}; consider using this sparingly, or primarily
+     * when an area has just gotten thicker than desired.
+     * <br>
+     * This currently uses 4-way adjacency, but had previously used 8-way; if you want the behavior this previously had,
+     * you can use {@link #thin8way()}, but it may be a good idea to try this method as well (some of the old behavior
+     * had problems where it yielded significantly larger minimum widths in some areas).
+     *
+     * @param bufferA a temporary Region that should be the same size as this Region
+     * @param bufferB a temporary Region that should be the same size as this Region
+     * @param bufferC a temporary Region that should be the same size as this Region
+     * @return this for chaining
+     */
+    public Region thin(Region bufferA, Region bufferB, Region bufferC) {
+        if (width > 2 && ySections > 0) {
+            if(bufferA == null) bufferA = new Region(this);
+            else bufferA.remake(this);
+            bufferA.retract();
+
+            if(bufferB == null) bufferB = new Region(bufferA);
+            else bufferB.remake(bufferA);
+            bufferB.expand(bufferA).xor(this).expand(bufferC).and(this);
+
+            remake(bufferA).or(bufferB);
+        }
+        return this;
     }
 
     /**
