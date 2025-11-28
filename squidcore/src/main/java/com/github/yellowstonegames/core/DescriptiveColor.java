@@ -1177,7 +1177,7 @@ public final class DescriptiveColor {
     public static float hue(final int oklab) {
         final float a = ((oklab >>> 7 & 0x1FE) - 255);
         final float b = ((oklab >>> 15 & 0x1FE) - 255);
-        return TrigTools.atan2Turns(a, b);
+        return TrigTools.atan2Turns(b, a);
     }
 
     /**
