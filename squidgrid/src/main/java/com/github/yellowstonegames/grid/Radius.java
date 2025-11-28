@@ -236,7 +236,7 @@ public enum Radius {
         if(radiusLength < 1) {
             return center;
         }
-        float theta = TrigTools.atan2Turns(middle.y - center.y, middle.x - center.x),
+        float theta = TrigTools.atan2TurnsFinite(middle.y - center.y, middle.x - center.x),
                 cosTheta = TrigTools.cosTurns(theta), sinTheta = TrigTools.sinTurns(theta);
 
         Coord end = Coord.get(middle.x, middle.y);

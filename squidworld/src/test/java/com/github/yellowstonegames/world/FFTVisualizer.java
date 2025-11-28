@@ -1527,7 +1527,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                     float distX = x - (width >>> 1);
                     for (int y = 0; y < height; y++) {
                         float distY = y - (height >>> 1);
-                        float theta = TrigTools.atan2Turns(distY, distX) * 8f;
+                        float theta = TrigTools.atan2TurnsFinite(distY, distX) * 8f;
                         int flip = -((int)theta & 1) | 1;
                         theta *= flip;
                         float len = (float) Math.sqrt(distX * distX + distY * distY);
@@ -1545,7 +1545,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         float distY = y - (height >>> 1);
                         float len = (float) Math.sqrt(distX * distX + distY * distY);
                         float shrunk = len * 0.08f;
-                        float theta = TrigTools.atan2Turns(distY, distX) * 12f + 0.01f * c + 0.1f * shrunk;
+                        float theta = TrigTools.atan2TurnsFinite(distY, distX) * 12f + 0.01f * c + 0.1f * shrunk;
                         int flip = -((int)theta & 1) | 1;
                         theta *= flip;
                         bright = basicPrepare(noise.getConfiguredNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - c));
@@ -1560,7 +1560,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 float distX = x - (width>>>1);
                 for (int y = 0; y < height; y++) {
                     float distY = y - (height>>>1);
-                    float theta = TrigTools.atan2Turns(distY, distX) * (3+dim+dim);
+                    float theta = TrigTools.atan2TurnsFinite(distY, distX) * (3+dim+dim);
                     float len = (float)Math.sqrt(distX * distX + distY * distY);
                     float shrunk = len / (3f+dim+dim);
                     bright = basicPrepare(noise.getConfiguredNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - c));
@@ -1574,7 +1574,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                 float distX = x - (width>>>1);
                 for (int y = 0; y < height; y++) {
                     float distY = y - (height>>>1);
-                    float theta = TrigTools.atan2Turns(distY, distX) * (3+dim+dim);
+                    float theta = TrigTools.atan2TurnsFinite(distY, distX) * (3+dim+dim);
                     float len = (float)Math.sqrt(distX * distX + distY * distY);
                     float shrunk = len / (3f+dim+dim);
                     len = (len - c) * 0x1p-8f;
@@ -1593,7 +1593,7 @@ public class FFTVisualizer extends ApplicationAdapter {
                         float distX = x - (width>>>1);
                         for (int y = 0; y < height; y++) {
                             float distY = y - (height>>>1);
-                            float theta = TrigTools.atan2Turns(distY, distX) * (3+dim+dim) + (ct * 0x3p-8f);
+                            float theta = TrigTools.atan2TurnsFinite(distY, distX) * (3+dim+dim) + (ct * 0x3p-8f);
                             float len = (float)Math.sqrt(distX * distX + distY * distY);
                             float shrunk = len / (3f+dim+dim);
                             len = (len - ct) * 0x1p-8f;

@@ -382,7 +382,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
                 }
                 edges[y << 1 | 1] = x;
                 th = TrigTools.asin(rho); // c
-                lon = removeExcess((centerLongitude + (TrigTools.atan2(ixPos * rho, rho * TrigTools.cosSmoother(th)))) * 0.5f);
+                lon = removeExcess((centerLongitude + (TrigTools.atan2Finite(ixPos * rho, rho * TrigTools.cosSmoother(th)))) * 0.5f);
 
                 radians = lon * TrigTools.radToIndex;
                 floor = (int)(radians + 16384.0) - 16384;

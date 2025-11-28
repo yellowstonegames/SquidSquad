@@ -218,7 +218,7 @@ public class TriplexNoise implements INoise {
         p *= 99.20689070704672f;
         float mag2 = (o * o + p * p);
         mag2 *= mag2 + mag2;
-        float theta = TrigTools.atan2Turns(o, p) + n * (0.125f * 99.20689070704672f);
+        float theta = TrigTools.atan2TurnsFinite(o, p) + n * (0.125f * 99.20689070704672f);
         return wrappingTrobble(seed, theta * 16f) * (mag2 / (0.2f + mag2));
     }
 

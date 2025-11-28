@@ -90,7 +90,7 @@ public enum Direction {
      */
     public static Direction getDirection(int x, int y) {
         if ((x | y) == 0) return NONE;
-        return COUNTERCLOCKWISE[(int)(TrigTools.atan2Turns(y, x) * 8f + 6.5f) & 7];
+        return COUNTERCLOCKWISE[(int)(TrigTools.atan2TurnsFinite(y, x) * 8f + 6.5f) & 7];
     }
 
     /**
@@ -151,7 +151,7 @@ public enum Direction {
      */
     public static Direction getCardinalDirection(int x, int y) {
         if ((x | y) == 0) return NONE;
-        return CARDINALS_COUNTERCLOCKWISE[(int)(TrigTools.atan2Turns(y, x) * 4f + 3.5f) & 3];
+        return CARDINALS_COUNTERCLOCKWISE[(int)(TrigTools.atan2TurnsFinite(y, x) * 4f + 3.5f) & 3];
     }
 
 	/**

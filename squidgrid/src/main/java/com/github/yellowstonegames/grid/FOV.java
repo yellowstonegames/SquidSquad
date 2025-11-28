@@ -802,7 +802,7 @@ public final class FOV {
                         || radiusStrategy.radius(x, y, x2, y2) >= radius + 1) {//+1 to cover starting tile
                     continue;
                 }
-                float newAngle = TrigTools.atan2Turns(y2 - y, x2 - x) - angle;
+                float newAngle = TrigTools.atan2TurnsFinite(y2 - y, x2 - x) - angle;
                 newAngle -= MathTools.fastFloor(newAngle);
                 if (newAngle > span * 0.5f && newAngle < 1.0f - span * 0.5f) 
                     continue;
@@ -1084,7 +1084,7 @@ public final class FOV {
                     break;
                 }
                 float deltaRadius = radiusStrategy.radius(deltaX, deltaY),
-                        at2 = Math.abs(angle - TrigTools.atan2Turns(currentY - starty, currentX - startx));// + 1.0f) % 1.0f;
+                        at2 = Math.abs(angle - TrigTools.atan2TurnsFinite(currentY - starty, currentX - startx));// + 1.0f) % 1.0f;
                 //check if it's within the light-able area and light if needed
                 if (deltaRadius <= radius
                         && (at2 <= span * 0.5f
@@ -1308,7 +1308,7 @@ public final class FOV {
                 } else if (end > leftSlope) {
                     break;
                 }
-                float at2 = Math.abs(angle - TrigTools.atan2Turns(currentY - starty, currentX - startx)) * 8.0f,
+                float at2 = Math.abs(angle - TrigTools.atan2TurnsFinite(currentY - starty, currentX - startx)) * 8.0f,
                         deltaRadius = radiusStrategy.radius(deltaX, deltaY);
                 int ia = (int)(at2), low = ia & 7, high = ia + 1 & 7;
                 float a = at2 - ia, adjRadius = (1.0f - a) * directionRanges[low] + a * directionRanges[high];

@@ -178,7 +178,7 @@ public class RadialNoiseWrapper extends NoiseWrapper {
         y -= centerY;
         float len = (float) Math.sqrt(x * x + y * y);
         float shrunk = len / divisions;
-        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        float theta = TrigTools.atan2TurnsFinite(y, x) * divisions;
         int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
         theta *= flip;
         return super.getNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len);
@@ -190,7 +190,7 @@ public class RadialNoiseWrapper extends NoiseWrapper {
         y -= centerY;
         float len = (float) Math.sqrt(x * x + y * y);
         float shrunk = len / divisions;
-        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        float theta = TrigTools.atan2TurnsFinite(y, x) * divisions;
         int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
         theta *= flip;
         return super.getNoise(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - z);
@@ -202,7 +202,7 @@ public class RadialNoiseWrapper extends NoiseWrapper {
         y -= centerY;
         float len = (float) Math.sqrt(x * x + y * y);
         float shrunk = len / divisions;
-        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        float theta = TrigTools.atan2TurnsFinite(y, x) * divisions;
         int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
         theta *= flip;
         return super.getNoiseWithSeed(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len, seed);
@@ -214,7 +214,7 @@ public class RadialNoiseWrapper extends NoiseWrapper {
         y -= centerY;
         float len = (float) Math.sqrt(x * x + y * y);
         float shrunk = len / divisions;
-        float theta = TrigTools.atan2Turns(y, x) * divisions;
+        float theta = TrigTools.atan2TurnsFinite(y, x) * divisions;
         int flip = -((int)theta & 1 & (mirror ? divisions : 0)) | 1;
         theta *= flip;
         return super.getNoiseWithSeed(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - z, seed);

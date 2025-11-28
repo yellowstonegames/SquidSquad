@@ -456,7 +456,7 @@ public class GlobeMap extends WorldMapGenerator {
                 edges[y << 1 | 1] = x;
                 th = TrigTools.asin(rho); // c
 
-                lon = centerLongitude + TrigTools.atan2(ixPos * rho, rho * TrigTools.cosSmoother(th));
+                lon = centerLongitude + TrigTools.atan2Finite(ixPos * rho, rho * TrigTools.cosSmoother(th));
 
                 pc = TrigTools.cosSmoother(lon) * qc;
                 ps = TrigTools.sinSmoother(lon) * qc;

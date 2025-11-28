@@ -113,7 +113,7 @@ public class TaffyNoise implements INoise {
             }
         }
         for (int v = 0; v <= dim; v++) {
-//            final float theta = TrigTools.atan2Turns(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
+//            final float theta = TrigTools.atan2TurnsFinite(vertices[v][1], vertices[v][0]) + Hasher.randomize3Float(v - seed),
 //                    dist = (float) Math.sqrt(vertices[v][1] * vertices[v][1] + vertices[v][0] * vertices[v][0]);
 //            vertices[v][0] = TrigTools.cosTurns(theta) * dist;
 //            vertices[v][1] = TrigTools.sinTurns(theta) * dist;

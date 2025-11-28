@@ -34,7 +34,7 @@ public class ColorChecks {
 //        alpha = Math.min(Math.max(alpha, 0f), 1f);
 //        final float A2 = (A - 0.5f);
 //        final float B2 = (B - 0.5f);
-//        final float hue = TrigTools.atan2_(B2, A2);
+//        final float hue = TrigTools.atan2TurnsFinite(B2, A2);
 //        final int idx = (int) (L * 255.999f) << 8 | (int)(256f * hue);
 //        final float dist = getRawGamutValue(idx);
 //        if(dist * dist * 0x1p-16f >= (A2 * A2 + B2 * B2))
@@ -50,7 +50,7 @@ public class ColorChecks {
 //        final int decoded = BitConversion.floatToRawIntBits(packed);
 //        final float A = ((decoded >>> 8 & 0xff) - 127.5f);
 //        final float B = ((decoded >>> 16 & 0xff) - 127.5f);
-//        final float hue = TrigTools.atan2_(B, A);
+//        final float hue = TrigTools.atan2TurnsFinite(B, A);
 //        final int idx = (decoded & 0xff) << 8 | (int) (256f * hue);
 //        final float dist = getRawGamutValue(idx);
 //        if (dist * dist >= (A * A + B * B))

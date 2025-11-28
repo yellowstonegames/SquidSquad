@@ -238,7 +238,7 @@ public static class EllipticalHammerMap extends WorldMapGenerator {
                 xAdj = xPos * irx;
                 z = Math.sqrt(1.0 - 0.5 * xAdj * xAdj - 0.5 * yAdj * yAdj);
                 th = z * yAdj * root2;
-                lon = 2.0 * TrigTools.atan2((2.0 * z * z - 1.0), (z * xAdj * root2));
+                lon = 2.0 * TrigTools.atan2Finite((2.0 * z * z - 1.0), (z * xAdj * root2));
                 if(th != th || lon < 0.0) {
                     heightCodeData[x][y] = 10000;
                     inSpace = true;

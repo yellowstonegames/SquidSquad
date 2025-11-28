@@ -139,7 +139,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @return the angle in counterclockwise radians from {@code from} to {@code to}; 0 is to the right
      */
     public static float radians(final Coord from, final Coord to) {
-        return TrigTools.atan2(to.y - from.y, to.x - from.x);
+        return TrigTools.atan2Finite(to.y - from.y, to.x - from.x);
     }
 
     /**
@@ -157,7 +157,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @return the angle in counterclockwise degrees from {@code from} to {@code to}; 0 is to the right
      */
     public static float degrees(final Coord from, final Coord to) {
-        return TrigTools.atan2Deg360(to.y - from.y, to.x - from.x);
+        return TrigTools.atan2Deg360Finite(to.y - from.y, to.x - from.x);
     }
 
     /**
@@ -175,7 +175,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @return the angle in counterclockwise turns from {@code from} to {@code to}; 0 is to the right
      */
     public static float turns(final Coord from, final Coord to) {
-        return TrigTools.atan2Turns(to.y - from.y, to.x - from.x);
+        return TrigTools.atan2TurnsFinite(to.y - from.y, to.x - from.x);
     }
 
     /**
