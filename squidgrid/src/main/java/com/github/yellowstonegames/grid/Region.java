@@ -4958,7 +4958,6 @@ public class Region implements Collection<Coord> {
      * @return this, after expanding, for chaining
      */
     public Region flood(Region bounds) {
-        Region result = this;
         if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             final long[] next = new long[width * ySections];
             for (int a = 0; a < ySections && a < bounds.ySections; a++) {
@@ -5006,7 +5005,71 @@ public class Region implements Collection<Coord> {
             tallied = false;
         }
 
-        return result;
+        return this;
+    }
+
+    /**
+     * Like {@link #expand()}, but limits expansion to the "on" cells of {@code bounds}. Expands in all 4-way directions
+     * by one cell simultaneously, and only successfully affects the cells that are adjacent to this and are in bounds.
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate, and after the call, {@code buffer} will contain the previous contents of this Region.
+     *
+     * @param bounds the set of "on" cells that limits where this can expand into
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this, after expanding, for chaining
+     */
+    public Region flood(Region bounds, Region buffer) {
+        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+            if(buffer == null) buffer = new Region(this);
+            else buffer.remake(this);
+            final long[] copy = buffer.data;
+            final long[] self = this.data;
+            for (int a = 0; a < ySections && a < bounds.ySections; a++) {
+                self[a] |= (copy[a] | (copy[a] << 1) | (copy[a] >>> 1) | copy[a + ySections]) & bounds.data[a];
+                self[(width - 1) * ySections + a] |= (copy[(width - 1) * ySections + a] | (copy[(width - 1) * ySections + a] << 1)
+                        | (copy[(width - 1) * ySections + a] >>> 1) | copy[(width - 2) * ySections + a]) & bounds.data[(width - 1) * bounds.ySections + a];
+
+                for (int i = ySections + a, j = bounds.ySections + a; i < (width - 1) * ySections &&
+                        j < (bounds.width - 1) * bounds.ySections; i += ySections, j += bounds.ySections) {
+                    self[i] |= (copy[i] | (copy[i] << 1) | (copy[i] >>> 1) | copy[i - ySections] | copy[i + ySections]) & bounds.data[j];
+                }
+
+                if (a > 0) {
+                    for (int i = ySections + a, j = bounds.ySections + a; i < (width - 1) * ySections && j < (bounds.width - 1) * bounds.ySections;
+                         i += ySections, j += bounds.ySections) {
+                        self[i] |= (copy[i] | ((copy[i - 1] & 0x8000000000000000L) >>> 63)) & bounds.data[j];
+                    }
+                }
+
+                if (a < ySections - 1 && a < bounds.ySections - 1) {
+                    for (int i = ySections + a, j = bounds.ySections + a;
+                         i < (width - 1) * ySections && j < (bounds.width - 1) * bounds.ySections; i += ySections, j += bounds.ySections) {
+                        self[i] |= (copy[i] | ((copy[i + 1] & 1L) << 63)) & bounds.data[j];
+                    }
+                }
+            }
+            if (yEndMask != -1 && bounds.yEndMask != -1) {
+                if (ySections == bounds.ySections) {
+                    long mask = ((yEndMask >>> 1) <= (bounds.yEndMask >>> 1))
+                            ? yEndMask : bounds.yEndMask;
+                    for (int a = ySections - 1; a < self.length; a += ySections) {
+                        self[a] &= mask;
+                    }
+                } else if (ySections < bounds.ySections) {
+                    for (int a = ySections - 1; a < self.length; a += ySections) {
+                        self[a] &= yEndMask;
+                    }
+                } else {
+                    for (int a = bounds.ySections - 1; a < self.length; a += ySections) {
+                        self[a] &= bounds.yEndMask;
+                    }
+                }
+            }
+            tallied = false;
+        }
+
+        return this;
     }
 
     /**
@@ -5022,8 +5085,9 @@ public class Region implements Collection<Coord> {
     public Region flood(Region bounds, int amount)
     {
         int ct = size(), ct2;
+        Region buffer = new Region(width, height);
         for (int i = 0; i < amount; i++) {
-            flood(bounds);
+            flood(bounds, buffer);
             if(ct == (ct2 = size()))
                 break;
             else
@@ -5051,12 +5115,12 @@ public class Region implements Collection<Coord> {
             int ct = size(), ct2;
             Region[] regions = new Region[amount];
             boolean done = false;
-            Region temp = new Region(this);
+            Region temp = new Region(this), buffer = new Region(width, height);
             for (int i = 0; i < amount; i++) {
                 if (done) {
                     regions[i] = new Region(temp);
                 } else {
-                    regions[i] = new Region(temp.flood(bounds));
+                    regions[i] = new Region(temp.flood(bounds, buffer));
                     if (ct == (ct2 = temp.size()))
                         done = true;
                     else
@@ -5079,9 +5143,9 @@ public class Region implements Collection<Coord> {
     public ObjectList<Region> floodSeriesToLimit(Region bounds) {
         int ct = size(), ct2;
         ObjectList<Region> regions = new ObjectList<>();
-        Region temp = new Region(this);
+        Region temp = new Region(this), buffer = new Region(width, height);
         while (true) {
-            temp.flood(bounds);
+            temp.flood(bounds, buffer);
             if (ct == (ct2 = temp.size()))
                 return regions;
             else {
