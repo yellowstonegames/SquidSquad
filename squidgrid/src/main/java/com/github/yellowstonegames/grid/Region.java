@@ -6284,9 +6284,9 @@ public class Region implements Collection<Coord> {
     public Region removeIsolated()
     {
         int fst = firstTight();
-        Region remaining = new Region(this), filled = new Region(this);
+        Region remaining = new Region(this), filled = new Region(this), buffer = new Region(width, height);
         while (fst >= 0) {
-            filled.empty().insert(fst).flood(remaining, 8);
+            filled.empty().insert(fst).flood(remaining, 8, buffer);
             if(filled.size() <= 4)
                 andNot(filled);
             remaining.andNot(filled);
@@ -6502,6 +6502,30 @@ public class Region implements Collection<Coord> {
 
     /**
      * Like {@link #retract()}, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
+     * method it keeps a fraction of those surface cells, quasi-randomly selecting them. This can be thought of as
+     * running {@link #surface()} on a copy of this Region, running {@link #separatedRegionBlue(float)} on that
+     * surface with the given fractionKept, taking the original Region and removing its whole surface with
+     * {@link #retract()}, then inserting the quasi-randomly-removed surface into this Region to replace its
+     * surface with a randomly "damaged" one.
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate. After the call, the contents of {@code buffer} will be the same as a copy of this with
+     * {@link #retract()} called once.
+     *
+     * @param fractionKept the fraction between 0.0 and 1.0 of how many cells on the outer surface of this to keep "on"
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region fray(float fractionKept, Region buffer)
+    {
+        if(buffer == null) buffer = new Region(this);
+        else buffer.remake(this);
+        buffer.retract();
+        return xor(buffer).separatedRegionBlue(fractionKept).or(buffer);
+    }
+
+    /**
+     * Like {@link #retract()}, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
      * method it keeps a fraction of those surface cells, randomly selecting them. This can be thought of as running 
      * {@link #surface()} on a copy of this Region, running {@link #deteriorate(EnhancedRandom, float)} on
      * that surface with the given fractionKept, taking the original Region and removing its whole surface with
@@ -6515,6 +6539,31 @@ public class Region implements Collection<Coord> {
     {
         Region cpy = new Region(this).retract();
         return xor(cpy).deteriorate(random, fractionKept).or(cpy);
+    }
+
+    /**
+     * Like {@link #retract()}, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
+     * method it keeps a fraction of those surface cells, randomly selecting them. This can be thought of as running
+     * {@link #surface()} on a copy of this Region, running {@link #deteriorate(EnhancedRandom, float)} on
+     * that surface with the given fractionKept, taking the original Region and removing its whole surface with
+     * {@link #retract()}, then inserting the randomly-removed surface into this Region to replace its surface
+     * with a randomly "damaged" one.
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate. After the call, the contents of {@code buffer} will be the same as a copy of this with
+     * {@link #retract()} called once.
+     *
+     * @param random a EnhancedRandom, or a recommended subclass like {@link WhiskerRandom}
+     * @param fractionKept the fraction between 0.0 and 1.0 of how many cells on the outer surface of this to keep "on"
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region fray(EnhancedRandom random, float fractionKept, Region buffer)
+    {
+        if(buffer == null) buffer = new Region(this);
+        else buffer.remake(this);
+        buffer.retract();
+        return xor(buffer).deteriorate(random, fractionKept).or(buffer);
     }
 
     /**
