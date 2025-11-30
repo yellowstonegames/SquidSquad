@@ -5979,9 +5979,9 @@ public class Region implements Collection<Coord> {
     {
         ObjectList<Region> scattered = new ObjectList<>(32);
         int fst = firstTight();
-        Region remaining = new Region(this);
+        Region remaining = new Region(this), buffer = new Region(width, height);
         while (fst >= 0) {
-            Region filled = new Region(width, height).insert(fst).flood8way(remaining, width * height);
+            Region filled = new Region(width, height).insert(fst).flood8way(remaining, width * height, buffer);
             scattered.add(filled);
             remaining.andNot(filled);
             fst = remaining.firstTight();
