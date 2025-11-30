@@ -6174,9 +6174,7 @@ public class Region implements Collection<Coord> {
      * @return this, after modifications, for chaining
      */
     public Region neighborUpLeft() {
-        Region result = this;
-        if (width < 2 || ySections <= 0) {
-        } else {
+        if (width >= 2 && height >= 2) {
             for (int a = ySections - 1; a >= 0; a--) {
                 if (a > 0) {
                     for (int i = ySections * (width - 1) + a; i >= ySections; i -= ySections) {
@@ -6190,8 +6188,10 @@ public class Region implements Collection<Coord> {
                     data[a] = 0L;
                 }
             }
+        } else {
+            clear();
         }
-        return result;
+        return this;
     }
 
     /**
@@ -6202,9 +6202,7 @@ public class Region implements Collection<Coord> {
      * @return this, after modifications, for chaining
      */
     public Region neighborUpRight() {
-        Region result = this;
-        if (width < 2 || ySections <= 0) {
-        } else {
+        if (width >= 2 && height >= 2) {
             for (int a = ySections - 1; a >= 0; a--) {
                 if (a > 0) {
                     for (int i = a; i < (width - 1) * ySections; i += ySections) {
@@ -6219,8 +6217,10 @@ public class Region implements Collection<Coord> {
                 }
             }
             tallied = false;
+        } else {
+            clear();
         }
-        return result;
+        return this;
     }
 
     /**
@@ -6231,9 +6231,7 @@ public class Region implements Collection<Coord> {
      * @return this, after modifications, for chaining
      */
     public Region neighborDownLeft() {
-        Region result = this;
-        if (width < 2 || ySections <= 0) {
-        } else {
+        if (width >= 2 && height >= 2) {
             for (int a = 0; a < ySections; a++) {
                 if (a < ySections - 1) {
                     for (int i = ySections * (width - 1) + a; i >= ySections; i -= ySections) {
@@ -6248,8 +6246,10 @@ public class Region implements Collection<Coord> {
                 }
             }
             tallied = false;
+        } else {
+            clear();
         }
-        return result;
+        return this;
     }
 
     /**
@@ -6260,9 +6260,7 @@ public class Region implements Collection<Coord> {
      * @return this, after modifications, for chaining
      */
     public Region neighborDownRight() {
-        Region result = this;
-        if (width < 2 || ySections <= 0) {
-        } else {
+        if (width >= 2 && height >= 2) {
             for (int a = 0; a < ySections; a++) {
                 if (a < ySections - 1) {
                     for (int i = a; i < (width - 1) * ySections; i += ySections) {
@@ -6277,8 +6275,10 @@ public class Region implements Collection<Coord> {
                 }
             }
             tallied = false;
+        } else {
+            clear();
         }
-        return result;
+        return this;
     }
 
     public Region removeIsolated()
