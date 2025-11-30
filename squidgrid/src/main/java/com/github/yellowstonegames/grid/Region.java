@@ -3233,22 +3233,18 @@ public class Region implements Collection<Coord> {
 
         return result;
     }
+
     /**
      * Takes the pairs of "on" cells in this Region that are separated by exactly one cell in an orthogonal or
      * diagonal line, and changes the gap cells to "on" as well. As a special case, this requires diagonals to either
      * have no "on" cells adjacent along the perpendicular diagonal, or both cells on that perpendicular diagonal need
      * to be "on." This is useful to counteract some less-desirable behavior of {@link #connect8way()}, where a right
      * angle would always get the inner corners filled because it was considered a diagonal.
-     * <br>
-     * This method is very efficient due to how the class is implemented, and the various spatial increase/decrease
-     * methods (including {@link #expand()}, {@link #retract()}, {@link #fringe()}, and {@link #surface()}) all perform
-     * very well by operating in bulk on up to 64 cells at a time.
+     *
      * @return this for chaining
      */
     public Region connectLines() {
-        Region result = this;
-        if (width < 2 || ySections == 0) {
-        } else {
+        if (width >= 1 && ySections != 0) {
             final long[] next = new long[width * ySections];
             System.arraycopy(data, 0, next, 0, width * ySections);
             for (int a = 0; a < ySections; a++) {
@@ -3297,7 +3293,76 @@ public class Region implements Collection<Coord> {
             tallied = false;
         }
 
-        return result;
+        return this;
+    }
+
+
+    /**
+     * Takes the pairs of "on" cells in this Region that are separated by exactly one cell in an orthogonal or
+     * diagonal line, and changes the gap cells to "on" as well. As a special case, this requires diagonals to either
+     * have no "on" cells adjacent along the perpendicular diagonal, or both cells on that perpendicular diagonal need
+     * to be "on." This is useful to counteract some less-desirable behavior of {@link #connect8way()}, where a right
+     * angle would always get the inner corners filled because it was considered a diagonal.
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate, and after the call, {@code buffer} will contain the previous contents of this Region.
+     *
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region connectLines(Region buffer) {
+        if (width >= 1 && ySections != 0) {
+            if(buffer == null) buffer = new Region(this);
+            else buffer.remake(this);
+            final long[] self = this.data;
+            final long[] copy = buffer.data;
+            System.arraycopy(copy, 0, self, 0, width * ySections);
+            for (int a = 0; a < ySections; a++) {
+                self[a] |= ((copy[a] << 1) & (copy[a] >>> 1)) | copy[a + ySections] | (copy[a + ySections] << 1) | (copy[a + ySections] >>> 1);
+                self[(width - 1) * ySections + a] |= ((copy[(width - 1) * ySections + a] << 1) & (copy[(width - 1) * ySections + a] >>> 1))
+                        | copy[(width - 2) * ySections + a] | (copy[(width - 2) * ySections + a] << 1) | (copy[(width - 2) * ySections + a] >>> 1);
+
+                for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                    self[i] |= ((copy[i] << 1) & (copy[i] >>> 1)) | (copy[i - ySections] & copy[i + ySections])
+                            | (((copy[i - ySections] << 1) & (copy[i + ySections] >>> 1))
+                            ^ ((copy[i + ySections] << 1) & (copy[i - ySections] >>> 1)));
+                }
+
+                if (a > 0) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] |= ((copy[i - 1] & 0x8000000000000000L) >>> 63 & (copy[i] >>> 1))
+                                | (((copy[i - ySections - 1] & 0x8000000000000000L) >>> 63 & (copy[i + ySections] >>> 1))
+                                ^ ((copy[i + ySections - 1] & 0x8000000000000000L) >>> 63 & (copy[i - ySections] >>> 1)));
+                    }
+                } else {
+                    for (int i = ySections; i < (width - 1) * ySections; i += ySections) {
+                        self[i] |= (copy[i] >>> 1 & 1L) | (copy[i - ySections] >>> 1 & 1L) | (copy[i + ySections] >>> 1 & 1L);
+                    }
+                }
+
+                if (a < ySections - 1) {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] |= ((copy[i + 1] & 1L) << 63 & (copy[i] << 1))
+                                | (((copy[i - ySections + 1] & 1L) << 63 & (copy[i + ySections] << 1))
+                                ^ ((copy[i + ySections + 1] & 1L) << 63 & (copy[i - ySections] << 1)));
+                    }
+                } else {
+                    for (int i = ySections + a; i < (width - 1) * ySections; i += ySections) {
+                        self[i] |= (copy[i] << 1 & 0x8000000000000000L)
+                                | (copy[i - ySections] << 1 & 0x8000000000000000L) | (copy[i + ySections] << 1 & 0x8000000000000000L);
+                    }
+
+                }
+            }
+            if (ySections > 0 && yEndMask != -1) {
+                for (int a = ySections - 1; a < self.length; a += ySections) {
+                    self[a] &= yEndMask;
+                }
+            }
+            tallied = false;
+        }
+
+        return this;
     }
 
     /**
@@ -5467,7 +5532,7 @@ public class Region implements Collection<Coord> {
      * @return this, after expanding randomly once, for chaining
      */
     public Region splash(Region bounds, EnhancedRandom rng, Region temp) {
-        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+        if (width >= 1 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             if(temp == null) temp = new Region(this);
             else temp.remake(this);
             // even if the fringe doesn't overlap with bounds, singleRandom() will produce a Coord that won't be a
@@ -5511,7 +5576,7 @@ public class Region implements Collection<Coord> {
      */
     public Region spill(Region bounds, int volume, EnhancedRandom rng, Region temp, Region temp2) {
         Region result = this;
-        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+        if (width >= 1 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             int current = size();
             if (current < volume) {
                 if(temp == null) temp = new Region(this);
@@ -5601,7 +5666,7 @@ public class Region implements Collection<Coord> {
      * @return this, after expanding to adjacent cells where decider returned true, for chaining
      */
     public Region stir(Region bounds, IntIntPredicate decider, Region temp) {
-        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+        if (width >= 1 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             if(temp == null) temp = new Region(this);
             else temp.remake(this);
             temp.fringe().and(bounds);
@@ -5681,7 +5746,7 @@ public class Region implements Collection<Coord> {
      * @return this, after expanding to adjacent cells where the noise was within range, for chaining
      */
     public Region stir(Region bounds, INoise noise, float lowerBound, float upperBound, Region temp) {
-        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+        if (width >= 1 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             if(temp == null) temp = new Region(this);
             else temp.remake(this);
             temp.fringe().and(bounds);
@@ -5764,7 +5829,7 @@ public class Region implements Collection<Coord> {
      * @return this, after expanding to adjacent cells where the noise was within range, for chaining
      */
     public Region stir(Region bounds, INoise noise, float z, float lowerBound, float upperBound, Region temp) {
-        if (width >= 2 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
+        if (width >= 1 && ySections > 0 && bounds != null && bounds.width >= 2 && bounds.ySections > 0) {
             if(temp == null) temp = new Region(this);
             else temp.remake(this);
             temp.fringe().and(bounds);
