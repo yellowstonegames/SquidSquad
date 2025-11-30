@@ -6440,7 +6440,7 @@ public class Region implements Collection<Coord> {
             int[] xCounts = new int[width];
             for (int x = 0; x < width; x++) {
                 for (int s = 0; s < ySections; s++) {
-                    t = data[x * ySections + s] | 0L;
+                    t = data[x * ySections + s];
                     if (t != 0) {
                         tmp = Long.bitCount(t);
                         xCounts[x] += tmp;
@@ -6463,9 +6463,9 @@ public class Region implements Collection<Coord> {
                                 yTotal = xCounts[x];
                                 yTarget = yTotal * aY / oY;
                                 for (int s = 0, y = 0; s < ySections; s++) {
-                                    t = data[bestX * ySections + s] | 0L;
+                                    t = data[bestX * ySections + s];
                                     for (long cy = 1L; cy != 0L && y < height; y++, cy <<= 1) {
-                                        if ((t & (cy | 0L)) != 0 && --yTarget < 0) {
+                                        if ((t & cy) != 0 && --yTarget < 0) {
                                             next[bestX][y] = ao;
                                             continue CELL_WISE;
                                         }
@@ -8096,7 +8096,7 @@ public class Region implements Collection<Coord> {
             for (int s = 0; s < ySections; s++) {
                 for (int x = 0; x < width; x++) {
                     if ((c = counts[x * ySections + s]) > index) {
-                        t = data[x * ySections + s] | 0L;
+                        t = data[x * ySections + s];
                         for (--c; t != 0; c--) {
                             w = BitConversion.lowestOneBit(t);
                             if (c == index)
