@@ -6031,9 +6031,9 @@ public class Region implements Collection<Coord> {
     {
         int fst = firstTight(), bestSize = 0, currentSize;
         Region remaining = new Region(this), filled = new Region(width, height),
-                choice = new Region(width, height);
+                choice = new Region(width, height), buffer = new Region(width, height);
         while (fst >= 0) {
-            filled.empty().insert(fst).flood(remaining, width * height);
+            filled.empty().insert(fst).flood(remaining, width * height, buffer);
             if((currentSize = filled.size()) > bestSize)
             {
                 bestSize = currentSize;
@@ -6058,9 +6058,9 @@ public class Region implements Collection<Coord> {
     {
         int fst = firstTight(), bestSize = 0, currentSize;
         Region remaining = new Region(this), filled = new Region(width, height),
-                choice = new Region(width, height);
+                choice = new Region(width, height), buffer = new Region(width, height);
         while (fst >= 0) {
-            filled.empty().insert(fst).flood8way(remaining, width * height);
+            filled.empty().insert(fst).flood8way(remaining, width * height, buffer);
             if((currentSize = filled.size()) > bestSize)
             {
                 bestSize = currentSize;
