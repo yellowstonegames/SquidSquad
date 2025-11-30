@@ -5962,7 +5962,7 @@ public class Region implements Collection<Coord> {
      * flood-filling the floors out from the area that produces by 2 cells (4-way this time) to restore the original
      * size of non-corridor areas (plus some extra to ensure odd shapes are kept). Corridors are obtained by removing
      * the rooms from floors. The example code also gets the doors (which overlap with rooms, not corridors) by finding
-     * where the a room and a corridor are adjacent. This technique is used with some enhancements in the RoomFinder
+     * where a room and a corridor are adjacent. This technique is used with some enhancements in the RoomFinder
      * class.
      * @return an ObjectList containing each unconnected area from packed as a Region element
      */
@@ -5970,9 +5970,9 @@ public class Region implements Collection<Coord> {
     {
         ObjectList<Region> scattered = new ObjectList<>(32);
         int fst = firstTight();
-        Region remaining = new Region(this);
+        Region remaining = new Region(this), buffer = new Region(width, height);
         while (fst >= 0) {
-            Region filled = new Region(width, height).insert(fst).flood(remaining, width * height);
+            Region filled = new Region(width, height).insert(fst).flood(remaining, width * height, buffer);
             scattered.add(filled);
             remaining.andNot(filled);
             fst = remaining.firstTight();
@@ -6000,7 +6000,7 @@ public class Region implements Collection<Coord> {
      * flood-filling the floors out from the area that produces by 2 cells (4-way this time) to restore the original
      * size of non-corridor areas (plus some extra to ensure odd shapes are kept). Corridors are obtained by removing
      * the rooms from floors. The example code also gets the doors (which overlap with rooms, not corridors) by finding
-     * where the a room and a corridor are adjacent. This technique is used with some enhancements in the RoomFinder
+     * where a room and a corridor are adjacent. This technique is used with some enhancements in the RoomFinder
      * class.
      * @return an ObjectList containing each unconnected area from packed as a Region element
      */
