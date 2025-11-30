@@ -5098,6 +5098,35 @@ public class Region implements Collection<Coord> {
     }
 
     /**
+     * Like {@link #expand(int)}, but limits expansion to the "on" cells of {@code bounds}. Repeatedly expands in all
+     * orthogonal directions by one cell simultaneously, and only successfully affects the cells that are adjacent to
+     * the previous expansion and are in bounds. This won't skip over gaps in bounds, even if amount is high enough that
+     * a call to {@link #expand(int)} would reach past the gap; it will stop at the gap and only pass it if expansion
+     * takes it around.
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate. After the call, the contents of {@code buffer} will be undefined.
+     *
+     * @param bounds the set of "on" cells that limits where this can expand into
+     * @param amount how far to expand this outward by, in cells
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this, after expanding, for chaining
+     */
+    public Region flood(Region bounds, int amount, Region buffer)
+    {
+        int ct = size(), ct2;
+        if(buffer == null) buffer = new Region(width, height);
+        for (int i = 0; i < amount; i++) {
+            flood(bounds, buffer);
+            if(ct == (ct2 = size()))
+                break;
+            else
+                ct = ct2;
+        }
+        return this;
+    }
+
+    /**
      * Repeatedly calls {@link #flood(Region)} {@code amount} times and returns the intermediate steps in a
      * Region array of size {@code amount}. Doesn't modify this Region, and doesn't return it in the array
      * (it may return a copy of it if and only if no flood8way() calls can expand the area). If this fills
