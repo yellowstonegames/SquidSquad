@@ -44,12 +44,12 @@ public class WorldMapWriter extends ApplicationAdapter {
     private static final int AA = 1;
 
 //    private static final int width = 1920, height = 1080;
-//    private static final int width = 256, height = 256; // localMimic
+    private static final int width = 256, height = 256; // localMimic
 //    private static final int width = 400, height = 400;
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
-//    private static final int width = 128, height = 128; // space view, MimicLocal
+//    private static final int width = 128, height = 128; // space view, localMimic
 //    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
 //    private static final int width = 512, height = 256;
@@ -60,7 +60,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 2000, height = 2000;
 //    private static final int width = 2000, height = 1000;
 //    private static final int width = 1000, height = 1000;
-    private static final int width = 1800, height = 900;
+//    private static final int width = 1800, height = 900;
 
 //    private static final int width = 512, height = 512;
 //    private static final int width = 512 >>> AA, height = 256 >>> AA; // mimic world
@@ -148,7 +148,7 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        else
 
 //        world = new MimicWorldMap(seed, noise, 2f);
-//        world = new MimicLocalMap(seed, noise, 2f);
+        world = new MimicLocalMap(seed, noise, 2f);
 //        world = new LocalMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new TilingWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new RoundSideWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
@@ -158,14 +158,15 @@ public class WorldMapWriter extends ApplicationAdapter {
 //        world = new DiagonalWorldMap(seed, width / cellWidth << AA, noise, 2f);
 //        world = new EllipticalWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new LatLonWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
-        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
+//        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new RotatingGlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1.25f);
 //        wmv = new DetailedWorldMapView(world);
         wmv = new BlendedWorldMapView(world);
 //        wmv = new SimpleWorldMapView(world);
 
-//        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
+        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
+        Gdx.files.local("AustraliaFlipped.txt").writeString(Region.decompress(MimicLocalMap.AUSTRALIA_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 
         //generate(seed);
         rng.setSeed(seed);

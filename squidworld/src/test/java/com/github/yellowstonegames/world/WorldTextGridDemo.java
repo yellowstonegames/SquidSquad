@@ -69,8 +69,8 @@ public class WorldTextGridDemo extends ApplicationAdapter {
     private EnhancedRandom rng;
     private long seedA, seedB;
     private Vector3 position, previousPosition, nextPosition, temp;
-//    private MimicWorldMap world;
-    private HyperellipticalWorldMap world;
+    private MimicWorldMap world;
+//    private HyperellipticalWorldMap world;
     private BlendedWorldMapView wmv;
     private Thesaurus thesaurus;
     private PoliticalMapper pm;
@@ -102,8 +102,8 @@ public class WorldTextGridDemo extends ApplicationAdapter {
         seedB = 0x12345L;
         rng = new FlowRandom(seedA, seedB);
         Noise noise = new Noise(rng.nextInt(), 1.0f, Noise.FOAM, 1);
-//        world = new MimicWorldMap(seedA, noise, 0.8f); // uses a map of Australia for land
-        world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, noise, 0.8f);
+        world = new MimicWorldMap(seedA, noise, 0.8f); // uses a map of Earth for land
+//        world = new HyperellipticalWorldMap(seedA, bigWidth, bigHeight, noise, 0.8f);
         wmv = new BlendedWorldMapView(world);
         thesaurus = new Thesaurus(rng.nextLong(), rng.nextLong());
         pm = new PoliticalMapper();

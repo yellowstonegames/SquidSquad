@@ -53,8 +53,12 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //    private static final int width = 700, height = 700;
 //    private static final int width = 512, height = 512;
 //    private static final int width = 128, height = 128;
-    private static final int AA = 1;
-    
+
+    // AA must be 0 for "mimic" maps at full size
+    private static final int AA = 0;
+    // but, AA looks better if higher on other types
+//    private static final int AA = 1;
+
     private ImmediateModeRenderer20 batch;
     private InputProcessor input;
     private Viewport view;
@@ -106,7 +110,7 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        otherNoise = new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 1);
 
 //        world = new GlobeMap(seed, width << AA, height << AA, terrainNoise, 0.75f);
-        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.75f);
+//        world = new RotatingGlobeMap(seed, width << AA, height << AA, terrainNoise, 0.75f);
 
 //        world = new RoundSideWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 //        world = new HyperellipticalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
@@ -115,14 +119,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        world = new HexagonalWorldMap(seed, width << AA, height << AA, terrainNoise, 0.625f);
 
 //        world = new MimicWorldMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
-//        world = new MimicLocalMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 1.5f);
+        world = new MimicLocalMap(seed, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 1.5f);
 //        world = new RoundSideWorldMap(seed, width, height, new Noise(rng.nextInt(), 1.5f, Noise.FOAM_FRACTAL, 2), 0.5f);
 //        world = new HexagonalWorldMap(seed, width, height, new Noise(rng.nextInt(), 2f, Noise.FOAM_FRACTAL, 2), 0.9f);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.2, 0.0625, 2.5);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.2, 0.0, 2.0);
-//        world = new WorldMapGenerator.SphereMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.6);
-//        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 0.65);
-//        world = new WorldMapGenerator.LocalMimicMap(seed, ((WorldMapGenerator.LocalMimicMap) world).earth.not(), WorldMapGenerator.DEFAULT_NOISE, 0.9);
         inner = new LocalMap(seed, width << AA, height << AA, new Noise(rng.nextInt(), 1f, Noise.FOAM_FRACTAL, 2), 0.8f);
         wmv = new BlendedWorldMapView(world);
 //        wmv.initialize(SColor.CW_FADED_RED, SColor.AURORA_BRICK, SColor.DEEP_SCARLET, SColor.DARK_CORAL,
@@ -282,9 +281,9 @@ public class WorldViewerDemo extends ApplicationAdapter {
 //        moistureNoise.setMutation(change);
 //        otherNoise.setMutation(change);
         //// maybe comment in next line if using something other than RotatingGlobeMap
-//        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
+        wmv.generate(world.seedA, world.seedB, world.landModifier, world.heatModifier);
         //// comment out next line if using something other than RotatingGlobeMap
-        wmv.getBiomeMapper().makeBiomes(world);
+//        wmv.getBiomeMapper().makeBiomes(world);
         wmv.show();
         ttg = System.currentTimeMillis() - startTime;
     }
