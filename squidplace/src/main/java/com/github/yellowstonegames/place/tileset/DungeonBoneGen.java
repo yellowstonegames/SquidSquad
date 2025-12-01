@@ -41,7 +41,7 @@ public class DungeonBoneGen {
     public Region region = new Region(1, 1);
     /**
      * Not recommended for general usage; a Region that is frequently modified by this generator and is kept
-     * in a field so this and potentially other classes can avoid allocating new GreasedRegions with
+     * in a field so this and potentially other classes can avoid allocating new Regions with
      * {@link Region#remake(Region)} or the various refill methods in Region.
      */
     public transient Region workingRegion = new Region(1, 1);

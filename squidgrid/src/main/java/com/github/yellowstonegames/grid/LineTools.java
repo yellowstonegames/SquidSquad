@@ -524,7 +524,7 @@ public final class LineTools {
     }
 
     /** Adjusts an existing map that uses box-drawing characters so non-visible line segments aren't rendered.
-     * Takes a map that was produced using {@link #hashesToLines(char[][])} and a GreasedRegion that
+     * Takes a map that was produced using {@link #hashesToLines(char[][])} and a Region that
      * stores already-seen cells, and writes an altered version of the 2D char array {@code map} to {@code writeInto},
      * leaving non-box-drawing chars unchanged. This method modifies writeInto in-place, and also returns it after those
      * changesare made. The way this works is explained well with an example: if the player is north of a T-junction
@@ -532,7 +532,7 @@ public final class LineTools {
      * isn't visible to him, and so '─' should be rendered instead of '┬'. If a cell has already been seen, it is
      * considered still visible for the purpose of calculating shown segments (it won't change once you leave an area).
      * @param map a 2D char array that should have been produced by {@link #hashesToLines(char[][])}
-     * @param seen a GreasedRegion where "on" cells are visible now or were visible in the past
+     * @param seen a Region where "on" cells are visible now or were visible in the past
      * @param writeInto a 2D char array that must have at least the dimensions of map; will be modified
      * @return writeInto, after modifications
      */
@@ -542,7 +542,7 @@ public final class LineTools {
     }
 
     /** Adjusts an existing map that uses box-drawing characters so non-visible line segments aren't rendered.
-     * Takes a map that was produced using {@link #hashesToLines(char[][])} a GreasedRegion that stores
+     * Takes a map that was produced using {@link #hashesToLines(char[][])} a Region that stores
      * already-seen cells, an optional char array that refers to a line drawing style constant in this class (defaults
      * to {@link #light}, and writes an altered version of the 2D char array {@code map} to {@code writeInto}, leaving
      * non-box-drawing chars unchanged. This method modifies writeInto in-place, and also returns it after those changes
@@ -552,7 +552,7 @@ public final class LineTools {
      * {@code seen}), it is considered still visible for the purpose of calculating shown segments (that is, it won't
      * change once you leave an area).
      * @param map a 2D char array that should have been produced by {@link #hashesToLines(char[][])}
-     * @param seen a GreasedRegion where "on" cells are visible now or were visible in the past
+     * @param seen a Region where "on" cells are visible now or were visible in the past
      * @param symbols a char array that should be {@link #light} or {@link #heavy} unless you know your font supports
      *                the chars "╴╵╶╷", in which case you can use {@link #lightAlt}, or the heavy-weight versions of 
      *                those chars, in which case you can use {@link #heavyAlt}

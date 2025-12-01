@@ -91,7 +91,7 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //// you can use whatever map you have instead of fantasy_map.png, where white means land and black means water
 //        Pixmap pix = new Pixmap(Gdx.files.internal("special/fantasy_map.png"));
 //        final int bigWidth = pix.getWidth() / 4, bigHeight = pix.getHeight() / 4;
-//        GreasedRegion basis = new GreasedRegion(bigWidth, bigHeight);
+//        Region basis = new Region(bigWidth, bigHeight);
 //        for (int x = 0; x < bigWidth; x++) {
 //            for (int y = 0; y < bigHeight; y++) {
 //                if(pix.getPixel(x * 4, y * 4) < 0) // only counts every fourth row and every fourth column
@@ -99,10 +99,10 @@ public class WorldWildMapDemo extends ApplicationAdapter {
 //            }
 //        }
 //        basis = WorldMapGenerator.MimicMap.reprojectToElliptical(basis);
-//// at this point you could get the GreasedRegion as a String, and save the compressed output to a file:
+//// at this point you could get the Region as a String, and save the compressed output to a file:
 //// Gdx.files.local("map.txt").writeString(LZSPlus.compress(basis.stringSerialize()), false, "UTF16");
 //// you could reload basis without needing the original map image with
-//// basis = GreasedRegion.stringDeserialize(LZSPlus.decompress(Gdx.files.local("map.txt").readString("UTF16")));
+//// basis = Region.stringDeserialize(LZSPlus.decompress(Gdx.files.local("map.txt").readString("UTF16")));
 //// it's also possible to store the compressed map as a String in code, but you need to be careful about escaped chars.
 //        world = new WorldMapGenerator.LocalMimicMap(seed, basis, FastNoise.instance, 0.8);
 //        pix.dispose();

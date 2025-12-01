@@ -852,7 +852,7 @@ public class RNG implements Serializable, IRNG {
      * distributed pseudo-randomly, while a parameter of 47 will have on average 47 bits set. This can be useful for
      * certain code that uses bits to represent data but needs a different ratio of set bits to unset bits than 1:1.
      * <br>
-     * This method is deprecated because it really only finds usage in GreasedRegion, so it has been moved there and
+     * This method is deprecated because it really only finds usage in Region, so it has been moved there and
      * made so it can take any RandomnessSource as a parameter, including any IRNG or RNG.
      *
      * @param bitCount an int, only considered if between 0 and 64, that is the average number of bits to set
@@ -882,8 +882,8 @@ public class RNG implements Serializable, IRNG {
      * Gets a somewhat-random long with exactly 32 bits set; in each pair of bits starting at bit 0 and bit 1, then bit
      * 2 and bit 3, up to bit 62 and bit 3, one bit will be 1 and one bit will be 0 in each pair.
      * <br>
-     * Not exactly general-use; meant for generating data for GreasedRegion. This is deprecated in favor of the version
-     * in GreasedRegion.
+     * Not exactly general-use; meant for generating data for Region. This is deprecated in favor of the version
+     * in Region.
      * @return a random long with 32 "1" bits, distributed so exactly one bit is "1" for each pair of bits
      */
     @Deprecated

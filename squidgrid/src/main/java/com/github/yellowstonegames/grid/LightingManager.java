@@ -163,7 +163,7 @@ public class LightingManager {
     public ObjectDeque<LightSource> lights;
 
     /**
-     * A GreasedRegion that stores any cells that are in line-of-sight or are close enough to a cell in line-of-sight to
+     * A Region that stores any cells that are in line-of-sight or are close enough to a cell in line-of-sight to
      * potentially cast light into such a cell. Depends on the highest {@link Radiance#range} in {@link #lights}.
      */
     public Region noticeable;

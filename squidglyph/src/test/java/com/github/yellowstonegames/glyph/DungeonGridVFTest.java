@@ -444,7 +444,7 @@ public class DungeonGridVFTest extends ApplicationAdapter {
                 playerToCursor.setGoal(playerGlyph.getLocation());
                 // DijkstraMap.partialScan only finds the distance to get to a cell if that distance is less than some limit,
                 // which is 13 here. It also won't try to find distances through an impassable cell, which here is the blockage
-                // GreasedRegion that contains the cells just past the edge of the player's FOV area.
+                // Region that contains the cells just past the edge of the player's FOV area.
                 playerToCursor.partialScan(13, vision.blockage);
             }
         }
