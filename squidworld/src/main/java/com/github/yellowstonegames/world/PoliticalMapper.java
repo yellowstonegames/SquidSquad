@@ -634,15 +634,16 @@ public class PoliticalMapper {
                 sty = Math.min(Math.max((wmg.zoomStartY - (height >> 1)) / ((2 << wmg.zoom) - 2), 0), height);
         Region nation = new Region(wmg.landData);
         Region fillable = new Region(politicalMap, '~').not();
+        Region buffer = new Region(width, height);
         for (int i = 0; i < wmg.zoom; i++) {
-            fillable.zoom(stx, sty);
+            fillable.zoom(stx, sty, buffer);
         }
-        fillable.flood(nation, width + height);
+        fillable.flood(nation, width + height, buffer);
         for (int i = 1; i < atlas.size(); i++) {
             nation.refill(politicalMap, c = (char) atlas.keyAt(i));
             if(nation.isEmpty()) continue;
             for (int z = 0; z < wmg.zoom; z++) {
-                nation.zoom(stx, sty).expand8way().expand().fray(0.5f);
+                nation.zoom(stx, sty, buffer).expand8way(buffer).expand(buffer).fray(0.5f, buffer);
             }
             fillable.andNot(nation);
             nation.intoChars(zoomedMap, c);
@@ -650,7 +651,7 @@ public class PoliticalMapper {
         for (int i = 1; i < atlas.size(); i++) {
             nation.refill(zoomedMap, c = (char) atlas.keyAt(i));
             if(nation.isEmpty()) continue;
-            nation.flood(fillable, 4 << wmg.zoom).intoChars(zoomedMap, c);
+            nation.flood(fillable, 4 << wmg.zoom, buffer).intoChars(zoomedMap, c);
         }
         nation.refill(wmg.heightCodeData, 4, 999).and(new Region(zoomedMap, ' ')).intoChars(zoomedMap, '%');
         nation.refill(wmg.heightCodeData, -999, 4).intoChars(zoomedMap, '~');

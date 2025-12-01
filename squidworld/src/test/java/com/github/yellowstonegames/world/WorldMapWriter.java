@@ -165,8 +165,8 @@ public class WorldMapWriter extends ApplicationAdapter {
         wmv = new BlendedWorldMapView(world);
 //        wmv = new SimpleWorldMapView(world);
 
-        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
-        Gdx.files.local("AustraliaFlipped.txt").writeString(Region.decompress(MimicLocalMap.AUSTRALIA_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
+//        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
+//        Gdx.files.local("AustraliaFlipped.txt").writeString(Region.decompress(MimicLocalMap.AUSTRALIA_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 
         //generate(seed);
         rng.setSeed(seed);
