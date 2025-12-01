@@ -20,6 +20,8 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.yellowstonegames.grid.Region;
 
+import java.io.IOException;
+
 /**
  * Generates a dungeon as a 2D char array using
  * <a href="http://nothings.org/gamedev/herringbone/">Sean T. Barrett's Herringbone Wang Tiles method</a>.
@@ -45,26 +47,33 @@ public class DungeonBoneGen {
      * {@link Region#remake(Region)} or the various refill methods in Region.
      */
     public transient Region workingRegion = new Region(1, 1);
+    /**
+     * Not recommended for general usage; a Region that is frequently modified by this generator and is kept
+     * in a field so this and potentially other classes can avoid allocating new Regions with
+     * {@link Region#remake(Region)} or the various refill methods in Region.
+     */
+    public transient Region workingRegionB = new Region(1, 1);
 
     /**
-     * Gets the current RNG.
-     * @return
+     * Gets the current EnhancedRandom used as a random number generator (RNG).
+     * @return the current EnhancedRandom
      */
     public EnhancedRandom getRng() {
         return rng;
     }
 
     /**
-     * Sets the current RNG.
-     * @param rng
+     * Sets the current EnhancedRandom used as a random number generator (RNG).
+     * @param rng the non-null EnhancedRandom to use
      */
     public void setRng(EnhancedRandom rng) {
-        this.rng = rng;
+        if(rng != null)
+            this.rng = rng;
     }
 
     /**
      * Returns the width, used as the first coordinate in any char[][] in this class.
-     * @return
+     * @return the width of 2D arrays this returns (the first length)
      */
     public int getWidth() {
         return wide;
@@ -72,7 +81,7 @@ public class DungeonBoneGen {
 
     /**
      * Returns the height, used as the second coordinate in any char[][] in this class.
-     * @return
+     * @return the height of 2D arrays this returns (the second length)
      */
     public int getHeight() {
         return high;
@@ -81,7 +90,7 @@ public class DungeonBoneGen {
     /**
      * Get the char[][] dungeon that was last returned by generate(), or null if generate() or setDungeon have not been
      * called. Uses x,y indexing.
-     * @return
+     * @return the last 2D char array map this generated, or null if {@link #generate(TilesetType, int, int)} or {@link #setDungeon(char[][])} have not been called
      */
     public char[][] getDungeon() {
         return dungeon;
@@ -89,19 +98,21 @@ public class DungeonBoneGen {
 
     /**
      * Change the stored char[][] dungeon, using x,y indexing.
-     * @param dungeon
+     * @param dungeon the 2D char array to use; if null, width and height will be invalid
      */
     public void setDungeon(char[][] dungeon) {
         this.dungeon = dungeon;
-        wide = dungeon.length;
-        high = dungeon[0].length;
+        if (dungeon != null) {
+            wide = dungeon.length;
+            high = dungeon[0].length;
+        }
     }
 
     /**
      * Gets the char at a given x,y position.
-     * @param x
-     * @param y
-     * @return
+     * @param x first coordinate; should be at least 0 and less than {@link #getWidth()}
+     * @param y second coordinate; should be at least 0 and less than {@link #getHeight()}
+     * @return the char in the last generated map at the given coordinates
      */
     public char get(int x, int y) {
         return dungeon[x][y];
@@ -110,9 +121,9 @@ public class DungeonBoneGen {
     /**
      * Sets the char at the given x,y position, storing it in this object. The dungeon this modifies is accessible with
      * getDungeon() and can be set all at once with setDungeon().
-     * @param elem
-     * @param x
-     * @param y
+     * @param elem the char to place
+     * @param x first coordinate; should be at least 0 and less than {@link #getWidth()}
+     * @param y second coordinate; should be at least 0 and less than {@link #getHeight()}
      */
     public void put(char elem, int x, int y) {
         dungeon[x][y] = elem;
@@ -331,6 +342,7 @@ public class DungeonBoneGen {
         high = Math.max(1, h);
         region.resizeAndEmpty(wide, high);
         workingRegion.resizeAndEmpty(wide, high);
+        workingRegionB.resizeAndEmpty(wide, high);
         int sidelen = ts.config.short_side_length;
         int xmax = (wide / sidelen) + 6;
         int ymax = (high / sidelen) + 6;
@@ -404,16 +416,7 @@ public class DungeonBoneGen {
                         if (t == null)
                             return null;
 
-                        //trans_output = insert(trans_output, t.data, ypos, xpos);
-
-                        ////debug info in case fix on September 13, 2019 isn't complete
-//                        workingRegion.refill(t.data, t.width, t.height, wide, high);
-//                        System.out.println("\nhorizontal tile at i="+i+",j="+j);
-//                        System.out.println(workingRegion);
-//                        region.or(workingRegion.translate(xpos, ypos));
-//                        System.out.println("\nhorizontal tile translated at i="+i+",j="+j+",xPos="+xpos+",yPos="+ypos+",first="+workingRegion.first());
-//                        System.out.println(workingRegion);
-                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos));
+                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos, workingRegionB));
 
                     }
                     xpos += sidelen * 2;
@@ -428,17 +431,8 @@ public class DungeonBoneGen {
 
                         if (t == null)
                             return null;
-                        //trans_output = insert(trans_output, t.data, ypos, xpos);
-                        
-                        ////debug info in case fix on September 13, 2019 isn't complete
-//                        workingRegion.refill(t.data, t.width, t.height, wide, high);
-//                        System.out.println("\nvertical tile at i="+i+",j="+j);
-//                        System.out.println(workingRegion);
-//                        region.or(workingRegion.translate(xpos, ypos));
-//                        System.out.println("\nvertical tile translated at i="+i+",j="+j+",xPos="+xpos+",yPos="+ypos+",first="+workingRegion.first());
-//                        System.out.println(workingRegion);
 
-                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos));
+                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos, workingRegionB));
                     }
                 }
                 ypos += sidelen;
@@ -479,7 +473,7 @@ public class DungeonBoneGen {
                         if (t == null)
                             return null;
                         //trans_output = insert(trans_output, t.data, ypos, xpos);
-                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos));
+                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos, workingRegionB));
                     }
                     xpos += sidelen * 2;
                     // now we're at the end of a previous vertical one
@@ -493,18 +487,13 @@ public class DungeonBoneGen {
 
                         if (t == null)
                             return null;
-                        //trans_output = insert(trans_output, t.data, ypos, xpos);
-                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos));
+                        region.or(workingRegion.refill(t.data, t.width, t.height, wide, high).translate(xpos, ypos, workingRegionB));
                     }
                 }
                 ypos += sidelen;
             }
         }
-        /*for (int x = 0; x < w; x++) {
-            for (int y = 0; y < h; y++) {
-                output[x][y] = trans_output[y][x];
-            }
-        }*/
+
         dungeon = region.toChars();
         return dungeon;
     }
@@ -512,22 +501,31 @@ public class DungeonBoneGen {
     /**
      * Provides a string representation of the latest generated dungeon.
      *
-     * @return
+     * @return a newline-separated String representation, with y=0 at the bottom
      */
     @Override
 	public String toString() {
-        char[][] trans = new char[high][wide];
-        for (int x = 0; x < wide; x++) {
-            for (int y = 0; y < high; y++) {
-                trans[y][x] = dungeon[x][y];
+        StringBuilder sb = new StringBuilder();
+        for (int y = high - 1; y >= 0; y--) {
+            for (int x = 0; x < wide; x++) {
+                sb.append(dungeon[x][y]);
             }
-        }
-        StringBuffer sb = new StringBuffer();
-        for (int row = 0; row < high; row++) {
-            sb.append(trans[row]);
             sb.append('\n');
         }
         return sb.toString();
+    }
+
+	public Appendable appendToString(Appendable sb) {
+        try {
+            for (int y = high - 1; y >= 0; y--) {
+                for (int x = 0; x < wide; x++) {
+                    sb.append(dungeon[x][y]);
+                }
+                sb.append('\n');
+            }
+        }catch (IOException ignored) {
+        }
+        return sb;
     }
 
     /*
