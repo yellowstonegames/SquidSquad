@@ -2925,9 +2925,7 @@ public class Region implements Collection<Coord> {
      * @return this for chaining
      */
     public Region insertTranslation(int x, int y) {
-        Region result = this;
-        if (width < 1 || ySections <= 0 || (x == 0 && y == 0)) {
-        } else {
+        if (width >= 1 && ySections > 0 && (x != 0 || y != 0)) {
             int start = Math.max(0, x), len = Math.min(width, width + x) - start,
                     jump = (y == 0) ? 0 : (y < 0) ? -(-y >>> 6) : (y >>> 6), lily = (y < 0) ? -(-y & 63) : (y & 63),
                     originalJump = Math.max(0, -jump), alterJump = Math.max(0, jump);
@@ -2985,8 +2983,84 @@ public class Region implements Collection<Coord> {
             tallied = false;
         }
 
+        return this;
+    }
 
-        return result;
+    /**
+     * Adds to this Region with a moved set of its own "on" cells, moved to the given x and y offset.
+     * Ignores cells that would be added out of bounds. Keeps all cells that are currently "on" unchanged.
+     * @param x the x offset to translate by; can be negative
+     * @param y the y offset to translate by; can be negative
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate, and after the call, {@code buffer} will contain the previous contents of this Region.
+     *
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region insertTranslation(int x, int y, Region buffer) {
+        if (width > 0 && ySections > 0 && (x != 0 || y != 0)) {
+            if(buffer == null) buffer = new Region(this);
+            else buffer.remake(this);
+
+            int start = Math.max(0, x), len = Math.min(width, width + x) - start,
+                    jump = (y == 0) ? 0 : (y < 0) ? -(-y >>> 6) : (y >>> 6), lily = (y < 0) ? -(-y & 63) : (y & 63),
+                    originalJump = Math.max(0, -jump), alterJump = Math.max(0, jump);
+            final long[] self = this.data;
+            final long[] copy = buffer.data;
+            long prev, tmp;
+            if (x < 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < ySections; i++, oi++) {
+                    for (int j = Math.max(0, -x), jj = 0; jj < len; j++, jj++) {
+                        self[jj * ySections + i] = copy[j * ySections + oi];
+                    }
+                }
+            } else if (x > 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < ySections; i++, oi++) {
+                    for (int j = 0, jj = start; j < len; j++, jj++) {
+                        self[jj * ySections + i] = copy[j * ySections + oi];
+                    }
+                }
+            } else {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < ySections; i++, oi++) {
+                    for (int j = 0; j < len; j++) {
+                        self[j * ySections + i] = copy[j * ySections + oi];
+                    }
+                }
+            }
+            if (lily < 0) {
+                for (int i = start; i < len; i++) {
+                    prev = 0L;
+                    for (int j = 0; j < ySections; j++) {
+                        tmp = prev;
+                        prev = (self[i * ySections + j] & ~(-1L << -lily)) << (64 + lily);
+                        self[i * ySections + j] >>>= -lily;
+                        self[i * ySections + j] |= tmp;
+                    }
+                }
+            } else if (lily > 0) {
+                for (int i = start; i < start + len; i++) {
+                    prev = 0L;
+                    for (int j = 0; j < ySections; j++) {
+                        tmp = prev;
+                        prev = (self[i * ySections + j] & ~(-1L >>> lily)) >>> (64 - lily);
+                        self[i * ySections + j] <<= lily;
+                        self[i * ySections + j] |= tmp;
+                    }
+                }
+            }
+            for (int i = 0; i < width * ySections; i++) {
+                self[i] |= copy[i];
+            }
+            if (yEndMask != -1) {
+                for (int a = ySections - 1; a < self.length; a += ySections) {
+                    self[a] &= yEndMask;
+                }
+            }
+            tallied = false;
+        }
+
+        return this;
     }
 
     /**
@@ -2998,9 +3072,7 @@ public class Region implements Collection<Coord> {
      * @return this for chaining
      */
     public Region zoom(int x, int y) {
-        Region result = this;
-        if (width < 1 || ySections <= 0) {
-        } else {
+        if (width >= 1 && ySections > 0) {
             x = -x;
             y = -y;
             int
@@ -3111,7 +3183,7 @@ public class Region implements Collection<Coord> {
         }
 
 
-        return result;
+        return this;
     }
 
     /**
