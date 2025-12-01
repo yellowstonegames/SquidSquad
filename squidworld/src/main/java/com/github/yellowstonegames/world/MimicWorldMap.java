@@ -35,6 +35,7 @@ public class MimicWorldMap extends EllipticalWorldMap {
     public Region shallow;
     public Region coast;
     public Region earthOriginal;
+    protected transient final Region buffer = new Region(1, 1);
 
     /**
      * Constructs a concrete WorldMapGenerator for a map that should look like Earth using an elliptical projection
@@ -138,9 +139,10 @@ public class MimicWorldMap extends EllipticalWorldMap {
     public MimicWorldMap(long initialSeed, Region toMimic, INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, toMimic.width, toMimic.height, noiseGenerator, octaveMultiplier);
         earth = toMimic;
-        earthOriginal = earth.copy();
-        coast = earth.copy().not().fringe(2);
-        shallow = earth.copy().fringe(2);
+        earthOriginal = new Region(toMimic.width, toMimic.height);
+        coast = earth.copy().not().expand(2, earthOriginal).and(earth);
+        shallow = earth.copy().expand(2, earthOriginal).andNot(earth);
+        earthOriginal.remake(earth);
     }
 
     /**
@@ -373,13 +375,13 @@ public class MimicWorldMap extends EllipticalWorldMap {
             int stx = Math.min(Math.max((zoomStartX - (width >> 1)) / ((2 << zoom) - 2), 0), width),
                     sty = Math.min(Math.max((zoomStartY - (height >> 1)) / ((2 << zoom) - 2), 0), height);
             for (int z = 0; z < zoom; z++) {
-                earth.zoom(stx, sty).expand8way().fray(0.5f).expand();
+                earth.zoom(stx, sty, buffer).expand8way(buffer).fray(0.5f, buffer).expand(buffer);
             }
-            coast.remake(earth).not().fringe(2 << zoom).expand().fray(0.5f);
-            shallow.remake(earth).fringe(2 << zoom).expand().fray(0.5f);
+            coast.remake(earth).not().expand(2 << zoom, buffer).and(earth).expand(buffer).fray(0.5f, buffer);
+            shallow.remake(earth).expand(2 << zoom, buffer).andNot(earth).expand(buffer).fray(0.5f, buffer);
         } else {
-            coast.remake(earth).not().fringe(2);
-            shallow.remake(earth).fringe(2);
+            coast.remake(earth).not().expand(2, buffer).and(earth);
+            shallow.remake(earth).expand(2, buffer).andNot(earth);
         }
         float p,
                 ps, pc,
