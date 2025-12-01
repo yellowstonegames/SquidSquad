@@ -3256,6 +3256,135 @@ public class Region implements Collection<Coord> {
             tallied = false;
         }
 
+        return this;
+    }
+
+    /**
+     * Effectively doubles the x and y values of each cell this contains (not scaling each cell to be larger, so each
+     * "on" cell will be surrounded by "off" cells), and re-maps the positions so the given x and y in the doubled space
+     * become 0,0 in the resulting Region (which is this, assigning to itself).
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate, and after the call, {@code buffer} will contain the previous contents of this Region.
+     *
+     * @param x in the doubled coordinate space, the x position that should become 0 x in the result; can be negative
+     * @param y in the doubled coordinate space, the y position that should become 0 y in the result; can be negative
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region zoom(int x, int y, Region buffer) {
+        if(buffer == null) buffer = new Region(this);
+        else buffer.remake(this);
+        if (width >= 1 && ySections > 0) {
+            x = -x;
+            y = -y;
+            int
+                    width2 = width + 1 >>> 1, ySections2 = ySections + 1 >>> 1,
+                    start = Math.max(0, x), len = Math.min(width, width + x) - start,
+                    //tall = (Math.min(height, height + y) - Math.max(0, y)) + 63 >> 6,
+                    jump = (y == 0) ? 0 : (y < 0) ? -(-y >>> 6) : (y >>> 6), lily = (y < 0) ? -(-y & 63) : (y & 63),
+                    originalJump = Math.max(0, -jump), alterJump = Math.max(0, jump),
+                    oddX = (x & 1), oddY = (y & 1);
+            long[] self = this.data;
+            long[] copy = buffer.data;
+            long prev, tmp, yEndMask2 = -1L >>> (64 - ((height + 1 >>> 1) & 63));
+            if (x < 0) {
+                for (int i = alterJump, oi = originalJump; i <= ySections2 && oi < ySections; i++, oi++) {
+                    for (int j = Math.max(0, -x), jj = 0; jj < len; j++, jj++) {
+                        self[jj * ySections + i] = copy[j * ySections + oi];
+                    }
+                }
+            } else if (x > 0) {
+                for (int i = alterJump, oi = originalJump; i <= ySections2 && oi < ySections; i++, oi++) {
+                    for (int j = 0, jj = start; j < len; j++, jj++) {
+                        self[jj * ySections + i] = copy[j * ySections + oi];
+                    }
+                }
+            } else {
+                for (int i = alterJump, oi = originalJump; i <= ySections2 && oi < ySections; i++, oi++) {
+                    for (int j = 0; j < len; j++) {
+                        self[j * ySections + i] = copy[j * ySections + oi];
+                    }
+                }
+            }
+            if (lily < 0) {
+                for (int i = start; i < len; i++) {
+                    prev = 0L;
+                    for (int j = ySections2; j >= 0; j--) {
+                        tmp = prev;
+                        prev = (self[i * ySections + j] & ~(-1L << -lily)) << (64 + lily);
+                        self[i * ySections + j] >>>= -lily;
+                        self[i * ySections + j] |= tmp;
+                    }
+                }
+            } else if (lily > 0) {
+                for (int i = start; i < start + len; i++) {
+                    prev = 0L;
+                    for (int j = 0; j < ySections2; j++) {
+                        tmp = prev;
+                        prev = (self[i * ySections + j] & ~(-1L >>> lily)) >>> (64 - lily);
+                        self[i * ySections + j] <<= lily;
+                        self[i * ySections + j] |= tmp;
+                    }
+                }
+            }
+            if (yEndMask2 != -1) {
+                for (int a = ySections2 - 1; a < self.length; a += ySections) {
+                    self[a] &= yEndMask2;
+                    if (ySections2 < ySections)
+                        self[a + 1] = 0L;
+                }
+            }
+            for (int i = 0; i < width2; i++) {
+                for (int j = 0; j < ySections2; j++) {
+                    prev = self[i * ySections + j];
+                    tmp = prev >>> 32;
+                    prev &= 0xFFFFFFFFL;
+                    prev = (prev | (prev << 16)) & 0x0000FFFF0000FFFFL;
+                    prev = (prev | (prev << 8)) & 0x00FF00FF00FF00FFL;
+                    prev = (prev | (prev << 4)) & 0x0F0F0F0F0F0F0F0FL;
+                    prev = (prev | (prev << 2)) & 0x3333333333333333L;
+                    prev = (prev | (prev << 1)) & 0x5555555555555555L;
+                    prev <<= oddY;
+                    if (oddX == 1) {
+                        if (i * 2 + 1 < width)
+                            copy[(i * ySections + j) * 2 + ySections] = prev;
+                        if (i * 2 < width)
+                            copy[(i * ySections + j) * 2] = 0L;
+                    } else {
+                        if (i * 2 < width)
+                            copy[(i * ySections + j) * 2] = prev;
+                        if (i * 2 + 1 < width)
+                            copy[(i * ySections + j) * 2 + ySections] = 0L;
+                    }
+                    if (j * 2 + 1 < ySections) {
+                        tmp = (tmp | (tmp << 16)) & 0x0000FFFF0000FFFFL;
+                        tmp = (tmp | (tmp << 8)) & 0x00FF00FF00FF00FFL;
+                        tmp = (tmp | (tmp << 4)) & 0x0F0F0F0F0F0F0F0FL;
+                        tmp = (tmp | (tmp << 2)) & 0x3333333333333333L;
+                        tmp = (tmp | (tmp << 1)) & 0x5555555555555555L;
+                        tmp <<= oddY;
+                        if (oddX == 1) {
+                            if (i * 2 + 1 < width)
+                                copy[(i * ySections + j) * 2 + ySections + 1] = tmp;
+                            if (i * 2 < width)
+                                copy[(i * ySections + j) * 2 + 1] = 0L;
+                        } else {
+                            if (i * 2 < width)
+                                copy[(i * ySections + j) * 2 + 1] = tmp;
+                            if (i * 2 + 1 < width)
+                                copy[(i * ySections + j) * 2 + ySections + 1] = 0L;
+                        }
+                    }
+                }
+            }
+            if (yEndMask != -1) {
+                for (int a = ySections - 1; a < copy.length; a += ySections) {
+                    copy[a] &= yEndMask;
+                }
+            }
+            tallied = false;
+        }
 
         return this;
     }
