@@ -18,7 +18,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.Stringf;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.annotations.Beta;
 
@@ -59,7 +58,7 @@ import java.util.Objects;
  *     <li>Every "turn" (when an input is entered), call {@link #removeViewer(Coord)} if a viewer was removed.</li>
  *     <li>Every "turn" (when an input is entered), call {@link #moveViewer(Coord, Coord)} if a viewer moved.</li>
  *     <li>Every "turn" (when an input is entered), call {@link #editSingle(Coord, char)} if a map cell was altered (such as a door opening).</li>
- *     <li>Every "turn" (when an input is entered), call {@link #editAll(char[][])} if the whole current map was altered (such as going down stairs to a new area).</li>
+ *     <li>Every "turn" (when an input is entered), call {@link #editAll(char[][])} if the whole current map was altered (such as going downstairs to a new area).</li>
  *     <li>Every "turn" (when an input is entered), if any of the previous every-turn methods was called, call {@link #finishChanges()} to complete the change.</li>
  *     <li>Every frame, call {@link #update(float)}, passing it the number of milliseconds since the last turn was handled (this number can be altered).</li>
  *     <li>Every frame, call {@link #getForegroundColor(Coord, float)} for every position with a moving creature or object in it, passing it a position to query and the number of milliseconds since the last turn was handled (this number can be altered).</li>
@@ -152,6 +151,11 @@ public class VisionFramework {
      * they are visible right now.
      */
     public Region inView;
+
+    /**
+     * Used as temporary storage by methods that can reuse a Region to avoid allocation.
+     */
+    protected transient final Region buffer = new Region(1, 1);
 
     /**
      * Maps the positions of "things that can view the map for the player" to how far each of those things can see.
@@ -322,7 +326,7 @@ public class VisionFramework {
      * The existing place map should really be the same size as the new place map.You must call
      * {@link #finishChanges()} when you are done changing the place map, in order to update
      * the lighting with the latest changes.
-     * @param newPlaceMap
+     * @param newPlaceMap the replacement 2D char array to use as {@link #linePlaceMap}
      */
     public void editAll(char[][] newPlaceMap) {
         ArrayTools.set(newPlaceMap, linePlaceMap);
@@ -469,7 +473,7 @@ public class VisionFramework {
         justHidden.andNot(inView);
         // changes blockage so instead of all currently visible cells, it now stores the cells that would have been
         // adjacent to those cells.
-        blockage.fringe8way();
+        blockage.fringe8way(buffer);
         // takes box-drawing characters (walls) in linePlaceMap that would have segments that aren't visible in
         // seen, then removes the segments that shouldn't be visible and stores the result in prunedPlaceMap.
         LineTools.pruneLines(linePlaceMap, seen, prunedPlaceMap);

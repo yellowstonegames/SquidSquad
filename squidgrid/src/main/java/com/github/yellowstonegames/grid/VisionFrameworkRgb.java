@@ -54,7 +54,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
  *     <li>Every "turn" (when an input is entered), call {@link #removeViewer(Coord)} if a viewer was removed.</li>
  *     <li>Every "turn" (when an input is entered), call {@link #moveViewer(Coord, Coord)} if a viewer moved.</li>
  *     <li>Every "turn" (when an input is entered), call {@link #editSingle(Coord, char)} if a map cell was altered (such as a door opening).</li>
- *     <li>Every "turn" (when an input is entered), call {@link #editAll(char[][])} if the whole current map was altered (such as going down stairs to a new area).</li>
+ *     <li>Every "turn" (when an input is entered), call {@link #editAll(char[][])} if the whole current map was altered (such as going downstairs to a new area).</li>
  *     <li>Every "turn" (when an input is entered), if any of the previous every-turn methods was called, call {@link #finishChanges()} to complete the change.</li>
  *     <li>Every frame, call {@link #update(float)}, passing it the number of milliseconds since the last turn was handled (this number can be altered).</li>
  *     <li>Every frame, call {@link #getForegroundColor(Coord, float)} for every position with a moving creature or object in it, passing it a position to query and the number of milliseconds since the last turn was handled (this number can be altered).</li>
