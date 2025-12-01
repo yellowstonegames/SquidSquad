@@ -139,10 +139,9 @@ public class MimicWorldMap extends EllipticalWorldMap {
     public MimicWorldMap(long initialSeed, Region toMimic, INoise noiseGenerator, float octaveMultiplier) {
         super(initialSeed, toMimic.width, toMimic.height, noiseGenerator, octaveMultiplier);
         earth = toMimic;
-        earthOriginal = new Region(toMimic.width, toMimic.height);
-        coast = earth.copy().not().expand(2, earthOriginal).and(earth);
-        shallow = earth.copy().expand(2, earthOriginal).andNot(earth);
-        earthOriginal.remake(earth);
+        earthOriginal = earth.copy();
+        coast = earth.copy().not().expand(2, buffer).and(earth);
+        shallow = earth.copy().expand(2, buffer).andNot(earth);
     }
 
     /**
