@@ -2041,10 +2041,13 @@ public class Region implements Collection<Coord> {
      * Takes another Region, called other, with potentially different size and removes its "on" cells from this
      * Region at the given x,y offset, allowing negative x and/or y to remove only part of other in this.
      * <br>
-     * This is a rather complex method internally, but should be about as efficient as a general remove-region method
-     * can be. The code is identical to {@link #insert(int, int, Region)} except that where insert only adds
+     * This is a rather complex method internally.
+     * The code is identical to {@link #insert(int, int, Region)} except that where insert only adds
      * cells, this only removes cells. Essentially, insert() is to {@link #or(Region)} as remove() is to
      * {@link #andNot(Region)}.
+     * <br>
+     * This allocates a long array internally; to avoid that, you can use {@link #remove(int, int, Region, Region)}.
+     *
      * @param x the x offset to start removing other from; may be negative
      * @param y the y offset to start removing other from; may be negative
      * @param other the other Region to remove
@@ -2165,6 +2168,142 @@ public class Region implements Collection<Coord> {
 
         return this;
     }
+    /**
+     * Takes another Region, called other, with potentially different size and removes its "on" cells from this
+     * Region at the given x,y offset, allowing negative x and/or y to remove only part of other in this.
+     * <br>
+     * This is a rather complex method internally.
+     * The code is identical to {@link #insert(int, int, Region)} except that where insert only adds
+     * cells, this only removes cells. Essentially, insert() is to {@link #or(Region)} as remove() is to
+     * {@link #andNot(Region)}.
+     * <br>
+     * This overload takes a {@code buffer} Region that should be the same size as this one. If it is, this won't
+     * allocate, and after the call, {@code buffer} will contain undefined data.
+     *
+     * @param x the x offset to start removing other from; may be negative
+     * @param y the y offset to start removing other from; may be negative
+     * @param other the other Region to remove
+     * @param buffer another Region that will be erased and replaced with the contents of this Region before this call; should be the same size as this
+     * @return this for chaining
+     */
+    public Region remove(int x, int y, Region other, Region buffer)
+    {
+        if(other == null || other.ySections <= 0 || other.width <= 0)
+            return this;
+
+        int start = Math.max(0, x), len = Math.min(width, Math.min(other.width, other.width + x) - start),
+                oys = other.ySections, jump = (y == 0) ? 0 : (y < 0) ? -(-y >>> 6) : (y-1 >>> 6), lily = (y < 0) ? -(-y & 63) : (y & 63),
+                originalJump = Math.max(0, -jump), alterJump = Math.max(0, jump);
+        if(buffer == null) buffer = new Region(width, height);
+        else buffer.resizeAndEmpty(width, height);
+        long[] data2 = buffer.data;
+
+        long prev, tmp;
+        if(oys == ySections) {
+            if (x < 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = Math.max(0, -x), jj = 0; jj < len; j++, jj++) {
+                        data2[jj * ySections + i] = other.data[j * oys + oi];
+                    }
+                }
+            } else if (x > 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = 0, jj = start; j < len; j++, jj++) {
+                        data2[jj * ySections + i] = other.data[j * ySections + oi];
+                    }
+                }
+            } else {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = 0; j < len; j++) {
+                        data2[j * ySections + i] = other.data[j * ySections + oi];
+                    }
+                }
+            }
+        }
+        else if(oys < ySections)
+        {
+            if (x < 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = Math.max(0, -x), jj = 0; jj < len; j++, jj++) {
+                        data2[jj * ySections + i] = other.data[j * oys + oi];
+                    }
+                }
+            } else if (x > 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {// oi < oys - Math.max(0, jump)
+                    for (int j = 0, jj = start; j < len; j++, jj++) {
+                        data2[jj * ySections + i] = other.data[j * oys + oi];
+                    }
+                }
+            } else {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = 0; j < len; j++) {
+                        data2[j * ySections + i] = other.data[j * oys + oi];
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (x < 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = Math.max(0, -x), jj = 0; jj < len; j++, jj++) {
+                        data2[jj * ySections + i] = other.data[j * oys + oi];
+                    }
+                }
+            } else if (x > 0) {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = 0, jj = start; j < len; j++, jj++) {
+                        data2[jj * ySections + i] = other.data[j * oys + oi];
+                    }
+                }
+            } else {
+                for (int i = alterJump, oi = originalJump; i < ySections && oi < oys; i++, oi++) {
+                    for (int j = 0; j < len; j++) {
+                        data2[j * ySections + i] = other.data[j * oys + oi];
+                    }
+                }
+            }
+        }
+
+        if(lily < 0) {
+            for (int i = start; i < len; i++) {
+                prev = 0L;
+                for (int j = 0; j < ySections; j++) {
+                    tmp = prev;
+                    prev = (data2[i * ySections + j] & ~(-1L << -lily)) << (64 + lily);
+                    data2[i * ySections + j] >>>= -lily;
+                    data2[i * ySections + j] |= tmp;
+                }
+            }
+        }
+        else if(lily > 0) {
+            for (int i = start; i < start + len; i++) {
+                prev = 0L;
+                for (int j = 0; j < ySections; j++) {
+                    tmp = prev;
+                    prev = (data2[i * ySections + j] & ~(-1L >>> lily)) >>> (64 - lily);
+                    data2[i * ySections + j] <<= lily;
+                    data2[i * ySections + j] |= tmp;
+                }
+            }
+        }
+        len = Math.min(width, start + len);
+        for (int i = start; i < len; i++) {
+            for (int j = 0; j < ySections; j++) {
+                data[i * ySections + j] &= ~data2[i * ySections + j];
+            }
+        }
+
+        if(ySections > 0 && yEndMask != -1) {
+            for (int a = ySections - 1; a < data.length; a += ySections) {
+                data[a] &= yEndMask;
+            }
+        }
+        tallied = false;
+
+        return this;
+    }
+
     public Region removeSeveral(Coord... points)
     {
         for (int i = 0, x, y; i < points.length; i++) {
