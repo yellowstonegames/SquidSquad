@@ -32,7 +32,8 @@ public class SlashMazeGenerator implements PlaceGenerator {
     public EnhancedRandom rng;
     public int width, height;
     public boolean thin = false;
-    private Region map;
+    private final Region map;
+    private final transient Region buffer = new Region(1, 1);
     private int[][] env;
     private char[][] maze;
 
@@ -64,7 +65,7 @@ public class SlashMazeGenerator implements PlaceGenerator {
         map.resizeAndEmpty(width, height);
         for (int x = 0; x < width; x+=6) {
             for (int y = 0; y < height; y+=6) {
-                map.insert(x, y, rng.nextBoolean() ? slash : backslash);
+                map.insert(x, y, rng.nextBoolean() ? slash : backslash, buffer);
             }
         }
         if(thin)

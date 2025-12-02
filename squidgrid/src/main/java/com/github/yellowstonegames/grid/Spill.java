@@ -139,7 +139,7 @@ public class Spill {
      * @return the {@link #getSpillMap() spillMap}, which this can reuse; call {@link Region#copy()} to avoid losing this
      */
     public Region run(Region entrances, int volume) {
-        return spillMap.empty().insert(0, 0, entrances).spill(passable, volume, random, buffer, buffer2);
+        return spillMap.empty().insert(0, 0, entrances, buffer).spill(passable, volume, random, buffer, buffer2);
     }
 
     /**
