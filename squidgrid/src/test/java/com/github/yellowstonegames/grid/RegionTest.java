@@ -173,6 +173,90 @@ public class RegionTest {
     }
 
     @Test
+    public void testInsert() {
+        String[] gaps = new String[]{
+                "      ",
+                " ! !  ",
+                "      ",
+                " ! !  ",
+                "      ",
+                "      ",
+        };
+        Region r = new Region(gaps, '!');
+        String[] target1 = new String[]{
+                "      ",
+                " !!!! ",
+                "      ",
+                " !!!! ",
+                "      ",
+                "      ",
+        };
+        String[] target2 = new String[]{
+                "      ",
+                " ! !  ",
+                "  ! ! ",
+                " ! !  ",
+                "  ! ! ",
+                "      ",
+        };
+        String[] target3 = new String[]{
+                "      ",
+                " ! !  ",
+                " ! !  ",
+                " ! !  ",
+                " ! !  ",
+                "      ",
+        };
+        String[] target4 = new String[]{
+                "      ",
+                " !!!! ",
+                " !!!! ",
+                " !!!! ",
+                " !!!! ",
+                "      ",
+        };
+
+        Region rr = r.copy();
+        Region b = r.copy();
+        Region t = new Region(target1, '!');
+
+        r.refill(gaps, '!');
+        r.insert(1, 0, rr);
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        r.insert(1, 0, rr, b);
+        Assert.assertEquals(r, t);
+
+        r.refill(gaps, '!');
+        t.refill(target2, '!');
+        r.insert(1, 1, rr);
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        r.insert(1, 1, rr, b);
+        Assert.assertEquals(r, t);
+
+        r.refill(gaps, '!');
+        t.refill(target3, '!');
+        r.insert(0, 1, rr);
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        r.insert(0, 1, rr, b);
+        Assert.assertEquals(r, t);
+
+        r.refill(gaps, '!');
+        t.refill(target4, '!');
+        r.insert(1, 0, rr);
+        r.insert(0, 1, rr.remake(r));
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        rr.remake(r);
+        r.insert(1, 0, rr, b);
+        r.insert(0, 1, rr.remake(r), b);
+        Assert.assertEquals(r, t);
+
+    }
+
+    @Test
     public void testExpand() {
         String[] lines = new String[]{
                 "      ",
@@ -531,7 +615,7 @@ public class RegionTest {
             System.out.println();
         }
     }
-    
+
     @Test
     public void testRemoveCorners() {
         String[] lines = new String[]{
