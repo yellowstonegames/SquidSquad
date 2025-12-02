@@ -253,7 +253,86 @@ public class RegionTest {
         r.insert(1, 0, rr, b);
         r.insert(0, 1, rr.remake(r), b);
         Assert.assertEquals(r, t);
+    }
 
+    @Test
+    public void testRemove() {
+        String[] gaps = new String[]{
+                "      ",
+                " ! !  ",
+                "      ",
+                " ! !  ",
+                "      ",
+                "      ",
+        };
+        Region r = new Region(gaps, '!');
+        String[] target1 = new String[]{
+                "      ",
+                " !    ",
+                "      ",
+                " !    ",
+                "      ",
+                "      ",
+        };
+        String[] target2 = new String[]{
+                "      ",
+                " ! !  ",
+                "      ",
+                " !    ",
+                "      ",
+                "      ",
+        };
+        String[] target3 = new String[]{
+                "      ",
+                "      ",
+                "      ",
+                " ! !  ",
+                "      ",
+                "      ",
+        };
+        String[] target4 = new String[]{
+                "      ",
+                "   !  ",
+                "      ",
+                "   !  ",
+                "      ",
+                "      ",
+        };
+
+        Region rr = r.copy();
+        Region b = r.copy();
+        Region t = new Region(target1, '!');
+
+        r.refill(gaps, '!');
+        r.remove(2, 0, rr);
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        r.remove(2, 0, rr, b);
+        Assert.assertEquals(r, t);
+
+        r.refill(gaps, '!');
+        t.refill(target2, '!');
+        r.remove(2, 2, rr);
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        r.remove(2, 2, rr, b);
+        Assert.assertEquals(r, t);
+
+        r.refill(gaps, '!');
+        t.refill(target3, '!');
+        r.remove(0, -2, rr);
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        r.remove(0, -2, rr, b);
+        Assert.assertEquals(r, t);
+
+        r.refill(gaps, '!');
+        t.refill(target4, '!');
+        r.remove(-2, 0, rr);
+        Assert.assertEquals(r, t);
+        r.refill(gaps, '!');
+        r.remove(-2, 0, rr, b);
+        Assert.assertEquals(r, t);
     }
 
     @Test
