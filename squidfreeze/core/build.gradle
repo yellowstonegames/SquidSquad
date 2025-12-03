@@ -10,7 +10,7 @@ dependencies {
 	api("com.github.tommyettinger:kryo-regexodus:0.1.19.1"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-digital:0.9.5.1"){
+	api("com.github.tommyettinger:kryo-digital:0.9.7.1"){
         exclude module: 'digital'
     }
 	api("com.github.tommyettinger:kryo-jdkgdxds:1.13.1.1"){
