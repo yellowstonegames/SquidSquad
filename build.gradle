@@ -13,8 +13,8 @@ apply plugin: 'java-library'
 apply plugin: 'com.vanniktech.maven.publish'
 
 def projectName = 'SquidSquad'
-version "$VERSION_NAME"
-group 'com.squidpony'
+version = "$VERSION_NAME"
+group = 'com.squidpony'
 
 allprojects {
     apply plugin: 'eclipse'
@@ -25,8 +25,8 @@ allprojects {
 configure(subprojects) {
     apply plugin: 'java-library'
     apply plugin: 'com.vanniktech.maven.publish'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    java.sourceCompatibility = 1.8
+    java.targetCompatibility = 1.8
     compileJava {
         options.incremental = true
     }
@@ -39,8 +39,8 @@ subprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
-		maven { url 'https://jitpack.io' }
+		maven { url = 'https://central.sonatype.com/repository/maven-snapshots/' }
+		maven { url = 'https://jitpack.io' }
 	}
     javadoc.options.source("17")
     javadoc.destinationDir = file("../docs/$name/apidocs")
