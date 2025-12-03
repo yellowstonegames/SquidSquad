@@ -36,7 +36,6 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.grid.*;
-import com.github.yellowstonegames.grid.HuskyNoise;
 
 import java.util.Arrays;
 

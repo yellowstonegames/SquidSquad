@@ -26,7 +26,6 @@ import com.github.yellowstonegames.path.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 

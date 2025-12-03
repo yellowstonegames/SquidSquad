@@ -36,7 +36,6 @@ import it.unimi.dsi.fastutil.ints.IntArrays;
 
 import java.util.Random;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A class providing static methods and objects that do useful things with type-specific arrays.

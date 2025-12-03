@@ -20,8 +20,6 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.world.BiomeMapper.BlendedBiomeMapper;
 
-import java.util.Arrays;
-
 /**
  * Takes a {@link WorldMapGenerator}, such as a {@link LocalMap}, {@link RotatingGlobeMap}, or {@link StretchWorldMap},
  * and wraps it so that you can call {@link #generate()} on this to coordinate calls to

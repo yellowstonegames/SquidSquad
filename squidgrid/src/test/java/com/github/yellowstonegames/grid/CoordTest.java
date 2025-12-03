@@ -1,7 +1,5 @@
 package com.github.yellowstonegames.grid;
 
-import com.github.tommyettinger.digital.MathTools;
-
 public class CoordTest {
     /**
      * All unique!

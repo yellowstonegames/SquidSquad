@@ -22,8 +22,6 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.github.yellowstonegames.world.EllipticalWorldMap;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * Serializer for {@link EllipticalWorldMap}; doesn't need anything else registered.
  */

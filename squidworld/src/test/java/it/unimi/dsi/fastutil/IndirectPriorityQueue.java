@@ -18,7 +18,6 @@ package it.unimi.dsi.fastutil;
 
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
 
-import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 /** An indirect priority queue.

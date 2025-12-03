@@ -34,7 +34,6 @@ import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.FlowRandom;
-import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.KnownFonts;
 import com.github.yellowstonegames.core.DescriptiveColor;

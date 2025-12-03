@@ -2,7 +2,6 @@ package com.github.yellowstonegames.seek;
 
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.gand.utils.GridMetric;
-import com.github.tommyettinger.gdcrux.PointI2;
 import com.github.yellowstonegames.grid.Coord;
 import org.junit.Assert;
 import org.junit.Test;

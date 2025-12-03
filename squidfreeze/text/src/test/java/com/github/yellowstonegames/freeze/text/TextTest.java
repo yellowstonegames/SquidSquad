@@ -26,8 +26,6 @@ import com.github.yellowstonegames.text.Translator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-
 public class TextTest {
     @Test
     public void testLanguage() {

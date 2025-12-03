@@ -23,8 +23,6 @@ import com.github.yellowstonegames.old.v300.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-
 public class OldTest {
     @Test
     public void testLightRNG() {

@@ -25,8 +25,6 @@ import com.github.yellowstonegames.grid.NoiseWrapper;
 
 import java.util.Arrays;
 
-import static com.github.tommyettinger.digital.TrigTools.asin;
-
 /**
  * A concrete implementation of {@link WorldMapGenerator} that is like {@link StretchWorldMap} but rotates the world so
  * the South Pole is in the lower-left corner (0,0), the North Pole is in the upper right corner (near (width,height)),

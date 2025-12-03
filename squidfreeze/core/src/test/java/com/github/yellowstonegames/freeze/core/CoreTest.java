@@ -32,8 +32,6 @@ import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-
 public class CoreTest {
     @Test
     public void testDiceRule() {

@@ -40,9 +40,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static it.unimi.dsi.fastutil.floats.FloatArrays.DIGITS_PER_ELEMENT;
-import static it.unimi.dsi.fastutil.floats.FloatArrays.DIGIT_BITS;
-
 /**
  * A class providing static methods and objects that do useful things with type-specific arrays.
  *

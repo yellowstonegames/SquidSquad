@@ -20,11 +20,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.tommyettinger.ds.ObjectSet;
 import com.github.yellowstonegames.text.Language;
-import com.github.yellowstonegames.world.BiomeMapper;
 import com.github.yellowstonegames.world.PoliticalMapper.Faction;
-import com.github.yellowstonegames.world.WorldMapGenerator;
 
 /**
  * Serializer for {@link Faction}; doesn't need anything else registered.

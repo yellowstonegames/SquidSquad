@@ -34,8 +34,6 @@ import com.github.yellowstonegames.grid.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-
 public class GridTest {
     @Test
     public void testCoord() {
