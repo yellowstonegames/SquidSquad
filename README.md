@@ -8,13 +8,13 @@ From all corners of the maybe-seven procedurally-generated seas, arise, O Mighty
 Depend on the modules you need by adding dependencies to core/build.gradle . For example,
 
 ```
-api 'com.squidpony:squidgrid:4.0.3' // important code for anything that has a position here
-api 'com.squidpony:squidplace:4.0.3' // allows generating dungeons, caves, wilderness areas as char arrays
-api 'com.squidpony:squidstorepath:4.0.3' // adds a dependency for pathfinding and also allows saving related types 
-api 'com.squidpony:squidstoretext:4.0.3' // adds a dependency for gibberish generation/translation; allows saving types
+api 'com.squidpony:squidgrid:4.0.4' // important code for anything that has a position here
+api 'com.squidpony:squidplace:4.0.4' // allows generating dungeons, caves, wilderness areas as char arrays
+api 'com.squidpony:squidstorepath:4.0.4' // adds a dependency for pathfinding and also allows saving related types 
+api 'com.squidpony:squidstoretext:4.0.4' // adds a dependency for gibberish generation/translation; allows saving types
 ```
 
-On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.3'`,
+On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.4'`,
 which is a dependency of all other SquidSquad modules. The `squidstorepath` and `squidstoretext` dependencies pull in
 `squidpath` and `squidtext`, as well as allowing saving their various types to JSON using [libGDX](https://libgdx.com/)
 and its `Json` class. If you aren't using libGDX, there's other options that don't depend on it, though SquidSquad is
@@ -225,10 +225,10 @@ changes to those files to keep things like scene2d.ui from libGDX.
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
-released version such as the current `4.0.3`, which can be obtained from the main source for dependencies on the
+released version such as the current `4.0.4`, which can be obtained from the main source for dependencies on the
 JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
 dependencies [can be seen for each version here on Maven Central](https://search.maven.org/search?q=g:com.squidpony),
-and look like `implementation 'com.squidpony:squidcore:4.0.3'`. Maven Central's search will still show (much) older
+and look like `implementation 'com.squidpony:squidcore:4.0.4'`. Maven Central's search will still show (much) older
 SquidLib versions as well, such as `squidlib`, `squidlib-util`, and `squidlib-extra`; these are not used at all here.
 Some compatibility code is present for porting from SquidLib to SquidSquad in the SquidSquad module `squidold`.
 
@@ -255,7 +255,7 @@ they will probably all be in the dependencies, but this ensures all the versions
 projects are present.
 
 Liftoff fetches SquidSquad from Maven Central, and needs a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.3`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+such release is `4.0.4`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
 commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
 The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
 `com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are
