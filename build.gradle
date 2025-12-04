@@ -5,7 +5,7 @@ buildscript {
 //		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.34.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.35.0'
     }
 }
 
@@ -44,6 +44,10 @@ subprojects {
 	}
     javadoc.options.source("17")
     javadoc.destinationDir = file("../docs/$name/apidocs")
+
+    tasks.withType(AbstractTestTask).configureEach {
+        failOnNoDiscoveredTests = false
+    }
 }
 
 // Disable JDK 8's doclint
