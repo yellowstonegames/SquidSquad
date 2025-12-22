@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.TextTools;
+import com.github.tommyettinger.ds.CharBitSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.OffsetBitSet;
 import regexodus.Category;
@@ -992,12 +993,9 @@ public final class StringTools {
      * @param category a RegExodus Category, such as {@link Category#Lu} for upper-case letters
      * @return a new OffsetBitSet storing the same contents as the given Category, but optimized for faster access
      */
-    public static OffsetBitSet decompressCategory(Category category) {
+    public static CharBitSet decompressCategory(Category category) {
         char[] contents = category.contents();
-        OffsetBitSet set = new OffsetBitSet(contents[contents.length - 1]);
-        for (int i = contents.length - 1; i >= 0; i--) {
-            set.add(contents[i]);
-        }
+        CharBitSet set = new CharBitSet(contents);
         return set;
     }
 
@@ -1041,10 +1039,8 @@ public final class StringTools {
             TECHNICAL_PUNCTUATION + GROUPING_SIGNS_OPEN + GROUPING_SIGNS_CLOSE;
     public static final String CURRENCY = "$¢£¤¥₤€";
     public static final String SPACING = " ";
-    public static final String ENGLISH_LETTERS_UPPER =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static final String ENGLISH_LETTERS_LOWER =
-            "abcdefghijklmnopqrstuvwxyz";
+    public static final String ENGLISH_LETTERS_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String ENGLISH_LETTERS_LOWER = "abcdefghijklmnopqrstuvwxyz";
     public static final String ENGLISH_LETTERS = ENGLISH_LETTERS_UPPER + ENGLISH_LETTERS_LOWER;
 
     public static final String LATIN_EXTENDED_LETTERS_UPPER =
@@ -1061,22 +1057,18 @@ public final class StringTools {
      * Includes the letter Sigma, 'Σ', twice because it has two lower-case forms in {@link #GREEK_LETTERS_LOWER}. This
      * lets you use one index for both lower and upper case, like with Latin and Cyrillic.
      */
-    public static final String GREEK_LETTERS_UPPER =
-            "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΣΤΥΦΧΨΩΆΈΉΊΌΎΏΪΫΪΫ";
+    public static final String GREEK_LETTERS_UPPER = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΣΤΥΦΧΨΩΆΈΉΊΌΎΏΪΫΪΫ";
     /**
      * Includes both lower-case forms for Sigma, 'ς' and 'σ', but this matches the two upper-case Sigma in
      * {@link #GREEK_LETTERS_UPPER}. This lets you use one index for both lower and upper case, like with Latin and
      * Cyrillic.
      */
-    public static final String GREEK_LETTERS_LOWER =
-            "αβγδεζηθικλμνξοπρςστυφχψωάέήίόύώϊϋΐΰ";
+    public static final String GREEK_LETTERS_LOWER = "αβγδεζηθικλμνξοπρςστυφχψωάέήίόύώϊϋΐΰ";
 
     public static final String GREEK_LETTERS = GREEK_LETTERS_UPPER + GREEK_LETTERS_LOWER;
 
-    public static final String CYRILLIC_LETTERS_UPPER =
-            "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏѴҐ";
-    public static final String CYRILLIC_LETTERS_LOWER =
-            "абвгдежзийклмнопрстуфхцчшщъыьэюяѐёђѓєѕіїјљњћќѝўџѵґ";
+    public static final String CYRILLIC_LETTERS_UPPER = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏѴҐ";
+    public static final String CYRILLIC_LETTERS_LOWER = "абвгдежзийклмнопрстуфхцчшщъыьэюяѐёђѓєѕіїјљњћќѝўџѵґ";
     public static final String CYRILLIC_LETTERS = CYRILLIC_LETTERS_UPPER + CYRILLIC_LETTERS_LOWER;
 
     public static final String LETTERS_UPPER = LATIN_LETTERS_UPPER + GREEK_LETTERS_UPPER + CYRILLIC_LETTERS_UPPER;
@@ -1088,15 +1080,15 @@ public final class StringTools {
      * An OffsetBitSet containing every letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LETTER_SET.contains(c)} .
      */
-    public static final OffsetBitSet ALL_UNICODE_LETTER_SET = decompressCategory(Category.L);
+    public static final CharBitSet ALL_UNICODE_LETTER_SET = decompressCategory(Category.L);
     /**
      * An OffsetBitSet containing every upper-case letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_UPPERCASE_LETTER_SET.contains(c)} .
      */
-    public static final OffsetBitSet ALL_UNICODE_UPPERCASE_LETTER_SET = decompressCategory(Category.Lu);
+    public static final CharBitSet ALL_UNICODE_UPPERCASE_LETTER_SET = decompressCategory(Category.Lu);
     /**
      * An OffsetBitSet containing every lower-case letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LOWERCASE_LETTER_SET.contains(c)} .
      */
-    public static final OffsetBitSet ALL_UNICODE_LOWERCASE_LETTER_SET = decompressCategory(Category.Ll);
+    public static final CharBitSet ALL_UNICODE_LOWERCASE_LETTER_SET = decompressCategory(Category.Ll);
 }
