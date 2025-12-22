@@ -19,10 +19,7 @@ package com.github.yellowstonegames.store.core;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.digital.ArrayTools;
-import com.github.tommyettinger.random.DistinctRandom;
-import com.github.tommyettinger.random.FourWheelRandom;
-import com.github.tommyettinger.random.LaserRandom;
-import com.github.tommyettinger.random.TricycleRandom;
+import com.github.tommyettinger.random.*;
 import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -109,29 +106,40 @@ public class JsonCoreTest {
         System.out.println();
     }
 
+    /**
+     * JSON length: 250
+     * Raw length : 336
+     */
     @Test
     public void testFloat2D() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonCore.registerFloat2D(json);
         float[][] map = new float[8][8];
-        FourWheelRandom random = new FourWheelRandom(123L);
+        float f = -0.125f;
+        AceRandom random = new AceRandom(12345L);
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < 8; j++) {
-                map[i][j] = random.nextFloat();
+//                map[i][j] = random.nextFloat();
+                map[i][j] = (f += 0.125f);
             }
             random.shuffle(map[i]);
         }
         String data = json.toJson(map);
         System.out.println(data);
         float[][] map2 = json.fromJson(float[][].class, data);
+        StringBuilder sb = new StringBuilder(512);
         for (int y = 0; y < map2.length; y++) {
             for (int x = 0; x < map2[0].length; x++) {
-                System.out.print(map[y][x]);
-                System.out.print(' ');
+                sb.append(map[y][x]);
+                if(x + 1 != map2[0].length)
+                    sb.append(' ');
             }
-            System.out.println();
+            sb.append('\n');
         }
+        System.out.println(sb);
         Assert.assertTrue(Arrays.deepEquals(map, map2));
+        System.out.println("JSON length: " + data.length());
+        System.out.println("Raw length : " + sb.length());
         System.out.println();
     }
 
