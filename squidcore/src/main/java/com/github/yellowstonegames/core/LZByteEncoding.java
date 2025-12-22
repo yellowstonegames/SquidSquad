@@ -18,9 +18,9 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.ds.ByteList;
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.ds.ObjectIntMap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -52,7 +52,7 @@ public final class LZByteEncoding {
         if (uncompressedStr.isEmpty()) return new byte[0];
         final int bitsPerChar = 8;
         int i, value;
-        HashMap<String, Integer> context_dictionary = new HashMap<>(256, 0.5f);
+        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>(256, 0.5f);
         HashSet<String> context_dictionaryToCreate = new HashSet<>(256, 0.5f);
         String context_c;
         String context_wc;

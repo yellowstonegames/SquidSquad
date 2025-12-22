@@ -25,8 +25,9 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.ds.ObjectIntMap;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -88,7 +89,7 @@ public final class LZSEncoding {
     public static String decompressFromBase64(String compressed) {
         if (compressed == null)
             return null;
-        if (compressed.length() == 0)
+        if (compressed.isEmpty())
             return "";
         return _decompress(compressed.length(), compressed, valStrBase64);
     }
@@ -113,7 +114,7 @@ public final class LZSEncoding {
     public static String decompressFromUTF16(String compressed) {
         if (compressed == null)
             return null;
-        if (compressed.length() == 0)
+        if (compressed.isEmpty())
             return "";
         return _decompress(compressed.length(), 16384, compressed, -32);
     }
@@ -147,7 +148,7 @@ public final class LZSEncoding {
      */
     public static String decompressFromEncodedURIComponent(String compressed) {
         if (compressed == null) return null;
-        if (compressed.length() == 0) return "";
+        if (compressed.isEmpty()) return "";
         return _decompress(compressed.length(), compressed, valStrUriSafe);
     }
 
@@ -165,8 +166,7 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        // This boxes int to Integer, but HashMap is faster on containsKey() calls with String keys, maybe?
-        HashMap<String, Integer> context_dictionary = new HashMap<>(256, 0.5f);
+        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>(256, 0.5f);
         HashSet<String> context_dictionaryToCreate = new HashSet<>(256, 0.5f);
         String context_c;
         String context_wc;
@@ -370,7 +370,7 @@ public final class LZSEncoding {
         if (uncompressedStr == null) return null;
         if (uncompressedStr.isEmpty()) return "";
         int i, value;
-        HashMap<String, Integer> context_dictionary = new HashMap<>(256, 0.5f);
+        ObjectIntMap<String> context_dictionary = new ObjectIntMap<>(256, 0.5f);
         HashSet<String> context_dictionaryToCreate = new HashSet<>(256, 0.5f);
         String context_c;
         String context_wc;
@@ -586,7 +586,7 @@ public final class LZSEncoding {
     private static String _decompress(int length, String getNextValue, char[] modify) {
         if(getNextValue == null)
             return null;
-        if(getNextValue.length() == 0)
+        if(getNextValue.isEmpty())
             return "";
         ArrayList<String> dictionary = new ArrayList<>();
         int enlargeIn = 4, dictSize = 4, numBits = 3, position = 32, index = 1, resb, maxpower, power;
@@ -737,7 +737,7 @@ public final class LZSEncoding {
     private static String _decompress(int length, int resetValue, String getNextValue, int offset) {
         if(getNextValue == null)
             return null;
-        if(getNextValue.length() == 0)
+        if(getNextValue.isEmpty())
             return "";
         ArrayList<String> dictionary = new ArrayList<>();
         int enlargeIn = 4, dictSize = 4, numBits = 3, position = resetValue, index = 1, resb, maxpower, power;
