@@ -63,25 +63,25 @@ public final class DigitTools {
         return Base.BASE16.unsigned(number);
     }
 
-    public static StringBuilder appendHex(StringBuilder builder, long number){
+    public static <T extends CharSequence & Appendable> T appendHex(T builder, long number){
         return Base.BASE16.appendUnsigned(builder, number);
     }
-    public static StringBuilder appendHex(StringBuilder builder, double number){
+    public static <T extends CharSequence & Appendable> T appendHex(T builder, double number){
         return Base.BASE16.appendUnsigned(builder, number);
     }
-    public static StringBuilder appendHex(StringBuilder builder, int number){
+    public static <T extends CharSequence & Appendable> T appendHex(T builder, int number){
         return Base.BASE16.appendUnsigned(builder, number);
     }
-    public static StringBuilder appendHex(StringBuilder builder, float number){
+    public static <T extends CharSequence & Appendable> T appendHex(T builder, float number){
         return Base.BASE16.appendUnsigned(builder, number);
     }
-    public static StringBuilder appendHex(StringBuilder builder, short number){
+    public static <T extends CharSequence & Appendable> T appendHex(T builder, short number){
         return Base.BASE16.appendUnsigned(builder, number);
     }
-    public static StringBuilder appendHex(StringBuilder builder, char number){
+    public static <T extends CharSequence & Appendable> T appendHex(T builder, char number){
         return Base.BASE16.appendUnsigned(builder, number);
     }
-    public static StringBuilder appendHex(StringBuilder builder, byte number){
+    public static <T extends CharSequence & Appendable> T appendHex(T builder, byte number){
         return Base.BASE16.appendUnsigned(builder, number);
     }
 
