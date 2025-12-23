@@ -44,10 +44,10 @@ import java.util.List;
  * randomly-selected item is easy; just use {@link #random()}.
  * <br>
  * You can serialize a ProbabilityTable in various ways. The class can be registered with
- * <a href="https://fury.apache.org">Fury serialization</a> using {@code fury.register()} as long as you have
+ * <a href="https://fory.apache.org">Fory serialization</a> using {@code fory.register()} as long as you have
  * already registered the classes listed in {@link #classesToRegister}. It can also be written
  * and read with a specialized serializer from SquidStore or SquidFreeze, for JSON or Kryo respectively. All
- * these options require having other types registered, which always includes {@code T}. Kryo and Fury
+ * these options require having other types registered, which always includes {@code T}. Kryo and Fory
  * also require {@link ObjectList}, {@link NumberedSet}, and {@link IntList} to be registered, plus the
  * concrete subclass of {@link EnhancedRandom} used by the ProbabilityTable (which defaults to
  * {@link WhiskerRandom}). Kryo also needs {@link EnhancedRandom} itself registered.

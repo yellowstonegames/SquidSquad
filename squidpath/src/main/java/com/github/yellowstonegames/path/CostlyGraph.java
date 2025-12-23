@@ -400,7 +400,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	}
 
 	/**
-	 * Meant for serialization using <a href="https://fury.apache.org">Fury</a>.
+	 * Meant for serialization using <a href="https://fory.apache.org">Fory</a>.
 	 * If a class overrides this with different behavior, {@link #readExternal(ObjectInput)}
 	 * must also be overridden to match that behavior.
 	 *
@@ -429,7 +429,7 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	}
 
 	/**
-	 * Meant for deserialization using <a href="https://fury.apache.org">Fury</a>.
+	 * Meant for deserialization using <a href="https://fory.apache.org">Fory</a>.
 	 * If a class overrides this with different behavior, {@link #writeExternal(ObjectOutput)}
 	 * must also be overridden to match that behavior.
 	 *

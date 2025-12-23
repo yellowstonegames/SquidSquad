@@ -35,7 +35,7 @@ import java.util.List;
  * iterates through one of these, or call the iterator's next() method only a limited number of times. Collections have
  * a size that can be checked, but Iterables can be infinite (and in this case, this one is).
  * <br>
- * You can serialize this with <a href="https://fury.apache.org">Fury</a> without needing a serializer, as long as you
+ * You can serialize this with <a href="https://fory.apache.org">Fory</a> without needing a serializer, as long as you
  * have the classes in {@link #classesToRegister} registered. You probably need to register the concrete subclass of
  * EnhancedRandom you use here; the default subclass of EnhancedRandom used here is {@link AceRandom}, unless you have
  * provided your own with a different type. If you use JSON, a serializer is available in squidstore.grid, and if you

@@ -11,7 +11,7 @@ import com.github.tommyettinger.digital.Base;
  * <br>
  * This can be serialized out-of-the-box to Strings using {@link #stringSerialize()}, but if you do, so must the
  * {@link #GENERATOR} that produces new UniqueIdentifier instances and ensures they are unique.
- * If you are using Fury or another type of serializer that can register arbitrary classes, this can be sent
+ * If you are using Fory or another type of serializer that can register arbitrary classes, this can be sent
  * directly to that without needing any extra serialization code. Like with the String serialization, you must serialize
  * the {@link #GENERATOR} field and restore it when restarting from a serialized state. The {@code Base} class (in
  * digital) is all this uses from other code.
