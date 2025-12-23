@@ -1956,7 +1956,7 @@ public final class DescriptiveColorRgb {
      * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
      * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
      * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
-     * weight, as in "red red blue".
+     * weight, as in "red red blue", which is equivalent to "red 2 blue".
      * <br>
      * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
      * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
@@ -1977,7 +1977,7 @@ public final class DescriptiveColorRgb {
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
-     * "red:3 orange", and "dark deep (blue 7) (cyan 3)".
+     * "red 3 orange", and "dark deep (blue 7) (cyan 3)".
      * <br>
      * This method will check the first character of description and may change how it parses depending on that char.
      * If the first char is {@code #}, and there are 6 characters remaining, this parses those 6 characters as a hex
@@ -2015,7 +2015,7 @@ public final class DescriptiveColorRgb {
      * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
      * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
      * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
-     * weight, as in "red red blue".
+     * weight, as in "red red blue", which is equivalent to "red 2 blue".
      * <br>
      * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
      * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
@@ -2036,7 +2036,7 @@ public final class DescriptiveColorRgb {
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
-     * "red:3 orange", and "dark deep (blue 7) (cyan 3)".
+     * "red 3 orange", and "dark deep (blue 7) (cyan 3)".
      * <br>
      * This overload always considers its input a color description, and won't parse hex colors. It only handles the
      * simplest case, where the full provided {@code description} is only a color description.
@@ -2060,7 +2060,7 @@ public final class DescriptiveColorRgb {
      * {@code ' '}, but other punctuation like {@code ':'}, or whitespace, is usually valid. Note that in some contexts,
      * color descriptions shouldn't contain square brackets, curly braces, or the chars <code>@%?^=.</code> , because
      * they can have unintended effects on the behavior of markup. You can also repeat a color name to increase its
-     * weight, as in "red red blue".
+     * weight, as in "red red blue", which is equivalent to "red 2 blue".
      * <br>
      * The special adjectives "light" and "dark" change the lightness of the described color; likewise, "rich" and
      * "dull" change the saturation (how different the color is from grayscale). All of these adjectives can have "-er"
@@ -2082,7 +2082,7 @@ public final class DescriptiveColorRgb {
      * <br>
      * Examples of valid descriptions include "blue", "dark green", "duller red", "peach pink", "indigo purple mauve",
      * "lightest richer apricot-olive", "bright magenta", "palest cyan blue", "deep fern black", "weakmost celery",
-     * "red:3 orange", and "dark deep (blue 7) (cyan 3)".
+     * "red 3 orange", and "dark deep (blue 7) (cyan 3)".
      *
      * @param description a color description, as a String matching the above format
      * @param start the first character index of the description to read from

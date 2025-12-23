@@ -18,6 +18,7 @@ package com.github.yellowstonegames.store.text;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
@@ -117,7 +118,7 @@ public final class JsonText {
             public void write(Json json, Translator object, Class knownType) {
                 json.writeObjectStart(Translator.class, knownType);
                 json.writeValue("lang", object.language, Language.class);
-                json.writeValue("shift", DigitTools.hex(object.shift), String.class);
+                json.writeValue("shift", Base.SIMPLE64.signed(object.shift), String.class);
                 json.writeValue("cache", object.cacheLevel);
                 json.writeValue("tableK", object.table.keySet().toArray(new String[0]), String[].class, String.class);
                 json.writeValue("tableV", object.table.values().toArray(new String[0]), String[].class, String.class);
@@ -130,7 +131,7 @@ public final class JsonText {
             public Translator read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 Language language = json.readValue("lang", Language.class, jsonData);
-                long shift = DigitTools.longFromHex(jsonData.getString("shift", "0"));
+                long shift = Base.SIMPLE64.readLong(jsonData.getString("shift", "0"));
                 int cacheLevel = jsonData.getInt("cache");
                 ObjectObjectMap<String, String> table = new ObjectObjectMap<>(
                         json.readValue("tableK", String[].class, String.class, jsonData),
