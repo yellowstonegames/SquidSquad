@@ -583,7 +583,7 @@ public class Thesaurus {
                 return nx.toUpperCase();
             }
             if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
-                return Character.toUpperCase(nx.charAt(0)) + nx.substring(1);
+                return Category.caseUp(nx.charAt(0)) + nx.substring(1);
             }
             return nx;
         } else if (languages.containsKey(word2)) {
@@ -599,7 +599,7 @@ public class Thesaurus {
                 return (numberWordInRange(2, num).toUpperCase());
             } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberWordInRange(2, num);
-                return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
+                return (Category.caseUp(w.charAt(0)) + w.substring(1));
             } else {
                 return (numberWordInRange(2, num));
             }
@@ -608,7 +608,7 @@ public class Thesaurus {
                 return (numberAdjectiveInRange(2, num).toUpperCase());
             } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberAdjectiveInRange(2, num);
-                return (Character.toUpperCase(w.charAt(0)) + w.substring(1));
+                return (Category.caseUp(w.charAt(0)) + w.substring(1));
             } else {
                 return (numberAdjectiveInRange(2, num));
             }
@@ -649,7 +649,7 @@ public class Thesaurus {
                 return;
             }
             if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
-                dest.append(Character.toUpperCase(nx.charAt(0)));
+                dest.append(Category.caseUp(nx.charAt(0)));
                 dest.append(nx.substring(1));
                 return;
             }
@@ -669,7 +669,7 @@ public class Thesaurus {
                 dest.append(numberWordInRange(2, num).toUpperCase());
             } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberWordInRange(2, num);
-                dest.append(Character.toUpperCase(w.charAt(0)));
+                dest.append(Category.caseUp(w.charAt(0)));
                 dest.append(w.substring(1));
             } else {
                 dest.append(numberWordInRange(2, num));
@@ -680,7 +680,7 @@ public class Thesaurus {
                 dest.append(numberAdjectiveInRange(2, numberAdj).toUpperCase());
             } else if (ALL_UNICODE_UPPERCASE_LETTER_SET.contains(word.charAt(0))) {
                 String w = numberAdjectiveInRange(2, numberAdj);
-                dest.append(Character.toUpperCase(w.charAt(0)));
+                dest.append(Category.caseUp(w.charAt(0)));
                 dest.append(w.substring(1));
             } else {
                 dest.append(numberAdjectiveInRange(2, numberAdj));

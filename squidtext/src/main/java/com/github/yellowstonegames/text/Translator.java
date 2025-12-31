@@ -893,10 +893,10 @@ se$->z
         // https://github.com/gwtproject/gwt/blob/2.6.1/user/super/com/google/gwt/emul/java/lang/Character.java#L54-L61
         // ). We are using GWT to capitalize, though, which appears to work in practice and the docs agree.
         if(StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(source.charAt(0)))
-            chars[0] = Character.toUpperCase(chars[0]);
+            chars[0] = Category.caseUp(chars[0]);
         if(source.length() > 1 && StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(source.charAt(1))) {
             for (int i = 1; i < chars.length; i++) {
-                chars[i] = Character.toUpperCase(chars[i]);
+                chars[i] = Category.caseUp(chars[i]);
             }
         }
         return new String(chars);
@@ -941,10 +941,10 @@ se$->z
             }
             char[] chars = translated.toCharArray();
             if(StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(match.charAt(0)))
-                chars[0] = Character.toUpperCase(chars[0]);
+                chars[0] = Category.caseUp(chars[0]);
             if(match.length() > 1 && StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(match.charAt(1))) {
                 for (int i = 1; i < chars.length; i++) {
-                    chars[i] = Character.toUpperCase(chars[i]);
+                    chars[i] = Category.caseUp(chars[i]);
                 }
             }
             dest.append(chars, 0, chars.length);

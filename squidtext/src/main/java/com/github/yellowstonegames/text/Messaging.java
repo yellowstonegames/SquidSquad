@@ -17,11 +17,7 @@
 package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
-import regexodus.MatchResult;
-import regexodus.Pattern;
-import regexodus.Replacer;
-import regexodus.Substitution;
-import regexodus.TextBuffer;
+import regexodus.*;
 
 /**
  * Helps handle formation of messages from a template, using correct pronouns and helping handle various idiosyncrasies
@@ -443,7 +439,7 @@ public final class Messaging {
         }
         public static void appendCapitalized(String s, TextBuffer dest)
         {
-            dest.append(Character.toUpperCase(s.charAt(0)));
+            dest.append(Category.caseUp(s.charAt(0)));
             if(s.length() > 1)
                 dest.append(s.substring(1));
         }

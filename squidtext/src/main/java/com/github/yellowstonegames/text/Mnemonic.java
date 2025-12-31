@@ -22,6 +22,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.StringTools;
+import regexodus.Category;
 
 import java.util.Collection;
 
@@ -269,7 +270,7 @@ public class Mnemonic {
         String item;
         int idx = 0;
         item = items.getAt((int)(number & 0xFF));
-        c[idx++] = capitalize ? Character.toUpperCase(item.charAt(0)) : item.charAt(0);
+        c[idx++] = capitalize ? Category.caseUp(item.charAt(0)) : item.charAt(0);
         c[idx++] = item.charAt(1);
         c[idx++] = item.charAt(2);
 
@@ -331,7 +332,7 @@ public class Mnemonic {
                 .append(allAdjectives.getAt((number /= nounCount) % adjectiveCount)).append(' ')
                 .append(allNouns.getAt((number / adjectiveCount) % nounCount));
         if(capitalize)
-            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            sb.setCharAt(0, Category.caseUp(sb.charAt(0)));
         return sb.toString();
     }
 
@@ -447,7 +448,7 @@ public class Mnemonic {
                 .append(allAdjectives.getAt((int)((number /= nounCount) % adjectiveCount))).append(' ')
                 .append(allNouns.getAt((int)((number / adjectiveCount))));
         if(capitalize)
-            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            sb.setCharAt(0, Category.caseUp(sb.charAt(0)));
         return sb.toString();
     }
 

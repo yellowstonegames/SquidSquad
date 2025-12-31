@@ -25,11 +25,7 @@ import com.github.tommyettinger.random.Deserializer;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
-import regexodus.MatchResult;
-import regexodus.Matcher;
-import regexodus.Pattern;
-import regexodus.REFlags;
-import regexodus.Replacer;
+import regexodus.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -3998,7 +3994,7 @@ public class Language {
             }
 
             if (capitalize)
-                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+                sb.setCharAt(0, Category.caseUp(sb.charAt(0)));
 
             if (clean && !checkAll(sb, vulgarChecks))
             {
@@ -4071,7 +4067,7 @@ public class Language {
             for (int m = 0; m < modifiers.size(); m++) {
                 modifiers.get(m).modify(rng, sb);
             }
-            if (capitalize) sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+            if (capitalize) sb.setCharAt(0, Category.caseUp(sb.charAt(0)));
             return sb.toString();
         }
         while (true) {
@@ -4160,7 +4156,7 @@ public class Language {
                 continue;
 
             if (capitalize)
-                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+                sb.setCharAt(0, Category.caseUp(sb.charAt(0)));
 
             return sb.toString();
         }

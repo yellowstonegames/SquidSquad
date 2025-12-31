@@ -18,6 +18,7 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TextTools;
+import com.github.tommyettinger.ds.Casing;
 import com.github.tommyettinger.ds.CharFilter;
 import com.github.tommyettinger.ds.FilteredStringSet;
 import com.github.yellowstonegames.TextInternals;
@@ -83,7 +84,7 @@ public class MarkovTest {
             System.out.print("..."+markovText.chain(++seed, 70).replaceFirst("\\P{L}+$", "... "));
         }
         
-        FilteredStringSet names = FilteredStringSet.with(CharFilter.getOrCreate("LetterOnlyCaseInsensitive", StringTools.ALL_UNICODE_LETTER_SET::contains, Character::toUpperCase), ArrayTools.stringSpan(48, 72));
+        FilteredStringSet names = FilteredStringSet.with(CharFilter.getOrCreate("LetterOnlyCaseInsensitive", StringTools.ALL_UNICODE_LETTER_SET, Casing::caseUp), ArrayTools.stringSpan(48, 72));
 
         MarkovText copy = markovText.copy();
 
@@ -147,7 +148,7 @@ public class MarkovTest {
 //                for (int i = 0, len = cs.length(); i < len; i++) {
 //                    char c = cs.charAt(i);
 //                    if(Category.L.contains(c)){
-//                        hash = (hash + Character.toUpperCase(c)) * hashMultiplier;
+//                        hash = (hash + Category.caseUp(c)) * hashMultiplier;
 //                    }
 //                }
 //                return (int)(hash >>> shift);
@@ -175,7 +176,7 @@ public class MarkovTest {
 //                            cr = -1;
 //                        }
 //                    }
-//                    if(cl != cr && Character.toUpperCase(cl) != Character.toUpperCase(cr))
+//                    if(cl != cr && Category.caseUp(cl) != Category.caseUp(cr))
 //                        return false;
 //                }
 //                return true;
