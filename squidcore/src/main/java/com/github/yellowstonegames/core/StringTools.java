@@ -17,7 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.TextTools;
-import com.github.tommyettinger.ds.CharBitSet;
+import com.github.tommyettinger.ds.CharBitSetFixedSize;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.OffsetBitSet;
 import regexodus.Category;
@@ -993,10 +993,8 @@ public final class StringTools {
      * @param category a RegExodus Category, such as {@link Category#Lu} for upper-case letters
      * @return a new OffsetBitSet storing the same contents as the given Category, but optimized for faster access
      */
-    public static CharBitSet decompressCategory(Category category) {
-        char[] contents = category.contents();
-        CharBitSet set = new CharBitSet(contents);
-        return set;
+    public static CharBitSetFixedSize decompressCategory(Category category) {
+        return new CharBitSetFixedSize(category.contents());
     }
 
     /**
@@ -1080,15 +1078,15 @@ public final class StringTools {
      * An OffsetBitSet containing every letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LETTER_SET.contains(c)} .
      */
-    public static final CharBitSet ALL_UNICODE_LETTER_SET = decompressCategory(Category.L);
+    public static final CharBitSetFixedSize ALL_UNICODE_LETTER_SET = decompressCategory(Category.L);
     /**
      * An OffsetBitSet containing every upper-case letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_UPPERCASE_LETTER_SET.contains(c)} .
      */
-    public static final CharBitSet ALL_UNICODE_UPPERCASE_LETTER_SET = decompressCategory(Category.Lu);
+    public static final CharBitSetFixedSize ALL_UNICODE_UPPERCASE_LETTER_SET = decompressCategory(Category.Lu);
     /**
      * An OffsetBitSet containing every lower-case letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LOWERCASE_LETTER_SET.contains(c)} .
      */
-    public static final CharBitSet ALL_UNICODE_LOWERCASE_LETTER_SET = decompressCategory(Category.Ll);
+    public static final CharBitSetFixedSize ALL_UNICODE_LOWERCASE_LETTER_SET = decompressCategory(Category.Ll);
 }
