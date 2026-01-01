@@ -951,7 +951,7 @@ se$->z
         this.cacheLevel = Math.min(Math.max(cacheLevel, 0), 2);
     }
 
-    protected Matcher markupMatcher = Pattern.compile("\\[\\?\\](.*?)(?:\\[\\?\\]|$)").matcher();
+    protected final Matcher markupMatcher = Pattern.compile("<\\?<(.*?)(?:>\\?>|$)").matcher();
 
     private class BulkCipherSubstitution implements Substitution
     {
@@ -978,12 +978,12 @@ se$->z
     /**
      * Given a String, StringBuilder, or other CharSequence that should contain words in the source language (almost
      * always English, since this only knows English prefixes and suffixes), this finds sections of the text that
-     * start and end with {@code [?]} and {@code [?]}, translates each word between those start/end markers to the fake
+     * start and end with {@code <?<} and {@code >?>}, translates each word between those start/end markers to the fake
      * language, using existing translations if previous calls to cipher() or lookup() had translated that word, and
-     * removes the {@code [?]} markup afterwards. This is meant for cases where only some words should be translated,
-     * such as (for example) translating "What the [?]heck?[?]" to "What the grug?" or something like it if the language
-     * is {@link Language#GOBLIN}, or "What the xu'oz?" if the language is {@link Language#DEMONIC}.
-     * @param text a CharSequence, such as a String, that contains words in the source language and {@code [?]} markup
+     * removes the {@code <?<}/{@code >?>} markup. This is meant for cases where only some words should be translated,
+     * such as (for example) translating {@code "What the <?<heck>?>!"} to "What the grug!" or something like it if the
+     * language is {@link Language#GOBLIN}, or "What the xu'oz!" if the language is {@link Language#DEMONIC}.
+     * @param text a CharSequence, such as a String, that contains words in the source language and {@code <?<} markup
      * @return a String of the translated text with markup-surrounded sections translated and markup removed
      */
     public String cipherMarkup(CharSequence text)

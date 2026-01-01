@@ -393,7 +393,7 @@ public class LanguageTest {
                 Language.DEEP_SPEECH,
                 Language.FELINE,
         };
-        String marked = "What the [?]heck?[?] Check that out will ya? It's probably nothing, but - OH [?]NO, THIS IS BAD!";
+        String marked = "What the <?<heck?>?> Check that out will ya? It's probably nothing, but - OH <?<NO, THIS IS BAD!";
         String oz =
                 "Uncle Uncles Carbuncle Carbuncles Live Lives Lived Living Liver Livers Livery Liveries\n\n" +
                 "Dorothy lived in the midst of the great Kansas prairies, with Uncle Henry, who was a "+
