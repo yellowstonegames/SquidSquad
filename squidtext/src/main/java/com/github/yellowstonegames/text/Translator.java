@@ -18,6 +18,7 @@ package com.github.yellowstonegames.text;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.StringTools;
 import regexodus.*;
@@ -52,114 +53,6 @@ import java.util.Map;
  * for later usage.
  */
 public class Translator{
-
-    /**
-     * An intentionally-flawed implementation of EnhancedRandom, meant to produce similar random values when given
-     * similar initial states. This similarity-preservation is not a desirable property for most random number
-     * generators, but this is meant to be repeatedly reseeded with the results of a phonetic hash (it could use a
-     * locality-sensitive hash and keep similar properties). Since phonetic hashes produce similar numerical values when
-     * similar words are given as input (at least, similar in terms of Hamming distance, though not numerical distance),
-     * having the random outputs retain that similarity means the outputs when feeding this through a {@link Language}
-     * should be more similar than otherwise.
-     */
-    public static class SemiRandom extends EnhancedRandom {
-        @Override
-        public String getTag() {
-            return "SmiR";
-        }
-
-        public long state;
-        public SemiRandom()
-        {
-            state = BitConversion.doubleToRawLongBits(Math.random()) << 32 |
-                    (BitConversion.doubleToRawLongBits(Math.random()) & 0xFFFFFFFFL);
-        }
-        public SemiRandom(long state)
-        {
-            this.state = state;
-        }
-
-        @Override
-        public void setSeed(long seed) {
-            this.state = seed;
-        }
-
-        @Override
-        public int getStateCount() {
-            return 1;
-        }
-
-        @Override
-        public long getSelectedState(int selection) {
-            return state;
-        }
-
-        @Override
-        public void setSelectedState(int selection, long value) {
-            state = value;
-        }
-
-        public void setState(long stateA) {
-            this.state = stateA;
-        }
-
-        @Override
-        public long nextLong() {
-            // guarantees all possible states will be used, eventually, for any starting input.
-            long s = ++state;
-//            // the next two lines are the smallest, weakest possible XorShift generator, though
-//            // they are given a counter instead of their last result, which weakens them further.
-//            s ^= s << 7;
-//            return s ^ s >>> 9;
-            // returning the square is an option; it will alternate even and odd results.
-//            return s * s;
-            // this returns s times the Gray code of s.
-            // sequential Gray codes don't alternate even and odd results, which (surprisingly) worsens the output here.
-            // nextLong() will return an even number about 3x as often as it returns an odd one.
-            return s * (s ^ s >>> 1);
-        }
-
-        @Override
-        public int next(int bits) {
-            return (int) (nextLong() & (-1L >>> -bits));
-        }
-
-        public double nextDouble()
-        {
-            return (nextLong() * 0x7777777777777777L & 0x1FFFFFFFFFFFFFL) * 0x1p-53;
-        }
-
-        @Override
-        public SemiRandom copy() {
-            return new SemiRandom(state);
-        }
-
-        @Override
-        public int nextInt(int bound) {
-            return (int)((nextLong() & 0x7FFFFFFFFFFFFFFFL) % bound);
-        }
-
-        @Override
-        public int nextInt() {
-            return (int)nextLong();
-        }
-
-        @Override
-        public long nextLong(long bound) {
-            return (nextLong() & 0x7FFFFFFFFFFFFFFFL) % bound;
-        }
-
-        @Override
-        public boolean nextBoolean() {
-            return (nextLong() & 32L) != 0L;
-        }
-
-        @Override
-        public float nextFloat() {
-            return (nextLong() * 0x77777777L & 0xFFFFFFL) * 0x1p-24f;
-        }
-    }
-
     /**
      * The Language this will use to construct words; normally one of the static fields in Language, a
      * Language produced by using the {@link Language#mixAll(Object...)} method of two or more of them, or
@@ -168,7 +61,10 @@ public class Translator{
      * to see how the existing calls to constructors work.
      */
     public Language language;
-    private final transient SemiRandom rng;
+    /**
+     * The state of this random number generator isn't kept between words; it is re-seeded per-word.
+     */
+    private final transient DistinctRandom rng;
 
     private String pluralSuffix, verbingSuffix, verbedSuffix, verberSuffix, verbationSuffix,
             verbmentSuffix, nounySuffix, nounenSuffix, nounistSuffix, nounismSuffix,
@@ -183,7 +79,7 @@ public class Translator{
             PROVERB = 1L << 18,  ANTIVERB = 1L << 19,  DISNOUN = 1L << 20;
 
     /*
-    qu->kw
+qu->kw
 x->ks
 y->i
 kh->q
@@ -423,7 +319,7 @@ se$->z
      * @param shift any long; this will be used to alter the specific words generated unless it is 0
      */
     public Translator(Language language, long shift) {
-        rng = new SemiRandom(0L);
+        rng = new DistinctRandom(0L);
         table = new ObjectObjectMap<>(512);
         reverse = new ObjectObjectMap<>(512);
         initialize(language, shift);
@@ -441,7 +337,7 @@ se$->z
      */
     public Translator(Language language, long shift, int cacheLevel, Map<String, String> forwardTable,
                       Map<String, String> reverseTable) {
-        rng = new SemiRandom(0L);
+        rng = new DistinctRandom(0L);
         table = new ObjectObjectMap<>(forwardTable);
         reverse = new ObjectObjectMap<>(reverseTable);
         this.cacheLevel = Math.min(Math.max(cacheLevel, 0), 2);
@@ -530,6 +426,7 @@ se$->z
         proverbPrefix = other.proverbPrefix;
         antiverbPrefix = other.antiverbPrefix;
         disnounPrefix = other.disnounPrefix;
+        cacheLevel = other.cacheLevel;
     }
 
     /**
@@ -888,10 +785,7 @@ se$->z
             }
         }
         char[] chars = ciphered.toCharArray();
-        // Lu is the upper case letter category in Unicode; we're using regexodus for this because GWT won't
-        // respect unicode case data on its own (see
-        // https://github.com/gwtproject/gwt/blob/2.6.1/user/super/com/google/gwt/emul/java/lang/Character.java#L54-L61
-        // ). We are using GWT to capitalize, though, which appears to work in practice and the docs agree.
+        // Use Category, which uses Java 25's Unicode data, to handle both letter ID and case change.
         if(StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(source.charAt(0)))
             chars[0] = Category.caseUp(chars[0]);
         if(source.length() > 1 && StringTools.ALL_UNICODE_UPPERCASE_LETTER_SET.contains(source.charAt(1))) {
