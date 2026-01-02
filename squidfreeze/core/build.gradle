@@ -10,14 +10,14 @@ dependencies {
 	api("com.github.tommyettinger:kryo-regexodus:0.1.20.1"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-digital:0.9.7.1"){
+	api("com.github.tommyettinger:kryo-digital:0.9.9.1"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-jdkgdxds:1.13.2.1"){
+	api("com.github.tommyettinger:kryo-jdkgdxds:1.14.1.1"){
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-juniper:0.8.5.1"){
+	api("com.github.tommyettinger:kryo-juniper:0.8.6.1"){
         exclude module: 'juniper'
         exclude module: 'digital'
     }
