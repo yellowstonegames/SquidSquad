@@ -24,7 +24,7 @@ import java.util.HashSet;
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
-    public static final int CAPACITY = SIZE * SIZE;//51;//
+    public static final int CAPACITY = 51;//SIZE * SIZE;//
     public static final float LOAD = 0.9f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
@@ -94,6 +94,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 16228 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Different Coord hash; uses Xor-Rotate-Xor-Rotate instead of a multiplication, but still Rosenberg-Strong:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 74487 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 86166 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 42234 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 22702 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeObjectSetTest() {
@@ -191,6 +205,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * CoordSet took 22357 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Different Coord hash; uses Xor-Rotate-Xor-Rotate instead of a multiplication, but still Rosenberg-Strong:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 35421 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 73927 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 24360 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 15901 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeCoordSetTest() {
@@ -287,6 +315,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * HashSet took 48101 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Different Coord hash; uses Xor-Rotate-Xor-Rotate instead of a multiplication, but still Rosenberg-Strong:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 201115 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 204330 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 191694 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 185862 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeHashSetTest() {
