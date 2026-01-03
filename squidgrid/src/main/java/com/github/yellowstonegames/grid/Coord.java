@@ -107,16 +107,14 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
         // Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
         final int max = Math.max(mx, my);
         // imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
-        this.hash = 
-//                BitConversion.imul(
+        this.hash = BitConversion.imul(
                 // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
                 (max * max + max + mx - my)
                         // XOR with every odd-index bit of xs and every even-index bit of ys
                         // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
                         ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
                 // use imul() to multiply by a golden-ratio-based number to randomize upper bits
-//                , 0x9E3779B9)
-				;
+                , 0x9E3779B9);
     }
 
     public static Coord get(final int x, final int y) {
