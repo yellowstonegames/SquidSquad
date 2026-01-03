@@ -24,7 +24,7 @@ import java.util.HashSet;
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
-    public static final int CAPACITY = SIZE * SIZE;//51;//
+    public static final int CAPACITY = 51;//SIZE * SIZE;//51;//
     public static final float LOAD = 0.9f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
@@ -66,6 +66,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 21435 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Using a multiplier of 0x9E3779B9 on a Cantor pairing function instead of Rosenberg-Strong:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 58454 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 72565 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 39070 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 19232 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeObjectSetTest() {
@@ -134,6 +148,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * CoordSet took 20689 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Using a multiplier of 0x9E3779B9 on a Cantor pairing function instead of Rosenberg-Strong:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 41149 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 39496 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 31836 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 21274 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeCoordSetTest() {
@@ -202,6 +230,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * HashSet took 48363 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Using a multiplier of 0x9E3779B9 on a Cantor pairing function instead of Rosenberg-Strong:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 43554 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 57627 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 43244 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 48983 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeHashSetTest() {
