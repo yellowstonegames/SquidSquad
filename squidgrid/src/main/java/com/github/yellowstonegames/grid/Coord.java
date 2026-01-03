@@ -116,7 +116,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
 //                // use imul() to multiply by a golden-ratio-based number to randomize upper bits
                 //, 0x9E3779B9)
 				;
-		this.hash = h ^ (h << 16 | h >>> 16) ^ (h << 8 | h >>> 24);
+        this.hash = h ^ (h << 15 | h >>> 17) ^ (h << 7 | h >>> 25);
     }
 
     public static Coord get(final int x, final int y) {
