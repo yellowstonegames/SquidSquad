@@ -59,7 +59,7 @@ public class CoordSet extends ObjectSet<Coord> {
 
     @Override
     protected int place(final Object item) {
-        return item.hashCode() >>> shift; // Uses default Coord hashCode(), precalculated
+        return item.hashCode() & mask; // Uses default Coord hashCode(), precalculated
     }
 
     @Override
