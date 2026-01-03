@@ -24,7 +24,7 @@ import java.util.HashSet;
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
-    public static final int CAPACITY = SIZE * SIZE;
+    public static final int CAPACITY = 51; //SIZE * SIZE;
     public static final float LOAD = 0.5f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
@@ -38,11 +38,33 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 15660 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Testing Coord without the final imul()...
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 50310 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 49753 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 33801 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 17504 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeObjectSetTest() {
         Coord.expandPoolTo(2048, 2048);
-        ObjectSet<Coord> set = ObjectSet.with(Coord.get(0,0));
+        ObjectSet<Coord> set;
+        {
+            set = new ObjectSet<>(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(Coord.get(x, y));
+                }
+            }
+        }
         System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE) + " Coord items each...");
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < LIMIT; i++) {
@@ -69,11 +91,34 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * CoordSet took 14927 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Testing Coord without the final imul()...
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 458318 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took (FOREVER!!!) ms with CAPACITY=51 and LOAD=0.9
+     * (Over 25 minutes without finishing!!!)
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 18084 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 13670 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeCoordSetTest() {
         Coord.expandPoolTo(2048, 2048);
-        CoordSet set = CoordSet.with(Coord.get(0,0));
+        CoordSet set;
+        {
+            set = new CoordSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(Coord.get(x, y));
+                }
+            }
+        }
         System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE) + " Coord items each...");
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < LIMIT; i++) {
@@ -101,12 +146,33 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * HashSet took 48833 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Testing Coord without the final imul()...
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 23812 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 27500 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 22384 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 24134 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeHashSetTest() {
         Coord.expandPoolTo(2048, 2048);
-        HashSet<Coord> set = new HashSet<>(1);
-        set.add(Coord.get(0,0));
+        HashSet<Coord> set;
+        {
+            set = new HashSet<>(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(Coord.get(x, y));
+                }
+            }
+        }
         System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE) + " Coord items each...");
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < LIMIT; i++) {
