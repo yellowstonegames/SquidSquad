@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectSet;
+import com.github.tommyettinger.ds.Utilities;
 
 import java.util.Collection;
 
@@ -28,7 +29,7 @@ import java.util.Collection;
  */
 public class CoordSet extends ObjectSet<Coord> {
     public CoordSet() {
-        this(51, 0.9f);
+        this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f);
     }
 
     public CoordSet(int initialCapacity) {
@@ -66,6 +67,12 @@ public class CoordSet extends ObjectSet<Coord> {
     protected boolean equate(Object left, Object right) {
         return left == right;
     }
+
+    @Override
+    protected void resize(int newSize) {
+        super.resize(Math.max(newSize, Utilities.tableSize(Coord.getCacheWidth() * Coord.getCacheHeight(), loadFactor)));
+    }
+
     /**
      * Constructs an empty set given the type as a generic type argument.
      * This is usually less useful than just using the constructor, but can be handy
