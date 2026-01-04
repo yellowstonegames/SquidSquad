@@ -28,12 +28,22 @@ import java.util.Collection;
  * should use a normal {@link ObjectIntOrderedMap} instead, since some optimizations here require Coord keys to be in
  * the pool.
  * <br>
+ * If no initialCapacity is supplied, or if this must resize to enter a Coord, this will use a capacity at least as
+ * large as the Coord cache, as defined by {@link Coord#getCacheWidth()} by {@link Coord#getCacheHeight()}. While this
+ * means that any resizing will potentially make this use much more memory, it avoids a situation where some dense key
+ * sets could take hundreds of times longer than they should. It also usually doesn't use drastically more memory unless
+ * the Coord pool has been expanded quite a bit.
+ * <br>
+ * This tends to perform significantly better with a high low factor, such as 0.9f, instead of a lower one like 0.5f .
+ * It also performs its best when the initial capacity is sufficient to hold every key this needs without resizing, but
+ * it typically only has to resize once if it has to resize at all.
+ * <br>
  * You can create a CoordIntOrderedMap with {@link #fromArray2D(int[][], int, int)} if you have a 2D int array and
  * want to get the positions within some range of values.
  */
 public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
     public CoordIntOrderedMap(OrderType type) {
-        this(51, 0.9f, type);
+        this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f, type);
     }
 
     public CoordIntOrderedMap(int initialCapacity, OrderType type) {
@@ -68,7 +78,7 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
     }
 
     public CoordIntOrderedMap() {
-        this(51, 0.9f);
+        this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f);
     }
 
     public CoordIntOrderedMap(int initialCapacity) {
@@ -110,6 +120,11 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
     @Override
     protected boolean equate(Object left, Object right) {
         return left == right;
+    }
+
+    @Override
+    protected void resize(int newSize) {
+        super.resize(Math.max(newSize, Utilities.tableSize(Coord.getCacheWidth() * Coord.getCacheHeight(), loadFactor)));
     }
 
     /**

@@ -26,6 +26,17 @@ import java.util.Collection;
  * This assumes all Coord keys are in the Coord pool; that is, {@link Coord#expandPoolTo(int, int)} has been called with
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold items placed into here, you
  * should use a normal {@link ObjectSet} instead, since some optimizations here require Coord items to be in the pool.
+ * <br>
+ * If no initialCapacity is supplied, or if this must resize to enter a Coord, this will use a capacity at least as
+ * large as the Coord cache, as defined by {@link Coord#getCacheWidth()} by {@link Coord#getCacheHeight()}. While this
+ * means that any resizing will potentially make this use much more memory, it avoids a situation where some dense key
+ * sets could take hundreds of times longer than they should. It also usually doesn't use drastically more memory unless
+ * the Coord pool has been expanded quite a bit. If the Coord pool hasn't been expanded, each set should use about 1MB
+ * of memory or less when created with the default constructor.
+ * <br>
+ * This tends to perform significantly better with a high low factor, such as 0.9f, instead of a lower one like 0.5f .
+ * It also performs its best when the initial capacity is sufficient to hold every item this needs without resizing, but
+ * it typically only has to resize once if it has to resize at all.
  */
 public class CoordSet extends ObjectSet<Coord> {
     public CoordSet() {

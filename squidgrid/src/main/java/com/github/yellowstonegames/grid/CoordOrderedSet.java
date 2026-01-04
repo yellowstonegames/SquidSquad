@@ -19,6 +19,8 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 
 import com.github.tommyettinger.ds.OrderType;
+import com.github.tommyettinger.ds.Utilities;
+
 import java.util.Collection;
 
 /**
@@ -27,10 +29,21 @@ import java.util.Collection;
  * the maximum values for Coord x and y. If you cannot be sure that the Coord pool will hold items placed into here, you
  * should use a normal {@link ObjectOrderedSet} instead, since some optimizations here require Coord items to be in the
  * pool.
+ * <br>
+ * If no initialCapacity is supplied, or if this must resize to enter a Coord, this will use a capacity at least as
+ * large as the Coord cache, as defined by {@link Coord#getCacheWidth()} by {@link Coord#getCacheHeight()}. While this
+ * means that any resizing will potentially make this use much more memory, it avoids a situation where some dense key
+ * sets could take hundreds of times longer than they should. It also usually doesn't use drastically more memory unless
+ * the Coord pool has been expanded quite a bit. If the Coord pool hasn't been expanded, each set should use about 1MB
+ * of memory or less when created with the default constructor, plus size proportional to {@link #size()} for the order.
+ * <br>
+ * This tends to perform significantly better with a high low factor, such as 0.9f, instead of a lower one like 0.5f .
+ * It also performs its best when the initial capacity is sufficient to hold every item this needs without resizing, but
+ * it typically only has to resize once if it has to resize at all.
  */
 public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     public CoordOrderedSet(OrderType type) {
-        this(51, 0.9f, type);
+        this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f, type);
     }
 
     public CoordOrderedSet(int initialCapacity, float loadFactor, OrderType type) {
@@ -98,6 +111,11 @@ public class CoordOrderedSet extends ObjectOrderedSet<Coord> {
     @Override
     protected boolean equate(Object left, Object right) {
         return left == right;
+    }
+
+    @Override
+    protected void resize(int newSize) {
+        super.resize(Math.max(newSize, Utilities.tableSize(Coord.getCacheWidth() * Coord.getCacheHeight(), loadFactor)));
     }
 
     /**
