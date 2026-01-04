@@ -25,7 +25,7 @@ public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
     public static final int CAPACITY = SIZE * SIZE;//51;//
-    public static final float LOAD = 0.9f;
+    public static final float LOAD = 0.5f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 54576 ms with CAPACITY=51 and LOAD=0.5
@@ -164,6 +164,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 15921 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Still making CoordSet.resize() use at least the Coord cache size, but now Coord.hashCode() has no multiplier:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 49808 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 49943 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 33752 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 18155 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeObjectSetTest() {
@@ -331,6 +345,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * CoordSet took 19292 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Still making CoordSet.resize() use at least the Coord cache size, but now Coord.hashCode() has no multiplier:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 22595 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 13825 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 17581 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 13951 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeCoordSetTest() {
@@ -497,6 +525,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * HashSet took 47922 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Still making CoordSet.resize() use at least the Coord cache size, but now Coord.hashCode() has no multiplier:
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 26450 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 27862 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 22357 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 24263 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeHashSetTest() {
