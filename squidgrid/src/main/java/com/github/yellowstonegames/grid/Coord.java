@@ -757,14 +757,14 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
 
         // Calculates a hash that won't ever fully collide.
         // the signs for x and y; each is either -1 or 0
-        final int xs = this.x >> 31, ys = this.y >> 31;
+        final int xs = x >> 31, ys = y >> 31;
         // makes mx equivalent to -1 ^ this.x if this.x is negative; this means mx is never negative
-        final int mx = this.x ^ xs;
+        final int mx = x ^ xs;
         // same for my; it is also never negative
-        final int my = this.y ^ ys;
+        final int my = y ^ ys;
         // Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
         final int max = Math.max(mx, my);
-        this.hash = 
+        return
                     // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
                     (max * max + max + mx - my)
                     // XOR with every odd-index bit of xs and every even-index bit of ys
@@ -787,7 +787,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @param code typically a result of {@link #signedRosenbergStrongHashCode(int, int)}
      * @return a Coord that contains the x and y that would have been passed to {@link #signedRosenbergStrongHashCode(int, int)}
      */
-    public static Coord signedRosenbergStrongInverse(final int code) {
+    public static Coord signedRosenbergStrongInverse(int code) {
         final int xs = code >> 31, ys = (code << 1) >> 31;
         code ^= (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
         final int b = (int)Math.sqrt(code);

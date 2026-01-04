@@ -17,6 +17,9 @@ public class CoordTest {
         }
     }
 
+    /**
+     * All unique!
+     */
     public void testSignedRosenbergStrongUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
@@ -146,9 +149,9 @@ public class CoordTest {
     public static void main(String[] args) {
 //        System.out.printf(" 0x%08X ", MathTools.modularMultiplicativeInverse(0x9E3779B9)); // 0x144CBC89
 //        System.out.printf(" 0x%08X ", (0x7FFF * 0x7FFF + 0x7FFF + 0x7FFF - 0)); // 0x3FFFFFFF
-//        new CoordTest().testSignedRosenbergStrongInverse(); // passes!
-        new CoordTest().testSignedRosenbergStrongMultiplyInverse(); // passes!
-//        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes!
+        new CoordTest().testSignedRosenbergStrongInverse(); // passes!
+//        new CoordTest().testSignedRosenbergStrongMultiplyInverse(); // passes!
+        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes!
 //        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes! but, requires 16-bit x and y.
 //        new CoordTest().testRosenbergStrongUniqueness(); // passes!
 //        new CoordTest().testSignedCantorUniqueness(); // fails!
