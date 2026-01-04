@@ -73,19 +73,17 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * Also accessible via {@link #hashCode()}, this is a precalculated hashCode() result. It is only assigned when a
      * Coord is first created. It uses a method of computing a hash value that won't collide in full (over all 32 bits)
      * for any possible Coord values. Even using a smaller portion of the hash, if a hash table can fit 8192x8192 Coord
-     * values with load factor 0.5f, an appropriate mask will still not cause collisions here. This does randomize the
-     * upper bits of the hash somewhat, but the lower bits (where collisions are most important, because masks typically
-     * keep only some range of the lower bits) are more orderly.
+     * values with load factor 0.5f, an appropriate mask will still not cause collisions here. This does not randomize
+     * the hash at all; it does do some work to allow negative-valued Coords to be used without frequent collisions.
      * <br>
-     * The actual method used to assign this involves passing x and y to the Rosenberg-Strong pairing function, then
-     * multiplying that by 0x9E3779B9, or -1640531527 in decimal. The Rosenberg-Strong pairing function is discussed
+     * The actual method used to assign this involves passing x and y to the Rosenberg-Strong pairing function, if both
+     * x and y are non-negative. The Rosenberg-Strong pairing function is discussed
      * more <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">here (a good introduction)</a> and
-     * <a href="https://arxiv.org/abs/1706.04129">here (a more technical paper)</a>. 0x9E3779B9 is used because it is
-     * (2 to the 32) divided by the golden ratio, and because of properties of the golden ratio, 0x9E3779B9 helps ensure
-     * "sub-random" bit patterns in its multiples. Because 0x9E3779B9 is odd, if every possible hashCode() is taken and
-     * multiplied by 0x9E3779B9, the full set of (2 to the 32) numbers will just be rearranged; nothing will collide.
+     * <a href="https://arxiv.org/abs/1706.04129">here (a more technical paper)</a>. If x is negative, this toggles
+	 * every other bit using the mask {@code 0xAAAAAAAA}; if y is negative, this toggles every other bit using the mask
+	 * {@code 0x55555555} (which is every bit not flipped by negative x).
      *
-     * @see #signedRosenbergStrongMultiplyHashCode(int, int)
+     * @see #signedRosenbergStrongHashCode(int, int)
      */
     public transient final int hash;
 
@@ -97,7 +95,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
         this.x = (short)x;
         this.y = (short)y;
 
-        // Calculates a hash that won't overlap until very, very many Coords have been produced.
+        // Calculates a hash that won't ever fully collide.
         // the signs for x and y; each is either -1 or 0
         final int xs = this.x >> 31, ys = this.y >> 31;
         // makes mx equivalent to -1 ^ this.x if this.x is negative; this means mx is never negative
@@ -106,16 +104,12 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
         final int my = this.y ^ ys;
         // Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
         final int max = Math.max(mx, my);
-        // imul uses * on most platforms, but instead uses the JS Math.imul() function on GWT
         this.hash = 
-//                BitConversion.imul(
-                        // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
-                        (max * max + max + mx - my)
-                        // XOR with every odd-index bit of xs and every even-index bit of ys
-                        // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
-                        ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
-//                // use imul() to multiply by a golden-ratio-based number to randomize upper bits
-//                , 0x9E3779B9)
+                    // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
+                    (max * max + max + mx - my)
+                    // XOR with every odd-index bit of xs and every even-index bit of ys
+                    // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+                    ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
 				;
     }
 
@@ -736,10 +730,11 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * for two nearby x,y points, the upper bits of the hash codes this produces will be more random than the lower
      * bits. This helps avoid collisions in dense sets or maps of Coord.
      * <br>
-     * The actual method this uses involves masking x and y to fit in 16-bit unsigned numbers, then passing them to the
+     * The actual method this uses involves casting x and y to short, storing their signs, then passing them to the
      * Rosenberg-Strong pairing function. The Rosenberg-Strong pairing function is discussed
      * more <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">here (a good introduction)</a> and
-     * <a href="https://arxiv.org/abs/1706.04129">here (a more technical paper)</a>. Unlike
+     * <a href="https://arxiv.org/abs/1706.04129">here (a more technical paper)</a>. This finishes by toggling
+	 * alternating bits if x and/or y is negative, potentially toggling every bit if both are negative. Unlike
      * {@link #signedRosenbergStrongMultiplyHashCode(int, int)}, this does not finish by multiplying by a constant. You
      * can always do so yourself, but you should use {@link BitConversion#imul(int, int)} if targeting GWT at all.
      * <br>
@@ -757,15 +752,25 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     public static int signedRosenbergStrongHashCode(int x, int y) {
         // Calculates a hash that won't overlap until Coords reach 32768 or higher in x or y.
         // (Or if they reach -32769 or lower in x or y.)
+        x = (short)x;
+        y = (short)y;
 
-        // Masks x and y to the (non-negative) 16-bit range.
-        // This is synonymous to casting x and y each to char.
-        x &= 0xFFFF;
-        y &= 0xFFFF;
-        // Math.max can be branchless on modern JVMs, which may speed this method up a little if called often.
-        final int max = Math.max(x, y);
-        // Rosenberg-Strong pairing function; produces larger values in a square-shaped "ripple" moving away from the origin.
-        return (max * max + max + x - y);
+        // Calculates a hash that won't ever fully collide.
+        // the signs for x and y; each is either -1 or 0
+        final int xs = this.x >> 31, ys = this.y >> 31;
+        // makes mx equivalent to -1 ^ this.x if this.x is negative; this means mx is never negative
+        final int mx = this.x ^ xs;
+        // same for my; it is also never negative
+        final int my = this.y ^ ys;
+        // Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
+        final int max = Math.max(mx, my);
+        this.hash = 
+                    // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
+                    (max * max + max + mx - my)
+                    // XOR with every odd-index bit of xs and every even-index bit of ys
+                    // this makes negative x, negative y, positive both, and negative both all get different bits XORed or not
+                    ^ (xs & 0xAAAAAAAA) ^ (ys & 0x55555555)
+				;
     }
 
     /**
@@ -783,10 +788,12 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @return a Coord that contains the x and y that would have been passed to {@link #signedRosenbergStrongHashCode(int, int)}
      */
     public static Coord signedRosenbergStrongInverse(final int code) {
-        final int b = (int)Math.sqrt(code & 0xFFFFFFFFL);
+        final int xs = code >> 31, ys = (code << 1) >> 31;
+        code ^= (xs & 0xAAAAAAAA) ^ (ys & 0x55555555);
+        final int b = (int)Math.sqrt(code);
         final int r = code - b * b;
         final int min = Math.min(b, r);
-        return Coord.get(min, b - r + min);
+        return Coord.get(min ^ xs, b - r + min ^ ys);
     }
 
     /**
