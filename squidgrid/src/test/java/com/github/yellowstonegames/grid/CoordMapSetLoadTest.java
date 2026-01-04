@@ -24,7 +24,7 @@ import java.util.HashSet;
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
-    public static final int CAPACITY = SIZE * SIZE;//51;//
+    public static final int CAPACITY = 51;//SIZE * SIZE;//
     public static final float LOAD = 0.9f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
@@ -122,6 +122,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 24249 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Reverting but changing multiplier to 0x9E3779B1, which is prime ...
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 49124 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 51629 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 33635 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * ObjectSet took 17688 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeObjectSetTest() {
@@ -247,6 +261,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * CoordSet took 20440 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Reverting but changing multiplier to 0x9E3779B1, which is prime ...
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 41229 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 35235 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 31557 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * CoordSet took 21210 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeCoordSetTest() {
@@ -371,6 +399,20 @@ public class CoordMapSetLoadTest {
      * <br>
      * Creating 100 sets with 4194304 Coord items each...
      * HashSet took 33144 ms with CAPACITY=4194304 and LOAD=0.9
+     * <br>
+     * Reverting but changing multiplier to 0x9E3779B1, which is prime ...
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 44626 ms with CAPACITY=51 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 55221 ms with CAPACITY=51 and LOAD=0.9
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 43327 ms with CAPACITY=4194304 and LOAD=0.5
+     * <br>
+     * Creating 100 sets with 4194304 Coord items each...
+     * HashSet took 47796 ms with CAPACITY=4194304 and LOAD=0.9
      */
     @Test
     public void fillHugeHashSetTest() {
