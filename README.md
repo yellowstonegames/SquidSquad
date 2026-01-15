@@ -8,13 +8,13 @@ From all corners of the maybe-seven procedurally-generated seas, arise, O Mighty
 Depend on the modules you need by adding dependencies to core/build.gradle . For example,
 
 ```
-api 'com.squidpony:squidgrid:4.0.4' // important code for anything that has a position here
-api 'com.squidpony:squidplace:4.0.4' // allows generating dungeons, caves, wilderness areas as char arrays
-api 'com.squidpony:squidstorepath:4.0.4' // adds a dependency for pathfinding and also allows saving related types 
-api 'com.squidpony:squidstoretext:4.0.4' // adds a dependency for gibberish generation/translation; allows saving types
+api 'com.squidpony:squidgrid:4.0.5' // important code for anything that has a position here
+api 'com.squidpony:squidplace:4.0.5' // allows generating dungeons, caves, wilderness areas as char arrays
+api 'com.squidpony:squidstorepath:4.0.5' // adds a dependency for pathfinding and also allows saving related types 
+api 'com.squidpony:squidstoretext:4.0.5' // adds a dependency for gibberish generation/translation; allows saving types
 ```
 
-On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.4'`,
+On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.5'`,
 which is a dependency of all other SquidSquad modules. The `squidstorepath` and `squidstoretext` dependencies pull in
 `squidpath` and `squidtext`, as well as allowing saving their various types to JSON using [libGDX](https://libgdx.com/)
 and its `Json` class. If you aren't using libGDX, there's other options that don't depend on it, though SquidSquad is
@@ -207,28 +207,15 @@ it's in SquidLib-Demos and uses the wonderful DawnLike tileset by DragonDePlatin
 present as a test in `squidsmooth`, but the standalone version of it shows how you can use SquidSquad in a complete
 libGDX application.
 
-If you use ProGuard on desktop or iOS platforms, you need to add a line to your `proguard.pro` file. This allows
-`squidcore` and, if needed, `squidgrid` to function after ProGuard does its optimizations:
-
-```
--optimizations !code/simplification/string
-```
-
-Note that this line will be added automatically to the Android R8 configuration,
-which is subtly different from ProGuard configuration on any other platform.
-If you only use ProGuard on Android (where it's really using R8), you shouldn't need
-to change any `.pro` files manually to use SquidSquad. You may still need to make
-changes to those files to keep things like scene2d.ui from libGDX.
-
 # Get?
 
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
-released version such as the current `4.0.4`, which can be obtained from the main source for dependencies on the
+released version such as the current `4.0.5`, which can be obtained from the main source for dependencies on the
 JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
 dependencies [can be seen for each version here on Maven Central](https://search.maven.org/search?q=g:com.squidpony),
-and look like `implementation 'com.squidpony:squidcore:4.0.4'`. Maven Central's search will still show (much) older
+and look like `implementation 'com.squidpony:squidcore:4.0.5'`. Maven Central's search will still show (much) older
 SquidLib versions as well, such as `squidlib`, `squidlib-util`, and `squidlib-extra`; these are not used at all here.
 Some compatibility code is present for porting from SquidLib to SquidSquad in the SquidSquad module `squidold`.
 
@@ -255,7 +242,7 @@ they will probably all be in the dependencies, but this ensures all the versions
 projects are present.
 
 Liftoff fetches SquidSquad from Maven Central, and needs a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.4`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+such release is `4.0.5`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
 commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
 The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
 `com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are
@@ -276,6 +263,37 @@ The other versions go up fairly often as things are fixed or improved, but they 
   - `cruxVersion`=0.1.3
   - `textraTypistVersion`=2.2.10
   - `gdxVersion`=1.14.0
+
+# Help!
+
+Feel free to post an issue in this repo if you're having trouble with SquidSquad in particular. There are also issues
+pages for the dependencies if you find a problem with one of those, but if the general problem is SquidSquad-related,
+don't be shy about posting the issue here. It could be connected to several different parts! There's also a
+[SquidLib and SquidSquad Discord server](https://discord.gg/EmxUBsS) for real-time help, or help with some usage of
+SquidSquad that isn't exactly an issue. If you have issues with some libGDX part of a game using SquidSquad, you can
+also ask on the [libGDX Discord server](https://libgdx.com/community/discord/), which is very active. The
+[libGDX wiki](https://libgdx.com/wiki/) is also a vital resource.
+
+Some common issues do have known simple fixes. Here are some:
+
+If you use ProGuard on desktop or iOS platforms, you need to add a line to your `proguard.pro` file. This allows
+`squidcore` and, if needed, `squidgrid` to function after ProGuard does its optimizations:
+
+```
+-optimizations !code/simplification/string
+```
+
+Note that this line will be added automatically to the Android R8 configuration,
+which is subtly different from ProGuard configuration on any other platform.
+If you only use ProGuard on Android (where it's really using R8), you shouldn't need
+to change any `.pro` files manually to use SquidSquad. You may still need to make
+changes to those files to keep things like scene2d.ui from libGDX.
+
+There are some drawbacks to using TeaVM. TeaVM requires language level 11, and the iOS target using RoboVM can't
+use language level 11, so you can't easily target TeaVM and RoboVM from the same application. You can potentially stick
+to using language level 8 and only compile TeaVM with a JDK 11 or newer. You could use MOE (Multi-OS Engine) to target
+iOS with language level 11, though, and could do that alongside TeaVM.
+
 
 # License
 
