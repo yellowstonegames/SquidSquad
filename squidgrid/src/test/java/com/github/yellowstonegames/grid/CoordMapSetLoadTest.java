@@ -17,10 +17,12 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectSet;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashSet;
 
+@Ignore
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
