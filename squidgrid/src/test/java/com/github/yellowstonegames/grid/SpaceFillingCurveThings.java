@@ -62,13 +62,37 @@ public class SpaceFillingCurveThings {
         return brs(x, brs(y, z));
     }
 
+    /**
+     * Pigeon-Ettinger-Rosenberg-Strong Triple function.
+     * @param x 3D coordinate, must be non-negative
+     * @param y 3D coordinate, must be non-negative
+     * @param z 3D coordinate, must be non-negative
+     * @return the distance along a space-filling curve from the origin to the given point.
+     */
+    public static int pers(final int x, final int y, final int z) {
+        final int m = Math.max(x, y); // max of lateral dimensions
+        final int g = Math.max(m, z); // gnomon, or shell
+        final int u = g + 1;          // up one gnomon
+        final int s = -(m + z & 1);   // sign, used to flip direction
+        if ((g & 1) == 0) {
+            if (g == z)
+                return (g * g * g) + m * m + m + (x - y + s ^ s);
+            return (g * g * u) + (m + (x - y + s ^ s)) + (g + g + 1) * (g - z);
+        } else {
+            if (g == z) {
+                return (u * u * u - 1) - (m * m + m + (y - x + s ^ s));
+            }
+            return (g * g * g) + (m + (x - y + s ^ s)) + (g + g + 1) * z;
+        }
+    }
+
     public interface TripleFunction {
         int triple(int x, int y, int z);
     }
 
     public static void main(String[] args) {
-        int SIZE = 4;
-        TripleFunction tri = SpaceFillingCurveThings::brs;
+        int SIZE = 6;
+        TripleFunction tri = SpaceFillingCurveThings::pers;
         for (int z = 0; z < SIZE; z++) {
             for (int y = 0; y < SIZE; y++) {
                 for (int x = 0; x < SIZE; x++) {
