@@ -210,7 +210,6 @@ public class SymmetryDungeonGenerator extends MixedGenerator {
         ObjectObjectOrderedMap.OrderedMapValues<Coord, ObjectList<Coord>> rVals = new ObjectObjectOrderedMap.OrderedMapValues<>(conns);
         for(ObjectList<Coord> left : lVals)
         {
-            rVals.resetIterator();
             for(ObjectList<Coord> right : rVals)
             {
                 for (int i = 0; i < left.size(); i++) {

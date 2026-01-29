@@ -14,7 +14,7 @@ dependencies {
 	api("com.github.tommyettinger:tantrum-digital:0.9.9.20"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:tantrum-jdkgdxds:2.0.1.20"){
+	api("com.github.tommyettinger:tantrum-jdkgdxds:2.1.1.20"){
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }

@@ -13,7 +13,7 @@ dependencies {
 	api("com.github.tommyettinger:kryo-digital:0.9.9.1"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-jdkgdxds:2.0.1.1"){
+	api("com.github.tommyettinger:kryo-jdkgdxds:2.1.1.1"){
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }
