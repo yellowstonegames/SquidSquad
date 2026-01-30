@@ -8,13 +8,13 @@ From all corners of the maybe-seven procedurally-generated seas, arise, O Mighty
 Depend on the modules you need by adding dependencies to core/build.gradle . For example,
 
 ```
-api 'com.squidpony:squidgrid:4.0.6' // important code for anything that has a position here
-api 'com.squidpony:squidplace:4.0.6' // allows generating dungeons, caves, wilderness areas as char arrays
-api 'com.squidpony:squidstorepath:4.0.6' // adds a dependency for pathfinding and also allows saving related types 
-api 'com.squidpony:squidstoretext:4.0.6' // adds a dependency for gibberish generation/translation; allows saving types
+api 'com.squidpony:squidgrid:4.0.7' // important code for anything that has a position here
+api 'com.squidpony:squidplace:4.0.7' // allows generating dungeons, caves, wilderness areas as char arrays
+api 'com.squidpony:squidstorepath:4.0.7' // adds a dependency for pathfinding and also allows saving related types 
+api 'com.squidpony:squidstoretext:4.0.7' // adds a dependency for gibberish generation/translation; allows saving types
 ```
 
-On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.6'`,
+On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.7'`,
 which is a dependency of all other SquidSquad modules. The `squidstorepath` and `squidstoretext` dependencies pull in
 `squidpath` and `squidtext`, as well as allowing saving their various types to JSON using [libGDX](https://libgdx.com/)
 and its `Json` class. If you aren't using libGDX, there's other options that don't depend on it, though SquidSquad is
@@ -36,16 +36,24 @@ depend on the modules you need. All the modules depend on `squidcore`, which alw
 [jdkgdxds](https://github.com/tommyettinger/jdkgdxds) for data structures, the
 [digital](https://github.com/tommyettinger/digital) for various number and digit stuff,
 [juniper](https://github.com/tommyettinger/juniper) for random number generation, and
-[regexodus](https://github.com/tommyettinger/RegExodus) for cross-platform regular expressions with an expanded API. This is already quite a few dependencies,
+[regexodus](https://github.com/tommyettinger/RegExodus) for cross-platform regular expressions with an expanded API.
+This is already quite a few dependencies,
 but these mostly have roles that were moved out of squidlib-util in earlier versions.
 
 The important `squidgrid` module has an extra dependency on [crux](https://github.com/tommyettinger/crux), which
 mostly provides interfaces that other libraries can use without needing `squidgrid` (instead needing `crux`). Some
 modules (`squidglyph`, `squidsmooth`, `squidpress`, and all the `squidstore` modules) depend on
 [libGDX](https://libgdx.com/), which is recommended for use with SquidSquad but not always required. That means if you
-don't use `squidglyph`, `squidsmooth`, `squidpress`, or `squidstore`, you can use SquidSquad in purely-server-side code,
-in tests, or otherwise outside the application lifecycle libGDX expects. The `squidfreeze` modules all depend on
-[Kryo](https://github.com/EsotericSoftware/kryo) and [kryo-more](https://github.com/tommyettinger/kryo-more).
+don't use `squidglyph`, `squidsmooth`, `squidpress`, `squidseek`, or `squidstore`, you can use SquidSquad in
+purely-server-side code, in tests, or otherwise outside the application lifecycle libGDX expects. `squidstore` modules
+also depend on [jdkgdxds-interop](https://github.com/tommyettinger/jdkgdxds_interop) for extra JSON-related code. The
+`squidfreeze` modules all depend on [Kryo](https://github.com/EsotericSoftware/kryo) and
+[kryo-more](https://github.com/tommyettinger/kryo-more). The`squidwrath` modules all depend on
+[Apache Fory](https://fory.apache.org) instead, and use [tantrum](https://github.com/tommyettinger/tantrum) to extend
+serialization support. `squidpath` and `squidseek` are very similar, but `squidseek` uses
+[Gand](https://github.com/tommyettinger/gand) as a dependency, while `squidpath` mostly has specialized copies of
+similar code to Gand in its own module or already available in `squidgrid`. Currently, `squidpath` is recommended of
+those two pathfinding modules.
 
 The various dependencies are updated independently of SquidSquad. Some are going to be very familiar if you used
 SquidLib before. `digital` is essentially an expansion on the NumberUtils, ArrayTools, and CrossHash classes from
@@ -212,10 +220,10 @@ libGDX application.
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
-released version such as the current `4.0.6`, which can be obtained from the main source for dependencies on the
+released version such as the current `4.0.7`, which can be obtained from the main source for dependencies on the
 JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
 dependencies [can be seen for each version here on Maven Central](https://search.maven.org/search?q=g:com.squidpony),
-and look like `implementation 'com.squidpony:squidcore:4.0.6'`. Maven Central's search will still show (much) older
+and look like `implementation 'com.squidpony:squidcore:4.0.7'`. Maven Central's search will still show (much) older
 SquidLib versions as well, such as `squidlib`, `squidlib-util`, and `squidlib-extra`; these are not used at all here.
 Some compatibility code is present for porting from SquidLib to SquidSquad in the SquidSquad module `squidold`.
 
@@ -242,7 +250,7 @@ they will probably all be in the dependencies, but this ensures all the versions
 projects are present.
 
 Liftoff fetches SquidSquad from Maven Central, and needs a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.6`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+such release is `4.0.7`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
 commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
 The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
 `com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are

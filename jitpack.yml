@@ -1,5 +1,5 @@
 before_install:
-  - sdk install java 23-open
-  - sdk use java 23-open
+  - sdk install java 25-open
+  - sdk use java 25-open
 jdk:
-  - openjdk23
+  - openjdk25
