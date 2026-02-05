@@ -70,6 +70,30 @@ public class SpaceFillingCurveTest {
     }
 
     /**
+     * Inverse of the Boustrophedonic Rosenberg-Strong pairing function.
+     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
+     * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
+     * @param d the distance on the Boustrophedonic Rosenberg-Strong curve, from the origin (usually an integer)
+     * @return {@code p}, after modifications
+     */
+    public static Point2Int brsInverse(Point2Int p, double d){
+        final int g = (int)Math.sqrt(d);
+        final int r = (int)(d - g * g);
+        int i, j;
+        if(r <= g){
+            i = g;
+            j = r;
+        } else {
+            i = g + g - r;
+            j = g;
+        }
+        if((Math.max(i, j) & 1) == 1)
+            p.set(i, j);
+        else p.set(j, i);
+        return p;
+    }
+
+    /**
      * <pre>
      * 000 001 008 009
      * 003 002 007 010
