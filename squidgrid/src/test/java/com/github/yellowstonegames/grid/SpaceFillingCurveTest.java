@@ -162,6 +162,72 @@ public class SpaceFillingCurveTest {
         return (g * g * g) + (m + (x - y + s ^ s)) + (g + g + 1) * z;
     }
 
+    public static Point3Int persInverse(Point3Int p, double d){
+        final int g = (int)(Math.cbrt(d)); // which gnomon, or shell, we are in
+        final int u = g + 1;               // up one gnomon
+        final double b = (double) g * g * g;           // base of the current gnomon
+        if ((g & 1) == 0) {
+            if(d - b < (double) u * u)
+            {
+                // here we are on the top.
+                final int t = (int)Math.sqrt(d - b); // top gnomon
+                final int r = (int)(d - b - t * t);
+                int i, j;
+                if(r <= t){
+                    i = t;
+                    j = r;
+                } else {
+                    i = t + t - r;
+                    j = t;
+                }
+                if((Math.max(i, j) & 1) == 1)
+                    p.set(i, j, g);
+                else p.set(j, i, g);
+            } else {
+                // winding down.
+                int bend = g + g + 1;
+                int remain = (int)(d - b - (double) u * u); // remaining
+                int k = g - remain / bend;
+                int i, j;
+                int r = remain % bend;
+                if(r <= g){
+                    i = g;
+                    j = r;
+                } else {
+                    i = g + g - r;
+                    j = g;
+                }
+                if((g + k & 1) == 1)
+                    p.set(i, j, k);
+                else
+                    p.set(j, i, k);
+            }
+        } else {
+            // FIXME: placeholder
+            p.set(0, 0, 0);
+        }
+        return p;
+    }
+
+    @Test
+    public void testPers() {
+        Point3Int store = new Point3Int();
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                for (int k = 0; k < 100; k++) {
+                    if((Math.max(i, Math.max(j, k)) & 1) == 1)
+                        continue;
+                    double dist = pers(i, j, k);
+                    persInverse(store, dist);
+//                    Assert.assertEquals("Failure at distance " + (int)dist, i, store.x);
+//                    Assert.assertEquals("Failure at distance " + (int)dist, j, store.y);
+//                    Assert.assertEquals("Failure at distance " + (int)dist, k, store.z);
+                }
+            }
+        }
+
+    }
+
     public interface TripleFunction {
         int triple(int x, int y, int z);
     }
