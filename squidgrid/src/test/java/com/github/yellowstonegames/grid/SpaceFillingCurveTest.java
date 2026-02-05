@@ -93,6 +93,19 @@ public class SpaceFillingCurveTest {
         return p;
     }
 
+    @Test
+    public void testBrs() {
+        Point2Int store = new Point2Int();
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                double dist = brs(i, j);
+                brsInverse(store, dist);
+                Assert.assertEquals(i, store.x);
+                Assert.assertEquals(j, store.y);
+            }
+        }
+    }
+
     /**
      * <pre>
      * 000 001 008 009
