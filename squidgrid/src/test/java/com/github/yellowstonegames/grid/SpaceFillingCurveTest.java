@@ -39,6 +39,19 @@ public class SpaceFillingCurveTest {
         return p.set(x, y);
     }
 
+    @Test
+    public void testRs() {
+        Point2Int store = new Point2Int();
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                double dist = rs(i, j);
+                rsInverse(store, dist);
+                Assert.assertEquals(i, store.x);
+                Assert.assertEquals(j, store.y);
+            }
+        }
+    }
+
     public static int rs(final int x, final int y, final int z){
         return rs(z, rs(x, y));
     }
