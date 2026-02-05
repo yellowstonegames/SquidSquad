@@ -1,17 +1,42 @@
 package com.github.yellowstonegames.grid;
 
-public class SpaceFillingCurveThings {
+import org.junit.Assert;
+import org.junit.Test;
+
+public class SpaceFillingCurveTest {
 
     /**
      * Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
-     * @param x
-     * @param y
-     * @return
+     * @param x non-negative horizontal input
+     * @param y non-negative vertical input
+     * @return distance on the Rosenberg-Strong curve, from the origin
      */
     public static int rs(final int x, final int y){
         final int m = Math.max(x, y);
-        return m * m + m + x - y;
+        return m * m + m + y - x;
+    }
+
+
+    /**
+     * Inverse of the Rosenberg-Strong pairing function.
+     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
+     * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
+     * @param d the distance on the Rosenberg-Strong curve, from the origin (usually an integer)
+     * @return {@code p}, after modifications
+     */
+    public static Point2Int rsInverse(Point2Int p, double d) {
+        final int g = (int) Math.sqrt(d);
+        final int r = (int) (d - g * g);
+        int x, y;
+        if (r <= g) {
+            x = g;
+            y = r;
+        } else {
+            x = g + g - r;
+            y = g;
+        }
+        return p.set(x, y);
     }
 
     public static int rs(final int x, final int y, final int z){
@@ -21,9 +46,9 @@ public class SpaceFillingCurveThings {
     /**
      * Boustrophedonic Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
-     * @param x
-     * @param y
-     * @return
+     * @param x non-negative horizontal input
+     * @param y non-negative vertical input
+     * @return distance on the Boustrophedonic Rosenberg-Strong curve, from the origin
      */
     public static int brs(final int x, final int y){
         final int m = Math.max(x, y);
@@ -75,15 +100,16 @@ public class SpaceFillingCurveThings {
         final int u = g + 1;          // up one gnomon
         final int s = -(m + z & 1);   // sign, used to flip direction
         if ((g & 1) == 0) {
+            // start at the top, wind over the top face, then snake down as z falls. Ends on x,y,z == g,0,0 .
             if (g == z)
                 return (g * g * g) + m * m + m + (x - y + s ^ s);
             return (g * g * u) + (m + (x - y + s ^ s)) + (g + g + 1) * (g - z);
-        } else {
-            if (g == z) {
-                return (u * u * u - 1) - (m * m + m + (y - x + s ^ s));
-            }
-            return (g * g * g) + (m + (x - y + s ^ s)) + (g + g + 1) * z;
         }
+        // start at the bottom, snake up as z rises, then wind over the top face until we reach x,y,z == 0,0,g .
+        if (g == z) {
+            return (u * u * u - 1) - (m * m + m + (y - x + s ^ s));
+        }
+        return (g * g * g) + (m + (x - y + s ^ s)) + (g + g + 1) * z;
     }
 
     public interface TripleFunction {
@@ -92,7 +118,7 @@ public class SpaceFillingCurveThings {
 
     public static void main(String[] args) {
         int SIZE = 6;
-        TripleFunction tri = SpaceFillingCurveThings::pers;
+        TripleFunction tri = SpaceFillingCurveTest::pers;
         for (int z = 0; z < SIZE; z++) {
             for (int y = 0; y < SIZE; y++) {
                 for (int x = 0; x < SIZE; x++) {
