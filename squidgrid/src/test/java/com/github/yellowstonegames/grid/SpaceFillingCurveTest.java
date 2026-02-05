@@ -187,7 +187,7 @@ public class SpaceFillingCurveTest {
                 // winding down.
                 int bend = g + g + 1;
                 int remain = (int)(d - b - (double) u * u); // remaining
-                int k = g - remain / bend;
+                int k = g - 1 - remain / bend;
                 int i, j;
                 int r = remain % bend;
                 if(r <= g){
@@ -219,9 +219,9 @@ public class SpaceFillingCurveTest {
                         continue;
                     double dist = pers(i, j, k);
                     persInverse(store, dist);
-//                    Assert.assertEquals("Failure at distance " + (int)dist, i, store.x);
-//                    Assert.assertEquals("Failure at distance " + (int)dist, j, store.y);
-//                    Assert.assertEquals("Failure at distance " + (int)dist, k, store.z);
+                    Assert.assertEquals("Failure at distance " + (int)dist, i, store.x);
+                    Assert.assertEquals("Failure at distance " + (int)dist, j, store.y);
+                    Assert.assertEquals("Failure at distance " + (int)dist, k, store.z);
                 }
             }
         }
@@ -234,11 +234,27 @@ public class SpaceFillingCurveTest {
 
     public static void main(String[] args) {
         int SIZE = 6;
-        TripleFunction tri = SpaceFillingCurveTest::pers;
+//        TripleFunction tri = SpaceFillingCurveTest::pers;
+//        for (int z = 0; z < SIZE; z++) {
+//            for (int y = 0; y < SIZE; y++) {
+//                for (int x = 0; x < SIZE; x++) {
+//                    System.out.printf("%03d ", tri.triple(x, y, z));
+//                }
+//                System.out.println();
+//            }
+//            System.out.println();
+//        }
+//        System.out.println();
+        int[][][] distances = new int[SIZE][SIZE][SIZE];
+        Point3Int store = new Point3Int();
+        for (int i = 0, n = SIZE * SIZE * SIZE; i < n; i++) {
+            persInverse(store, i);
+            distances[store.x][store.y][store.z] = i;
+        }
         for (int z = 0; z < SIZE; z++) {
             for (int y = 0; y < SIZE; y++) {
                 for (int x = 0; x < SIZE; x++) {
-                    System.out.printf("%03d ", tri.triple(x, y, z));
+                    System.out.printf("%03d ", distances[x][y][z]);
                 }
                 System.out.println();
             }
