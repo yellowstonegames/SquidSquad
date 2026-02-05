@@ -187,9 +187,10 @@ public class SpaceFillingCurveTest {
                 // winding down.
                 int bend = g + g + 1;
                 int remain = (int)(d - b - (double) u * u); // remaining
-                int k = g - 1 - remain / bend;
+                int ratio = remain / bend;
+                int k = g - 1 - ratio;
                 int i, j;
-                int r = remain % bend;
+                int r = remain - ratio * bend;
                 if(r <= g){
                     i = g;
                     j = r;
@@ -203,8 +204,42 @@ public class SpaceFillingCurveTest {
                     p.set(j, i, k);
             }
         } else {
-            // FIXME: placeholder
-            p.set(0, 0, 0);
+            double lower = (double) u * u * g;
+            if(d >= lower){
+                // finishing at the top, wind back to x,y == 0,0 .
+                int top = (int) ((double)u * u * u - 1 - d);
+                int t = (int) Math.sqrt(top); // top gnomon
+                int r = top - t * t;
+                int i, j;
+                if(r <= t){
+                    i = t;
+                    j = r;
+                } else {
+                    i = t + t - r;
+                    j = t;
+                }
+                if((Math.max(i, j) & 1) == 1)
+                    p.set(i, j, g);
+                else p.set(j, i, g);
+            } else {
+                // winding up.
+                int bend = g + g + 1;
+                int remain = (int)(d - b); // remaining
+                int k = remain / bend;
+                int i, j;
+                int r = remain - k * bend;
+                if(r <= g){
+                    i = g;
+                    j = r;
+                } else {
+                    i = g + g - r;
+                    j = g;
+                }
+                if((g + k & 1) == 1)
+                    p.set(i, j, k);
+                else
+                    p.set(j, i, k);
+            }
         }
         return p;
     }
@@ -215,8 +250,8 @@ public class SpaceFillingCurveTest {
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
                 for (int k = 0; k < 100; k++) {
-                    if((Math.max(i, Math.max(j, k)) & 1) == 1)
-                        continue;
+//                    if((Math.max(i, Math.max(j, k)) & 1) == 1)
+//                        continue;
                     double dist = pers(i, j, k);
                     persInverse(store, dist);
                     Assert.assertEquals("Failure at distance " + (int)dist, i, store.x);
