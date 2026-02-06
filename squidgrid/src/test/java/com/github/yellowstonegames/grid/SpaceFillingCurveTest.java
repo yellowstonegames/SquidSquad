@@ -11,7 +11,7 @@ public class SpaceFillingCurveTest {
      *
      * @param x non-negative horizontal input, between 0 and 46339, inclusive
      * @param y non-negative vertical input, between 0 and 46339, inclusive
-     * @return distance on the Rosenberg-Strong curve, from the origin
+     * @return pair of x and y as one int via the Rosenberg-Strong function
      */
     public static int rs(final int x, final int y){
         final int m = Math.max(x, y);
@@ -24,7 +24,7 @@ public class SpaceFillingCurveTest {
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
      *
      * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
-     * @param d the distance on the Rosenberg-Strong curve, from the origin, between 0 and 2147395599, inclusive
+     * @param d pair of x and y via the Rosenberg-Strong function, from the origin, between 0 and 2147395599, inclusive
      * @return {@code p}, after modifications
      */
     public static Point2Int rsInverse(Point2Int p, int d) {
@@ -71,7 +71,6 @@ public class SpaceFillingCurveTest {
 //        System.out.println(store + " has distance " + limit);
         Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
         Assert.assertEquals("Failure at distance " + limit, 0, store.y);
-
     }
 
     public static int rs(final int x, final int y, final int z){
@@ -377,6 +376,38 @@ public class SpaceFillingCurveTest {
 //        System.out.println(store + " has distance " + limit);
     }
 
+
+    /**
+     * 2D Szudzik Elegant pairing function.
+     * <a href="https://en.wikipedia.org/wiki/Pairing_function#Restriction_to_natural_numbers">See Wikipedia</a>.
+     *
+     * @param x non-negative horizontal input, between 0 and 46339, inclusive
+     * @param y non-negative vertical input, between 0 and 46339, inclusive
+     * @return pair of x and y as one int via the Szudzik Elegant function
+     */
+    public static int se(final int x, final int y){
+        return x < y ? y * y + x : x * x + x + y;
+    }
+
+
+    /**
+     * Inverse of the 2D Szudzik Elegant pairing function.
+     * <a href="https://en.wikipedia.org/wiki/Pairing_function#Restriction_to_natural_numbers">See Wikipedia</a>.
+     *
+     * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
+     * @param d pair of x and y via the Szudzik Elegant function, from the origin, between 0 and 2147395599, inclusive
+     * @return {@code p}, after modifications
+     */
+    public static Point2Int seInverse(Point2Int p, int d) {
+        final int r = (int) Math.sqrt(d); // root
+        final int m = d - r * r;          // distance minus r squared
+        if(m < r){
+            p.set(m, r);
+        } else {
+            p.set(r, m - r);
+        }
+        return p;
+    }
     public interface TripleFunction {
         int triple(int x, int y, int z);
     }
