@@ -8,8 +8,9 @@ public class SpaceFillingCurveTest {
     /**
      * Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
-     * @param x non-negative horizontal input
-     * @param y non-negative vertical input
+     *
+     * @param x non-negative horizontal input, between 0 and 46339, inclusive
+     * @param y non-negative vertical input, between 0 and 46339, inclusive
      * @return distance on the Rosenberg-Strong curve, from the origin
      */
     public static int rs(final int x, final int y){
@@ -21,13 +22,14 @@ public class SpaceFillingCurveTest {
     /**
      * Inverse of the Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
+     *
      * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
-     * @param d the distance on the Rosenberg-Strong curve, from the origin (usually an integer)
+     * @param d the distance on the Rosenberg-Strong curve, from the origin, between 0 and 2147395599, inclusive
      * @return {@code p}, after modifications
      */
-    public static Point2Int rsInverse(Point2Int p, double d) {
+    public static Point2Int rsInverse(Point2Int p, int d) {
         final int g = (int) Math.sqrt(d);
-        final int r = (int) (d - g * g);
+        final int r = d - g * g;
         int x, y;
         if (r <= g) {
             x = g;
@@ -44,12 +46,32 @@ public class SpaceFillingCurveTest {
         Point2Int store = new Point2Int();
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
-                double dist = rs(i, j);
+                int dist = rs(i, j);
                 rsInverse(store, dist);
                 Assert.assertEquals(i, store.x);
                 Assert.assertEquals(j, store.y);
             }
         }
+        int limit;
+
+        limit = rs(46339, 46339);
+        rsInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
+
+        limit = rs(0, 46339);
+        rsInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
+
+        limit = rs(46339, 0);
+        rsInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.y);
+
     }
 
     public static int rs(final int x, final int y, final int z){
@@ -311,22 +333,27 @@ public class SpaceFillingCurveTest {
         }
         int limit = pers(1289, 1289, 1289);
         persInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
         Assert.assertEquals("Failure at distance " + limit, 1289, store.x);
         Assert.assertEquals("Failure at distance " + limit, 1289, store.y);
         Assert.assertEquals("Failure at distance " + limit, 1289, store.z);
 
         limit = pers(0, 0, 1289);
         persInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
         Assert.assertEquals("Failure at distance " + limit, 0, store.x);
         Assert.assertEquals("Failure at distance " + limit, 0, store.y);
         Assert.assertEquals("Failure at distance " + limit, 1289, store.z);
 
         limit = pers(1289, 0, 0);
         persInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
         Assert.assertEquals("Failure at distance " + limit, 1289, store.x);
         Assert.assertEquals("Failure at distance " + limit, 0, store.y);
         Assert.assertEquals("Failure at distance " + limit, 0, store.z);
 
+//        persInverse(store, Integer.MAX_VALUE);
+//        System.out.println(store + " has distance " + limit);
     }
 
     public interface TripleFunction {
