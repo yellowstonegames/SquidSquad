@@ -408,6 +408,40 @@ public class SpaceFillingCurveTest {
         }
         return p;
     }
+
+    @Test
+    public void testSe() {
+        Point2Int store = new Point2Int();
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                int dist = se(i, j);
+                seInverse(store, dist);
+                Assert.assertEquals(i, store.x);
+                Assert.assertEquals(j, store.y);
+            }
+        }
+        int limit;
+
+        limit = se(46339, 46339);
+        seInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
+
+        limit = se(0, 46339);
+        seInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
+
+        limit = se(46339, 0);
+        seInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.y);
+
+    }
+
     public interface TripleFunction {
         int triple(int x, int y, int z);
     }
