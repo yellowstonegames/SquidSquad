@@ -139,9 +139,28 @@ public class SpaceFillingCurveTest {
 
     /**
      * Pigeon-Ettinger-Rosenberg-Strong Triple function.
-     * @param x 3D coordinate, must be non-negative
-     * @param y 3D coordinate, must be non-negative
-     * @param z 3D coordinate, must be non-negative
+     * This gets a single integer that encodes three non-negative ints (between 0 and 1289, inclusive) into one distance
+     * along a space-filling curve starting at (0,0,0). The curve is organized into cube-shaped "shells" or "gnomons,"
+     * each shell being completely returned before an outer shell can be returned. That is, the distance to a point
+     * inside a cube will always be less than the distance to a point that is outside that cube (if both have inputs
+     * that are in range). Two different shells will connect at one of two edges, either y=0,z=0 for an even shell
+     * connecting to a larger odd shell, or z=0,y=0 for an odd shell connecting to a larger even shell.
+     * <br>
+     * Notably, the distance will always be less than {@code Math.pow(Math.max(x, Math.max(y, z)) + 1, 3)} for inputs
+     * that are in range.
+     * <br>
+     * This is based on a boustrophedonic Rosenberg-Strong pairing function (see
+     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">Steven Pigeon's blog</a> for more), but extended
+     * to three dimensions. The blog post suggests using the pair of x with the pair of y and z as a triple function,
+     * but that doesn't act like the 2D pairing function regarding shells.
+     * <br>
+     * "We could, of course, devise some complicated function for 3..." -- Steven Pigeon
+     * <br>
+     * "Yes! It works!" -- Tommy Ettinger
+     *
+     * @param x 3D coordinate, between 0 and 1289, inclusive
+     * @param y 3D coordinate, between 0 and 1289, inclusive
+     * @param z 3D coordinate, between 0 and 1289, inclusive
      * @return the distance along a space-filling curve from the origin to the given point.
      */
     public static int pers(final int x, final int y, final int z) {
@@ -149,17 +168,18 @@ public class SpaceFillingCurveTest {
         final int g = Math.max(m, z); // gnomon, or shell
         final int u = g + 1;          // up one gnomon
         final int s = -(m + z & 1);   // sign, used to flip direction
+        final int w = x - y + s ^ s;  // wind, used in all branches
         if ((g & 1) == 0) {
-            // start at the top, wind over the top face, then snake down as z falls. Ends on x,y,z == g,0,0 .
+            // start at the top, wind over the top face, then snake down as z falls. Ends on x,y,z == g,0,0
             if (g == z)
-                return (g * g * g) + m * m + m + (x - y + s ^ s);
-            return (g * g * u) + (m + (x - y + s ^ s)) + (g + g + 1) * (g - z);
+                return (g * g * g) + m * m + m + w;
+            return (g * g * u) + m + w + (g + g + 1) * (g - z);
         }
-        // start at the bottom, snake up as z rises, then wind over the top face until we reach x,y,z == 0,0,g .
+        // start at the bottom, snake up as z rises, then wind over the top face until we reach x,y,z == 0,0,g
         if (g == z) {
-            return (u * u * u - 1) - (m * m + m + (y - x + s ^ s));
+            return (u * u * u - 1) - m * m - m + w;
         }
-        return (g * g * g) + (m + (x - y + s ^ s)) + (g + g + 1) * z;
+        return (g * g * g) + m + w + (g + g + 1) * z;
     }
 
     public static Point3Int persInverse(Point3Int p, double d){
