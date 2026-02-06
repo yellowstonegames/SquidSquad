@@ -6,7 +6,7 @@ import org.junit.Test;
 public class SpaceFillingCurveTest {
 
     /**
-     * Rosenberg-Strong pairing function.
+     * 2D Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
      *
      * @param x non-negative horizontal input, between 0 and 46339, inclusive
@@ -20,7 +20,7 @@ public class SpaceFillingCurveTest {
 
 
     /**
-     * Inverse of the Rosenberg-Strong pairing function.
+     * Inverse of the 2D Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
      *
      * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
@@ -79,10 +79,11 @@ public class SpaceFillingCurveTest {
     }
 
     /**
-     * Boustrophedonic Rosenberg-Strong pairing function.
+     * 2D Boustrophedonic Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
-     * @param x non-negative horizontal input
-     * @param y non-negative vertical input
+     *
+     * @param x non-negative horizontal input, between 0 and 46339, inclusive
+     * @param y non-negative vertical input, between 0 and 46339, inclusive
      * @return distance on the Boustrophedonic Rosenberg-Strong curve, from the origin
      */
     public static int brs(final int x, final int y){
@@ -92,15 +93,16 @@ public class SpaceFillingCurveTest {
     }
 
     /**
-     * Inverse of the Boustrophedonic Rosenberg-Strong pairing function.
+     * Inverse of the 2D Boustrophedonic Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
+     *
      * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
-     * @param d the distance on the Boustrophedonic Rosenberg-Strong curve, from the origin (usually an integer)
+     * @param d the distance on the Boustrophedonic Rosenberg-Strong curve, from the origin, between 0 and 2147395599, inclusive
      * @return {@code p}, after modifications
      */
-    public static Point2Int brsInverse(Point2Int p, double d){
+    public static Point2Int brsInverse(Point2Int p, int d){
         final int g = (int)Math.sqrt(d);
-        final int r = (int)(d - g * g);
+        final int r = d - g * g;
         int i, j;
         if(r <= g){
             i = g;
@@ -120,12 +122,31 @@ public class SpaceFillingCurveTest {
         Point2Int store = new Point2Int();
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
-                double dist = brs(i, j);
+                int dist = brs(i, j);
                 brsInverse(store, dist);
                 Assert.assertEquals(i, store.x);
                 Assert.assertEquals(j, store.y);
             }
         }
+        int limit;
+
+        limit = brs(46339, 46339);
+        brsInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
+
+        limit = brs(0, 46339);
+        brsInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
+
+        limit = brs(46339, 0);
+        brsInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.y);
     }
 
     /**
@@ -160,7 +181,7 @@ public class SpaceFillingCurveTest {
     }
 
     /**
-     * Pigeon-Ettinger-Rosenberg-Strong Triple function.
+     * 3D Pigeon-Ettinger-Rosenberg-Strong Triple function.
      * This gets a single integer that encodes three non-negative ints (between 0 and 1289, inclusive) into one distance
      * along a space-filling curve starting at (0,0,0). The curve is organized into cube-shaped "shells" or "gnomons,"
      * each shell being completely returned before an outer shell can be returned. That is, the distance to a point
@@ -205,7 +226,7 @@ public class SpaceFillingCurveTest {
     }
 
     /**
-     * Pigeon-Ettinger-Rosenberg-Strong Triple Inverse function.
+     * Inverse of the 3D Pigeon-Ettinger-Rosenberg-Strong Triple function.
      * This takes a single double {@code d} for distance and a {@link Point3Int} {@code p} that will be modified
      * in-place, and sets p to hold the coordinates of the point at distance {@code Math.floor(d)} along the
      * Pigeon-Ettinger-Rosenberg-Strong space-filling curve, starting at the origin (0,0,0).
