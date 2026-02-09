@@ -6,6 +6,34 @@ import org.junit.Test;
 public class SpaceFillingCurveTest {
 
     /**
+     * 2D <a href="https://en.wikipedia.org/wiki/Pairing_function">Cantor pairing function</a>.
+     * This is a way of getting a unique int result for small enough x and y values, where "small enough" can safely be
+     * considered "between 0 and 32766." This can overflow if the sum of x and y is greater than 65533, so it can't
+     * reasonably deal with all int inputs.
+     *
+     * @param x non-negative horizontal input, between 0 and 32766, inclusive
+     * @param y non-negative vertical input, between 0 and 32766, inclusive
+     * @return pair of x and y as one int via the Cantor pairing function
+     */
+    public static int cantor(int x, int y) {
+        return y + ((x + y) * (x + y + 1) >>> 1);
+    }
+
+    /**
+     * Inverse of the 2D <a href="https://en.wikipedia.org/wiki/Pairing_function">Cantor pairing function</a>.
+     *
+     * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
+     * @param d pair of x and y via the Cantor function, from the origin, between 0 and 2147385344, inclusive
+     * @return {@code p}, after modifications
+     */
+    public static Point2Int cantorInverse(Point2Int p, int d) {
+        final int w = (int) (Math.sqrt(8.0 * d + 1) - 1) >>> 1;
+        final int t = (w | 1) * (w + 1 >>> 1); /* triangular number with lower likelihood of overflowing */
+        final int y = d - t;
+        return p.set(w - y, y);
+    }
+
+    /**
      * 2D Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
      *
