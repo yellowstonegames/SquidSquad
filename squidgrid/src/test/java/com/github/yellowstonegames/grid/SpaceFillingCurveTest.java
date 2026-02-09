@@ -33,6 +33,55 @@ public class SpaceFillingCurveTest {
         return p.set(w - y, y);
     }
 
+    @Test
+    public void testCantor() {
+        Point2Int store = new Point2Int();
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                int dist = cantor(i, j);
+                cantorInverse(store, dist);
+                Assert.assertEquals(i, store.x);
+                Assert.assertEquals(j, store.y);
+            }
+        }
+        int limit;
+
+        limit = cantor(32766, 32766);
+        cantorInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 32766, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 32766, store.y);
+
+        limit = cantor(0, 46340);
+        cantorInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 46340, store.y);
+
+        limit = cantor(46340, 0);
+        cantorInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 46340, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.y);
+
+        int highest = 65533;
+        limit = cantor(0, highest);
+        cantorInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.x);
+        Assert.assertEquals("Failure at distance " + limit, highest, store.y);
+
+        limit = cantor(highest, 0);
+        cantorInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+        Assert.assertEquals("Failure at distance " + limit, highest, store.x);
+        Assert.assertEquals("Failure at distance " + limit, 0, store.y);
+
+        limit = 2147395599;
+        cantorInverse(store, limit);
+//        System.out.println(store + " has distance " + limit);
+    }
+
     /**
      * 2D Rosenberg-Strong pairing function.
      * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
