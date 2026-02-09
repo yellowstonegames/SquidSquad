@@ -3,36 +3,9 @@ package com.github.yellowstonegames.grid;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static com.github.yellowstonegames.grid.NumberPairing.*;
+
 public class SpaceFillingCurveTest {
-
-    /**
-     * 2D <a href="https://en.wikipedia.org/wiki/Pairing_function">Cantor pairing function</a>.
-     * This is a way of getting a unique int result for small enough x and y values, where "small enough" can safely be
-     * considered "between 0 and 32766." This can overflow if the sum of x and y is greater than 65533, so it can't
-     * reasonably deal with all int inputs.
-     *
-     * @param x non-negative horizontal input, between 0 and 32766, inclusive
-     * @param y non-negative vertical input, between 0 and 32766, inclusive
-     * @return pair of x and y as one int via the Cantor pairing function
-     */
-    public static int cantor(int x, int y) {
-        return y + ((x + y) * (x + y + 1) >>> 1);
-    }
-
-    /**
-     * Inverse of the 2D <a href="https://en.wikipedia.org/wiki/Pairing_function">Cantor pairing function</a>.
-     *
-     * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
-     * @param d pair of x and y via the Cantor function, from the origin, between 0 and 2147385344, inclusive
-     * @return {@code p}, after modifications
-     */
-    public static Point2Int cantorInverse(Point2Int p, int d) {
-        final int w = (int) (Math.sqrt(8.0 * d + 1) - 1) >>> 1;
-        final int t = (w | 1) * (w + 1 >>> 1); /* triangular number with lower likelihood of overflowing */
-        final int y = d - t;
-        return p.set(w - y, y);
-    }
-
     @Test
     public void testCantor() {
         Point2Int store = new Point2Int();
@@ -82,76 +55,47 @@ public class SpaceFillingCurveTest {
 //        System.out.println(store + " has distance " + limit);
     }
 
-    /**
-     * 2D Rosenberg-Strong pairing function.
-     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
-     *
-     * @param x non-negative horizontal input, between 0 and 46339, inclusive
-     * @param y non-negative vertical input, between 0 and 46339, inclusive
-     * @return pair of x and y as one int via the Rosenberg-Strong function
-     */
-    public static int rs(final int x, final int y){
-        final int m = Math.max(x, y);
-        return m * m + m + y - x;
-    }
-
-
-    /**
-     * Inverse of the 2D Rosenberg-Strong pairing function.
-     * <a href="https://hbfs.wordpress.com/2018/08/07/moeud-deux/">See Steven Pigeon's blog</a>.
-     *
-     * @param p a point that will have its contents overwritten with the decoded x and y of the given distance
-     * @param d pair of x and y via the Rosenberg-Strong function, from the origin, between 0 and 2147395599, inclusive
-     * @return {@code p}, after modifications
-     */
-    public static Point2Int rsInverse(Point2Int p, int d) {
-        final int g = (int) Math.sqrt(d);
-        final int r = d - g * g;
-        int x, y;
-        if (r <= g) {
-            x = g;
-            y = r;
-        } else {
-            x = g + g - r;
-            y = g;
-        }
-        return p.set(x, y);
-    }
-
     @Test
     public void testRs() {
         Point2Int store = new Point2Int();
         for (int i = 0; i < 100; i++) {
             for (int j = 0; j < 100; j++) {
-                int dist = rs(i, j);
-                rsInverse(store, dist);
+                int dist = rosenbergStrong(i, j);
+                rosenbergStrongInverse(store, dist);
                 Assert.assertEquals(i, store.x);
                 Assert.assertEquals(j, store.y);
             }
         }
         int limit;
 
-        limit = rs(46339, 46339);
-        rsInverse(store, limit);
+        limit = rosenbergStrong(46339, 46339);
+        rosenbergStrongInverse(store, limit);
 //        System.out.println(store + " has distance " + limit);
         Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
         Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
 
-        limit = rs(0, 46339);
-        rsInverse(store, limit);
+        limit = rosenbergStrong(0, 46339);
+        rosenbergStrongInverse(store, limit);
 //        System.out.println(store + " has distance " + limit);
         Assert.assertEquals("Failure at distance " + limit, 0, store.x);
         Assert.assertEquals("Failure at distance " + limit, 46339, store.y);
 
-        limit = rs(46339, 0);
-        rsInverse(store, limit);
+        limit = rosenbergStrong(46339, 0);
+        rosenbergStrongInverse(store, limit);
 //        System.out.println(store + " has distance " + limit);
         Assert.assertEquals("Failure at distance " + limit, 46339, store.x);
         Assert.assertEquals("Failure at distance " + limit, 0, store.y);
     }
 
+    /**
+     * Attempt at a 3D Rosenberg-Strong triple function; doesn't work as hoped.
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
     public static int rs(final int x, final int y, final int z){
-        return rs(z, rs(x, y));
+        return rosenbergStrong(z, rosenbergStrong(x, y));
     }
 
     /**
