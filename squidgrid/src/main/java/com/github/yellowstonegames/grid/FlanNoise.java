@@ -95,7 +95,10 @@ public class FlanNoise implements INoise {
         vc = dim * detail;
         points = new float[vc];
         input = new float[dim];
-        vertices = new float[vc][dim];
+        vertices = new float[vc][];
+        for (int i = 0; i < vc; i++) {
+            vertices[i] = new float[dim];
+        }
         this.seed = seed;
         AceRandom random = new AceRandom(seed^vc);
         for (int v = 0; v < vc; v++) {
@@ -124,7 +127,10 @@ public class FlanNoise implements INoise {
             vc = dim * detail;
             points = new float[vc];
             input = new float[dim];
-            vertices = new float[vc][dim];
+            vertices = new float[vc][];
+            for (int i = 0; i < vc; i++) {
+                vertices[i] = new float[dim];
+            }
             this.seed = seed;
             AceRandom random = new AceRandom(seed^vc);
             for (int v = 0; v < vc; v++) {

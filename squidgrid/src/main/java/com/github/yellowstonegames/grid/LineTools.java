@@ -338,7 +338,10 @@ public final class LineTools {
      */
     public static char[][] decode4x4(long encoded, char[] symbols)
     {
-        char[][] v = new char[4][4];
+        char[][] v = new char[4][];
+        for (int i = 0; i < 4; i++) {
+            v[i] = new char[4];
+        }
         for (int i = 0; i < 16; i++) {
             v[i & 3][i >> 2] = symbols[(int) (encoded >>> (i << 2) & 15L)];
         }
@@ -719,7 +722,13 @@ public final class LineTools {
      * @return into, with box-drawing characters replacing '#' walls
      */
     public static char[][] hashesToLinesInto(char[][] source, char[][] target, boolean keepSingleHashes) {
-        if(target == null) target = new char[source.length][source[0].length];
+        if(source == null) return null;
+        if(target == null) {
+            target = new char[source.length][];
+            for (int i = 0; i < source.length; i++) {
+                target[i] = new char[source[i].length];
+            }
+        }
 
         int width = Math.min(source.length, target.length);
         int height = Math.min(source[0].length, target[0].length);

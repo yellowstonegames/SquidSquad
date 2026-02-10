@@ -91,7 +91,7 @@ float cyclicNoise(vec3 p){
     protected float start = 1f;
     protected float frequency = 2f;
     protected long seed;
-    protected transient float[][][] rotations = new float[6][4][];
+    protected transient float[][][] rotations = new float[6][][];
     protected transient float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6], new float[7]};
     protected transient float[][] outputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6], new float[7]};
     protected transient float[] gauss = new float[7], house = new float[49], large = new float[49], temp = new float[49];
@@ -109,6 +109,7 @@ float cyclicNoise(vec3 p){
     public CyclicNoise(long seed, int octaves, float frequency) {
         setOctaves(octaves);
         for (int i = 0, s = 2; i < 6; i++, s++) {
+            rotations[i] = new float[4][];
             for (int j = 0; j < 4; j++) {
                 rotations[i][j] = new float[s * s];
             }

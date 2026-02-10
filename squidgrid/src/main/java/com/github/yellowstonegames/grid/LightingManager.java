@@ -170,12 +170,19 @@ public class LightingManager {
 
     public SymmetryMode symmetry;
 
+    protected static float[][] generateDefaultFloatArray() {
+        float[][] f = new float[20][];
+        for (int i = 0; i < 20; i++) {
+            f[i] = new float[20];
+        }
+        return f;
+    }
     /**
      * Unlikely to be used except during serialization; makes a LightingManager for a 20x20 fully visible level.
      * The viewer vision range will be 4.0f, and lights will use a circular shape.
      */
     public LightingManager() {
-        this(new float[20][20], 0, Radius.CIRCLE, 4.0f);
+        this(generateDefaultFloatArray(), 0, Radius.CIRCLE, 4.0f);
     }
 
     /**

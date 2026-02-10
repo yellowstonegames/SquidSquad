@@ -50,7 +50,7 @@ public class LightingManagerRgb extends LightingManager {
      */
     public LightingManagerRgb()
     {
-        this(new float[20][20], 0, Radius.CIRCLE, 4.0f);
+        this(generateDefaultFloatArray(), 0, Radius.CIRCLE, 4.0f);
     }
 
     /**

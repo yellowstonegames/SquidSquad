@@ -1540,7 +1540,10 @@ public final class FOV {
         if(losGrid == null || losGrid.length == 0)
             return addFOVs(grids);
         final int width = losGrid.length, height = losGrid[0].length;
-        float[][] grid = new float[width][height];
+        float[][] grid = new float[width][];
+        for (int i = 0; i < width; i++) {
+            grid[i] = new float[height];
+        }
         if(grids == null || grids.length == 0)
             return grid;
         for(int i = 0; i < grids.length; i++)
@@ -1577,7 +1580,10 @@ public final class FOV {
         if(losGrid == null || losGrid.length <= 0 || losGrid[0].length <= 0)
             return addFOVsInto(basis, grids);
         final int width = losGrid.length, height = losGrid[0].length;
-        float[][] grid = new float[width][height];
+        float[][] grid = new float[width][];
+        for (int i = 0; i < width; i++) {
+            grid[i] = new float[height];
+        }
         if(grids == null || grids.length == 0)
             return grid;
         for(int i = 0; i < grids.length; i++)
@@ -1612,7 +1618,10 @@ public final class FOV {
         if(losGrid == null || losGrid.length == 0)
             return addFOVs(grids);
         final int width = losGrid.length, height = losGrid[0].length;
-        float[][] grid = new float[width][height];
+        float[][] grid = new float[width][];
+        for (int i = 0; i < width; i++) {
+            grid[i] = new float[height];
+        }
         if(grids == null)
             return grid;
         for (float[][] grid1 : grids) {
@@ -1706,7 +1715,10 @@ public final class FOV {
     public static float[][] generateResistances(char[][] map) {
         int width = map.length;
         int height = map[0].length;
-        float[][] portion = new float[width][height];
+        float[][] portion = new float[width][];
+        for (int i = 0; i < width; i++) {
+            portion[i] = new float[height];
+        }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (map[i][j]) {
@@ -1908,7 +1920,10 @@ public final class FOV {
     public static float[][] generateSimpleResistances(char[][] grid) {
         int width = grid.length;
         int height = grid[0].length;
-        float[][] portion = new float[width][height];
+        float[][] portion = new float[width][];
+        for (int i = 0; i < width; i++) {
+            portion[i] = new float[height];
+        }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (grid[i][j]) {
@@ -2090,7 +2105,10 @@ public final class FOV {
     public static float[][] generateSoundResistances(char[][] grid) {
         int width = grid.length;
         int height = grid[0].length;
-        float[][] portion = new float[width][height];
+        float[][] portion = new float[width][];
+        for (int i = 0; i < width; i++) {
+            portion[i] = new float[height];
+        }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (grid[i][j]) {
