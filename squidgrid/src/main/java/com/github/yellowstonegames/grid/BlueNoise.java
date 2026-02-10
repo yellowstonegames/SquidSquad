@@ -135,10 +135,11 @@ new StringBuilder("ù¬Ò<-þ¹ã\rÁ@ç\t©Ï:¹å¦9éÒ¬:ä\n)Õ�
      * Stores the same values as the first element in {@link #TILE_NOISE} if considered [x][y] indexed; available for
      * convenient usage by code that uses 2D byte arrays.
      */
-    public static final byte[][] RAW_2D = new byte[128][128];
+    public static final byte[][] RAW_2D = new byte[128][];
 
     static {
         for (int x = 0; x < 128; x++) {
+            RAW_2D[x] = new byte[128];
             System.arraycopy(TILE_NOISE[0], x << 7, RAW_2D[x], 0, 128);
         }
     }
