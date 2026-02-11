@@ -47,7 +47,7 @@ import java.util.Collection;
 public class LineAOE implements AOE {
     private Coord origin, end;
     private int radius;
-    private float[][] dungeon;
+    private float[][] map;
     private DijkstraMap dijkstra;
     private Radius rt;
     private BresenhamLine los;
@@ -118,10 +118,10 @@ public class LineAOE implements AOE {
     }
     private float[][] initDijkstra()
     {
-        los.isReachable(origin.x, origin.y, end.x, end.y, dungeon, los.lastLine);
+        los.isReachable(origin.x, origin.y, end.x, end.y, map, los.lastLine);
         ObjectDeque<Coord> lit = los.lastLine;
 
-        dijkstra.initializeByResistance(dungeon);
+        dijkstra.initializeByResistance(map);
         for(Coord p : lit)
         {
             dijkstra.setGoal(p);
@@ -171,7 +171,7 @@ public class LineAOE implements AOE {
     }
 
     public void setEnd(Coord end) {
-        if (dungeon != null && end.isWithin(dungeon.length, dungeon[0].length) &&
+        if (map != null && end.isWithin(map.length, map[0].length) &&
                 AreaUtils.verifyReach(reach, origin, end)) {
             this.end = end;
             dijkstra.resetMap();
@@ -237,20 +237,20 @@ public class LineAOE implements AOE {
         Coord[] exs = requiredExclusions.toArray(new Coord[0]);
         Coord t;
 
-        float[][][] compositeMap = new float[ts.length][dungeon.length][dungeon[0].length];
+        float[][][] compositeMap = new float[ts.length][map.length][map[0].length];
 
-        float[][] dungeonCopy = new float[dungeon.length][dungeon[0].length];
-        for (int i = 0; i < dungeon.length; i++) {
-            System.arraycopy(dungeon[i], 0, dungeonCopy[i], 0, dungeon[i].length);
+        float[][] mapCopy = new float[map.length][map[0].length];
+        for (int i = 0; i < map.length; i++) {
+            System.arraycopy(map[i], 0, mapCopy[i], 0, map[i].length);
         }
-        DijkstraMap dt = new DijkstraMap(dungeon, dijkstra.measurement, true);
+        DijkstraMap dt = new DijkstraMap(map, dijkstra.measurement, true);
         Coord tempPt;
         for (int i = 0; i < exs.length; ++i) {
             t = exs[i];
             dt.resetMap();
             dt.clearGoals();
 
-            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, map, los.lastLine);
             ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -260,22 +260,22 @@ public class LineAOE implements AOE {
             if(radius > 0)
                 dt.partialScan(radius, null);
 
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
                     if(dt.gradientMap[x][y] < DijkstraMap.FLOOR || !AreaUtils.verifyReach(reach, origin, tempPt))
-                        dungeonCopy[x][y] = Float.NaN;
+                        mapCopy[x][y] = Float.NaN;
                 }
             }
         }
 
         for (int i = 0; i < ts.length; ++i) {
-            DijkstraMap dm = new DijkstraMap(dungeon, dijkstra.measurement, true);
+            DijkstraMap dm = new DijkstraMap(map, dijkstra.measurement, true);
 
             t = ts[i];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, map, los.lastLine);
             ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -287,8 +287,8 @@ public class LineAOE implements AOE {
 
 
             float dist;
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
                     if (dt.gradientMap[x][y] < DijkstraMap.FLOOR){
                         dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius)
@@ -301,7 +301,7 @@ public class LineAOE implements AOE {
             }
             if(compositeMap[i][ts[i].x][ts[i].y] > DijkstraMap.FLOOR)
             {
-                for (int x = 0; x < dungeon.length; x++) {
+                for (int x = 0; x < map.length; x++) {
                     Arrays.fill(compositeMap[i][x], 99999f);
                 }
                 continue;
@@ -311,16 +311,16 @@ public class LineAOE implements AOE {
             dm.initialize(compositeMap[i]);
             dm.setGoal(t);
             dm.scan(null, null);
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
-                    compositeMap[i][x][y] = (dm.gradientMap[x][y] < DijkstraMap.FLOOR  && dungeonCopy[x][y] == dungeonCopy[x][y]) ? dm.gradientMap[x][y] : 99999f;
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
+                    compositeMap[i][x][y] = (dm.gradientMap[x][y] < DijkstraMap.FLOOR  && mapCopy[x][y] == mapCopy[x][y]) ? dm.gradientMap[x][y] : 99999f;
                 }
             }
             dm.resetMap();
             dm.clearGoals();
         }
         float bestQuality = 99999 * ts.length;
-        float[][] qualityMap = new float[dungeon.length][dungeon[0].length];
+        float[][] qualityMap = new float[map.length][map[0].length];
         for (int x = 0; x < qualityMap.length; x++) {
             for (int y = 0; y < qualityMap[x].length; y++) {
                 qualityMap[x][y] = 0.0f;
@@ -378,21 +378,21 @@ public class LineAOE implements AOE {
         Coord[] exs = requiredExclusions.toArray(new Coord[0]);
         Coord t;
 
-        float[][][] compositeMap = new float[totalTargets][dungeon.length][dungeon[0].length];
+        float[][][] compositeMap = new float[totalTargets][map.length][map[0].length];
 
-        float[][] dungeonCopy = new float[dungeon.length][dungeon[0].length],
-                dungeonPriorities = new float[dungeon.length][dungeon[0].length];
-        for (int i = 0; i < dungeon.length; i++) {
-            System.arraycopy(dungeon[i], 0, dungeonCopy[i], 0, dungeon[i].length);
+        float[][] dungeonCopy = new float[map.length][map[0].length],
+                dungeonPriorities = new float[map.length][map[0].length];
+        for (int i = 0; i < map.length; i++) {
+            System.arraycopy(map[i], 0, dungeonCopy[i], 0, map[i].length);
             Arrays.fill(dungeonPriorities[i], 1f);
         }
-        DijkstraMap dt = new DijkstraMap(dungeon, dijkstra.measurement, true);
+        DijkstraMap dt = new DijkstraMap(map, dijkstra.measurement, true);
         Coord tempPt;
         for (int i = 0; i < exs.length; ++i) {
             t = exs[i];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, map, los.lastLine);
             ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -402,8 +402,8 @@ public class LineAOE implements AOE {
             if(radius > 0)
                 dt.partialScan(radius, null);
 
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
                     tempPt = Coord.get(x, y);
                     if(dt.gradientMap[x][y] < DijkstraMap.FLOOR || !AreaUtils.verifyReach(reach, origin, tempPt))
                         dungeonCopy[x][y] = Float.NaN;
@@ -412,11 +412,11 @@ public class LineAOE implements AOE {
         }
 
         for (int i = 0; i < pts.length; ++i) {
-            DijkstraMap dm = new DijkstraMap(dungeon, dijkstra.measurement, true);
+            DijkstraMap dm = new DijkstraMap(map, dijkstra.measurement, true);
             t = pts[i];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, map, los.lastLine);
             ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -428,13 +428,13 @@ public class LineAOE implements AOE {
 
 
             float dist;
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
                     if (dt.gradientMap[x][y] < DijkstraMap.FLOOR){
                         dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius) {
                             compositeMap[i][x][y] = dm.physicalMap[x][y];
-                            dungeonPriorities[x][y] = dungeon[x][y];
+                            dungeonPriorities[x][y] = map[x][y];
                         }
                         else
                             compositeMap[i][x][y] = DijkstraMap.WALL;
@@ -444,7 +444,7 @@ public class LineAOE implements AOE {
             }
             if(compositeMap[i][pts[i].x][pts[i].y] > DijkstraMap.FLOOR)
             {
-                for (int x = 0; x < dungeon.length; x++) {
+                for (int x = 0; x < map.length; x++) {
                     Arrays.fill(compositeMap[i][x], 399999.0f);
                 }
                 continue;
@@ -454,8 +454,8 @@ public class LineAOE implements AOE {
             dm.initialize(compositeMap[i]);
             dm.setGoal(t);
             dm.scan(null, null);
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
                     compositeMap[i][x][y] = (dm.gradientMap[x][y] < DijkstraMap.FLOOR  && dungeonCopy[x][y] == dungeonCopy[x][y]) ? dm.gradientMap[x][y] : 399999.0f;
                 }
             }
@@ -464,11 +464,11 @@ public class LineAOE implements AOE {
         }
 
         for (int i = pts.length; i < totalTargets; ++i) {
-            DijkstraMap dm = new DijkstraMap(dungeon, dijkstra.measurement, true);
+            DijkstraMap dm = new DijkstraMap(map, dijkstra.measurement, true);
             t = lts[i - pts.length];
             dt.resetMap();
             dt.clearGoals();
-            los.isReachable(origin.x, origin.y, t.x, t.y, dungeon, los.lastLine);
+            los.isReachable(origin.x, origin.y, t.x, t.y, map, los.lastLine);
             ObjectDeque<Coord> lit = los.lastLine;
 
             for(Coord p : lit)
@@ -479,8 +479,8 @@ public class LineAOE implements AOE {
                 dt.partialScan(radius, null);
 
             float dist;
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
                     if (dt.gradientMap[x][y] < DijkstraMap.FLOOR){
                         dist = reach.metric.radius(origin.x, origin.y, x, y);
                         if(dist <= reach.maxDistance + radius && dist >= reach.minDistance - radius)
@@ -493,7 +493,7 @@ public class LineAOE implements AOE {
             }
             if(compositeMap[i][lts[i - pts.length].x][lts[i - pts.length].y] > DijkstraMap.FLOOR)
             {
-                for (int x = 0; x < dungeon.length; x++)
+                for (int x = 0; x < map.length; x++)
                 {
                     Arrays.fill(compositeMap[i][x], 99999f);
                 }
@@ -504,8 +504,8 @@ public class LineAOE implements AOE {
             dm.initialize(compositeMap[i]);
             dm.setGoal(t);
             dm.scan(null, null);
-            for (int x = 0; x < dungeon.length; x++) {
-                for (int y = 0; y < dungeon[x].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                for (int y = 0; y < map[x].length; y++) {
                     if(dm.gradientMap[x][y] < DijkstraMap.FLOOR  && dungeonCopy[x][y] == dungeonCopy[x][y] && dungeonPriorities[x][y] < 1f)
                         compositeMap[i][x][y] = dm.gradientMap[x][y];
                 }
@@ -514,7 +514,7 @@ public class LineAOE implements AOE {
             dm.clearGoals();
         }
         float bestQuality = 99999 * lts.length + 399999 * pts.length;
-        float[][] qualityMap = new float[dungeon.length][dungeon[0].length];
+        float[][] qualityMap = new float[map.length][map[0].length];
         for (int x = 0; x < qualityMap.length; x++) {
             for (int y = 0; y < qualityMap[x].length; y++) {
                 qualityMap[x][y] = 0f;
@@ -642,7 +642,7 @@ public class LineAOE implements AOE {
 */
     @Override
     public void setMap(float[][] map) {
-        dungeon = map;
+        this.map = map;
         dijkstra.resetMap();
         dijkstra.clearGoals();
     }
