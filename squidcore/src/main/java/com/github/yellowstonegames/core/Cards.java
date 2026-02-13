@@ -3,7 +3,10 @@ package com.github.yellowstonegames.core;
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.IntDeque;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.random.Xoshiro256MX3Random;
 import com.github.yellowstonegames.core.annotations.Beta;
+
+import java.util.Arrays;
 
 /**
  * A simple class to simulate a deck of cards that can be shuffled or drawn from (without replacement). If the deck is
@@ -16,6 +19,32 @@ import com.github.yellowstonegames.core.annotations.Beta;
  */
 @Beta
 public class Cards {
+
+    public enum DeckType {
+        TAROT_MAJOR_ARCANA(
+                "The Fool", "The Magician", "The High Priestess", "The Empress",
+                "The Emperor", "The Hierophant", "The Lovers", "The Chariot",
+                "Strength", "The Hermit", "Wheel of Fortune", "Justice",
+                "The Hanged Man", "Death", "Temperance", "The Devil",
+                "The Tower", "The Star", "The Moon", "The Sun",
+                "Judgement", "The World"
+        );
+
+        final String[] names;
+        DeckType(String... names){
+            this.names = names;
+        }
+
+        public int size() {
+            return names.length;
+        }
+
+        public String get(int index) {
+            if(index < 0 || index > names.length) return null;
+            return names[index];
+        }
+    }
+
     public IntDeque deck;
     public EnhancedRandom random;
     public String[] names;
@@ -24,6 +53,14 @@ public class Cards {
         deck = new IntDeque(ArrayTools.range(names.length));
         this.random = random;
         this.names = names;
+    }
+
+    public Cards(DeckType type, EnhancedRandom random) {
+        this(Arrays.copyOf(type.names, type.names.length), random);
+    }
+
+    public Cards(DeckType type) {
+        this(type, new Xoshiro256MX3Random());
     }
 
     /**
