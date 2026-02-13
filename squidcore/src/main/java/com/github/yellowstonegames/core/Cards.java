@@ -2,6 +2,7 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.ds.IntDeque;
+import com.github.tommyettinger.function.IntToIntFunction;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.Xoshiro256MX3Random;
 import com.github.yellowstonegames.core.annotations.Beta;
@@ -26,10 +27,10 @@ public class Cards {
     public enum DeckType {
         /**
          * The 22 major arcana cards in many tarot decks, typically used for fortune-telling and symbolism.
-         * These are sometimes numbered; the first card, The Fool, is numbered 0 or 22, and the rest usually have
-         * numbers equivalent to their indices here.
+         * These are sometimes numbered; the first card, The Fool, is numbered 0 here but is sometimes assigned 22
+         * instead, and the rest usually have numbers equivalent to their indices here.
          */
-        TAROT_MAJOR_ARCANA(
+        TAROT_MAJOR_ARCANA((index -> index),
                 "The Fool", "The Magician", "The High Priestess", "The Empress",
                 "The Emperor", "The Hierophant", "The Lovers", "The Chariot",
                 "Strength", "The Hermit", "Wheel of Fortune", "Justice",
@@ -48,7 +49,7 @@ public class Cards {
          * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
          * then adding 1; this produces 1 for Aces, 11 for Pages, 12 for Knights, 13 for Queens, and 14 for Kings.
          */
-        TAROT_MINOR_ARCANA(
+        TAROT_MINOR_ARCANA((index -> (index >> 2) + 1),
                 "Ace of Swords", "Ace of Cups", "Ace of Wands", "Ace of Pentacles",
                 "Two of Swords", "Two of Cups", "Two of Wands", "Two of Pentacles",
                 "Three of Swords", "Three of Cups", "Three of Wands", "Three of Pentacles",
@@ -73,7 +74,7 @@ public class Cards {
          * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
          * then adding 1; this produces 1 for Aces, 11 for Jacks, 12 for Queens, and 13 for Kings.
          */
-        FRENCH_52(
+        FRENCH_52((index -> (index >> 2) + 1),
                 "Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds",
                 "Two of Spades", "Two of Hearts", "Two of Clubs", "Two of Diamonds",
                 "Three of Spades", "Three of Hearts", "Three of Clubs", "Three of Diamonds",
@@ -95,7 +96,7 @@ public class Cards {
          * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
          * then adding 1; this produces 1 for Aces, 11 for Jacks, 12 for Queens, 13 for Kings, and 14 for the Joker.
          */
-        FRENCH_52_WITH_JOKER(
+        FRENCH_52_WITH_JOKER((index -> (index >> 2) + 1),
                 "Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds",
                 "Two of Spades", "Two of Hearts", "Two of Clubs", "Two of Diamonds",
                 "Three of Spades", "Three of Hearts", "Three of Clubs", "Three of Diamonds",
@@ -122,7 +123,7 @@ public class Cards {
          * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
          * then adding 1; this produces 1 for Aces, 11 for Jacks, 12 for Queens, 13 for Kings, and 14 for either Joker.
          */
-        FRENCH_52_WITH_2_JOKERS(
+        FRENCH_52_WITH_2_JOKERS((index -> (index >> 2) + 1),
                 "Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds",
                 "Two of Spades", "Two of Hearts", "Two of Clubs", "Two of Diamonds",
                 "Three of Spades", "Three of Hearts", "Three of Clubs", "Three of Diamonds",
@@ -159,7 +160,7 @@ public class Cards {
          * Mersenne Twister generators. PCG-Random generators can be constructed with large enough periods. A minimum of
          * 12 ints or 6 longs of state are needed for most generators to potentially have a large enough period.
          */
-        TAROT_78(
+        TAROT_78((index -> index),
                 "The Fool",
                 "Ace of Clubs", "Ace of Diamonds", "Ace of Hearts", "Ace of Spades",
                 "Two of Clubs", "Two of Diamonds", "Two of Hearts", "Two of Spades",
@@ -183,15 +184,19 @@ public class Cards {
                 "21 of Trumps"
         ),
 
-                ;
+        ;
 
+        private final IntToIntFunction evaluator;
         private final String[] names;
-        DeckType(String... names){
+
+        DeckType(IntToIntFunction evaluator, String... names) {
+            this.evaluator = evaluator;
             this.names = names;
         }
 
         /**
          * Returns the size of the deck of cards before any cards have been drawn.
+         *
          * @return the size of the deck of cards before any cards have been drawn
          */
         public int size() {
@@ -201,20 +206,36 @@ public class Cards {
         /**
          * Tries to get the card with the given index in this DeckType, if the index is valid. Returns null if
          * the index is negative or too large.
+         *
          * @param index should be non-negative and less than {@link #size()}
          * @return the card name with the given index
          */
         public String get(int index) {
-            if(index < 0 || index > names.length) return null;
+            if (index < 0 || index > names.length) return null;
             return names[index];
         }
 
         /**
          * Gets a copy of the array of String names this uses.
+         *
          * @return a copy of the array of String names this uses
          */
         public String[] getNames() {
             return Arrays.copyOf(names, names.length);
+        }
+
+        /**
+         * If this type of deck has the concept of numerical values for cards, this calculates the numerical value for
+         * a given index of card. This typically does not consider suit as part of value, since most games don't agree
+         * on the order of suits in precedence. It does consider suit in {@link #TAROT_78}, since French Tarot has a
+         * defined order for all cards after index 0 (The Fool). It doesn't have a concept of suit for
+         * {@link #TAROT_MAJOR_ARCANA}, but does for {@link #TAROT_MINOR_ARCANA}.
+         *
+         * @param index the index of a card in this type of deck
+         * @return the numerical value, if applicable, for the card with the given index
+         */
+        public int numericalValue(int index) {
+            return evaluator.applyAsInt(index);
         }
     }
 
@@ -234,7 +255,8 @@ public class Cards {
      * 256 for a typical playing card deck (with or without jokers). CCG-type decks with 60 or more cards likely can't
      * have all shuffles produced by a single generator currently, though the amount of possible shuffles for even the
      * 22 tarot major arcana cards is astronomically large already.
-     * @param names a String array of names for cards, which do not need to be unique; used directly (not copied)
+     *
+     * @param names  a String array of names for cards, which do not need to be unique; used directly (not copied)
      * @param random an EnhancedRandom generator that will be used directly (not copied)
      */
     public Cards(String[] names, EnhancedRandom random) {
@@ -264,6 +286,7 @@ public class Cards {
     /**
      * Creates a new Cards using the specified {@link DeckType} and an unseeded {@link Xoshiro256MX3Random} generator,
      * which is guaranteed to be able to produce all possible shuffles of an up-to-57-card deck.
+     *
      * @param type a predefined {@link DeckType} enum constant
      */
     public Cards(DeckType type) {
@@ -273,10 +296,11 @@ public class Cards {
     /**
      * If {@code full} is true, shuffles the entire deck back in to restart it from its original size in a new order.
      * Otherwise, this only shuffles the remaining cards in the deck into a new order.
+     *
      * @param full if true, the deck will start again at its original size; if false, only the remaining cards will be shuffled
      */
     public void shuffleDeck(boolean full) {
-        if(full){
+        if (full) {
             deck.clear();
             for (int i = 0, n = names.length; i < n; i++) {
                 deck.add(i);
@@ -289,10 +313,11 @@ public class Cards {
      * If the deck has any remaining cards, this removes the last card from the deck and returns its index.
      * Otherwise, this shuffles the entire deck back up to its original size, and then removes the last card and
      * returns its index.
+     *
      * @return an index of a card in the deck
      */
     public int drawInt() {
-        if(deck.isEmpty())
+        if (deck.isEmpty())
             shuffleDeck(true);
         return deck.pop();
     }
@@ -301,6 +326,7 @@ public class Cards {
      * If the deck has any remaining cards, this removes the last card from the deck and returns its name.
      * Otherwise, this shuffles the entire deck back up to its original size, and then removes the last card and
      * returns its name.
+     *
      * @return a String name of a card in the deck
      */
     public String drawName() {
@@ -312,12 +338,13 @@ public class Cards {
      * @return the name associated with {@code index}, or null if the index is invalid.
      */
     public String nameForInt(int index) {
-        if(index < 0 || index >= names.length) return null;
+        if (index < 0 || index >= names.length) return null;
         return names[index];
     }
 
     /**
      * Gets how many cards are left in the deck, before drawing a card would need to shuffle.
+     *
      * @return how many cards are left in the deck
      */
     public int remainingCards() {
