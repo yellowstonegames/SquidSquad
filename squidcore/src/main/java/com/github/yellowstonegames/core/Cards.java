@@ -1,6 +1,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.IntDeque;
 import com.github.tommyettinger.function.IntToIntFunction;
 import com.github.tommyettinger.random.EnhancedRandom;
@@ -349,5 +350,28 @@ public class Cards {
      */
     public int remainingCards() {
         return deck.size();
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Cards)) return false;
+
+        Cards cards = (Cards) o;
+        return deck.equals(cards.deck) && random.equals(cards.random) && Arrays.equals(names, cards.names);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = deck.hashCode();
+        result = 31 * result + random.hashCode();
+        result = 31 * result + Hasher.carbon.hashBulk(names);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Cards{" +
+                "names=" + Arrays.toString(names) +
+                '}';
     }
 }
