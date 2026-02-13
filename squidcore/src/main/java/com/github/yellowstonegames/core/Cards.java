@@ -138,7 +138,52 @@ public class Cards {
                 "King of Spades", "King of Hearts", "King of Clubs", "King of Diamonds",
                 "Black Joker", "Red Joker"
         ),
-        ;
+        /**
+         * The 78-card deck used to play French Tarot. Unlike tarot for fortune-telling, 22 cards correspond
+         * to major arcana ({@link #TAROT_MAJOR_ARCANA} but are explicitly numbered and not given special names, except
+         * for the card with index 0, "The Fool". The rest of the major arcana are simply a "Number of Trumps", and go
+         * at the end. The minor arcana cards go after The Fool, and use the same suits as {@link #FRENCH_52}; like
+         * {@link #TAROT_MINOR_ARCANA}, there are 14 values per suit, but the Page is called a Jack.
+         * <br>
+         * The cards are organized in the order of their value for the purposes of determining turn order
+         * in French Tarot, with The Fool the only one with a different meaning here (draw again). Cards with index 0
+         * (The Fool), 57 (1 of Trumps), and 77 (21 of Trumps) are special in French Tarot. Pip cards start at index 1
+         * and continue to index 40. Face cards start at index 41 and continue to index 56. Trump cards start at index
+         * 57 and continue to the end (index 77).
+         * <br>
+         * This deck is unusually large; there isn't an {@link EnhancedRandom} currently available that can guarantee it
+         * can produce all possible shuffles of the deck. There are
+         * {@code 11324281178206297831457521158732046228731749579488251990048962825668835325234200766245086213177344000000000000000000}
+         * possible shuffles of a French Tarot deck, which is incredibly large, but possible for a few generators
+         * to guarantee all possible shuffles. Xoshiro512, but not Xoshiro256, generators can, as can Xoroshiro1024 and
+         * Mersenne Twister generators. PCG-Random generators can be constructed with large enough periods. A minimum of
+         * 12 ints or 6 longs of state are needed for most generators to potentially have a large enough period.
+         */
+        TAROT_78(
+                "The Fool",
+                "Ace of Clubs", "Ace of Diamonds", "Ace of Hearts", "Ace of Spades",
+                "Two of Clubs", "Two of Diamonds", "Two of Hearts", "Two of Spades",
+                "Three of Clubs", "Three of Diamonds", "Three of Hearts", "Three of Spades",
+                "Four of Clubs", "Four of Diamonds", "Four of Hearts", "Four of Spades",
+                "Five of Clubs", "Five of Diamonds", "Five of Hearts", "Five of Spades",
+                "Six of Clubs", "Six of Diamonds", "Six of Hearts", "Six of Spades",
+                "Seven of Clubs", "Seven of Diamonds", "Seven of Hearts", "Seven of Spades",
+                "Eight of Clubs", "Eight of Diamonds", "Eight of Hearts", "Eight of Spades",
+                "Nine of Clubs", "Nine of Diamonds", "Nine of Hearts", "Nine of Spades",
+                "Ten of Clubs", "Ten of Diamonds", "Ten of Hearts", "Ten of Spades",
+                "Jack of Clubs", "Jack of Diamonds", "Jack of Hearts", "Jack of Spades",
+                "Knight of Clubs", "Knight of Diamonds", "Knight of Hearts", "Knight of Spades",
+                "Queen of Clubs", "Queen of Diamonds", "Queen of Hearts", "Queen of Spades",
+                "King of Clubs", "King of Diamonds", "King of Hearts", "King of Spades",
+                "1 of Trumps", "2 of Trumps", "3 of Trumps", "4 of Trumps",
+                "5 of Trumps", "6 of Trumps", "7 of Trumps", "8 of Trumps",
+                "9 of Trumps", "10 of Trumps", "11 of Trumps", "12 of Trumps",
+                "13 of Trumps", "14 of Trumps", "15 of Trumps", "16 of Trumps",
+                "17 of Trumps", "18 of Trumps", "19 of Trumps", "20 of Trumps",
+                "21 of Trumps"
+        ),
+
+                ;
 
         private final String[] names;
         DeckType(String... names){
