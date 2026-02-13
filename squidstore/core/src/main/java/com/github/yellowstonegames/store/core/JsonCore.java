@@ -19,6 +19,7 @@ package com.github.yellowstonegames.store.core;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.ds.IntDeque;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
@@ -48,6 +49,7 @@ public final class JsonCore {
 
         JsonSupport.registerAll(json);
 
+        registerCards(json);
         registerDiceRule(json);
         registerGapShuffler(json);
         registerIntShuffler(json);
@@ -205,6 +207,45 @@ public final class JsonCore {
                     data[i] = Base.SIMPLE64.longSplit(c.asString(), "&");
                 }
                 return data;
+            }
+        });
+    }
+
+    /**
+     * Registers Cards with the given Json object, so Cards can be written to and read from JSON.
+     * This registers serialization/deserialization for IntDeque as well, since Cards requires it.
+     * You should either register the EnhancedRandom you use with this (which is
+     * {@link com.github.tommyettinger.random.Xoshiro256MX3Random} if unspecified),
+     * use {@link JsonSupport#registerEnhancedRandom(Json)} (if you don't know what type the random number generator
+     * uses), or just call {@link #registerAll(Json)}.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCards(Json json) {
+        json.addClassTag("Crds", Cards.class);
+        JsonSupport.registerEnhancedRandom(json);
+        JsonSupport.registerIntDeque(json);
+        json.setSerializer(Cards.class, new Json.Serializer<Cards>() {
+            @Override
+            public void write(Json json, Cards object, Class knownType) {
+                json.writeObjectStart();
+                json.writeType(Cards.class);
+                json.writeArrayStart("names");
+                for (int i = 0; i < object.names.length; i++) {
+                    json.writeValue((Object) object.names[i], String.class);
+                }
+                json.writeArrayEnd();
+                json.writeValue("rng", object.random, null);
+                json.writeValue("deck", object.deck, IntDeque.class);
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Cards read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                Cards cs = new Cards(jsonData.get("names").asStringArray(), json.readValue("rng", EnhancedRandom.class, jsonData));
+                cs.deck = json.readValue("deck", IntDeque.class, jsonData);
+                return cs;
             }
         });
     }
