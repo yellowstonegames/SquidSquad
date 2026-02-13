@@ -36,7 +36,82 @@ public class Cards {
                 "The Hanged Man", "Death", "Temperance", "The Devil",
                 "The Tower", "The Star", "The Moon", "The Sun",
                 "Judgement", "The World"
-        );
+        ),
+        /**
+         * A "standard" type of deck with four suits and 13 possible values per suit.
+         * You can get the index of the suit by taking an int index and using {@code index % 4} or {@code (index & 3)}
+         * to get a suit from 0 to 3 (Spades, Hearts, Clubs, then Diamonds) for a card.
+         * You can get the color of a card's suit by taking an int index and using {@code index % 2} or
+         * {@code (index & 1)}; 0 is black, 1 is red.
+         * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
+         * then adding 1; this produces 1 for Aces, 11 for Jacks, 12 for Queens, and 13 for Kings.
+         */
+        FRENCH_52(
+                "Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds",
+                "Two of Spades", "Two of Hearts", "Two of Clubs", "Two of Diamonds",
+                "Three of Spades", "Three of Hearts", "Three of Clubs", "Three of Diamonds",
+                "Four of Spades", "Four of Hearts", "Four of Clubs", "Four of Diamonds",
+                "Five of Spades", "Five of Hearts", "Five of Clubs", "Five of Diamonds",
+                "Six of Spades", "Six of Hearts", "Six of Clubs", "Six of Diamonds",
+                "Seven of Spades", "Seven of Hearts", "Seven of Clubs", "Seven of Diamonds",
+                "Eight of Spades", "Eight of Hearts", "Eight of Clubs", "Eight of Diamonds",
+                "Nine of Spades", "Nine of Hearts", "Nine of Clubs", "Nine of Diamonds",
+                "Ten of Spades", "Ten of Hearts", "Ten of Clubs", "Ten of Diamonds",
+                "Jack of Spades", "Jack of Hearts", "Jack of Clubs", "Jack of Diamonds",
+                "Queen of Spades", "Queen of Hearts", "Queen of Clubs", "Queen of Diamonds",
+                "King of Spades", "King of Hearts", "King of Clubs", "King of Diamonds"
+        ),
+        /**
+         * A "standard" type of deck with four suits and 13 possible values per suit, plus one Joker card.
+         * You can get the index of the suit by taking an int index and using {@code index % 4} or {@code (index & 3)}
+         * to get a suit from 0 to 3 (Spades, Hearts, Clubs, then Diamonds) for a card, which is suit 0 for the Joker.
+         * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
+         * then adding 1; this produces 1 for Aces, 11 for Jacks, 12 for Queens, 13 for Kings, and 14 for the Joker.
+         */
+        FRENCH_52_WITH_JOKER(
+                "Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds",
+                "Two of Spades", "Two of Hearts", "Two of Clubs", "Two of Diamonds",
+                "Three of Spades", "Three of Hearts", "Three of Clubs", "Three of Diamonds",
+                "Four of Spades", "Four of Hearts", "Four of Clubs", "Four of Diamonds",
+                "Five of Spades", "Five of Hearts", "Five of Clubs", "Five of Diamonds",
+                "Six of Spades", "Six of Hearts", "Six of Clubs", "Six of Diamonds",
+                "Seven of Spades", "Seven of Hearts", "Seven of Clubs", "Seven of Diamonds",
+                "Eight of Spades", "Eight of Hearts", "Eight of Clubs", "Eight of Diamonds",
+                "Nine of Spades", "Nine of Hearts", "Nine of Clubs", "Nine of Diamonds",
+                "Ten of Spades", "Ten of Hearts", "Ten of Clubs", "Ten of Diamonds",
+                "Jack of Spades", "Jack of Hearts", "Jack of Clubs", "Jack of Diamonds",
+                "Queen of Spades", "Queen of Hearts", "Queen of Clubs", "Queen of Diamonds",
+                "King of Spades", "King of Hearts", "King of Clubs", "King of Diamonds",
+                "Joker"
+        ),
+        /**
+         * A "standard" type of deck with four suits and 13 possible values per suit, plus two Joker cards (one black
+         * and one red).
+         * You can get the index of the suit by taking an int index and using {@code index % 4} or {@code (index & 3)}
+         * to get a suit from 0 to 3 (Spades, Hearts, Clubs, then Diamonds) for a card, which is suit 0 for the Black
+         * Joker and suit 1 for the Red Joker.
+         * You can get the color of a card's suit by taking an int index and using {@code index % 2} or
+         * {@code (index & 1)}; 0 is black, 1 is red. This is also true for jokers, which don't exactly have a suit.
+         * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
+         * then adding 1; this produces 1 for Aces, 11 for Jacks, 12 for Queens, 13 for Kings, and 14 for either Joker.
+         */
+        FRENCH_52_WITH_2_JOKERS(
+                "Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds",
+                "Two of Spades", "Two of Hearts", "Two of Clubs", "Two of Diamonds",
+                "Three of Spades", "Three of Hearts", "Three of Clubs", "Three of Diamonds",
+                "Four of Spades", "Four of Hearts", "Four of Clubs", "Four of Diamonds",
+                "Five of Spades", "Five of Hearts", "Five of Clubs", "Five of Diamonds",
+                "Six of Spades", "Six of Hearts", "Six of Clubs", "Six of Diamonds",
+                "Seven of Spades", "Seven of Hearts", "Seven of Clubs", "Seven of Diamonds",
+                "Eight of Spades", "Eight of Hearts", "Eight of Clubs", "Eight of Diamonds",
+                "Nine of Spades", "Nine of Hearts", "Nine of Clubs", "Nine of Diamonds",
+                "Ten of Spades", "Ten of Hearts", "Ten of Clubs", "Ten of Diamonds",
+                "Jack of Spades", "Jack of Hearts", "Jack of Clubs", "Jack of Diamonds",
+                "Queen of Spades", "Queen of Hearts", "Queen of Clubs", "Queen of Diamonds",
+                "King of Spades", "King of Hearts", "King of Clubs", "King of Diamonds",
+                "Black Joker", "Red Joker"
+        ),
+        ;
 
         final String[] names;
         DeckType(String... names){
