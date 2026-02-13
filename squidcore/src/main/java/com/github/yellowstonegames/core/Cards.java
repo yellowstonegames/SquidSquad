@@ -49,20 +49,20 @@ public class Cards {
          * then adding 1; this produces 1 for Aces, 11 for Pages, 12 for Knights, 13 for Queens, and 14 for Kings.
          */
         TAROT_MINOR_ARCANA(
-                "Ace of Swords ", "Ace of Cups", "Ace of Wands", "Ace of Pentacles",
-                "Two of Swords ", "Two of Cups", "Two of Wands", "Two of Pentacles",
-                "Three of Swords ", "Three of Cups", "Three of Wands", "Three of Pentacles",
-                "Four of Swords ", "Four of Cups", "Four of Wands", "Four of Pentacles",
-                "Five of Swords ", "Five of Cups", "Five of Wands", "Five of Pentacles",
-                "Six of Swords ", "Six of Cups", "Six of Wands", "Six of Pentacles",
-                "Seven of Swords ", "Seven of Cups", "Seven of Wands", "Seven of Pentacles",
-                "Eight of Swords ", "Eight of Cups", "Eight of Wands", "Eight of Pentacles",
-                "Nine of Swords ", "Nine of Cups", "Nine of Wands", "Nine of Pentacles",
-                "Ten of Swords ", "Ten of Cups", "Ten of Wands", "Ten of Pentacles",
-                "Page of Swords ", "Page of Cups", "Page of Wands", "Page of Pentacles",
-                "Knight of Swords ", "Knight of Cups", "Knight of Wands", "Knight of Pentacles",
-                "Queen of Swords ", "Queen of Cups", "Queen of Wands", "Queen of Pentacles",
-                "King of Swords ", "King of Cups", "King of Wands", "King of Pentacles"
+                "Ace of Swords", "Ace of Cups", "Ace of Wands", "Ace of Pentacles",
+                "Two of Swords", "Two of Cups", "Two of Wands", "Two of Pentacles",
+                "Three of Swords", "Three of Cups", "Three of Wands", "Three of Pentacles",
+                "Four of Swords", "Four of Cups", "Four of Wands", "Four of Pentacles",
+                "Five of Swords", "Five of Cups", "Five of Wands", "Five of Pentacles",
+                "Six of Swords", "Six of Cups", "Six of Wands", "Six of Pentacles",
+                "Seven of Swords", "Seven of Cups", "Seven of Wands", "Seven of Pentacles",
+                "Eight of Swords", "Eight of Cups", "Eight of Wands", "Eight of Pentacles",
+                "Nine of Swords", "Nine of Cups", "Nine of Wands", "Nine of Pentacles",
+                "Ten of Swords", "Ten of Cups", "Ten of Wands", "Ten of Pentacles",
+                "Page of Swords", "Page of Cups", "Page of Wands", "Page of Pentacles",
+                "Knight of Swords", "Knight of Cups", "Knight of Wands", "Knight of Pentacles",
+                "Queen of Swords", "Queen of Cups", "Queen of Wands", "Queen of Pentacles",
+                "King of Swords", "King of Cups", "King of Wands", "King of Pentacles"
         ),
         /**
          * A "standard" type of deck with four suits and 13 possible values per suit.
