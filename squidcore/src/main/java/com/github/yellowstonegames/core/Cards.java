@@ -38,6 +38,33 @@ public class Cards {
                 "Judgement", "The World"
         ),
         /**
+         * The 56 minor arcana cards in the Rider-Waite tarot deck, used for both fortune-telling and card games.
+         * These are divided into four suits, which often have different names in different decks: Swords, Cups, Wands,
+         * and Pentacles. There are 14 values per suit, starting with the Ace, then Two through Ten, then Page, Knight,
+         * Queen, and King. The Page and Knight also sometimes have different names.
+         * <br>
+         * You can get the index of the suit by taking an int index and using {@code index % 4} or {@code (index & 3)}
+         * to get a suit from 0 to 3 (Swords, Cups, Wands, then Pentacles) for a card.
+         * You can get the numerical value for a card index by dividing the index by 4, or using {@code (index >> 2)},
+         * then adding 1; this produces 1 for Aces, 11 for Pages, 12 for Knights, 13 for Queens, and 14 for Kings.
+         */
+        TAROT_MINOR_ARCANA(
+                "Ace of Swords ", "Ace of Cups", "Ace of Wands", "Ace of Pentacles",
+                "Two of Swords ", "Two of Cups", "Two of Wands", "Two of Pentacles",
+                "Three of Swords ", "Three of Cups", "Three of Wands", "Three of Pentacles",
+                "Four of Swords ", "Four of Cups", "Four of Wands", "Four of Pentacles",
+                "Five of Swords ", "Five of Cups", "Five of Wands", "Five of Pentacles",
+                "Six of Swords ", "Six of Cups", "Six of Wands", "Six of Pentacles",
+                "Seven of Swords ", "Seven of Cups", "Seven of Wands", "Seven of Pentacles",
+                "Eight of Swords ", "Eight of Cups", "Eight of Wands", "Eight of Pentacles",
+                "Nine of Swords ", "Nine of Cups", "Nine of Wands", "Nine of Pentacles",
+                "Ten of Swords ", "Ten of Cups", "Ten of Wands", "Ten of Pentacles",
+                "Page of Swords ", "Page of Cups", "Page of Wands", "Page of Pentacles",
+                "Knight of Swords ", "Knight of Cups", "Knight of Wands", "Knight of Pentacles",
+                "Queen of Swords ", "Queen of Cups", "Queen of Wands", "Queen of Pentacles",
+                "King of Swords ", "King of Cups", "King of Wands", "King of Pentacles"
+        ),
+        /**
          * A "standard" type of deck with four suits and 13 possible values per suit.
          * You can get the index of the suit by taking an int index and using {@code index % 4} or {@code (index & 3)}
          * to get a suit from 0 to 3 (Spades, Hearts, Clubs, then Diamonds) for a card.
@@ -113,7 +140,7 @@ public class Cards {
         ),
         ;
 
-        final String[] names;
+        private final String[] names;
         DeckType(String... names){
             this.names = names;
         }
@@ -135,6 +162,14 @@ public class Cards {
         public String get(int index) {
             if(index < 0 || index > names.length) return null;
             return names[index];
+        }
+
+        /**
+         * Gets a copy of the array of String names this uses.
+         * @return a copy of the array of String names this uses
+         */
+        public String[] getNames() {
+            return Arrays.copyOf(names, names.length);
         }
     }
 
