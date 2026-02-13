@@ -144,6 +144,22 @@ public class JsonCoreTest {
     }
 
     @Test
+    public void testCards() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonCore.registerCards(json);
+        Cards cards = new Cards(Cards.DeckType.FRENCH_52_WITH_2_JOKERS, new Xoshiro160RoadroxoRandom(1234567890L));
+        cards.shuffleDeck(true);
+        String data = json.toJson(cards);
+        System.out.println(data);
+        Cards cards2 = json.fromJson(Cards.class, data);
+        Assert.assertEquals(cards, cards2);
+        Assert.assertEquals(cards.drawName(), cards2.drawName());
+        Assert.assertEquals(cards.drawName(), cards2.drawName());
+        Assert.assertEquals(cards.drawName(), cards2.drawName());
+        Assert.assertEquals(cards.drawName(), cards2.drawName());
+    }
+
+    @Test
     public void testDiceRule() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonCore.registerDiceRule(json);
