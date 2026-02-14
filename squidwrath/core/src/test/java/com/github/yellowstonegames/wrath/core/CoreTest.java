@@ -16,12 +16,15 @@
 
 package com.github.yellowstonegames.wrath.core;
 
+import com.github.tommyettinger.ds.IntDeque;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.random.Xoshiro256MX3Random;
+import com.github.tommyettinger.tantrum.jdkgdxds.IntDequeSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.IntListSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.NumberedSetSerializer;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectListSerializer;
@@ -34,6 +37,27 @@ import org.junit.Test;
 
 @SuppressWarnings("rawtypes")
 public class CoreTest {
+    @Test
+    public void testCards() {
+        LoggerFactory.disableLogging();
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(EnhancedRandom.class);
+        fory.register(Xoshiro256MX3Random.class);
+        fory.registerSerializer(IntDeque.class, new IntDequeSerializer(fory));
+        fory.register(Cards.class);
+
+        Cards data = new Cards(Cards.DeckType.FRENCH_52_WITH_2_JOKERS, new Xoshiro256MX3Random(1234567890L));
+        data.shuffleDeck(true);
+
+        byte[] bytes = fory.serializeJavaObject(data);
+        data.drawInt();
+        Cards data2 = fory.deserializeJavaObject(bytes, Cards.class);
+        data2.drawInt();
+        Assert.assertEquals(data.drawInt(), data2.drawInt());
+        Assert.assertEquals(data.drawName(), data2.drawName());
+        Assert.assertEquals(data, data2);
+    }
+
     @Test
     public void testDiceRule() {
         LoggerFactory.disableLogging();        
@@ -71,7 +95,7 @@ public class CoreTest {
 
     @Test
     public void testProbabilityTable() {        
-//        LoggerFactory.disableLogging();
+        LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(EnhancedRandom.class);
         fory.register(WhiskerRandom.class);
