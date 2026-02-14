@@ -37,10 +37,10 @@ import java.util.List;
  * a size that can be checked, but Iterables can be infinite (and in this case, this one is).
  * <br>
  * You can serialize this with <a href="https://fory.apache.org">Fory</a> without needing a serializer, as long as you
- * have the classes in {@link #classesToRegister} registered. You probably need to register the concrete subclass of
- * EnhancedRandom you use here; the default subclass of EnhancedRandom used here is {@link AceRandom}, unless you have
- * provided your own with a different type. If you use JSON, a serializer is available in squidstore.grid, and if you
- * use Kryo, one is available in squidfreeze.grid .
+ * have the classes in {@link #getSerializersNeeded()} registered. You probably need to register the concrete subclass
+ * of EnhancedRandom you use here; the default subclass of EnhancedRandom used here is {@link AceRandom}, unless you
+ * have provided your own with a different type. If you use JSON, a serializer is available in squidstore.grid, and if
+ * you use Kryo, one is available in squidfreeze.grid .
  *
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
