@@ -295,6 +295,16 @@ public class Cards {
     }
 
     /**
+     * Copy constructor; makes a copy of each field (no direct references).
+     * @param other another Cards instance to copy exactly, including the remaining deck and its order
+     */
+    public Cards(Cards other) {
+        names = Arrays.copyOf(other.names, other.names.length);
+        random = other.random.copy();
+        deck = new IntDeque(other.deck);
+    }
+
+    /**
      * If {@code full} is true, shuffles the entire deck back in to restart it from its original size in a new order.
      * Otherwise, this only shuffles the remaining cards in the deck into a new order.
      *
