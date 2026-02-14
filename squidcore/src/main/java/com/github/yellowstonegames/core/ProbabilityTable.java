@@ -26,6 +26,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +46,7 @@ import java.util.List;
  * <br>
  * You can serialize a ProbabilityTable in various ways. The class can be registered with
  * <a href="https://fory.apache.org">Fory serialization</a> using {@code fory.register()} as long as you have
- * already registered the classes listed in {@link #classesToRegister}. It can also be written
+ * already registered the classes listed in {@link #getSerializersNeeded()}. It can also be written
  * and read with a specialized serializer from SquidStore or SquidFreeze, for JSON or Kryo respectively. All
  * these options require having other types registered, which always includes {@code T}. Kryo and Fory
  * also require {@link ObjectList}, {@link NumberedSet}, and {@link IntList} to be registered, plus the
@@ -58,7 +59,7 @@ import java.util.List;
  *
  * @param <T> The type of object to be held in the table
  */
-public class ProbabilityTable<T> {
+public class ProbabilityTable<T> implements ISerializersNeeded {
     /**
      * The set of items that can be produced directly from {@link #random()} (without additional lookups).
      */
@@ -460,11 +461,10 @@ public class ProbabilityTable<T> {
         return result;
     }
 
-    /**
-     * An unmodifiable List of classes that must be registered with serialization frameworks for this class to be able
-     * to be registered. This may also need the concrete subclass of EnhancedRandom registered.
-     * <br>
-     * {@code EnhancedRandom.class, NumberedSet.class, ObjectList.class, IntList.class}
-     */
-    public static final List<Class<?>> classesToRegister = Arrays.asList(EnhancedRandom.class, NumberedSet.class, ObjectList.class, IntList.class);
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(EnhancedRandom.class, rng.getClass(), NumberedSet.class, ObjectList.class, IntList.class);
+    }
+
 }

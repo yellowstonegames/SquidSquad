@@ -21,6 +21,7 @@ import com.github.tommyettinger.random.AceRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 
 import java.util.Arrays;
@@ -43,7 +44,7 @@ import java.util.List;
  *
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
-public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
+public class GapShuffler<T> implements Iterator<T>, Iterable<T>, ISerializersNeeded {
     public EnhancedRandom random;
     protected ObjectList<T> elements;
     protected int index;
@@ -378,12 +379,9 @@ public class GapShuffler<T> implements Iterator<T>, Iterable<T> {
         return elements.equals(that.elements);
     }
 
-    /**
-     * An unmodifiable List of classes that must be registered with serialization frameworks for this class to be able
-     * to be registered. This may also need the concrete subclass of EnhancedRandom registered.
-     * <br>
-     * {@code EnhancedRandom.class, ObjectList.class}
-     */
-    public static final List<Class<?>> classesToRegister = Arrays.asList(EnhancedRandom.class, ObjectList.class);
-
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(EnhancedRandom.class, random.getClass(), ObjectList.class);
+    }
 }
