@@ -7,8 +7,10 @@ import com.github.tommyettinger.function.IntToIntFunction;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.Xoshiro256MX3Random;
 import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple class to simulate a deck of cards that can be shuffled or drawn from (without replacement). If the deck is
@@ -20,7 +22,7 @@ import java.util.Arrays;
  * {@link #nameForInt(int)}, or just retrieve the name directly with {@link #drawName()}.
  */
 @Beta
-public class Cards {
+public class Cards implements ISerializersNeeded {
 
     /**
      * Predefined common types of card decks, stored by the names of cards (permitting duplicates).
@@ -383,5 +385,11 @@ public class Cards {
         return "Cards{" +
                 "names=" + Arrays.toString(names) +
                 '}';
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(String[].class, IntDeque.class, EnhancedRandom.class, random.getClass());
     }
 }
