@@ -20,19 +20,48 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.github.tommyettinger.ds.IntDeque;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.kryo.jdkgdxds.IntDequeSerializer;
 import com.github.tommyettinger.kryo.jdkgdxds.IntListSerializer;
 import com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer;
 import com.github.tommyettinger.kryo.juniper.WhiskerRandomSerializer;
+import com.github.tommyettinger.kryo.juniper.Xoshiro256MX3RandomSerializer;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.WhiskerRandom;
+import com.github.tommyettinger.random.Xoshiro256MX3Random;
 import com.github.yellowstonegames.core.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class CoreTest {
+    @Test
+    public void testCards() {
+        Kryo kryo = new Kryo();
+        kryo.register(String[].class);
+        kryo.register(EnhancedRandom.class, new EnhancedRandomSerializer());
+        kryo.register(Xoshiro256MX3Random.class, new Xoshiro256MX3RandomSerializer());
+        kryo.register(IntDeque.class, new IntDequeSerializer());
+        kryo.register(Cards.class, new CardsSerializer());
+
+        Cards data = new Cards(Cards.DeckType.FRENCH_52_WITH_2_JOKERS, new Xoshiro256MX3Random(1234567890L));
+        data.shuffleDeck(true);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        data.drawInt();
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            Cards data2 = kryo.readObject(input, Cards.class);
+            data2.drawInt();
+            Assert.assertEquals(data.drawInt(), data2.drawInt());
+            Assert.assertEquals(data.drawName(), data2.drawName());
+            Assert.assertEquals(data, data2);
+        }
+    }
+
     @Test
     public void testDiceRule() {
         Kryo kryo = new Kryo();

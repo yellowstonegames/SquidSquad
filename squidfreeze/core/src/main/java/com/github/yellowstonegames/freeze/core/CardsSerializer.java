@@ -25,12 +25,12 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.Cards;
 
 /**
- * Needs {@link com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer} to be registered
+ * Needs {@code String[]} registered with {@code kryo.register(String[].class);},
+ * {@link com.github.tommyettinger.kryo.juniper.EnhancedRandomSerializer} to be registered
  * and {@link com.github.tommyettinger.kryo.jdkgdxds.IntDequeSerializer} to be registered,
  * plus whatever type of EnhancedRandom the Cards uses to be registered (by default,
  * {@link com.github.tommyettinger.kryo.juniper.Xoshiro256MX3RandomSerializer}).
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class CardsSerializer extends Serializer<Cards> {
     public CardsSerializer() {
         setImmutable(false);
@@ -51,7 +51,7 @@ public class CardsSerializer extends Serializer<Cards> {
         cs.deck = kryo.readObject(input, IntDeque.class);
         return cs;
     }
-    
+
     @Override
     public Cards copy(Kryo kryo, Cards original) {
         return new Cards(original);
