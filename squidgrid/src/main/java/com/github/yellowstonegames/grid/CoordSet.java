@@ -18,8 +18,12 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectSet;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A variant on jdkgdxds' {@link ObjectSet} class that only holds Coord items, and can do so more efficiently.
@@ -38,7 +42,7 @@ import java.util.Collection;
  * It also performs its best when the initial capacity is sufficient to hold every item this needs without resizing, but
  * it typically only has to resize once if it has to resize at all.
  */
-public class CoordSet extends ObjectSet<Coord> {
+public class CoordSet extends ObjectSet<Coord> implements ISerializersNeeded {
     public CoordSet() {
         this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f);
     }
@@ -225,5 +229,11 @@ public class CoordSet extends ObjectSet<Coord> {
     @SafeVarargs
     public static CoordSet with (Coord... varargs) {
         return new CoordSet(varargs);
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(Coord.class);
     }
 }

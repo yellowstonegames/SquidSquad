@@ -18,8 +18,12 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.LongComparator;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A variant on jdkgdxds' {@link ObjectLongOrderedMap} class that only uses Coord keys, and can do so more efficiently.
@@ -41,7 +45,7 @@ import java.util.Collection;
  * You can create a CoordLongOrderedMap with {@link #fromArray2D(long[][], long, long)} if you have a 2D long array and
  * want to get the positions within some range of values.
  */
-public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
+public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> implements ISerializersNeeded {
     public CoordLongOrderedMap(OrderType type) {
         this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f, type);
     }
@@ -364,5 +368,11 @@ public class CoordLongOrderedMap extends ObjectLongOrderedMap<Coord> {
             }
         }
         return map;
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(Coord.class);
     }
 }

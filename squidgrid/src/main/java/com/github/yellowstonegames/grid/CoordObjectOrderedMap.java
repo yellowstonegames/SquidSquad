@@ -21,8 +21,12 @@ import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 
 import com.github.tommyettinger.ds.OrderType;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +46,7 @@ import java.util.Map;
  * It also performs its best when the initial capacity is sufficient to hold every key this needs without resizing, but
  * it typically only has to resize once if it has to resize at all.
  */
-public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
+public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> implements ISerializersNeeded {
     public CoordObjectOrderedMap(OrderType type) {
         this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f, type);
     }
@@ -238,4 +242,9 @@ public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> {
         return map;
     }
 
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(Coord.class, defaultValue.getClass());
+    }
 }

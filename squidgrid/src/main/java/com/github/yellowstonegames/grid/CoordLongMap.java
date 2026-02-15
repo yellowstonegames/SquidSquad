@@ -19,8 +19,12 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.ds.ObjectLongMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A variant on jdkgdxds' {@link ObjectLongMap} class that only uses Coord keys, and can do so more efficiently.
@@ -42,7 +46,7 @@ import java.util.Collection;
  * You can create a CoordLongMap with {@link #fromArray2D(long[][], long, long)} if you have a 2D long array and
  * want to get the positions within some range of values.
  */
-public class CoordLongMap extends ObjectLongMap<Coord> {
+public class CoordLongMap extends ObjectLongMap<Coord> implements ISerializersNeeded {
     public CoordLongMap() {
         this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f);
     }
@@ -322,4 +326,9 @@ public class CoordLongMap extends ObjectLongMap<Coord> {
         return map;
     }
 
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(Coord.class);
+    }
 }

@@ -18,8 +18,12 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.FloatComparator;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A variant on jdkgdxds' {@link ObjectFloatOrderedMap} class that only uses Coord keys, and can do so more efficiently.
@@ -44,7 +48,7 @@ import java.util.Collection;
  * associated with their values in the {@code float[][]}, and call {@link #sortByValue(FloatComparator)} to change the
  * keys' iteration order. There is code for this in {@link #fromArray2D(float[][], float, float)}.
  */
-public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
+public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> implements ISerializersNeeded {
     public CoordFloatOrderedMap(OrderType type) {
         this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f, type);
     }
@@ -367,5 +371,11 @@ public class CoordFloatOrderedMap extends ObjectFloatOrderedMap<Coord> {
             }
         }
         return map;
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(Coord.class);
     }
 }

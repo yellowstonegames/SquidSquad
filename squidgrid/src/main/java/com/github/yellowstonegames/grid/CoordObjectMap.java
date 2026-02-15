@@ -18,9 +18,10 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A variant on jdkgdxds' {@link ObjectObjectMap} class that only uses Coord keys, and can do so more efficiently.
@@ -39,7 +40,7 @@ import java.util.Map;
  * It also performs its best when the initial capacity is sufficient to hold every key this needs without resizing, but
  * it typically only has to resize once if it has to resize at all.
  */
-public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
+public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> implements ISerializersNeeded {
     public CoordObjectMap() {
         this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f);
     }
@@ -209,4 +210,9 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> {
         return map;
     }
 
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(Coord.class, defaultValue.getClass());
+    }
 }

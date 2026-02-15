@@ -18,8 +18,12 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.support.sort.IntComparator;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A variant on jdkgdxds' {@link ObjectIntOrderedMap} class that only uses Coord keys, and can do so more efficiently.
@@ -41,7 +45,7 @@ import java.util.Collection;
  * You can create a CoordIntOrderedMap with {@link #fromArray2D(int[][], int, int)} if you have a 2D int array and
  * want to get the positions within some range of values.
  */
-public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
+public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> implements ISerializersNeeded {
     public CoordIntOrderedMap(OrderType type) {
         this(Coord.getCacheWidth() * Coord.getCacheHeight(), 0.9f, type);
     }
@@ -364,5 +368,11 @@ public class CoordIntOrderedMap extends ObjectIntOrderedMap<Coord> {
             }
         }
         return map;
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(Coord.class);
     }
 }
