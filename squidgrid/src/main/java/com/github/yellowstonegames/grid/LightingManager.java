@@ -23,10 +23,10 @@ import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A convenience class that makes dealing with multiple colored light sources easier.
@@ -54,7 +54,7 @@ import java.util.Objects;
  * relatively simple example using many colors of light. {@link VisionFramework} also can be used to handle much of the
  * boilerplate associated with vision and lighting.
  */
-public class LightingManager {
+public class LightingManager implements ISerializersNeeded {
 
     /**
      * A functional interface that is really only meant to be one of two functions:
@@ -1082,5 +1082,12 @@ public class LightingManager {
 
     public String toString() {
         return "LightingManager{size:" + width + "x" + height + "}";
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(int[].class, int[][].class, float[].class, float[][].class, Coord.class, Region.class,
+                ObjectDeque.class, Radiance.class, LightSource.class);
     }
 }

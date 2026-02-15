@@ -16,8 +16,14 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A convenience class that makes dealing with multiple colored light sources easier.
@@ -43,7 +49,7 @@ import com.github.yellowstonegames.core.DescriptiveColorRgb;
  * relatively simple example using many colors of light. {@link VisionFramework} also can be used to handle much of the
  * boilerplate associated with vision and lighting.
  */
-public class LightingManagerRgb extends LightingManager {
+public class LightingManagerRgb extends LightingManager implements ISerializersNeeded {
     /**
      * Unlikely to be used except during serialization; makes a LightingManager for a 20x20 fully visible level.
      * The viewer vision range will be 4.0f, and lights will use a circular shape.
@@ -321,5 +327,12 @@ public class LightingManagerRgb extends LightingManager {
 
     public String toString() {
         return "LightingManagerRgb{size:" + width + "x" + height + "}";
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(int[].class, int[][].class, float[].class, float[][].class, Coord.class, Region.class,
+                ObjectDeque.class, Radiance.class, LightSource.class);
     }
 }

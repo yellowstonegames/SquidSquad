@@ -2,12 +2,17 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A tiny data wrapper around a {@link #radiance} and a Coord {@link #position} for that Radiance, as well as,
  * optionally, an angle to project a cone of light in and a span for how wide of a cone to project.
  */
-public class LightSource {
+public class LightSource implements ISerializersNeeded {
     public Radiance radiance;
     public Coord position;
     /**
@@ -123,5 +128,11 @@ public class LightSource {
 
     public static LightSource recreateFromString(String data) {
         return new LightSource().stringDeserialize(data);
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(Coord.class, Radiance.class);
     }
 }

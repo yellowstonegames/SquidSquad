@@ -24,7 +24,7 @@ import com.github.yellowstonegames.grid.BasicHashNoise;
 import com.github.yellowstonegames.grid.IPointHash;
 
 /**
- * Serializer for {@link BasicHashNoise}; may need the used implementation of {@link IPointHash} registered.
+ * Serializer for {@link BasicHashNoise}; needs the used implementation of {@link IPointHash} registered.
  */
 public class BasicHashNoiseSerializer extends Serializer<BasicHashNoise> {
     public BasicHashNoiseSerializer() {

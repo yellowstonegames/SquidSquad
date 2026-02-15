@@ -16,6 +16,12 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Collections;
+import java.util.List;
+
 import static com.github.tommyettinger.digital.MathTools.fastFloor;
 
 /**
@@ -25,7 +31,7 @@ import static com.github.tommyettinger.digital.MathTools.fastFloor;
  * because this uses an arbitrary IPointHash (and that interface doesn't define any way to serialize itself), you can't
  * serialize or deserialize a BasicHashNoise to or from a String. Binary serialization (such as using Kryo) still works.
  */
-public class BasicHashNoise implements INoise {
+public class BasicHashNoise implements INoise, ISerializersNeeded {
     public static final BasicHashNoise instance = new BasicHashNoise();
     public int seed;
     public IPointHash pointHash;
@@ -396,5 +402,11 @@ public class BasicHashNoise implements INoise {
     @Override
     public int hashCode() {
         return seed;
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(pointHash.getClass());
     }
 }

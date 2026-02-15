@@ -19,10 +19,15 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Collections;
+import java.util.List;
 
 import static com.github.yellowstonegames.grid.Noise.*;
 
-public class NoiseWrapper implements INoise {
+public class NoiseWrapper implements INoise, ISerializersNeeded {
     public INoise wrapped;
     public float frequency;
     public int mode;
@@ -1401,4 +1406,11 @@ public class NoiseWrapper implements INoise {
     public void setSeed(long seed) {
         wrapped.setSeed(seed);
     }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(wrapped.getClass());
+    }
+
 }

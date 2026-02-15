@@ -19,6 +19,11 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.Interpolations.InterpolationFunction;
 import com.github.tommyettinger.digital.Interpolations.Interpolator;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Wraps another {@link INoise} and alters its output by running it through an {@link Interpolator}. The {@code [-1,1]}
@@ -36,7 +41,7 @@ import com.github.tommyettinger.digital.Interpolations.Interpolator;
  * defines many Interpolators for later usage. The NoiseAdjustment can use any INoise, such as a {@link Noise} or here
  * a {@link SimplexNoise}.
  */
-public class NoiseAdjustment implements INoise {
+public class NoiseAdjustment implements INoise, ISerializersNeeded {
     public INoise wrapped;
     public Interpolator adjustment;
 
@@ -218,5 +223,11 @@ public class NoiseAdjustment implements INoise {
         int result = wrapped.hashCode();
         result = 31 * result + adjustment.hashCode();
         return result;
+    }
+
+    @Override
+    @GwtIncompatible
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(wrapped.getClass());
     }
 }
