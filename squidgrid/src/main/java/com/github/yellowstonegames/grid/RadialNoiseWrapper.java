@@ -18,6 +18,11 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A NoiseWrapper that makes its output radially symmetric around a given center point.
@@ -25,7 +30,7 @@ import com.github.tommyettinger.digital.TrigTools;
  * There are 5 divisions by default, but this can be changed to any positive int with {@link #setDivisions(int)}. If the
  * number of divisions is even, you can make every other division a mirror image with {@link #setMirror(boolean)}.
  */
-public class RadialNoiseWrapper extends NoiseWrapper {
+public class RadialNoiseWrapper extends NoiseWrapper implements ISerializersNeeded {
     /**
      * The center of the noise regarding radial symmetry; the x-coordinate.
      */
@@ -219,4 +224,11 @@ public class RadialNoiseWrapper extends NoiseWrapper {
         theta *= flip;
         return super.getNoiseWithSeed(TrigTools.cosTurns(theta) * shrunk, TrigTools.sinTurns(theta) * shrunk, len - z, seed);
     }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(wrapped.getClass());
+    }
+
 }

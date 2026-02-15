@@ -1412,5 +1412,4 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
     public List<Class<?>> getSerializersNeeded() {
         return Collections.singletonList(wrapped.getClass());
     }
-
 }

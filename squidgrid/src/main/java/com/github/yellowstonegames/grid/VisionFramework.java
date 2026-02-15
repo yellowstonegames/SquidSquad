@@ -18,10 +18,13 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.core.DescriptiveColor;
-import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -67,8 +70,7 @@ import java.util.Objects;
  * <br>
  * This class uses the Oklab color space throughout. Use {@link VisionFrameworkRgb} if you prefer RGBA colors.
  */
-@Beta
-public class VisionFramework {
+public class VisionFramework implements ISerializersNeeded {
 
     /**
      * The x-size of all 2D arrays here (the first index).
@@ -629,5 +631,13 @@ public class VisionFramework {
                 ", light count=" + lighting.lights.size() +
                 ", viewers count=" + viewers.size() +
                 '}';
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(int[].class, int[][].class, float[].class, float[][].class, char[].class, char[][].class,
+                Coord.class, Region.class, ObjectDeque.class, Radiance.class, LightSource.class,
+                CoordFloatOrderedMap.class,  LightingManager.class);
     }
 }

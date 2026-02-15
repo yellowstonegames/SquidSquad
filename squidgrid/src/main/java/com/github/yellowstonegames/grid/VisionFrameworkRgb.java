@@ -17,8 +17,13 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
-import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A "one-stop shop" for handling field-of-view, line-of-sight, (colorful) light sources, and more.
@@ -65,8 +70,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * VisionFramework, as {@link LightingManagerRgb} extends LightingManager, which allows the {@link #lighting} field to
  * be a LightingManager that happens to always be a LightingManagerRgb in this class.
  */
-@Beta
-public class VisionFrameworkRgb extends VisionFramework {
+public class VisionFrameworkRgb extends VisionFramework implements ISerializersNeeded {
     /**
      * The empty constructor. You can call {@link #restart(char[][], CoordFloatOrderedMap, int)} when you have a 2D char
      * array to use as the map and one or more viewer positions. See the {@link VisionFrameworkRgb class docs} for more
@@ -256,5 +260,13 @@ public class VisionFrameworkRgb extends VisionFramework {
             }
         }
 
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(int[].class, int[][].class, float[].class, float[][].class, char[].class, char[][].class,
+                Coord.class, Region.class, ObjectDeque.class, Radiance.class, LightSource.class,
+                CoordFloatOrderedMap.class, LightingManagerRgb.class);
     }
 }
