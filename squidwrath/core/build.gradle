@@ -11,7 +11,7 @@ dependencies {
         exclude module: 'regexodus'
     }
 
-	api("com.github.tommyettinger:tantrum-digital:0.9.9.21"){
+	api("com.github.tommyettinger:tantrum-digital:0.10.0.21"){
         exclude module: 'digital'
     }
 	api("com.github.tommyettinger:tantrum-jdkgdxds:2.1.1.21"){
