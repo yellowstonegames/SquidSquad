@@ -1,1 +1,5 @@
+// Can be used to automatically download a JDK with the correct version.
+plugins {
+    id('org.gradle.toolchains.foojay-resolver-convention') version '1.0.0'
+}
 include 'squidcore', 'squidtext', 'squidgrid', 'squidplace', 'squidpath', 'squidworld', 'squidsmooth', 'squidglyph', 'squidold', 'squidpress', 'squidseek', 'squidstore:core', 'squidstore:grid', 'squidstore:old', 'squidstore:path', 'squidstore:text', 'squidstore:world', 'squidfreeze:core', 'squidfreeze:grid', 'squidfreeze:old', 'squidfreeze:path', 'squidfreeze:text', 'squidfreeze:world', 'squidwrath:core', 'squidwrath:grid', 'squidwrath:old', 'squidwrath:path', 'squidwrath:text', 'squidwrath:world'

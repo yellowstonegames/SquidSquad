@@ -15,12 +15,12 @@ dependencies {
     //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
 }
 
-
 import com.vanniktech.maven.publish.JavaLibrary
 import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SourcesJar
 
 mavenPublishing {
-    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+    configure(new JavaLibrary(new JavadocJar.Javadoc(), new SourcesJar.Sources()))
 }
 
 plainJavadocJar.archiveBaseName.set(project.name)

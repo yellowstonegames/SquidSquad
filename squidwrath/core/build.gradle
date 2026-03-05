@@ -14,7 +14,7 @@ dependencies {
 	api("com.github.tommyettinger:tantrum-digital:0.10.0.21"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:tantrum-jdkgdxds:2.1.1.21"){
+	api("com.github.tommyettinger:tantrum-jdkgdxds:2.1.2.21"){
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }
@@ -22,12 +22,12 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
 }
 
-
 import com.vanniktech.maven.publish.JavaLibrary
 import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SourcesJar
 
 mavenPublishing {
-    configure(new JavaLibrary(new JavadocJar.Javadoc(), true))
+    configure(new JavaLibrary(new JavadocJar.Javadoc(), new SourcesJar.Sources()))
 }
 
 plainJavadocJar.archiveBaseName.set(project.name)
