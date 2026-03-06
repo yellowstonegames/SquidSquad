@@ -19,6 +19,7 @@ package com.github.yellowstonegames.path;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
@@ -28,13 +29,15 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A default setting for an {@link UndirectedGraph} of Coord vertices where all connections have cost 1. This should be
  * initialized with a 2D (rectangular) char array using the map convention where {@code '#'} is a wall and anything else
  * is passable.
  */
-public class DefaultGraph extends UndirectedGraph<Coord>{
+public class DefaultGraph extends UndirectedGraph<Coord> implements ISerializersNeeded {
 	public int width;
 	public int height;
 
@@ -336,5 +339,17 @@ public class DefaultGraph extends UndirectedGraph<Coord>{
 	@Override
 	public String toString() {
 		return "DefaultGraph: {\n" + String.valueOf(show()) + "\n}";
+	}
+
+	/**
+	 * Gets a List of Class instances that must each be registered with a serialization library before this object can
+	 * be successfully serialized or deserialized. This is {@link GwtIncompatible}; none of the serialization libraries
+	 * this is meant for have any support for GWT.
+	 *
+	 * @return a List of Class instances that must each be registered with a serialization library
+	 */
+	@GwtIncompatible
+	public List<Class<?>> getSerializersNeeded() {
+		return Collections.singletonList(Coord.class);
 	}
 }

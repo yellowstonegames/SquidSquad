@@ -21,6 +21,7 @@ import com.github.tommyettinger.ds.IntFloatMap;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
+import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
@@ -30,12 +31,14 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A default setting for a DirectedGraph of Coord vertices where each passable cell has a cost to enter it from any
  * passable neighbor.
  */
-public class CostlyGraph extends DirectedGraph<Coord> {
+public class CostlyGraph extends DirectedGraph<Coord> implements ISerializersNeeded {
 	public int width;
 	public int height;
 
@@ -496,5 +499,17 @@ public class CostlyGraph extends DirectedGraph<Coord> {
 	@Override
 	public String toString() {
 		return "CostlyGraph: {\n" + String.valueOf(show()) + "\n}";
+	}
+
+	/**
+	 * Gets a List of Class instances that must each be registered with a serialization library before this object can
+	 * be successfully serialized or deserialized. This is {@link GwtIncompatible}; none of the serialization libraries
+	 * this is meant for have any support for GWT.
+	 *
+	 * @return a List of Class instances that must each be registered with a serialization library
+	 */
+	@GwtIncompatible
+	public List<Class<?>> getSerializersNeeded() {
+		return Collections.singletonList(Coord.class);
 	}
 }
