@@ -91,15 +91,15 @@ public class Biome {
      */
     public final char representation;
 
-    private Biome(){
+    public Biome(){
         heat = Heat.COLDEST;
         moisture = Moisture.STRANGE;
         name = "Space";
-        representation = '.';
-        colorOklab = 0xFF7A8121; // inky almost-black
+        representation = ' ';
+        colorOklab = 0x007A8121; // inky almost-black, but fully transparent
     }
 
-    private Biome(Heat h, Moisture m, String n, int o) {
+    public Biome(Heat h, Moisture m, String n, int o) {
         heat = h;
         moisture = m;
         name = n;
@@ -108,7 +108,7 @@ public class Biome {
     }
 
 
-    private Biome(Heat h, Moisture m, String n, int o, char representation) {
+    public Biome(Heat h, Moisture m, String n, int o, char representation) {
         heat = h;
         moisture = m;
         name = n;
@@ -125,7 +125,7 @@ public class Biome {
      */
     public static final String SAVANNA_BIOME = "Savanna";
     /**
-     * Hot, mostly-dry land with some parched vegetation; also called scrub or chaparral.
+     * Hot, humid, and soaked by frequent rain, this is a lush ecosystem of tropical-evergreen forest.
      */
     public static final String TROPICAL_RAINFOREST_BIOME = "TropicalRainforest";
     /**
@@ -141,19 +141,19 @@ public class Biome {
      */
     public static final String SEASONAL_FOREST_BIOME = "SeasonalForest";
     /**
-     * Forest that tends to be slightly warm but very wet
+     * Forest that tends to be slightly warm but very wet.
      */
     public static final String TEMPERATE_RAINFOREST_BIOME = "TemperateRainforest";
     /**
-     * Forest that tends to be cold and very wet.
+     * Forest that tends to be cold and very wet; tends toward evergreen trees like pine.
      */
     public static final String BOREAL_FOREST_BIOME = "BorealForest";
     /**
-     * Very cold plains that still have some low-lying vegetation; also called taiga
+     * Very cold plains that still have some low-lying vegetation; also called taiga.
      */
     public static final String TUNDRA_BIOME = "Tundra";
     /**
-     * Cold barren land covered in permafrost; also used for rivers and lakes that are frozen
+     * Cold barren land covered in permafrost; also used for rivers and lakes that are frozen.
      */
     public static final String ICE_BIOME = "Ice";
     /**
