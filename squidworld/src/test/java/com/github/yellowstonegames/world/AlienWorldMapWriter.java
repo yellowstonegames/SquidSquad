@@ -48,7 +48,8 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
 
 //    private static final int width = 1920, height = 1080;
 //    private static final int width = 256, height = 256; // localMimic
-    private static final int width = 400, height = 400;
+//    private static final int width = 400, height = 400;
+    private static final int width = 600, height = 600;
 //    private static final int width = 512, height = 256; // mimic, elliptical
 //    private static final int width = 256, height = 128; // mimic, elliptical
 //    private static final int width = 2048, height = 1024; // mimic, elliptical
@@ -72,7 +73,7 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
 
     private static final int cellWidth = 1, cellHeight = 1;
 
-    private static final int LIMIT = 5;
+    private static final int LIMIT = 10;
 //    private static final boolean FLOWING_LAND = true;
     private static final boolean ALIEN_COLORS = true;
 
@@ -166,12 +167,8 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
 //        world = new StretchWorldMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
         world = new GlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 2f);
 //        world = new RotatingGlobeMap(seed, width / cellWidth << AA, height / cellHeight << AA, noise, 1.25f);
-//        wmv = new DetailedWorldMapView(world);
+
         wmv = new BlendedWorldMapView(world);
-        mapper.initialize(AlienBiomes.generateAlienBiomeTable(rng, Language.HLETKIP, 3,
-                DescriptiveColor.FERN, DescriptiveColor.CHOCOLATE, DescriptiveColor.TURQUOISE));
-        wmv.setBiomeMapper(mapper);
-//        wmv = new SimpleWorldMapView(world);
 
 //        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 //        Gdx.files.local("AustraliaFlipped.txt").writeString(Region.decompress(MimicLocalMap.AUSTRALIA_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
@@ -234,20 +231,20 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
 //                DiverRNG.determineDouble(seed * 0x12345L + 0x54321L) * 0.2 + 1.0, seed);
 //        dbm.makeBiomes(world);
         world.rng.setSeed(seed);
-        world.seedA = world.rng.getStateA();
-        world.seedB = world.rng.getStateB();
+
 //        if(ALIEN_COLORS) {
 //            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
 //        }
-        int liquidLevel = rng.nextInt(6);
-        mapper.initialize(AlienBiomes.generateAlienBiomeTable(rng, Language.HLETKIP, liquidLevel,
-                DescriptiveColor.oklabByHSL(rng.nextFloat(), rng.nextFloat(0.3f, 0.9f), rng.nextFloat(0.3f, 0.7f), 1f),
-                DescriptiveColor.oklabByHSL(rng.nextFloat(), rng.nextFloat(0f, 0.6f), rng.nextFloat(0.1f, 0.7f), 1f),
-                DescriptiveColor.oklabByHSL(rng.nextFloat(), rng.nextFloat(0.6f, 1.0f), rng.nextFloat(0.4f, 0.8f), 1f)
+        int liquidLevel = world.rng.nextInt(6);
+        mapper.initialize(AlienBiomes.generateAlienBiomeTable(world.rng, Language.HLETKIP, liquidLevel,
+                DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.3f, 0.9f), world.rng.nextFloat(0.3f, 0.7f), 1f),
+                DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.0f, 0.6f), world.rng.nextFloat(0.1f, 0.7f), 1f),
+                DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.6f, 1.0f), world.rng.nextFloat(0.4f, 0.8f), 1f)
                 ));
         wmv.setBiomeMapper(mapper);
-
-        wmv.generate(1f - liquidLevel * 0.15f, 1.35f);
+        world.seedA = world.rng.getStateA();
+        world.seedB = world.rng.getStateB();
+        wmv.generate(1.5f - liquidLevel * 0.125f, 1.35f);
         ttg = System.currentTimeMillis() - startTime;
     }
 
