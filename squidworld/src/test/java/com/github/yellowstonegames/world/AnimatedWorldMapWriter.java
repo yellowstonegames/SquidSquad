@@ -55,7 +55,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 //    private static final int width = 512, height = 512;
 
     private static final int LIMIT = 5;
-    private static final int FRAMES = 240;
+    private static final int FRAMES = 280;
     private static final boolean ALIEN_COLORS = true;
     private static final boolean MANY_STILL = false;
     private static final boolean SHADOW = false;
@@ -132,45 +132,33 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer.setFlipY(false);
 //        apng = new AnimatedPNG();
 //        apng.setFlipY(false);
-        if(MANY_STILL){
+        if (MANY_STILL) {
             png = new FastPNG();
             png.setFlipY(false);
         }
 
-//        for(DitherAlgorithm dither : new DitherAlgorithm[]{GOURD, GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
-        for(DitherAlgorithm dither : new DitherAlgorithm[]{MARTEN, }) {
-//        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
-            writer.setDitherAlgorithm(dither);
-            writer.setDitherStrength(0.6f);
-            rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
-            seed = rng.state;
-            thesaurus = new Thesaurus(rng);
-            //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
+        rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
+        seed = rng.state;
+        thesaurus = new Thesaurus(rng);
+        //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
 
 //            INoise fn = new NoiseWrapper(new FoamNoise(seed), 1.4f, NoiseWrapper.FBM, 1);
-//            INoise fn = new NoiseWrapper(new PerlueNoise(seed), 0.8f, NoiseWrapper.FBM, 3);
+        INoise fn = new NoiseWrapper(new PerlueNoise(seed), 0.8f, NoiseWrapper.DOMAIN_WARP, 2);
 //        INoise fn = new CyclicNoise(seed, 3, 1.5f);
 //        INoise fn = new PuffyNoise(seed, 2, 2.6f);
-        INoise fn = new HuskyNoise(seed, 2, 2.6f);
+//        INoise fn = new HuskyNoise(seed, 2, 2.6f);
 
-            noise = fn;
+        noise = fn;
 
-            world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.2f);
+        world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.2f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 0.75f);
 
-            wmv = new BlendedWorldMapView(world);
+        wmv = new BlendedWorldMapView(world);
 
-            path = "out/worldsAnimated/" + date + "/" + dither.legibleName + "/" +
-                    world.getClass().getSimpleName() + noise.getTag() + (SHADOW ? "_shadow/" : "/");
-
-            if (!Gdx.files.local(path).exists())
-                Gdx.files.local(path).mkdirs();
-
-            rng.setSeed(seed);
-            Gdx.graphics.setContinuousRendering(false);
-            for (int i = 0; i < LIMIT; i++) {
-                putMap();
-            }
+        rng.setSeed(seed);
+        Gdx.graphics.setContinuousRendering(false);
+        for (int i = 0; i < LIMIT; i++) {
+            putMap();
         }
         Gdx.app.exit();
     }
@@ -201,7 +189,13 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     public void putMap() {
         ++counter;
         String name = makeName(thesaurus);
-        while (Gdx.files.local(path + name + ".gif").exists())
+
+        path = "out/worldsAnimated/" + date + "/" +
+                world.getClass().getSimpleName() + noise.getTag() + (SHADOW ? "_shadow/" : "/");
+        if (!Gdx.files.local(path).exists())
+            Gdx.files.local(path).mkdirs();
+
+        while (Gdx.files.local(path + "/Pattern/" + name + ".gif").exists())
             name = makeName(thesaurus);
         long hash;
         hash = Hasher.balam.hash64(name);
@@ -295,14 +289,20 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 png.write(stills.child("world_" + i + ".png"), pm[i]);
             }
         }
+        temp.dispose();
 
         Array<Pixmap> pms = new Array<>(pm);
         writer.palette.analyze(pms);
-        writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
-//        apng.write(Gdx.files.local(path + name + "_apng.png"), pms, 20);
-        temp.dispose();
+        for(DitherAlgorithm dither : new DitherAlgorithm[]{PATTERN}) {
+//        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, MARTEN, ADDITIVE, GOURD, PATTERN}) {
+            writer.setDitherAlgorithm(dither);
+            writer.setDitherStrength(0.75f);
 
-        System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
+            System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
+            writer.write(Gdx.files.local(path + "/" + dither.legibleName + "/" + name + ".gif"), pms, 20);
+//        apng.write(Gdx.files.local(path + name + "_apng.png"), pms, 20);
+
+        }
 
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }
