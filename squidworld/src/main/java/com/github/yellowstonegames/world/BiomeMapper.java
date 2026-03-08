@@ -931,6 +931,17 @@ public interface BiomeMapper {
             }
         }
 
+        public void initialize(Biome[] alternateBiomeTable)
+        {
+            if(alternateBiomeTable == null || alternateBiomeTable.length < 66){
+                initialize();
+            } else {
+                for (int i = 0; i < 66; i++) {
+                    colorTable[i] = alternateBiomeTable[i].colorOklab;
+                }
+            }
+        }
+
         /**
          * Initializes the color tables this uses for all biomes, but allows rotating all hues and adjusting
          * brightness/saturation/contrast to produce maps of non-Earth-like planets.

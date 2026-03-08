@@ -68,7 +68,7 @@ public class AlienBiomes {
                         table[i] = new Biome(Biome.Heat.ALL[h], Biome.Moisture.ALL[m], hotDesert, DescriptiveColor.unevenMix(barrenColorOklab, 30, liquidColorOklab, m + 1, DescriptiveColor.ORANGE, h + 1));
                     }
                 }
-                for (int m = 1; m <= liquidAmount; m++) {
+                for (int m = 0; m <= liquidAmount; m++) {
                     for (int h = 1; h < 6; h++) {
                         int i = m * 6 + h;
                         table[i] = new Biome(Biome.Heat.ALL[h], Biome.Moisture.ALL[m], namer.word(random, true), DescriptiveColor.unevenMix(lifeColorOklab, 15 + m, liquidColorOklab, m + 1, DescriptiveColor.BLACK, 2, DescriptiveColor.ORANGE, h + 1));
