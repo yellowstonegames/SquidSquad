@@ -29,10 +29,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.StringTools;
-import com.github.yellowstonegames.grid.HoneyNoise;
-import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.Noise;
-import com.github.yellowstonegames.grid.NoiseWrapper;
+import com.github.yellowstonegames.grid.*;
 import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Thesaurus;
@@ -94,14 +91,14 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
     private long seed;
     private long ttg, worldTime; // time to generate, world starting time
     private WorldMapGenerator world;
-    private WorldMapView wmv;
+    private BlendedWorldMapView wmv;
     private BiomeMapper.BlendedBiomeMapper mapper = new BiomeMapper.BlendedBiomeMapper();
 
 
     private String date, path;
     private INoise noise;
     private FastPNG png;
-    private static final Color INK = new Color(DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab));
+    private static final Color INK = new Color(0f, 0f, 0f, 0f);//DescriptiveColor.toRGBA8888(Biome.TABLE[60].colorOklab)
     @Override
     public void create() {
         view = new StretchViewport(width / cellWidth, height / cellHeight);
@@ -141,11 +138,11 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
 //        noise = fn;
 
 //        noise = new CyclicNoise(seed, 4, 1.9f);
-//        noise = new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
-        noise = new NoiseWrapper(new HoneyNoise(seed), seed, 0.9f, NoiseWrapper.FBM, 1);
-//        noise = new NoiseWrapper(new PerlueNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1);
-//        noise = new NoiseWrapper(new PerlinNoise(seed), seed, 1.5f, NoiseWrapper.FBM, 1);
-//        noise = new NoiseWrapper(new ValueNoise(seed), seed, 2f, NoiseWrapper.FBM, 1);
+        noise = new NoiseWrapper(new FoamNoise(seed), 1.6f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new HoneyNoise(seed), 0.9f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new PerlueNoise(seed), 1.2f, NoiseWrapper.FBM, 2);
+//        noise = new NoiseWrapper(new PerlinNoise(seed), 1.5f, NoiseWrapper.FBM, 1);
+//        noise = new NoiseWrapper(new ValueNoise(seed), 2f, NoiseWrapper.FBM, 1);
 //        noise = new SimplexNoise(seed);
 //        noise = new CyclicNoise(seed, 2, 2.5f);
 
@@ -173,40 +170,11 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
 //        Gdx.files.local("EarthFlipped.txt").writeString(Region.decompress(MimicWorldMap.EARTH_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 //        Gdx.files.local("AustraliaFlipped.txt").writeString(Region.decompress(MimicLocalMap.AUSTRALIA_ENCODED).flip(false, true).toCompressedString(), false, "UTF8");
 
-        //generate(seed);
         rng.setSeed(seed);
-//        path = "out/worlds/" + date + "/EllipseFoam/";
-//        path = "out/worlds/" + date + "/EllipseTaffy/";
-//        path = "out/worlds/" + date + "/HyperellipseTaffy/";
-//        path = "out/worlds/" + date + "/HyperellipseSimplex/";
-//        path = "out/worlds/" + date + "/HyperellipseFoam/";
-//        path = "out/worlds/" + date + "/HyperellipseFoam/";
-//        path = "out/worlds/" + date + "/EllipseFoam/";
-//        path = "out/worlds/" + date + "/HexagonFoam/";
-//        path = "out/worlds/" + date + "/HexagonTaffy/";
-//        path = "out/worlds/" + date + "/HexagonSimplex2/";
-//        path = "out/worlds/" + date + "/LocalSimplex2/";
-//        path = "out/worlds/" + date + "/MimicLocalSimplex2/";
-//        path = "out/worlds/" + date + "/MimicSimplex2/";
-//        path = "out/worlds/" + date + "/RoundSideSimplex2/";
-//        path = "out/worlds/" + date + "/RoundSideFoam/";
-//        path = "out/worlds/" + date + "/TilingFoam/";
-//        path = "out/worlds/" + date + "/LocalFoam/";
-//        path = "out/worlds/" + date + "/StretchFoam/";
-//        path = "out/worlds/" + date + "/LatLonFoam/";
-//        path = "out/worlds/" + date + "/GlobePerlinNormal/";
 
         path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
                     + (noise == fn ? (Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown")) : noise.getTag()) + "_"
                     + wmv.getClass().getSimpleName() + "/";
-
-//        path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
-//                    + Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown") + "_"
-//                    + wmv.getClass().getSimpleName() + "AlternateFlat" + "/";
-//
-//        path = "out/worlds/" + date + "/" + world.getClass().getSimpleName() + "_"
-//                    + Noise.NOISE_TYPES.getOrDefault(fn.getNoiseType(), "Unknown") + "_"
-//                    + wmv.getClass().getSimpleName() + "AlternateFlatter" + "/";
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -221,27 +189,15 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
     public void generate(final long seed)
     {
         long startTime = System.currentTimeMillis();
-        //randomizeColors(seed);
-//        world.generate(1, 1.125, seed); // mimic of Earth favors too-cold planets
-//        dbm.makeBiomes(world);
-//        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, FastNoise.instance, octaveCounter * 0.001);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, PerlinNoise.instance, octaveCounter * 0.001, 0.0625, 2.5);
-//        world = new WorldMapGenerator.EllipticalMap(seed, width, height, PerlinNoise.instance, octaveCounter * 0.001);
-//        world.generate(0.95 + NumberTools.formCurvedDouble((seed ^ 0x123456789ABCDL) * 0x12345689ABL) * 0.15,
-//                DiverRNG.determineDouble(seed * 0x12345L + 0x54321L) * 0.2 + 1.0, seed);
-//        dbm.makeBiomes(world);
         world.rng.setSeed(seed);
 
-//        if(ALIEN_COLORS) {
-//            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
-//        }
         int liquidLevel = world.rng.nextInt(6);
-        mapper.initialize(AlienBiomes.generateAlienBiomeTable(world.rng, Language.HLETKIP, liquidLevel,
+
+        wmv.biomeMapper.initialize(AlienBiomes.generateAlienBiomeTable(world.rng, Language.HLETKIP, liquidLevel,
                 DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.3f, 0.9f), world.rng.nextFloat(0.3f, 0.7f), 1f),
                 DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.0f, 0.6f), world.rng.nextFloat(0.1f, 0.7f), 1f),
                 DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.6f, 1.0f), world.rng.nextFloat(0.4f, 0.8f), 1f)
                 ));
-        wmv.setBiomeMapper(mapper);
         world.seedA = world.rng.getStateA();
         world.seedB = world.rng.getStateB();
         wmv.generate(1.5f - liquidLevel * 0.125f, 1.35f);
@@ -277,37 +233,13 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
             }
         }
         pm.setFilter(Pixmap.Filter.NearestNeighbour);
-//        pm.setFilter(Pixmap.Filter.BiLinear);
         pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
         png.write(Gdx.files.local(path + name + ".png"), pm);
-//        PixmapIO.writePNG(Gdx.files.local(path + name + ".png"), pm);
         temp.dispose();
 
         System.out.println();
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
-//        System.out.println("Remaking...");
         worldTime = System.currentTimeMillis();
-//        String ser = world.stringSerialize();
-//
-//        world = StretchWorldMap.recreateFromString(ser);
-//        wmv.setWorld(world);
-//        wmv.getBiomeMapper().makeBiomes(world);
-//        cm = wmv.show();
-//        temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
-//        temp.setFilter(Pixmap.Filter.BiLinear);
-//        temp.setColor(INK);
-//        temp.fill();
-//
-//        for (int x = 0; x < bw; x++) {
-//            for (int y = 0; y < bh; y++) {
-//                temp.drawPixel(x, y, cm[x][y]);
-//            }
-//        }
-//        pm.setFilter(Pixmap.Filter.BiLinear);
-//        pm.drawPixmap(temp, 0, 0, temp.getWidth(), temp.getHeight(), 0, 0, pm.getWidth(), pm.getHeight());
-//        png.write(Gdx.files.local(path + name + "_remade.png"), pm);
-//        temp.dispose();
-//        System.out.println("Remake #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }
 
     @Override

@@ -32,6 +32,7 @@ import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.*;
@@ -48,26 +49,16 @@ import static com.github.tommyettinger.anim8.Dithered.DitherAlgorithm.*;
  * Writes one or more spinning globes to the out/ folder.
  */
 public class AnimatedWorldMapWriter extends ApplicationAdapter {
-//    private static final int width = 1920, height = 1080;
-//    private static final int width = 256, height = 256; // localMimic
-//    private static final int width = 420, height = 210; // mimic, elliptical
-//    private static final int width = 512, height = 256; // mimic, elliptical
-//    private static final int width = 1024, height = 512; // mimic, elliptical
-//    private static final int width = 2048, height = 1024; // mimic, elliptical
 //    private static final int width = 480, height = 480; // BIG space view
     private static final int width = 240, height = 240; // space view
-//    private static final int width = 1200, height = 400; // squat
 //    private static final int width = 300, height = 300;
-    //private static final int width = 314 * 4, height = 400;
 //    private static final int width = 512, height = 512;
 
-    private static final int LIMIT = 2;
-    private static final int FRAMES = 300;
-    private static final boolean FLOWING_LAND = false;
-    private static final boolean ALIEN_COLORS = false;
+    private static final int LIMIT = 5;
+    private static final int FRAMES = 240;
+    private static final boolean ALIEN_COLORS = true;
     private static final boolean MANY_STILL = false;
-    private static final boolean SEEDY = false;
-    private static final boolean SHADOW = true;
+    private static final boolean SHADOW = false;
     private int baseSeed = 1234567890;
 //    private final int AA = 0;
     private final int AA = 1;
@@ -116,9 +107,9 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     private long seed;
     private long ttg, worldTime; // time to generate, world starting time
     private WorldMapGenerator world;
-    private WorldMapView wmv;
+    private BlendedWorldMapView wmv;
     private AnimatedGif writer;
-    private AnimatedPNG apng;
+//    private AnimatedPNG apng;
     private FastPNG png;
     
     private String date, path;
@@ -139,74 +130,31 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         writer = new AnimatedGif();
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
-        apng = new AnimatedPNG();
-        apng.setFlipY(false);
+//        apng = new AnimatedPNG();
+//        apng.setFlipY(false);
         if(MANY_STILL){
             png = new FastPNG();
             png.setFlipY(false);
         }
 
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{GOURD, GRADIENT_NOISE, BLUE_NOISE, NONE,}) {
-        for(DitherAlgorithm dither : new DitherAlgorithm[]{BLUE_NOISE, }) {
+        for(DitherAlgorithm dither : new DitherAlgorithm[]{MARTEN, }) {
 //        for(DitherAlgorithm dither : new DitherAlgorithm[]{NONE, GOURD, BLUE_NOISE, ROBERTS, GRADIENT_NOISE, PATTERN}) {
             writer.setDitherAlgorithm(dither);
-            writer.setDitherStrength(0.75f);
+            writer.setDitherStrength(0.6f);
             rng = new DistinctRandom(Hasher.balam.hash64(date) + 1L);
             seed = rng.state;
             thesaurus = new Thesaurus(rng);
             //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
-            //rng = new StatefulRNG(0L);
 
-//        final Noise.Noise3D noise = new Noise.Noise3D() {
-//            @Override
-//            public double getNoise(double x, double y, double z) {
-//                return WorldMapGenerator.DEFAULT_NOISE.getNoiseWithSeed(x, y, z, mutationA, mutationB, 123456789);
-//            }
-//
-//            @Override
-//            public double getNoiseWithSeed(double x, double y, double z, long seed) {
-//                return WorldMapGenerator.DEFAULT_NOISE.getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
-//            }
-//        };
-
-//        Noise fn = new Noise((int) seed, 3.5f, Noise.TAFFY_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 2f, Noise.PERLIN_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1.5f, Noise.VALUE_FRACTAL, 1, 3f, 1f/3f);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.FOAM_FRACTAL, 1);
-//        Noise fn = new Noise((int) seed, 1.4f, Noise.PERLIN_FRACTAL, 1);
-
-//        fn.setInterpolation(Noise.QUINTIC);
-
-            INoise fn = new NoiseWrapper(new PerlueNoise(seed), 0.8f, NoiseWrapper.FBM, 3);
+            INoise fn = new NoiseWrapper(new FoamNoise(seed), 1.4f, NoiseWrapper.FBM, 1);
+//            INoise fn = new NoiseWrapper(new PerlueNoise(seed), 0.8f, NoiseWrapper.FBM, 3);
 //        INoise fn = new CyclicNoise(seed, 3, 1.5f);
 
             noise = fn;
 
-//        WorldMapGenerator.DEFAULT_NOISE.setNoiseType(FastNoise.HONEY);
-//        WorldMapGenerator.DEFAULT_NOISE.setFrequency(1.25f);
-//        WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(1);
-//        WorldMapGenerator.DEFAULT_NOISE.setFractalType(FastNoise.BILLOW);
-
-//        world = new WorldMapGenerator.RotatingSpaceMap(seed, width, height, noise, 1.0);
-
-//        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
-//        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
-//        world = new WorldMapGenerator.MimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, noise, 1.3);
-
             world = new RotatingGlobeMap(seed, width << AA, height << AA, noise, 1.2f);
 //        world = new GlobeMap(seed, width << AA, height << AA, noise, 0.75f);
-
-//        world = new WorldMapGenerator.RoundSideMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8, 0.03125, 2.5);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.5, 0.03125, 2.5);
-//        world = new WorldMapGenerator.EllipticalHammerMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.LocalMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 0.8);
-//        world = new WorldMapGenerator.LocalMimicMap(seed, WorldMapGenerator.DEFAULT_NOISE, 1.75);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, noise, 0.8, 0.03125, 2.5);
 
             wmv = new BlendedWorldMapView(world);
 
@@ -216,7 +164,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             if (!Gdx.files.local(path).exists())
                 Gdx.files.local(path).mkdirs();
 
-            //generate(seed);
             rng.setSeed(seed);
             Gdx.graphics.setContinuousRendering(false);
             for (int i = 0; i < LIMIT; i++) {
@@ -229,22 +176,23 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
     public void generate(final long seed)
     {
         long startTime = System.currentTimeMillis();
-        //randomizeColors(seed);
-//        world.generate(1, 1.125, seed); // mimic of Earth favors too-cold planets
-//        dbm.makeBiomes(world);
-//        world = new WorldMapGenerator.SpaceViewMap(seed, width, height, FastNoise.instance, octaveCounter * 0.001);
-//        world = new WorldMapGenerator.HyperellipticalMap(seed, width, height, PerlinNoise.instance, octaveCounter * 0.001, 0.0625, 2.5);
-//        world = new WorldMapGenerator.EllipticalMap(seed, width, height, PerlinNoise.instance, octaveCounter * 0.001);
-//        world.generate(0.95 + NumberTools.formCurvedDouble((seed ^ 0x123456789ABCDL) * 0x12345689ABL) * 0.15,
-//                DiverRNG.determineDouble(seed * 0x12345L + 0x54321L) * 0.2 + 1.0, seed);
-//        dbm.makeBiomes(world);
         world.rng.setSeed(seed);
-        world.seedA = world.rng.getStateA();
-        world.seedB = world.rng.getStateB();
-//        if(ALIEN_COLORS) {
-//            wmv.initialize(world.rng.nextFloat() * 0.7f - 0.35f, world.rng.nextFloat() * 0.2f - 0.1f, world.rng.nextFloat() * 0.3f - 0.15f, world.rng.nextFloat() + 0.2f);
-//        }
-        wmv.generate(0.9f, 1.25f);
+        if(ALIEN_COLORS) {
+            int liquidLevel = world.rng.nextInt(6);
+
+            wmv.biomeMapper.initialize(AlienBiomes.generateAlienBiomeTable(world.rng, Language.HLETKIP, liquidLevel,
+                    DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.3f, 0.9f), world.rng.nextFloat(0.3f, 0.7f), 1f),
+                    DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.0f, 0.6f), world.rng.nextFloat(0.1f, 0.7f), 1f),
+                    DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.6f, 1.0f), world.rng.nextFloat(0.4f, 0.8f), 1f)
+            ));
+            world.seedA = world.rng.getStateA();
+            world.seedB = world.rng.getStateB();
+            wmv.generate(1.5f - liquidLevel * 0.125f, 1.35f);
+        } else {
+            world.seedA = world.rng.getStateA();
+            world.seedB = world.rng.getStateB();
+            wmv.generate(1f, 1.25f);
+        }
         ttg = System.currentTimeMillis() - startTime;
     }
 
@@ -261,9 +209,10 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             stills.mkdirs();
         }
 
-//        StringBuilder sb = new StringBuilder(256 * 12);
         worldTime = System.currentTimeMillis();
-        Pixmap temp = new Pixmap(width * cellWidth + 10 << AA, height * cellHeight + 10 << AA, Pixmap.Format.RGBA8888);
+        Pixmap temp;
+        if(SHADOW) temp = new Pixmap(width * cellWidth + 10 << AA, height * cellHeight + 10 << AA, Pixmap.Format.RGBA8888);
+        else temp = new Pixmap(width * cellWidth << AA, height * cellHeight << AA, Pixmap.Format.RGBA8888);
         temp.setFilter(Pixmap.Filter.BiLinear);
         if(world instanceof RotatingGlobeMap) {
             world.setCenterLongitude(0f);
@@ -272,10 +221,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
 
         for (int i = 0; i < pm.length; i++) {
             float angle = i / (float)pm.length;
-//            if(FLOWING_LAND) {
-//                ((Noise.Adapted3DFrom5D)noise).w = TrigTools.cosTurns(angle) * 0.3125f;
-//                ((Noise.Adapted3DFrom5D)noise).u = TrigTools.sinTurns(angle) * 0.3125f;
-//            }
             world.setCenterLongitude(angle * MathUtils.PI2);
             if(!(world instanceof RotatingGlobeMap)) {
                 generate(hash);
@@ -297,7 +242,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                 shadowAngle = -45 + TrigTools.sinSmootherTurns(angle) * 180f;
                 shadowStrength = TrigTools.cosSmootherTurns(angle) * 0.4f;
 
-                // 0.70710677f
                 final float iw = 1.5f * TrigTools.cosSmootherDeg(shadowAngle) / bw,
                         ih = -1.5f * TrigTools.sinSmootherDeg(shadowAngle) / bh;
                 for (int x = 0; x < bw; x++) {
@@ -314,7 +258,6 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
                         }
                         float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(-shadowStrength - (xx * iw + yy * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
                         int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
-//                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
                         adjusted |= adjusted >>> 7 & 1;
                         // debug to find any non-opaque planet pixels
 //                        if((adjusted & 0xFF) != 0xFF)
@@ -352,22 +295,13 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         }
 
         Array<Pixmap> pms = new Array<>(pm);
-        writer.palette.analyzeHueWise(pms, 15.0);
+        writer.palette.analyze(pms);
         writer.write(Gdx.files.local(path + name + ".gif"), pms, 20);
-        apng.write(Gdx.files.local(path + name + "_apng.png"), pms, 20);
+//        apng.write(Gdx.files.local(path + name + "_apng.png"), pms, 20);
         temp.dispose();
 
         System.out.println("\nUsing dither: " + writer.getDitherAlgorithm().legibleName + " on " + writer.palette.colorCount + " colors:");
 
-//        sb.setLength(0);
-//        int idx = 0;
-//        for (;idx < writer.palette.paletteArray.length;) {
-//            for (int i = 0; i < 8 && idx < writer.palette.paletteArray.length; i++, idx++) {
-//                Base.BASE16.appendUnsigned(sb.append("0x"), writer.palette.paletteArray[idx]).append(", ");
-//            }
-//            sb.setCharAt(sb.length() - 1, '\n');
-//        }
-//        System.out.println(sb);
         System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }
     @Override
