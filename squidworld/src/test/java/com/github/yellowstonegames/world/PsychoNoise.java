@@ -24,6 +24,7 @@ import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.CyclicNoise;
 import com.github.yellowstonegames.grid.INoise;
+import com.github.yellowstonegames.grid.PerlinNoise;
 import com.github.yellowstonegames.grid.RotationTools;
 
 import java.util.Arrays;
@@ -37,6 +38,8 @@ import static com.github.tommyettinger.digital.TrigTools.*;
 public class PsychoNoise implements INoise {
     protected static final float LACUNARITY = 1.6f;
     protected static final float GAIN = 0.625f;
+    protected static final float ADD = 0.05f;
+    protected static final float MUL = PerlinNoise.calculateEqualizeAdjustment(ADD);
 
     protected int octaves;
     protected float total = 2f;
@@ -81,7 +84,7 @@ public class PsychoNoise implements INoise {
             start /= GAIN;
             total += start;
         }
-        total = 2f / total;
+        total = 4f / total;
     }
 
     @Override
@@ -210,7 +213,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return LineWobble.bicubicWobble(seed, noise * total);
+        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
     }
 
     @Override
@@ -257,28 +260,6 @@ public class PsychoNoise implements INoise {
                     ) * (0.5f/3f)
             ) * amp;
 
-//            noise += TrigTools.sinSmootherTurns((
-//                            TrigTools.cosSmoother(xx) * TrigTools.sinSmoother(zz) +
-//                            TrigTools.cosSmoother(yy) * TrigTools.sinSmoother(xx) +
-//                            TrigTools.cosSmoother(zz) * TrigTools.sinSmoother(yy)
-//                    ) * (0.5f/3f)
-//            ) * amp;
-
-//            noise += TrigTools.sinSmootherTurns((
-//                            MathTools.lerp(COS_TABLE[xs], COS_TABLE[xs+1], xr) * MathTools.lerp(SIN_TABLE[zs], SIN_TABLE[zs+1], zr) +
-//                            MathTools.lerp(COS_TABLE[ys], COS_TABLE[ys+1], yr) * MathTools.lerp(SIN_TABLE[xs], SIN_TABLE[xs+1], xr) +
-//                            MathTools.lerp(COS_TABLE[zs], COS_TABLE[zs+1], zr) * MathTools.lerp(SIN_TABLE[ys], SIN_TABLE[ys+1], yr)
-//                    ) * (0.5f/3f)
-//            ) * amp;
-
-//            noise += TrigTools.sinSmootherTurns((float) (
-//                            Math.cos(xx) * Math.sin(zz) +
-//                            Math.cos(yy) * Math.sin(xx) +
-//                            Math.cos(zz) * Math.sin(yy)
-//                    ) * (0.5f/3f)
-//            ) * amp;
-
-
             x = xx * LACUNARITY;
             y = yy * LACUNARITY;
             z = zz * LACUNARITY;
@@ -286,7 +267,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return LineWobble.bicubicWobble(seed, noise * total);
+        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
     }
 
     @Override
@@ -343,7 +324,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return LineWobble.bicubicWobble(seed, noise * total);
+        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
     }
 
     @Override
@@ -407,7 +388,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return LineWobble.bicubicWobble(seed, noise * total);
+        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
     }
 
     @Override
@@ -478,7 +459,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return LineWobble.bicubicWobble(seed, noise * total);
+        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
     }
 
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
@@ -555,7 +536,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return LineWobble.bicubicWobble(seed, noise * total);
+        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
     }
 
     @Override
