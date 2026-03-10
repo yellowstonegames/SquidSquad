@@ -20,6 +20,7 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.CyclicNoise;
 import com.github.yellowstonegames.grid.INoise;
@@ -38,7 +39,7 @@ public class PsychoNoise implements INoise {
     protected static final float GAIN = 0.625f;
 
     protected int octaves;
-    protected float total = 1f;
+    protected float total = 8f;
     protected float start = 1f;
     protected float frequency = 2f;
     protected long seed;
@@ -80,7 +81,7 @@ public class PsychoNoise implements INoise {
             start /= GAIN;
             total += start;
         }
-        total = 1f / total;
+        total = 8f / total;
     }
 
     @Override
@@ -116,7 +117,7 @@ public class PsychoNoise implements INoise {
         for (int i = 0; i < rotations.length; i++) {
             for (int j = 0; j < rotations[i].length; j++) {
                 for (int k = 0; k < rotations[i][j].length; k++) {
-                    rotations[i][j][k] = (Hasher.randomizeHFloat(seed++) - 0.5f) * 4f;
+                    rotations[i][j][k] = (Hasher.randomizeHFloat(seed++) - 0.5f) * 0.5f;
                 }
             }
         }
@@ -209,7 +210,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return noise * total;
+        return LineWobble.bicubicWobble(seed, noise * total);
     }
 
     @Override
@@ -285,7 +286,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return noise * total;
+        return LineWobble.bicubicWobble(seed, noise * total);
     }
 
     @Override
@@ -342,7 +343,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return noise * total;
+        return LineWobble.bicubicWobble(seed, noise * total);
     }
 
     @Override
@@ -406,7 +407,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return noise * total;
+        return LineWobble.bicubicWobble(seed, noise * total);
     }
 
     @Override
@@ -477,7 +478,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return noise * total;
+        return LineWobble.bicubicWobble(seed, noise * total);
     }
 
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
@@ -554,7 +555,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return noise * total;
+        return LineWobble.bicubicWobble(seed, noise * total);
     }
 
     @Override
