@@ -116,7 +116,7 @@ public class PsychoNoise implements INoise {
         for (int i = 0; i < rotations.length; i++) {
             for (int j = 0; j < rotations[i].length; j++) {
                 for (int k = 0; k < rotations[i][j].length; k++) {
-                    rotations[i][j][k] = Hasher.randomizeHFloat(seed++) - 0.5f;
+                    rotations[i][j][k] = (Hasher.randomizeHFloat(seed++) - 0.5f) * 4f;
                 }
             }
         }
