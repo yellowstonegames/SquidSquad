@@ -23,16 +23,18 @@ import static com.github.tommyettinger.digital.MathTools.lerp;
 import static com.github.yellowstonegames.grid.GradientVectors.*;
 
 /**
- * A mix of "Classic" Perlin noise, written by Ken Perlin before he created Simplex Noise, with value noise calculated
- * at the same time. This uses quintic interpolation throughout (which was an improvement found in Simplex Noise), and
- * has a single {@code int} seed. Perlue Noise can have significant grid-aligned and 45-degree-diagonal artifacts when
- * too few octaves are used, but sometimes this is irrelevant, such as when sampling 3D noise on the surface of a
- * sphere. These artifacts sometimes manifest as "waves" of quickly-changing and then slowly-changing noise, when 3D
- * noise uses time as the z axis.
+ * A mix of "Classic" {@link PerlinNoise}, written by Ken Perlin before he created Simplex Noise, with
+ * {@link ValueNoise} calculated at the same time. This uses quintic interpolation throughout (which was an improvement
+ * found in Simplex Noise), and has a single {@code int} seed. Perlue Noise can have significant grid-aligned and
+ * 45-degree-diagonal artifacts when too few octaves are used, but sometimes this is irrelevant, such as when sampling
+ * 3D noise on the surface of a sphere. These artifacts sometimes manifest as "waves" of quickly-changing and then
+ * slowly-changing noise, when 3D noise uses time as the z axis.
  * <br>
  * This tends to look fairly different from vanilla PerlinNoise or ValueNoise; it is capable of more chaotic
  * arrangements of high and low values than either of those, but it still tends to have clusters of values of a specific
- * size more often than clusters with very different sizes.
+ * size more often than clusters with very different sizes. In higher dimensions (4 and up, mainly), the value noise
+ * artifacts are more readily apparent. Using more octaves tends to improve the appearance of both this and PerlinNoise.
+ * In the highest dimensions this supports, PerlinNoise may have less-noticeable artifacts when compared to PerlueNoise.
  */
 public class PerlueNoise implements INoise {
     public static final PerlueNoise instance = new PerlueNoise();

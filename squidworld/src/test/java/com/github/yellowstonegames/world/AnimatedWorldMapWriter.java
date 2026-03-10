@@ -143,7 +143,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
         //rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
 
 //            INoise fn = new NoiseWrapper(new FoamNoise(seed), 1.4f, NoiseWrapper.FBM, 1);
-        INoise fn = new NoiseWrapper(new PerlueNoise(seed), 0.8f, NoiseWrapper.DOMAIN_WARP, 2);
+        INoise fn = new NoiseWrapper(new PerlinNoise(seed), 0.7f, NoiseWrapper.FBM, 3);
 //        INoise fn = new CyclicNoise(seed, 3, 1.5f);
 //        INoise fn = new PuffyNoise(seed, 2, 2.6f);
 //        INoise fn = new HuskyNoise(seed, 2, 2.6f);
