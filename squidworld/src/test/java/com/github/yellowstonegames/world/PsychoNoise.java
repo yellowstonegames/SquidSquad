@@ -39,7 +39,7 @@ public class PsychoNoise implements INoise {
     protected static final float GAIN = 0.625f;
 
     protected int octaves;
-    protected float total = 8f;
+    protected float total = 2f;
     protected float start = 1f;
     protected float frequency = 2f;
     protected long seed;
@@ -81,7 +81,7 @@ public class PsychoNoise implements INoise {
             start /= GAIN;
             total += start;
         }
-        total = 8f / total;
+        total = 2f / total;
     }
 
     @Override
@@ -199,7 +199,7 @@ public class PsychoNoise implements INoise {
             int xs = radiansToTableIndex(xx);
             int ys = radiansToTableIndex(yy);
 
-            noise += TrigTools.sinTurns((
+            noise += ((
                             COS_TABLE[xs] * SIN_TABLE[ys] + COS_TABLE[ys] * SIN_TABLE[xs]
                     ) * (0.5f/2f)
             ) * amp;
@@ -250,7 +250,7 @@ public class PsychoNoise implements INoise {
             int ys = radiansToTableIndex(yy);
             int zs = radiansToTableIndex(zz);
 //
-            noise += TrigTools.sinSmootherTurns((
+            noise += ((
                             COS_TABLE[xs] * SIN_TABLE[zs] +
                             COS_TABLE[ys] * SIN_TABLE[xs] +
                             COS_TABLE[zs] * SIN_TABLE[ys]
@@ -327,7 +327,7 @@ public class PsychoNoise implements INoise {
             int zs = radiansToTableIndex(zz);
             int ws = radiansToTableIndex(ww);
 
-            noise += TrigTools.sinTurns((
+            noise += ((
                     + COS_TABLE[xs] * SIN_TABLE[ws]
                     + COS_TABLE[ys] * SIN_TABLE[xs]
                     + COS_TABLE[zs] * SIN_TABLE[ys]
@@ -389,7 +389,7 @@ public class PsychoNoise implements INoise {
             int ws = radiansToTableIndex(ww);
             int us = radiansToTableIndex(uu);
 
-            noise += TrigTools.sinTurns((
+            noise += ((
                     + COS_TABLE[xs] * SIN_TABLE[us]
                     + COS_TABLE[ys] * SIN_TABLE[xs]
                     + COS_TABLE[zs] * SIN_TABLE[ys]
@@ -458,7 +458,7 @@ public class PsychoNoise implements INoise {
             int us = radiansToTableIndex(uu);
             int vs = radiansToTableIndex(vv);
 
-            noise += TrigTools.sinTurns((
+            noise += ((
                     + COS_TABLE[xs] * SIN_TABLE[vs]
                     + COS_TABLE[ys] * SIN_TABLE[xs]
                     + COS_TABLE[zs] * SIN_TABLE[ys]
@@ -533,7 +533,7 @@ public class PsychoNoise implements INoise {
             int vs = radiansToTableIndex(vv);
             int ms = radiansToTableIndex(mm);
 
-            noise += TrigTools.sinTurns((
+            noise += ((
                                     + COS_TABLE[xs] * SIN_TABLE[ms]
                                     + COS_TABLE[ys] * SIN_TABLE[xs]
                                     + COS_TABLE[zs] * SIN_TABLE[ys]
