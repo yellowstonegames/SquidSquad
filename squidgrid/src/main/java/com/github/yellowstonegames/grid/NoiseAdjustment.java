@@ -182,7 +182,7 @@ public class NoiseAdjustment implements INoise, ISerializersNeeded {
      * Produces a String that describes everything needed to recreate this INoise in full. This String can be read back
      * in by {@link #stringDeserialize(String)} to reassign the described state to another INoise. The syntax here
      * should always start and end with the {@code `} character, which is used by
-     * {@link Serializer#stringDeserialize(String)} to identify the portion of a String that can be read back. The
+     * {@link Serializer#deserialize(String)} to identify the portion of a String that can be read back. The
      * {@code `} character should not be otherwise used unless to serialize another INoise that this uses.
      *
      * @return a String that describes this INoise for serialization
