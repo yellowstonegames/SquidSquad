@@ -28,11 +28,11 @@ public class UnrealisticBiomeMapperSerializer extends Serializer<UnrealisticBiom
 
     @Override
     public void write(MemoryBuffer buffer, UnrealisticBiomeMapper data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public UnrealisticBiomeMapper read(MemoryBuffer buffer) {
-        return UnrealisticBiomeMapper.recreateFromString(fory.readJavaString(buffer));
+        return UnrealisticBiomeMapper.recreateFromString(fory.readString(buffer));
     }
 }

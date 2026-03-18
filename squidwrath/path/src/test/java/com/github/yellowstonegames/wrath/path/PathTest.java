@@ -68,10 +68,10 @@ public class PathTest {
         int n = 5;
         Graph<Coord> data = makeGridGraph(new UndirectedGraph<>(), n);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         System.out.println("Undirected byte length: " + bytes.length);
         {
-            UndirectedGraph<?> data2 = fory.deserializeJavaObject(bytes, UndirectedGraph.class);
+            UndirectedGraph<?> data2 = fory.deserialize(bytes, UndirectedGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
@@ -90,10 +90,10 @@ public class PathTest {
         int n = 5;
         Graph<Coord> data = makeGridGraph(new DirectedGraph<>(), n);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         System.out.println("Directed byte length: " + bytes.length);
         {
-            DirectedGraph<?> data2 = fory.deserializeJavaObject(bytes, DirectedGraph.class);
+            DirectedGraph<?> data2 = fory.deserialize(bytes, DirectedGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
@@ -118,10 +118,10 @@ public class PathTest {
                 "######".toCharArray(),
         }, true);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         System.out.println("Default byte length: " + bytes.length);
         {
-            DefaultGraph data2 = fory.deserializeJavaObject(bytes, DefaultGraph.class);
+            DefaultGraph data2 = fory.deserialize(bytes, DefaultGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),
@@ -146,10 +146,10 @@ public class PathTest {
                 "######".toCharArray(),
         }, true);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         System.out.println("Costly byte length: " + bytes.length);
         {
-            CostlyGraph data2 = fory.deserializeJavaObject(bytes, CostlyGraph.class);
+            CostlyGraph data2 = fory.deserialize(bytes, CostlyGraph.class);
             Assert.assertEquals(data.getEdgeCount(), data2.getEdgeCount());
             Assert.assertEquals(new ArrayList<>(data.getVertices()), new ArrayList<>(data2.getVertices()));
             Assert.assertEquals(data.getEdges().stream().map(Object::toString).collect(Collectors.toList()),

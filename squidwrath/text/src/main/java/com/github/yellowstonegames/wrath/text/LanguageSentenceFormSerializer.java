@@ -28,11 +28,11 @@ public class LanguageSentenceFormSerializer extends Serializer<Language.Sentence
 
     @Override
     public void write(MemoryBuffer buffer, Language.SentenceForm data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public Language.SentenceForm read(MemoryBuffer buffer) {
-        return Language.SentenceForm.stringDeserialize(fory.readJavaString(buffer));
+        return Language.SentenceForm.stringDeserialize(fory.readString(buffer));
     }
 }

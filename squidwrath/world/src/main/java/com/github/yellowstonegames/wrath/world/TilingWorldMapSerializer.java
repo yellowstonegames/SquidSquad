@@ -28,11 +28,11 @@ public class TilingWorldMapSerializer extends Serializer<TilingWorldMap> {
 
     @Override
     public void write(MemoryBuffer buffer, TilingWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public TilingWorldMap read(MemoryBuffer buffer) {
-        return TilingWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return TilingWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

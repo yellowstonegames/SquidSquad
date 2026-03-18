@@ -28,11 +28,11 @@ public class HyperellipticalWorldMapSerializer extends Serializer<Hyperelliptica
 
     @Override
     public void write(MemoryBuffer buffer, HyperellipticalWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public HyperellipticalWorldMap read(MemoryBuffer buffer) {
-        return HyperellipticalWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return HyperellipticalWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

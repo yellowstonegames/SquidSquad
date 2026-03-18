@@ -28,11 +28,11 @@ public class SimpleBiomeMapperSerializer extends Serializer<SimpleBiomeMapper> {
 
     @Override
     public void write(MemoryBuffer buffer, SimpleBiomeMapper data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public SimpleBiomeMapper read(MemoryBuffer buffer) {
-        return SimpleBiomeMapper.recreateFromString(fory.readJavaString(buffer));
+        return SimpleBiomeMapper.recreateFromString(fory.readString(buffer));
     }
 }

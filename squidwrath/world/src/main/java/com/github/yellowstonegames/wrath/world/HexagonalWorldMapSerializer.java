@@ -28,11 +28,11 @@ public class HexagonalWorldMapSerializer extends Serializer<HexagonalWorldMap> {
 
     @Override
     public void write(MemoryBuffer buffer, HexagonalWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public HexagonalWorldMap read(MemoryBuffer buffer) {
-        return HexagonalWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return HexagonalWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

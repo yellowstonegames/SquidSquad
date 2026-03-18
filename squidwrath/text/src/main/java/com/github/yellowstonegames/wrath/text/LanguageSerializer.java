@@ -28,11 +28,11 @@ public class LanguageSerializer extends Serializer<Language> {
 
     @Override
     public void write(MemoryBuffer buffer, Language data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public Language read(MemoryBuffer buffer) {
-        return Language.stringDeserialize(fory.readJavaString(buffer));
+        return Language.stringDeserialize(fory.readString(buffer));
     }
 }

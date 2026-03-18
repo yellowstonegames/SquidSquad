@@ -39,8 +39,8 @@ public class WorldTest {
         EllipticalWorldMap data = new EllipticalWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            EllipticalWorldMap data2 = fory.deserializeJavaObject(bytes, EllipticalWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            EllipticalWorldMap data2 = fory.deserialize(bytes, EllipticalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -54,8 +54,8 @@ public class WorldTest {
         GlobeMap data = new GlobeMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            GlobeMap data2 = fory.deserializeJavaObject(bytes, GlobeMap.class);
+            byte[] bytes = fory.serialize(data);
+            GlobeMap data2 = fory.deserialize(bytes, GlobeMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -69,8 +69,8 @@ public class WorldTest {
         HexagonalWorldMap data = new HexagonalWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            HexagonalWorldMap data2 = fory.deserializeJavaObject(bytes, HexagonalWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            HexagonalWorldMap data2 = fory.deserialize(bytes, HexagonalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -84,8 +84,8 @@ public class WorldTest {
         HyperellipticalWorldMap data = new HyperellipticalWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            HyperellipticalWorldMap data2 = fory.deserializeJavaObject(bytes, HyperellipticalWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            HyperellipticalWorldMap data2 = fory.deserialize(bytes, HyperellipticalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -99,8 +99,8 @@ public class WorldTest {
         DiagonalWorldMap data = new DiagonalWorldMap(123, 200);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            DiagonalWorldMap data2 = fory.deserializeJavaObject(bytes, DiagonalWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            DiagonalWorldMap data2 = fory.deserialize(bytes, DiagonalWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -114,8 +114,8 @@ public class WorldTest {
         LatLonWorldMap data = new LatLonWorldMap(123, 200, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            LatLonWorldMap data2 = fory.deserializeJavaObject(bytes, LatLonWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            LatLonWorldMap data2 = fory.deserialize(bytes, LatLonWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -129,8 +129,8 @@ public class WorldTest {
         LocalMap data = new LocalMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            LocalMap data2 = fory.deserializeJavaObject(bytes, LocalMap.class);
+            byte[] bytes = fory.serialize(data);
+            LocalMap data2 = fory.deserialize(bytes, LocalMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -144,8 +144,8 @@ public class WorldTest {
         MimicLocalMap data = new MimicLocalMap(123);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            MimicLocalMap data2 = fory.deserializeJavaObject(bytes, MimicLocalMap.class);
+            byte[] bytes = fory.serialize(data);
+            MimicLocalMap data2 = fory.deserialize(bytes, MimicLocalMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -159,8 +159,8 @@ public class WorldTest {
         MimicWorldMap data = new MimicWorldMap(123);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            MimicWorldMap data2 = fory.deserializeJavaObject(bytes, MimicWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            MimicWorldMap data2 = fory.deserialize(bytes, MimicWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -174,8 +174,8 @@ public class WorldTest {
         RotatingGlobeMap data = new RotatingGlobeMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            RotatingGlobeMap data2 = fory.deserializeJavaObject(bytes, RotatingGlobeMap.class);
+            byte[] bytes = fory.serialize(data);
+            RotatingGlobeMap data2 = fory.deserialize(bytes, RotatingGlobeMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -189,8 +189,8 @@ public class WorldTest {
         RoundSideWorldMap data = new RoundSideWorldMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            RoundSideWorldMap data2 = fory.deserializeJavaObject(bytes, RoundSideWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            RoundSideWorldMap data2 = fory.deserialize(bytes, RoundSideWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -204,8 +204,8 @@ public class WorldTest {
         StretchWorldMap data = new StretchWorldMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            StretchWorldMap data2 = fory.deserializeJavaObject(bytes, StretchWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            StretchWorldMap data2 = fory.deserialize(bytes, StretchWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -219,8 +219,8 @@ public class WorldTest {
         TilingWorldMap data = new TilingWorldMap(123, 100, 100);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            TilingWorldMap data2 = fory.deserializeJavaObject(bytes, TilingWorldMap.class);
+            byte[] bytes = fory.serialize(data);
+            TilingWorldMap data2 = fory.deserialize(bytes, TilingWorldMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -237,8 +237,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            SimpleBiomeMapper data2 = fory.deserializeJavaObject(bytes, SimpleBiomeMapper.class);
+            byte[] bytes = fory.serialize(data);
+            SimpleBiomeMapper data2 = fory.deserialize(bytes, SimpleBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -255,8 +255,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            DetailedBiomeMapper data2 = fory.deserializeJavaObject(bytes, DetailedBiomeMapper.class);
+            byte[] bytes = fory.serialize(data);
+            DetailedBiomeMapper data2 = fory.deserialize(bytes, DetailedBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -273,8 +273,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            BlendedBiomeMapper data2 = fory.deserializeJavaObject(bytes, BlendedBiomeMapper.class);
+            byte[] bytes = fory.serialize(data);
+            BlendedBiomeMapper data2 = fory.deserialize(bytes, BlendedBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -291,8 +291,8 @@ public class WorldTest {
         data.makeBiomes(wmg);
 
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            UnrealisticBiomeMapper data2 = fory.deserializeJavaObject(bytes, UnrealisticBiomeMapper.class);
+            byte[] bytes = fory.serialize(data);
+            UnrealisticBiomeMapper data2 = fory.deserialize(bytes, UnrealisticBiomeMapper.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -310,8 +310,8 @@ public class WorldTest {
         data = new SimpleWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            SimpleWorldMapView data2 = fory.deserializeJavaObject(bytes, SimpleWorldMapView.class);
+            byte[] bytes = fory.serialize(data);
+            SimpleWorldMapView data2 = fory.deserialize(bytes, SimpleWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -329,8 +329,8 @@ public class WorldTest {
         data = new DetailedWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            DetailedWorldMapView data2 = fory.deserializeJavaObject(bytes, DetailedWorldMapView.class);
+            byte[] bytes = fory.serialize(data);
+            DetailedWorldMapView data2 = fory.deserialize(bytes, DetailedWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -348,8 +348,8 @@ public class WorldTest {
         data = new BlendedWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            BlendedWorldMapView data2 = fory.deserializeJavaObject(bytes, BlendedWorldMapView.class);
+            byte[] bytes = fory.serialize(data);
+            BlendedWorldMapView data2 = fory.deserialize(bytes, BlendedWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -367,8 +367,8 @@ public class WorldTest {
         data = new UnrealisticWorldMapView(world);
         data.generate();
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            UnrealisticWorldMapView data2 = fory.deserializeJavaObject(bytes, UnrealisticWorldMapView.class);
+            byte[] bytes = fory.serialize(data);
+            UnrealisticWorldMapView data2 = fory.deserialize(bytes, UnrealisticWorldMapView.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -381,8 +381,8 @@ public class WorldTest {
 
         Faction data = new Faction(Language.randomLanguage(123), "The Joyous Land of Tormentia", "Tormentia", new String[]{Biome.DESERT_BIOME});
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            Faction data2 = fory.deserializeJavaObject(bytes, Faction.class);
+            byte[] bytes = fory.serialize(data);
+            Faction data2 = fory.deserialize(bytes, Faction.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -403,8 +403,8 @@ public class WorldTest {
         bm.makeBiomes(w);
         data.generate(123L, w, bm, 5, 0.9f);
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            PoliticalMapper data2 = fory.deserializeJavaObject(bytes, PoliticalMapper.class);
+            byte[] bytes = fory.serialize(data);
+            PoliticalMapper data2 = fory.deserialize(bytes, PoliticalMapper.class);
             Assert.assertEquals(data, data2);
         }
     }

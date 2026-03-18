@@ -28,11 +28,11 @@ public class MimicWorldMapSerializer extends Serializer<MimicWorldMap> {
 
     @Override
     public void write(MemoryBuffer buffer, MimicWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public MimicWorldMap read(MemoryBuffer buffer) {
-        return MimicWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return MimicWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

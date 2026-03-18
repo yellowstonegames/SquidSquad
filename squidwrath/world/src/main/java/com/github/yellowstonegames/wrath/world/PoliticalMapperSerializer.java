@@ -41,9 +41,9 @@ public class PoliticalMapperSerializer extends Serializer<PoliticalMapper> {
 
     @Override
     public void write(MemoryBuffer buffer, PoliticalMapper data) {
-        fory.writeJavaString(buffer, data.rng.stringSerialize());
+        fory.writeString(buffer, data.rng.stringSerialize());
         fory.writeRef(buffer, data.atlas);
-        fory.writeJavaString(buffer, data.name);
+        fory.writeString(buffer, data.name);
         fory.writeRef(buffer, data.politicalMap);
         fory.writeRef(buffer, data.zoomedMap);
         fory.writeRef(buffer, data.wmg);
@@ -52,9 +52,9 @@ public class PoliticalMapperSerializer extends Serializer<PoliticalMapper> {
 
     @Override
     public PoliticalMapper read(MemoryBuffer buffer) {
-        PoliticalMapper p = new PoliticalMapper(Deserializer.deserialize(fory.readJavaString(buffer)));
+        PoliticalMapper p = new PoliticalMapper(Deserializer.deserialize(fory.readString(buffer)));
         p.atlas = (IntObjectOrderedMap<Faction>)fory.readRef(buffer);
-        p.name = fory.readJavaString(buffer);
+        p.name = fory.readString(buffer);
         p.politicalMap = (char[][])fory.readRef(buffer);
         p.zoomedMap = (char[][])fory.readRef(buffer);
         p.wmg = (WorldMapGenerator)fory.readRef(buffer);

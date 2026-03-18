@@ -28,11 +28,11 @@ public class GlobeMapSerializer extends Serializer<GlobeMap> {
 
     @Override
     public void write(MemoryBuffer buffer, GlobeMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public GlobeMap read(MemoryBuffer buffer) {
-        return GlobeMap.recreateFromString(fory.readJavaString(buffer));
+        return GlobeMap.recreateFromString(fory.readString(buffer));
     }
 }

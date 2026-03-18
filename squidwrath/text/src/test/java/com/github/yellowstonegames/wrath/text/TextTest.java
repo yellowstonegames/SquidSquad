@@ -33,21 +33,21 @@ public class TextTest {
 
         Language data = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            Language data2 = fory.deserializeJavaObject(bytes, Language.class);
+            Language data2 = fory.deserialize(bytes, Language.class);
             Assert.assertEquals(data, data2);
         }
         data = Language.KOBOLD;
-        bytes = fory.serializeJavaObject(data);
+        bytes = fory.serialize(data);
         {
-            Language data2 = fory.deserializeJavaObject(bytes, Language.class);
+            Language data2 = fory.deserialize(bytes, Language.class);
             Assert.assertEquals(data, data2);
         }
         data = Language.randomLanguage(0x1337BEEFCAFEBABEL).mix(4, Language.ARABIC_ROMANIZED, 5, Language.JAPANESE_ROMANIZED, 3).addModifiers(Language.Modifier.LISP);
-        bytes = fory.serializeJavaObject(data);
+        bytes = fory.serialize(data);
         {
-            Language data2 = fory.deserializeJavaObject(bytes, Language.class);
+            Language data2 = fory.deserialize(bytes, Language.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -60,8 +60,8 @@ public class TextTest {
 
         Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8);
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            Language.SentenceForm data2 = fory.deserializeJavaObject(bytes, Language.SentenceForm.class);
+            byte[] bytes = fory.serialize(data);
+            Language.SentenceForm data2 = fory.deserialize(bytes, Language.SentenceForm.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -76,9 +76,9 @@ public class TextTest {
         String sentence = "For you, I can translate; I will lower my steep rate; to something more affordable; since you are so adorable.";
         Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            Translator data2 = fory.deserializeJavaObject(bytes, Translator.class);
+            Translator data2 = fory.deserialize(bytes, Translator.class);
             Assert.assertEquals(data, data2);
             Assert.assertEquals(data.cipher(sentence), data2.cipher(sentence));
         }
@@ -92,8 +92,8 @@ public class TextTest {
 
         Mnemonic data = new Mnemonic(1234567L);
         {
-            byte[] bytes = fory.serializeJavaObject(data);
-            Mnemonic data2 = fory.deserializeJavaObject(bytes, Mnemonic.class);
+            byte[] bytes = fory.serialize(data);
+            Mnemonic data2 = fory.deserialize(bytes, Mnemonic.class);
             Assert.assertEquals(data, data2);
         }
     }

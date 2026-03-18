@@ -34,7 +34,7 @@ public class SimpleWorldMapViewSerializer extends Serializer<SimpleWorldMapView>
     @Override
     public void write(MemoryBuffer buffer, SimpleWorldMapView data) {
         fory.writeRef(buffer, data.getWorld());
-        fory.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
+        fory.writeString(buffer, data.getBiomeMapper().stringSerialize());
         fory.writeRef(buffer, data.getColorMap());
         fory.writeRef(buffer, data.getColorMapOklab());
         fory.writeRef(buffer, data.biomeColorTable);
@@ -44,7 +44,7 @@ public class SimpleWorldMapViewSerializer extends Serializer<SimpleWorldMapView>
     @Override
     public SimpleWorldMapView read(MemoryBuffer buffer) {
         SimpleWorldMapView wmv = new SimpleWorldMapView((WorldMapGenerator) fory.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.SimpleBiomeMapper.recreateFromString(fory.readJavaString(buffer)));
+        wmv.setBiomeMapper(BiomeMapper.SimpleBiomeMapper.recreateFromString(fory.readString(buffer)));
         wmv.setColorMap((int[][])fory.readRef(buffer));
         wmv.setColorMapOklab((int[][])fory.readRef(buffer));
         System.arraycopy(fory.readRef(buffer), 0, wmv.biomeColorTable, 0, 66);

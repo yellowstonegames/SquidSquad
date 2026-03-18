@@ -32,9 +32,9 @@ public class OldTest {
 
         LightRNG data = new LightRNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            LightRNG data2 = fory.deserializeJavaObject(bytes, LightRNG.class);
+            LightRNG data2 = fory.deserialize(bytes, LightRNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -52,9 +52,9 @@ public class OldTest {
 
         DiverRNG data = new DiverRNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            DiverRNG data2 = fory.deserializeJavaObject(bytes, DiverRNG.class);
+            DiverRNG data2 = fory.deserialize(bytes, DiverRNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -72,9 +72,9 @@ public class OldTest {
 
         LinnormRNG data = new LinnormRNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            LinnormRNG data2 = fory.deserializeJavaObject(bytes, LinnormRNG.class);
+            LinnormRNG data2 = fory.deserialize(bytes, LinnormRNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -92,9 +92,9 @@ public class OldTest {
 
         ThrustAltRNG data = new ThrustAltRNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            ThrustAltRNG data2 = fory.deserializeJavaObject(bytes, ThrustAltRNG.class);
+            ThrustAltRNG data2 = fory.deserialize(bytes, ThrustAltRNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -112,9 +112,9 @@ public class OldTest {
 
         GWTRNG data = new GWTRNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            GWTRNG data2 = fory.deserializeJavaObject(bytes, GWTRNG.class);
+            GWTRNG data2 = fory.deserialize(bytes, GWTRNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -132,9 +132,9 @@ public class OldTest {
 
         SilkRNG data = new SilkRNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            SilkRNG data2 = fory.deserializeJavaObject(bytes, SilkRNG.class);
+            SilkRNG data2 = fory.deserialize(bytes, SilkRNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -152,9 +152,9 @@ public class OldTest {
 
         LongPeriodRNG data = new LongPeriodRNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            LongPeriodRNG data2 = fory.deserializeJavaObject(bytes, LongPeriodRNG.class);
+            LongPeriodRNG data2 = fory.deserialize(bytes, LongPeriodRNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -171,9 +171,9 @@ public class OldTest {
 
         XoshiroStarPhi32RNG data = new XoshiroStarPhi32RNG(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            XoshiroStarPhi32RNG data2 = fory.deserializeJavaObject(bytes, XoshiroStarPhi32RNG.class);
+            XoshiroStarPhi32RNG data2 = fory.deserialize(bytes, XoshiroStarPhi32RNG.class);
             Assert.assertEquals(data.nextLong(), data2.nextLong());
             Assert.assertEquals(data.next(31), data2.next(31));
             Assert.assertEquals(data.nextInt(12345), data2.nextInt(12345));
@@ -191,8 +191,8 @@ public class OldTest {
 
         LowStorageShuffler data = new LowStorageShuffler(5, 12345, 67890);
 
-        byte[] bytes = fory.serializeJavaObject(data); {
-            LowStorageShuffler data2 = fory.deserializeJavaObject(bytes, LowStorageShuffler.class);
+        byte[] bytes = fory.serialize(data); {
+            LowStorageShuffler data2 = fory.deserialize(bytes, LowStorageShuffler.class);
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.next(), data2.next());
             Assert.assertEquals(data.next(), data2.next());
@@ -211,8 +211,8 @@ public class OldTest {
 
         CrossHash.Yolk data = CrossHash.Yolk.psi;
 
-        byte[] bytes = fory.serializeJavaObject(data); {
-            CrossHash.Yolk hasher2 = fory.deserializeJavaObject(bytes, CrossHash.Yolk.class);
+        byte[] bytes = fory.serialize(data); {
+            CrossHash.Yolk hasher2 = fory.deserialize(bytes, CrossHash.Yolk.class);
             Assert.assertEquals(data.hash64(""), hasher2.hash64(""));
             Assert.assertEquals(data.hash(""), hasher2.hash(""));
             Assert.assertEquals(data.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
@@ -231,8 +231,8 @@ public class OldTest {
 
         CrossHash.Curlup data = CrossHash.Curlup.psi;
 
-        byte[] bytes = fory.serializeJavaObject(data); {
-            CrossHash.Curlup hasher2 = fory.deserializeJavaObject(bytes, CrossHash.Curlup.class);
+        byte[] bytes = fory.serialize(data); {
+            CrossHash.Curlup hasher2 = fory.deserialize(bytes, CrossHash.Curlup.class);
             Assert.assertEquals(data.hash64(""), hasher2.hash64(""));
             Assert.assertEquals(data.hash(""), hasher2.hash(""));
             Assert.assertEquals(data.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));
@@ -251,8 +251,8 @@ public class OldTest {
 
         CrossHash.Mist data = CrossHash.Mist.psi;
 
-        byte[] bytes = fory.serializeJavaObject(data); {
-            CrossHash.Mist hasher2 = fory.deserializeJavaObject(bytes, CrossHash.Mist.class);
+        byte[] bytes = fory.serialize(data); {
+            CrossHash.Mist hasher2 = fory.deserialize(bytes, CrossHash.Mist.class);
             Assert.assertEquals(data.hash64(""), hasher2.hash64(""));
             Assert.assertEquals(data.hash(""), hasher2.hash(""));
             Assert.assertEquals(data.hash64("You're a kitty!"), hasher2.hash64("You're a kitty!"));

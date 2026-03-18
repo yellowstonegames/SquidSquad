@@ -28,11 +28,11 @@ public class RotatingGlobeMapSerializer extends Serializer<RotatingGlobeMap> {
 
     @Override
     public void write(MemoryBuffer buffer, RotatingGlobeMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public RotatingGlobeMap read(MemoryBuffer buffer) {
-        return RotatingGlobeMap.recreateFromString(fory.readJavaString(buffer));
+        return RotatingGlobeMap.recreateFromString(fory.readString(buffer));
     }
 }

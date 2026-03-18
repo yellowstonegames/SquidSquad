@@ -34,7 +34,7 @@ public class DetailedWorldMapViewSerializer extends Serializer<DetailedWorldMapV
     @Override
     public void write(MemoryBuffer buffer, DetailedWorldMapView data) {
         fory.writeRef(buffer, data.getWorld());
-        fory.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
+        fory.writeString(buffer, data.getBiomeMapper().stringSerialize());
         fory.writeRef(buffer, data.getColorMap());
         fory.writeRef(buffer, data.getColorMapOklab());
         fory.writeRef(buffer, data.biomeColorTable);
@@ -44,7 +44,7 @@ public class DetailedWorldMapViewSerializer extends Serializer<DetailedWorldMapV
     @Override
     public DetailedWorldMapView read(MemoryBuffer buffer) {
         DetailedWorldMapView wmv = new DetailedWorldMapView((WorldMapGenerator) fory.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.DetailedBiomeMapper.recreateFromString(fory.readJavaString(buffer)));
+        wmv.setBiomeMapper(BiomeMapper.DetailedBiomeMapper.recreateFromString(fory.readString(buffer)));
         wmv.setColorMap((int[][])fory.readRef(buffer));
         wmv.setColorMapOklab((int[][])fory.readRef(buffer));
         System.arraycopy(fory.readRef(buffer), 0, wmv.biomeColorTable, 0, 66);

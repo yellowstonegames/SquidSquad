@@ -49,9 +49,9 @@ public class CoreTest {
         Cards data = new Cards(Cards.DeckType.FRENCH_52_WITH_2_JOKERS, new Xoshiro256MX3Random(1234567890L));
         data.shuffleDeck(true);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         data.drawInt();
-        Cards data2 = fory.deserializeJavaObject(bytes, Cards.class);
+        Cards data2 = fory.deserialize(bytes, Cards.class);
         data2.drawInt();
         Assert.assertEquals(data.drawInt(), data2.drawInt());
         Assert.assertEquals(data.drawName(), data2.drawName());
@@ -66,8 +66,8 @@ public class CoreTest {
 
         Dice.Rule data = new Dice.Rule("3>4d6");
 
-        byte[] bytes = fory.serializeJavaObject(data);
-        Dice.Rule data2 = fory.deserializeJavaObject(bytes, Dice.Rule.class);
+        byte[] bytes = fory.serialize(data);
+        Dice.Rule data2 = fory.deserialize(bytes, Dice.Rule.class);
         Dice d1 = new Dice(123L);
         Dice d2 = new Dice(123L);
         Assert.assertEquals(d1.runRollRule(data), d2.runRollRule(data2));
@@ -86,8 +86,8 @@ public class CoreTest {
 
         GapShuffler<String> data = new GapShuffler<>(new String[]{"Foo", "Bar", "Baz", "Quux"}, new AceRandom(123));
 
-        byte[] bytes = fory.serializeJavaObject(data);
-        GapShuffler data2 = fory.deserializeJavaObject(bytes, GapShuffler.class);
+        byte[] bytes = fory.serialize(data);
+        GapShuffler data2 = fory.deserialize(bytes, GapShuffler.class);
         Assert.assertEquals(data.next(), data2.next());
         Assert.assertEquals(data.next(), data2.next());
         Assert.assertEquals(data, data2);
@@ -114,8 +114,8 @@ public class CoreTest {
         bonus.add("Normality", 10);
         data.add(bonus, 6);
 
-        byte[] bytes = fory.serializeJavaObject(data);
-        ProbabilityTable data2 = fory.deserializeJavaObject(bytes, ProbabilityTable.class);
+        byte[] bytes = fory.serialize(data);
+        ProbabilityTable data2 = fory.deserialize(bytes, ProbabilityTable.class);
         Assert.assertEquals(data.random(), data2.random());
         Assert.assertEquals(data.random(), data2.random());
         Assert.assertEquals(data, data2);
@@ -130,8 +130,8 @@ public class CoreTest {
 
         WeightedTable data = new WeightedTable(1f, 2f, 3f, 4f, 0.5f, 5.5f);
 
-        byte[] bytes = fory.serializeJavaObject(data);
-        WeightedTable data2 = fory.deserializeJavaObject(bytes, WeightedTable.class);
+        byte[] bytes = fory.serialize(data);
+        WeightedTable data2 = fory.deserialize(bytes, WeightedTable.class);
         Assert.assertEquals(data.random(0L), data2.random(0L));
         Assert.assertEquals(data.random(1L), data2.random(1L));
         Assert.assertEquals(data.random(2L), data2.random(2L));
@@ -148,8 +148,8 @@ public class CoreTest {
 
         IntShuffler data = new IntShuffler(10, 123L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
-        IntShuffler data2 = fory.deserializeJavaObject(bytes, IntShuffler.class);
+        byte[] bytes = fory.serialize(data);
+        IntShuffler data2 = fory.deserialize(bytes, IntShuffler.class);
         Assert.assertEquals(data.next(), data2.next());
         Assert.assertEquals(data.next(), data2.next());
         Assert.assertEquals(data.next(), data2.next());

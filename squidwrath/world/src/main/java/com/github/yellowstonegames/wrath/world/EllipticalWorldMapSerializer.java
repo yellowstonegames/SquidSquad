@@ -28,11 +28,11 @@ public class EllipticalWorldMapSerializer extends Serializer<EllipticalWorldMap>
 
     @Override
     public void write(MemoryBuffer buffer, EllipticalWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public EllipticalWorldMap read(MemoryBuffer buffer) {
-        return EllipticalWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return EllipticalWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

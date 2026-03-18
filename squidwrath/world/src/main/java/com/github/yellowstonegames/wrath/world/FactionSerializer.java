@@ -33,9 +33,9 @@ public class FactionSerializer extends Serializer<Faction> {
 
     @Override
     public void write(MemoryBuffer buffer, Faction data) {
-        fory.writeJavaString(buffer, data.language == null ? null : data.language.stringSerialize());
-        fory.writeJavaString(buffer, data.name == null ? null : data.name);
-        fory.writeJavaString(buffer, data.shortName == null ? null : data.shortName);
+        fory.writeString(buffer, data.language == null ? null : data.language.stringSerialize());
+        fory.writeString(buffer, data.name == null ? null : data.name);
+        fory.writeString(buffer, data.shortName == null ? null : data.shortName);
         fory.writeRef(buffer, data.preferredBiomes == null ? null : data.preferredBiomes.toArray(new String[0]));
         fory.writeRef(buffer, data.blockedBiomes == null ? null : data.blockedBiomes.toArray(new String[0]));
         fory.writeRef(buffer, data.preferredHeight == null ? null : data.preferredHeight);
@@ -46,9 +46,9 @@ public class FactionSerializer extends Serializer<Faction> {
     @Override
     public Faction read(MemoryBuffer buffer) {
         return new Faction(
-                Language.stringDeserialize(fory.readJavaString(buffer)),
-                fory.readJavaString(buffer),
-                fory.readJavaString(buffer),
+                Language.stringDeserialize(fory.readString(buffer)),
+                fory.readString(buffer),
+                fory.readString(buffer),
                 (String[])fory.readRef(buffer),
                 (String[])fory.readRef(buffer),
                 (int[])fory.readRef(buffer),

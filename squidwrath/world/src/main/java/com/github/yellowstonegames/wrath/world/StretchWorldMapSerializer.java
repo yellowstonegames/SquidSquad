@@ -28,11 +28,11 @@ public class StretchWorldMapSerializer extends Serializer<StretchWorldMap> {
 
     @Override
     public void write(MemoryBuffer buffer, StretchWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public StretchWorldMap read(MemoryBuffer buffer) {
-        return StretchWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return StretchWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

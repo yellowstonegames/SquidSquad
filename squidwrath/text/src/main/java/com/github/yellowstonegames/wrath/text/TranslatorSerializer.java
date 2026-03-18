@@ -30,22 +30,22 @@ public class TranslatorSerializer extends Serializer<Translator> {
 
     @Override
     public void write(MemoryBuffer buffer, Translator data) {
-        fory.writeJavaString(buffer, data.language.stringSerialize());
+        fory.writeString(buffer, data.language.stringSerialize());
         buffer.writeInt64(data.shift);
         buffer.writeVarUint32(data.cacheLevel);
         buffer.writeVarUint32(data.table.size());
         for(String k : data.table.keySet()){
-            fory.writeJavaString(buffer, k);
+            fory.writeString(buffer, k);
         }
         for(String v : data.table.values()){
-            fory.writeJavaString(buffer, v);
+            fory.writeString(buffer, v);
         }
 
     }
 
     @Override
     public Translator read(MemoryBuffer buffer) {
-        Language lang = Language.stringDeserialize(fory.readJavaString(buffer));
+        Language lang = Language.stringDeserialize(fory.readString(buffer));
         long shift = buffer.readInt64();
         int cacheLevel = buffer.readVarUint32();
         int tableSize = buffer.readVarUint32();
@@ -53,10 +53,10 @@ public class TranslatorSerializer extends Serializer<Translator> {
         String[] vs = new String[tableSize];
 
         for (int i = 0; i < tableSize; i++) {
-            ks[i] = fory.readJavaString(buffer);
+            ks[i] = fory.readString(buffer);
         }
         for (int i = 0; i < tableSize; i++) {
-            vs[i] = fory.readJavaString(buffer);
+            vs[i] = fory.readString(buffer);
         }
         return new Translator(lang, shift, cacheLevel, new ObjectObjectMap<>(ks, vs), new ObjectObjectMap<>(vs, ks));
     }

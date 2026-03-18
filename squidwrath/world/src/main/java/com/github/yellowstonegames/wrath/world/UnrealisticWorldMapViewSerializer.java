@@ -34,13 +34,13 @@ public class UnrealisticWorldMapViewSerializer extends Serializer<UnrealisticWor
     @Override
     public void write(MemoryBuffer buffer, UnrealisticWorldMapView data) {
         fory.writeRef(buffer, data.getWorld());
-        fory.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
+        fory.writeString(buffer, data.getBiomeMapper().stringSerialize());
     }
 
     @Override
     public UnrealisticWorldMapView read(MemoryBuffer buffer) {
         UnrealisticWorldMapView wmv = new UnrealisticWorldMapView((WorldMapGenerator) fory.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.UnrealisticBiomeMapper.recreateFromString(fory.readJavaString(buffer)));
+        wmv.setBiomeMapper(BiomeMapper.UnrealisticBiomeMapper.recreateFromString(fory.readString(buffer)));
 
         return wmv;
     }

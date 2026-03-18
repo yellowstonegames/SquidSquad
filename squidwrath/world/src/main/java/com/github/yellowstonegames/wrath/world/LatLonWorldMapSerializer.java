@@ -28,11 +28,11 @@ public class LatLonWorldMapSerializer extends Serializer<LatLonWorldMap> {
 
     @Override
     public void write(MemoryBuffer buffer, LatLonWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public LatLonWorldMap read(MemoryBuffer buffer) {
-        return LatLonWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return LatLonWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

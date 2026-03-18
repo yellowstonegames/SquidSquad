@@ -28,11 +28,11 @@ public class LocalMapSerializer extends Serializer<LocalMap> {
 
     @Override
     public void write(MemoryBuffer buffer, LocalMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public LocalMap read(MemoryBuffer buffer) {
-        return LocalMap.recreateFromString(fory.readJavaString(buffer));
+        return LocalMap.recreateFromString(fory.readString(buffer));
     }
 }

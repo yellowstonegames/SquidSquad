@@ -34,13 +34,13 @@ public class BlendedWorldMapViewSerializer extends Serializer<BlendedWorldMapVie
     @Override
     public void write(MemoryBuffer buffer, BlendedWorldMapView data) {
         fory.writeRef(buffer, data.getWorld());
-        fory.writeJavaString(buffer, data.getBiomeMapper().stringSerialize());
+        fory.writeString(buffer, data.getBiomeMapper().stringSerialize());
     }
 
     @Override
     public BlendedWorldMapView read(MemoryBuffer buffer) {
         BlendedWorldMapView wmv = new BlendedWorldMapView((WorldMapGenerator) fory.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.BlendedBiomeMapper.recreateFromString(fory.readJavaString(buffer)));
+        wmv.setBiomeMapper(BiomeMapper.BlendedBiomeMapper.recreateFromString(fory.readString(buffer)));
 
         return wmv;
     }

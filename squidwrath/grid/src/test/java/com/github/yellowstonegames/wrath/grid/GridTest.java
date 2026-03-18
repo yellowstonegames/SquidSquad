@@ -41,8 +41,8 @@ public class GridTest {
         fory.registerSerializer(ObjectList.class, new ObjectListSerializer(fory));
         ObjectList<Coord> data = ObjectList.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(-2, -3), Coord.get(100, 100));
 
-        byte[] bytes = fory.serializeJavaObject(data);
-        ObjectList<?> data2 = fory.deserializeJavaObject(bytes, ObjectList.class);
+        byte[] bytes = fory.serialize(data);
+        ObjectList<?> data2 = fory.deserialize(bytes, ObjectList.class);
         Assert.assertEquals(data, data2);
     }
 
@@ -53,9 +53,9 @@ public class GridTest {
         fory.register(Region.class);
         Region data = new Region(120, 120, Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            Region data2 = fory.deserializeJavaObject(bytes, Region.class);
+            Region data2 = fory.deserialize(bytes, Region.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -68,9 +68,9 @@ public class GridTest {
         fory.registerSerializer(CoordSet.class, new CoordSetSerializer(fory));
         CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordSet data2 = fory.deserializeJavaObject(bytes, CoordSet.class);
+            CoordSet data2 = fory.deserialize(bytes, CoordSet.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -83,9 +83,9 @@ public class GridTest {
         fory.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer(fory));
         CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordOrderedSet data2 = fory.deserializeJavaObject(bytes, CoordOrderedSet.class);
+            CoordOrderedSet data2 = fory.deserialize(bytes, CoordOrderedSet.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -98,10 +98,10 @@ public class GridTest {
         fory.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fory));
         CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         //Serialized length is ~~82~~ now it's 44!
         System.out.println("Serialized length is " + bytes.length);
-        CoordObjectMap<?> data2 = fory.deserializeJavaObject(bytes, CoordObjectMap.class);
+        CoordObjectMap<?> data2 = fory.deserialize(bytes, CoordObjectMap.class);
 
         Assert.assertEquals(data, data2);
     }
@@ -113,11 +113,11 @@ public class GridTest {
         fory.registerSerializer(Coord.class, new CoordSerializer(fory));
         fory.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fory));
         CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         //Serialized length is ~~105~~ now it's 44!
         System.out.println("Serialized length is " + bytes.length);
         {
-            CoordObjectOrderedMap<?> data2 = fory.deserializeJavaObject(bytes, CoordObjectOrderedMap.class);
+            CoordObjectOrderedMap<?> data2 = fory.deserialize(bytes, CoordObjectOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -130,9 +130,9 @@ public class GridTest {
         fory.registerSerializer(CoordFloatMap.class, new CoordFloatMapSerializer(fory));
         CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordFloatMap data2 = fory.deserializeJavaObject(bytes, CoordFloatMap.class);
+            CoordFloatMap data2 = fory.deserialize(bytes, CoordFloatMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -145,9 +145,9 @@ public class GridTest {
         fory.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
         CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordFloatOrderedMap data2 = fory.deserializeJavaObject(bytes, CoordFloatOrderedMap.class);
+            CoordFloatOrderedMap data2 = fory.deserialize(bytes, CoordFloatOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -160,9 +160,9 @@ public class GridTest {
         fory.registerSerializer(CoordLongMap.class, new CoordLongMapSerializer(fory));
         CoordLongMap data = CoordLongMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordLongMap data2 = fory.deserializeJavaObject(bytes, CoordLongMap.class);
+            CoordLongMap data2 = fory.deserialize(bytes, CoordLongMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -175,9 +175,9 @@ public class GridTest {
         fory.registerSerializer(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer(fory));
         CoordLongOrderedMap data = CoordLongOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordLongOrderedMap data2 = fory.deserializeJavaObject(bytes, CoordLongOrderedMap.class);
+            CoordLongOrderedMap data2 = fory.deserialize(bytes, CoordLongOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -190,9 +190,9 @@ public class GridTest {
         fory.registerSerializer(CoordIntMap.class, new CoordIntMapSerializer(fory));
         CoordIntMap data = CoordIntMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordIntMap data2 = fory.deserializeJavaObject(bytes, CoordIntMap.class);
+            CoordIntMap data2 = fory.deserialize(bytes, CoordIntMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -205,9 +205,9 @@ public class GridTest {
         fory.registerSerializer(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer(fory));
         CoordIntOrderedMap data = CoordIntOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CoordIntOrderedMap data2 = fory.deserializeJavaObject(bytes, CoordIntOrderedMap.class);
+            CoordIntOrderedMap data2 = fory.deserialize(bytes, CoordIntOrderedMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -282,9 +282,9 @@ public class GridTest {
         data.add(new IGI(Coord.get(1, 3)));
         data.add(new IGI(Coord.get(2, 3)));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            SpatialMap<?> data2 = fory.deserializeJavaObject(bytes, SpatialMap.class);
+            SpatialMap<?> data2 = fory.deserialize(bytes, SpatialMap.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -297,9 +297,9 @@ public class GridTest {
 
         Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            Radiance data2 = fory.deserializeJavaObject(bytes, Radiance.class);
+            Radiance data2 = fory.deserialize(bytes, Radiance.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -314,9 +314,9 @@ public class GridTest {
 
         LightSource data = new LightSource(Coord.get(1, 10), new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123), 1f/6f, 0.125f);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            LightSource data2 = fory.deserializeJavaObject(bytes, LightSource.class);
+            LightSource data2 = fory.deserialize(bytes, LightSource.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -339,9 +339,9 @@ public class GridTest {
         LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            LightingManager data2 = fory.deserializeJavaObject(bytes, LightingManager.class);
+            LightingManager data2 = fory.deserialize(bytes, LightingManager.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -364,9 +364,9 @@ public class GridTest {
         LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            LightingManagerRgb data2 = fory.deserializeJavaObject(bytes, LightingManagerRgb.class);
+            LightingManagerRgb data2 = fory.deserialize(bytes, LightingManagerRgb.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -394,9 +394,9 @@ public class GridTest {
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColor.describeOklab("darker gray 9 yellow"));
         data.lighting.addLight(3, 3, new Radiance(3f, 0xFF9966AA, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            VisionFramework data2 = fory.deserializeJavaObject(bytes, VisionFramework.class);
+            VisionFramework data2 = fory.deserialize(bytes, VisionFramework.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -424,9 +424,9 @@ public class GridTest {
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
         data.lighting.addLight(3, 3, new Radiance(3f, 0x9966AAFF, 0.2f, 0f, 0f, 0f));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            VisionFrameworkRgb data2 = fory.deserializeJavaObject(bytes, VisionFrameworkRgb.class);
+            VisionFrameworkRgb data2 = fory.deserialize(bytes, VisionFrameworkRgb.class);
             Assert.assertEquals(data, data2);
         }
     }
@@ -440,9 +440,9 @@ public class GridTest {
         Noise data = new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f);
         data.setFractalSpiral(true);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            Noise data2 = fory.deserializeJavaObject(bytes, Noise.class);
+            Noise data2 = fory.deserialize(bytes, Noise.class);
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f), data2.getConfiguredNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f), data2.getConfiguredNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), data2.getConfiguredNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -461,9 +461,9 @@ public class GridTest {
 
         FoamNoise data = new FoamNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            FoamNoise data2 = fory.deserializeJavaObject(bytes, FoamNoise.class);
+            FoamNoise data2 = fory.deserialize(bytes, FoamNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -481,9 +481,9 @@ public class GridTest {
 
         FoamplexNoise data = new FoamplexNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            FoamplexNoise data2 = fory.deserializeJavaObject(bytes, FoamplexNoise.class);
+            FoamplexNoise data2 = fory.deserialize(bytes, FoamplexNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -501,9 +501,9 @@ public class GridTest {
 
         PhantomNoise data = new PhantomNoise(1234, 8, 7f);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            PhantomNoise data2 = fory.deserializeJavaObject(bytes, PhantomNoise.class);
+            PhantomNoise data2 = fory.deserialize(bytes, PhantomNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -517,9 +517,9 @@ public class GridTest {
 
         TaffyNoise data = new TaffyNoise(1234, 8, 7f);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            TaffyNoise data2 = fory.deserializeJavaObject(bytes, TaffyNoise.class);
+            TaffyNoise data2 = fory.deserialize(bytes, TaffyNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -533,9 +533,9 @@ public class GridTest {
 
         FlanNoise data = new FlanNoise(1234, 8, 7f, 2);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            FlanNoise data2 = fory.deserializeJavaObject(bytes, FlanNoise.class);
+            FlanNoise data2 = fory.deserialize(bytes, FlanNoise.class);
             Assert.assertEquals(data.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), data2.getNoise(new float[]{0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f}), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -549,9 +549,9 @@ public class GridTest {
 
         CyclicNoise data = new CyclicNoise(-9876543210L, 8);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            CyclicNoise data2 = fory.deserializeJavaObject(bytes, CyclicNoise.class);
+            CyclicNoise data2 = fory.deserialize(bytes, CyclicNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -565,9 +565,9 @@ public class GridTest {
 
         PuffyNoise data = new PuffyNoise(-9876543210L, 8);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            PuffyNoise data2 = fory.deserializeJavaObject(bytes, PuffyNoise.class);
+            PuffyNoise data2 = fory.deserialize(bytes, PuffyNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -581,9 +581,9 @@ public class GridTest {
 
         HuskyNoise data = new HuskyNoise(-9876543210L, 8);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            HuskyNoise data2 = fory.deserializeJavaObject(bytes, HuskyNoise.class);
+            HuskyNoise data2 = fory.deserialize(bytes, HuskyNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -597,9 +597,9 @@ public class GridTest {
 
         SorbetNoise data = new SorbetNoise(-9876543210L, 8);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            SorbetNoise data2 = fory.deserializeJavaObject(bytes, SorbetNoise.class);
+            SorbetNoise data2 = fory.deserialize(bytes, SorbetNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -613,9 +613,9 @@ public class GridTest {
 
         SimplexNoise data = new SimplexNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            SimplexNoise data2 = fory.deserializeJavaObject(bytes, SimplexNoise.class);
+            SimplexNoise data2 = fory.deserialize(bytes, SimplexNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -633,9 +633,9 @@ public class GridTest {
 
         SimplexNoiseScaled data = new SimplexNoiseScaled(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            SimplexNoiseScaled data2 = fory.deserializeJavaObject(bytes, SimplexNoiseScaled.class);
+            SimplexNoiseScaled data2 = fory.deserialize(bytes, SimplexNoiseScaled.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -653,9 +653,9 @@ public class GridTest {
 
         SimplexNoiseHard data = new SimplexNoiseHard(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            SimplexNoiseHard data2 = fory.deserializeJavaObject(bytes, SimplexNoiseHard.class);
+            SimplexNoiseHard data2 = fory.deserialize(bytes, SimplexNoiseHard.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -673,9 +673,9 @@ public class GridTest {
 
         OpenSimplex2 data = new OpenSimplex2(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            OpenSimplex2 data2 = fory.deserializeJavaObject(bytes, OpenSimplex2.class);
+            OpenSimplex2 data2 = fory.deserialize(bytes, OpenSimplex2.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -691,9 +691,9 @@ public class GridTest {
 
         OpenSimplex2Smooth data = new OpenSimplex2Smooth(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            OpenSimplex2Smooth data2 = fory.deserializeJavaObject(bytes, OpenSimplex2Smooth.class);
+            OpenSimplex2Smooth data2 = fory.deserialize(bytes, OpenSimplex2Smooth.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -709,9 +709,9 @@ public class GridTest {
 
         PerlinNoise data = new PerlinNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            PerlinNoise data2 = fory.deserializeJavaObject(bytes, PerlinNoise.class);
+            PerlinNoise data2 = fory.deserialize(bytes, PerlinNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -729,9 +729,9 @@ public class GridTest {
 
         ValueNoise data = new ValueNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            ValueNoise data2 = fory.deserializeJavaObject(bytes, ValueNoise.class);
+            ValueNoise data2 = fory.deserialize(bytes, ValueNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -750,9 +750,9 @@ public class GridTest {
 
         BasicHashNoise data = new BasicHashNoise(-987654321, new FlawedPointHash.FlowerHash(123456789));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            BasicHashNoise data2 = fory.deserializeJavaObject(bytes, BasicHashNoise.class);
+            BasicHashNoise data2 = fory.deserialize(bytes, BasicHashNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -770,9 +770,9 @@ public class GridTest {
 
         HighDimensionalValueNoise data = new HighDimensionalValueNoise(1234, 8);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            HighDimensionalValueNoise data2 = fory.deserializeJavaObject(bytes, HighDimensionalValueNoise.class);
+            HighDimensionalValueNoise data2 = fory.deserialize(bytes, HighDimensionalValueNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
         }
@@ -786,9 +786,9 @@ public class GridTest {
 
         WhiteNoise data = new WhiteNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            WhiteNoise data2 = fory.deserializeJavaObject(bytes, WhiteNoise.class);
+            WhiteNoise data2 = fory.deserialize(bytes, WhiteNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -806,9 +806,9 @@ public class GridTest {
 
         PerlueNoise data = new PerlueNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            PerlueNoise data2 = fory.deserializeJavaObject(bytes, PerlueNoise.class);
+            PerlueNoise data2 = fory.deserialize(bytes, PerlueNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -826,9 +826,9 @@ public class GridTest {
 
         BadgerNoise data = new BadgerNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            BadgerNoise data2 = fory.deserializeJavaObject(bytes, BadgerNoise.class);
+            BadgerNoise data2 = fory.deserialize(bytes, BadgerNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -846,9 +846,9 @@ public class GridTest {
 
         SnakeNoise data = new SnakeNoise(-9876543210L);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            SnakeNoise data2 = fory.deserializeJavaObject(bytes, SnakeNoise.class);
+            SnakeNoise data2 = fory.deserialize(bytes, SnakeNoise.class);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f), data2.getNoise(0.1f, 0.2f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f, 0.4f), data2.getNoise(0.1f, 0.2f, 0.3f, 0.4f), Float.MIN_NORMAL);
@@ -867,9 +867,9 @@ public class GridTest {
 
         NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            NoiseWrapper data2 = fory.deserializeJavaObject(bytes, NoiseWrapper.class);
+            NoiseWrapper data2 = fory.deserialize(bytes, NoiseWrapper.class);
             Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -888,9 +888,9 @@ public class GridTest {
 
         RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 10f, 20.125f);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            RadialNoiseWrapper data2 = fory.deserializeJavaObject(bytes, RadialNoiseWrapper.class);
+            RadialNoiseWrapper data2 = fory.deserialize(bytes, RadialNoiseWrapper.class);
             Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data, data2);
@@ -906,9 +906,9 @@ public class GridTest {
 
         NoiseAdjustment data = new NoiseAdjustment(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), Interpolations.exp5In);
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            NoiseAdjustment data2 = fory.deserializeJavaObject(bytes, NoiseAdjustment.class);
+            NoiseAdjustment data2 = fory.deserialize(bytes, NoiseAdjustment.class);
             Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
             Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
@@ -926,9 +926,9 @@ public class GridTest {
         fory.registerSerializer(PointPair.class, new PointPairSerializer(fory));
         PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
 
-        byte[] bytes = fory.serializeJavaObject(data);
+        byte[] bytes = fory.serialize(data);
         {
-            PointPair<?> data2 = fory.deserializeJavaObject(bytes, PointPair.class);
+            PointPair<?> data2 = fory.deserialize(bytes, PointPair.class);
             Assert.assertEquals(data, data2);
         }
     }

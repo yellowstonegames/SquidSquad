@@ -28,11 +28,11 @@ public class MimicLocalMapSerializer extends Serializer<MimicLocalMap> {
 
     @Override
     public void write(MemoryBuffer buffer, MimicLocalMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public MimicLocalMap read(MemoryBuffer buffer) {
-        return MimicLocalMap.recreateFromString(fory.readJavaString(buffer));
+        return MimicLocalMap.recreateFromString(fory.readString(buffer));
     }
 }

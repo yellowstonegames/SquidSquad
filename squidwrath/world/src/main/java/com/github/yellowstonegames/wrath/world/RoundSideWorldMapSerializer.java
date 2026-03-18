@@ -28,11 +28,11 @@ public class RoundSideWorldMapSerializer extends Serializer<RoundSideWorldMap> {
 
     @Override
     public void write(MemoryBuffer buffer, RoundSideWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public RoundSideWorldMap read(MemoryBuffer buffer) {
-        return RoundSideWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return RoundSideWorldMap.recreateFromString(fory.readString(buffer));
     }
 }

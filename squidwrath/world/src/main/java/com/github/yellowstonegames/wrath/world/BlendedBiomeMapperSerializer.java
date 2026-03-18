@@ -28,11 +28,11 @@ public class BlendedBiomeMapperSerializer extends Serializer<BlendedBiomeMapper>
 
     @Override
     public void write(MemoryBuffer buffer, BlendedBiomeMapper data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public BlendedBiomeMapper read(MemoryBuffer buffer) {
-        return BlendedBiomeMapper.recreateFromString(fory.readJavaString(buffer));
+        return BlendedBiomeMapper.recreateFromString(fory.readString(buffer));
     }
 }

@@ -28,11 +28,11 @@ public class DiagonalWorldMapSerializer extends Serializer<DiagonalWorldMap> {
 
     @Override
     public void write(MemoryBuffer buffer, DiagonalWorldMap data) {
-        fory.writeJavaString(buffer, data.stringSerialize());
+        fory.writeString(buffer, data.stringSerialize());
     }
 
     @Override
     public DiagonalWorldMap read(MemoryBuffer buffer) {
-        return DiagonalWorldMap.recreateFromString(fory.readJavaString(buffer));
+        return DiagonalWorldMap.recreateFromString(fory.readString(buffer));
     }
 }
