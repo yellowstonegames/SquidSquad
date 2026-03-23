@@ -16,9 +16,17 @@ dependencies {
     }
 
     testImplementation "junit:junit:$junitVersion"
-    //testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.9.0"
     testImplementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+    constraints{
+        testImplementation("org.lwjgl:lwjgl:$lwjgl3Version")
+        testImplementation("org.lwjgl:lwjgl-glfw:$lwjgl3Version")
+        testImplementation("org.lwjgl:lwjgl-jemalloc:$lwjgl3Version")
+        testImplementation("org.lwjgl:lwjgl-openal:$lwjgl3Version")
+        testImplementation("org.lwjgl:lwjgl-opengl:$lwjgl3Version")
+        testImplementation("org.lwjgl:lwjgl-stb:$lwjgl3Version")
+    }
 }
 
 import com.vanniktech.maven.publish.JavaLibrary
