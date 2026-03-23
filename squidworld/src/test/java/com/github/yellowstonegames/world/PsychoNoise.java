@@ -53,11 +53,11 @@ public class PsychoNoise implements INoise {
         this(3);
     }
     public PsychoNoise(int octaves) {
-        this(0xBEEF1E57, octaves, PI2);
+        this(0xBEEF1E57, octaves, 4);
     }
 
     public PsychoNoise(long seed, int octaves) {
-        this(seed, octaves, PI2);
+        this(seed, octaves, 4);
     }
 
     public PsychoNoise(long seed, int octaves, float frequency) {
@@ -107,9 +107,9 @@ public class PsychoNoise implements INoise {
         setSeed(seed, frequency);
     }
     /**
-     * Sets the seed, and in doing so generates 203 random floats for different dimensions to use. Note that this
+     * Sets the seed, and in doing so generates many random floats for different dimensions to use. Note that this
      * may be considerably more expensive than a typical setter, because all matrices are set whenever the seed changes.
-     * Also sets the frequency; the default is 2.
+     * Also sets the frequency; the default is 4.
      * @param seed any long
      * @param frequency a multiplier that will apply to all coordinates; higher changes faster, lower changes slower
      */
@@ -117,10 +117,16 @@ public class PsychoNoise implements INoise {
         this.seed = seed;
         this.frequency = frequency;
         seed = Hasher.randomize3(seed);
-        for (int i = 0; i < rotations.length; i++) {
+        for (int i = 0, d = i + 2; i < rotations.length; i++, d++) {
             for (int j = 0; j < rotations[i].length; j++) {
-                for (int k = 0; k < rotations[i][j].length; k++) {
-                    rotations[i][j][k] = (Hasher.randomizeHFloat(seed++) - Hasher.randomizeHFloat(seed++));
+                float central = (Hasher.randomizeHFloat(seed++) - 0.5f);
+                for (int c = 0; c < d; c++) {
+                    rotations[i][j][c * (d + 1)] = central;
+                }
+                for (int x = 0; x < d; x++) {
+                    for (int y = 0; y < x; y++) {
+                        rotations[i][j][x + y * d] = -(rotations[i][j][y + x * d] = (Hasher.randomizeHFloat(seed++)));
+                    }
                 }
             }
         }
