@@ -44,7 +44,7 @@ public class PsychoNoise implements INoise {
     protected int octaves;
     protected float total = 2f;
     protected float start = 1f;
-    protected float frequency = 2f;
+    protected float frequency = 4f;
     protected long seed;
     protected transient float[][][] rotations = new float[6][][];
     protected transient float[][] inputs = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6], new float[7]};
@@ -53,11 +53,11 @@ public class PsychoNoise implements INoise {
         this(3);
     }
     public PsychoNoise(int octaves) {
-        this(0xBEEF1E57, octaves, 2f);
+        this(0xBEEF1E57, octaves, PI2);
     }
 
     public PsychoNoise(long seed, int octaves) {
-        this(seed, octaves, 2f);
+        this(seed, octaves, PI2);
     }
 
     public PsychoNoise(long seed, int octaves, float frequency) {
@@ -84,7 +84,7 @@ public class PsychoNoise implements INoise {
             start /= GAIN;
             total += start;
         }
-        total = 4f / total;
+        total = 1f / total;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class PsychoNoise implements INoise {
         for (int i = 0; i < rotations.length; i++) {
             for (int j = 0; j < rotations[i].length; j++) {
                 for (int k = 0; k < rotations[i][j].length; k++) {
-                    rotations[i][j][k] = (Hasher.randomizeHFloat(seed++) - 0.5f) * 0.5f;
+                    rotations[i][j][k] = (Hasher.randomizeHFloat(seed++) - Hasher.randomizeHFloat(seed++));
                 }
             }
         }
@@ -202,7 +202,7 @@ public class PsychoNoise implements INoise {
             int xs = radiansToTableIndex(xx);
             int ys = radiansToTableIndex(yy);
 
-            noise += ((
+            noise += TrigTools.sinTurns((
                             COS_TABLE[xs] * SIN_TABLE[ys] + COS_TABLE[ys] * SIN_TABLE[xs]
                     ) * (0.5f/2f)
             ) * amp;
@@ -213,7 +213,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
+        return noise * total;
     }
 
     @Override
@@ -245,18 +245,14 @@ public class PsychoNoise implements INoise {
             yy = outputs[1][1];
             zz = outputs[1][2];
 
-//            float xr = (xx * TrigTools.radToIndex); int xf = MathTools.fastFloor(xr); xr -= xf; int xs = xf & TABLE_MASK;
-//            float yr = (yy * TrigTools.radToIndex); int yf = MathTools.fastFloor(yr); yr -= yf; int ys = yf & TABLE_MASK;
-//            float zr = (zz * TrigTools.radToIndex); int zf = MathTools.fastFloor(zr); zr -= zf; int zs = zf & TABLE_MASK;
-
             int xs = radiansToTableIndex(xx);
             int ys = radiansToTableIndex(yy);
             int zs = radiansToTableIndex(zz);
-//
-            noise += ((
+
+            noise += TrigTools.sinSmootherTurns((
                             COS_TABLE[xs] * SIN_TABLE[zs] +
-                            COS_TABLE[ys] * SIN_TABLE[xs] +
-                            COS_TABLE[zs] * SIN_TABLE[ys]
+                                    COS_TABLE[ys] * SIN_TABLE[xs] +
+                                    COS_TABLE[zs] * SIN_TABLE[ys]
                     ) * (0.5f/3f)
             ) * amp;
 
@@ -267,7 +263,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
+        return noise * total;
     }
 
     @Override
@@ -308,11 +304,11 @@ public class PsychoNoise implements INoise {
             int zs = radiansToTableIndex(zz);
             int ws = radiansToTableIndex(ww);
 
-            noise += ((
-                    + COS_TABLE[xs] * SIN_TABLE[ws]
-                    + COS_TABLE[ys] * SIN_TABLE[xs]
-                    + COS_TABLE[zs] * SIN_TABLE[ys]
-                    + COS_TABLE[ws] * SIN_TABLE[zs]
+            noise += TrigTools.sinTurns((
+                            + COS_TABLE[xs] * SIN_TABLE[ws]
+                                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                                    + COS_TABLE[ws] * SIN_TABLE[zs]
                     ) * (0.5f/4f)
             ) * amp;
 
@@ -324,7 +320,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
+        return noise * total;
     }
 
     @Override
@@ -370,12 +366,12 @@ public class PsychoNoise implements INoise {
             int ws = radiansToTableIndex(ww);
             int us = radiansToTableIndex(uu);
 
-            noise += ((
-                    + COS_TABLE[xs] * SIN_TABLE[us]
-                    + COS_TABLE[ys] * SIN_TABLE[xs]
-                    + COS_TABLE[zs] * SIN_TABLE[ys]
-                    + COS_TABLE[ws] * SIN_TABLE[zs]
-                    + COS_TABLE[us] * SIN_TABLE[ws]
+            noise += TrigTools.sinTurns((
+                            + COS_TABLE[xs] * SIN_TABLE[us]
+                                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                                    + COS_TABLE[ws] * SIN_TABLE[zs]
+                                    + COS_TABLE[us] * SIN_TABLE[ws]
                     ) * (0.5f/5f)
             ) * amp;
 
@@ -388,7 +384,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
+        return noise * total;
     }
 
     @Override
@@ -439,13 +435,13 @@ public class PsychoNoise implements INoise {
             int us = radiansToTableIndex(uu);
             int vs = radiansToTableIndex(vv);
 
-            noise += ((
-                    + COS_TABLE[xs] * SIN_TABLE[vs]
-                    + COS_TABLE[ys] * SIN_TABLE[xs]
-                    + COS_TABLE[zs] * SIN_TABLE[ys]
-                    + COS_TABLE[ws] * SIN_TABLE[zs]
-                    + COS_TABLE[us] * SIN_TABLE[ws]
-                    + COS_TABLE[vs] * SIN_TABLE[us]
+            noise += TrigTools.sinTurns((
+                            + COS_TABLE[xs] * SIN_TABLE[vs]
+                                    + COS_TABLE[ys] * SIN_TABLE[xs]
+                                    + COS_TABLE[zs] * SIN_TABLE[ys]
+                                    + COS_TABLE[ws] * SIN_TABLE[zs]
+                                    + COS_TABLE[us] * SIN_TABLE[ws]
+                                    + COS_TABLE[vs] * SIN_TABLE[us]
                     ) * (0.5f/6f)
             ) * amp;
 
@@ -459,7 +455,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
+        return noise * total;
     }
 
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
@@ -514,8 +510,8 @@ public class PsychoNoise implements INoise {
             int vs = radiansToTableIndex(vv);
             int ms = radiansToTableIndex(mm);
 
-            noise += ((
-                                    + COS_TABLE[xs] * SIN_TABLE[ms]
+            noise += TrigTools.sinTurns((
+                            + COS_TABLE[xs] * SIN_TABLE[ms]
                                     + COS_TABLE[ys] * SIN_TABLE[xs]
                                     + COS_TABLE[zs] * SIN_TABLE[ys]
                                     + COS_TABLE[ws] * SIN_TABLE[zs]
@@ -536,7 +532,7 @@ public class PsychoNoise implements INoise {
             warpTrk *= warpTrkGain;
             amp *= GAIN;
         }
-        return PerlinNoise.equalize(LineWobble.bicubicWobble(seed, noise * total), ADD, MUL);
+        return noise * total;
     }
 
     @Override
