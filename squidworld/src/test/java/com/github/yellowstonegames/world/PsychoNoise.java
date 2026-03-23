@@ -119,13 +119,13 @@ public class PsychoNoise implements INoise {
         seed = Hasher.randomize3(seed);
         for (int i = 0, d = i + 2; i < rotations.length; i++, d++) {
             for (int j = 0; j < rotations[i].length; j++) {
-                float central = (Hasher.randomizeHFloat(seed++) - 0.5f);
+                float central = ((seed += 0x9E3779B97F4A7C15L) * 0x1p-64f);
                 for (int c = 0; c < d; c++) {
                     rotations[i][j][c * (d + 1)] = central;
                 }
                 for (int x = 0; x < d; x++) {
                     for (int y = 0; y < x; y++) {
-                        rotations[i][j][x + y * d] = -(rotations[i][j][y + x * d] = (Hasher.randomizeHFloat(seed++) - 0.5f));
+                        rotations[i][j][x + y * d] = -(rotations[i][j][y + x * d] = ((seed += 0x9E3779B97F4A7C15L) * 0x1p-64f));
                     }
                 }
             }
