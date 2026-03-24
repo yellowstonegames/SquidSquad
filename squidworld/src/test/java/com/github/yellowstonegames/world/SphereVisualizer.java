@@ -1682,9 +1682,9 @@ public static final float[] GRADIENTS_6D = {
     }
     public void onSphereHalton(final int index)
     {
-        float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, index));
-        float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, index));
-        float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, index));
+        float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(3, index));
+        float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(5, index));
+        float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(7, index));
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -1957,12 +1957,12 @@ public static final float[] GRADIENTS_6D = {
     }
 
     /**
-     * Meant to imitate {@link MathTools#probit(double)} using the simpler logit function. This scales the actual logit
-     * function by {@code Math.sqrt(Math.PI/8.0)}, which makes it have the same slope as probit when x is 0.5. The
+     * Meant to imitate {@link Distributor#probitD(double)} using the simpler logit function. This scales the actual
+     * logit function by {@code Math.sqrt(Math.PI/8.0)}, which makes it have the same slope as probit when x is 0.5. The
      * permissible values for x are between 0.0 and 1.0 inclusive. If you pass 0, you will get negative infinity, and if
      * you pass 1, you will get positive infinity.
      * <br>
-     * NOTE: this is usually slower than {@link MathTools#probit(double)}, and this doesn't produce a correct Gaussian
+     * NOTE: this is usually slower than {@link Distributor#probit(double)}, and this doesn't produce a correct Gaussian
      * distribution. For generating Gaussian variables, {@link Distributor#normal(long)} is generally fastest.
      * @param x between 0 and 1, inclusive if you do accept infinite outputs, or exclusive if you do not
      * @return an approximately-normal-distributed double with mu = 0.0, sigma = 1.0
@@ -2708,10 +2708,10 @@ public static final float[] GRADIENTS_6D = {
         double[] v4 = new double[4];
 
         for (int i = 0; i < STANDARD_COUNT; i++) {
-            v4[0] = MathTools.probit(((x = x + GOLDEN_LONGS[3][0]) >>> 11) * 0x1p-53);
-            v4[1] = MathTools.probit(((y = y + GOLDEN_LONGS[3][1]) >>> 11) * 0x1p-53);
-            v4[2] = MathTools.probit(((z = z + GOLDEN_LONGS[3][2]) >>> 11) * 0x1p-53);
-            v4[3] = MathTools.probit(((w = w + GOLDEN_LONGS[3][3]) >>> 11) * 0x1p-53);
+            v4[0] = Distributor.probitL(x = x + GOLDEN_LONGS[3][0]);
+            v4[1] = Distributor.probitL(y = y + GOLDEN_LONGS[3][1]);
+            v4[2] = Distributor.probitL(z = z + GOLDEN_LONGS[3][2]);
+            v4[3] = Distributor.probitL(w = w + GOLDEN_LONGS[3][3]);
             double mag = Math.sqrt(
                     v4[0] * v4[0] +
                     v4[1] * v4[1] +
@@ -2732,10 +2732,10 @@ public static final float[] GRADIENTS_6D = {
 
     private void gaussianHalton(float[] gradients4D) {
         for (int i = 0; i < STANDARD_COUNT; i++) {
-            double x = MathTools.probit(QuasiRandomTools.vanDerCorputD(2, i + 1));
-            double y = MathTools.probit(QuasiRandomTools.vanDerCorputD(3, i + 1));
-            double z = MathTools.probit(QuasiRandomTools.vanDerCorputD(5, i + 1));
-            double w = MathTools.probit(QuasiRandomTools.vanDerCorputD(7, i + 1));
+            double x = Distributor.probitD(QuasiRandomTools.vanDerCorputD(2, i + 1));
+            double y = Distributor.probitD(QuasiRandomTools.vanDerCorputD(3, i + 1));
+            double z = Distributor.probitD(QuasiRandomTools.vanDerCorputD(5, i + 1));
+            double w = Distributor.probitD(QuasiRandomTools.vanDerCorputD(7, i + 1));
             double mag = Math.sqrt(
                     x * x +
                     y * y +
@@ -3178,11 +3178,11 @@ public static final float[] GRADIENTS_6D = {
                 GRADIENTS_5D[i] *= 0.5f;
             }
             for (int i = 1; i <= STANDARD_COUNT; i++) {
-                float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
-                float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
-                float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
-                float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
-                float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(2, i));
+                float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(3, i));
+                float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(5, i));
+                float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(7, i));
+                float w = Distributor.probitF(QuasiRandomTools.vanDerCorput(11, i));
+                float u = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i));
 
                 final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
                 int index = i - 1 << 3;
@@ -3727,11 +3727,11 @@ public static final float[] GRADIENTS_5D = {
                 long wl = GOLDEN_LONGS[5][3] - 0x4000000000000000L;
                 long ul = GOLDEN_LONGS[5][4] - 0x4000000000000000L;
                 for (int i = 1; i <= STANDARD_COUNT; i += 2) {
-                    float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[4][0]) >>> 11) * 0x1p-53);
-                    float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[4][1]) >>> 11) * 0x1p-53);
-                    float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[4][2]) >>> 11) * 0x1p-53);
-                    float w = (float) MathTools.probit(((wl += QuasiRandomTools.GOLDEN_LONGS[4][3]) >>> 11) * 0x1p-53);
-                    float u = (float) MathTools.probit(((ul += QuasiRandomTools.GOLDEN_LONGS[4][4]) >>> 11) * 0x1p-53);
+                    float x = (float) Distributor.probitL(((xl += QuasiRandomTools.GOLDEN_LONGS[4][0])));
+                    float y = (float) Distributor.probitL(((yl += QuasiRandomTools.GOLDEN_LONGS[4][1])));
+                    float z = (float) Distributor.probitL(((zl += QuasiRandomTools.GOLDEN_LONGS[4][2])));
+                    float w = (float) Distributor.probitL(((wl += QuasiRandomTools.GOLDEN_LONGS[4][3])));
+                    float u = (float) Distributor.probitL(((ul += QuasiRandomTools.GOLDEN_LONGS[4][4])));
 
 //            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
                     final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u);
@@ -3816,12 +3816,12 @@ public static final float[] GRADIENTS_5D = {
 
 
             for (int i = 1; i <= STANDARD_COUNT; i++) {
-                float x = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(3, i));
-                float y = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(5, i));
-                float z = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(7, i));
-                float w = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(11, i));
-                float u = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(2, i));
-                float v = (float) MathTools.probit(QuasiRandomTools.vanDerCorput(13, i));
+                float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(3, i));
+                float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(5, i));
+                float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(7, i));
+                float w = Distributor.probitF(QuasiRandomTools.vanDerCorput(11, i));
+                float u = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i));
+                float v = Distributor.probitF(QuasiRandomTools.vanDerCorput(13, i));
 
                 final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v);
                 int index = i - 1 << 3;
@@ -3841,12 +3841,12 @@ public static final float[] GRADIENTS_5D = {
                 long ul = GOLDEN_LONGS[6][4] - 0x4000000000000000L;
                 long vl = GOLDEN_LONGS[6][5] - 0x4000000000000000L;
                 for (int i = 1; i <= STANDARD_COUNT; i += 2) {
-                    float x = (float) MathTools.probit(((xl += QuasiRandomTools.GOLDEN_LONGS[5][0]) >>> 11) * 0x1p-53);// | 1L << 52
-                    float y = (float) MathTools.probit(((yl += QuasiRandomTools.GOLDEN_LONGS[5][1]) >>> 11) * 0x1p-53);
-                    float z = (float) MathTools.probit(((zl += QuasiRandomTools.GOLDEN_LONGS[5][2]) >>> 11) * 0x1p-53);
-                    float w = (float) MathTools.probit(((wl += QuasiRandomTools.GOLDEN_LONGS[5][3]) >>> 11) * 0x1p-53);
-                    float u = (float) MathTools.probit(((ul += QuasiRandomTools.GOLDEN_LONGS[5][4]) >>> 11) * 0x1p-53);
-                    float v = (float) MathTools.probit(((vl += QuasiRandomTools.GOLDEN_LONGS[5][5]) >>> 11) * 0x1p-53);
+                    float x = (float) Distributor.probitL(xl += QuasiRandomTools.GOLDEN_LONGS[5][0]);// | 1L << 52
+                    float y = (float) Distributor.probitL(yl += QuasiRandomTools.GOLDEN_LONGS[5][1]);
+                    float z = (float) Distributor.probitL(zl += QuasiRandomTools.GOLDEN_LONGS[5][2]);
+                    float w = (float) Distributor.probitL(wl += QuasiRandomTools.GOLDEN_LONGS[5][3]);
+                    float u = (float) Distributor.probitL(ul += QuasiRandomTools.GOLDEN_LONGS[5][4]);
+                    float v = (float) Distributor.probitL(vl += QuasiRandomTools.GOLDEN_LONGS[5][5]);
 
 //            float r = (float) Math.pow((QuasiRandomTools.goldenLong[5][5] * i >>> 12) * 0x1p-52, 0.2);
                     final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v);
