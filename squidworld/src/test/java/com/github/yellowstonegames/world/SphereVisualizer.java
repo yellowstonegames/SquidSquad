@@ -1533,7 +1533,7 @@ public static final float[] GRADIENTS_6D = {
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
-            onSphereVDC2(i);
+            onSphereVDC(i, 7);
 //            onSpherePhi(i);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
@@ -1863,12 +1863,12 @@ public static final float[] GRADIENTS_6D = {
         vector[1] = y;
         vector[2] = z;
     }
-    public void onSphereVDC2(final int index)
+    public void onSphereVDC(final int index, final int base)
     {
         final int i = index * 3;
-        float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i+1));
-        float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i+2));
-        float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i+3));
+        float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(base, i+1 ^ i+1 >>> 1));
+        float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(base, i+2 ^ i+2 >>> 1));
+        float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(base, i+3 ^ i+3 >>> 1));
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
