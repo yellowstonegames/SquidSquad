@@ -62,7 +62,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 12;
+    private int mode = 5;
     private final int modes = 39;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
@@ -1342,7 +1342,7 @@ public static final float[] GRADIENTS_6D = {
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
-            onSphereRoberts(i);
+            onSphereRoberts(i, 6);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -1354,7 +1354,7 @@ public static final float[] GRADIENTS_6D = {
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
-            onSphereRobertsVDC(i);
+            onSphereRobertsVDC(i, 6);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -1438,7 +1438,7 @@ public static final float[] GRADIENTS_6D = {
         for (int i = 0; i < POINT_COUNT; i++) {
             points[i][0] = points[i][1] = points[i][2] = 0f;
 //            RotationTools.rotate(pole, RotationTools.randomRotation3D(++seed), points[i]);
-            onSphereRoberts(i);
+            onSphereRoberts(i, 2);
             renderer.color(smoke);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 125 + 260 + 126, points[i][1] * 125 + 260, 0);
 //            if(!MathTools.isEqual(circleCoord[0] * circleCoord[0] + circleCoord[1] * circleCoord[1] + circleCoord[2] * circleCoord[2], 1f, 0.00001f))
@@ -1533,7 +1533,7 @@ public static final float[] GRADIENTS_6D = {
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
-            onSphereVDC(i, 7);
+            onSphereVDC(i, 3);
 //            onSpherePhi(i);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
@@ -1709,11 +1709,11 @@ public static final float[] GRADIENTS_6D = {
         vector[1] = y;
         vector[2] = z;
     }
-    public void onSphereRoberts(final int index)
+    public void onSphereRoberts(final int index, final int dimension)
     {
-        float x = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[2][0] * index >>> 12) * 0x1p-52);
-        float y = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[2][1] * index >>> 12) * 0x1p-52);
-        float z = (float) MathTools.probit((QuasiRandomTools.GOLDEN_LONGS[2][2] * index >>> 12) * 0x1p-52);
+        float x = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][0] * index);
+        float y = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][1] * index);
+        float z = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][2] * index);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -1725,12 +1725,12 @@ public static final float[] GRADIENTS_6D = {
         vector[1] = y;
         vector[2] = z;
     }
-    public void onSphereRobertsVDC(final int index)
+    public void onSphereRobertsVDC(final int index, final int dimension)
     {
         long v = Long.reverse(index);
-        float x = (float) MathTools.probit(((QuasiRandomTools.GOLDEN_LONGS[2][0] * index ^ v) >>> 12) * 0x1p-52);
-        float y = (float) MathTools.probit(((QuasiRandomTools.GOLDEN_LONGS[2][1] * index ^ v) >>> 12) * 0x1p-52);
-        float z = (float) MathTools.probit(((QuasiRandomTools.GOLDEN_LONGS[2][2] * index ^ v) >>> 12) * 0x1p-52);
+        float x = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][0] * index ^ v);
+        float y = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][1] * index ^ v);
+        float z = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][2] * index ^ v);
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
