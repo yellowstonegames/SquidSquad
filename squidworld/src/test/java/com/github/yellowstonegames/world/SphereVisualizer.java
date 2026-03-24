@@ -876,7 +876,8 @@ public static final float[] GRADIENTS_6D = {
                 sphereRobertsMode();
                 break;
             case 6:
-                sphereRobertsVDCMode();
+                if (UIUtils.shift()) sphereHammersley2AltMode();
+                else sphereHammersley2Mode();
                 break;
             case 7:
                 sphereBitCountMode();
@@ -892,8 +893,7 @@ public static final float[] GRADIENTS_6D = {
                 sphereHalton2Mode();
                 break;
             case 11:
-                if (UIUtils.shift()) sphereHammersley2AltMode();
-                else sphereHammersley2Mode();
+                sphereRobertsVDCMode();
                 break;
             case 12:
                 spherePhiMode();
@@ -1536,8 +1536,8 @@ public static final float[] GRADIENTS_6D = {
 //            onSpherePhi(i);
 //            onSphereVDC(i, 3);
 //            onSphereRandomize1(i); // 1700+ fps
-//            onSphereRandomize3(i); // 1700+ fps
-            onSphereRandomizeH(i); // 1700+ fps
+            onSphereRandomize3(i); // 1700+ fps
+//            onSphereRandomizeH(i); // 1700+ fps
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -1887,9 +1887,9 @@ public static final float[] GRADIENTS_6D = {
     public void onSphereRandomize1(final int index)
     {
         final int i = index * 3;
-        float x = (float) Distributor.probitL(Hasher.randomize1(i+1));
-        float y = (float) Distributor.probitL(Hasher.randomize1(i+2));
-        float z = (float) Distributor.probitL(Hasher.randomize1(i+3));
+        float x = RoughMath.normalRougher(Hasher.randomize1(i+1));
+        float y = RoughMath.normalRougher(Hasher.randomize1(i+2));
+        float z = RoughMath.normalRougher(Hasher.randomize1(i+3));
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -1904,9 +1904,9 @@ public static final float[] GRADIENTS_6D = {
     public void onSphereRandomize3(final int index)
     {
         final int i = index * 3;
-        float x = (float) Distributor.probitL(Hasher.randomize3(i+1));
-        float y = (float) Distributor.probitL(Hasher.randomize3(i+2));
-        float z = (float) Distributor.probitL(Hasher.randomize3(i+3));
+        float x = RoughMath.normalRougher(Hasher.randomize3(i+1));
+        float y = RoughMath.normalRougher(Hasher.randomize3(i+2));
+        float z = RoughMath.normalRougher(Hasher.randomize3(i+3));
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
@@ -1921,9 +1921,12 @@ public static final float[] GRADIENTS_6D = {
     public void onSphereRandomizeH(final int index)
     {
         final int i = index * 3;
-        float x = (float) Distributor.probitL(Hasher.randomizeH(i+1));
-        float y = (float) Distributor.probitL(Hasher.randomizeH(i+2));
-        float z = (float) Distributor.probitL(Hasher.randomizeH(i+3));
+        float x = RoughMath.normalRougher(Hasher.randomizeH(i+1));
+        float y = RoughMath.normalRougher(Hasher.randomizeH(i+2));
+        float z = RoughMath.normalRougher(Hasher.randomizeH(i+3));
+//        float x = (float) Distributor.probitL(Hasher.randomizeH(i+1));
+//        float y = (float) Distributor.probitL(Hasher.randomizeH(i+2));
+//        float z = (float) Distributor.probitL(Hasher.randomizeH(i+3));
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
