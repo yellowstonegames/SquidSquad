@@ -62,7 +62,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 5;
+    private int mode = 12;
     private final int modes = 39;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
@@ -981,7 +981,7 @@ public static final float[] GRADIENTS_6D = {
         batch.begin();
         font.draw(batch, String.format("Mode %d at %d FPS",
                         mode, Gdx.graphics.getFramesPerSecond()),
-                64, 518, 256+128, Align.center, true);
+                64, 525, 256+128, Align.center, true);
         batch.end();
     }
 
@@ -1533,8 +1533,11 @@ public static final float[] GRADIENTS_6D = {
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
-            onSphereVDC(i, 3);
 //            onSpherePhi(i);
+//            onSphereVDC(i, 3);
+//            onSphereRandomize1(i); // 1700+ fps
+//            onSphereRandomize3(i); // 1700+ fps
+            onSphereRandomizeH(i); // 1700+ fps
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -1870,6 +1873,57 @@ public static final float[] GRADIENTS_6D = {
         float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(base, i+1 ^ i+1 >>> 1));
         float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(base, i+2 ^ i+2 >>> 1));
         float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(base, i+3 ^ i+3 >>> 1));
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+
+        float[] vector = points[index];
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
+    public void onSphereRandomize1(final int index)
+    {
+        final int i = index * 3;
+        float x = (float) Distributor.probitL(Hasher.randomize1(i+1));
+        float y = (float) Distributor.probitL(Hasher.randomize1(i+2));
+        float z = (float) Distributor.probitL(Hasher.randomize1(i+3));
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+
+        float[] vector = points[index];
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
+    public void onSphereRandomize3(final int index)
+    {
+        final int i = index * 3;
+        float x = (float) Distributor.probitL(Hasher.randomize3(i+1));
+        float y = (float) Distributor.probitL(Hasher.randomize3(i+2));
+        float z = (float) Distributor.probitL(Hasher.randomize3(i+3));
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+
+        float[] vector = points[index];
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
+    public void onSphereRandomizeH(final int index)
+    {
+        final int i = index * 3;
+        float x = (float) Distributor.probitL(Hasher.randomizeH(i+1));
+        float y = (float) Distributor.probitL(Hasher.randomizeH(i+2));
+        float z = (float) Distributor.probitL(Hasher.randomizeH(i+3));
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
