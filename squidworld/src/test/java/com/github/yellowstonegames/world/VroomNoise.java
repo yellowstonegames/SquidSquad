@@ -1,0 +1,1086 @@
+/*
+ * Copyright (c) 2020-2024 See AUTHORS file.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.github.yellowstonegames.world;
+
+import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.random.LineWobble;
+import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.grid.INoise;
+import com.github.yellowstonegames.grid.SimplexNoise;
+
+/**
+ * Vroom noise code as an {@link INoise} implementation.
+ */
+@Beta
+public class VroomNoise implements INoise {
+
+    /**
+     * Use the same seed for any noise that should be continuous (smooth) across calls to nearby points.
+     */
+    protected long seed;
+
+    public static final VroomNoise instance = new VroomNoise();
+
+    public VroomNoise() {
+        this(1234567890L);
+    }
+
+    public VroomNoise(long seed)
+    {
+        this.seed = seed;
+    }
+
+    // 2D SECTION
+
+    /**
+     * Gets 2D noise using {@link #getSeed()}.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return noise between -1 and 1, inclusive
+     */
+    public float getNoise(final float x, final float y) {
+        return getNoiseWithSeed(x, y, seed);
+    }
+
+    /**
+     * Gets 2D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, long seed) {
+        final float a = LineWobble.bicubicWobble(seed, x * -0.5f + y * 0.8660254037844386f);
+        final float b = LineWobble.bicubicWobble(seed + 0x9A827999FCEF3243L, (x + a) * -0.5f + y * -0.8660254037844387f);
+        final float c = LineWobble.bicubicWobble(seed + 0x3504F333F9DE6486L, x + b);
+        final float result = (a + b + c) * (0.5f / 3f) + 0.5f;
+        // Barron spline
+        final float sharp = 2.2f; // increase to sharpen, decrease to soften
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    // 3D SECTION
+
+    /**
+     * Gets 3D noise using {@link #getSeed()}.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @return noise between -1 and 1, inclusive
+     */
+    public float getNoise(final float x, final float y, final float z) {
+        return getNoiseWithSeed(x, y, z, seed);
+    }
+
+    /**
+     * Gets 3D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    public float getNoiseWithSeed(float x, float y, float z, long seed) {
+        final float p0 = x;
+        final float p1 = x * -0.3333333333333333f + y * 0.9428090415820634f;
+        final float p2 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * 0.816496580927726f;
+        final float p3 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * -0.816496580927726f;
+
+        float xin = p1;
+        float yin = p2;
+        float zin = p3;
+        final float a = valueNoise(xin, yin, zin, seed);
+        xin = p0;
+        yin = p2;
+        zin = p3;
+        final float b = valueNoise(xin + a, yin, zin, seed + 0x9A827999FCEF3243L);
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        final float c = valueNoise(xin + b, yin, zin, seed + 0x3504F333F9DE6486L);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        final float d = valueNoise(xin + c, yin, zin, seed + 0xCF876CCDF6CD96C9L);
+        final float result = (a + b + c + d) * 0.25f;
+        // Barron spline
+        final float sharp = 0.75f * 3.3f; // increase to sharpen, decrease to soften
+        final float diff = 0.5f - result;
+        final long sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+    /**
+     * Gets value noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x, y, or z. This has a different output range (0 to 1) than foam noise.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @return noise between 0 and 1
+     */
+    public static float valueNoise(float x, float y, float z, final long seed) {
+        final long STEPX = 0xD1B54A32D192ED03L;
+        final long STEPY = 0xABC98388FB8FAC03L;
+        final long STEPZ = 0x8CB92BA72F3D8DD7L;
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        long zFloor = (long)Math.floor(z);
+        z -= zFloor;
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        zFloor *= STEPZ;
+        return ((1 - z) *
+                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, seed))
+                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, seed)))
+                + z *
+                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, seed))
+                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, seed)))
+        ) * 0x1p-64f + 0.5f;
+    }
+
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xD1B54A32D192ED03L
+     * @param y should be premultiplied by 0xABC98388FB8FAC03L
+     * @param z should be premultiplied by 0x8CB92BA72F3D8DD7L
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, final long z, long s) {
+        s ^= x ^ y ^ z;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
+    }
+
+    // 4D SECTION
+
+    /**
+     * Gets 4D foam noise using {@link #getSeed()}.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param w w coordinate
+     * @return noise between -1 and 1, inclusive
+     */
+    public float getNoise(final float x, final float y, final float z, final float w) {
+        return getNoiseWithSeed(x, y, z, w, seed);
+    }
+
+    /**
+     * Gets 4D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+        final float p0 = x;
+        final float p1 = x * -0.25f + y *  0.9682458365518543f;
+        final float p2 = x * -0.25f + y * -0.3227486121839514f + z * 0.9128709291752769f;
+        final float p3 = x * -0.25f + y * -0.3227486121839514f + z * -0.45643546458763834f + w * 0.7905694150420949f;
+        final float p4 = x * -0.25f + y * -0.3227486121839514f + z * -0.45643546458763834f + w * -0.7905694150420947f;
+        float xin = p1;
+        float yin = p2;
+        float zin = p3;
+        float win = p4;
+        final float a = valueNoise(xin, yin, zin, win, seed);
+        xin = p0;
+        yin = p2;
+        zin = p3;
+        win = p4;
+        final float b = valueNoise(xin + a, yin, zin, win, seed + 0x9A827999FCEF3243L);
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        win = p4;
+        final float c = valueNoise(xin + b, yin, zin, win, seed + 0x3504F333F9DE6486L);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p4;
+        final float d = valueNoise(xin + c, yin, zin, win, seed + 0xCF876CCDF6CD96C9L);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        final float e = valueNoise(xin + d, yin, zin, win, seed + 0x6A09E667F3BCC90CL);
+
+        final float result = (a + b + c + d + e) * 0.2f;
+        // Barron spline
+        final float sharp = 0.75f * 4.4f; // increase to sharpen, decrease to soften
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    /**
+     * Gets 4D value noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x, y, z, or w. This has a different output range (0 to 1) than foam noise.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param z z coordinate
+     * @param w w coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @return noise between 0 and 1
+     */
+    public static float valueNoise(float x, float y, float z, float w, final long seed) {
+        final long STEPX = 0xDB4F0B9175AE2165L;
+        final long STEPY = 0xBBE0563303A4615FL;
+        final long STEPZ = 0xA0F2EC75A1FE1575L;
+        final long STEPW = 0x89E182857D9ED689L;
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        long zFloor = (long)Math.floor(z);
+        z -= zFloor;
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        long wFloor = (long)Math.floor(w);
+        w -= wFloor;
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        zFloor *= STEPZ;
+        wFloor *= STEPW;
+        return ((1 - w) *
+                ((1 - z) *
+                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, seed))
+                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, seed)))
+                        + z *
+                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, seed))
+                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, seed))))
+                + (w *
+                ((1 - z) *
+                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, seed))
+                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, seed)))
+                        + z *
+                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, seed))
+                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, seed)))
+                ))) * 0x1p-64f + 0.5f;
+    }
+
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xDB4F0B9175AE2165L
+     * @param y should be premultiplied by 0xBBE0563303A4615FL
+     * @param z should be premultiplied by 0xA0F2EC75A1FE1575L
+     * @param w should be premultiplied by 0x89E182857D9ED689L
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, final long z, final long w, long s) {
+        s ^= x ^ y ^ z ^ w;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
+    }
+
+    // 5D SECTION
+
+    /**
+     * Gets 5D noise with {@link #getSeed()}.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u) {
+        return getNoiseWithSeed(x, y, z, w, u, seed);
+    }
+
+    /**
+     * Gets 5D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param seed any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
+        final float p0 = x *  0.8157559148337911f + y *  0.5797766823136037f;
+        final float p1 = x * -0.7314923478726791f + y *  0.6832997137249108f;
+        final float p2 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * 0.9486832980505138f;
+        final float p3 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w *   0.8944271909999159f;
+        final float p4 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u *  0.7745966692414833f;
+        final float p5 = x * -0.0208603044412437f + y * -0.3155296974329846f + z * -0.316227766016838f + w * -0.44721359549995804f + u * -0.7745966692414836f;
+
+        float xin = p1;
+        float yin = p2;
+        float zin = p3;
+        float win = p4;
+        float uin = p5;
+        final float a = valueNoise(xin, yin, zin, win, uin, seed);
+        xin = p0;
+        yin = p2;
+        zin = p3;
+        win = p4;
+        uin = p5;
+        final float b = valueNoise(xin + a, yin, zin, win, uin, seed + 0x9A827999FCEF3243L);
+        xin = p0;
+        yin = p1;
+        zin = p3;
+        win = p4;
+        uin = p5;
+        final float c = valueNoise(xin + b, yin, zin, win, uin, seed + 0x3504F333F9DE6486L);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p4;
+        uin = p5;
+        final float d = valueNoise(xin + c, yin, zin, win, uin, seed + 0xCF876CCDF6CD96C9L);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p5;
+        final float e = valueNoise(xin + d, yin, zin, win, uin, seed + 0x6A09E667F3BCC90CL);
+        xin = p0;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p4;
+        final float f = valueNoise(xin + e, yin, zin, win, uin, seed + 0x48C6001F0ABFB4FL);
+
+        final float result = (a + b + c + d + e + f) * 0.16666666666666666f;
+        final float sharp = 0.75f * 5.5f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    /**
+     * Gets 5D value noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x, y, z, w, or u. This has a different output range (0 to 1) than foam noise.
+     *
+     * @param x    x coordinate
+     * @param y    y coordinate
+     * @param z    z coordinate
+     * @param w    w coordinate
+     * @param u    u coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @return noise between 0 and 1
+     */
+    public static float valueNoise(float x, float y, float z, float w, float u, long seed) {
+        final long STEPX = 0xE19B01AA9D42C633L;
+        final long STEPY = 0xC6D1D6C8ED0C9631L;
+        final long STEPZ = 0xAF36D01EF7518DBBL;
+        final long STEPW = 0x9A69443F36F710E7L;
+        final long STEPU = 0x881403B9339BD42DL;
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        long zFloor = (long)Math.floor(z);
+        z -= zFloor;
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        long wFloor = (long)Math.floor(w);
+        w -= wFloor;
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        long uFloor = (long)Math.floor(u);
+        u -= uFloor;
+        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
+        //STEPX, STEPY, STEPZ, STEPW, STEPU
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        zFloor *= STEPZ;
+        wFloor *= STEPW;
+        uFloor *= STEPU;
+        return ((1 - u) *
+                ((1 - w) *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, seed))))
+                        + (w *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, seed)))
+                        )))
+                + (u *
+                ((1 - w) *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, seed))))
+                        + (w *
+                        ((1 - z) *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, seed)))
+                                + z *
+                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, seed))
+                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, seed)))
+                        ))))
+        ) * 0x1p-64f + 0.5f;
+    }
+
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xE19B01AA9D42C633L
+     * @param y should be premultiplied by 0xC6D1D6C8ED0C9631L
+     * @param z should be premultiplied by 0xAF36D01EF7518DBBL
+     * @param w should be premultiplied by 0x9A69443F36F710E7L
+     * @param u should be premultiplied by 0x881403B9339BD42DL
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, final long z, final long w, final long u, long s) {
+        s ^= x ^ y ^ z ^ w ^ u;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
+    }
+
+    // 6D SECTION
+
+    /**
+     * Gets 6D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v) {
+        return getNoiseWithSeed(x, y, z, w, u, v, seed);
+    }
+
+    /**
+     * Gets 6D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param v    v position; can be any finite float
+     * @param seed any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
+        final float p0 = x;
+        final float p1 = x * -0.16666666666666666f + y *  0.98601329718326940f;
+        final float p2 = x * -0.16666666666666666f + y * -0.19720265943665383f + z *  0.96609178307929590f;
+        final float p3 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w *  0.93541434669348530f;
+        final float p4 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u *  0.8819171036881969f;
+        final float p5 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u * -0.4409585518440984f + v *  0.7637626158259734f;
+        final float p6 = x * -0.16666666666666666f + y * -0.19720265943665383f + z * -0.24152294576982394f + w * -0.31180478223116176f + u * -0.4409585518440984f + v * -0.7637626158259732f;
+        float xin = p0;
+        float yin = p5;
+        float zin = p3;
+        float win = p6;
+        float uin = p1;
+        float vin = p4;
+        final float a = valueNoise(xin, yin, zin, win, uin, vin, seed);
+        xin = p2;
+        yin = p6;
+        zin = p0;
+        win = p4;
+        uin = p5;
+        vin = p3;
+        final float b = valueNoise(xin + a, yin, zin, win, uin, vin, seed + 0x9A827999FCEF3243L);
+        xin = p1;
+        yin = p2;
+        zin = p3;
+        win = p4;
+        uin = p6;
+        vin = p5;
+        final float c = valueNoise(xin + b, yin, zin, win, uin, vin, seed + 0x3504F333F9DE6486L);
+        xin = p6;
+        yin = p0;
+        zin = p2;
+        win = p5;
+        uin = p4;
+        vin = p1;
+        final float d = valueNoise(xin + c, yin, zin, win, uin, vin, seed + 0xCF876CCDF6CD96C9L);
+        xin = p2;
+        yin = p1;
+        zin = p5;
+        win = p0;
+        uin = p3;
+        vin = p6;
+        final float e = valueNoise(xin + d, yin, zin, win, uin, vin, seed + 0x6A09E667F3BCC90CL);
+        xin = p0;
+        yin = p4;
+        zin = p6;
+        win = p3;
+        uin = p1;
+        vin = p2;
+        final float f = valueNoise(xin + e, yin, zin, win, uin, vin, seed + 0x48C6001F0ABFB4FL);
+        xin = p5;
+        yin = p1;
+        zin = p2;
+        win = p3;
+        uin = p4;
+        vin = p0;
+        final float g = valueNoise(xin + f, yin, zin, win, uin, vin, seed + 0x9F0ED99BED9B2D92L);
+        final float result = (a + b + c + d + e + f + g) * 0.14285714285714285f;
+        final float sharp = 0.75f * 6.6f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    public static float valueNoise(float x, float y, float z, float w, float u, float v, long seed) {
+        final long STEPX = 0xE60E2B722B53AEEBL;
+        final long STEPY = 0xCEBD76D9EDB6A8EFL;
+        final long STEPZ = 0xB9C9AA3A51D00B65L;
+        final long STEPW = 0xA6F5777F6F88983FL;
+        final long STEPU = 0x9609C71EB7D03F7BL;
+        final long STEPV = 0x86D516E50B04AB1BL;
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        long zFloor = (long)Math.floor(z);
+        z -= zFloor;
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        long wFloor = (long)Math.floor(w);
+        w -= wFloor;
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        long uFloor = (long)Math.floor(u);
+        u -= uFloor;
+        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
+        long vFloor = (long)Math.floor(v);
+        v -= vFloor;
+        v *= v * (1 - v - v + 2); /* Won't go outside 0f to 1f range. */
+        //STEPX, STEPY, STEPZ, STEPW, STEPU, STEPV
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        zFloor *= STEPZ;
+        wFloor *= STEPW;
+        uFloor *= STEPU;
+        vFloor *= STEPV;
+        return ((1 - v) *
+                ((1 - u) *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor, seed))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, seed)))
+                                )))
+                        + (u *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, seed))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, seed)))
+                                )))))
+                + (v *
+                ((1 - u) *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor + STEPV, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, seed))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, seed)))
+                                )))
+                        + (u *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, seed))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed))
+                                                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, seed)))
+                                ))))))
+        ) * 0x1p-64f + 0.5f;
+    }
+    
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xE60E2B722B53AEEBL
+     * @param y should be premultiplied by 0xCEBD76D9EDB6A8EFL
+     * @param z should be premultiplied by 0xB9C9AA3A51D00B65L
+     * @param w should be premultiplied by 0xA6F5777F6F88983FL
+     * @param u should be premultiplied by 0x9609C71EB7D03F7BL
+     * @param v should be premultiplied by 0x86D516E50B04AB1BL
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, final long z, final long w, final long u, final long v, long s) {
+        s ^= x ^ y ^ z ^ w ^ u ^ v;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
+    }
+
+    // 7D SECTION
+
+    /**
+     * Gets 7D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @param m m position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        return getNoiseWithSeed(x, y, z, w, u, v, m, seed);
+    }
+
+    /**
+     * Gets 7D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param v    v position; can be any finite float
+     * @param m    m position; can be any finite float
+     * @param seed any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        final float p0 = x;
+        final float p1 = x * -0.14285714285714285f + y * +0.9897433186107870f;
+        final float p2 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * +0.97590007294853320f;
+        final float p3 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * +0.95618288746751490f;
+        final float p4 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * +0.92582009977255150f;
+        final float p5 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * +0.8728715609439696f;
+        final float p6 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * -0.4364357804719847f + m * +0.7559289460184545f;
+        final float p7 = x * -0.14285714285714285f + y * -0.1649572197684645f + z * -0.19518001458970663f + w * -0.23904572186687872f + u * -0.30860669992418377f + v * -0.4364357804719847f + m * -0.7559289460184544f;
+        float xin = p0;
+        float yin = p6;
+        float zin = p3;
+        float win = p7;
+        float uin = p1;
+        float vin = p4;
+        float min = p5;
+        final float a = valueNoise(xin, yin, zin, win, uin, vin, min, seed);
+        xin = p2;
+        yin = p3;
+        zin = p0;
+        win = p4;
+        uin = p6;
+        vin = p5;
+        min = p7;
+        final float b = valueNoise(xin + a, yin, zin, win, uin, vin, min, seed + 0x9A827999FCEF3243L);
+        xin = p1;
+        yin = p2;
+        zin = p4;
+        win = p3;
+        uin = p5;
+        vin = p7;
+        min = p6;
+        final float c = valueNoise(xin + b, yin, zin, win, uin, vin, min, seed + 0x3504F333F9DE6486L);
+        xin = p7;
+        yin = p0;
+        zin = p2;
+        win = p5;
+        uin = p4;
+        vin = p6;
+        min = p1;
+        final float d = valueNoise(xin + c, yin, zin, win, uin, vin, min, seed + 0xCF876CCDF6CD96C9L);
+        xin = p3;
+        yin = p1;
+        zin = p5;
+        win = p6;
+        uin = p7;
+        vin = p0;
+        min = p2;
+        final float e = valueNoise(xin + d, yin, zin, win, uin, vin, min, seed + 0x6A09E667F3BCC90CL);
+        xin = p4;
+        yin = p7;
+        zin = p6;
+        win = p2;
+        uin = p0;
+        vin = p1;
+        min = p3;
+        final float f = valueNoise(xin + e, yin, zin, win, uin, vin, min, seed + 0x48C6001F0ABFB4FL);
+        xin = p5;
+        yin = p4;
+        zin = p7;
+        win = p1;
+        uin = p2;
+        vin = p3;
+        min = p0;
+        final float g = valueNoise(xin + f, yin, zin, win, uin, vin, min, seed + 0x9F0ED99BED9B2D92L);
+        xin = p6;
+        yin = p5;
+        zin = p1;
+        win = p0;
+        uin = p3;
+        vin = p2;
+        min = p4;
+        final float h = valueNoise(xin + f, yin, zin, win, uin, vin, min, seed + 0x39915335EA8A5FD5L);
+
+        final float result = (a + b + c + d + e + f + g + h) * 0.125f;
+        final float sharp = 0.75f * 7.7f;
+        final float diff = 0.5f - result;
+        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
+        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    public static float valueNoise(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        final long STEPX = 0xE95E1DD17D35800DL;
+        final long STEPY = 0xD4BC74E13F3C782FL;
+        final long STEPZ = 0xC1EDBC5B5C68AC25L;
+        final long STEPW = 0xB0C8AC50F0EDEF5DL;
+        final long STEPU = 0xA127A31C56D1CDB5L;
+        final long STEPV = 0x92E852C80D153DB3L;
+        final long STEPM = 0x85EB75C3024385C3L;
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        long zFloor = (long)Math.floor(z);
+        z -= zFloor;
+        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        long wFloor = (long)Math.floor(w);
+        w -= wFloor;
+        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        long uFloor = (long)Math.floor(u);
+        u -= uFloor;
+        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
+        long vFloor = (long)Math.floor(v);
+        v -= vFloor;
+        v *= v * (1 - v - v + 2); /* Won't go outside 0f to 1f range. */
+        long mFloor = (long)Math.floor(m);
+        m -= mFloor;
+        m *= m * (1 - m - m + 2); /* Won't go outside 0f to 1f range. */
+        //STEPX, STEPY, STEPZ, STEPW, STEPU, STEPV
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        zFloor *= STEPZ;
+        wFloor *= STEPW;
+        uFloor *= STEPU;
+        vFloor *= STEPV;
+        mFloor *= STEPM;
+        return ((1 - m) *
+                ((1 - v) *
+                        ((1 - u) *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor, seed)))
+                                        )))
+                                + (u *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor, seed)))
+                                        )))))
+                        + (v *
+                        ((1 - u) *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor, seed)))
+                                        )))
+                                + (u *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor, seed)))
+                                        ))))))
+                ) + (m *
+                ((1 - v) *
+                        ((1 - u) *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor, mFloor + STEPM, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor, mFloor + STEPM, seed)))
+                                        )))
+                                + (u *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor, mFloor + STEPM, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor, mFloor + STEPM, seed)))
+                                        )))))
+                        + (v *
+                        ((1 - u) *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor, vFloor + STEPV, mFloor + STEPM, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor, vFloor + STEPV, mFloor + STEPM, seed)))
+                                        )))
+                                + (u *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed))
+                                                        + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, zFloor + STEPZ, wFloor + STEPW, uFloor + STEPU, vFloor + STEPV, mFloor + STEPM, seed)))
+                                        ))))))
+                ))) * 0x1p-64f + 0.5f;
+    }
+
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xE95E1DD17D35800DL
+     * @param y should be premultiplied by 0xD4BC74E13F3C782FL
+     * @param z should be premultiplied by 0xC1EDBC5B5C68AC25L
+     * @param w should be premultiplied by 0xB0C8AC50F0EDEF5DL
+     * @param u should be premultiplied by 0xA127A31C56D1CDB5L
+     * @param v should be premultiplied by 0x92E852C80D153DB3L
+     * @param m should be premultiplied by 0x85EB75C3024385C3L
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, final long z, final long w, final long u, final long v, final long m, long s) {
+        s ^= x ^ y ^ z ^ w ^ u ^ v ^ m;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
+    }
+
+    // OTHER
+
+    /**
+     * Returns the String "FoaN", to be used as a unique tag for this generator.
+     *
+     * @return the String "FoaN"
+     */
+    @Override
+    public String getTag() {
+        return "FoaN";
+    }
+
+    /**
+     * Gets the minimum dimension supported by this generator, which is 2.
+     *
+     * @return the minimum supported dimension, which is 2 inclusive
+     */
+    @Override
+    public int getMinDimension() {
+        return 2;
+    }
+
+    /**
+     * Gets the maximum dimension supported by this generator, which is 6.
+     *
+     * @return the maximum supported dimension, which is 6 inclusive
+     */
+    @Override
+    public int getMaxDimension() {
+        return 6;
+    }
+
+    /**
+     * Returns true because this generator can be seeded with {@link #setSeed(long)} and retrieved with
+     * {@link #getSeed()}.
+     *
+     * @return true
+     */
+    @Override
+    public boolean hasEfficientSetSeed() {
+        return true;
+    }
+    
+    public void setSeed(long seed) {
+        this.seed = seed;
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
+    @Override
+    public String stringSerialize() {
+        return "`" + seed + "`";
+    }
+
+    @Override
+    public VroomNoise stringDeserialize(String data) {
+        setSeed(Base.BASE10.readLong(data, 1, data.length() - 1));
+        return this;
+    }
+
+    public static VroomNoise recreateFromString(String data) {
+        return new VroomNoise(Base.BASE10.readLong(data, 1, data.length() - 1));
+    }
+
+    @Override
+    public VroomNoise copy() {
+        return new VroomNoise(this.seed);
+    }
+
+    @Override
+    public String toString() {
+        return "FoamNoise{seed=" + seed + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        VroomNoise that = (VroomNoise) o;
+
+        return (seed == that.seed);
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (seed ^ seed >>> 32);
+    }
+}

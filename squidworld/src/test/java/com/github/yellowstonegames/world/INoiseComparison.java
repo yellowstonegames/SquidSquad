@@ -267,9 +267,10 @@ public class INoiseComparison extends ApplicationAdapter {
             new PsychoNoise(1L, 3),                                    // 48
             new SorbetNoise(1L, 1),                                    // 49
             new SorbetNoise(1L, 3),                                    // 50
+            new VroomNoise(1L),                                        // 51
     };
-    private int index0 = 39;
-    private int index1 = 47;
+    private int index0 = 7;
+    private int index1 = 51;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
