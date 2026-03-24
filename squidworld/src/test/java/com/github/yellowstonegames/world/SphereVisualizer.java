@@ -1727,7 +1727,8 @@ public static final float[] GRADIENTS_6D = {
     }
     public void onSphereRobertsVDC(final int index, final int dimension)
     {
-        long v = Long.reverse(index);
+//        long v = Long.reverse(index);
+        long v = Long.reverseBytes(index);
         float x = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][0] * index ^ v);
         float y = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][1] * index ^ v);
         float z = (float) Distributor.probitL(QuasiRandomTools.GOLDEN_LONGS[dimension][2] * index ^ v);
