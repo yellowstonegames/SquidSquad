@@ -62,7 +62,7 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 38;
+    private int mode = 12;
     private final int modes = 39;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
@@ -1533,7 +1533,8 @@ public static final float[] GRADIENTS_6D = {
                 s = TrigTools.cosSmootherTurns(theta);
         renderer.begin(camera.combined, GL20.GL_POINTS);
         for (int i = 0; i < POINT_COUNT; i++) {
-            onSpherePhi(i);
+            onSphereVDC2(i);
+//            onSpherePhi(i);
             renderer.color(black);
             renderer.vertex((points[i][0] * c + points[i][2] * s) * 250 + 260, points[i][1] * 250 + 260, 0);
         }
@@ -1848,9 +1849,26 @@ public static final float[] GRADIENTS_6D = {
     public void onSpherePhi(final int index)
     {
         final int i = index * 3;
-        float x = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+1) >>> 12) * 0x1p-52);
-        float y = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+2) >>> 12) * 0x1p-52);
-        float z = (float) MathTools.probit((0x9E3779B97F4A7C15L * (i+3) >>> 12) * 0x1p-52);
+        float x = (float) Distributor.probitL(0x9E3779B97F4A7C15L * (i+1));
+        float y = (float) Distributor.probitL(0x9E3779B97F4A7C15L * (i+2));
+        float z = (float) Distributor.probitL(0x9E3779B97F4A7C15L * (i+3));
+
+        final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
+        x *= mag;
+        y *= mag;
+        z *= mag;
+
+        float[] vector = points[index];
+        vector[0] = x;
+        vector[1] = y;
+        vector[2] = z;
+    }
+    public void onSphereVDC2(final int index)
+    {
+        final int i = index * 3;
+        float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i+1));
+        float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i+2));
+        float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(2, i+3));
 
         final float mag = 1f / (float)Math.sqrt(x * x + y * y + z * z);
         x *= mag;
