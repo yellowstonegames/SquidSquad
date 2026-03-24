@@ -20,7 +20,8 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.SimplexNoise;
+
+import static com.github.tommyettinger.digital.TrigTools.*;
 
 /**
  * Vroom noise code as an {@link INoise} implementation.
@@ -66,12 +67,18 @@ public class VroomNoise implements INoise {
      */
     @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
-        final float a = LineWobble.bicubicWobble(seed, x * -0.5f + y * 0.8660254037844386f);
-        final float b = LineWobble.bicubicWobble(seed + 0x9A827999FCEF3243L, (x + a) * -0.5f + y * -0.8660254037844387f);
-        final float c = LineWobble.bicubicWobble(seed + 0x3504F333F9DE6486L, x + b);
-        final float result = (a + b + c) * (0.5f / 3f) + 0.5f;
+        int angle = 0x1234;
+        final float a = LineWobble.bicubicWobble(seed, x * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
+        final float b = LineWobble.bicubicWobble(seed + 0x9A827999FCEF3243L, (x + a) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
+        final float c = LineWobble.bicubicWobble(seed + 0x3504F333F9DE6486L, (x + b) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
+        final float d = LineWobble.bicubicWobble(seed + 0xCF876CCDF6CD96C9L, (x + c) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
+        final float e = LineWobble.bicubicWobble(seed + 0x6A09E667F3BCC90CL, (x + d) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
+        final float f = LineWobble.bicubicWobble(seed + 0x048C6001F0ABFB4FL, (x + e) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
+        final float g = LineWobble.bicubicWobble(seed + 0x9F0ED99BED9B2D92L, (x + f) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
+        final float h = LineWobble.bicubicWobble(seed + 0x39915335EA8A5FD5L, (x + g) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]);
+        final float result = (a + b + c + d + e + f + g + h) * (0.5f / 8f) + 0.5f;
         // Barron spline
-        final float sharp = 2.2f; // increase to sharpen, decrease to soften
+        final float sharp = 2f * 2.2f; // increase to sharpen, decrease to soften
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
