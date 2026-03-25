@@ -13,7 +13,6 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * {@link #getNoise(float, float)}, passing x and y, internally this calls
  * {@link FoamNoise#getNoise(float, float, float)} and passes x, y, and mutation.
  */
-@Beta
 public class MutantNoise implements INoise {
     /**
      * The FoamNoise this uses for all its internal noise generation.
@@ -23,7 +22,7 @@ public class MutantNoise implements INoise {
     /**
      * The extra input that is passed to {@link #basis}, in addition to the inputs to each noise call.
      * This typically changes only be a small amount at a time, to make minor continuous adjustments to a noise result,
-     * instead of using {@link #setSeed(long)} to make a non-continuous adjustment that "jumps."
+     * instead of using {@link #setSeed(long)} to make a non-continuous adjustment that "jumps." This defaults to 0.
      */
     public float mutation = 0f;
 

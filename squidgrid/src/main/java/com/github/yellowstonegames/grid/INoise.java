@@ -375,6 +375,8 @@ public interface INoise extends Externalizable {
             register(new FoamplexNoise());
             register(new HighDimensionalValueNoise());
             register(new HoneyNoise());
+            register(new HuskyNoise());
+            register(new MutantNoise());
             register(new Noise());
             register(new OpenSimplex2());
             register(new OpenSimplex2Smooth());
@@ -390,6 +392,8 @@ public interface INoise extends Externalizable {
             register(new SorbetNoise(1));
             register(new TaffyNoise());
             register(new ValueNoise());
+            register(new VroomNoise());
+            register(new WhiteNoise());
 
             register(new NoiseAdjustment());
             register(new NoiseWrapper());

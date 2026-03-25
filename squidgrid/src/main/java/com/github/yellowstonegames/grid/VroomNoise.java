@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.yellowstonegames.world;
+package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.yellowstonegames.grid.INoise;
 
 /**
  * A type of continuous noise that is meant to look "similar in character" regardless of dimension.
