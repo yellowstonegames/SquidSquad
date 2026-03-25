@@ -67,21 +67,56 @@ public class VroomNoise implements INoise {
      */
     @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
-        int angle = 0x1234;
-        final float a = LineWobble.bicubicWobble(seed, x * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
-        final float b = LineWobble.bicubicWobble(seed + 0x9A827999FCEF3243L, (x + a) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
-        final float c = LineWobble.bicubicWobble(seed + 0x3504F333F9DE6486L, (x + b) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
-        final float d = LineWobble.bicubicWobble(seed + 0xCF876CCDF6CD96C9L, (x + c) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
-        final float e = LineWobble.bicubicWobble(seed + 0x6A09E667F3BCC90CL, (x + d) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
-        final float f = LineWobble.bicubicWobble(seed + 0x048C6001F0ABFB4FL, (x + e) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
-        final float g = LineWobble.bicubicWobble(seed + 0x9F0ED99BED9B2D92L, (x + f) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]); angle += 0x1111;
-        final float h = LineWobble.bicubicWobble(seed + 0x39915335EA8A5FD5L, (x + g) * COS_TABLE[angle & TABLE_MASK] + y * SIN_TABLE[angle & TABLE_MASK]);
-        final float result = (a + b + c + d + e + f + g + h) * (0.5f / 8f) + 0.5f;
+        final float p0 = x;
+        final float p1 = x * -0.5f + y * 0.8660254037844386f;
+        final float p2 = x * -0.5f + y * -0.8660254037844387f;
+
+        final float a = valueNoise(p1, p2, seed);
+        final float b = valueNoise(p2, p0, seed + 0x9A827999FCEF3243L);
+        final float c = valueNoise(p0, p1, seed + 0x3504F333F9DE6486L);
+        final float result = (a + b + c) * 0.3333333333333333f;
         // Barron spline
-        final float sharp = 2f * 2.2f; // increase to sharpen, decrease to soften
+        final float sharp = 0.75f * 2.2f; // increase to sharpen, decrease to soften
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    /**
+     * Gets 2D value noise with the lowest, fastest level of detail. Uses the given seed
+     * and does not change x or y. This has a different output range (0 to 1) than foam noise.
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param seed the seed to use for the noise (used in place of {@link #getSeed()})
+     * @return noise between 0 and 1
+     */
+    public static float valueNoise(float x, float y, final long seed) {
+        final long STEPX = 0xC13FA9A902A6328FL;
+        final long STEPY = 0x91E10DA5C79E7B1DL;
+        long xFloor = (long)Math.floor(x);
+        x -= xFloor;
+        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        long yFloor = (long)Math.floor(y);
+        y -= yFloor;
+        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        xFloor *= STEPX;
+        yFloor *= STEPY;
+        return ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, seed))
+                + y * ((1 - x) * hashPart(xFloor, yFloor + STEPY, seed) + x * hashPart(xFloor + STEPX, yFloor + STEPY, seed)))
+                * 0x1p-64f + 0.5f;
+    }
+
+    /**
+     * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
+     * (2 to the 64).
+     * @param x should be premultiplied by 0xC13FA9A902A6328FL
+     * @param y should be premultiplied by 0x91E10DA5C79E7B1DL
+     * @param s state, any long
+     * @return a mediocre 64-bit hash
+     */
+    private static long hashPart(final long x, final long y, long s) {
+        s ^= x ^ y;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
     }
 
     // 3D SECTION
