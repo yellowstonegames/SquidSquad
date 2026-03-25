@@ -148,22 +148,10 @@ public class VroomNoise implements INoise {
         final float p2 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * 0.816496580927726f;
         final float p3 = x * -0.3333333333333333f + y * -0.4714045207910317f + z * -0.816496580927726f;
 
-        float xin = p1;
-        float yin = p2;
-        float zin = p3;
-        final float a = valueNoise(xin, yin, zin, seed);
-        xin = p0;
-        yin = p2;
-        zin = p3;
-        final float b = valueNoise(xin + a, yin, zin, seed + 0x9A827999FCEF3243L);
-        xin = p0;
-        yin = p1;
-        zin = p3;
-        final float c = valueNoise(xin + b, yin, zin, seed + 0x3504F333F9DE6486L);
-        xin = p0;
-        yin = p1;
-        zin = p2;
-        final float d = valueNoise(xin + c, yin, zin, seed + 0xCF876CCDF6CD96C9L);
+        final float a = valueNoise(p1, p2, seed);
+        final float b = valueNoise(p2, p3, seed + 0x9A827999FCEF3243L);
+        final float c = valueNoise(p3, p0, seed + 0x3504F333F9DE6486L);
+        final float d = valueNoise(p0, p1, seed + 0xCF876CCDF6CD96C9L);
         final float result = (a + b + c + d) * 0.25f;
         // Barron spline
         final float sharp = 0.75f * 3.3f; // increase to sharpen, decrease to soften
