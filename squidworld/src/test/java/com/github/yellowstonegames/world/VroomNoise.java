@@ -17,16 +17,16 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.tommyettinger.random.LineWobble;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.INoise;
 
-import static com.github.tommyettinger.digital.TrigTools.*;
-
 /**
- * Vroom noise code as an {@link INoise} implementation.
+ * A type of continuous noise that is meant to look "similar in character" regardless of dimension.
+ * This is closely based on {@link com.github.yellowstonegames.grid.FoamNoise}, but doesn't do any domain warping
+ * between results. This lowers the quality of single-octave noise somewhat, but may improve the appearance of noise
+ * using 3 or more octaves of FBM noise. Like FoamNoise in D dimensions, this makes D+1 calls to D-dimensional value
+ * noise with different rotations, averages them, and sharpens the result. Unlike FoamNoise, the grid structure of the
+ * value noise is noticeable in 4D and up. The grid quickly disappears if multiple octaves are used.
  */
-@Beta
 public class VroomNoise implements INoise {
 
     /**
@@ -878,13 +878,13 @@ public class VroomNoise implements INoise {
     // OTHER
 
     /**
-     * Returns the String "FoaN", to be used as a unique tag for this generator.
+     * Returns the String "VroN", to be used as a unique tag for this generator.
      *
-     * @return the String "FoaN"
+     * @return the String "VroN"
      */
     @Override
     public String getTag() {
-        return "FoaN";
+        return "VroN";
     }
 
     /**
@@ -948,7 +948,7 @@ public class VroomNoise implements INoise {
 
     @Override
     public String toString() {
-        return "FoamNoise{seed=" + seed + "}";
+        return "VroomNoise{seed=" + seed + "}";
     }
 
     @Override
