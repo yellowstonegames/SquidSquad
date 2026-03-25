@@ -843,7 +843,7 @@ public class FoamNoise implements INoise {
         uin = p3;
         vin = p2;
         min = p4;
-        final float h = valueNoise(xin + f, yin, zin, win, uin, vin, min, seed + 0x39915335EA8A5FD5L);
+        final float h = valueNoise(xin + g, yin, zin, win, uin, vin, min, seed + 0x39915335EA8A5FD5L);
 
         final float result = (a + b + c + d + e + f + g + h) * 0.125f;
         final float sharp = 0.75f * 7.7f;
