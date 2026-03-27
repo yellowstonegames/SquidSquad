@@ -180,6 +180,7 @@ public class PuffyNoise implements INoise {
         return getNoise(x, y, z, w, u, v, 1f);
     }
 
+    @Override
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
         float noise = 0f;
 
