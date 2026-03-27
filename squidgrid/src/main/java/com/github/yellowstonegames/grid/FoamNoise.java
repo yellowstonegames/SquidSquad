@@ -754,6 +754,7 @@ public class FoamNoise implements INoise {
      * @param m m position; can be any finite float
      * @return a noise value between -1.0f and 1.0f, both inclusive
      */
+    @Override
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
         return getNoiseWithSeed(x, y, z, w, u, v, m, seed);
     }
@@ -771,6 +772,7 @@ public class FoamNoise implements INoise {
      * @param seed any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
      */
+    @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
         final float p0 = x;
         final float p1 = x * -0.14285714285714285f + y * +0.9897433186107870f;
@@ -1067,13 +1069,13 @@ public class FoamNoise implements INoise {
     }
 
     /**
-     * Gets the maximum dimension supported by this generator, which is 6.
+     * Gets the maximum dimension supported by this generator, which is 7.
      *
-     * @return the maximum supported dimension, which is 6 inclusive
+     * @return the maximum supported dimension, 7
      */
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 
     /**

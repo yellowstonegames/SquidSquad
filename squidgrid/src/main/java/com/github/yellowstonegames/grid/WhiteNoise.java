@@ -49,13 +49,13 @@ public class WhiteNoise implements INoise {
     }
 
     /**
-     * Gets the maximum dimension supported by this generator, which is 6.
+     * Gets the maximum dimension supported by this generator, which is 7.
      *
-     * @return the maximum supported dimension, 6
+     * @return the maximum supported dimension, 7
      */
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 
     /**
@@ -201,6 +201,24 @@ public class WhiteNoise implements INoise {
                 BitConversion.floatToIntBits(w),
                 BitConversion.floatToIntBits(u),
                 BitConversion.floatToIntBits(v),
+                (int)seed) * 0x1p-31f;
+    }
+
+
+    @Override
+    public float getNoise(final float x, final float y, final float z, final float w, final float u, final float v, final float m) {
+        return getNoiseWithSeed(x, y, z, w, u, v, m, seed);
+    }
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        return IntPointHash.hashAll(
+                BitConversion.floatToIntBits(x),
+                BitConversion.floatToIntBits(y),
+                BitConversion.floatToIntBits(z),
+                BitConversion.floatToIntBits(w),
+                BitConversion.floatToIntBits(u),
+                BitConversion.floatToIntBits(v),
+                BitConversion.floatToIntBits(m),
                 (int)seed) * 0x1p-31f;
     }
 
