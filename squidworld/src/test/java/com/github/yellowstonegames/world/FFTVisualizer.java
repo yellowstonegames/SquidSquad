@@ -39,7 +39,6 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.yellowstonegames.core.ColorGradients;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.grid.*;
-import com.github.yellowstonegames.world.random.SpectatorPointHash;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -66,9 +65,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final FlawedPointHash.QuiltHash quilt = new FlawedPointHash.QuiltHash(1, 32);
     private final FlawedPointHash.CubeHash cube = new FlawedPointHash.CubeHash(1, 64);
     private final FlawedPointHash.FNVHash fnv = new FlawedPointHash.FNVHash(1);
-    private final SpectatorPointHash spec = new SpectatorPointHash();
-    private final SlimPointHash slim = new SlimPointHash();
-    private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt, spec, slim, };
+    private final IPointHash[] pointHashes = new IPointHash[] {iph, fnv, cube, rug, quilt, };
     private final PhantomNoise[] phantoms = new PhantomNoise[7];
     private final TaffyNoise[] taffies = new TaffyNoise[7];
     private final FlanNoise[] flans = new FlanNoise[7];
@@ -89,7 +86,7 @@ public class FFTVisualizer extends ApplicationAdapter {
     private final CyclicNoise cyclic = new CyclicNoise(noise.getSeed(), 1);
     private final SorbetNoise sorbet = new SorbetNoise(noise.getSeed(), 1);
     private final float[][] points = new float[][]{new float[2], new float[3], new float[4], new float[5], new float[6]};
-    private int hashIndex = 6;
+    private int hashIndex = 0;
     private static final int MODE_LIMIT = 29;
     private int mode = 9;
     private int dim = 2; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
@@ -494,14 +491,6 @@ public class FFTVisualizer extends ApplicationAdapter {
                     }
                     break;
                 case 2:
-//                    for (int x = 0; x < width; x++) {
-//                        for (int y = 0; y < height; y++) {
-//                            bright = (float) (db = (1.0/255.0) * Noise.HastyPointHash.hash256(x, y, noise.getSeed()));
-//                            real[x][y] = db;
-//                            renderer.color(bright, bright, bright, 1f);
-//                            renderer.vertex(x, y, 0);
-//                        }
-//                    }
                     for (int x = 0; x < width; x++) {
                         for (int y = 0; y < height; y++) {
                             bright = (float) (db = (1.0/255.0) * fancy256(x - (width >>> 1), y - (height >>> 1), (int)noise.getSeed()));

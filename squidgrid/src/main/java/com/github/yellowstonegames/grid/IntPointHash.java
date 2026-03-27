@@ -71,6 +71,11 @@ public final class IntPointHash extends IPointHash.IntImpl {
         return hashAll(x, y, z, w, u, v, state);
     }
 
+    @Override
+    public int hashWithState(int x, int y, int z, int w, int u, int v, int m, int state) {
+        return hashAll(x, y, z, w, u, v, m, state);
+    }
+
     /**
      * A 32-bit point hash that smashes x and y into s using XOR and multiplications by harmonious numbers,
      * then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash, especially for
@@ -126,8 +131,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
 
     /**
      * A 32-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -147,8 +151,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
 
     /**
      * A 32-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -164,6 +167,28 @@ public final class IntPointHash extends IPointHash.IntImpl {
      */
     public static int hashAll(int x, int y, int z, int w, int u, int v, int s) {
         s ^= x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
+        return (s = (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493) ^ s >>> 11;
+    }
+
+    /**
+     * A 32-bit point hash that smashes x, y, z, w, u, v, and m into s using XOR and multiplications by harmonious
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
+     * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
+     * hash used here has been stripped down heavily, both for speed and because unless points are selected
+     * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
+     * rrxmrrxmsx_0 has.
+     * @param x x position, as an int
+     * @param y y position, as an int
+     * @param z z position, as an int
+     * @param w w position, as an int
+     * @param u u position, as an int
+     * @param v v position, as an int
+     * @param m m position, as an int
+     * @param s any int, a seed to be able to produce many hashes for a given point
+     * @return 32-bit hash of the x,y,z,w,u,v,m point with the given state s
+     */
+    public static int hashAll(int x, int y, int z, int w, int u, int v, int m, int s) {
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
         return (s = (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493) ^ s >>> 11;
     }
 
@@ -221,8 +246,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
     }
     /**
      * An 8-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -242,8 +266,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
 
     /**
      * A 8-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -259,6 +282,28 @@ public final class IntPointHash extends IPointHash.IntImpl {
      */
     public static int hash256(int x, int y, int z, int w, int u, int v, int s) {
         s ^= x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
+        return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 24;
+    }
+
+    /**
+     * A 8-bit point hash that smashes x, y, z, w, u, v, and m into s using XOR and multiplications by harmonious
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
+     * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
+     * hash used here has been stripped down heavily, both for speed and because unless points are selected
+     * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
+     * rrxmrrxmsx_0 has.
+     * @param x x position, as an int
+     * @param y y position, as an int
+     * @param z z position, as an int
+     * @param w w position, as an int
+     * @param u u position, as an int
+     * @param v v position, as an int
+     * @param m m position, as an int
+     * @param s any int, a seed to be able to produce many hashes for a given point
+     * @return 8-bit hash of the x,y,z,w,u,v,m point with the given state s
+     */
+    public static int hash256(int x, int y, int z, int w, int u, int v, int m, int s) {
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 24;
     }
 
@@ -317,8 +362,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
 
     /**
      * A 6-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -338,8 +382,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
 
     /**
      * A 6-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -357,6 +400,29 @@ public final class IntPointHash extends IPointHash.IntImpl {
         s ^= x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 26;
     }
+
+    /**
+     * A 6-bit point hash that smashes x, y, z, w, u, v, and m into s using XOR and multiplications by harmonious
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
+     * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
+     * hash used here has been stripped down heavily, both for speed and because unless points are selected
+     * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
+     * rrxmrrxmsx_0 has.
+     * @param x x position, as an int
+     * @param y y position, as an int
+     * @param z z position, as an int
+     * @param w w position, as an int
+     * @param u u position, as an int
+     * @param v v position, as an int
+     * @param m m position, as an int
+     * @param s any int, a seed to be able to produce many hashes for a given point
+     * @return 6-bit hash of the x,y,z,w,u,v,m point with the given state s
+     */
+    public static int hash64(int x, int y, int z, int w, int u, int v, int m, int s) {
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
+        return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 26;
+    }
+
     /**
      * A 5-bit point hash that smashes x and y into s using XOR and multiplications by harmonious numbers,
      * then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash, especially for
@@ -412,8 +478,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
 
     /**
      * A 5-bit point hash that smashes x, y, z, w, and u into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -433,8 +498,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
 
     /**
      * A 5-bit point hash that smashes x, y, z, w, u, and v into s using XOR and multiplications by harmonious
-     * numbers, then runs a simple unary hash on s and returns it. Has better performance than HastyPointHash,
-     * especially for ints, and has slightly fewer collisions in a hash table of points. GWT-optimized. Inspired by
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
      * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
      * hash used here has been stripped down heavily, both for speed and because unless points are selected
      * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
@@ -450,6 +514,28 @@ public final class IntPointHash extends IPointHash.IntImpl {
      */
     public static int hash32(int x, int y, int z, int w, int u, int v, int s) {
         s ^= x * 0x1CC1C5 ^ y * 0x19D7AF ^ z * 0x173935 ^ w * 0x14DEAF ^ u * 0x12C139 ^ v * 0x10DAA3;
+        return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 27;
+    }
+
+    /**
+     * A 5-bit point hash that smashes x, y, z, w, u, v, and m into s using XOR and multiplications by harmonious
+     * numbers, then runs a simple unary hash on s and returns it. GWT-optimized. Inspired by
+     * Pelle Evensen's rrxmrrxmsx_0 unary hash, though this doesn't use its code or its full algorithm. The unary
+     * hash used here has been stripped down heavily, both for speed and because unless points are selected
+     * specifically to target flaws in the hash, it doesn't need the intense resistance to bad inputs that
+     * rrxmrrxmsx_0 has.
+     * @param x x position, as an int
+     * @param y y position, as an int
+     * @param z z position, as an int
+     * @param w w position, as an int
+     * @param u u position, as an int
+     * @param v v position, as an int
+     * @param m m position, as an int
+     * @param s any int, a seed to be able to produce many hashes for a given point
+     * @return 5-bit hash of the x,y,z,w,u,v,m point with the given state s
+     */
+    public static int hash32(int x, int y, int z, int w, int u, int v, int m, int s) {
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 27;
     }
 }

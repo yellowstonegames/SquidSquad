@@ -39,6 +39,7 @@ public interface IPointHash {
     int hashWithState(int x, int y, int z, int w, int state);
     int hashWithState(int x, int y, int z, int w, int u, int state);
     int hashWithState(int x, int y, int z, int w, int u, int v, int state);
+    int hashWithState(int x, int y, int z, int w, int u, int v, int m, int state);
 
     /**
      * A convenience abstract class to implement IPointHash when you have an int for state. Subclasses will need to

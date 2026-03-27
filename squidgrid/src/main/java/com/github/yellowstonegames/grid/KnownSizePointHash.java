@@ -77,4 +77,9 @@ public class KnownSizePointHash extends IPointHash.IntImpl {
     public int hashWithState(int x, int y, int z, int w, int u, int v, int state) {
         return IntPointHash.hashAll(x, y, z, w, u, v, state);
     }
+
+    @Override
+    public int hashWithState(int x, int y, int z, int w, int u, int v, int m, int state) {
+        return IntPointHash.hashAll(x, y, z, w, u, v, m, state);
+    }
 }

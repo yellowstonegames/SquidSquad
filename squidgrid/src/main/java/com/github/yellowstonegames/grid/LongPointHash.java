@@ -63,7 +63,12 @@ public final class LongPointHash extends IPointHash.LongImpl
     public int hashWithState(int x, int y, int z, int w, int u, int v, int state) {
         return (int)hashAll(x, y, z, w, u, v, state);
     }
-    
+
+    @Override
+    public int hashWithState(int x, int y, int z, int w, int u, int v, int m, int state) {
+        return (int)hashAll(x, y, z, w, u, v, m, state);
+    }
+
     public long getState(){
         return state;
     }
@@ -144,6 +149,24 @@ public final class LongPointHash extends IPointHash.LongImpl
         s ^= x * 0x85EB75C3024385C3L ^ y * 0x92E852C80D153DB3L ^ z * 0xA127A31C56D1CDB5L ^ w * 0xB0C8AC50F0EDEF5DL ^ u * 0xC1EDBC5B5C68AC25L ^ v * 0xD4BC74E13F3C782FL;
         return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
     }
+
+    /**
+     * Gets a 64-bit point hash of a 7D point (x, y, z, w, u, v, and m are all longs) and a state/seed as a long.
+     * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
+     * @param x x position; any long
+     * @param y y position; any long
+     * @param z z position; any long
+     * @param w w position; any long
+     * @param u u position; any long
+     * @param v v position; any long
+     * @param m m position; any long
+     * @param s the state; any long
+     * @return 64-bit hash of the x,y,z,w,u,v,m point with the given state
+     */
+    public static long hashAll(long x, long y, long z, long w, long u, long v, long m, long s) {
+        s ^= x * 0x8538ECB5BD456EA3L ^ y * 0x908E3D2C82567A73L ^ z * 0x9CDA5E693FEA10AFL ^ w * 0xAA324F90DED86B69L ^ u * 0xB8ACD90C142FE10BL ^ v * 0xC862B36DAF790DD5L ^ m * 0xD96EB1A810CAAF5FL;
+        return (s = (s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L) ^ s >>> 25;
+    }
     /**
      * Gets an 8-bit point hash of a 2D point (x and y are both longs) and a state/seed as a long.
      * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
@@ -218,6 +241,25 @@ public final class LongPointHash extends IPointHash.LongImpl
         s ^= x * 0x85EB75C3024385C3L ^ y * 0x92E852C80D153DB3L ^ z * 0xA127A31C56D1CDB5L ^ w * 0xB0C8AC50F0EDEF5DL ^ u * 0xC1EDBC5B5C68AC25L ^ v * 0xD4BC74E13F3C782FL;
         return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 56);
     }
+
+    /**
+     * Gets an 8-bit point hash of a 7D point (x, y, z, w, u, v, and m are all longs) and a state/seed as a long.
+     * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
+     * @param x x position; any long
+     * @param y y position; any long
+     * @param z z position; any long
+     * @param w w position; any long
+     * @param u u position; any long
+     * @param v v position; any long
+     * @param m m position; any long
+     * @param s the state; any long
+     * @return 8-bit hash of the x,y,z,w,u,v,m point with the given state
+     */
+    public static int hash256(long x, long y, long z, long w, long u, long v, long m, long s) {
+        s ^= x * 0x8538ECB5BD456EA3L ^ y * 0x908E3D2C82567A73L ^ z * 0x9CDA5E693FEA10AFL ^ w * 0xAA324F90DED86B69L ^ u * 0xB8ACD90C142FE10BL ^ v * 0xC862B36DAF790DD5L ^ m * 0xD96EB1A810CAAF5FL;
+        return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 56);
+    }
+
     /**
      * Gets a 5-bit point hash of a 2D point (x and y are both longs) and a state/seed as a long.
      * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
@@ -294,6 +336,24 @@ public final class LongPointHash extends IPointHash.LongImpl
     }
 
     /**
+     * Gets a 5-bit point hash of a 7D point (x, y, z, w, u, v, and m are all longs) and a state/seed as a long.
+     * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
+     * @param x x position; any long
+     * @param y y position; any long
+     * @param z z position; any long
+     * @param w w position; any long
+     * @param u u position; any long
+     * @param v v position; any long
+     * @param m m position; any long
+     * @param s the state; any long
+     * @return 5-bit hash of the x,y,z,w,u,v,m point with the given state
+     */
+    public static int hash32(long x, long y, long z, long w, long u, long v, long m, long s) {
+        s ^= x * 0x8538ECB5BD456EA3L ^ y * 0x908E3D2C82567A73L ^ z * 0x9CDA5E693FEA10AFL ^ w * 0xAA324F90DED86B69L ^ u * 0xB8ACD90C142FE10BL ^ v * 0xC862B36DAF790DD5L ^ m * 0xD96EB1A810CAAF5FL;
+        return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 59);
+    }
+
+    /**
      * Gets a 6-bit point hash of a 2D point (x and y are both longs) and a state/seed as a long.
      * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
      * @param x x position; any long
@@ -365,6 +425,24 @@ public final class LongPointHash extends IPointHash.LongImpl
      */
     public static int hash64(long x, long y, long z, long w, long u, long v, long s) {
         s ^= x * 0x85EB75C3024385C3L ^ y * 0x92E852C80D153DB3L ^ z * 0xA127A31C56D1CDB5L ^ w * 0xB0C8AC50F0EDEF5DL ^ u * 0xC1EDBC5B5C68AC25L ^ v * 0xD4BC74E13F3C782FL;
+        return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 58);
+    }
+
+    /**
+     * Gets a 6-bit point hash of a 7D point (x, y, z, w, u, v, and m are all longs) and a state/seed as a long.
+     * This point hash is fast and very good at randomizing its bits when any argument changes even slightly.
+     * @param x x position; any long
+     * @param y y position; any long
+     * @param z z position; any long
+     * @param w w position; any long
+     * @param u u position; any long
+     * @param v v position; any long
+     * @param m m position; any long
+     * @param s the state; any long
+     * @return 6-bit hash of the x,y,z,w,u,v,m point with the given state
+     */
+    public static int hash64(long x, long y, long z, long w, long u, long v, long m, long s) {
+        s ^= x * 0x8538ECB5BD456EA3L ^ y * 0x908E3D2C82567A73L ^ z * 0x9CDA5E693FEA10AFL ^ w * 0xAA324F90DED86B69L ^ u * 0xB8ACD90C142FE10BL ^ v * 0xC862B36DAF790DD5L ^ m * 0xD96EB1A810CAAF5FL;
         return (int)((s ^ (s << 47 | s >>> 17) ^ (s << 23 | s >>> 41)) * 0xF1357AEA2E62A9C5L + 0x9E3779B97F4A7C15L >>> 58);
     }
 }
