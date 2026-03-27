@@ -531,6 +531,7 @@ float cyclicNoise(vec3 p){
         return noise * total;
     }
 
+    @Override
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
         float noise = 0f;
 
@@ -640,7 +641,7 @@ float cyclicNoise(vec3 p){
 
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 
 

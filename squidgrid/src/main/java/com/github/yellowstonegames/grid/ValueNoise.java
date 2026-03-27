@@ -641,6 +641,10 @@ public class ValueNoise implements INoise {
         return true;
     }
 
+    public float getNoise(float x) {
+        return valueNoise(x, seed);
+    }
+
     @Override
     public float getNoise(float x, float y) {
         return valueNoise(x, y, seed);
@@ -666,6 +670,7 @@ public class ValueNoise implements INoise {
         return valueNoise(x, y, z, w, u, v, seed);
     }
 
+    @Override
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
         return valueNoise(x, y, z, w, u, v, m, seed);
     }
@@ -678,6 +683,10 @@ public class ValueNoise implements INoise {
     @Override
     public long getSeed() {
         return seed;
+    }
+
+    public float getNoiseWithSeed(float x, long seed) {
+        return valueNoise(x, (int) seed);
     }
 
     @Override
@@ -705,6 +714,7 @@ public class ValueNoise implements INoise {
         return valueNoise(x, y, z, w, u, v, (int) seed);
     }
 
+    @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
         return valueNoise(x, y, z, w, u, v, m, (int) seed);
     }
