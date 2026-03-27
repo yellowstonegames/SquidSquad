@@ -262,6 +262,7 @@ public interface INoise extends Externalizable {
      * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
+     * @param seed can be any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
      * @throws UnsupportedOperationException if 2D noise cannot be produced by this generator
      */
@@ -283,6 +284,7 @@ public interface INoise extends Externalizable {
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
+     * @param seed can be any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
      * @throws UnsupportedOperationException if 3D noise cannot be produced by this generator
      */
@@ -305,6 +307,7 @@ public interface INoise extends Externalizable {
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
      * @param w w position; can be any finite float
+     * @param seed can be any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
      * @throws UnsupportedOperationException if 4D noise cannot be produced by this generator
      */
@@ -328,6 +331,7 @@ public interface INoise extends Externalizable {
      * @param z z position; can be any finite float
      * @param w w position; can be any finite float
      * @param u u position; can be any finite float
+     * @param seed can be any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
      * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
      */
@@ -352,6 +356,7 @@ public interface INoise extends Externalizable {
      * @param w w position; can be any finite float
      * @param u u position; can be any finite float
      * @param v v position; can be any finite float
+     * @param seed can be any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
      * @throws UnsupportedOperationException if 6D noise cannot be produced by this generator
      */
@@ -377,6 +382,7 @@ public interface INoise extends Externalizable {
      * @param u u position; can be any finite float
      * @param v v position; can be any finite float
      * @param m m position; can be any finite float
+     * @param seed can be any long
      * @return a noise value between -1.0f and 1.0f, both inclusive
      * @throws UnsupportedOperationException if 7D noise cannot be produced by this generator
      */

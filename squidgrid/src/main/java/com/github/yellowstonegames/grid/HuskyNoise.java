@@ -161,32 +161,183 @@ public class HuskyNoise implements INoise {
         return new HuskyNoise(seed, octaves, freq);
     }
 
+    /**
+     * Gets 2D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
     @Override
     public float getNoise(float x, float y) {
-        return getNoise(x, y, 1f, 1f, 1f, 1f, 1f);
+        return getNoiseWithSeed(x, y, 1f, 1f, 1f, 1f, 1f, seed);
     }
 
+    /**
+     * Gets 3D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
     @Override
     public float getNoise(float x, float y, float z) {
-        return getNoise(x, y, z, 1f, 1f, 1f, 1f);
+        return getNoiseWithSeed(x, y, z, 1f, 1f, 1f, 1f, seed);
     }
 
+    /**
+     * Gets 4D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        return getNoise(x, y, z, w, 1f, 1f, 1f);
+        return getNoiseWithSeed(x, y, z, w, 1f, 1f, 1f, seed);
     }
 
+    /**
+     * Gets 5D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        return getNoise(x, y, z, w, u, 1f, 1f);
+        return getNoiseWithSeed(x, y, z, w, u, 1f, 1f, seed);
     }
 
+    /**
+     * Gets 6D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        return getNoise(x, y, z, w, u, v, 1f);
+        return getNoiseWithSeed(x, y, z, w, u, v, 1f, seed);
     }
 
+    /**
+     * Gets 7D noise with a default or pre-set seed.
+     *
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @param m m position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
     public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        return getNoiseWithSeed(x, y, z, w, u, v, m, seed);
+    }
+
+    /**
+     * Gets 2D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, long seed) {
+        return getNoiseWithSeed(x, y, 1f, 1f, 1f, 1f, 1f, seed);
+    }
+
+    /**
+     * Gets 3D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, long seed) {
+        return getNoiseWithSeed(x, y, z, 1f, 1f, 1f, 1f, seed);
+    }
+
+    /**
+     * Gets 4D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
+        return getNoiseWithSeed(x, y, z, w, 1f, 1f, 1f, seed);
+    }
+
+    /**
+     * Gets 5D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
+        return getNoiseWithSeed(x, y, z, w, u, 1f, 1f, seed);
+    }
+
+    /**
+     * Gets 6D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param v    v position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
+        return getNoiseWithSeed(x, y, z, w, u, v, 1f, seed);
+    }
+
+    /**
+     * Gets 7D noise with a specific seed.
+     *
+     * @param x    x position; can be any finite float
+     * @param y    y position; can be any finite float
+     * @param z    z position; can be any finite float
+     * @param w    w position; can be any finite float
+     * @param u    u position; can be any finite float
+     * @param v    v position; can be any finite float
+     * @param m    m position; can be any finite float
+     * @param seed can be any long
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
         float noise = 0f;
 
         float amp = start;
@@ -298,6 +449,6 @@ public class HuskyNoise implements INoise {
 
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 }
