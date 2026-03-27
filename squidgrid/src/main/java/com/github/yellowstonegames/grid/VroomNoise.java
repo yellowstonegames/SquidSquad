@@ -20,11 +20,18 @@ import com.github.tommyettinger.digital.BitConversion;
 
 /**
  * A type of continuous noise that is meant to look "similar in character" regardless of dimension.
- * This is closely based on {@link com.github.yellowstonegames.grid.FoamNoise}, but doesn't do any domain warping
+ * This is closely based on {@link FoamNoise}, but doesn't do any domain warping
  * between results. This lowers the quality of single-octave noise somewhat, but may improve the appearance of noise
  * using 3 or more octaves of FBM noise. Like FoamNoise in D dimensions, this makes D+1 calls to D-dimensional value
  * noise with different rotations, averages them, and sharpens the result. Unlike FoamNoise, the grid structure of the
  * value noise is noticeable in 4D and up. The grid quickly disappears if multiple octaves are used.
+ * <br>
+ * This may be somewhat faster than FoamNoise, while maintaining similar traits when multiple octaves are used.
+ * It isn't exactly clear why generating planets using 5D VroomNoise is 10-20% faster than 5D FoamNoise (with non-noise
+ * steps taking much of that time). One possibility is that VroomNoise is faster because it doesn't have any data
+ * dependency between noise calls, so those calls could potentially be executed with instruction-level parallelism.
+ * Another possibility is that the measurement was flawed, and they're about the same speed. In any case, VroomNoise
+ * shouldn't ever be slower than FoamNoise, and it may look better with multiple octaves.
  */
 public class VroomNoise implements INoise {
 

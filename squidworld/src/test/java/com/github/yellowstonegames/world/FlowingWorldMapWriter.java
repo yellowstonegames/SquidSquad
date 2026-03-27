@@ -77,10 +77,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //    private static final int FRAMES = 8;
     // How many frames should be rendered between still PNGs being saved; if 0, no PNGs will be saved;
     // if >= FRAMES, will save only one frame; or if 1, will save every frame.
-    private static final int STILLS_EVERY = 8;
+    private static final int STILLS_EVERY = 0;
     private static final int LIMIT = 3;
-    private static float SPEED = 0.25f;
-    private int baseSeed = 1234567890;
+    private static final float SPEED = 0.25f;
+    private static final int baseSeed = 1234567890;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
@@ -265,8 +265,9 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+        iNoise = new Noise3DFrom5D(new NoiseWrapper(new VroomNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
 //        iNoise = new Noise3DFrom5D(new NoiseWrapper(new CyclicNoise(seed, 3, 3f), seed, 0.75f, NoiseWrapper.FBM, 2));
-        iNoise = new Noise3DFrom5D(new HuskyNoise(seed, 1, 3f));
+//        iNoise = new Noise3DFrom5D(new HuskyNoise(seed, 1, 3f));
 //        iNoise = new Noise3DFrom5D(new PuffyNoise(seed, 3, 3f));
 //        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 2.7f)); SPEED *= 0.75f;
 //        iNoise = new Noise3DFrom5D(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;

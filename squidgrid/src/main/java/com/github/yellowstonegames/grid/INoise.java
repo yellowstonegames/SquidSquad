@@ -26,29 +26,41 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+/**
+ * Shared interface for all continuous noise algorithms that can produce at least one dimensionality of noise between
+ * 2D and 7D. An INoise can be used as the base algorithm by {@link NoiseWrapper}, which adds functionality like
+ * changing the frequency, using multiple octaves and having different ways of combining those octaves. You can also
+ * manipulate an INoise with {@link NoiseAdjustment}. An INoise can be serialized to a String or using Externalizable.
+ * {@link Serializer#deserialize(String)} allows returning an arbitrary INoise from the String serialized format, as
+ * long as the INoise type was registered with {@link Serializer#register(INoise)}.
+ * <br>
+ * The class {@link Noise} also implements INoise, and so it can be used wherever a single algorithm can be,
+ * but it has a much larger and more complex API because it also does what a NoiseWrapper does. Using an INoise class
+ * along with a NoiseWrapper is usually preferred because it's easier to serialize.
+ */
 public interface INoise extends Externalizable {
     /**
      * Gets the minimum dimension supported by this generator, such as 2 for a generator that only is defined for flat
      * surfaces, or 3 for one that is only defined for 3D or higher-dimensional spaces.
-     * @return the minimum supported dimension, from 2 to 6 inclusive
+     * @return the minimum supported dimension, from 2 to 7 inclusive
      */
     int getMinDimension();
 
     /**
      * Gets the maximum dimension supported by this generator, such as 2 for a generator that only is defined for flat
-     * surfaces, or 6 for one that is defined up to the highest dimension this interface knows about (6D).
-     * @return the maximum supported dimension, from 2 to 6 inclusive
+     * surfaces, or 7 for one that is defined up to the highest dimension this interface knows about (7D).
+     * @return the maximum supported dimension, from 2 to 7 inclusive
      */
     int getMaxDimension();
 
     /**
      * Returns true if this generator can be seeded with {@link #setSeed(long)} during each call to obtain noise, or
      * false if calling setSeed() is slow enough or allocates enough that alternative approaches should be used. You
-     * can always call setSeed() on your own, but generators that don't have any seed won't do anything, and generators
+     * can always call setSeed() on your own, but generators that don't have any seed won't do anything. Generators
      * that return false for this method will generally behave differently when comparing how
      * {@link #getNoiseWithSeed(float, float, long)} changes the seed and how setSeed() does.
      *
-     * @return whether {@link #setSeed(long)} should be safe to call in every {@link #getNoiseWithSeed} call
+     * @return whether {@link #setSeed(long)} should be efficient to call in every {@link #getNoiseWithSeed} call
      */
     boolean hasEfficientSetSeed();
 
@@ -106,6 +118,22 @@ public interface INoise extends Externalizable {
      * @throws UnsupportedOperationException if 6D noise cannot be produced by this generator
      */
     float getNoise(float x, float y, float z, float w, float u, float v);
+
+    /**
+     * Gets 7D noise with a default or pre-set seed.
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @param m m position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 7D noise cannot be produced by this generator
+     */
+    default float getNoise(float x, float y, float z, float w, float u, float v, float m){
+        throw new UnsupportedOperationException("7D getNoise() is not supported by this generator.");
+    }
 
     /**
      * Sets the seed to the given long, if long seeds are supported, or {@code (int)seed} if only int seeds are
@@ -335,6 +363,31 @@ public interface INoise extends Externalizable {
         final long s = getSeed();
         setSeed(seed);
         final float r = getNoise(x, y, z, w, u, v);
+        setSeed(s);
+        return r;
+    }
+
+    /**
+     * Gets 7D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
+     * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @param m m position; can be any finite float
+     * @return a noise value between -1.0f and 1.0f, both inclusive
+     * @throws UnsupportedOperationException if 7D noise cannot be produced by this generator
+     */
+    default float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        if(!hasEfficientSetSeed()) {
+            float s = seed * 0x1p-48f;
+            return getNoise(x + s, y + s, z + s, w + s, u + s, v + s, m + s);
+        }
+        final long s = getSeed();
+        setSeed(seed);
+        final float r = getNoise(x, y, z, w, u, v, m);
         setSeed(s);
         return r;
     }
