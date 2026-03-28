@@ -15,10 +15,10 @@ import com.github.yellowstonegames.core.annotations.Beta;
  */
 public class MutantNoise implements INoise {
     /**
-     * The FoamNoise this uses for all its internal noise generation.
-     * This can be changed to a subclass of FoamNoise if you want to assign one here.
+     * The INoise this uses for all its internal noise generation.
+     * This defaults to a FoamNoise, but can be any INoise with {@link INoise#getMaxDimension()} greater than 2.
      */
-    public FoamNoise basis;
+    public INoise basis;
     /**
      * The extra input that is passed to {@link #basis}, in addition to the inputs to each noise call.
      * This typically changes only be a small amount at a time, to make minor continuous adjustments to a noise result,
@@ -27,57 +27,78 @@ public class MutantNoise implements INoise {
     public float mutation = 0f;
 
     /**
-     * Makes a MutantNoise with a default seed, 1234567890L, and a mutation of 0.0f .
+     * Makes a MutantNoise with a {@link FoamNoise} basis (seeded with 1234567890L) and a mutation of 0.0f .
      */
     public MutantNoise() {
         this(1234567890L);
     }
 
     /**
-     * Makes a MutantNoise with the given seed and a mutation of 0.0f.
+     * Makes a MutantNoise with a {@link FoamNoise} basis (seeded with the given seed) and a mutation of 0.0f.
      * @param seed the seed to use for any noise call that doesn't take a seed already
      */
     public MutantNoise(long seed)
     {
-        this.basis = new FoamNoise(seed);
+        this(new FoamNoise(seed), 0f);
     }
 
     /**
-     * Makes a MutantNoise with the given seed and mutation.
+     * Makes a MutantNoise with a {@link FoamNoise} basis (seeded with the given seed) and the given mutation.
      * @param seed the seed to use for any noise call that doesn't take a seed already
      * @param mutation the initial value for the extra input to be passed in addition to the inputs to each noise call
      */
     public MutantNoise(long seed, float mutation)
     {
-        this.basis = new FoamNoise(seed);
+        this(new FoamNoise(seed), mutation);
+    }
+
+    /**
+     * Makes a MutantNoise with the given basis INoise and a mutation of 0.0f.
+     * @param base the INoise to use as a basis
+     */
+    public MutantNoise(INoise base)
+    {
+        this(base, 0f);
+    }
+
+    /**
+     * Makes a MutantNoise with the given basis INoise and mutation.
+     * @param base the INoise to use as a basis
+     * @param mutation the initial value for the extra input to be passed in addition to the inputs to each noise call
+     */
+    public MutantNoise(INoise base, float mutation)
+    {
+        this.basis = base;
         this.mutation = mutation;
     }
 
     /**
-     * Minimum dimension is 2.
-     * @return 2
+     * Minimum dimension is 2, unless the basis INoise has a minimum dimension of 4 or greater.
+     * With the default basis, a FoamNoise, this will be 2.
+     * @return 2, in almost all cases
      */
     @Override
     public int getMinDimension() {
-        return 2;
+        return Math.min(basis.getMaxDimension() - 1, Math.max(2, basis.getMinDimension() - 1));
     }
 
     /**
-     * Maximum dimension is 6.
-     * @return 6
+     * Maximum dimension is one less than the maximum dimension of the basis INoise. With the default basis, a
+     * FoamNoise, this will be 6.
+     * @return one less than {@code basis.getMaxDimension()}
      */
     @Override
     public int getMaxDimension() {
-        return 6;
+        return basis.getMaxDimension() - 1;
     }
 
     /**
-     * Setting the seed is efficient here.
-     * @return true
+     * Setting the seed is efficient here if and only if it is efficient for the basis INoise.
+     * @return {@code basis.hasEfficientSetSeed()}
      */
     @Override
     public boolean hasEfficientSetSeed() {
-        return true;
+        return basis.hasEfficientSetSeed();
     }
 
     @Override
@@ -167,7 +188,7 @@ public class MutantNoise implements INoise {
 
     @Override
     public MutantNoise copy() {
-        return new MutantNoise(basis.getSeed(), mutation);
+        return new MutantNoise(basis.copy(), mutation);
     }
 
     @Override
