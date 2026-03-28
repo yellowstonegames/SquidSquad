@@ -554,6 +554,34 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testMutantNoiseWrapper() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerMutantNoiseWrapper(json);
+        MutantNoiseWrapper noise, noise2;
+        noise = new MutantNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 0.2f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(MutantNoiseWrapper.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
+    public void testDualMutantNoiseWrapper() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerDualMutantNoiseWrapper(json);
+        DualMutantNoiseWrapper noise, noise2;
+        noise = new DualMutantNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 0.2f, 0.1f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(DualMutantNoiseWrapper.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
     public void testRadialNoiseWrapper() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerRadialNoiseWrapper(json);

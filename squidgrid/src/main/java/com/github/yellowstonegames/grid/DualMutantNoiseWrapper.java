@@ -262,7 +262,7 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
     public DualMutantNoiseWrapper stringDeserialize(String data) {
         int idx = 2;
         mutationA = Base.BASE10.readFloat(data, 1, idx = data.indexOf('~', idx));
-        mutationB = Base.BASE10.readFloat(data, idx+1, idx = data.indexOf('~', idx));
+        mutationB = Base.BASE10.readFloat(data, idx+1, idx = data.indexOf('~', idx+1));
         basis = Serializer.deserialize(data.substring(idx+1, data.lastIndexOf('`')-1));
         return this;
     }
@@ -270,7 +270,7 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
     public static DualMutantNoiseWrapper recreateFromString(String data) {
         int idx = 2;
         float mutationA = Base.BASE10.readFloat(data, 1, idx = data.indexOf('~', idx));
-        float mutationB = Base.BASE10.readFloat(data, idx+1, idx = data.indexOf('~', idx));
+        float mutationB = Base.BASE10.readFloat(data, idx+1, idx = data.indexOf('~', idx+1));
         INoise basis = Serializer.deserialize(data.substring(idx+1, data.lastIndexOf('`')-1));
         return new DualMutantNoiseWrapper(basis, mutationA, mutationB);
 
@@ -285,6 +285,31 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
     @Override
     public DualMutantNoiseWrapper copy() {
         return new DualMutantNoiseWrapper(basis.copy(), mutationA, mutationB);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof DualMutantNoiseWrapper)) return false;
+
+        DualMutantNoiseWrapper that = (DualMutantNoiseWrapper) o;
+        return Float.compare(mutationA, that.mutationA) == 0 && Float.compare(mutationB, that.mutationB) == 0 && basis.equals(that.basis);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = basis.hashCode();
+        result = 31 * result + Float.hashCode(mutationA);
+        result = 31 * result + Float.hashCode(mutationB);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "DualMutantNoiseWrapper{" +
+                "basis=" + basis +
+                ", mutationA=" + mutationA +
+                ", mutationB=" + mutationB +
+                '}';
     }
 
     @Override

@@ -222,6 +222,29 @@ public class MutantNoiseWrapper implements INoise, ISerializersNeeded {
     }
 
     @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof MutantNoiseWrapper)) return false;
+
+        MutantNoiseWrapper that = (MutantNoiseWrapper) o;
+        return Float.compare(mutation, that.mutation) == 0 && basis.equals(that.basis);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = basis.hashCode();
+        result = 31 * result + Float.hashCode(mutation);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "MutantNoiseWrapper{" +
+                "basis=" + basis +
+                ", mutation=" + mutation +
+                '}';
+    }
+
+    @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
         return basis.getNoiseWithSeed(x, y, mutation, seed);
     }

@@ -844,7 +844,7 @@ public final class JsonGrid {
 
     /**
      * Registers INoise with the given Json object, so INoise can be written to and read from JSON.
-     * This is a simple wrapper around INoise's built-in {@link INoise#stringSerialize()} and
+     * This is a simple wrapper around INoise's built-in {@link INoise.Serializer#serialize(INoise)} and
      * {@link INoise.Serializer#deserialize(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
@@ -855,7 +855,7 @@ public final class JsonGrid {
             @Override
             public void write(Json json, INoise object, Class knownType) {
                 json.writeObjectStart(INoise.class, knownType);
-                json.writeValue("v", object.stringSerialize());
+                json.writeValue("v", INoise.Serializer.serialize(object));
                 json.writeObjectEnd();
             }
 
@@ -913,6 +913,56 @@ public final class JsonGrid {
             public NoiseWrapper read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return new NoiseWrapper().stringDeserialize(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers MutantNoiseWrapper with the given Json object, so MutantNoiseWrapper can be written to and read from JSON.
+     * This is a simple wrapper around MutantNoiseWrapper's built-in {@link MutantNoiseWrapper#stringSerialize()} and
+     * {@link MutantNoiseWrapper#stringDeserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerMutantNoiseWrapper(Json json) {
+        json.addClassTag("Muta", MutantNoiseWrapper.class);
+        json.setSerializer(MutantNoiseWrapper.class, new Json.Serializer<MutantNoiseWrapper>() {
+            @Override
+            public void write(Json json, MutantNoiseWrapper object, Class knownType) {
+                json.writeObjectStart(MutantNoiseWrapper.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public MutantNoiseWrapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return MutantNoiseWrapper.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers DualMutantNoiseWrapper with the given Json object, so DualMutantNoiseWrapper can be written to and read from JSON.
+     * This is a simple wrapper around DualMutantNoiseWrapper's built-in {@link DualMutantNoiseWrapper#stringSerialize()} and
+     * {@link DualMutantNoiseWrapper#stringDeserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerDualMutantNoiseWrapper(Json json) {
+        json.addClassTag("Muta", DualMutantNoiseWrapper.class);
+        json.setSerializer(DualMutantNoiseWrapper.class, new Json.Serializer<DualMutantNoiseWrapper>() {
+            @Override
+            public void write(Json json, DualMutantNoiseWrapper object, Class knownType) {
+                json.writeObjectStart(DualMutantNoiseWrapper.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public DualMutantNoiseWrapper read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return DualMutantNoiseWrapper.recreateFromString(jsonData.get("v").asString());
             }
         });
     }

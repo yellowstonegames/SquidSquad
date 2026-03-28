@@ -453,6 +453,7 @@ public interface INoise extends Externalizable {
             register(new VroomNoise());
             register(new WhiteNoise());
 
+            register(new DualMutantNoiseWrapper());
             register(new MutantNoiseWrapper());
             register(new NoiseAdjustment());
             register(new NoiseWrapper());
