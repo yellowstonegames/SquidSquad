@@ -111,23 +111,23 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
     }
 
     /**
-     * Minimum dimension is 2, unless the basis INoise has a minimum dimension of 4 or greater.
+     * Minimum dimension is 2, unless the basis INoise has a minimum dimension of 5 or greater.
      * With the default basis, a FoamNoise, this will be 2.
      * @return 2, in almost all cases
      */
     @Override
     public int getMinDimension() {
-        return Math.min(basis.getMaxDimension() - 1, Math.max(2, basis.getMinDimension() - 1));
+        return Math.min(basis.getMaxDimension() - 2, Math.max(2, basis.getMinDimension() - 2));
     }
 
     /**
-     * Maximum dimension is one less than the maximum dimension of the basis INoise. With the default basis, a
-     * FoamNoise, this will be 6.
-     * @return one less than {@code basis.getMaxDimension()}
+     * Maximum dimension is two less than the maximum dimension of the basis INoise. With the default basis, a
+     * FoamNoise, this will be 5.
+     * @return two less than {@code basis.getMaxDimension()}
      */
     @Override
     public int getMaxDimension() {
-        return basis.getMaxDimension() - 1;
+        return basis.getMaxDimension() - 2;
     }
 
     /**
@@ -141,27 +141,55 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
 
     @Override
     public float getNoise(float x, float y) {
-        return basis.getNoise(x, y, mutationA);
+        return basis.getNoise(x, y, mutationA, mutationB);
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        return basis.getNoise(x, y, z, mutationA);
+        return basis.getNoise(x, y, z, mutationA, mutationB);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        return basis.getNoise(x, y, z, w, mutationA);
+        return basis.getNoise(x, y, z, w, mutationA, mutationB);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        return basis.getNoise(x, y, z, w, u, mutationA);
+        return basis.getNoise(x, y, z, w, u, mutationA, mutationB);
     }
 
+    /**
+     * Not supported.
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @return never returns
+     * @throws UnsupportedOperationException not supported
+     */
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        return basis.getNoise(x, y, z, w, u, v, mutationA);
+        throw new UnsupportedOperationException("Generating 6D noise with DualMutantNoiseWrapper is not supported.");
+    }
+
+    /**
+     * Not supported.
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @param m m position; can be any finite float
+     * @return never returns
+     * @throws UnsupportedOperationException not supported
+     */
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        throw new UnsupportedOperationException("Generating 7D noise with DualMutantNoiseWrapper is not supported.");
     }
 
     @Override
@@ -217,12 +245,12 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
     }
 
     /**
-     * The String "DMut" .
-     * @return "DMut"
+     * The String "DuMu" .
+     * @return "DuMu"
      */
     @Override
     public String getTag() {
-        return "DMut";
+        return "DuMu";
     }
 
     @Override
@@ -261,26 +289,56 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
 
     @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
-        return basis.getNoiseWithSeed(x, y, mutationA, seed);
+        return basis.getNoiseWithSeed(x, y, mutationA, mutationB, seed);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, long seed) {
-        return basis.getNoiseWithSeed(x, y, z, mutationA, seed);
+        return basis.getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-        return basis.getNoiseWithSeed(x, y, z, w, mutationA, seed);
+        return basis.getNoiseWithSeed(x, y, z, w, mutationA, mutationB, seed);
     }
 
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        return basis.getNoiseWithSeed(x, y, z, w, u, mutationA, seed);
+        return basis.getNoiseWithSeed(x, y, z, w, u, mutationA, mutationB, seed);
     }
 
+    /**
+     * Not supported.
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @param seed can be any long
+     * @return never returns
+     * @throws UnsupportedOperationException not supported
+     */
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        return basis.getNoiseWithSeed(x, y, z, w, u, v, mutationA, seed);
+        throw new UnsupportedOperationException("Generating 6D noise with DualMutantNoiseWrapper is not supported.");
+    }
+
+    /**
+     * Not supported.
+     * @param x x position; can be any finite float
+     * @param y y position; can be any finite float
+     * @param z z position; can be any finite float
+     * @param w w position; can be any finite float
+     * @param u u position; can be any finite float
+     * @param v v position; can be any finite float
+     * @param m m position; can be any finite float
+     * @param seed can be any long
+     * @return never returns
+     * @throws UnsupportedOperationException not supported
+     */
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        throw new UnsupportedOperationException("Generating 7D noise with DualMutantNoiseWrapper is not supported.");
     }
 }
