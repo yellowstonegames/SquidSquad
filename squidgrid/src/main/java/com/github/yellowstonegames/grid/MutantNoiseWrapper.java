@@ -2,23 +2,26 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.yellowstonegames.core.ISerializersNeeded;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * A variant on {@link FoamNoise} that allows an extra degree of freedom to adjust the inputs by a small amount,
+ * A wrapper around an {@link INoise} that allows an extra degree of freedom to adjust the inputs by a small amount,
  * continuously rather than in jumps (as adjusting the seed would do). You can change the {@link #mutation} by any
  * amount at a time, though usually it is a small change you can preview to see how each adjustment affects some result.
  * <br>
- * Internally this works by calling the same method you call here on an internal FoamNoise, {@link #basis}, but using
+ * Internally this works by calling the same method you call here on an internal INoise, {@link #basis}, but using
  * a higher dimension and passing {@link #mutation} in as that higher-dimensional input. This means if you call
  * {@link #getNoise(float, float)}, passing x and y, internally this calls
- * {@link FoamNoise#getNoise(float, float, float)} and passes x, y, and mutation.
+ * {@link INoise#getNoise(float, float, float)} and passes x, y, and mutation.
+ * <br>
+ * This defaults to using a FoamNoise for its basis INoise, which allows dimensions 2 through 6 to be produced with a
+ * mutation value. Using a FoamNoise means this defaults to acting like {@link Noise} with {@link Noise#MUTANT} as its
+ * NoiseType.
  */
-public class MutantNoise implements INoise, ISerializersNeeded {
+public class MutantNoiseWrapper implements INoise, ISerializersNeeded {
     /**
      * The INoise this uses for all its internal noise generation.
      * This defaults to a FoamNoise, but can be any INoise with {@link INoise#getMaxDimension()} greater than 2.
@@ -34,7 +37,7 @@ public class MutantNoise implements INoise, ISerializersNeeded {
     /**
      * Makes a MutantNoise with a {@link FoamNoise} basis (seeded with 1234567890L) and a mutation of 0.0f .
      */
-    public MutantNoise() {
+    public MutantNoiseWrapper() {
         this(1234567890L);
     }
 
@@ -42,7 +45,7 @@ public class MutantNoise implements INoise, ISerializersNeeded {
      * Makes a MutantNoise with a {@link FoamNoise} basis (seeded with the given seed) and a mutation of 0.0f.
      * @param seed the seed to use for any noise call that doesn't take a seed already
      */
-    public MutantNoise(long seed)
+    public MutantNoiseWrapper(long seed)
     {
         this(new FoamNoise(seed), 0f);
     }
@@ -52,7 +55,7 @@ public class MutantNoise implements INoise, ISerializersNeeded {
      * @param seed the seed to use for any noise call that doesn't take a seed already
      * @param mutation the initial value for the extra input to be passed in addition to the inputs to each noise call
      */
-    public MutantNoise(long seed, float mutation)
+    public MutantNoiseWrapper(long seed, float mutation)
     {
         this(new FoamNoise(seed), mutation);
     }
@@ -61,7 +64,7 @@ public class MutantNoise implements INoise, ISerializersNeeded {
      * Makes a MutantNoise with the given basis INoise and a mutation of 0.0f.
      * @param base the INoise to use as a basis
      */
-    public MutantNoise(INoise base)
+    public MutantNoiseWrapper(INoise base)
     {
         this(base, 0f);
     }
@@ -71,7 +74,7 @@ public class MutantNoise implements INoise, ISerializersNeeded {
      * @param base the INoise to use as a basis
      * @param mutation the initial value for the extra input to be passed in addition to the inputs to each noise call
      */
-    public MutantNoise(INoise base, float mutation)
+    public MutantNoiseWrapper(INoise base, float mutation)
     {
         this.basis = base;
         this.mutation = mutation;
@@ -177,18 +180,18 @@ public class MutantNoise implements INoise, ISerializersNeeded {
     }
 
     @Override
-    public MutantNoise stringDeserialize(String data) {
+    public MutantNoiseWrapper stringDeserialize(String data) {
         int idx = 2;
         mutation = Base.BASE10.readFloat(data, 1, idx = data.indexOf('~', idx));
         basis = Serializer.deserialize(data.substring(idx+1, data.lastIndexOf('`')-1));
         return this;
     }
 
-    public static MutantNoise recreateFromString(String data) {
+    public static MutantNoiseWrapper recreateFromString(String data) {
         int idx = 2;
         float mutation = Base.BASE10.readFloat(data, 1, idx = data.indexOf('~', idx));
         INoise basis = Serializer.deserialize(data.substring(idx+1, data.lastIndexOf('`')-1));
-        return new MutantNoise(basis, mutation);
+        return new MutantNoiseWrapper(basis, mutation);
 
     }
 
@@ -199,8 +202,8 @@ public class MutantNoise implements INoise, ISerializersNeeded {
     }
 
     @Override
-    public MutantNoise copy() {
-        return new MutantNoise(basis.copy(), mutation);
+    public MutantNoiseWrapper copy() {
+        return new MutantNoiseWrapper(basis.copy(), mutation);
     }
 
     @Override

@@ -413,12 +413,12 @@ public interface INoise extends Externalizable {
          * {@link #deserialize(String)}. The INoise type must implement {@link INoise#getTag()},
          * {@link INoise#stringSerialize()}, {@link INoise#stringDeserialize(String)}, and {@link INoise#copy()}.
          *
-         * @param random a (typically freshly-constructed) INoise that should never be reused elsewhere
+         * @param noise a (typically freshly-constructed) INoise that should never be reused elsewhere
          */
-        public static void register(INoise random) {
-            String tag = random.getTag();
+        public static void register(INoise noise) {
+            String tag = noise.getTag();
             if (!NOISE_BY_TAG.containsKey(tag))
-                NOISE_BY_TAG.put(tag, random);
+                NOISE_BY_TAG.put(tag, noise);
             else
                 System.err.println("When registering an INoise, a duplicate tag failed to register: " + tag);
         }
@@ -435,7 +435,6 @@ public interface INoise extends Externalizable {
             register(new HighDimensionalValueNoise());
             register(new HoneyNoise());
             register(new HuskyNoise());
-            register(new MutantNoise());
             register(new Noise());
             register(new OpenSimplex2());
             register(new OpenSimplex2Smooth());
@@ -454,6 +453,7 @@ public interface INoise extends Externalizable {
             register(new VroomNoise());
             register(new WhiteNoise());
 
+            register(new MutantNoiseWrapper());
             register(new NoiseAdjustment());
             register(new NoiseWrapper());
             register(new RadialNoiseWrapper());
