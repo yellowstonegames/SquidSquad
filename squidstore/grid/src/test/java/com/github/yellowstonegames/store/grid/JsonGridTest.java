@@ -540,6 +540,22 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testINoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        // The results are the same with or without the next line.
+        // It prints a very long JSON String that doesn't use INoise.Serializer at all.
+//        JsonGrid.registerINoise(json);
+        INoise noise, noise2;
+        noise = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
+        String data = json.toJson(noise, INoise.class);
+        System.out.println(data);
+        noise2 = json.fromJson(INoise.class, data);
+//        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
     public void testNoiseWrapper() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerNoiseWrapper(json);

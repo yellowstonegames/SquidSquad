@@ -844,6 +844,8 @@ public final class JsonGrid {
 
     /**
      * Registers INoise with the given Json object, so INoise can be written to and read from JSON.
+     * In practice, this probably isn't usable; prefer registering individual types using methods like
+     * {@link #registerPerlinNoise(Json)} and {@link #registerSimplexNoise(Json)}.
      * This is a simple wrapper around INoise's built-in {@link INoise.Serializer#serialize(INoise)} and
      * {@link INoise.Serializer#deserialize(String)} methods.
      *
