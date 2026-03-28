@@ -1252,7 +1252,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerFoamplexNoise(Json json) {
-        json.addClassTag("FoaN", FoamplexNoise.class);
+        json.addClassTag("FplN", FoamplexNoise.class);
         json.setSerializer(FoamplexNoise.class, new Json.Serializer<FoamplexNoise>() {
             @Override
             public void write(Json json, FoamplexNoise object, Class knownType) {
@@ -1268,6 +1268,7 @@ public final class JsonGrid {
             }
         });
     }
+
     /**
      * Registers ShapedFoamNoise with the given Json object, so ShapedFoamNoise can be written to and read from JSON.
      * This is a simple wrapper around ShapedFoamNoise's built-in {@link ShapedFoamNoise#stringSerialize()} and
@@ -1301,7 +1302,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerHoneyNoise(Json json) {
-        json.addClassTag("FoaN", HoneyNoise.class);
+        json.addClassTag("HnyN", HoneyNoise.class);
         json.setSerializer(HoneyNoise.class, new Json.Serializer<HoneyNoise>() {
             @Override
             public void write(Json json, HoneyNoise object, Class knownType) {
