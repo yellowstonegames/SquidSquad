@@ -1293,7 +1293,32 @@ public final class JsonGrid {
             }
         });
     }
-    
+
+    /**
+     * Registers VroomNoise with the given Json object, so VroomNoise can be written to and read from JSON.
+     * This is a simple wrapper around VroomNoise's built-in {@link VroomNoise#stringSerialize()} and
+     * {@link VroomNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerVroomNoise(Json json) {
+        json.addClassTag("VroN", VroomNoise.class);
+        json.setSerializer(VroomNoise.class, new Json.Serializer<VroomNoise>() {
+            @Override
+            public void write(Json json, VroomNoise object, Class knownType) {
+                json.writeObjectStart(VroomNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public VroomNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return VroomNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
     /**
      * Registers HoneyNoise with the given Json object, so HoneyNoise can be written to and read from JSON.
      * This is a simple wrapper around HoneyNoise's built-in {@link HoneyNoise#stringSerialize()} and

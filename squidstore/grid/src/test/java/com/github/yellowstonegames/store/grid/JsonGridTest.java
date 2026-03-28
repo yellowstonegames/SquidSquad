@@ -640,6 +640,20 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testVroomNoise() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerVroomNoise(json);
+        VroomNoise noise, noise2;
+        noise = new VroomNoise(-9876543210L);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(VroomNoise.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f), noise2.getNoise(-123f, 0.4f, 0.625f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
     public void testFoamplexNoise() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerFoamplexNoise(json);
