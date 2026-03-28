@@ -1,7 +1,12 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.Beta;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A variant on {@link FoamNoise} that allows an extra degree of freedom to adjust the inputs by a small amount,
@@ -13,7 +18,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * {@link #getNoise(float, float)}, passing x and y, internally this calls
  * {@link FoamNoise#getNoise(float, float, float)} and passes x, y, and mutation.
  */
-public class MutantNoise implements INoise {
+public class MutantNoise implements INoise, ISerializersNeeded {
     /**
      * The INoise this uses for all its internal noise generation.
      * This defaults to a FoamNoise, but can be any INoise with {@link INoise#getMaxDimension()} greater than 2.
@@ -158,32 +163,39 @@ public class MutantNoise implements INoise {
     }
 
     /**
-     * The String "MutN" .
-     * @return "MutN"
+     * The String "Muta" .
+     * @return "Muta"
      */
     @Override
     public String getTag() {
-        return "MutN";
+        return "Muta";
     }
 
     @Override
     public String stringSerialize() {
-        return "`" + basis.getSeed() + "~" + mutation + "`";
+        return "`" + mutation + "~" + Serializer.serialize(basis) + "`";
     }
 
     @Override
     public MutantNoise stringDeserialize(String data) {
         int idx = 2;
-        basis.setSeed(Base.BASE10.readLong(data, 1, idx = data.indexOf('~', idx)));
-        mutation = Base.BASE10.readFloat(data, idx + 1, data.indexOf('`', idx + 1));
+        mutation = Base.BASE10.readFloat(data, 1, idx = data.indexOf('~', idx));
+        basis = Serializer.deserialize(data.substring(idx+1, data.lastIndexOf('`')-1));
         return this;
     }
 
     public static MutantNoise recreateFromString(String data) {
         int idx = 2;
-        return new MutantNoise(Base.BASE10.readLong(data, 1, idx = data.indexOf('~', idx)),
-                Base.BASE10.readFloat(data, idx + 1, data.indexOf('`', idx + 1)));
+        float mutation = Base.BASE10.readFloat(data, 1, idx = data.indexOf('~', idx));
+        INoise basis = Serializer.deserialize(data.substring(idx+1, data.lastIndexOf('`')-1));
+        return new MutantNoise(basis, mutation);
 
+    }
+
+    @GwtIncompatible
+    @Override
+    public List<Class<?>> getSerializersNeeded() {
+        return Collections.singletonList(basis.getClass());
     }
 
     @Override
