@@ -54,14 +54,23 @@ import static com.github.tommyettinger.digital.BitConversion.longBitsToDouble;
  */
 public class FlowingWorldMapWriter extends ApplicationAdapter {
 
-    // generating a 256x256 gif and apng, 240 frames, foam noise, blended world map:
-    // World #1, LimeTobacco, completed in         242466 ms
-    // same as above, but with a detailed world map:
-    // World #1, BrownsapAlder, completed in       241347 ms
-    // with a detailed world map and Perlin noise:
-    // World #1, TuftedBudEucalyptus, completed in  57233 ms
-    // with blended world map and Cyclic noise (3 octaves, 2.7f frequency), size 256x256:
-    // World #1, OrangeThistle, completed in 26848 ms
+    // 256x256 GIF with 240 frames, blended:
+    //
+    // using: DualMutantNoiseWrapper(new NoiseWrapper(new VroomNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+    // World #1, PungentShrubDogwood, completed in 68935 ms
+    // Looks good most of the time, but some changes happen very suddenly.
+    // using: DualMutantNoiseWrapper(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+    // World #1, RedFlax, completed in 81627 ms
+    // Looks good all around.
+    // using: DualMutantNoiseWrapper(new NoiseWrapper(new CyclicNoise(seed, 5, 3f), seed, 0.75f, NoiseWrapper.FBM, 1));
+    // World #1, BitterPineappleEucalyptus, completed in 49359 ms
+    // Looks very strange and chaotic at the edges.
+    // using: DualMutantNoiseWrapper(new HuskyNoise(seed, 1, 3f));
+    // World #1, PungentShrubDogwood, completed in 26348 ms
+    // Looks good but doesn't change quite quickly enough? Maybe frequency should be increased somewhat.
+    // using: DualMutantNoiseWrapper(new PuffyNoise(seed, 3, 3f));
+    // World #1, PungentShrubDogwood, completed in 54206 ms
+    // Looks strange at the edges.
 
     private static final boolean FLOWING_LAND = true;
     private static final boolean GLOBE_SPIN = true;
@@ -75,10 +84,10 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //    private static final int FRAMES = 100;
     private static final int FRAMES = 240;
 //    private static final int FRAMES = 8;
-    // How many frames should be rendered between still PNGs being saved; if 0, no PNGs will be saved;
+    // How many frames should be rendered between still PNGs being saved; if 0 or negative, no PNGs will be saved;
     // if >= FRAMES, will save only one frame; or if 1, will save every frame.
-    private static final int STILLS_EVERY = 0;
-    private static final int LIMIT = 3;
+    private static final int STILLS_EVERY = -1;
+    private static final int LIMIT = 1;
     private static final float SPEED = 0.25f;
     private static final int baseSeed = 1234567890;
 
@@ -135,8 +144,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUNT);
-        writer.setDitherStrength(0.3f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.MARTEN);
+        writer.setDitherStrength(0.5f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
 
