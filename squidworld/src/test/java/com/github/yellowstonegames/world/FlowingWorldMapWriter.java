@@ -87,7 +87,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
     // How many frames should be rendered between still PNGs being saved; if 0 or negative, no PNGs will be saved;
     // if >= FRAMES, will save only one frame; or if 1, will save every frame.
     private static final int STILLS_EVERY = -1;
-    private static final int LIMIT = 1;
+    private static final int LIMIT = 3;
     private static final float SPEED = 0.25f;
     private static final int baseSeed = 1234567890;
 
@@ -144,8 +144,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         }
 
         writer = new AnimatedGif();
-        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.MARTEN);
-        writer.setDitherStrength(0.5f);
+        writer.setDitherAlgorithm(Dithered.DitherAlgorithm.BLUNT);
+        writer.setDitherStrength(0.3f);
         writer.palette = new QualityPalette();
         writer.setFlipY(false);
 
@@ -165,8 +165,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
 //        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new VroomNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
 //        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new CyclicNoise(seed, 5, 3f), seed, 0.75f, NoiseWrapper.FBM, 1));
-//        iNoise = new DualMutantNoiseWrapper(new HuskyNoise(seed, 1, 3f));
-        iNoise = new DualMutantNoiseWrapper(new PuffyNoise(seed, 3, 3f));
+        iNoise = new DualMutantNoiseWrapper(new HuskyNoise(seed, 1, 4f));
+//        iNoise = new DualMutantNoiseWrapper(new PuffyNoise(seed, 3, 3f));
 //        iNoise = new DualMutantNoiseWrapper(new CyclicNoise(seed, 3, 2.7f)); SPEED *= 0.75f;
 //        iNoise = new DualMutantNoiseWrapper(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
 //        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
