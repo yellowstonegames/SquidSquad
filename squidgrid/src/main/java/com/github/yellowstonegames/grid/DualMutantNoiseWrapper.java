@@ -207,6 +207,8 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
      * The mutation is an extra input that is passed to {@link #basis}, in addition to the inputs to each noise call.
      * This typically changes only be a small amount at a time, to make minor continuous adjustments to a noise result,
      * instead of using {@link #setSeed(long)} to make a non-continuous adjustment that "jumps."
+     *
+     * @return the first mutation value
      */
     public float getMutationA() {
         return mutationA;
@@ -217,6 +219,7 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
      * The mutation is an extra input that is passed to {@link #basis}, in addition to the inputs to each noise call.
      * This typically changes only be a small amount at a time, to make minor continuous adjustments to a noise result,
      * instead of using {@link #setSeed(long)} to make a non-continuous adjustment that "jumps."
+     *
      * @param mutationA the float value to use for the mutation
      */
     public void setMutationA(float mutationA) {
@@ -228,6 +231,8 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
      * This is the second extra input that is passed to {@link #basis}, in addition to the inputs to each noise call.
      * This typically changes only be a small amount at a time, to make minor continuous adjustments to a noise result,
      * instead of using {@link #setSeed(long)} to make a non-continuous adjustment that "jumps."
+     *
+     * @return the second mutation value
      */
     public float getMutationB() {
         return mutationB;
@@ -238,10 +243,104 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
      * This is the second extra input that is passed to {@link #basis}, in addition to the inputs to each noise call.
      * This typically changes only be a small amount at a time, to make minor continuous adjustments to a noise result,
      * instead of using {@link #setSeed(long)} to make a non-continuous adjustment that "jumps."
+     *
      * @param mutationB the float value to use for the second mutation
      */
     public void setMutationB(float mutationB) {
         this.mutationB = mutationB;
+    }
+
+    /**
+     * Gets the magnitude of the circle that contains the current mutation values.
+     *
+     * @return the Euclidean distance from 0,0 to mutationA,mutationB
+     */
+    public float getMutationMagnitude() {
+        return (float) Math.sqrt(mutationA * mutationA + mutationB * mutationB);
+    }
+
+    /**
+     * Gets the squared magnitude of the circle that contains the current mutation values.
+     *
+     * @return the squared Euclidean distance from 0,0 to mutationA,mutationB
+     */
+    public float getMutationMagnitudeSquared() {
+        return (mutationA * mutationA + mutationB * mutationB);
+    }
+
+    /**
+     * Gets the angle in radians of the current mutation values.
+     *
+     * @return the angle in radians
+     */
+    public float getMutationAngle() {
+        return TrigTools.atan2Finite(mutationB, mutationA);
+    }
+
+    /**
+     * Gets the angle in degrees, from -180 to 180, of the current mutation values.
+     *
+     * @return the angle in degrees
+     */
+    public float getMutationAngleDegrees() {
+        return TrigTools.atan2DegFinite(mutationB, mutationA);
+    }
+
+    /**
+     * Gets the angle in degrees, from 0 to 360, of the current mutation values.
+     *
+     * @return the angle in degrees
+     */
+    public float getMutationAngleDegrees360() {
+        return TrigTools.atan2Deg360Finite(mutationB, mutationA);
+    }
+
+    /**
+     * Gets the angle in turns, from 0 to 1.0, of the current mutation values.
+     *
+     * @return the angle in turns
+     */
+    public float getMutationAngleTurns() {
+        return TrigTools.atan2TurnsFinite(mutationB, mutationA);
+    }
+
+    /**
+     * Sets both mutation values so they are on a circle with the given magnitude at the given angle, in radians.
+     * If the magnitude does not change and the angle makes a full circle, the noise produced will loop seamlessly.
+     * Larger magnitude values will make changes to the angle more significant.
+     *
+     * @param angleRadians the angle on the circle, in radians
+     * @param magnitude the radius of the circle; larger values will change more for the same change in angle
+     */
+    public void setMutationAngle(float angleRadians, float magnitude) {
+        mutationA = TrigTools.cos(angleRadians) * magnitude;
+        mutationB = TrigTools.sin(angleRadians) * magnitude;
+    }
+
+    /**
+     * Sets both mutation values so they are on a circle with the given magnitude at the given angle, in degrees.
+     * If the magnitude does not change and the angle makes a full circle, the noise produced will loop seamlessly.
+     * Larger magnitude values will make changes to the angle more significant.
+     *
+     * @param angleDegrees the angle on the circle, in degrees
+     * @param magnitude the radius of the circle; larger values will change more for the same change in angle
+     */
+    public void setMutationAngleDegrees(float angleDegrees, float magnitude) {
+        mutationA = TrigTools.cosDeg(angleDegrees) * magnitude;
+        mutationB = TrigTools.sinDeg(angleDegrees) * magnitude;
+    }
+
+    /**
+     * Sets both mutation values so they are on a circle with the given magnitude at the given angle, in turns.
+     * If the magnitude does not change and the angle makes a full circle, the noise produced will loop seamlessly.
+     * Larger magnitude values will make changes to the angle more significant.
+     *
+     * @param angleTurns the angle on the circle, in turns
+     * @param magnitude the radius of the circle; larger values will change more for the same change in angle
+     */
+    public void setMutationAngleTurns(float angleTurns, float magnitude) {
+        mutationA = TrigTools.cosTurns(angleTurns) * magnitude;
+        mutationB = TrigTools.sinTurns(angleTurns) * magnitude;
     }
 
     /**
