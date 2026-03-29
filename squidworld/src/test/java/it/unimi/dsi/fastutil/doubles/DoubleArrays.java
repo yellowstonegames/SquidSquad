@@ -29,6 +29,7 @@
 	*/
 package it.unimi.dsi.fastutil.doubles;
 
+import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.support.sort.DoubleComparator;
 import it.unimi.dsi.fastutil.Arrays;
 import it.unimi.dsi.fastutil.Hash;
@@ -1767,11 +1768,11 @@ public final class DoubleArrays {
 
 	/** A type-specific content-based hash strategy for arrays. */
 	private static final class ArrayHashStrategy implements Hash.Strategy<double[]>, java.io.Serializable {
-		private static final long serialVersionUID = -7046029254386353129L;
+		private static final long serialVersionUID = 2L;
 
 		@Override
 		public int hashCode(final double[] o) {
-			return java.util.Arrays.hashCode(o);
+			return Hasher.hashBulk(1L, o);
 		}
 
 		@Override

@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.Hasher;
 
 import java.util.Arrays;
 
@@ -736,9 +737,9 @@ public class PerlinNoise implements INoise {
 
     @Override
     public int hashCode() {
-        int result = Arrays.hashCode(eqAdd);
-        result = 31 * result + Arrays.hashCode(eqMul);
-        result = 31 * result + (int) (seed ^ (seed >>> 32));
+        int result = Hasher.hashBulk(1L, eqAdd);
+        result = 31 * result + Hasher.hashBulk(2L, eqMul);
+        result = 31 * result + ((int) seed ^ (int) (seed >>> 32));
         return result;
     }
 
