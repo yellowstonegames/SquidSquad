@@ -122,118 +122,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
      */
     private float shadowAngle = -45f;
 
-    public static class Noise3DFrom5D implements INoise {
-        public INoise noise;
-        public float c, s;
-        public Noise3DFrom5D(){
-            noise = new Noise();
-        }
-
-        public Noise3DFrom5D(INoise iNoise) {
-            this.noise = iNoise;
-        }
-
-        @Override
-        public long getSeed() {
-            return noise.getSeed();
-        }
-
-        public void setSeed(int seed) {
-            noise.setSeed(seed);
-        }
-
-        @Override
-        public boolean hasEfficientSetSeed() {
-            return noise.hasEfficientSetSeed();
-        }
-
-        @Override
-        public int getMinDimension() {
-            return 3;
-        }
-
-        @Override
-        public int getMaxDimension() {
-            return 3;
-        }
-
-        @Override
-        public void setSeed(long seed) {
-            noise.setSeed(seed);
-        }
-
-        @Override
-        public float getNoise(float x, float y) {
-            return noise.getNoise(x, y);
-        }
-
-        @Override
-        public float getNoise(float x, float y, float z) {
-            return noise.getNoise(x, y, z, s, c);
-        }
-
-        @Override
-        public float getNoise(float x, float y, float z, float w) {
-            return noise.getNoise(x, y, z, w);
-        }
-
-        @Override
-        public float getNoise(float x, float y, float z, float w, float u) {
-            return noise.getNoise(x, y, z, w, u);
-        }
-
-        @Override
-        public float getNoise(float x, float y, float z, float w, float u, float v) {
-            return noise.getNoise(x, y, z, w, u, v);
-        }
-
-        public float getNoiseWithSeed(float x, float y, int seed) {
-            return noise.getNoiseWithSeed(x, y, seed);
-        }
-
-        public float getNoiseWithSeed(float x, float y, float z, int seed) {
-            return noise.getNoiseWithSeed(x, y, z, s, c, seed);
-        }
-
-        public float getNoiseWithSeed(float x, float y, float z, float w, int seed) {
-            return noise.getNoiseWithSeed(x, y, z, w, seed);
-        }
-
-        public float getNoiseWithSeed(float x, float y, float z, float w, float u, int seed) {
-            return noise.getNoiseWithSeed(x, y, z, w, u, seed);
-        }
-
-        public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, int seed) {
-            return noise.getNoiseWithSeed(x, y, z, w, u, v, seed);
-        }
-
-        @Override
-        public float getNoiseWithSeed(float x, float y, long seed) {
-            return noise.getNoiseWithSeed(x, y, seed);
-        }
-
-        @Override
-        public float getNoiseWithSeed(float x, float y, float z, long seed) {
-            return noise.getNoiseWithSeed(x, y, z, s, c, seed);
-        }
-
-        @Override
-        public float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
-            return noise.getNoiseWithSeed(x, y, z, w, seed);
-        }
-
-        @Override
-        public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-            return noise.getNoiseWithSeed(x, y, z, w, u, seed);
-        }
-
-        @Override
-        public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-            return noise.getNoiseWithSeed(x, y, z, w, u, v, seed);
-        }
-    }
-
-    public Noise3DFrom5D iNoise;
+    public DualMutantNoiseWrapper iNoise;
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
@@ -263,28 +152,28 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 
         thesaurus = new Thesaurus(rng);
 
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
-        iNoise = new Noise3DFrom5D(new NoiseWrapper(new VroomNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new CyclicNoise(seed, 3, 3f), seed, 0.75f, NoiseWrapper.FBM, 2));
-//        iNoise = new Noise3DFrom5D(new HuskyNoise(seed, 1, 3f));
-//        iNoise = new Noise3DFrom5D(new PuffyNoise(seed, 3, 3f));
-//        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 3, 2.7f)); SPEED *= 0.75f;
-//        iNoise = new Noise3DFrom5D(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 1));
-//        iNoise = new Noise3DFrom5D(new NoiseWrapper(new PerlinNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
+//        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
+//        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+//        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new VroomNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
+//        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new CyclicNoise(seed, 5, 3f), seed, 0.75f, NoiseWrapper.FBM, 1));
+//        iNoise = new DualMutantNoiseWrapper(new HuskyNoise(seed, 1, 3f));
+        iNoise = new DualMutantNoiseWrapper(new PuffyNoise(seed, 3, 3f));
+//        iNoise = new DualMutantNoiseWrapper(new CyclicNoise(seed, 3, 2.7f)); SPEED *= 0.75f;
+//        iNoise = new DualMutantNoiseWrapper(new SorbetNoise(seed, 2, 3f)); SPEED *= 0.75f;
+//        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
+//        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new PerlueNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 1));
+//        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new PerlinNoise(seed), seed, 1.2f, NoiseWrapper.FBM, 2).setFractalSpiral(true));
 
-//        iNoise = new Noise3DFrom5D(new SimplexNoise(seed)); // between 33709ms and 45305ms
-//        iNoise = new Noise3DFrom5D(new ValueNoise(seed)); // between  and
-//        iNoise = new Noise3DFrom5D(new FlanNoise(seed, 5)); // between 53757ms and 59479ms
-//        iNoise = new Noise3DFrom5D(new CyclicNoise(seed, 4, 2f)); // between 53757ms and 59479ms
-//        iNoise = new Noise3DFrom5D(new HighDimensionalValueNoise(seed, 5)); // between 69009ms and 94373ms
-//        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
-//        iNoise = new Noise3DFrom5D(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
+//        iNoise = new DualMutantNoiseWrapper(new SimplexNoise(seed)); // between 33709ms and 45305ms
+//        iNoise = new DualMutantNoiseWrapper(new ValueNoise(seed)); // between  and
+//        iNoise = new DualMutantNoiseWrapper(new FlanNoise(seed, 5)); // between 53757ms and 59479ms
+//        iNoise = new DualMutantNoiseWrapper(new CyclicNoise(seed, 4, 2f)); // between 53757ms and 59479ms
+//        iNoise = new DualMutantNoiseWrapper(new HighDimensionalValueNoise(seed, 5)); // between 69009ms and 94373ms
+//        iNoise = new DualMutantNoiseWrapper(new Noise((int) seed, 1f, Noise.FOAM, 1)); // between 126331ms and 128884ms
+//        iNoise = new DualMutantNoiseWrapper(new NoiseAdjustment(new Noise((int) seed, 0.75f, Noise.SIMPLEX_FRACTAL, 2),
 //                f -> INoise.noiseSpline(f, 1.2f, 0f))); // between ms and ms
 //                f -> (float)(Math.pow(2f, f) - 1.25f) * (4f/3f))); // between ms and ms
-//        iNoise = new Noise3DFrom5D(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
+//        iNoise = new DualMutantNoiseWrapper(new Noise((int) seed, 1f, Noise.SIMPLEX, 1)); // between 31682ms and 36851ms
 
 //        ((NoiseWrapper)iNoise.noise).setFractalSpiral(true);
 
@@ -296,7 +185,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
 //            world = new HyperellipticalWorldMap(seed, width, height, iNoise, 0.6f, 0f, 2.5f);
 
         path = "out/worldsFlowing/" + date + "/" +
-                world.getClass().getSimpleName() + iNoise.noise.getTag() + (SHADOW ? "_shadow/" : "/");
+                world.getClass().getSimpleName() + iNoise.basis.getTag() + (SHADOW ? "_shadow/" : "/");
 
         if(!Gdx.files.local(path).exists())
             Gdx.files.local(path).mkdirs();
@@ -361,8 +250,7 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
         final int bw = temp.getWidth(), bh = temp.getHeight();
         for (int i = 0; i < FRAMES; i++) {
             float angle = i / (float) FRAMES;
-            iNoise.s = TrigTools.sinTurns(angle) * SPEED;// 0.4f;// 0.3125f;
-            iNoise.c = TrigTools.cosTurns(angle) * SPEED;// 0.4f;// 0.3125f;
+            iNoise.setMutationAngleTurns(angle, SPEED);
 
             if(GLOBE_SPIN)
                 world.setCenterLongitude(angle * TrigTools.PI2);
@@ -372,22 +260,12 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                 System.out.println(name + " has minHeat "+ world.minHeat+", maxHeat " + world.maxHeat +",\n" +
                         "            minWet " + world.minWet + ", maxWet " + world.maxWet);
             }
-//            temp.setColor(SPACE);
-//            temp.fill();
-
-//            for (int x = 0; x < width; x++) {
-//                for (int y = 0; y < height; y++) {
-//                    temp.drawPixel(x, y, cm[x][y]);
-//                }
-//            }
-
 
             final int padding = (5), margin = (1);
             final float
                     centerW = (temp.getWidth() - 1) * 0.5f,
                     centerH = (temp.getHeight() - 1) * 0.5f,
                     rim2 = centerW * centerH + 4,
-                    radius2 = (centerW - margin) * (centerH - margin),
                     innerRadius2 = (centerW - padding - margin) * (centerH - padding - margin);
             if(SHADOW){
                 if((SPACE & 0xFF) == 0)
@@ -396,10 +274,8 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                     temp.setColor(SPACE);
                 temp.fill();
 
-//                shadowAngle = -45 + TrigTools.sinSmootherTurns(angle) * 180f;
                 shadowStrength = TrigTools.cosSmootherTurns(angle) * 0.4f - 0.15f;
 
-                // 0.70710677f
                 final float iw = 1.5f * TrigTools.cosSmootherDeg(shadowAngle) / bw,
                         ih = -1.5f * TrigTools.sinSmootherDeg(shadowAngle) / bh;
                 for (int x = 0; x < bw; x++) {
@@ -410,17 +286,14 @@ public class FlowingWorldMapWriter extends ApplicationAdapter {
                         if((mapColor & 0xFF) == 0){
                             double distance2 = GLOBE_SPIN ? xx * xx + yy * yy : xx * xx * 0.5f + yy * yy * 2;
                             if(distance2 >= innerRadius2 && distance2 <= rim2) {
-                                mapColor = ATMOSPHERE;//(distance2 <= radius2) ? ATMOSPHERE : ATMOSPHERE & 0xFFFFFF00;
+                                mapColor = ATMOSPHERE;
                             }
                             else continue;
                         }
                         float change = Math.min(Math.max(MathTools.barronSpline(Math.min(Math.max(-shadowStrength - (xx * iw + yy * ih), 0f), 1f), 0.75f, 0.75f) * 1.65f - 1f, -1f), 1f);
                         int adjusted = DescriptiveColorRgb.adjustLightness(mapColor, change);
-//                        if(change < -0.5f) System.out.println("LOW WITH ADJUSTED 0x" + Base.BASE16.unsigned(adjusted) + " COLOR 0x" + Base.BASE16.unsigned(mapColor) + " AND CHANGE " + Base.BASE10.decimal(change, 10, 8) + " AT " + x + "," + y + " FOR DISTANCE " + Base.BASE10.decimal(1.1f - (x * iw + y * ih), 10, 8) + " (OR, " + (1.1f - (x * iw + y * ih)) + ")");
                         adjusted |= adjusted >>> 7 & 1;
-                        // debug to find any non-opaque planet pixels
-//                        if((adjusted & 0xFF) != 0xFF)
-//                            adjusted = DescriptiveColorRgb.RED;
+
                         temp.drawPixel(x, y, adjusted);
                     }
                 }
