@@ -16,6 +16,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
@@ -232,7 +233,7 @@ public class MutantNoiseWrapper implements INoise, ISerializersNeeded {
     @Override
     public int hashCode() {
         int result = basis.hashCode();
-        result = 31 * result + Float.hashCode(mutation);
+        result = 31 * result + BitConversion.floatToIntBits(mutation);
         return result;
     }
 

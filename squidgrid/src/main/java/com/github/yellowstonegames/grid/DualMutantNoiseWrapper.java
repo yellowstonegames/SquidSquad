@@ -16,6 +16,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.Beta;
@@ -397,8 +398,8 @@ public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
     @Override
     public int hashCode() {
         int result = basis.hashCode();
-        result = 31 * result + Float.hashCode(mutationA);
-        result = 31 * result + Float.hashCode(mutationB);
+        result = 31 * result + BitConversion.floatToIntBits(mutationA);
+        result = 31 * result + BitConversion.floatToIntBits(mutationB);
         return result;
     }
 
