@@ -22,7 +22,6 @@ import com.github.yellowstonegames.grid.*;
 import org.apache.fory.Fory;
 import org.apache.fory.context.ReadContext;
 import org.apache.fory.context.WriteContext;
-import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
 /**
@@ -32,7 +31,6 @@ import org.apache.fory.serializer.Serializer;
  * {@link Radiance}, {@link LightingManagerRgbSerializer} for {@link LightingManagerRgb}, and
  * {@link LightSourceSerializer} for {@link LightSource} to be registered.
  */
-@SuppressWarnings({"unchecked"})
 public class VisionFrameworkRgbSerializer extends Serializer<VisionFrameworkRgb> {
     public VisionFrameworkRgbSerializer(Fory fory) {
         super(fory.getConfig(), VisionFrameworkRgb.class);

@@ -18,24 +18,25 @@ package com.github.yellowstonegames.wrath.old.v300;
 
 import com.github.yellowstonegames.old.v300.CrossHash;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class CrossHashCurlupSerializer extends Serializer<CrossHash.Curlup> {
 
     public CrossHashCurlupSerializer(Fory fory) {
-        super(fory, CrossHash.Curlup.class);
+        super(fory.getConfig(), CrossHash.Curlup.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, final CrossHash.Curlup data) {
-        buffer.writeInt64(data.seed);
+    public void write(WriteContext output, final CrossHash.Curlup data) {
+        output.writeInt64(data.seed);
     }
 
     @Override
-    public CrossHash.Curlup read(MemoryBuffer buffer) {
+    public CrossHash.Curlup read(ReadContext input) {
         CrossHash.Curlup data = new CrossHash.Curlup();
-        data.seed = buffer.readInt64();
+        data.seed = input.readInt64();
         return data;
     }
 

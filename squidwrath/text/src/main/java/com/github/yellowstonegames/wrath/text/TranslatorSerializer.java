@@ -20,43 +20,44 @@ import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Translator;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class TranslatorSerializer extends Serializer<Translator> {
     public TranslatorSerializer(Fory fory) {
-        super(fory, Translator.class);
+        super(fory.getConfig(), Translator.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, Translator data) {
-        fory.writeString(buffer, data.language.stringSerialize());
-        buffer.writeInt64(data.shift);
-        buffer.writeVarUint32(data.cacheLevel);
-        buffer.writeVarUint32(data.table.size());
+    public void write(WriteContext output, Translator data) {
+        output.writeString(data.language.stringSerialize());
+        output.writeInt64(data.shift);
+        output.writeVarUint32(data.cacheLevel);
+        output.writeVarUint32(data.table.size());
         for(String k : data.table.keySet()){
-            fory.writeString(buffer, k);
+            output.writeString(k);
         }
         for(String v : data.table.values()){
-            fory.writeString(buffer, v);
+            output.writeString(v);
         }
 
     }
 
     @Override
-    public Translator read(MemoryBuffer buffer) {
-        Language lang = Language.stringDeserialize(fory.readString(buffer));
-        long shift = buffer.readInt64();
-        int cacheLevel = buffer.readVarUint32();
-        int tableSize = buffer.readVarUint32();
+    public Translator read(ReadContext input) {
+        Language lang = Language.stringDeserialize(input.readString());
+        long shift = input.readInt64();
+        int cacheLevel = input.readVarUint32();
+        int tableSize = input.readVarUint32();
         String[] ks = new String[tableSize];
         String[] vs = new String[tableSize];
 
         for (int i = 0; i < tableSize; i++) {
-            ks[i] = fory.readString(buffer);
+            ks[i] = input.readString();
         }
         for (int i = 0; i < tableSize; i++) {
-            vs[i] = fory.readString(buffer);
+            vs[i] = input.readString();
         }
         return new Translator(lang, shift, cacheLevel, new ObjectObjectMap<>(ks, vs), new ObjectObjectMap<>(vs, ks));
     }

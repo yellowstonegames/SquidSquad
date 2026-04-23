@@ -18,24 +18,25 @@ package com.github.yellowstonegames.wrath.old.v300;
 
 import com.github.yellowstonegames.old.v300.CrossHash;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class CrossHashYolkSerializer extends Serializer<CrossHash.Yolk> {
 
     public CrossHashYolkSerializer(Fory fory) {
-        super(fory, CrossHash.Yolk.class);
+        super(fory.getConfig(), CrossHash.Yolk.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, final CrossHash.Yolk data) {
-        buffer.writeInt64(data.seed);
+    public void write(WriteContext output, final CrossHash.Yolk data) {
+        output.writeInt64(data.seed);
     }
 
     @Override
-    public CrossHash.Yolk read(MemoryBuffer buffer) {
+    public CrossHash.Yolk read(ReadContext input) {
         CrossHash.Yolk data = new CrossHash.Yolk();
-        data.seed = buffer.readInt64();
+        data.seed = input.readInt64();
         return data;
     }
 

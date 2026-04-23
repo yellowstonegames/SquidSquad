@@ -22,7 +22,6 @@ import org.apache.fory.Fory;
 import org.apache.fory.config.Config;
 import org.apache.fory.context.ReadContext;
 import org.apache.fory.context.WriteContext;
-import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
 public class BasicHashNoiseSerializer extends Serializer<BasicHashNoise> {

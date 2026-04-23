@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.text;
 
 import com.github.yellowstonegames.text.Language;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class LanguageSerializer extends Serializer<Language> {
     public LanguageSerializer(Fory fory) {
-        super(fory, Language.class);
+        super(fory.getConfig(), Language.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, Language data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext output, Language data) {
+        output.writeString(data.stringSerialize());
     }
 
     @Override
-    public Language read(MemoryBuffer buffer) {
-        return Language.stringDeserialize(fory.readString(buffer));
+    public Language read(ReadContext input) {
+        return Language.stringDeserialize(input.readString());
     }
 }

@@ -18,26 +18,27 @@ package com.github.yellowstonegames.wrath.old.v300;
 
 import com.github.yellowstonegames.old.v300.CrossHash;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class CrossHashMistSerializer extends Serializer<CrossHash.Mist> {
 
     public CrossHashMistSerializer(Fory fory) {
-        super(fory, CrossHash.Mist.class);
+        super(fory.getConfig(), CrossHash.Mist.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, final CrossHash.Mist data) {
-        buffer.writeInt64(data.l1);
-        buffer.writeInt64(data.l2);
+    public void write(WriteContext output, final CrossHash.Mist data) {
+        output.writeInt64(data.l1);
+        output.writeInt64(data.l2);
     }
 
     @Override
-    public CrossHash.Mist read(MemoryBuffer buffer) {
+    public CrossHash.Mist read(ReadContext input) {
         CrossHash.Mist data = new CrossHash.Mist();
-        data.l1 = buffer.readInt64();
-        data.l2 = buffer.readInt64();
+        data.l1 = input.readInt64();
+        data.l2 = input.readInt64();
         return data;
     }
 

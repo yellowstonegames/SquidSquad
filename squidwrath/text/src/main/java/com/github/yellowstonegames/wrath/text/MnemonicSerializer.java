@@ -19,46 +19,47 @@ package com.github.yellowstonegames.wrath.text;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.yellowstonegames.text.Mnemonic;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class MnemonicSerializer extends Serializer<Mnemonic> {
     public MnemonicSerializer(Fory fory) {
-        super(fory, Mnemonic.class);
+        super(fory.getConfig(), Mnemonic.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, Mnemonic data) {
-        buffer.writeVarUint32(data.items.size());
+    public void write(WriteContext output, Mnemonic data) {
+        output.writeVarUint32(data.items.size());
         for(String k : data.items.order()){
-            fory.writeString(buffer, k);
+            output.writeString(k);
         }
-        buffer.writeVarUint32(data.allAdjectives.size());
+        output.writeVarUint32(data.allAdjectives.size());
         for(String k : data.allAdjectives.order()){
-            fory.writeString(buffer, k);
+            output.writeString(k);
         }
-        buffer.writeVarUint32(data.allNouns.size());
+        output.writeVarUint32(data.allNouns.size());
         for(String k : data.allNouns.order()){
-            fory.writeString(buffer, k);
+            output.writeString(k);
         }
     }
 
     @Override
-    public Mnemonic read(MemoryBuffer buffer) {
-        int itemSize = buffer.readVarUint32();
+    public Mnemonic read(ReadContext input) {
+        int itemSize = input.readVarUint32();
         NumberedSet<String> items = new NumberedSet<>(itemSize);
         for (int i = 0; i < itemSize; i++) {
-            items.add(fory.readString(buffer));
+            items.add(input.readString());
         }
-        int adjSize = buffer.readVarUint32();
+        int adjSize = input.readVarUint32();
         NumberedSet<String> adj = new NumberedSet<>(adjSize);
         for (int i = 0; i < adjSize; i++) {
-            adj.add(fory.readString(buffer));
+            adj.add(input.readString());
         }
-        int nounSize = buffer.readVarUint32();
+        int nounSize = input.readVarUint32();
         NumberedSet<String> noun = new NumberedSet<>(nounSize);
         for (int i = 0; i < nounSize; i++) {
-            noun.add(fory.readString(buffer));
+            noun.add(input.readString());
         }
         return new Mnemonic(items, adj, noun);
     }
