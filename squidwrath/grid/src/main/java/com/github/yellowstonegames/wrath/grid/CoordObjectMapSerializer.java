@@ -20,6 +20,8 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectMap;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 import org.apache.fory.serializer.collection.MapSerializer;
@@ -31,24 +33,24 @@ import org.apache.fory.serializer.collection.MapSerializer;
 public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap> {
 
     public CoordObjectMapSerializer(Fory fory) {
-        super(fory, CoordObjectMap.class);
+        super(fory.getTypeResolver(), CoordObjectMap.class);
     }
 
     @Override
-    public void write(final MemoryBuffer output, final CoordObjectMap data) {
+    public void write(final WriteContext output, final CoordObjectMap data) {
         output.writeVarUint32(data.size());
         for(Object k : data.keySet()){
             output.writeInt16(((Coord)k).x);
             output.writeInt16(((Coord)k).y);
         }
         for(Object v : data.values()){
-            fory.writeRef(output, v);
+            output.writeRef(v);
         }
-        fory.writeRef(output, data.getDefaultValue());
+        output.writeRef(data.getDefaultValue());
     }
 
     @Override
-    public CoordObjectMap<?> read(MemoryBuffer input) {
+    public CoordObjectMap<?> read(ReadContext input) {
         final int len = input.readVarUint32();
         Coord[] ks = new Coord[len];
         Object[] vs = new Object[len];
@@ -56,11 +58,11 @@ public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap> {
             ks[i] = Coord.get(input.readInt16(), input.readInt16());
         }
         for (int i = 0; i < len; i++) {
-            vs[i] = fory.readRef(input);
+            vs[i] = input.readRef();
         }
 
         CoordObjectMap data = new CoordObjectMap<>(ks, vs);
-        data.setDefaultValue(fory.readRef(input));
+        data.setDefaultValue(input.readRef());
         return data;
     }
 }

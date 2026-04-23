@@ -20,6 +20,8 @@ import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.grid.*;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
@@ -31,34 +33,34 @@ import org.apache.fory.serializer.Serializer;
 @SuppressWarnings({"unchecked"})
 public class LightingManagerRgbSerializer extends Serializer<LightingManagerRgb> {
     public LightingManagerRgbSerializer(Fory fory) {
-        super(fory, LightingManagerRgb.class);
+        super(fory.getConfig(), LightingManagerRgb.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, LightingManagerRgb data) {
-        fory.writeRef(buffer, data.resistances);
-        buffer.writeInt32(data.backgroundColor);
-        buffer.writeVarUint32(data.radiusStrategy.ordinal());
-        buffer.writeFloat32(data.viewerRange);
-        fory.writeRef(buffer, data.noticeable);
-        fory.writeRef(buffer, data.lights);
-        fory.writeRef(buffer, data.colorLighting);
-        fory.writeRef(buffer, data.lightingStrength);
-        fory.writeRef(buffer, data.fovResult);
-        fory.writeRef(buffer, data.lightFromFOV);
-        fory.writeRef(buffer, data.losResult);
+    public void write(WriteContext fory, LightingManagerRgb data) {
+        fory.writeRef(data.resistances);
+        fory.writeInt32(data.backgroundColor);
+        fory.writeVarUint32(data.radiusStrategy.ordinal());
+        fory.writeFloat32(data.viewerRange);
+        fory.writeRef(data.noticeable);
+        fory.writeRef(data.lights);
+        fory.writeRef(data.colorLighting);
+        fory.writeRef(data.lightingStrength);
+        fory.writeRef(data.fovResult);
+        fory.writeRef(data.lightFromFOV);
+        fory.writeRef(data.losResult);
     }
 
     @Override
-    public LightingManagerRgb read(MemoryBuffer buffer) {
-        LightingManagerRgb lm = new LightingManagerRgb((float[][]) fory.readRef(buffer), buffer.readInt32(), Radius.ALL[buffer.readVarUint32()], buffer.readFloat32());
-        lm.noticeable = (Region) fory.readRef(buffer);
-        lm.lights = (ObjectDeque<LightSource>) fory.readRef(buffer);
-        lm.colorLighting = (int[][]) fory.readRef(buffer);
-        lm.lightingStrength = (float[][]) fory.readRef(buffer);
-        lm.fovResult = (float[][]) fory.readRef(buffer);
-        lm.lightFromFOV = (float[][]) fory.readRef(buffer);
-        lm.losResult = (float[][]) fory.readRef(buffer);
+    public LightingManagerRgb read(ReadContext fory) {
+        LightingManagerRgb lm = new LightingManagerRgb((float[][]) fory.readRef(), fory.readInt32(), Radius.ALL[fory.readVarUint32()], fory.readFloat32());
+        lm.noticeable = (Region) fory.readRef();
+        lm.lights = (ObjectDeque<LightSource>) fory.readRef();
+        lm.colorLighting = (int[][]) fory.readRef();
+        lm.lightingStrength = (float[][]) fory.readRef();
+        lm.fovResult = (float[][]) fory.readRef();
+        lm.lightFromFOV = (float[][]) fory.readRef();
+        lm.losResult = (float[][]) fory.readRef();
         return lm;
     }
 }

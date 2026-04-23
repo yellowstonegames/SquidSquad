@@ -20,6 +20,8 @@ import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.tantrum.jdkgdxds.ObjectDequeSerializer;
 import com.github.yellowstonegames.grid.*;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
@@ -33,46 +35,46 @@ import org.apache.fory.serializer.Serializer;
 @SuppressWarnings({"unchecked"})
 public class VisionFrameworkSerializer extends Serializer<VisionFramework> {
     public VisionFrameworkSerializer(Fory fory) {
-        super(fory, VisionFramework.class);
+        super(fory.getConfig(), VisionFramework.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, VisionFramework data) {
-        buffer.writeVarUint32(data.placeWidth);
-        buffer.writeVarUint32(data.placeHeight);
-        buffer.writeInt32(data.rememberedColor);
-        fory.writeRef(buffer, data.linePlaceMap);
-        fory.writeRef(buffer, data.prunedPlaceMap);
-        fory.writeRef(buffer, data.backgroundColors);
-        fory.writeRef(buffer, data.previousLightLevels);
-        fory.writeRef(buffer, data.blockage);
-        fory.writeRef(buffer, data.inView);
-        fory.writeRef(buffer, data.justHidden);
-        fory.writeRef(buffer, data.justSeen);
-        fory.writeRef(buffer, data.seen);
-        fory.writeRef(buffer, data.newlyVisible);
-        fory.writeRef(buffer, data.lighting);
-        fory.writeRef(buffer, data.viewers);
+    public void write(WriteContext fory, VisionFramework data) {
+        fory.writeVarUint32(data.placeWidth);
+        fory.writeVarUint32(data.placeHeight);
+        fory.writeInt32(data.rememberedColor);
+        fory.writeRef(data.linePlaceMap);
+        fory.writeRef(data.prunedPlaceMap);
+        fory.writeRef(data.backgroundColors);
+        fory.writeRef(data.previousLightLevels);
+        fory.writeRef(data.blockage);
+        fory.writeRef(data.inView);
+        fory.writeRef(data.justHidden);
+        fory.writeRef(data.justSeen);
+        fory.writeRef(data.seen);
+        fory.writeRef(data.newlyVisible);
+        fory.writeRef(data.lighting);
+        fory.writeRef(data.viewers);
     }
 
     @Override
-    public VisionFramework read(MemoryBuffer input) {
+    public VisionFramework read(ReadContext input) {
         VisionFramework vf = new VisionFramework();
         vf.placeWidth = input.readVarUint32();
         vf.placeHeight = input.readVarUint32();
         vf.rememberedColor = input.readInt32();
-        vf.linePlaceMap = (char[][])fory.readRef(input);
-        vf.prunedPlaceMap = (char[][])fory.readRef(input);
-        vf.backgroundColors = (int[][])fory.readRef(input);
-        vf.previousLightLevels = (float[][])fory.readRef(input);
-        vf.blockage = (Region)fory.readRef(input);
-        vf.inView = (Region)fory.readRef(input);
-        vf.justHidden = (Region)fory.readRef(input);
-        vf.justSeen = (Region)fory.readRef(input);
-        vf.seen = (Region)fory.readRef(input);
-        vf.newlyVisible = (Region)fory.readRef(input);
-        vf.lighting = (LightingManager)fory.readRef(input);
-        vf.viewers = (CoordFloatOrderedMap)fory.readRef(input);
+        vf.linePlaceMap = (char[][])input.readRef();
+        vf.prunedPlaceMap = (char[][])input.readRef();
+        vf.backgroundColors = (int[][])input.readRef();
+        vf.previousLightLevels = (float[][])input.readRef();
+        vf.blockage = (Region)input.readRef();
+        vf.inView = (Region)input.readRef();
+        vf.justHidden = (Region)input.readRef();
+        vf.justSeen = (Region)input.readRef();
+        vf.seen = (Region)input.readRef();
+        vf.newlyVisible = (Region)input.readRef();
+        vf.lighting = (LightingManager)input.readRef();
+        vf.viewers = (CoordFloatOrderedMap)input.readRef();
         return vf;
     }
 }

@@ -20,6 +20,8 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordObjectOrderedMap;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 import org.apache.fory.serializer.collection.MapSerializer;
@@ -31,24 +33,24 @@ import org.apache.fory.serializer.collection.MapSerializer;
 public class CoordObjectOrderedMapSerializer extends MapSerializer<CoordObjectOrderedMap> {
 
     public CoordObjectOrderedMapSerializer(Fory fory) {
-        super(fory, CoordObjectOrderedMap.class);
+        super(fory.getTypeResolver(), CoordObjectOrderedMap.class);
     }
 
     @Override
-    public void write(final MemoryBuffer output, final CoordObjectOrderedMap data) {
+    public void write(final WriteContext output, final CoordObjectOrderedMap data) {
         output.writeVarUint32(data.size());
         for(Object k : data.order()){
             output.writeInt16(((Coord)k).x);
             output.writeInt16(((Coord)k).y);
         }
         for(Object v : data.values()){
-            fory.writeRef(output, v);
+            output.writeRef(v);
         }
-        fory.writeRef(output, data.getDefaultValue());
+        output.writeRef(data.getDefaultValue());
     }
 
     @Override
-    public CoordObjectOrderedMap<?> read(MemoryBuffer input) {
+    public CoordObjectOrderedMap<?> read(ReadContext input) {
         final int len = input.readVarUint32();
         Coord[] ks = new Coord[len];
         Object[] vs = new Object[len];
@@ -56,11 +58,11 @@ public class CoordObjectOrderedMapSerializer extends MapSerializer<CoordObjectOr
             ks[i] = Coord.get(input.readInt16(), input.readInt16());
         }
         for (int i = 0; i < len; i++) {
-            vs[i] = fory.readRef(input);
+            vs[i] = input.readRef();
         }
 
         CoordObjectOrderedMap data = new CoordObjectOrderedMap<>(ks, vs);
-        data.setDefaultValue(fory.readRef(input));
+        data.setDefaultValue(input.readRef());
         return data;
 
     }

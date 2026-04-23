@@ -19,6 +19,8 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordSet;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 import org.apache.fory.serializer.collection.CollectionSerializer;
@@ -29,11 +31,11 @@ import org.apache.fory.serializer.collection.CollectionSerializer;
 public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
 
     public CoordSetSerializer(Fory fory) {
-        super(fory, CoordSet.class);
+        super(fory.getTypeResolver(), CoordSet.class, true);
     }
 
     @Override
-    public void write(final MemoryBuffer output, final CoordSet data) {
+    public void write(final WriteContext output, final CoordSet data) {
         final int len = data.size();
         output.writeVarUint32(len);
         for (Coord item : data) {
@@ -43,7 +45,7 @@ public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
     }
 
     @Override
-    public CoordSet read(MemoryBuffer input) {
+    public CoordSet read(ReadContext input) {
         final int len = input.readVarUint32();
         CoordSet data = new CoordSet(len);
         for (int i = 0; i < len; i++) {

@@ -18,6 +18,8 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Radiance;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
@@ -26,24 +28,24 @@ import org.apache.fory.serializer.Serializer;
  */
 public class RadianceSerializer extends Serializer<Radiance> {
     public RadianceSerializer(Fory fory) {
-        super(fory, Radiance.class);
+        super(fory.getConfig(), Radiance.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, Radiance data) {
-        buffer.writeFloat32(data.range);
-        buffer.writeInt32(data.color);
-        buffer.writeFloat32(data.flicker);
-        buffer.writeFloat32(data.strobe);
-        buffer.writeFloat32(data.delay);
-        buffer.writeFloat32(data.flare);
-        buffer.writeInt32(data.seed);
+    public void write(WriteContext fory, Radiance data) {
+        fory.writeFloat32(data.range);
+        fory.writeInt32(data.color);
+        fory.writeFloat32(data.flicker);
+        fory.writeFloat32(data.strobe);
+        fory.writeFloat32(data.delay);
+        fory.writeFloat32(data.flare);
+        fory.writeInt32(data.seed);
 
     }
 
     @Override
-    public Radiance read(MemoryBuffer buffer) {
-        return new Radiance(buffer.readFloat32(), buffer.readInt32(),
-                buffer.readFloat32(), buffer.readFloat32(), buffer.readFloat32(), buffer.readFloat32(), buffer.readInt32());
+    public Radiance read(ReadContext fory) {
+        return new Radiance(fory.readFloat32(), fory.readInt32(),
+                fory.readFloat32(), fory.readFloat32(), fory.readFloat32(), fory.readFloat32(), fory.readInt32());
     }
 }

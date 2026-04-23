@@ -21,6 +21,8 @@ import com.github.tommyettinger.ds.support.util.IntIterator;
 import com.github.yellowstonegames.grid.Coord;
 import com.github.yellowstonegames.grid.CoordIntMap;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
@@ -30,11 +32,11 @@ import org.apache.fory.serializer.Serializer;
 public class CoordIntMapSerializer extends Serializer<CoordIntMap> {
 
     public CoordIntMapSerializer(Fory fory) {
-        super(fory, CoordIntMap.class);
+        super(fory.getConfig(), CoordIntMap.class);
     }
 
     @Override
-    public void write(final MemoryBuffer output, final CoordIntMap data) {
+    public void write(final WriteContext output, final CoordIntMap data) {
         output.writeVarUint32(data.size());
         for(Coord k : data.keySet()){
             output.writeInt16(k.x);
@@ -48,7 +50,7 @@ public class CoordIntMapSerializer extends Serializer<CoordIntMap> {
     }
 
     @Override
-    public CoordIntMap read(MemoryBuffer input) {
+    public CoordIntMap read(ReadContext input) {
         final int len = input.readVarUint32();
         Coord[] ks = new Coord[len];
         int[] vs = new int[len];

@@ -18,6 +18,8 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.Coord;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
@@ -29,17 +31,17 @@ import org.apache.fory.serializer.Serializer;
 public class CoordSerializer extends Serializer<Coord> {
 
     public CoordSerializer(Fory fory) {
-        super(fory, Coord.class);
+        super(fory.getConfig(), Coord.class, true);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, final Coord data) {
-        buffer.writeInt16(data.x);
-        buffer.writeInt16(data.y);
+    public void write(WriteContext output, final Coord data) {
+        output.writeInt16(data.x);
+        output.writeInt16(data.y);
     }
 
     @Override
-    public Coord read(MemoryBuffer buffer) {
-        return Coord.get(buffer.readInt16(), buffer.readInt16());
+    public Coord read(ReadContext input) {
+        return Coord.get(input.readInt16(), input.readInt16());
     }
 }

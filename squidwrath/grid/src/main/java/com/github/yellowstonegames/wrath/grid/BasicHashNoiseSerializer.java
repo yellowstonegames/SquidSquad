@@ -19,22 +19,28 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.yellowstonegames.grid.BasicHashNoise;
 import com.github.yellowstonegames.grid.IPointHash;
 import org.apache.fory.Fory;
+import org.apache.fory.config.Config;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
 public class BasicHashNoiseSerializer extends Serializer<BasicHashNoise> {
     public BasicHashNoiseSerializer(Fory fory) {
+        super(fory.getConfig(), BasicHashNoise.class);
+    }
+    public BasicHashNoiseSerializer(Config fory) {
         super(fory, BasicHashNoise.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, BasicHashNoise value) {
-        buffer.writeInt32(value.seed);
-        fory.writeRef(buffer, value.pointHash);
+    public void write(WriteContext output, BasicHashNoise value) {
+        output.writeInt32(value.seed);
+        output.writeRef(value.pointHash);
     }
 
     @Override
-    public BasicHashNoise read(MemoryBuffer buffer) {
-        return new BasicHashNoise(buffer.readInt32(), (IPointHash) fory.readRef(buffer));
+    public BasicHashNoise read(ReadContext input) {
+        return new BasicHashNoise(input.readInt32(), (IPointHash) input.readRef());
     }
 }

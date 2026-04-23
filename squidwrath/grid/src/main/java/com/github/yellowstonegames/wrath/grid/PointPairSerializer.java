@@ -19,6 +19,8 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.tommyettinger.crux.PointN;
 import com.github.tommyettinger.crux.PointPair;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
@@ -29,17 +31,17 @@ import org.apache.fory.serializer.Serializer;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class PointPairSerializer extends Serializer<PointPair> {
     public PointPairSerializer(Fory fory) {
-        super(fory, PointPair.class);
+        super(fory.getConfig(), PointPair.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, PointPair value) {
-        fory.writeRef(buffer, value.a);
-        fory.writeRef(buffer, value.b);
+    public void write(WriteContext fory, PointPair value) {
+        fory.writeRef(value.a);
+        fory.writeRef(value.b);
     }
 
     @Override
-    public PointPair read(MemoryBuffer buffer) {
-        return new PointPair((PointN<?>)fory.readRef(buffer), (PointN<?>)fory.readRef(buffer));
+    public PointPair read(ReadContext fory) {
+        return new PointPair((PointN<?>)fory.readRef(), (PointN<?>)fory.readRef());
     }
 }

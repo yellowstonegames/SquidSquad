@@ -19,6 +19,8 @@ package com.github.yellowstonegames.wrath.grid;
 import com.github.yellowstonegames.grid.IGridIdentified;
 import com.github.yellowstonegames.grid.SpatialMap;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 import org.apache.fory.serializer.collection.CollectionSerializer;
@@ -31,24 +33,24 @@ import org.apache.fory.serializer.collection.CollectionSerializer;
 public class SpatialMapSerializer extends CollectionSerializer<SpatialMap> {
 
     public SpatialMapSerializer(Fory fory) {
-        super(fory, SpatialMap.class);
+        super(fory.getTypeResolver(), SpatialMap.class);
     }
 
     @Override
-    public void write(final MemoryBuffer output, final SpatialMap data) {
+    public void write(final WriteContext output, final SpatialMap data) {
         final int len = data.size();
         output.writeVarUint32(len);
         for (Object item : data) {
-            fory.writeRef(output, item);
+            output.writeRef(item);
         }
     }
 
     @Override
-    public SpatialMap<? extends IGridIdentified> read(MemoryBuffer input) {
+    public SpatialMap<? extends IGridIdentified> read(ReadContext input) {
         final int len = input.readVarUint32();
         SpatialMap data = new SpatialMap(len);
         for (int i = 0; i < len; i++) {
-            data.add((IGridIdentified) fory.readRef(input));
+            data.add((IGridIdentified) input.readRef());
         }
         return data;
     }

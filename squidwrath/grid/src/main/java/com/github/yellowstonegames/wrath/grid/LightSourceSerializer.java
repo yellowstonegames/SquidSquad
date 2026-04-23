@@ -18,6 +18,8 @@ package com.github.yellowstonegames.wrath.grid;
 
 import com.github.yellowstonegames.grid.*;
 import org.apache.fory.Fory;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.memory.MemoryBuffer;
 import org.apache.fory.serializer.Serializer;
 
@@ -27,20 +29,20 @@ import org.apache.fory.serializer.Serializer;
 @SuppressWarnings({"unchecked"})
 public class LightSourceSerializer extends Serializer<LightSource> {
     public LightSourceSerializer(Fory fory) {
-        super(fory, LightSource.class);
+        super(fory.getConfig(), LightSource.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, LightSource data) {
-        fory.writeRef(buffer, data.position);
-        fory.writeRef(buffer, data.radiance);
-        buffer.writeFloat32(data.span);
-        buffer.writeFloat32(data.direction);
+    public void write(WriteContext fory, LightSource data) {
+        fory.writeRef(data.position);
+        fory.writeRef(data.radiance);
+        fory.writeFloat32(data.span);
+        fory.writeFloat32(data.direction);
     }
 
     @Override
-    public LightSource read(MemoryBuffer buffer) {
-        return new LightSource((Coord) fory.readRef(buffer), (Radiance)fory.readRef(buffer),
-                buffer.readFloat32(), buffer.readFloat32());
+    public LightSource read(ReadContext fory) {
+        return new LightSource((Coord) fory.readRef(), (Radiance)fory.readRef(),
+                fory.readFloat32(), fory.readFloat32());
     }
 }
