@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.tommyettinger.random.LineWobble;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.CyclicNoise;
 import com.github.yellowstonegames.grid.INoise;

@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.LocalMap;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class LocalMapSerializer extends Serializer<LocalMap> {
     public LocalMapSerializer(Fory fory) {
-        super(fory, LocalMap.class);
+        super(fory.getConfig(), LocalMap.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, LocalMap data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, LocalMap data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public LocalMap read(MemoryBuffer buffer) {
-        return LocalMap.recreateFromString(fory.readString(buffer));
+    public LocalMap read(ReadContext fory) {
+        return LocalMap.recreateFromString(fory.readString());
     }
 }

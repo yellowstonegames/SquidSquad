@@ -20,7 +20,8 @@ import com.github.yellowstonegames.world.BiomeMapper;
 import com.github.yellowstonegames.world.SimpleWorldMapView;
 import com.github.yellowstonegames.world.WorldMapGenerator;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 /**
@@ -28,27 +29,27 @@ import org.apache.fory.serializer.Serializer;
  */
 public class SimpleWorldMapViewSerializer extends Serializer<SimpleWorldMapView> {
     public SimpleWorldMapViewSerializer(Fory fory) {
-        super(fory, SimpleWorldMapView.class);
+        super(fory.getConfig(), SimpleWorldMapView.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, SimpleWorldMapView data) {
-        fory.writeRef(buffer, data.getWorld());
-        fory.writeString(buffer, data.getBiomeMapper().stringSerialize());
-        fory.writeRef(buffer, data.getColorMap());
-        fory.writeRef(buffer, data.getColorMapOklab());
-        fory.writeRef(buffer, data.biomeColorTable);
-        fory.writeRef(buffer, data.biomeDarkColorTable);
+    public void write(WriteContext fory, SimpleWorldMapView data) {
+        fory.writeRef(data.getWorld());
+        fory.writeString(data.getBiomeMapper().stringSerialize());
+        fory.writeRef(data.getColorMap());
+        fory.writeRef(data.getColorMapOklab());
+        fory.writeRef(data.biomeColorTable);
+        fory.writeRef(data.biomeDarkColorTable);
     }
 
     @Override
-    public SimpleWorldMapView read(MemoryBuffer buffer) {
-        SimpleWorldMapView wmv = new SimpleWorldMapView((WorldMapGenerator) fory.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.SimpleBiomeMapper.recreateFromString(fory.readString(buffer)));
-        wmv.setColorMap((int[][])fory.readRef(buffer));
-        wmv.setColorMapOklab((int[][])fory.readRef(buffer));
-        System.arraycopy(fory.readRef(buffer), 0, wmv.biomeColorTable, 0, 66);
-        System.arraycopy(fory.readRef(buffer), 0, wmv.biomeDarkColorTable, 0, 66);
+    public SimpleWorldMapView read(ReadContext fory) {
+        SimpleWorldMapView wmv = new SimpleWorldMapView((WorldMapGenerator) fory.readRef());
+        wmv.setBiomeMapper(BiomeMapper.SimpleBiomeMapper.recreateFromString(fory.readString()));
+        wmv.setColorMap((int[][])fory.readRef());
+        wmv.setColorMapOklab((int[][])fory.readRef());
+        System.arraycopy((int[])fory.readRef(), 0, wmv.biomeColorTable, 0, 66);
+        System.arraycopy((int[])fory.readRef(), 0, wmv.biomeDarkColorTable, 0, 66);
 
         return wmv;
     }

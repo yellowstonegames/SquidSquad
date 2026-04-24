@@ -24,7 +24,8 @@ import com.github.yellowstonegames.world.PoliticalMapper;
 import com.github.yellowstonegames.world.PoliticalMapper.Faction;
 import com.github.yellowstonegames.world.WorldMapGenerator;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 /**
@@ -36,29 +37,29 @@ import org.apache.fory.serializer.Serializer;
  */
 public class PoliticalMapperSerializer extends Serializer<PoliticalMapper> {
     public PoliticalMapperSerializer(Fory fory) {
-        super(fory, PoliticalMapper.class);
+        super(fory.getConfig(), PoliticalMapper.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, PoliticalMapper data) {
-        fory.writeString(buffer, data.rng.stringSerialize());
-        fory.writeRef(buffer, data.atlas);
-        fory.writeString(buffer, data.name);
-        fory.writeRef(buffer, data.politicalMap);
-        fory.writeRef(buffer, data.zoomedMap);
-        fory.writeRef(buffer, data.wmg);
-        fory.writeRef(buffer, data.biomeMapper);
+    public void write(WriteContext fory, PoliticalMapper data) {
+        fory.writeString(data.rng.stringSerialize());
+        fory.writeRef(data.atlas);
+        fory.writeString(data.name);
+        fory.writeRef(data.politicalMap);
+        fory.writeRef(data.zoomedMap);
+        fory.writeRef(data.wmg);
+        fory.writeRef(data.biomeMapper);
     }
 
     @Override
-    public PoliticalMapper read(MemoryBuffer buffer) {
-        PoliticalMapper p = new PoliticalMapper(Deserializer.deserialize(fory.readString(buffer)));
-        p.atlas = (IntObjectOrderedMap<Faction>)fory.readRef(buffer);
-        p.name = fory.readString(buffer);
-        p.politicalMap = (char[][])fory.readRef(buffer);
-        p.zoomedMap = (char[][])fory.readRef(buffer);
-        p.wmg = (WorldMapGenerator)fory.readRef(buffer);
-        p.biomeMapper = (BiomeMapper)fory.readRef(buffer);
+    public PoliticalMapper read(ReadContext fory) {
+        PoliticalMapper p = new PoliticalMapper(Deserializer.deserialize(fory.readString()));
+        p.atlas = (IntObjectOrderedMap<Faction>)fory.readRef();
+        p.name = fory.readString();
+        p.politicalMap = (char[][])fory.readRef();
+        p.zoomedMap = (char[][])fory.readRef();
+        p.wmg = (WorldMapGenerator)fory.readRef();
+        p.biomeMapper = (BiomeMapper)fory.readRef();
         return p;
     }
 }

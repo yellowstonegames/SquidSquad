@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.RotatingGlobeMap;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class RotatingGlobeMapSerializer extends Serializer<RotatingGlobeMap> {
     public RotatingGlobeMapSerializer(Fory fory) {
-        super(fory, RotatingGlobeMap.class);
+        super(fory.getConfig(), RotatingGlobeMap.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, RotatingGlobeMap data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, RotatingGlobeMap data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public RotatingGlobeMap read(MemoryBuffer buffer) {
-        return RotatingGlobeMap.recreateFromString(fory.readString(buffer));
+    public RotatingGlobeMap read(ReadContext fory) {
+        return RotatingGlobeMap.recreateFromString(fory.readString());
     }
 }

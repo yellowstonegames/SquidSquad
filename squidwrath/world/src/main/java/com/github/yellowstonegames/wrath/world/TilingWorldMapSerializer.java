@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.TilingWorldMap;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class TilingWorldMapSerializer extends Serializer<TilingWorldMap> {
     public TilingWorldMapSerializer(Fory fory) {
-        super(fory, TilingWorldMap.class);
+        super(fory.getConfig(), TilingWorldMap.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, TilingWorldMap data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, TilingWorldMap data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public TilingWorldMap read(MemoryBuffer buffer) {
-        return TilingWorldMap.recreateFromString(fory.readString(buffer));
+    public TilingWorldMap read(ReadContext fory) {
+        return TilingWorldMap.recreateFromString(fory.readString());
     }
 }

@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.BiomeMapper.UnrealisticBiomeMapper;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class UnrealisticBiomeMapperSerializer extends Serializer<UnrealisticBiomeMapper> {
     public UnrealisticBiomeMapperSerializer(Fory fory) {
-        super(fory, UnrealisticBiomeMapper.class);
+        super(fory.getConfig(), UnrealisticBiomeMapper.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, UnrealisticBiomeMapper data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, UnrealisticBiomeMapper data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public UnrealisticBiomeMapper read(MemoryBuffer buffer) {
-        return UnrealisticBiomeMapper.recreateFromString(fory.readString(buffer));
+    public UnrealisticBiomeMapper read(ReadContext fory) {
+        return UnrealisticBiomeMapper.recreateFromString(fory.readString());
     }
 }

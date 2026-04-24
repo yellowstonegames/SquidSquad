@@ -22,7 +22,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.NumberedSet;
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.interop.JsonSupport;
-import com.github.yellowstonegames.core.DigitTools;
 import com.github.yellowstonegames.store.core.JsonCore;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.text.Language.SentenceForm;

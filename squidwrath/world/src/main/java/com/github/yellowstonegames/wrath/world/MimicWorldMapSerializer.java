@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.MimicWorldMap;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class MimicWorldMapSerializer extends Serializer<MimicWorldMap> {
     public MimicWorldMapSerializer(Fory fory) {
-        super(fory, MimicWorldMap.class);
+        super(fory.getConfig(), MimicWorldMap.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, MimicWorldMap data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, MimicWorldMap data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public MimicWorldMap read(MemoryBuffer buffer) {
-        return MimicWorldMap.recreateFromString(fory.readString(buffer));
+    public MimicWorldMap read(ReadContext fory) {
+        return MimicWorldMap.recreateFromString(fory.readString());
     }
 }

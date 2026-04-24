@@ -19,7 +19,8 @@ package com.github.yellowstonegames.wrath.world;
 import com.github.yellowstonegames.text.Language;
 import com.github.yellowstonegames.world.PoliticalMapper.Faction;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 /**
@@ -28,32 +29,32 @@ import org.apache.fory.serializer.Serializer;
  */
 public class FactionSerializer extends Serializer<Faction> {
     public FactionSerializer(Fory fory) {
-        super(fory, Faction.class);
+        super(fory.getConfig(), Faction.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, Faction data) {
-        fory.writeString(buffer, data.language == null ? null : data.language.stringSerialize());
-        fory.writeString(buffer, data.name == null ? null : data.name);
-        fory.writeString(buffer, data.shortName == null ? null : data.shortName);
-        fory.writeRef(buffer, data.preferredBiomes == null ? null : data.preferredBiomes.toArray(new String[0]));
-        fory.writeRef(buffer, data.blockedBiomes == null ? null : data.blockedBiomes.toArray(new String[0]));
-        fory.writeRef(buffer, data.preferredHeight == null ? null : data.preferredHeight);
-        fory.writeRef(buffer, data.preferredHeat == null ? null : data.preferredHeat);
-        fory.writeRef(buffer, data.preferredMoisture == null ? null : data.preferredMoisture);
+    public void write(WriteContext fory, Faction data) {
+        fory.writeString(data.language == null ? null : data.language.stringSerialize());
+        fory.writeString(data.name == null ? null : data.name);
+        fory.writeString(data.shortName == null ? null : data.shortName);
+        fory.writeRef(data.preferredBiomes == null ? null : data.preferredBiomes.toArray(new String[0]));
+        fory.writeRef(data.blockedBiomes == null ? null : data.blockedBiomes.toArray(new String[0]));
+        fory.writeRef(data.preferredHeight == null ? null : data.preferredHeight);
+        fory.writeRef(data.preferredHeat == null ? null : data.preferredHeat);
+        fory.writeRef(data.preferredMoisture == null ? null : data.preferredMoisture);
     }
 
     @Override
-    public Faction read(MemoryBuffer buffer) {
+    public Faction read(ReadContext fory) {
         return new Faction(
-                Language.stringDeserialize(fory.readString(buffer)),
-                fory.readString(buffer),
-                fory.readString(buffer),
-                (String[])fory.readRef(buffer),
-                (String[])fory.readRef(buffer),
-                (int[])fory.readRef(buffer),
-                (int[])fory.readRef(buffer),
-                (int[])fory.readRef(buffer)
+                Language.stringDeserialize(fory.readString()),
+                fory.readString(),
+                fory.readString(),
+                (String[])fory.readRef(),
+                (String[])fory.readRef(),
+                (int[])fory.readRef(),
+                (int[])fory.readRef(),
+                (int[])fory.readRef()
                 );
     }
 }

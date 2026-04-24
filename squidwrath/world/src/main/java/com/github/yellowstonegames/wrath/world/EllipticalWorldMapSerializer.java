@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.EllipticalWorldMap;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class EllipticalWorldMapSerializer extends Serializer<EllipticalWorldMap> {
     public EllipticalWorldMapSerializer(Fory fory) {
-        super(fory, EllipticalWorldMap.class);
+        super(fory.getConfig(), EllipticalWorldMap.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, EllipticalWorldMap data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, EllipticalWorldMap data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public EllipticalWorldMap read(MemoryBuffer buffer) {
-        return EllipticalWorldMap.recreateFromString(fory.readString(buffer));
+    public EllipticalWorldMap read(ReadContext fory) {
+        return EllipticalWorldMap.recreateFromString(fory.readString());
     }
 }

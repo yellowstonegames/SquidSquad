@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.GlobeMap;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class GlobeMapSerializer extends Serializer<GlobeMap> {
     public GlobeMapSerializer(Fory fory) {
-        super(fory, GlobeMap.class);
+        super(fory.getConfig(), GlobeMap.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, GlobeMap data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, GlobeMap data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public GlobeMap read(MemoryBuffer buffer) {
-        return GlobeMap.recreateFromString(fory.readString(buffer));
+    public GlobeMap read(ReadContext fory) {
+        return GlobeMap.recreateFromString(fory.readString());
     }
 }

@@ -20,7 +20,8 @@ import com.github.yellowstonegames.world.BiomeMapper;
 import com.github.yellowstonegames.world.UnrealisticWorldMapView;
 import com.github.yellowstonegames.world.WorldMapGenerator;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 /**
@@ -28,19 +29,19 @@ import org.apache.fory.serializer.Serializer;
  */
 public class UnrealisticWorldMapViewSerializer extends Serializer<UnrealisticWorldMapView> {
     public UnrealisticWorldMapViewSerializer(Fory fory) {
-        super(fory, UnrealisticWorldMapView.class);
+        super(fory.getConfig(), UnrealisticWorldMapView.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, UnrealisticWorldMapView data) {
-        fory.writeRef(buffer, data.getWorld());
-        fory.writeString(buffer, data.getBiomeMapper().stringSerialize());
+    public void write(WriteContext fory, UnrealisticWorldMapView data) {
+        fory.writeRef(data.getWorld());
+        fory.writeString(data.getBiomeMapper().stringSerialize());
     }
 
     @Override
-    public UnrealisticWorldMapView read(MemoryBuffer buffer) {
-        UnrealisticWorldMapView wmv = new UnrealisticWorldMapView((WorldMapGenerator) fory.readRef(buffer));
-        wmv.setBiomeMapper(BiomeMapper.UnrealisticBiomeMapper.recreateFromString(fory.readString(buffer)));
+    public UnrealisticWorldMapView read(ReadContext fory) {
+        UnrealisticWorldMapView wmv = new UnrealisticWorldMapView((WorldMapGenerator) fory.readRef());
+        wmv.setBiomeMapper(BiomeMapper.UnrealisticBiomeMapper.recreateFromString(fory.readString()));
 
         return wmv;
     }

@@ -18,21 +18,22 @@ package com.github.yellowstonegames.wrath.world;
 
 import com.github.yellowstonegames.world.HexagonalWorldMap;
 import org.apache.fory.Fory;
-import org.apache.fory.memory.MemoryBuffer;
+import org.apache.fory.context.ReadContext;
+import org.apache.fory.context.WriteContext;
 import org.apache.fory.serializer.Serializer;
 
 public class HexagonalWorldMapSerializer extends Serializer<HexagonalWorldMap> {
     public HexagonalWorldMapSerializer(Fory fory) {
-        super(fory, HexagonalWorldMap.class);
+        super(fory.getConfig(), HexagonalWorldMap.class);
     }
 
     @Override
-    public void write(MemoryBuffer buffer, HexagonalWorldMap data) {
-        fory.writeString(buffer, data.stringSerialize());
+    public void write(WriteContext fory, HexagonalWorldMap data) {
+        fory.writeString(data.stringSerialize());
     }
 
     @Override
-    public HexagonalWorldMap read(MemoryBuffer buffer) {
-        return HexagonalWorldMap.recreateFromString(fory.readString(buffer));
+    public HexagonalWorldMap read(ReadContext fory) {
+        return HexagonalWorldMap.recreateFromString(fory.readString());
     }
 }
