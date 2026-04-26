@@ -8,13 +8,13 @@ From all corners of the maybe-seven procedurally-generated seas, arise, O Mighty
 Depend on the modules you need by adding dependencies to core/build.gradle . For example,
 
 ```
-api 'com.squidpony:squidgrid:4.0.8' // important code for anything that has a position here
-api 'com.squidpony:squidplace:4.0.8' // allows generating dungeons, caves, wilderness areas as char arrays
-api 'com.squidpony:squidstorepath:4.0.8' // adds a dependency for pathfinding and also allows saving related types 
-api 'com.squidpony:squidstoretext:4.0.8' // adds a dependency for gibberish generation/translation; allows saving types
+api 'com.squidpony:squidgrid:4.0.9' // important code for anything that has a position here
+api 'com.squidpony:squidplace:4.0.9' // allows generating dungeons, caves, wilderness areas as char arrays
+api 'com.squidpony:squidstorepath:4.0.9' // adds a dependency for pathfinding and also allows saving related types 
+api 'com.squidpony:squidstoretext:4.0.9' // adds a dependency for gibberish generation/translation; allows saving types
 ```
 
-On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.8'`,
+On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.9'`,
 which is a dependency of all other SquidSquad modules. The `squidstorepath` and `squidstoretext` dependencies pull in
 `squidpath` and `squidtext`, as well as allowing saving their various types to JSON using [libGDX](https://libgdx.com/)
 and its `Json` class. If you aren't using libGDX, there's other options that don't depend on it, though SquidSquad is
@@ -181,7 +181,7 @@ dependency will usually pull in a few others. The full list is:
       most cases, while both serializing and deserializing even more quickly than Kryo.
     - Unlike `squidfreeze`, many classes can be serialized by `squidwrath` without needing a special serializer
       (the class still needs to be registered with Fory, just not with `registerSerializer()`). If a serializer isn't
-      present in `squidwrath`, that usually means you don't need a serializer when registering it.
+      present in `squidwrath` or `tantrum`, that usually means you don't need a serializer when registering it.
       - All random number generators in `juniper` and any classes in `squidcore` or `squidpath` that can be serialized
         don't need any serializer to be registered. That means `squidwrathcore` and `squidwrathpath` are empty other
         than their tests.
@@ -220,10 +220,10 @@ libGDX application.
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
-released version such as the current `4.0.8`, which can be obtained from the main source for dependencies on the
+released version such as the current `4.0.9`, which can be obtained from the main source for dependencies on the
 JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
 dependencies [can be seen for each version here on Maven Central](https://search.maven.org/search?q=g:com.squidpony),
-and look like `implementation 'com.squidpony:squidcore:4.0.8'`. Maven Central's search will still show (much) older
+and look like `implementation 'com.squidpony:squidcore:4.0.9'`. Maven Central's search will still show (much) older
 SquidLib versions as well, such as `squidlib`, `squidlib-util`, and `squidlib-extra`; these are not used at all here.
 Some compatibility code is present for porting from SquidLib to SquidSquad in the SquidSquad module `squidold`.
 
@@ -245,12 +245,13 @@ create your project. Use Maven only if you are a wizard. Select SquidSquad depen
 care of their dependencies on and off GWT. Generate the project. Relax. If you need to add another dependency, from
 SquidSquad or somewhere else, my usual recommendation is to generate an empty project with all dependencies you want
 selected, then to compare the `gradle.properties` and all `build.gradle` files between your empty and original projects.
+You should also check for differences in any and all `.gwt.xml` files in your project.
 Copy over any changes you want, reload your Gradle project, and you're done. There probably won't be many changes, and
 they will probably all be in the dependencies, but this ensures all the versions are up-to-date and necessary other
 projects are present.
 
 Liftoff fetches SquidSquad from Maven Central, and needs a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.8`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+such release is `4.0.9`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
 commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
 The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
 `com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are
@@ -269,7 +270,7 @@ The other versions go up fairly often as things are fixed or improved, but they 
   - `juniperVersion`=0.10.2
   - `regExodusVersion`=0.1.21
   - `cruxVersion`=0.1.3
-  - `textraTypistVersion`=2.2.14
+  - `textraTypistVersion`=2.2.15
   - `gdxVersion`=1.14.0
 
 # Help!
