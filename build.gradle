@@ -74,3 +74,9 @@ if(JavaVersion.current().isJava9Compatible()) {
         }
     }
 }
+allprojects {
+    tasks.withType(JavaExec.class).configureEach {
+        environment("__GL_THREADED_OPTIMIZATIONS", 0)
+        jvmArgs("--enable-native-access=ALL-UNNAMED")
+    }
+}
