@@ -39,11 +39,12 @@ public class PerlinNoiseSerializer extends Serializer<PerlinNoise> {
         output.writeFloat(data.getEqualization(4));
         output.writeFloat(data.getEqualization(5));
         output.writeFloat(data.getEqualization(6));
+        output.writeFloat(data.getEqualization(7));
     }
 
     @Override
     public PerlinNoise read(final Kryo kryo, final Input input, final Class<? extends PerlinNoise> dataClass) {
-        return new PerlinNoise(input.readLong(), input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat());
+        return new PerlinNoise(input.readLong(), input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat(),input.readFloat());
     }
 
     @Override
