@@ -136,6 +136,11 @@ public class NoiseAdjustment implements INoise, ISerializersNeeded {
     }
 
     @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoise(x, y, z, w, u, v, m)));
+    }
+
+    @Override
     public void setSeed(long seed) {
         wrapped.setSeed(seed);
     }
@@ -168,6 +173,11 @@ public class NoiseAdjustment implements INoise, ISerializersNeeded {
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
         return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed)));
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        return 2f * (-0.5f + adjustment.apply(0.5f + 0.5f * wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed)));
     }
 
     /**

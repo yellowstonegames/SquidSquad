@@ -132,7 +132,7 @@ public interface INoise extends Externalizable {
      * @throws UnsupportedOperationException if 7D noise cannot be produced by this generator
      */
     default float getNoise(float x, float y, float z, float w, float u, float v, float m){
-        throw new UnsupportedOperationException("7D getNoise() is not supported by this generator.");
+        throw new UnsupportedOperationException("7D getNoise() is not supported by this generator: " + getTag());
     }
 
     /**

@@ -238,8 +238,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),  // 19
             new CyclicNoise(1L, 1),                                    // 20
             new CyclicNoise(1L, 3),                                    // 21
-            new com.github.yellowstonegames.grid.HuskyNoise(1L, 1),                                     // 22
-            new com.github.yellowstonegames.grid.HuskyNoise(1L, 3),                                     // 23
+            new HuskyNoise(1L, 1),                                     // 22
+            new HuskyNoise(1L, 3),                                     // 23
             new PuffyNoise(1L, 1),                                     // 24
             new PuffyNoise(1L, 3),                                     // 25
             new NoiseAdjustment(analysis, Interpolations.linear),      // 26
@@ -270,12 +270,12 @@ public class INoiseComparison extends ApplicationAdapter {
             new VroomNoise(1L),                                        // 51
     };
     private int index0 = 7;
-    private int index1 = 51;
+    private int index1 = 11;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
     private final NoiseAdjustment adj1 = new NoiseAdjustment(wrap1, PREPARATIONS[prep1]);
-    private int dim = 0; // this can be 0 through 4 inclusive; add 2 to get the actual dimensions
+    private int dim = 0; // this can be 0 through 5 inclusive; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
     private boolean slice = true;
@@ -387,7 +387,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     }
                     case D: //dimension
-                        dim = (dim + (UIUtils.shift() ? 4 : 1)) % 5;
+                        dim = (dim + (UIUtils.shift() ? 5 : 1)) % 6;
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
@@ -510,6 +510,19 @@ public class INoiseComparison extends ApplicationAdapter {
                     }
                 }
                 break;
+                case 5: {
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bright = prepare0(adj0.getNoiseWithSeed(x, y, c, 1, 1, 1, 1, wrap0.getSeed()));
+                            colorize(bright);
+                            renderer.vertex(x, y, 0);
+                            bright = prepare1(adj1.getNoiseWithSeed(x, y, c, 1, 1, 1, 1, wrap1.getSeed()));
+                            colorize(bright);
+                            renderer.vertex(x + width, y, 0);
+                        }
+                    }
+                }
+                break;
 //            case 3:
 //            case 4:
 //            case 5:
@@ -593,6 +606,24 @@ public class INoiseComparison extends ApplicationAdapter {
                             renderer.vertex(x, y, 0);
                             bright = prepare1(adj1.getNoiseWithSeed(
                                     xc, yc, zc, xs, ys, zs, wrap1.getSeed()));
+                            colorize(bright);
+                            renderer.vertex(x + width, y, 0);
+                        }
+                    }
+                }
+                break;
+                case 5: {
+                    for (int x = 0; x < width; x++) {
+                        float xc = TrigTools.cosTurns(x * iWidth) * 32, xs = TrigTools.sinTurns(x * iWidth) * 32;
+                        for (int y = 0; y < height; y++) {
+                            float yc = TrigTools.cosTurns(y * iHeight) * 32, ys = TrigTools.sinTurns(y * iHeight) * 32,
+                                    zc = TrigTools.cosTurns((x - y) * 0.5f * iWidth) * 32, zs = TrigTools.sinTurns((x - y) * 0.5f * iWidth) * 32;
+                            bright = prepare0(adj0.getNoiseWithSeed(
+                                    xc, yc, zc, xs, ys, zs, c, wrap0.getSeed()));
+                            colorize(bright);
+                            renderer.vertex(x, y, 0);
+                            bright = prepare1(adj1.getNoiseWithSeed(
+                                    xc, yc, zc, xs, ys, zs, c, wrap1.getSeed()));
                             colorize(bright);
                             renderer.vertex(x + width, y, 0);
                         }

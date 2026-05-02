@@ -374,6 +374,18 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
     }
 
     @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        switch (mode) {
+            default:
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, getSeed());
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, getSeed());
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, getSeed());
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, getSeed());
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, getSeed());
+        }
+    }
+
+    @Override
     public float getNoiseWithSeed(float x, float y, long seed) {
         switch (mode) {
             default:
@@ -430,6 +442,18 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
             case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
             case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
             case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, seed);
+        }
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        switch (mode) {
+            default:
+            case 0: return fbm(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, seed);
+            case 1: return billow(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, seed);
+            case 2: return ridged(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, seed);
+            case 3: return warp(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, seed);
+            case 4: return exo(x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency, seed);
         }
     }
 
@@ -1386,6 +1410,242 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
             w *= 2f;
             u *= 2f;
             v *= 2f;
+            power *= 0.5f;
+            noise1 += (noise2 * noise2 * noise2) * power;
+//            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
+        }
+
+        noise1 /= (0.6f * power * ((1 << octaves) - 1));
+        // tanhRougher, from digital.
+        // -1f + 2f / (1f + exp(-2f * noise1))
+        return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
+    }
+
+    // 7D
+
+    /**
+     * Fractal Brownian Motion noise in 7D; this starts fairly smooth, usually, and adds finer and finer detail with
+     * each additional octave. This is often considered the primary or default type of continuous noise.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float fbm(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        float sum = wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX7D(x, y, z, w, u, v, m);
+                final float y2 = rotateY7D(x, y, z, w, u, v, m);
+                final float z2 = rotateZ7D(x, y, z, w, u, v, m);
+                final float w2 = rotateW7D(x, y, z, w, u, v, m);
+                final float u2 = rotateU7D(x, y, z, w, u, v, m);
+                final float v2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+            w *= 2f;
+            u *= 2f;
+            v *= 2f;
+            m *= 2f;
+
+            amp *= 0.5f;
+            sum += wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed + i) * amp;
+        }
+
+        return sum / (amp * ((1 << octaves) - 1));
+    }
+
+    /**
+     * Billow noise in 7D; this has large flat areas of fairly high values, with wiggly
+     * lines of low values running like folds throughout.
+     * Much like {@link #ridged(float, float, float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float billow(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        float sum = Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX7D(x, y, z, w, u, v, m);
+                final float y2 = rotateY7D(x, y, z, w, u, v, m);
+                final float z2 = rotateZ7D(x, y, z, w, u, v, m);
+                final float w2 = rotateW7D(x, y, z, w, u, v, m);
+                final float u2 = rotateU7D(x, y, z, w, u, v, m);
+                final float v2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+            w *= 2f;
+            u *= 2f;
+            v *= 2f;
+            m *= 2f;
+
+            amp *= 0.5f;
+            sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed + i)) * 2 - 1) * amp;
+        }
+
+        return sum / (amp * ((1 << octaves) - 1));
+    }
+
+    /**
+     * Ridged noise in 7D (sometimes called Ridged Multi-Fractal); this has large flat areas of low values, with wiggly
+     * lines of high values running like veins throughout.
+     * Much like {@link #billow(float, float, float, float, float, float, long)} if it was inverted high-to-low.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float ridged(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        float sum = 0f, exp = 1f, correction = 0f, spike;
+        for (int i = 0; i < octaves; i++) {
+            spike = 1f - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed + i));
+            sum += spike * exp;
+            correction += (exp *= 0.5f);
+            if(fractalSpiral){
+                final float x2 = rotateX7D(x, y, z, w, u, v, m);
+                final float y2 = rotateY7D(x, y, z, w, u, v, m);
+                final float z2 = rotateZ7D(x, y, z, w, u, v, m);
+                final float w2 = rotateW7D(x, y, z, w, u, v, m);
+                final float u2 = rotateU7D(x, y, z, w, u, v, m);
+                final float v2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+            w *= 2f;
+            u *= 2f;
+            v *= 2f;
+            m *= 2f;
+        }
+        return sum / correction - 1f;
+    }
+
+    /**
+     * Domain-warped noise in 7D; this is identical to {@link #fbm(float, float, float, float, float, float, long)} with
+     * one octave, but with more it looks rounded and bubbly.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float warp(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        float latest = wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX7D(x, y, z, w, u, v, m);
+                final float y2 = rotateY7D(x, y, z, w, u, v, m);
+                final float z2 = rotateZ7D(x, y, z, w, u, v, m);
+                final float w2 = rotateW7D(x, y, z, w, u, v, m);
+                final float u2 = rotateU7D(x, y, z, w, u, v, m);
+                final float v2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
+            }
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+            w *= 2f;
+            u *= 2f;
+            v *= 2f;
+            m *= 2f;
+
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 7) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 7) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 7) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 7) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 7) & TrigTools.TABLE_MASK];
+            float g = TrigTools.SIN_TABLE[idx + (8192 * 6 / 7) & TrigTools.TABLE_MASK];
+
+            amp *= 0.5f;
+            sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, u + e, v + f, m + g, seed + i)) * amp;
+        }
+
+        return sum / (amp * ((1 << octaves) - 1));
+    }
+
+    /**
+     * Exoplanet noise in 7D, meant to loosely imitate the battered surface of an alien world.
+     * Does not adjust coordinate parameters by {@link #frequency}; you can do this yourself.
+     * @param x first dimension parameter; not adjusted by frequency
+     * @param y second dimension parameter; not adjusted by frequency
+     * @param z third dimension parameter; not adjusted by frequency
+     * @param w fourth dimension parameter; not adjusted by frequency
+     * @param u fifth dimension parameter; not adjusted by frequency
+     * @param v sixth dimension parameter; not adjusted by frequency
+     * @param seed any long; should be the same for noise that should be continuous
+     * @return a noise result between -1f and 1f
+     */
+    public float exo(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        float power = 0.5f;
+
+        float striation1 = wrapped.getNoiseWithSeed(x * 0.25f, y * 0.25f, z * 0.25f, w * 0.25f, u * 0.25f, v * 0.25f, m * 0.25f, seed + 1111);
+        float distort1 = wrapped.getNoiseWithSeed(x * 0.3f, y * 0.3f, z * 0.3f, w * 0.3f, u * 0.3f, v * 0.3f, m * 0.3f, seed + 2222);
+        float noise1 = wrapped.getNoiseWithSeed(x + striation1 - distort1, y + striation1 + distort1, z, w, u, v, m, seed) * power;
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX7D(x, y, z, w, u, v, m);
+                final float y2 = rotateY7D(x, y, z, w, u, v, m);
+                final float z2 = rotateZ7D(x, y, z, w, u, v, m);
+                final float w2 = rotateW7D(x, y, z, w, u, v, m);
+                final float u2 = rotateU7D(x, y, z, w, u, v, m);
+                final float v2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
+            }
+            float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, w * 0.125f, u * 0.125f, v * 0.125f, m * 0.125f, seed + i + 3333);
+            float distort2 = wrapped.getNoiseWithSeed(x * 0.15f, y * 0.15f, z * 0.15f, w * 0.15f, u * 0.15f, v * 0.15f, m * 0.15f, seed + i + 4444);
+            float noise2 = wrapped.getNoiseWithSeed(x * 0.5f + striation2 - distort2, y * 0.5f + striation2 + distort2, z * 0.5f, w * 0.5f, u * 0.5f, v * 0.5f, m * 0.5f, seed + i) * 1.5f;
+//            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, w * 0.166f, u * 0.166f, v * 0.166f, seed + i + 5555) - 0.3f;
+//            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, w * 5f, u * 5f, v * 5f, seed + i + 6666);
+//            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, w * 2f, u * 2f, v * 2f, seed + i + 7777);
+            x *= 2f;
+            y *= 2f;
+            z *= 2f;
+            w *= 2f;
+            u *= 2f;
+            v *= 2f;
+            m *= 2f;
             power *= 0.5f;
             noise1 += (noise2 * noise2 * noise2) * power;
 //            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
