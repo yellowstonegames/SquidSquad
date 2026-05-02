@@ -2495,6 +2495,8 @@ public static final float[] GRADIENTS_6D = {
             +0.4425323009f, -0.3916659355f, +0.5925540924f, +0.0750466436f, +0.5048115253f, -0.1979288608f, 0.0f, 0.0f,
     };
 
+    public static final float[] GRADIENTS_7D = new float[2048];
+
     private static final int STANDARD_COUNT = 256;
     private final float[] GRADIENTS_4D_TEMP = new float[STANDARD_COUNT<<2];
     private final float[] GRADIENTS_4D_ACE = new float[STANDARD_COUNT<<2];
@@ -2536,6 +2538,13 @@ public static final float[] GRADIENTS_6D = {
     private final float[] GRADIENTS_6D_CURRENT = new float[STANDARD_COUNT<<3];
 
     private final float[] GRADIENTS_6D_TEMP = new float[STANDARD_COUNT<<3];
+
+    private final float[] GRADIENTS_7D_ACE = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_7D_U = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_7D_R7 = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_7D_HALTON = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_7D_CURRENT = new float[STANDARD_COUNT<<3];
+    private final float[] GRADIENTS_7D_TEMP = new float[STANDARD_COUNT<<3];
 
     /**
      * <a href="https://marcalexa.github.io/superfibonacci/">Based on the algorithm from here</a>.
@@ -2990,6 +2999,27 @@ public static final float[] GRADIENTS_6D = {
     }
     private void printMinDistance_6(final String name, final float[] gradients6D) {
         System.out.printf("%s:  Min distance %.8f\n", name, Math.sqrt(evaluateMinDistance2_6(gradients6D)));
+    }
+
+
+    private float evaluateMinDistance2_7(final float[] gradients7D) {
+        float minDist2 = Float.MAX_VALUE;
+        for (int i = 0; i < gradients7D.length; i += 8) {
+            float xi = gradients7D[i  ], yi = gradients7D[i+1], zi = gradients7D[i+2], wi = gradients7D[i+3], ui = gradients7D[i+4], vi = gradients7D[i+5], mi = gradients7D[i+6];
+            for (int j = 0; j < gradients7D.length; j += 8) {
+                if(i == j) continue;
+                float x = xi - gradients7D[j  ], y = yi - gradients7D[j+1], z = zi - gradients7D[j+2],
+                        w = wi - gradients7D[j+3], u = ui - gradients7D[j+4], v = vi - gradients7D[j+5],
+                        m = mi - gradients7D[j+6];
+                minDist2 = Math.min(minDist2, x * x + y * y + z * z + w * w + u * u + v * v + m * m);
+            }
+        }
+        return minDist2;
+    }
+    private double printMinDistance_7(final String name, final float[] gradients7D) {
+        double dist = Math.sqrt(evaluateMinDistance2_7(gradients7D));
+        System.out.printf("%s:  Min distance %.8f\n", name, dist);
+        return dist;
     }
 
     private double evaluateDeviation(final float[] gradients5D) {
@@ -3812,8 +3842,8 @@ public static final float[] GRADIENTS_5D = {
 //        }
 //        System.out.println("};\n");
 
+            /*
             System.out.println("6D STUFF");
-
 
             for (int i = 1; i <= STANDARD_COUNT; i++) {
                 float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(3, i));
@@ -3898,6 +3928,146 @@ public static final float[] GRADIENTS_5D = {
             printMinDistance_6("Halton", GRADIENTS_6D_HALTON);
             printMinDistance_6("Uniform", GRADIENTS_6D_U);
             printMinDistance_6("Current", GRADIENTS_6D_CURRENT);
+*/
+
+
+
+            System.out.println("7D STUFF");
+
+            for (int i = 1; i <= 256; i++) {
+                float x = Distributor.probitF(QuasiRandomTools.vanDerCorput(3, i));
+                float y = Distributor.probitF(QuasiRandomTools.vanDerCorput(5, i));
+                float z = Distributor.probitF(QuasiRandomTools.vanDerCorput(7, i));
+                float w = Distributor.probitF(QuasiRandomTools.vanDerCorput(11, i));
+                float u = Distributor.probitF(QuasiRandomTools.vanDerCorput(19, i));
+                float v = Distributor.probitF(QuasiRandomTools.vanDerCorput(13, i));
+                float m = Distributor.probitF(QuasiRandomTools.vanDerCorput(17, i));
+
+                final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v + m * m);
+                int index = i - 1 << 3;
+                GRADIENTS_7D_HALTON[index + 0] = x * mag;
+                GRADIENTS_7D_HALTON[index + 1] = y * mag;
+                GRADIENTS_7D_HALTON[index + 2] = z * mag;
+                GRADIENTS_7D_HALTON[index + 3] = w * mag;
+                GRADIENTS_7D_HALTON[index + 4] = u * mag;
+                GRADIENTS_7D_HALTON[index + 5] = v * mag;
+                GRADIENTS_7D_HALTON[index + 6] = m * mag;
+            }
+
+            {
+                long xl = GOLDEN_LONGS[7][0] - 0x4000000000000000L;
+                long yl = GOLDEN_LONGS[7][1] - 0x4000000000000000L;
+                long zl = GOLDEN_LONGS[7][2] - 0x4000000000000000L;
+                long wl = GOLDEN_LONGS[7][3] - 0x4000000000000000L;
+                long ul = GOLDEN_LONGS[7][4] - 0x4000000000000000L;
+                long vl = GOLDEN_LONGS[7][5] - 0x4000000000000000L;
+                long ml = GOLDEN_LONGS[7][6] - 0x4000000000000000L;
+                for (int i = 1; i <= STANDARD_COUNT; i += 2) {
+                    float x = (float) Distributor.probitL(xl += QuasiRandomTools.GOLDEN_LONGS[6][0]);// | 1L << 52
+                    float y = (float) Distributor.probitL(yl += QuasiRandomTools.GOLDEN_LONGS[6][1]);
+                    float z = (float) Distributor.probitL(zl += QuasiRandomTools.GOLDEN_LONGS[6][2]);
+                    float w = (float) Distributor.probitL(wl += QuasiRandomTools.GOLDEN_LONGS[6][3]);
+                    float u = (float) Distributor.probitL(ul += QuasiRandomTools.GOLDEN_LONGS[6][4]);
+                    float v = (float) Distributor.probitL(vl += QuasiRandomTools.GOLDEN_LONGS[6][5]);
+                    float m = (float) Distributor.probitL(ml += QuasiRandomTools.GOLDEN_LONGS[6][6]);
+
+                    final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v + m * m);
+                    int index = i - 1 << 3;
+                    GRADIENTS_7D_R7[index + 0] = x * mag;
+                    GRADIENTS_7D_R7[index + 1] = y * mag;
+                    GRADIENTS_7D_R7[index + 2] = z * mag;
+                    GRADIENTS_7D_R7[index + 3] = w * mag;
+                    GRADIENTS_7D_R7[index + 4] = u * mag;
+                    GRADIENTS_7D_R7[index + 5] = v * mag;
+                    GRADIENTS_7D_R7[index + 6] = m * mag;
+                    index += 8;
+                    GRADIENTS_7D_R7[index + 0] = x * -mag;
+                    GRADIENTS_7D_R7[index + 1] = y * -mag;
+                    GRADIENTS_7D_R7[index + 2] = z * -mag;
+                    GRADIENTS_7D_R7[index + 3] = w * -mag;
+                    GRADIENTS_7D_R7[index + 4] = u * -mag;
+                    GRADIENTS_7D_R7[index + 5] = v * -mag;
+                    GRADIENTS_7D_R7[index + 6] = m * -mag;
+                }
+            }
+            uniformND(7, GRADIENTS_7D_TEMP, 8);
+
+            random.setSeed(123456789L);
+            RotationTools.Rotator rotator6 = new RotationTools.Rotator(7, random);
+            for (int i = 0, p = 0; i < 256; i++, p += 8) {
+                rotator6.rotate(GRADIENTS_7D_TEMP, p, GRADIENTS_7D_U, p);
+            }
+            shuffleBlocks(random, GRADIENTS_7D_U, 8);
+
+            System.arraycopy(GRADIENTS_7D_HALTON, 0, GRADIENTS_7D_CURRENT, 0, GRADIENTS_7D_CURRENT.length);
+//            System.arraycopy(GRADIENTS_7D_R6, 0, GRADIENTS_7D_CURRENT, 0, GRADIENTS_7D_CURRENT.length);
+//            System.arraycopy(GRADIENTS_7D_U, 0, GRADIENTS_7D_CURRENT, 0, GRADIENTS_7D_CURRENT.length);
+//            Arrays.fill(GRADIENTS_7D_TEMP, 0f);
+
+            random.setSeed(123456789L);
+            for (int i = 1; i <= STANDARD_COUNT; i+= 2) {
+                float x = random.nextGaussianFloat();
+                float y = random.nextGaussianFloat();
+                float z = random.nextGaussianFloat();
+                float w = random.nextGaussianFloat();
+                float u = random.nextGaussianFloat();
+                float v = random.nextGaussianFloat();
+                float m = random.nextGaussianFloat();
+
+                final float mag = 1f / (float) Math.sqrt(x * x + y * y + z * z + w * w + u * u + v * v + m * m);
+                int index = i - 1 << 3;
+                GRADIENTS_7D[index + 0] = x * mag;
+                GRADIENTS_7D[index + 1] = y * mag;
+                GRADIENTS_7D[index + 2] = z * mag;
+                GRADIENTS_7D[index + 3] = w * mag;
+                GRADIENTS_7D[index + 4] = u * mag;
+                GRADIENTS_7D[index + 5] = v * mag;
+                GRADIENTS_7D[index + 6] = m * mag;
+                index += 8;
+                GRADIENTS_7D[index + 0] = x * -mag;
+                GRADIENTS_7D[index + 1] = y * -mag;
+                GRADIENTS_7D[index + 2] = z * -mag;
+                GRADIENTS_7D[index + 3] = w * -mag;
+                GRADIENTS_7D[index + 4] = u * -mag;
+                GRADIENTS_7D[index + 5] = v * -mag;
+                GRADIENTS_7D[index + 6] = m * -mag;
+            }
+            random.setSeed(123456789L);
+            shuffleBlocks(random, GRADIENTS_7D, 8);
+
+
+            float[] chosen = GRADIENTS_7D;
+
+            double distAce     = printMinDistance_7("Ace", GRADIENTS_7D);
+            double distChosen = distAce;
+            double distR7      = printMinDistance_7("R7", GRADIENTS_7D_R7);
+            if(distR7 > distChosen){
+                chosen = GRADIENTS_7D_R7;
+                distChosen = distR7;
+            }
+            double distHalton  = printMinDistance_7("Halton", GRADIENTS_7D_HALTON);
+            if(distHalton > distChosen){
+                chosen = GRADIENTS_7D_HALTON;
+                distChosen = distHalton;
+            }
+            double distUniform = printMinDistance_7("Uniform", GRADIENTS_7D_U);
+            if(distUniform > distChosen){
+                chosen = GRADIENTS_7D_U;
+                distChosen = distUniform;
+            }
+            double distCurrent = printMinDistance_7("Current", GRADIENTS_7D_CURRENT);
+            if(distCurrent > distChosen){
+                chosen = GRADIENTS_7D_CURRENT;
+                distChosen = distCurrent;
+            }
+
+
+            System.out.println("public static final float[] GRADIENTS_7D = {");
+            for (int i = 0; i < chosen.length; i += 8) {
+                System.out.printf("    %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, %0+13.10ff, 0.0f,\n",
+                        chosen[i], chosen[i + 1], chosen[i + 2], chosen[i + 3], chosen[i + 4], chosen[i + 5], chosen[i + 6]);
+            }
+            System.out.println("};");
 
 /*
 // R6 rotated

@@ -23,7 +23,6 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.CyclicNoise;
 import com.github.yellowstonegames.grid.INoise;
-import com.github.yellowstonegames.grid.PerlinNoise;
 import com.github.yellowstonegames.grid.RotationTools;
 
 import java.util.Arrays;
@@ -37,8 +36,6 @@ import static com.github.tommyettinger.digital.TrigTools.*;
 public class PsychoNoise implements INoise {
     protected static final float LACUNARITY = 1.6f;
     protected static final float GAIN = 0.625f;
-    protected static final float ADD = 0.05f;
-    protected static final float MUL = PerlinNoise.calculateEqualizeAdjustment(ADD);
 
     protected int octaves;
     protected float total = 2f;
