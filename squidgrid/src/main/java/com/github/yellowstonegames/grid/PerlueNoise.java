@@ -44,18 +44,21 @@ public class PerlueNoise implements INoise {
     public static final float SCALE4 = 0.99999990f; //towardsZero(1f)                            ;
     public static final float SCALE5 = 0.89442706f; //towardsZero(1f/ (float) Math.sqrt(5f / 4f));
     public static final float SCALE6 = 0.81649643f; //towardsZero(1f/ (float) Math.sqrt(6f / 4f));
+    public static final float SCALE7 = 0.75592890f; //towardsZero(1f/ (float) Math.sqrt(7f / 4f));
 
     public static final float EQ_ADD_2 = 1.0f / 0.85f;
     public static final float EQ_ADD_3 = 0.8f / 0.85f;
     public static final float EQ_ADD_4 = 0.6f / 0.85f;
     public static final float EQ_ADD_5 = 0.4f / 0.85f;
     public static final float EQ_ADD_6 = 0.2f / 0.85f;
+    public static final float EQ_ADD_7 = 0.1f / 0.85f;
 
     public static final float EQ_MUL_2 = 1.2535664f;
     public static final float EQ_MUL_3 = 1.2071217f;
     public static final float EQ_MUL_4 = 1.1588172f;
     public static final float EQ_MUL_5 = 1.1084094f;
     public static final float EQ_MUL_6 = 1.0555973f;
+    public static final float EQ_MUL_7 = 1.0281745f;
 
     public int seed;
 
@@ -86,13 +89,13 @@ public class PerlueNoise implements INoise {
     }
 
     /**
-     * Gets the maximum dimension supported by this generator, which is 6.
+     * Gets the maximum dimension supported by this generator, which is 7.
      *
-     * @return the maximum supported dimension, 6
+     * @return the maximum supported dimension, 7
      */
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 
     /**
@@ -176,6 +179,14 @@ public class PerlueNoise implements INoise {
         final int hash = h & (255 << 3);
         return (h * 0x1p-32f) + xd * GRADIENTS_6D[hash] + yd * GRADIENTS_6D[hash + 1] + zd * GRADIENTS_6D[hash + 2]
                 + wd * GRADIENTS_6D[hash + 3] + ud * GRADIENTS_6D[hash + 4] + vd * GRADIENTS_6D[hash + 5];
+    }
+    protected static float gradCoord7D(int seed, int x, int y, int z, int w, int u, int v, int m,
+                                       float xd, float yd, float zd, float wd, float ud, float vd, float md) {
+        final int h = hashAll(x, y, z, w, u, v, m, seed);
+        final int hash = (h & 255) << 3;
+        return (h * 0x1p-32f) + xd * GRADIENTS_7D[hash] + yd * GRADIENTS_7D[hash + 1] + zd * GRADIENTS_7D[hash + 2]
+                + wd * GRADIENTS_7D[hash + 3] + ud * GRADIENTS_7D[hash + 4] + vd * GRADIENTS_7D[hash + 5]
+                + md * GRADIENTS_7D[hash + 6];
     }
 
     /**
@@ -567,6 +578,288 @@ public class PerlueNoise implements INoise {
                         va) * SCALE6, EQ_ADD_6, EQ_MUL_6);
     }
 
+    @Override
+    public float getNoise(final float x, final float y, final float z, final float w, final float u, final float v, final float m) {
+        return getNoiseWithSeed(x, y, z, w, u, v, m, seed);
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, final long s) {
+        final int seed = (int)s;
+        final int
+                xi = fastFloor(x), x0 = xi * X_7,
+                yi = fastFloor(y), y0 = yi * Y_7,
+                zi = fastFloor(z), z0 = zi * Z_7,
+                wi = fastFloor(w), w0 = wi * W_7,
+                ui = fastFloor(u), u0 = ui * U_7,
+                vi = fastFloor(v), v0 = vi * V_7,
+                mi = fastFloor(m), m0 = mi * M_7;
+        final float xf = x - xi, yf = y - yi, zf = z - zi, wf = w - wi, uf = u - ui, vf = v - vi, mf = m - mi;
+        final float xa = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 9.999998f);
+        final float ya = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
+        final float za = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
+        final float wa = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
+        final float ua = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
+        final float va = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 9.999998f);
+        final float ma = mf * mf * mf * (mf * (mf * 6.0f - 15.0f) + 9.999998f);
+        return equalize(
+                lerp(
+                        lerp(
+                                lerp(
+                                        lerp(
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0, u0, v0, m0, xf, yf, zf, wf, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0, u0, v0, m0, xf - 1, yf, zf, wf, uf, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0, v0, m0, xf, yf - 1, zf, wf, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0, v0, m0, xf - 1, yf - 1, zf, wf, uf, vf, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0, v0, m0, xf, yf, zf - 1, wf, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0, v0, m0, xf - 1, yf, zf - 1, wf, uf, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0, v0, m0, xf, yf - 1, zf - 1, wf, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0, v0, m0, xf - 1, yf - 1, zf - 1, wf, uf, vf, mf), xa),
+                                                                ya),
+                                                        za),
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0, v0, m0, xf, yf, zf, wf - 1, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0, v0, m0, xf - 1, yf, zf, wf - 1, uf, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0, v0, m0, xf, yf - 1, zf, wf - 1, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0, v0, m0, xf - 1, yf - 1, zf, wf - 1, uf, vf, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0, v0, m0, xf, yf, zf - 1, wf - 1, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0, v0, m0, xf - 1, yf, zf - 1, wf - 1, uf, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0, v0, m0, xf, yf - 1, zf - 1, wf - 1, uf, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0, v0, m0, xf - 1, yf - 1, zf - 1, wf - 1, uf, vf, mf), xa),
+                                                                ya),
+                                                        za),
+                                                wa),
+                                        lerp(
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0, u0+U_7, v0, m0, xf, yf, zf, wf, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0, u0+U_7, v0, m0, xf - 1, yf, zf, wf, uf - 1, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0+U_7, v0, m0, xf, yf - 1, zf, wf, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0+U_7, v0, m0, xf - 1, yf - 1, zf, wf, uf - 1, vf, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0+U_7, v0, m0, xf, yf, zf - 1, wf, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0+U_7, v0, m0, xf - 1, yf, zf - 1, wf, uf - 1, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0+U_7, v0, m0, xf, yf - 1, zf - 1, wf, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0+U_7, v0, m0, xf - 1, yf - 1, zf - 1, wf, uf - 1, vf, mf), xa),
+                                                                ya),
+                                                        za),
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0+U_7, v0, m0, xf, yf, zf, wf - 1, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0+U_7, v0, m0, xf - 1, yf, zf, wf - 1, uf - 1, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0+U_7, v0, m0, xf, yf - 1, zf, wf - 1, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0+U_7, v0, m0, xf - 1, yf - 1, zf, wf - 1, uf - 1, vf, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0+U_7, v0, m0, xf, yf, zf - 1, wf - 1, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0+U_7, v0, m0, xf - 1, yf, zf - 1, wf - 1, uf - 1, vf, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0, m0, xf, yf - 1, zf - 1, wf - 1, uf - 1, vf, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0, m0, xf - 1, yf - 1, zf - 1, wf - 1, uf - 1, vf, mf), xa),
+                                                                ya),
+                                                        za),
+                                                wa),
+                                        ua),
+                                lerp(
+                                        lerp(
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0, u0, v0+V_7, m0, xf, yf, zf, wf, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0, u0, v0+V_7, m0, xf - 1, yf, zf, wf, uf, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0, v0+V_7, m0, xf, yf - 1, zf, wf, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0, v0+V_7, m0, xf - 1, yf - 1, zf, wf, uf, vf - 1, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0, v0+V_7, m0, xf, yf, zf - 1, wf, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0, v0+V_7, m0, xf - 1, yf, zf - 1, wf, uf, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0, v0+V_7, m0, xf, yf - 1, zf - 1, wf, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0, v0+V_7, m0, xf - 1, yf - 1, zf - 1, wf, uf, vf - 1, mf), xa),
+                                                                ya),
+                                                        za),
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0, v0+V_7, m0, xf, yf, zf, wf - 1, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0, v0+V_7, m0, xf - 1, yf, zf, wf - 1, uf, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0, v0+V_7, m0, xf, yf - 1, zf, wf - 1, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0, v0+V_7, m0, xf - 1, yf - 1, zf, wf - 1, uf, vf - 1, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0, v0+V_7, m0, xf, yf, zf - 1, wf - 1, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0, v0+V_7, m0, xf - 1, yf, zf - 1, wf - 1, uf, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0, v0+V_7, m0, xf, yf - 1, zf - 1, wf - 1, uf, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0, v0+V_7, m0, xf - 1, yf - 1, zf - 1, wf - 1, uf, vf - 1, mf), xa),
+                                                                ya),
+                                                        za),
+                                                wa),
+                                        lerp(
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0, u0+U_7, v0+V_7, m0, xf, yf, zf, wf, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0, u0+U_7, v0+V_7, m0, xf - 1, yf, zf, wf, uf - 1, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0+U_7, v0+V_7, m0, xf, yf - 1, zf, wf, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0+U_7, v0+V_7, m0, xf - 1, yf - 1, zf, wf, uf - 1, vf - 1, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0+U_7, v0+V_7, m0, xf, yf, zf - 1, wf, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0+U_7, v0+V_7, m0, xf - 1, yf, zf - 1, wf, uf - 1, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0+U_7, v0+V_7, m0, xf, yf - 1, zf - 1, wf, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0+U_7, v0+V_7, m0, xf - 1, yf - 1, zf - 1, wf, uf - 1, vf - 1, mf), xa),
+                                                                ya),
+                                                        za),
+                                                lerp(
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0+U_7, v0+V_7, m0, xf, yf, zf, wf - 1, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0+U_7, v0+V_7, m0, xf - 1, yf, zf, wf - 1, uf - 1, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0+U_7, v0+V_7, m0, xf, yf - 1, zf, wf - 1, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0+U_7, v0+V_7, m0, xf - 1, yf - 1, zf, wf - 1, uf - 1, vf - 1, mf), xa),
+                                                                ya),
+                                                        lerp(
+                                                                lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0, xf, yf, zf - 1, wf - 1, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0, xf - 1, yf, zf - 1, wf - 1, uf - 1, vf - 1, mf), xa),
+                                                                lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0, xf, yf - 1, zf - 1, wf - 1, uf - 1, vf - 1, mf),
+                                                                        gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0, xf - 1, yf - 1, zf - 1, wf - 1, uf - 1, vf - 1, mf), xa),
+                                                                ya),
+                                                        za),
+                                                wa),
+                                        ua),
+                                va),
+                                lerp(
+                                        lerp(
+                                                lerp(
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0, u0, v0, m0+M_7, xf, yf, zf, wf, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0, u0, v0, m0+M_7, xf - 1, yf, zf, wf, uf, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0, v0, m0+M_7, xf, yf - 1, zf, wf, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0, v0, m0+M_7, xf - 1, yf - 1, zf, wf, uf, vf, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0, v0, m0+M_7, xf, yf, zf - 1, wf, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0, v0, m0+M_7, xf - 1, yf, zf - 1, wf, uf, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0, v0, m0+M_7, xf, yf - 1, zf - 1, wf, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0, v0, m0+M_7, xf - 1, yf - 1, zf - 1, wf, uf, vf, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0, v0, m0+M_7, xf, yf, zf, wf - 1, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0, v0, m0+M_7, xf - 1, yf, zf, wf - 1, uf, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0, v0, m0+M_7, xf, yf - 1, zf, wf - 1, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0, v0, m0+M_7, xf - 1, yf - 1, zf, wf - 1, uf, vf, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0, v0, m0+M_7, xf, yf, zf - 1, wf - 1, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0, v0, m0+M_7, xf - 1, yf, zf - 1, wf - 1, uf, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0, v0, m0+M_7, xf, yf - 1, zf - 1, wf - 1, uf, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0, v0, m0+M_7, xf - 1, yf - 1, zf - 1, wf - 1, uf, vf, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        wa),
+                                                lerp(
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0, u0+U_7, v0, m0+M_7, xf, yf, zf, wf, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0, u0+U_7, v0, m0+M_7, xf - 1, yf, zf, wf, uf - 1, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0+U_7, v0, m0+M_7, xf, yf - 1, zf, wf, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0+U_7, v0, m0+M_7, xf - 1, yf - 1, zf, wf, uf - 1, vf, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0+U_7, v0, m0+M_7, xf, yf, zf - 1, wf, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0+U_7, v0, m0+M_7, xf - 1, yf, zf - 1, wf, uf - 1, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0+U_7, v0, m0+M_7, xf, yf - 1, zf - 1, wf, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0+U_7, v0, m0+M_7, xf - 1, yf - 1, zf - 1, wf, uf - 1, vf, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0+U_7, v0, m0+M_7, xf, yf, zf, wf - 1, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0+U_7, v0, m0+M_7, xf - 1, yf, zf, wf - 1, uf - 1, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0+U_7, v0, m0+M_7, xf, yf - 1, zf, wf - 1, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0+U_7, v0, m0+M_7, xf - 1, yf - 1, zf, wf - 1, uf - 1, vf, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0+U_7, v0, m0+M_7, xf, yf, zf - 1, wf - 1, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0+U_7, v0, m0+M_7, xf - 1, yf, zf - 1, wf - 1, uf - 1, vf, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0, m0+M_7, xf, yf - 1, zf - 1, wf - 1, uf - 1, vf, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0, m0+M_7, xf - 1, yf - 1, zf - 1, wf - 1, uf - 1, vf, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        wa),
+                                                ua),
+                                        lerp(
+                                                lerp(
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0, u0, v0+V_7, m0+M_7, xf, yf, zf, wf, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0, u0, v0+V_7, m0+M_7, xf - 1, yf, zf, wf, uf, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0, v0+V_7, m0+M_7, xf, yf - 1, zf, wf, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0, v0+V_7, m0+M_7, xf - 1, yf - 1, zf, wf, uf, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0, v0+V_7, m0+M_7, xf, yf, zf - 1, wf, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0, v0+V_7, m0+M_7, xf - 1, yf, zf - 1, wf, uf, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0, v0+V_7, m0+M_7, xf, yf - 1, zf - 1, wf, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0, v0+V_7, m0+M_7, xf - 1, yf - 1, zf - 1, wf, uf, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0, v0+V_7, m0+M_7, xf, yf, zf, wf - 1, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0, v0+V_7, m0+M_7, xf - 1, yf, zf, wf - 1, uf, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0, v0+V_7, m0+M_7, xf, yf - 1, zf, wf - 1, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0, v0+V_7, m0+M_7, xf - 1, yf - 1, zf, wf - 1, uf, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0, v0+V_7, m0+M_7, xf, yf, zf - 1, wf - 1, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0, v0+V_7, m0+M_7, xf - 1, yf, zf - 1, wf - 1, uf, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0, v0+V_7, m0+M_7, xf, yf - 1, zf - 1, wf - 1, uf, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0, v0+V_7, m0+M_7, xf - 1, yf - 1, zf - 1, wf - 1, uf, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        wa),
+                                                lerp(
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0, u0+U_7, v0+V_7, m0+M_7, xf, yf, zf, wf, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf, zf, wf, uf - 1, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0, u0+U_7, v0+V_7, m0+M_7, xf, yf - 1, zf, wf, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf - 1, zf, wf, uf - 1, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0, u0+U_7, v0+V_7, m0+M_7, xf, yf, zf - 1, wf, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf, zf - 1, wf, uf - 1, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0, u0+U_7, v0+V_7, m0+M_7, xf, yf - 1, zf - 1, wf, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf - 1, zf - 1, wf, uf - 1, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        lerp(
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf, yf, zf, wf - 1, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf, zf, wf - 1, uf - 1, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf, yf - 1, zf, wf - 1, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf - 1, zf, wf - 1, uf - 1, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                lerp(
+                                                                        lerp(gradCoord7D(seed, x0, y0, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf, yf, zf - 1, wf - 1, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf, zf - 1, wf - 1, uf - 1, vf - 1, mf - 1), xa),
+                                                                        lerp(gradCoord7D(seed, x0, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf, yf - 1, zf - 1, wf - 1, uf - 1, vf - 1, mf - 1),
+                                                                                gradCoord7D(seed, x0+X_7, y0+Y_7, z0+Z_7, w0+W_7, u0+U_7, v0+V_7, m0+M_7, xf - 1, yf - 1, zf - 1, wf - 1, uf - 1, vf - 1, mf - 1), xa),
+                                                                        ya),
+                                                                za),
+                                                        wa),
+                                                ua),
+                                        va),
+                                ma)
+                 * SCALE7, EQ_ADD_7, EQ_MUL_7);
+    }
+
     /**
      * Produces a String that describes everything needed to recreate this RawNoise in full. This String can be read back
      * in by {@link #stringDeserialize(String)} to reassign the described state to another RawNoise.
@@ -620,7 +913,7 @@ public class PerlueNoise implements INoise {
      * @param x x position, as an int pre-multiplied by {@link #X_2}
      * @param y y position, as an int pre-multiplied by {@link #Y_2}
      * @param s any int, a seed to be able to produce many hashes for a given point
-     * @return 8-bit hash of the x,y point with the given state s, shifted for {@link GradientVectors#GRADIENTS_2D}
+     * @return 32-bit hash of the x,y point with the given state s
      */
     private static int hashAll(int x, int y, int s) {
         final int h = (s ^ x ^ y) * 0x125493;
@@ -633,7 +926,7 @@ public class PerlueNoise implements INoise {
      * @param y y position, as an int pre-multiplied by {@link #Y_3}
      * @param z z position, as an int pre-multiplied by {@link #Z_3}
      * @param s any int, a seed to be able to produce many hashes for a given point
-     * @return 8-bit hash of the x,y,z point with the given state s, shifted for {@link GradientVectors#GRADIENTS_3D}
+     * @return 32-bit hash of the x,y,z point with the given state s
      */
     private static int hashAll(int x, int y, int z, int s) {
         final int h = (s ^ x ^ y ^ z) * 0x125493;
@@ -648,7 +941,7 @@ public class PerlueNoise implements INoise {
      * @param z z position, as an int pre-multiplied by {@link #Z_4}
      * @param w w position, as an int pre-multiplied by {@link #W_4}
      * @param s any int, a seed to be able to produce many hashes for a given point
-     * @return 8-bit hash of the x,y,z,w point with the given state s, shifted for {@link GradientVectors#GRADIENTS_4D}
+     * @return 32-bit hash of the x,y,z,w point with the given state s
      */
     private static int hashAll(int x, int y, int z, int w, int s) {
         final int h = (s ^ x ^ y ^ z ^ w) * 0x125493;
@@ -663,7 +956,7 @@ public class PerlueNoise implements INoise {
      * @param w w position, as an int pre-multiplied by {@link #W_5}
      * @param u u position, as an int pre-multiplied by {@link #U_5}
      * @param s any int, a seed to be able to produce many hashes for a given point
-     * @return 8-bit hash of the x,y,z,w,u point with the given state s, shifted for {@link GradientVectors#GRADIENTS_5D}
+     * @return 32-bit hash of the x,y,z,w,u point with the given state s
      */
     private static int hashAll(int x, int y, int z, int w, int u, int s) {
         final int h = (s ^ x ^ y ^ z ^ w ^ u) * 0x125493;
@@ -680,10 +973,28 @@ public class PerlueNoise implements INoise {
      * @param u u position, as an int pre-multiplied by {@link #U_6}
      * @param v v position, as an int pre-multiplied by {@link #V_6}
      * @param s any int, a seed to be able to produce many hashes for a given point
-     * @return 8-bit hash of the x,y,z,w,u,v point with the given state s, shifted for {@link GradientVectors#GRADIENTS_6D}
+     * @return 32-bit hash of the x,y,z,w,u,v point with the given state s
      */
     private static int hashAll(int x, int y, int z, int w, int u, int v, int s) {
         final int h = (s ^ x ^ y ^ z ^ w ^ u ^ v) * 0x125493;
+        return (h ^ (h << 11 | h >>> 21) ^ (h << 23 | h >>> 9));
+    }
+
+    /**
+     * A 32-bit point hash that needs 7 dimensions pre-multiplied by constants {@link #X_7} through {@link #M_7}, as
+     * well as an int seed.
+     * @param x x position, as an int pre-multiplied by {@link #X_7}
+     * @param y y position, as an int pre-multiplied by {@link #Y_7}
+     * @param z z position, as an int pre-multiplied by {@link #Z_7}
+     * @param w w position, as an int pre-multiplied by {@link #W_7}
+     * @param u u position, as an int pre-multiplied by {@link #U_7}
+     * @param v v position, as an int pre-multiplied by {@link #V_7}
+     * @param m m position, as an int pre-multiplied by {@link #M_7}
+     * @param s any int, a seed to be able to produce many hashes for a given point
+     * @return 32-bit hash of the x,y,z,w,u,v,m point with the given state s
+     */
+    private static int hashAll(int x, int y, int z, int w, int u, int v, int m, int s) {
+        final int h = (s ^ x ^ y ^ z ^ w ^ u ^ v ^ m) * 0x125493;
         return (h ^ (h << 11 | h >>> 21) ^ (h << 23 | h >>> 9));
     }
 
@@ -692,5 +1003,6 @@ public class PerlueNoise implements INoise {
     private static final int X_4 = 0x1B69E1, Y_4 = 0x177C0B, Z_4 = 0x141E5D, W_4 = 0x113C31;
     private static final int X_5 = 0x1C3361, Y_5 = 0x18DA39, Z_5 = 0x15E6DB, W_5 = 0x134D29, U_5 = 0x110281;
     private static final int X_6 = 0x1CC1C5, Y_6 = 0x19D7AF, Z_6 = 0x173935, W_6 = 0x14DEAF, U_6 = 0x12C139, V_6 = 0x10DAA3;
+    private static final int X_7 = 0x1D2BC3, Y_7 = 0x1A978F, Z_7 = 0x183DB7, W_7 = 0x161915, U_7 = 0x1424F5, V_7 = 0x125D0B, M_7 = 0x10BD6F;
 
 }
