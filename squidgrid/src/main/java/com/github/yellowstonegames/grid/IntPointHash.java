@@ -188,7 +188,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * @return 32-bit hash of the x,y,z,w,u,v,m point with the given state s
      */
     public static int hashAll(int x, int y, int z, int w, int u, int v, int m, int s) {
-        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978F ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F5 ^ v * 0x125D0B ^ m * 0x10BD6F;
         return (s = (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493) ^ s >>> 11;
     }
 
@@ -303,7 +303,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * @return 8-bit hash of the x,y,z,w,u,v,m point with the given state s
      */
     public static int hash256(int x, int y, int z, int w, int u, int v, int m, int s) {
-        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978F ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F5 ^ v * 0x125D0B ^ m * 0x10BD6F;
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 24;
     }
 
@@ -419,7 +419,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * @return 6-bit hash of the x,y,z,w,u,v,m point with the given state s
      */
     public static int hash64(int x, int y, int z, int w, int u, int v, int m, int s) {
-        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978F ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F5 ^ v * 0x125D0B ^ m * 0x10BD6F;
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 26;
     }
 
@@ -535,7 +535,7 @@ public final class IntPointHash extends IPointHash.IntImpl {
      * @return 5-bit hash of the x,y,z,w,u,v,m point with the given state s
      */
     public static int hash32(int x, int y, int z, int w, int u, int v, int m, int s) {
-        s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
+        s ^= x * 0x1D2BC3 ^ y * 0x1A978F ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F5 ^ v * 0x125D0B ^ m * 0x10BD6F;
         return (s ^ (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27) ^ 0xD1B54A35) * 0x125493 >>> 27;
     }
 }

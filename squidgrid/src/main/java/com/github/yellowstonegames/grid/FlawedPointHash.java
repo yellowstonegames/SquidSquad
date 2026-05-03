@@ -790,7 +790,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
 
         @Override
         public int hashWithState(int x, int y, int z, int w, int u, int s) {
-            s ^= x * 0x1C3360 ^ y * 0x18DA3A ^ z * 0x15E6DA ^ w * 0x134D28 ^ u * 0x110280;
+            s ^= x * 0x1C3361 ^ y * 0x18DA3B ^ z * 0x15E6DB ^ w * 0x134D29 ^ u * 0x110281;
             s ^= (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27);
             return s & ((s ^ 0xD1B54A35) * 0x125493 ^ s >>> 11);
         }
@@ -804,7 +804,7 @@ public interface FlawedPointHash extends IPointHash, IFlawed {
 
         @Override
         public int hashWithState(int x, int y, int z, int w, int u, int v, int m, int s) {
-            s ^= x * 0x1D2BC3 ^ y * 0x1A978E ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F4 ^ v * 0x125D0A ^ m * 0x10BD6E;
+            s ^= x * 0x1D2BC3 ^ y * 0x1A978F ^ z * 0x183DB7 ^ w * 0x161915 ^ u * 0x1424F5 ^ v * 0x125D0B ^ m * 0x10BD6F;
             s ^= (s << 19 | s >>> 13) ^ (s << 5 | s >>> 27);
             return s & ((s ^ 0xD1B54A35) * 0x125493 ^ s >>> 11);
         }
