@@ -121,6 +121,7 @@ public interface INoise extends Externalizable {
 
     /**
      * Gets 7D noise with a default or pre-set seed.
+     * Supporting 7D is not as common as other dimensions; generators that don't support this return 0 here.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
@@ -128,11 +129,10 @@ public interface INoise extends Externalizable {
      * @param u u position; can be any finite float
      * @param v v position; can be any finite float
      * @param m m position; can be any finite float
-     * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 7D noise cannot be produced by this generator
+     * @return a noise value between -1.0f and 1.0f, both inclusive, or 0f if not supported
      */
     default float getNoise(float x, float y, float z, float w, float u, float v, float m){
-        throw new UnsupportedOperationException("7D getNoise() is not supported by this generator: " + getTag());
+        return 0f;
     }
 
     /**
@@ -375,6 +375,7 @@ public interface INoise extends Externalizable {
     /**
      * Gets 7D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
      * changing the position instead of the seed; you can check if this will happen with {@link #hasEfficientSetSeed()}.
+     * Supporting 7D is not as common as other dimensions; generators that don't support this return 0 here.
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
@@ -383,8 +384,7 @@ public interface INoise extends Externalizable {
      * @param v v position; can be any finite float
      * @param m m position; can be any finite float
      * @param seed can be any long
-     * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 7D noise cannot be produced by this generator
+     * @return a noise value between -1.0f and 1.0f, both inclusive, or 0f if not supported
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
         if(!hasEfficientSetSeed()) {

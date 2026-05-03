@@ -129,23 +129,22 @@ public class OpenSimplex2Smooth implements INoise {
     }
 
     /**
-     * Gets 5D noise with a default or pre-set seed.
+     * Gets 5D noise with a default or pre-set seed; not supported, so this always returns 0f.
      *
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
      * @param z z position; can be any finite float
      * @param w w position; can be any finite float
      * @param u u position; can be any finite float
-     * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
+     * @return 0f, because this isn't supported
      */
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        throw new UnsupportedOperationException("5D noise is not supported.");
+        return 0f;
     }
 
     /**
-     * Gets 6D noise with a default or pre-set seed.
+     * Gets 6D noise with a default or pre-set seed; not supported, so this always returns 0f.
      *
      * @param x x position; can be any finite float
      * @param y y position; can be any finite float
@@ -153,12 +152,11 @@ public class OpenSimplex2Smooth implements INoise {
      * @param w w position; can be any finite float
      * @param u u position; can be any finite float
      * @param v v position; can be any finite float
-     * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 6D noise cannot be produced by this generator
+     * @return 0f, because this isn't supported
      */
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        throw new UnsupportedOperationException("6D noise is not supported.");
+        return 0f;
     }
 
     /**
@@ -210,8 +208,7 @@ public class OpenSimplex2Smooth implements INoise {
     }
 
     /**
-     * Gets 5D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #hasEfficientSetSeed()}.
+     * Gets 5D noise with a specific seed; always returns 0f because this isn't supported.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float
@@ -219,18 +216,15 @@ public class OpenSimplex2Smooth implements INoise {
      * @param w    w position; can be any finite float
      * @param u    u position; can be any finite float
      * @param seed
-     * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 5D noise cannot be produced by this generator
+     * @return 0f, because this isn't supported
      */
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
-        throw new UnsupportedOperationException("5D noise is not supported.");
-
+        return 0f;
     }
 
     /**
-     * Gets 6D noise with a specific seed. If the seed cannot be retrieved or changed per-call, then this falls back to
-     * {@link #getNoise}; you can check if this will happen with {@link #hasEfficientSetSeed()}.
+     * Gets 6D noise with a specific seed; always returns 0f because this isn't supported.
      *
      * @param x    x position; can be any finite float
      * @param y    y position; can be any finite float
@@ -239,12 +233,11 @@ public class OpenSimplex2Smooth implements INoise {
      * @param u    u position; can be any finite float
      * @param v    v position; can be any finite float
      * @param seed
-     * @return a noise value between -1.0f and 1.0f, both inclusive
-     * @throws UnsupportedOperationException if 6D noise cannot be produced by this generator
+     * @return 0f, because this isn't supported
      */
     @Override
     public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
-        throw new UnsupportedOperationException("6D noise is not supported.");
+        return 0f;
     }
 
     /**

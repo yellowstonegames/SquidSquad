@@ -251,6 +251,21 @@ public class HighDimensionalValueNoise implements INoise {
         throw new UnsupportedOperationException("Insufficient dimensions available for 6D noise.");
     }
 
+    @Override
+    public float getNoise(float x, float y, float z, float w, float u, float v, float m) {
+        if(dim >= 7) {
+            input[0] = x;
+            input[1] = y;
+            input[2] = z;
+            input[3] = w;
+            input[4] = u;
+            input[5] = v;
+            input[6] = m;
+            return noise(7, input);
+        }
+        throw new UnsupportedOperationException("Insufficient dimensions available for 7D noise.");
+    }
+
     public static final HighDimensionalValueNoise instance2D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[12][0], 2);
     public static final HighDimensionalValueNoise instance3D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[13][0], 3);
     public static final HighDimensionalValueNoise instance4D = new HighDimensionalValueNoise(QuasiRandomTools.GOLDEN_LONGS[14][0], 4);

@@ -231,10 +231,10 @@ public class INoiseComparison extends ApplicationAdapter {
             new PerlueNoise(1L),                                       // 12
             new NoiseAdjustment(new PerlinNoise(1L), watcher),         // 13
             new CyclicNoise(1L, 5, 4),                                 // 14
-            new FlanNoise(1L, 6),                                      // 15
-            new TaffyNoise(1L, 6),                                     // 16
+            new FlanNoise(1L, 7),                                      // 15
+            new TaffyNoise(1L, 7),                                     // 16
             new ValueNoise(1L),                                        // 17
-            new HighDimensionalValueNoise(1L, 6),                      // 18
+            new HighDimensionalValueNoise(1L, 7),                      // 18
             new BasicHashNoise(1, new FlawedPointHash.FlowerHash(1)),  // 19
             new CyclicNoise(1L, 1),                                    // 20
             new CyclicNoise(1L, 3),                                    // 21
@@ -269,8 +269,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new SorbetNoise(1L, 3),                                    // 50
             new VroomNoise(1L),                                        // 51
     };
-    private int index0 = 7;
-    private int index1 = 11;
+    private int index0 = 15;
+    private int index1 = 16;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
@@ -278,7 +278,7 @@ public class INoiseComparison extends ApplicationAdapter {
     private int dim = 0; // this can be 0 through 5 inclusive; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 1f/32f;
-    private boolean slice = true;
+    private boolean slice = false;
     private boolean hue = false;
 
     private ImmediateModeRenderer20 renderer;
@@ -340,11 +340,13 @@ public class INoiseComparison extends ApplicationAdapter {
                     case NUM_0:
                     case NUMPAD_0:
                         wrap0.setWrapped(noises[index0 = (index0 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
+                        dim = Math.min(dim, Math.min(wrap0.getMaxDimension(), wrap1.getMaxDimension()));
                         break;
                     case MINUS:
                     case NUM_1:
                     case NUMPAD_1:
                         wrap1.setWrapped(noises[index1 = (index1 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
+                        dim = Math.min(dim, Math.min(wrap0.getMaxDimension(), wrap1.getMaxDimension()));
                         break;
                     case NUM_9:
                     case NUMPAD_9:
@@ -388,6 +390,7 @@ public class INoiseComparison extends ApplicationAdapter {
                     }
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 5 : 1)) % 6;
+                        dim = Math.min(dim, Math.min(adj0.getMaxDimension(), adj1.getMaxDimension()));
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);

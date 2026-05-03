@@ -110,13 +110,13 @@ public class PerlinNoiseAnalysis implements INoise {
     }
 
     /**
-     * Returns the constant String {@code "PerN"} that identifies this in serialized Strings.
+     * Returns the constant String {@code "PeAN"} that identifies this in serialized Strings.
      *
-     * @return a short String constant that identifies this INoise type, {@code "PerN"}
+     * @return a short String constant that identifies this INoise type, {@code "PeAN"}
      */
     @Override
     public String getTag() {
-        return "PerN";
+        return "PeAN";
     }
 
     /**
