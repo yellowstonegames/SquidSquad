@@ -292,6 +292,6 @@ public class PuffyNoise implements INoise {
 
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 }
