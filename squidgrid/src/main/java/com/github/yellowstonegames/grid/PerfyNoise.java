@@ -45,7 +45,7 @@ public class PerfyNoise implements INoise {
     protected transient RotationTools.Rotator[] rotations = new RotationTools.Rotator[4];
     protected transient float[] inputs = new float[7];
     protected transient float[] outputs = new float[7];
-    protected transient PerlinNoise perlin;
+    protected transient NoiseWrapper perlin;
 
     public PerfyNoise() {
         this(3);
@@ -59,10 +59,10 @@ public class PerfyNoise implements INoise {
     }
 
     public PerfyNoise(long seed, int octaves, float frequency) {
+        perlin = new NoiseWrapper(new PerlinNoise(seed), frequency, NoiseWrapper.FBM, 1);
         setOctaves(octaves);
         setFrequency(frequency);
         this.seed = seed;
-        perlin = new PerlinNoise(seed);
         for (int i = 0; i < 4; i++) {
             rotations[i] = new RotationTools.Rotator(7, new DistinctRandom(seed ^ i));
         }
@@ -118,6 +118,7 @@ public class PerfyNoise implements INoise {
      */
     public void setFrequency(float frequency) {
         this.frequency = frequency;
+        perlin.setFrequency(frequency);
     }
 
     @Override
@@ -159,31 +160,31 @@ public class PerfyNoise implements INoise {
 
     @Override
     public float getNoise(float x, float y) {
-        final float p = perlin.getNoise(x, y);
+        final float p = perlin.getNoise(x, y) * 0.06250f * frequency;
         return getNoise(x, y, p, p, p, p, p);
     }
 
     @Override
     public float getNoise(float x, float y, float z) {
-        final float p = perlin.getNoise(x, y, z);
+        final float p = perlin.getNoise(x, y, z) * 0.06250f * frequency;
         return getNoise(x, y, z, p, p, p, p);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w) {
-        final float p = perlin.getNoise(x, y, z, w);
+        final float p = perlin.getNoise(x, y, z, w) * 0.06250f * frequency;
         return getNoise(x, y, z, w, p, p, p);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u) {
-        final float p = perlin.getNoise(x, y, z, w, u);
+        final float p = perlin.getNoise(x, y, z, w, u) * 0.06250f * frequency;
         return getNoise(x, y, z, w, u, p, p);
     }
 
     @Override
     public float getNoise(float x, float y, float z, float w, float u, float v) {
-        final float p = perlin.getNoise(x, y, z, w, u, v);
+        final float p = perlin.getNoise(x, y, z, w, u, v) * 0.06250f * frequency;
         return getNoise(x, y, z, w, u, v, p);
     }
 
