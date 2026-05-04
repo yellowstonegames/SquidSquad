@@ -253,8 +253,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new BadgerNoise(1L),                                       // 34
             new SnakeNoise(1L),                                        // 35
             new Noise(1),                                              // 36
-            new WavyNoise(1, 1),                                       // 37
-            new WavyNoise(1, 3),                                       // 38
+            new PerfyNoise(1, 1),                                      // 37
+            new PerfyNoise(1, 3),                                      // 38
             new CyclicNoise(1L, 1),                                    // 39
             new CyclicNoise(1L, 2),                                    // 40
             new CyclicNoise(1L, 3),                                    // 41
@@ -269,8 +269,8 @@ public class INoiseComparison extends ApplicationAdapter {
             new SorbetNoise(1L, 3),                                    // 50
             new VroomNoise(1L),                                        // 51
     };
-    private int index0 = 15;
-    private int index1 = 16;
+    private int index0 = 38;
+    private int index1 = 46;
     private final NoiseWrapper wrap0 = new NoiseWrapper(noises[index0], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseWrapper wrap1 = new NoiseWrapper(noises[index1], 1, 0.0625f, Noise.FBM, 1);
     private final NoiseAdjustment adj0 = new NoiseAdjustment(wrap0, PREPARATIONS[prep0]);
