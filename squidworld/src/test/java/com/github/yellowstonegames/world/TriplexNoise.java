@@ -838,7 +838,7 @@ public class TriplexNoise implements INoise {
 
     @Override
     public String getTag() {
-        return "SimN";
+        return "TrpN";
     }
 
     public String stringSerialize() {

@@ -340,13 +340,13 @@ public class INoiseComparison extends ApplicationAdapter {
                     case NUM_0:
                     case NUMPAD_0:
                         wrap0.setWrapped(noises[index0 = (index0 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
-                        dim = Math.min(dim, Math.min(wrap0.getMaxDimension(), wrap1.getMaxDimension()));
+                        dim = Math.min(dim, Math.min(wrap0.getMaxDimension(), wrap1.getMaxDimension()) - 2);
                         break;
                     case MINUS:
                     case NUM_1:
                     case NUMPAD_1:
                         wrap1.setWrapped(noises[index1 = (index1 + (UIUtils.shift() ? noises.length - 1 : 1)) % noises.length]);
-                        dim = Math.min(dim, Math.min(wrap0.getMaxDimension(), wrap1.getMaxDimension()));
+                        dim = Math.min(dim, Math.min(wrap0.getMaxDimension(), wrap1.getMaxDimension()) - 2);
                         break;
                     case NUM_9:
                     case NUMPAD_9:
@@ -390,7 +390,7 @@ public class INoiseComparison extends ApplicationAdapter {
                     }
                     case D: //dimension
                         dim = (dim + (UIUtils.shift() ? 5 : 1)) % 6;
-                        dim = Math.min(dim, Math.min(adj0.getMaxDimension(), adj1.getMaxDimension()));
+                        dim = Math.min(dim, Math.min(adj0.getMaxDimension(), adj1.getMaxDimension()) - 2);
                         break;
                     case F: // frequency
                         freq *= (UIUtils.shift() ? 1.25f : 0.8f);
@@ -424,6 +424,8 @@ public class INoiseComparison extends ApplicationAdapter {
                         ctr += 1000;
                         break;
                     case V: // view
+                        System.out.println("Comparing left: " + wrap0.wrapped.getClass() );
+                        System.out.println("      to right: " + wrap1.wrapped.getClass() );
                         System.out.println("mul = " + mul);
                         System.out.println("gamma = " + gamma);
                         System.out.println("mix = " + mix);
