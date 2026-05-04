@@ -58,13 +58,13 @@ public class BasicHashNoise implements INoise, ISerializersNeeded {
     }
 
     /**
-     * Gets the maximum dimension supported by this generator, which is 6.
+     * Gets the maximum dimension supported by this generator, which is 7.
      *
-     * @return the maximum supported dimension, 6
+     * @return the maximum supported dimension, 7
      */
     @Override
     public int getMaxDimension() {
-        return 6;
+        return 7;
     }
 
     /**
@@ -379,6 +379,168 @@ public class BasicHashNoise implements INoise, ISerializersNeeded {
                                                 + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, s)))
                                 ))))))
         ) * 0x1p-31f;
+    }
+
+    @Override
+    public float getNoise(final float x, final float y, final float z, final float w, final float u, final float v, final float m) {
+        return getNoiseWithSeed(x, y, z, w, u, v, m, seed);
+    }
+
+    @Override
+    public float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
+        final int
+                x0 = fastFloor(x),
+                y0 = fastFloor(y),
+                z0 = fastFloor(z),
+                w0 = fastFloor(w),
+                u0 = fastFloor(u),
+                v0 = fastFloor(v),
+                m0 = fastFloor(m);
+        final float xf = x - x0, yf = y - y0, zf = z - z0, wf = w - w0, uf = u - u0, vf = v - v0, mf = m - m0;
+
+        int s = (int) seed;
+        x = xf * xf * xf * (xf * (xf * 6.0f - 15.0f) + 9.999998f);
+        y = yf * yf * yf * (yf * (yf * 6.0f - 15.0f) + 9.999998f);
+        z = zf * zf * zf * (zf * (zf * 6.0f - 15.0f) + 9.999998f);
+        w = wf * wf * wf * (wf * (wf * 6.0f - 15.0f) + 9.999998f);
+        u = uf * uf * uf * (uf * (uf * 6.0f - 15.0f) + 9.999998f);
+        v = vf * vf * vf * (vf * (vf * 6.0f - 15.0f) + 9.999998f);
+        m = mf * mf * mf * (mf * (mf * 6.0f - 15.0f) + 9.999998f);
+        return ((1 - m) *
+                ((1 - v) *
+                ((1 - u) *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0, v0, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0, v0, m0, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0, v0, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0, m0, s)))
+                                )))
+                        + (u *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0 + 1, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0 + 1, v0, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0 + 1, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0, m0, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0 + 1, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, m0, s)))
+                                )))))
+                + (v *
+                ((1 - u) *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0, v0 + 1, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0, v0 + 1, m0, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0, v0 + 1, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, m0, s)))
+                                )))
+                        + (u *
+                        ((1 - w) *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0 + 1, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0 + 1, v0 + 1, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0 + 1, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, m0, s))))
+                                + (w *
+                                ((1 - z) *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0 + 1, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, m0, s)))
+                                        + z *
+                                        ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0, s))
+                                                + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0, s)))
+                                )))))))
+                + (m *
+                ((1 - v) *
+                        ((1 - u) *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0, v0, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0, v0, m0 + 1, s))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0, v0, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0, m0 + 1, s)))
+                                        )))
+                                + (u *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0 + 1, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0 + 1, v0, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0 + 1, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0, m0 + 1, s))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0 + 1, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0, m0 + 1, s)))
+                                        )))))
+                        + (v *
+                        ((1 - u) *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0, v0 + 1, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0, v0 + 1, m0 + 1, s))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0, v0 + 1, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0, v0 + 1, m0 + 1, s)))
+                                        )))
+                                + (u *
+                                ((1 - w) *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0, u0 + 1, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0, u0 + 1, v0 + 1, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0, u0 + 1, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0, u0 + 1, v0 + 1, m0 + 1, s))))
+                                        + (w *
+                                        ((1 - z) *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s)))
+                                                + z *
+                                                ((1 - y) * ((1 - x) * pointHash.hashWithState(x0, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s))
+                                                        + y * ((1 - x) * pointHash.hashWithState(x0, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s) + x * pointHash.hashWithState(x0 + 1, y0 + 1, z0 + 1, w0 + 1, u0 + 1, v0 + 1, m0 + 1, s)))
+                                        ))))))
+                ))) * 0x1p-31f;
     }
 
     @Override
