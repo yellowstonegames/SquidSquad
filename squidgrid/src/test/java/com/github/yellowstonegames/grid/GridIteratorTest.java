@@ -65,4 +65,19 @@ public class GridIteratorTest {
         DungeonTools.debugPrint(chars);
     }
 
+    /**
+     * Starting off, this is badly broken, and throws an ArrayIndexOutOfBoundsException...
+     */
+    @Test
+    public void testVerticalUp() {
+        GridIterator.VerticalUp it = new GridIterator.VerticalUp(3, 3, 7, 7);
+        int index = 0;
+        char[][] chars = ArrayTools.fill('.', 7, 7);
+        while (it.hasNext()){
+            Coord c = it.next();
+            chars[c.x][c.y] = (char) ('A' + index++);
+        }
+        DungeonTools.debugPrint(chars);
+    }
+
 }
