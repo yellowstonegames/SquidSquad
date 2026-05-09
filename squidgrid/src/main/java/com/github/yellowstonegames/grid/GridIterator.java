@@ -345,17 +345,19 @@ public abstract class GridIterator implements Iterator<Coord> {
         @Override
         public boolean hasNext() {
             final Coord n = findNext();
-            if (prev == null)
+            if (prev == null) {
+                prev = n;
                 return n != null;
+            }
             else {
+                prev = n;
                 /* Not done && has next */
-                return (prev.x != xStart || prev.y != yStart) && n != null;
+                return prev != null && (prev.x != xStart || prev.y != yStart);
             }
         }
 
         @Override
         public Coord next() {
-            prev = findNext();
             if (prev == null)
                 throw new NoSuchElementException();
             return prev;
@@ -372,19 +374,20 @@ public abstract class GridIterator implements Iterator<Coord> {
                 if (yStart == 0)
                     /* Start from the bottom */
                     return Coord.get(xStart, 0);
-                else
+                else if(yStart + 1 < height)
                     /* Start from the cell above (startx, starty) */
                     return Coord.get(xStart, yStart + 1);
+                else
+                    return Coord.get(xStart, 0);
             } else {
                 if (prev.x == xStart && prev.y == yStart)
                     /* Done iterating */
                     return null;
-                else if (prev.y == 0) {
+                else if (prev.y + 1 >= height) {
                     /* Continue from the bottom */
                     return Coord.get(xStart, 0);
                 } else {
                     /* Go up */
-                    assert 0 < prev.y && prev.y < height;
                     final Coord r = Coord.get(xStart, prev.y + 1);
                     if (r.y == yStart)
                         /* We would return the starting position */
