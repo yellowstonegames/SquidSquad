@@ -40,4 +40,29 @@ public class GridIteratorTest {
         }
         DungeonTools.debugPrint(chars);
     }
+
+    /**
+     * This one works! It can limit the square size to a "radius" correctly already.
+     * <pre>
+     * .......
+     * .UVWXY.
+     * .PQRST.
+     * .KLMNO.
+     * .FGHIJ.
+     * .ABCDE.
+     * .......
+     * </pre>
+     */
+    @Test
+    public void testCenteredSquare() {
+        GridIterator.CenteredSquare it = new GridIterator.CenteredSquare(7, 7, 3, 3, 2);
+        int index = 0;
+        char[][] chars = ArrayTools.fill('.', 7, 7);
+        while (it.hasNext()){
+            Coord c = it.next();
+            chars[c.x][c.y] = (char) ('A' + index++);
+        }
+        DungeonTools.debugPrint(chars);
+    }
+
 }
