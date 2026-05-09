@@ -126,7 +126,7 @@ public class PerlinNoise implements INoise {
 
     /**
      * A constructor that allows specifying the {@link #getEqualization(int) equalization values} for all dimensions
-     * this supports (2 through 6 inclusive), as well as the seed. Equalization values are typically less than 1.0
+     * this supports (2 through 7 inclusive), as well as the seed. Equalization values are typically less than 1.0
      * and get smaller as the dimension increases.
      * @param seed any long
      * @param eq2 defaults to {@code 1.0f/1.75f}
@@ -326,20 +326,20 @@ public class PerlinNoise implements INoise {
 
     /**
      *
-     * @param dimension between 2 and 6, inclusive
+     * @param dimension between 2 and 7, inclusive
      * @return the {@code add} value currently used to equalize noise
      */
     public float getEqualization(int dimension) {
-        return eqAdd[Math.min(Math.max(dimension, 2), 6) - 2];
+        return eqAdd[Math.min(Math.max(dimension, 2), 7) - 2];
     }
 
     /**
      *
-     * @param dimension between 2 and 6, inclusive
+     * @param dimension between 2 and 7, inclusive
      * @param value the {@code add} value to use when equalizing noise
      */
     public void setEqualization(int dimension, float value) {
-        dimension = Math.min(Math.max(dimension, 2), 6) - 2;
+        dimension = Math.min(Math.max(dimension, 2), 7) - 2;
         eqMul[dimension] = calculateEqualizeAdjustment(eqAdd[dimension] = Math.max(0f, value));
     }
 
