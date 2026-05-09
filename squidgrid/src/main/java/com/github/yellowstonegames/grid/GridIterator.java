@@ -235,6 +235,7 @@ public abstract class GridIterator implements Iterator<Coord> {
             final Coord next = findNext(true);
             if (next == null)
                 throw new NoSuchElementException();
+            ++index;
             return next;
         }
 

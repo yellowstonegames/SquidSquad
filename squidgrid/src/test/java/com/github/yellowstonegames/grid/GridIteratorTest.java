@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class GridIteratorTest {
     /**
-     * GridIterator.SquareSpiral definitely seems broken... This outputs:
+     * GridIterator.SquareSpiral definitely was broken... This originally output:
      * <pre>
      * .......
      * .......
@@ -16,6 +16,18 @@ public class GridIteratorTest {
      * .......
      * .......
      * </pre>
+     * Now it produces:
+     * <pre>
+     * efghijk
+     * dQRSTUl
+     * cPEFGVm
+     * bODAHWn
+     * aNCBIXo
+     * `MLKJYp
+     * _^]\[Zq
+     * </pre>
+     * Where it starts at the center, with A, and moves down, clockwise until it fully rotates, then down and clockwise
+     * again until it finishes on q.
      */
     @Test
     public void testSquareSpiral() {
