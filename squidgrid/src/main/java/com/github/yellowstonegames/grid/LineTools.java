@@ -648,7 +648,7 @@ public final class LineTools {
     }
 
     /**
-     * Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses unicode box
+     * Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses Unicode box
      * drawing characters to draw straight, continuous lines for walls, filling regions between walls (that were
      * filled with more walls before) with space characters, ' '. If the lines "point the wrong way," such as having
      * multiple horizontally adjacent vertical lines where there should be horizontal lines, call transposeLines() on
@@ -672,7 +672,7 @@ public final class LineTools {
     }
 
     /**
-     * Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses unicode box
+     * Takes a char[][] dungeon map that uses '#' to represent walls, and returns a new char[][] that uses Unicode box
      * drawing characters to draw straight, continuous lines for walls, filling regions between walls (that were
      * filled with more walls before) with space characters, ' '. If keepSingleHashes is true, then '#' will be used if
      * a wall has no orthogonal wall neighbors; if it is false, then a horizontal line will be used for stand-alone

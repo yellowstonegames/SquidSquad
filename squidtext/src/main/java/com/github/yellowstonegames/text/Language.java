@@ -576,8 +576,9 @@ public class Language {
     }
     /**
      * Imitation ancient Greek, using the original Greek alphabet. People may try to translate it and get gibberish.
-     * Make sure the font you use to render this supports the Greek alphabet! In the GDX display module, most
-     * fonts support all the Greek you need for this.
+     * Make sure the font you use to render this supports the Greek alphabet!
+     * Printing non-ASCII text to the console might not work smoothly with some Java settings, so you might see
+     * {@code ???} instead of the intended text when printing to a console, even if the text is actually correct.
      * <br>
      * Ψυιλασ αλορ; αιπεομαρτα λε λιασπα...
      */
@@ -626,8 +627,7 @@ public class Language {
     }
     /**
      * Imitation modern French, using the (many) accented vowels that are present in the language. Translating it
-     * will produce gibberish if it produces anything at all. In the GDX display module, most
-     * fonts support all the accented characters you need for this.
+     * will produce gibberish if it produces anything at all.
      * <br>
      * Bœurter; ubi plaqua se saigui ef brafeur?
      */
@@ -673,7 +673,8 @@ public class Language {
     /**
      * Imitation modern Russian, using the authentic Cyrillic alphabet used in Russia and other countries.
      * Make sure the font you use to render this supports the Cyrillic alphabet!
-     * In the GDX display module, the "smooth" fonts support all the Cyrillic alphabet you need for this.
+     * Printing non-ASCII text to the console might not work smoothly with some Java settings, so you might see
+     * {@code ???} instead of the intended text when printing to a console, even if the text is actually correct.
      * <br>
      * Жыдотуф руц пйцас, гогутяр шыскучэбаб - гйчапофёглор гюнуз ъсказюжин.
      */
@@ -1614,8 +1615,7 @@ public class Language {
      * Fantasy language that tries to imitate the various languages spoken by elves in J.R.R. Tolkien's works, using
      * accented vowels occasionally and aiming for long, flowing, vowel-heavy words. It's called ELF because there isn't
      * a consistent usage across fantasy and mythological sources of either "elvish", "elfish", "elven", "elfin", or any
-     * one adjective for "relating to an elf." In the GDX display module, the "smooth" and "unicode" fonts, among
-     * others, support all the accented characters you need for this.
+     * one adjective for "relating to an elf."
      * <br>
      * Il ilthiê arel enya; meâlelail theasor arôreisa.
      */
@@ -5435,8 +5435,8 @@ public class Language {
          * Replaces any characters this can produce that aren't in ASCII or Latin-1 with Latin-script stand-ins; this
          * will often use accented characters, but will only use those present in Latin-1 (which many fonts support).
          * <br>
-         * The rationale for this Modifier is to allow users of Language who don't display with the wide-ranging
-         * fonts in the display module to still be able to display something reasonable for generated text.
+         * The rationale for this Modifier is to allow users of Language who don't display with Unicode-heavy
+         * fonts to still be able to display something reasonable for generated text.
          */
         public static final Modifier REDUCE_ACCENTS = replacementTable("ā", "â", "ă", "ä", "ą", "ã", "ǻ", "å", "ǽ", "áe",
                 "ē", "ê", "ĕ", "ë", "ė", "ë", "ę", "è", "ě", "é", "ĩ", "í", "ī", "î", "į", "ì", "ĭ", "ï", "ı", "iy", "ō", "ô",

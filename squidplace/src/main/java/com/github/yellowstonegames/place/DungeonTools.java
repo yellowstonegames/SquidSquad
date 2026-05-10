@@ -25,8 +25,16 @@ import java.util.*;
 
 /**
  * A static class that can be used to modify the char[][] dungeons that other generators produce.
- * Includes various utilities for random floor-finding, but also provides ways to take dungeons that use '#'
- * for walls and make a copy that uses unicode box drawing characters.
+ * Includes constants to describe environment types encountered in possible dungeons, which are used elsewhere.
+ * Here, 2D char arrays are always indexed with x, then y.
+ * Has methods to open and close doors represented by {@code '+'} and {@code '/'}. Can double the width of a 2D char
+ * array while respecting both ASCII and Unicode box drawing chars for walls, or undo that operation. Can simplify 2D
+ * char arrays to use {@code '#'} for any wall and {@code '.'} for any floor. Can add random paths to existing maps to
+ * guarantee they can be traversed from one point to another. Can wrap a 2D char array with {@code '#'} chars for walls.
+ * <br>
+ * The earlier DungeonUtility class in SquidLib had various methods that have since been moved to {@link LineTools},
+ * such as the often-used {@link LineTools#hashesToLines(char[][])}. This class still has {@link #debugPrint(char[][])},
+ * but new code may want to prefer {@link StringTools#printChar2D(char[][])}, which calls the same code.
  */
 public class DungeonTools {
 
@@ -157,9 +165,10 @@ public class DungeonTools {
     }
 
     /**
-     * Takes a dungeon map with either '#' as the only wall character or the unicode box drawing characters used by
-     * hashesToLines(), and returns a new char[][] dungeon map with two characters per cell, mostly filling the spaces
-     * next to non-walls with space characters, and only doing anything different if a box-drawing character would
+     * Takes a dungeon map with either '#' as the only wall character or the Unicode box drawing characters used by
+     * {@link LineTools#hashesToLines(char[][])}.
+     * Returns a new char[][] dungeon map with two characters per cell, mostly filling the spaces
+     * next to non-walls with space characters. Only does anything different if a box-drawing character would
      * continue into an adjacent cell, or if a '#' wall needs another '#' wall next to it. The recommended approach is
      * to keep both the original non-double-width map and the newly-returned double-width map, since the single-width
      * maps can be used more easily for pathfinding. If you need to undo this function, call unDoubleWidth().
@@ -216,9 +225,9 @@ public class DungeonTools {
     public static char[][] unDoubleWidth(char[][] map) {
         int width = map.length;
         int height = map[0].length;
-        if (width % 2 != 0)
+        if ((width & 1) != 0)
             throw new IllegalArgumentException("Argument must be a char[width][height] with an even width.");
-        char[][] unpaired = new char[width / 2][height];
+        char[][] unpaired = new char[width >>> 1][height];
         for (int y = 0; y < height; y++) {
             for (int x = 0, px = 0; px < width; x++, px += 2) {
                 unpaired[x][y] = map[px][y];
@@ -397,7 +406,7 @@ public class DungeonTools {
      * @return the ObjectList of Coord points that are on the carved path, including existing non-blocking cells; will be empty if any parameters are invalid
      */
     public static ObjectList<Coord> ensurePath(char[][] map, EnhancedRandom rng, char replacement, char... blocking) {
-        if (map == null || map.length <= 0 || blocking == null || blocking.length <= 0)
+        if (map == null || map.length == 0 || blocking == null || blocking.length == 0)
             return new ObjectList<>(0);
         int width = map.length, height = map[0].length;
         ObjectList<Coord> points = pointPath(width, height, rng);
@@ -413,7 +422,7 @@ public class DungeonTools {
     }
 
     public static ObjectList<Coord> allMatching(char[][] map, char... matching) {
-        if (map == null || map.length <= 0 || matching == null || matching.length <= 0)
+        if (map == null || map.length == 0 || matching == null || matching.length == 0)
             return new ObjectList<>(0);
         return new ObjectList<>(new Region(map, matching));
     }
