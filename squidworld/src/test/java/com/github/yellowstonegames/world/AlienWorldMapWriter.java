@@ -191,8 +191,10 @@ public class AlienWorldMapWriter extends ApplicationAdapter {
         world.rng.setSeed(seed);
 
         int liquidLevel = world.rng.nextInt(6);
+        int lifeLevel = world.rng.minIntOf(0, 11, 3);
 
-        wmv.biomeMapper.initialize(AlienBiomes.generateAlienBiomeTable(world.rng, Language.HLETKIP, liquidLevel,
+        wmv.biomeMapper.initialize(AlienBiomes.generateAlienBiomeTable(world.rng, Language.HLETKIP,
+                liquidLevel, lifeLevel,
                 DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.3f, 0.9f), world.rng.nextFloat(0.3f, 0.7f), 1f),
                 DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.0f, 0.6f), world.rng.nextFloat(0.1f, 0.7f), 1f),
                 DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.6f, 1.0f), world.rng.nextFloat(0.4f, 0.8f), 1f)

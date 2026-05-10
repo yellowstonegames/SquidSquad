@@ -509,7 +509,7 @@ public interface BiomeMapper {
         public Biome extractBiomeA(int biomeCode)
         {
             biomeCode &= 1023;
-            if(biomeCode < 66)
+            if(biomeCode < Biome.TABLE.length)
                 return Biome.TABLE[biomeCode];
             return Biome.TABLE[60];
         }
@@ -533,7 +533,7 @@ public interface BiomeMapper {
         public Biome extractBiomeB(int biomeCode)
         {
             biomeCode = (biomeCode >>> 10) & 1023;
-            if(biomeCode < 66)
+            if(biomeCode < Biome.TABLE.length)
                 return Biome.TABLE[biomeCode];
             return Biome.TABLE[60];
         }

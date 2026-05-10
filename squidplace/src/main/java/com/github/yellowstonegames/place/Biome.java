@@ -55,7 +55,8 @@ public class Biome {
     }
 
     /**
-     * Represents 6 average precipitation/moisture levels that can determine a biome.
+     * Represents 6 average precipitation/moisture levels that can determine a biome, plus other "rows"
+     * for special places like coastlines and rivers, which may have different biomes at different temperatures.
      */
     public enum Moisture {
         DRIEST("driest"), DRIER("drier"), DRY("dry"), WET("wet"), WETTER("wetter"), WETTEST("wettest"),

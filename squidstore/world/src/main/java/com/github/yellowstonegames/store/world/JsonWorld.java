@@ -532,8 +532,8 @@ public final class JsonWorld {
                 wmv.setBiomeMapper(json.readValue("m", DetailedBiomeMapper.class, jsonData));
                 wmv.setColorMap(json.readValue("r", int[][].class, jsonData));
                 wmv.setColorMapOklab(json.readValue("o", int[][].class, jsonData));
-                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.biomeColorTable, 0, 66);
-                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.biomeDarkColorTable, 0, 66);
+                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.biomeColorTable, 0, wmv.biomeColorTable.length);
+                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.biomeDarkColorTable, 0, wmv.biomeDarkColorTable.length);
 
                 return wmv;
             }
@@ -572,8 +572,8 @@ public final class JsonWorld {
                 wmv.setBiomeMapper(json.readValue("m", SimpleBiomeMapper.class, jsonData));
                 wmv.setColorMap(json.readValue("r", int[][].class, jsonData));
                 wmv.setColorMapOklab(json.readValue("o", int[][].class, jsonData));
-                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.biomeColorTable, 0, 66);
-                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.biomeDarkColorTable, 0, 66);
+                System.arraycopy(json.readValue("C", int[].class, jsonData), 0, wmv.biomeColorTable, 0, wmv.biomeColorTable.length);
+                System.arraycopy(json.readValue("D", int[].class, jsonData), 0, wmv.biomeDarkColorTable, 0, wmv.biomeDarkColorTable.length);
 
                 return wmv;
             }
