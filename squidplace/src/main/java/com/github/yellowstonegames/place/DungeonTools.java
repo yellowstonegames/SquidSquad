@@ -41,40 +41,119 @@ public class DungeonTools {
     /**
      * Constant for environment tiles that are not near a cave, room, or corridor. Value is 0.
      * Used by several classes that distinguish types of dungeon environment.
+     * <br>
+     * This isn't really a bit flag, but if used as one in conjunction with {@link #ANY_FLOOR}, it is treated
+     * as a wall.
      */
     public static final int UNTOUCHED = 0;
+
     /**
-     * Constant for environment tiles that are floors for a room. Value is 1.
-     * Used by several classes that distinguish types of dungeon environment.
+     * Bit flag used by other constants to indicate they are floors, or if absent, that they are walls.
+     * All floors are considered possible to pass through for pathfinding purposes, and all walls are
+     * considered impassable. This constant should not be used on its own in an environment 2D array.
+     * You can check if an environment value is any type of floor with {@code (env & ANY_FLOOR) == ANY_FLOOR}, or
+     * is any type of wall with {@code (env & ANY_FLOOR) != ANY_FLOOR}.
      */
-    public static final int ROOM_FLOOR = 1;
+    public static final int ANY_FLOOR = 1;
+
     /**
      * Constant for environment tiles that are walls near a room. Value is 2.
      * Used by several classes that distinguish types of dungeon environment.
+     * <br>
+     * This is a bit flag.
+     * It can be used with {@code env == ROOM_WALL} to check if an environment int value is
+     * a wall in a room (and nothing else).
+     * Use {@code (env & ROOM_WALL) == ROOM_WALL} to check if an environment
+     * int value is any kind of room value (room wall or room floor, even if other flags are set).
+     * Use {@code (env & ROOM_FLOOR) == ROOM_WALL} to check if env represents a wall in a room, potentially with
+     * other flags.
      */
-    public static final int ROOM_WALL = 2;
+    public static final int ROOM_WALL = (1 << 1);
     /**
-     * Constant for environment tiles that are floors for a cave or other natural part of a map.
-     * Value is 3. Used by several classes that distinguish types of dungeon environment. Also
-     * used by {@link WildernessGenerator} for almost everything it generates.
+     * Constant for environment tiles that are floors for a room. Value is 3.
+     * Used by several classes that distinguish types of dungeon environment.
+     * <br>
+     * This is a bit flag.
+     * It can be treated as {@code ROOM_WALL | ANY_FLOOR}.
+     * You can compare an environment int value to this with {@code env == ROOM_FLOOR} to check if it represents a
+     * floor in a room (and nothing else).
+     * Use {@code (env & ROOM_FLOOR) == ROOM_FLOOR} to check if env represents a floor in a room, potentially with
+     * other flags.
+     * Use {@code (env & ROOM_FLOOR) == ROOM_WALL} to check if env represents a wall in a room, potentially with
+     * other flags.
      */
-    public static final int NATURAL_FLOOR = 3;
+    public static final int ROOM_FLOOR = ROOM_WALL | ANY_FLOOR;
     /**
      * Constant for environment tiles that are walls near a cave or other natural part of a map.
      * Value is 4. Used by several classes that distinguish types of dungeon environment. May be
      * used by {@link WildernessGenerator} for ledges and other natural obstacles.
+     * <br>
+     * This is a bit flag.
+     * It can be used with {@code env == NATURAL_WALL} to check if an environment int value is
+     * a wall in a natural area (and nothing else).
+     * Use {@code (env & NATURAL_WALL) == NATURAL_WALL} to check if an environment
+     * int value is any kind of natural area (wall or floor, even if other flags are set).
+     * Use {@code (env & NATURAL_FLOOR) == NATURAL_WALL} to check if env represents a wall in a natural area,
+     * potentially with other flags.
      */
-    public static final int NATURAL_WALL = 4;
+    public static final int NATURAL_WALL = (1 << 2);
     /**
-     * Constant for environment tiles that are floors for a corridor. Value is 5.
-     * Used by several classes that distinguish types of dungeon environment.
+     * Constant for environment tiles that are floors for a cave or other natural part of a map.
+     * Value is 5. Used by several classes that distinguish types of dungeon environment. Also
+     * used by {@link WildernessGenerator} for almost everything it generates.
+     * <br>
+     * This is a bit flag.
+     * It can be treated as {@code NATURAL_WALL | ANY_FLOOR}.
+     * You can compare an environment int value to this with {@code env == NATURAL_FLOOR} to check if it represents a
+     * floor in a natural area (and nothing else).
+     * Use {@code (env & NATURAL_FLOOR) == NATURAL_FLOOR} to check if env represents a floor in a natural area,
+     * potentially with other flags.
+     * Use {@code (env & NATURAL_FLOOR) == NATURAL_WALL} to check if env represents a wall in a natural area,
+     * potentially with other flags.
      */
-    public static final int CORRIDOR_FLOOR = 5;
+    public static final int NATURAL_FLOOR = NATURAL_WALL | ANY_FLOOR;
     /**
-     * Constant for environment tiles that are walls near a corridor. Value is 6.
+     * Constant for environment tiles that are walls near a corridor. Value is 8.
      * Used by several classes that distinguish types of dungeon environment.
+     * <br>
+     * This is a bit flag.
+     * It can be treated as {@code CORRIDOR_WALL | ANY_FLOOR}.
+     * You can compare an environment int value to this with {@code env == CORRIDOR_FLOOR} to check if it represents a
+     * floor in a corridor (and nothing else).
+     * Use {@code (env & CORRIDOR_FLOOR) == CORRIDOR_FLOOR} to check if env represents a floor in a corridor,
+     * potentially with other flags.
+     * Use {@code (env & CORRIDOR_FLOOR) == CORRIDOR_WALL} to check if env represents a wall in a corridor,
+     * potentially with other flags.
      */
-    public static final int CORRIDOR_WALL = 6;
+    public static final int CORRIDOR_WALL = (1 << 3);
+    /**
+     * Constant for environment tiles that are floors for a corridor. Value is 9.
+     * Used by several classes that distinguish types of dungeon environment.
+     * <br>
+     * This is a bit flag.
+     * It can be treated as {@code CORRIDOR_WALL | ANY_FLOOR}.
+     * You can compare an environment int value to this with {@code env == CORRIDOR_FLOOR} to check if it represents a
+     * floor in a corridor (and nothing else).
+     * Use {@code (env & CORRIDOR_FLOOR) == CORRIDOR_FLOOR} to check if env represents a floor in a corridor,
+     * potentially with other flags.
+     * Use {@code (env & CORRIDOR_FLOOR) == CORRIDOR_WALL} to check if env represents a wall in a corridor,
+     * potentially with other flags.
+     */
+    public static final int CORRIDOR_FLOOR = CORRIDOR_WALL | ANY_FLOOR;
+    /**
+     * A bit flag mask that can be used to isolate the bits that indicate whether an environment int value is a room,
+     * natural area, or corridor, regardless of floor/wall status. Use {@code (env & AREA_MASK) == wallConstant},
+     * where {@code wallConstant} is your choice of {@link #ROOM_WALL}, {@link #NATURAL_WALL}, or
+     * {@link #CORRIDOR_WALL}, to identify if that int is your selected area.
+     */
+    public static final int AREA_MASK = ROOM_WALL | NATURAL_WALL | CORRIDOR_WALL;
+    /**
+     * A bit flag mask that can be used to isolate only the bits used in constants defined by DungeonTools.
+     * Use {@code (env & CORE_ENVIRONMENT_MASK) == someConstant}, where{@code someConstant} is any constant from
+     * DungeonTools, to tell which one it is even if there are other flags present. Note that this will identify bit
+     * flags with no bits from DungeonTools constants as {@link #UNTOUCHED}.
+     */
+    public static final int CORE_ENVIRONMENT_MASK = ROOM_WALL | NATURAL_WALL | CORRIDOR_WALL | ANY_FLOOR;
 
     private DungeonTools() {
     }
