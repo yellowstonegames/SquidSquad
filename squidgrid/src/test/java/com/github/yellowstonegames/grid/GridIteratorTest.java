@@ -31,14 +31,28 @@ public class GridIteratorTest {
      */
     @Test
     public void testSquareSpiral() {
-        GridIterator.SquareSpiral it = new GridIterator.SquareSpiral(7, 7, 3, 3);
-        int index = 0;
-        char[][] chars = ArrayTools.fill('.', 7, 7);
-        while (it.hasNext() && index < 49){
-            Coord c = it.next();
-            chars[c.x][c.y] = (char) ('A' + index++);
+        {
+            System.out.println("CLOCKWISE:");
+            GridIterator.SquareSpiral it = new GridIterator.SquareSpiral(7, 7, 3, 3);
+            int index = 0;
+            char[][] chars = ArrayTools.fill('.', 7, 7);
+            while (it.hasNext() && index < 49){
+                Coord c = it.next();
+                chars[c.x][c.y] = (char) ('A' + index++);
+            }
+            DungeonTools.debugPrint(chars);
         }
-        DungeonTools.debugPrint(chars);
+        {
+            System.out.println("COUNTER-CLOCKWISE:");
+            GridIterator.SquareSpiral it = new GridIterator.SquareSpiral(7, 7, 3, 3, false);
+            int index = 0;
+            char[][] chars = ArrayTools.fill('.', 7, 7);
+            while (it.hasNext() && index < 49){
+                Coord c = it.next();
+                chars[c.x][c.y] = (char) ('A' + index++);
+            }
+            DungeonTools.debugPrint(chars);
+        }
     }
 
     /**

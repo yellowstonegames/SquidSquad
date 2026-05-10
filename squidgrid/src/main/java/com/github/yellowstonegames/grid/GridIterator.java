@@ -181,10 +181,11 @@ public abstract class GridIterator implements Iterator<Coord> {
         protected int index;
 
         protected boolean done;
+        protected boolean clockwise;
 
         /**
          * An iterator to iterate in the square of size {@code size} around
-         * {@code (x, y)}.
+         * {@code (x, y)}. This uses a clockwise spiral, assuming y points up.
          *
          * @param width
          *            The map's width
@@ -198,6 +199,40 @@ public abstract class GridIterator implements Iterator<Coord> {
          *             If {@code width <= 0 || height <= 0 || size < 0}.
          */
         public SquareSpiral(int width, int height, int x, int y) {
+            this(width, height, x, y, true);
+        }
+
+        /**
+         * An iterator to iterate in the square of size {@code size} around
+         * {@code start}. This uses a clockwise spiral, assuming y points up.
+         *
+         * @param width
+         *            The grid's width
+         * @param height
+         *            The grid's height
+         * @param start
+         *            The starting coordinate.
+         */
+        public SquareSpiral(int width, int height, Coord start) {
+            this(width, height, start.x, start.y, true);
+        }
+
+        /**
+         * An iterator to iterate in the square of size {@code size} around
+         * {@code (x, y)}. If clockwise is true, this uses a clockwise spiral, assuming y points up.
+         *
+         * @param width
+         *            The map's width
+         * @param height
+         *            The map's height
+         * @param x
+         *            The starting x coordinate.
+         * @param y
+         *            The starting y coordinate.
+         * @throws IllegalStateException
+         *             If {@code width <= 0 || height <= 0 || size < 0}.
+         */
+        public SquareSpiral(int width, int height, int x, int y, boolean clockwise) {
             this.width = width;
             if (width <= 0)
                 throw new IllegalStateException("Cannot build a square spiral iterator over an empty grid");
@@ -208,11 +243,12 @@ public abstract class GridIterator implements Iterator<Coord> {
             this.xStart = x;
             this.yStart = y;
             this.index = 0;
+            this.clockwise = clockwise;
         }
 
         /**
          * An iterator to iterate in the square of size {@code size} around
-         * {@code start}.
+         * {@code start}. If clockwise is true, this uses a clockwise spiral, assuming y points up.
          *
          * @param width
          *            The grid's width
@@ -221,8 +257,8 @@ public abstract class GridIterator implements Iterator<Coord> {
          * @param start
          *            The starting coordinate.
          */
-        public SquareSpiral(int width, int height, Coord start) {
-            this(width, height, start.x, start.y);
+        public SquareSpiral(int width, int height, Coord start, boolean clockwise) {
+            this(width, height, start.x, start.y, clockwise);
         }
 
         @Override
@@ -265,9 +301,10 @@ public abstract class GridIterator implements Iterator<Coord> {
             }
             final int root = (int) (Math.sqrt(index));
             final int sign = -(root & 1);
+            final int countersign = clockwise ? sign : ~sign;
             final int big = (root * (root + 1)) - index << 1;
             final int y = ((root + 1 >> 1) + sign ^ sign) + ((sign ^ sign + Math.min(big, 0)) >> 1);
-            final int x = ((root + 1 >> 1) + sign ^ sign) - ((sign ^ sign + Math.max(big, 0)) >> 1);
+            final int x = ((root + 1 >> 1) + countersign ^ countersign) - ((countersign ^ countersign + Math.max(big, 0)) >> 1);
             return Coord.get(xStart + x, yStart + y);
         }
 
