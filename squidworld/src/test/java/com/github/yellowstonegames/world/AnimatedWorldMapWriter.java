@@ -171,9 +171,7 @@ public class AnimatedWorldMapWriter extends ApplicationAdapter {
             int liquidLevel = world.rng.nextInt(6);
 
             wmv.biomeMapper.initialize(AlienBiomes.generateAlienBiomeTable(world.rng, Language.HLETKIP, liquidLevel,
-                    DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.3f, 0.9f), world.rng.nextFloat(0.3f, 0.7f), 1f),
-                    DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.0f, 0.6f), world.rng.nextFloat(0.1f, 0.7f), 1f),
-                    DescriptiveColor.oklabByHSL(world.rng.nextFloat(), world.rng.nextFloat(0.6f, 1.0f), world.rng.nextFloat(0.4f, 0.8f), 1f)
+                    world.rng.minIntOf(0, 11, 3)
             ));
             world.seedA = world.rng.getStateA();
             world.seedB = world.rng.getStateB();
