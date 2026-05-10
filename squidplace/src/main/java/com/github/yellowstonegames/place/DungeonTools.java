@@ -18,6 +18,7 @@ package com.github.yellowstonegames.place;
 
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.yellowstonegames.core.StringTools;
 import com.github.yellowstonegames.grid.*;
 
 import java.util.*;
@@ -303,23 +304,16 @@ public class DungeonTools {
     }
 
     /**
-     * For when you want to print a 2D char array. Prints on multiple lines, with a trailing newline.
-     * To match how libGDX displays on the screen, this prints with the y-axis pointing up, that is,
+     * Prints a 2D char array without padding. Prints on multiple lines, with a trailing newline.
+     * To match how libGDX usually displays on the screen, this prints with the y-axis pointing up, that is,
      * row 0 is at the bottom and the highest y-value is at the top.
+     * <br>
+     * This delegates to {@link StringTools#printChar2D(char[][])}.
      *
      * @param level a 2D char array to print with a trailing newline
      */
     public static void debugPrint(char[][] level) {
-        if (level == null || level.length == 0 || level[0].length == 0)
-            System.out.println("INVALID DUNGEON LEVEL");
-        else {
-            for (int y = level[0].length - 1; y >= 0; y--) {
-                for (int x = 0; x < level.length; x++) {
-                    System.out.print(level[x][y]);
-                }
-                System.out.println();
-            }
-        }
+        StringTools.printChar2D(level);
     }
 
     /**

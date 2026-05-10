@@ -875,10 +875,56 @@ public final class StringTools {
         }
         return receiving;
     }
+    /**
+     * A commonly-used method to print a 2D char array without padding.
+     * Prints on multiple lines, with a trailing newline.
+     * To match how libGDX usually displays on the screen, this prints with the y-axis pointing up, that is,
+     * row 0 is at the bottom and the highest y-value is at the top.
+     * <br>
+     * This delegates to {@link #printChar2D(char[][], boolean)} with yDown set to false.
+     *
+     * @param level a 2D char array to print with a trailing newline
+     */
+    public static void printChar2D(char[][] level) {
+        printChar2D(level, false);
+    }
+    /**
+     * A commonly-used method to print a 2D char array without padding.
+     * Prints on multiple lines, with a trailing newline.
+     * This can print either with the y-axis pointing up, that is,
+     * row 0 is at the bottom and the highest y-value is at the top,
+     * or pointing down, with row 0 on the top.
+     *
+     * @param level a 2D char array to print with a trailing newline
+     * @param yDown if true, row 0 will be on top; if false, row 0 will be at the bottom
+     */
+    public static void printChar2D(char[][] level, boolean yDown) {
+        if (level == null || level.length == 0 || level[0].length == 0)
+            System.out.println("INVALID 2D ARRAY; CANNOT PRINT.");
+        else {
+            if (yDown) {
+                for (int y = 0; y < level[0].length; y++) {
+                    for (int x = 0; x < level.length; x++) {
+                        System.out.print(level[x][y]);
+                    }
+                    System.out.println();
+                }
+            } else {
+                for (int y = level[0].length - 1; y >= 0; y--) {
+                    for (int x = 0; x < level.length; x++) {
+                        System.out.print(level[x][y]);
+                    }
+                    System.out.println();
+                }
+
+            }
+        }
+    }
 
     public static final Pattern whitespacePattern = Pattern.compile("\\s+"),
             nonSpacePattern = Pattern.compile("\\S+");
     private static final Matcher matcher = new Matcher(whitespacePattern);
+
     public static int indexOf(CharSequence text, Pattern regex, int beginIndex)
     {
         matcher.setPattern(regex);
