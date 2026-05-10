@@ -16,6 +16,8 @@
 
 package com.github.yellowstonegames.place.tileset;
 
+import com.github.yellowstonegames.place.DungeonTools;
+
 /**
  * An enumeration of all the kinds of dungeon that DungeonBoneGen
  * knows how to draw already. Each value has a Javadoc description.
@@ -1388,12 +1390,13 @@ public enum TilesetType {
 	}
 
     /**
-     * Returns DungeonTools.NATURAL_FLOOR (which is 3) or DungeonTools.ROOM_FLOOR (which is 1) based on whether this
+     * Returns {@link DungeonTools#NATURAL_FLOOR} or {@link DungeonTools#ROOM_FLOOR} based on whether this
      * TilesetType predominantly generates caves or rooms. This is relevant for certain feature placement.
-     * @return 3 if this produces mostly caves, or 1 if it produces mostly rooms
+     * @return {@link DungeonTools#NATURAL_FLOOR} if this produces mostly caves, or {@link DungeonTools#ROOM_FLOOR} if
+     * it produces mostly rooms
      */
 	public int environment() {
-        int caves = 3, rooms = 1;
+        int caves = DungeonTools.NATURAL_FLOOR, rooms = DungeonTools.ROOM_FLOOR;
         switch (this) {
             case CAVES_LIMIT_CONNECTIVITY:
             case SIMPLE_CAVES:

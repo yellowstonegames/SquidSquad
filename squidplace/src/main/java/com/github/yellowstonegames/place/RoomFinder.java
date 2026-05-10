@@ -251,7 +251,7 @@ public class RoomFinder {
         }
         else {
             ArrayTools.insert(dungeon, map, 0, 0);
-            ArrayTools.fill(environment, 0);
+            ArrayTools.fill(environment, DungeonTools.UNTOUCHED);
             allCaves.clear();
         }
         rooms.clear();
