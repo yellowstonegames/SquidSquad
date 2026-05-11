@@ -226,7 +226,6 @@ public class CoordSet extends ObjectSet<Coord> implements ISerializersNeeded {
      * @param varargs a Coord varargs or Coord array; remember that varargs allocate
      * @return a new CoordSet that holds the given items
      */
-    @SafeVarargs
     public static CoordSet with (Coord... varargs) {
         return new CoordSet(varargs);
     }
