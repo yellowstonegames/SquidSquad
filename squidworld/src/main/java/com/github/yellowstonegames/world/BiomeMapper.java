@@ -753,7 +753,11 @@ public interface BiomeMapper {
      * After you call {@link #makeBiomes(WorldMapGenerator)}, the {@link #colorDataOklab} and {@link #colorDataRgba}
      * fields will be usable, and will match points on the WorldMapGenerator's latest map with colors appropriate for a
      * biome at that point. Calling makeBiomes() also assigns to {@link #biomeCodeData}, though this only stores small
-     * int values here (between 0 and 65, inclusive) that correspond to indices into {@link Biome#TABLE}.
+     * int values here (between 0 and 65, inclusive) that correspond to indices into {@link Biome#TABLE}. Effectively,
+     * this only stores the "dominant" biome at a given location, rather than the mix that went into it.
+     * <br>
+     * This can work with {@link AlienBiomes} to generate an alternative Biome table, which you can pass to
+     * {@link #initialize(Biome[])} before calling {@link #makeBiomes(WorldMapGenerator)}.
      * <br>
      * This is often used via {@link BlendedWorldMapView}.
      */
@@ -783,8 +787,12 @@ public interface BiomeMapper {
         colorDataRgba;
 
         /**
-         * The colors for each biome, with each as a packed oklab int.
+         * The colors for each biome, with each as a packed Oklab int.
          * Always has 66 items, corresponding to the biomes in {@link Biome#TABLE} in order.
+         * You can use different colors by calling {@link #initialize(float, float, float, float)} to modify the default
+         * colors, or {@link #initialize(Biome[])} to use a different Biome table. You can generate Biome tables with
+         * {@link AlienBiomes}, or make them yourself. This field is public, so you could also avoid Biomes entirely and
+         * just assign the Oklab colors you want to this array.
          */
         public final int[] colorTable = new int[66];
 
