@@ -16,40 +16,62 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.ObjectSet;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.BitSet;
 import java.util.HashSet;
 
 /**
- * Current results as of May 10, 2026:
+ * Current results as of May 11, 2026:
  * <pre>
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 5243 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 Coord items each...
- * ObjectSet took 28887 ms with CAPACITY=4194304 and LOAD=0.5
+ * ObjectSet took 28319 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 int items each...
+ * Region took 601 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 Coord items each...
- * CoordSet took 22919 ms with CAPACITY=4194304 and LOAD=0.5
+ * CoordSet took 20462 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using simple pairing) took 5292 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 int items each...
+ * BitSet took 578 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 Coord items each...
- * HashSet took 25707 ms with CAPACITY=4194304 and LOAD=0.5
+ * HashSet took 24928 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 6555 ms with CAPACITY=4194304 and LOAD=0.5
  * </pre>
  * <br>
  * <pre>
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 5518 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 Coord items each...
- * ObjectSet took 21804 ms with CAPACITY=4194304 and LOAD=0.9
+ * ObjectSet took 20603 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 int items each...
+ * Region took 622 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 Coord items each...
- * CoordSet took 16794 ms with CAPACITY=4194304 and LOAD=0.9
+ * CoordSet took 14909 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using simple pairing) took 4947 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 int items each...
+ * BitSet took 1128 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 Coord items each...
- * HashSet took 26620 ms with CAPACITY=4194304 and LOAD=0.9
+ * HashSet took 25323 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 6328 ms with CAPACITY=4194304 and LOAD=0.9
  * </pre>
  * <br>
  * Definitely use higher load factors with Coord sets!
  */
-@Ignore
+//@Ignore
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
     public static final int CAPACITY = SIZE * SIZE;//51;//
-    public static final float LOAD = 0.9f;
+    public static final float LOAD = 0.5f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 54576 ms with CAPACITY=51 and LOAD=0.5
@@ -589,5 +611,137 @@ public class CoordMapSetLoadTest {
         System.out.println("HashSet took " + (System.currentTimeMillis() - startTime) +
                 " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
         System.out.println(set.iterator().next());
+    }
+
+
+    @Test
+    public void fillHugeIntSetRSReducedTest() {
+        IntSet set;
+        {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(Coord.rosenbergStrongHashCode(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + CAPACITY + " int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(Coord.rosenbergStrongHashCode(x, y));
+                }
+            }
+        }
+        System.out.println("IntSet (Using Coord.rosenbergStrongHashCode()) took " + (System.currentTimeMillis() - startTime) +
+                " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
+    }
+
+    @Test
+    public void fillHugeIntSetSzudzikReducedTest() {
+        IntSet set;
+        {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(NumberPairing.szudzik(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + CAPACITY + " int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(NumberPairing.szudzik(x, y));
+                }
+            }
+        }
+        System.out.println("IntSet (Using NumberPairing.szudzik()) took " + (System.currentTimeMillis() - startTime) +
+                " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
+    }
+
+    @Test
+    public void fillHugeIntSetSimpleReducedTest() {
+        IntSet set;
+        {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add((x & 0xFFFF) | y << 16);
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + CAPACITY + " int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add((x & 0xFFFF) | y << 16);
+                }
+            }
+        }
+        System.out.println("IntSet (Using simple pairing) took " + (System.currentTimeMillis() - startTime) +
+                " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
+    }
+
+    @Test
+    public void fillHugeBitSetReducedTest() {
+        BitSet set;
+        {
+            set = new BitSet(SIZE * SIZE);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.set(Coord.rosenbergStrongHashCode(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + CAPACITY + " int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new BitSet(SIZE * SIZE);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.set(Coord.rosenbergStrongHashCode(x, y));
+                }
+            }
+        }
+        System.out.println("BitSet took " + (System.currentTimeMillis() - startTime) +
+                " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.get(0));
+    }
+
+    @Test
+    public void fillHugeRegionReducedTest() {
+        Coord.expandPoolTo(SIZE, SIZE);
+        Region set;
+        {
+            set = new Region(SIZE, SIZE);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.insert(x, y);
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + CAPACITY + " int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new Region(SIZE, SIZE);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.insert(x, y);
+                }
+            }
+        }
+        System.out.println("Region took " + (System.currentTimeMillis() - startTime) +
+                " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
     }
 }

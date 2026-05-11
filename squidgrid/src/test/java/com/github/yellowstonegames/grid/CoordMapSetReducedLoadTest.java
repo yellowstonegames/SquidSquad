@@ -130,6 +130,34 @@ public class CoordMapSetReducedLoadTest {
                 " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
         System.out.println(set.first());
     }
+    @Test
+    public void fillHugeHashSetReducedTest() {
+        Coord.expandPoolTo(SIZE, SIZE);
+        HashSet<Coord> set;
+        {
+            set = new HashSet<>(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add(Coord.get(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE >>> REDUCTION) + " Coord items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new HashSet<>(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add(Coord.get(x, y));
+                }
+            }
+        }
+        System.out.println("HashSet took " + (System.currentTimeMillis() - startTime) +
+                " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.iterator().next());
+    }
 
     @Test
     public void fillHugeIntSetRSReducedTest() {
@@ -271,34 +299,4 @@ public class CoordMapSetReducedLoadTest {
                 " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
         System.out.println(set.first());
     }
-
-    @Test
-    public void fillHugeHashSetReducedTest() {
-        Coord.expandPoolTo(SIZE, SIZE);
-        HashSet<Coord> set;
-        {
-            set = new HashSet<>(REDUCED_CAPACITY, LOAD);
-            for (int x = 0; x < SIZE; x++) {
-                for (int y = 0; y < SIZE; y++) {
-                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
-                        set.add(Coord.get(x, y));
-                }
-            }
-        }
-        System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE >>> REDUCTION) + " Coord items each...");
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < LIMIT; i++) {
-            set = new HashSet<>(REDUCED_CAPACITY, LOAD);
-            for (int x = 0; x < SIZE; x++) {
-                for (int y = 0; y < SIZE; y++) {
-                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
-                        set.add(Coord.get(x, y));
-                }
-            }
-        }
-        System.out.println("HashSet took " + (System.currentTimeMillis() - startTime) +
-                " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
-        System.out.println(set.iterator().next());
-    }
-
 }
