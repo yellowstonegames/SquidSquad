@@ -27,36 +27,40 @@ import java.util.HashSet;
  * Current results as of May 10, 2026, with REDUCTION=2 (reducing used coords with ">>> 2"):
  * <pre>
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using Coord.rosenbergStrongHashCode()) took 1756 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 1533 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 Coord items each...
- * HashSet took 6901 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * HashSet took 11564 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 Coord items each...
- * ObjectSet took 8941 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * ObjectSet took 18975 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * Region took 329 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * Region took 348 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * BitSet took 355 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * IntSet (Using simple pairing) took 1617 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using NumberPairing.szudzik()) took 1853 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * BitSet took 345 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * Creating 100 sets with 1048576 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 1993 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 Coord items each...
- * CoordSet took 6134 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * CoordSet took 6408 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * </pre>
  * <br>
  * <pre>
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using Coord.rosenbergStrongHashCode()) took 1550 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 1845 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 Coord items each...
- * HashSet took 7807 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * HashSet took 7822 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 Coord items each...
- * ObjectSet took 6650 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * ObjectSet took 6593 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * Region took 372 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * Region took 334 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * BitSet took 339 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * IntSet (Using simple pairing) took 1608 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using NumberPairing.szudzik()) took 1868 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * BitSet took 351 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * Creating 100 sets with 1048576 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 1790 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 Coord items each...
- * CoordSet took 5152 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * CoordSet took 5137 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * </pre>
  * <br>
  */
@@ -67,7 +71,7 @@ public class CoordMapSetReducedLoadTest {
     public static final int REDUCTION = 2;
     public static final int REDUCTION_MASK = (1 << REDUCTION) - 1;
     public static final int REDUCED_CAPACITY = SIZE * SIZE >>> REDUCTION;
-    public static final float LOAD = 0.5f;
+    public static final float LOAD = 0.9f;
 
     @Test
     public void fillHugeObjectSetReducedTest() {
@@ -179,6 +183,34 @@ public class CoordMapSetReducedLoadTest {
             }
         }
         System.out.println("IntSet (Using NumberPairing.szudzik()) took " + (System.currentTimeMillis() - startTime) +
+                " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
+    }
+
+    @Test
+    public void fillHugeIntSetSimpleReducedTest() {
+        IntSet set;
+        {
+            set = new IntSet(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add((x & 0xFFFF) | y << 16);
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE >>> REDUCTION) + " int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new IntSet(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add((x & 0xFFFF) | y << 16);
+                }
+            }
+        }
+        System.out.println("IntSet (Using simple pairing) took " + (System.currentTimeMillis() - startTime) +
                 " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
         System.out.println(set.first());
     }
