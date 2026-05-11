@@ -33,6 +33,11 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
  * After that, you can call {@link #getBiomeCode(int, int)} to get the primary biome code for an area; more specialized
  * methods or fields may be available in implementations.
  * <br>
+ * If you primarily need smooth colors, you should use {@link BlendedBiomeMapper}. If you only need information on which
+ * Biome is at a particular position, you can use {@link SimpleBiomeMapper}, or {@link DetailedBiomeMapper} if you want
+ * Biomes to be able to mix. Most usage will want to prefer the {@link WorldMapView} wrappers when displaying a
+ * BiomeMapper, such as {@link BlendedWorldMapView} for a BlendedBiomeMapper.
+ * <br>
  * You can serialize a BiomeMapper using {@link #stringSerialize()}, which is much like
  * {@link WorldMapGenerator#stringSerialize()} and creates a String that can be read in by a constructor and/or
  * {@code recreateFromString(String)}. The serialized data typically includes the most recently-produced code data for
@@ -384,6 +389,9 @@ public interface BiomeMapper {
     /**
      * A way to get biome information for the cells on a map when you want an area's biome to be a combination of two
      * main biome types, such as "Grassland" or "TropicalRainforest", with the biomes varying in weight between areas.
+     * If you only want colors for biomes (such as for rendering), you will get smoother results using
+     * {@link BlendedBiomeMapper} instead. DetailedBiomeMapper can sometimes have disjointed seams between biomes, while
+     * BlendedBiomeMapper doesn't do that.
      * <br>
      * To use: 1, Construct a DetailedBiomeMapper (constructor takes no arguments). 2, call
      * {@link #makeBiomes(WorldMapGenerator)} with a WorldMapGenerator that has already produced at least one world map.
@@ -750,9 +758,14 @@ public interface BiomeMapper {
      * A very-smoothly-blending BiomeMapper. Unlike the more-complicated usage of {@link DetailedBiomeMapper}, this does
      * not have fine-grained access to which two biomes are mixed at any given point. The reason for this is partly that
      * more than two biomes can affect any given point, and partly that just accessing a mixed color may be much easier.
-     * After you call {@link #makeBiomes(WorldMapGenerator)}, the {@link #colorDataOklab} and {@link #colorDataRgba}
-     * fields will be usable, and will match points on the WorldMapGenerator's latest map with colors appropriate for a
-     * biome at that point. Calling makeBiomes() also assigns to {@link #biomeCodeData}, though this only stores small
+     * <br>
+     * To use, create a BlendedBiomeMapper, optionally call {@link #initialize(float, float, float, float)} if you want
+     * different colors, then call {@link #makeBiomes(WorldMapGenerator)}. That WorldMapGenerator must have already
+     * created a world. After you call makeBiomes(), the {@link #colorDataOklab} and {@link #colorDataRgba} fields will
+     * be usable, and will match points on the WorldMapGenerator's latest map with colors appropriate for a biome at
+     * that point.
+     * <br>
+     * Calling makeBiomes() also assigns to {@link #biomeCodeData}, though this only stores small
      * int values here (between 0 and 65, inclusive) that correspond to indices into {@link Biome#TABLE}. Effectively,
      * this only stores the "dominant" biome at a given location, rather than the mix that went into it.
      * <br>
