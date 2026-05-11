@@ -22,12 +22,34 @@ import org.junit.Test;
 
 import java.util.HashSet;
 
+/**
+ * Current results as of May 10, 2026:
+ * <pre>
+ * Creating 100 sets with 4194304 Coord items each...
+ * ObjectSet took 28887 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 Coord items each...
+ * CoordSet took 22919 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 Coord items each...
+ * HashSet took 25707 ms with CAPACITY=4194304 and LOAD=0.5
+ * </pre>
+ * <br>
+ * <pre>
+ * Creating 100 sets with 4194304 Coord items each...
+ * ObjectSet took 21804 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 Coord items each...
+ * CoordSet took 16794 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 Coord items each...
+ * HashSet took 26620 ms with CAPACITY=4194304 and LOAD=0.9
+ * </pre>
+ * <br>
+ * Definitely use higher load factors with Coord sets!
+ */
 @Ignore
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
     public static final int CAPACITY = SIZE * SIZE;//51;//
-    public static final float LOAD = 0.5f;
+    public static final float LOAD = 0.9f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 54576 ms with CAPACITY=51 and LOAD=0.5

@@ -16,9 +16,14 @@
 
 package com.github.yellowstonegames.grid;
 
+/**
+ * I don't know why this sample exists. It isn't really a test.
+ */
 public class NoiseBoundTest {
     public static void main(String[] args) {
-//        -0.022148 produced by x=359,y=216,freq=0.062500,seed=1
+//        -0.0221480 produced by x=359,y=216,freq=0.062500,seed=1
+        // later...
+//        -0.6103556 produced by x=359,y=216,freq=0.062500,seed=1
         Noise noise = new Noise(1, 0.0625f, Noise.CUBIC, 1);
         noise.setPointHash(new FlawedPointHash.QuiltHash(1, 16));
         float result = noise.getConfiguredNoise(359, 216);
