@@ -28,6 +28,8 @@ If you want to target the browser, save yourself some hassle and just use TeaVM 
 in gdx-liftoff at startup, and it works with Java (better than GWT does, even), Kotlin, Scala, and so on, instead of
 needing pure-Java source code that is specifically targeted at GWT.
 
+## [Javadoc links are listed here.](https://yellowstonegames.github.io/SquidSquad/)
+
 # What?
 SquidSquad is the successor to [SquidLib](https://github.com/yellowstonegames/SquidLib), and can be considered an
 overhaul but not a total rewrite. Like SquidLib, it provides tools for all sorts of procedural generation, and is
