@@ -25,43 +25,51 @@ import java.util.BitSet;
 import java.util.HashSet;
 
 /**
- * Current results as of May 11, 2026:
+ * Current results as of May 12, 2026:
  * <pre>
  * Creating 100 sets with 4194304 int items each...
- * IntSet (Using Coord.rosenbergStrongHashCode()) took 5243 ms with CAPACITY=4194304 and LOAD=0.5
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 4899 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 Coord items each...
- * ObjectSet took 28319 ms with CAPACITY=4194304 and LOAD=0.5
+ * ObjectSet took 28568 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 int items each...
- * Region took 601 ms with CAPACITY=4194304 and LOAD=0.5
+ * Region took 604 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 Coord items each...
- * CoordSet took 20462 ms with CAPACITY=4194304 and LOAD=0.5
- * Creating 100 sets with 4194304 int items each...
- * IntSet (Using simple pairing) took 5292 ms with CAPACITY=4194304 and LOAD=0.5
- * Creating 100 sets with 4194304 int items each...
- * BitSet took 578 ms with CAPACITY=4194304 and LOAD=0.5
+ * CoordSet took 21475 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 Coord items each...
- * HashSet took 24928 ms with CAPACITY=4194304 and LOAD=0.5
+ * CoordPureSet took 15585 ms with CAPACITY=4194304 and LOAD=0.5
  * Creating 100 sets with 4194304 int items each...
- * IntSet (Using NumberPairing.szudzik()) took 6555 ms with CAPACITY=4194304 and LOAD=0.5
+ * IntSet (Using NumberPairing.cantor()) took 5918 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using simple pairing) took 4876 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 int items each...
+ * BitSet took 575 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 Coord items each...
+ * HashSet took 25457 ms with CAPACITY=4194304 and LOAD=0.5
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 6245 ms with CAPACITY=4194304 and LOAD=0.5
  * </pre>
  * <br>
  * <pre>
  * Creating 100 sets with 4194304 int items each...
- * IntSet (Using Coord.rosenbergStrongHashCode()) took 5518 ms with CAPACITY=4194304 and LOAD=0.9
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 5491 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 Coord items each...
- * ObjectSet took 20603 ms with CAPACITY=4194304 and LOAD=0.9
+ * ObjectSet took 22114 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 int items each...
- * Region took 622 ms with CAPACITY=4194304 and LOAD=0.9
+ * Region took 629 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 Coord items each...
- * CoordSet took 14909 ms with CAPACITY=4194304 and LOAD=0.9
- * Creating 100 sets with 4194304 int items each...
- * IntSet (Using simple pairing) took 4947 ms with CAPACITY=4194304 and LOAD=0.9
- * Creating 100 sets with 4194304 int items each...
- * BitSet took 1128 ms with CAPACITY=4194304 and LOAD=0.9
+ * CoordSet took 16954 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 Coord items each...
- * HashSet took 25323 ms with CAPACITY=4194304 and LOAD=0.9
+ * CoordPureSet took 15376 ms with CAPACITY=4194304 and LOAD=0.9
  * Creating 100 sets with 4194304 int items each...
- * IntSet (Using NumberPairing.szudzik()) took 6328 ms with CAPACITY=4194304 and LOAD=0.9
+ * IntSet (Using NumberPairing.cantor()) took 5582 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using simple pairing) took 4950 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 int items each...
+ * BitSet took 539 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 Coord items each...
+ * HashSet took 27067 ms with CAPACITY=4194304 and LOAD=0.9
+ * Creating 100 sets with 4194304 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 6338 ms with CAPACITY=4194304 and LOAD=0.9
  * </pre>
  * <br>
  * Definitely use higher load factors with Coord sets!
@@ -71,7 +79,7 @@ public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;
     public static final int CAPACITY = SIZE * SIZE;//51;//
-    public static final float LOAD = 0.5f;
+    public static final float LOAD = 0.9f;
     /**
      * Creating 100 sets with 4194304 Coord items each...
      * ObjectSet took 54576 ms with CAPACITY=51 and LOAD=0.5
@@ -662,6 +670,32 @@ public class CoordMapSetLoadTest {
             }
         }
         System.out.println("IntSet (Using NumberPairing.szudzik()) took " + (System.currentTimeMillis() - startTime) +
+                " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
+    }
+
+    @Test
+    public void fillHugeIntSetCantorReducedTest() {
+        IntSet set;
+        {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(NumberPairing.cantor(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + CAPACITY + " int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new IntSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(NumberPairing.cantor(x, y));
+                }
+            }
+        }
+        System.out.println("IntSet (Using NumberPairing.cantor()) took " + (System.currentTimeMillis() - startTime) +
                 " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
         System.out.println(set.first());
     }
