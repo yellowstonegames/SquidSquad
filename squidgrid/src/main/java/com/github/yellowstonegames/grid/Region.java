@@ -28,10 +28,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.LZSEncoding;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Region encoding of on/off information about areas using bitsets; uncompressed but fast at bulk operations.
@@ -127,7 +124,7 @@ import java.util.List;
  * of the overloads of refill(). These re-methods don't do as much work as a constructor does if the width and height
  * of their argument are identical to their current width and height, and don't create more garbage for the GC.
  */
-public class Region implements Collection<Coord> {
+public class Region implements Set<Coord> {
     public long[] data;
     public int height;
     public int width;
@@ -8200,12 +8197,31 @@ public class Region implements Collection<Coord> {
         return into;
     }
 
+    /**
+     * Checks for equality as defined by the {@link Set} interface. The given Object is only considered
+     * equal if it also implements Set, has the same {@link Set#size()}, and has the same contents.
+     * You may want to prefer {@link #equalsRegion(Region)} when specifically comparing Regions for equality, since
+     * it also checks that the height and width are identical. The height and width aren't considered part of the
+     * definition of Set equality, but if they matter for your purposes, use equalsRegion().
+     *
+     * @param o object to be compared for equality with this set
+     * @return true if {@code o} is any Set with the same size and contents
+     */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == this)
+            return true;
 
-        Region that = (Region) o;
+        if (!(o instanceof Set))
+            return false;
+        Collection<?> c = (Collection<?>) o;
+        if (c.size() != size())
+            return false;
+        return containsAll(c);
+    }
+
+    public boolean equalsRegion(Region that) {
+        if (this == that) return true;
 
         if (height != that.height) return false;
         if (width != that.width) return false;
@@ -8214,10 +8230,42 @@ public class Region implements Collection<Coord> {
         return Arrays.equals(data, that.data);
     }
 
+    /**
+     * Implements hashCode() according to the rules a Set must obey. That is, the hashCode() of a Set is the sum of
+     * the hashCode() results for all items in that Set. This is likely slower than casting {@link #hash64()} to int.
+     * This implementation avoids creating or retrieving any Coord items, and only calculates the sum of all hash codes.
+     *
+     * @return a Set hash code, or, the sum of the hashCode() of each Coord in the Region.
+     */
     @Override
     public int hashCode() {
-        return Hasher.gremory.hash(data) ^ (int)Hasher.randomize2(Hasher.randomize2(height) + width);
+        int hash = 0;
+        long t, w;
+        for (int x = 0; x < width; x++) {
+            for (int s = 0; s < ySections; s++) {
+                if((t = data[x * ySections + s]) != 0)
+                {
+                    w = BitConversion.lowestOneBit(t);
+                    while (w != 0) {
+                        hash += Coord.signedRosenbergStrongHashCode(x, (s << 6) | Long.numberOfTrailingZeros(w));
+                        t ^= w;
+                        w = BitConversion.lowestOneBit(t);
+                    }
+                }
+            }
+        }
+        return hash;
     }
+
+    /**
+     * Computes a 64-bit hash code of this Region with a constant seed.
+     * This will produce identical hash codes for identical Regions, but does not obey the rules for Set hashing.
+     * Use {@link #hashCode()} if you need Set-compatible hashes (which are sums of the hash codes of all items).
+     * <br>
+     * Meant for potential use in Bloom filters. Uses {@link Hasher#hash64(long[])} with {@link Hasher#gremory} and
+     * also combines that hash with hashes of height and width.
+     * @return a 64-bit hash code for this Region
+     */
     public long hash64() {
         return Hasher.gremory.hash64(data) ^ Hasher.randomize2(Hasher.randomize2(height) + width);
     }
@@ -8226,7 +8274,8 @@ public class Region implements Collection<Coord> {
      * Computes a 64-bit hash code of this Region given a 64-bit seed; even if given two very similar seeds,
      * this should produce very different hash codes for the same Region.
      * <br>
-     * Meant for potential use in Bloom filters. Uses {@link Hasher}'s algorithm(s).
+     * Meant for potential use in Bloom filters. Uses {@link Hasher#hash64(long, long[])} and also combines that
+     * hash with hashes of height and width.
      * @param seed a seed that will determine how the hashing algorithm works; all 64 bits are used.
      * @return a 64-bit hash code for this Region
      */
