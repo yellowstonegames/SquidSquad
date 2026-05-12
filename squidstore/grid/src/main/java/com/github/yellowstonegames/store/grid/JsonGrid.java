@@ -397,7 +397,7 @@ public final class JsonGrid {
     /**
      * Registers Region with the given Json object, so Region can be written to and read from JSON.
      * This is a simple wrapper around Region's built-in {@link Region#stringSerialize()} and
-     * {@link Region#stringDeserialize(String)} methods.
+     * {@link Region#recreateFromString(String)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -412,7 +412,7 @@ public final class JsonGrid {
             @Override
             public Region read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return Region.stringDeserialize(jsonData.asString());
+                return Region.recreateFromString(jsonData.asString());
             }
         });
     }

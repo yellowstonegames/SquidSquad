@@ -8284,30 +8284,73 @@ public class Region implements Set<Coord> {
         return Hasher.hash64(seed, data) ^ Hasher.randomize2(Hasher.randomize2(height) + width);
     }
 
+    /**
+     * Gets a serialized form of this Region as a single String, storing its width, height, and contents.
+     * The serialized form can be read by {@link #stringDeserialize(String)}, which will mutate an existing Region,
+     * or {@link #recreateFromString(String)}, which will create a new Region.
+     *
+     * @return a String that can be read by {@link #stringDeserialize(String)} or {@link #recreateFromString(String)}
+     */
     public String stringSerialize()
     {
         return width +
                 "," + height +
-                "," + Base.SIMPLE64.join(",", data);
+                "," + Base.joinReadable(",", data);
     }
-    public static Region stringDeserialize(String s)
+
+    /**
+     * Mutates this Region so its contents match the serialized data in {@code s}. The given String should have been
+     * produced by {@link #stringSerialize()}.
+     *
+     * @param s a String that should have been produced by {@link #stringSerialize()}
+     * @return this Region, after modification
+     */
+    public Region stringDeserialize(String s){
+        if(s == null || s.isEmpty())
+            return this;
+        int gap = s.indexOf(',');
+        width = Base.BASE10.readInt(s, 0, gap);
+        int gap2 = s.indexOf(',', gap+1);
+        height = Base.BASE10.readInt(s, gap+1, gap2);
+        data = Base.longSplitReadable(s, ",", gap2 + 1, s.length());
+        ySections = (height + 63) >> 6;
+        yEndMask = -1L >>> (64 - (height & 63));
+        if(ySections > 0 && yEndMask != -1) {
+            for (int a = ySections - 1; a < data.length; a += ySections) {
+                data[a] &= yEndMask;
+            }
+        }
+        if(counts.length != width * ySections) {
+            counts = new int[width * ySections];
+        }
+        tallied = false;
+
+        return this;
+
+    }
+
+    /**
+     * Creates a new Region with the same contents stored in {@code s}, which should have been produced by
+     * {@link #stringSerialize()}.
+     *
+     * @param s a String that should have been produced by {@link #stringSerialize()}
+     * @return a new Region with the same contents serialized into {@code s}
+     */
+    public static Region recreateFromString(String s)
     {
         if(s == null || s.isEmpty())
             return null;
-        int gap = s.indexOf(','), w = Integer.parseInt(s.substring(0, gap)),
-                gap2 = s.indexOf(',', gap+1), h = Integer.parseInt(s.substring(gap+1, gap2));
-        long[] data = Base.SIMPLE64.longSplit(s, ",", gap2 + 1, s.length());
-//        String[] splits = StringTools.split(s.substring(gap2+1), ",");
-//        long[] data = new long[splits.length];
-//        for (int i = 0; i < splits.length; i++) {
-//            data[i] = DigitTools.longFromDec(splits[i]);
-//        }
-        return new Region(data, w, h);
+        int gap = s.indexOf(',');
+        int w = Base.BASE10.readInt(s, 0, gap);
+        int gap2 = s.indexOf(',', gap+1);
+        int h = Base.BASE10.readInt(s, gap+1, gap2);
+        return new Region(w, h).stringDeserialize(s);
     }
 
     /**
      * Constructs a Region using a vararg for data. Primarily meant for generated code, since
      * {@link #stringSerialize()} produces a String that happens to be a valid parameter list for this method.
+     *
      * @param width width of the Region to produce
      * @param height height of the Region to produce
      * @param data array or vararg of long containing the exact data, probably from an existing Region
