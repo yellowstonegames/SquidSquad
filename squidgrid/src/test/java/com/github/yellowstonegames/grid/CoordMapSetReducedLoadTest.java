@@ -24,47 +24,59 @@ import java.util.BitSet;
 import java.util.HashSet;
 
 /**
- * Current results as of May 10, 2026, with REDUCTION=2 (reducing used coords with ">>> 2"):
+ * Current results as of May 12, 2026, with REDUCTION=2 (reducing used coords with ">>> 2"):
  * <pre>
  * Creating 100 sets with 1048576 Coord items each...
- * CoordPureSet took 6636 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * CoordPureSet took 6933 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using Coord.rosenbergStrongHashCode()) took 1823 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 1876 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 Coord items each...
- * HashSet took 8867 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * HashSet took 9661 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 Coord items each...
- * ObjectSet took 10951 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * ObjectSet took 11151 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * Region took 337 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * Region took 331 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * Creating 100 sets with 1048576 Point2Int items each...
+ * HashSet of Point2Int took 10489 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using simple pairing) took 1695 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * IntSet (Using NumberPairing.cantor()) took 1678 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * BitSet took 685 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * IntSet (Using simple pairing) took 1595 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * Creating 100 sets with 1048576 Point2Int items each...
+ * ObjectSet of Point2Int took 7072 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using NumberPairing.szudzik()) took 1827 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * BitSet took 353 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * Creating 100 sets with 1048576 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 1826 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * Creating 100 sets with 1048576 Coord items each...
- * CoordSet took 7999 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
+ * CoordSet took 8772 ms with REDUCED_CAPACITY=1048576 and LOAD=0.5
  * </pre>
  * <br>
  * <pre>
  * Creating 100 sets with 1048576 Coord items each...
- * CoordPureSet took 6274 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * CoordPureSet took 6952 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using Coord.rosenbergStrongHashCode()) took 1841 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * IntSet (Using Coord.rosenbergStrongHashCode()) took 1844 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 Coord items each...
- * HashSet took 10180 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * HashSet took 10597 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 Coord items each...
- * ObjectSet took 8585 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * ObjectSet took 8527 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * Region took 622 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * Region took 354 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * Creating 100 sets with 1048576 Point2Int items each...
+ * HashSet of Point2Int took 12345 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using simple pairing) took 1646 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * IntSet (Using NumberPairing.cantor()) took 1671 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * BitSet took 668 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * IntSet (Using simple pairing) took 1667 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * Creating 100 sets with 1048576 Point2Int items each...
+ * ObjectSet of Point2Int took 4360 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 int items each...
- * IntSet (Using NumberPairing.szudzik()) took 1799 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * BitSet took 378 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * Creating 100 sets with 1048576 int items each...
+ * IntSet (Using NumberPairing.szudzik()) took 1809 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * Creating 100 sets with 1048576 Coord items each...
- * CoordSet took 6964 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
+ * CoordSet took 6826 ms with REDUCED_CAPACITY=1048576 and LOAD=0.9
  * </pre>
  * <br>
  */
@@ -75,7 +87,7 @@ public class CoordMapSetReducedLoadTest {
     public static final int REDUCTION = 2;
     public static final int REDUCTION_MASK = (1 << REDUCTION) - 1;
     public static final int REDUCED_CAPACITY = SIZE * SIZE >>> REDUCTION;
-    public static final float LOAD = 0.5f;
+    public static final float LOAD = 0.9f;
 
     @Test
     public void fillHugeObjectSetReducedTest() {
@@ -360,6 +372,62 @@ public class CoordMapSetReducedLoadTest {
         System.out.println("CoordPureSet took " + (System.currentTimeMillis() - startTime) +
                 " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
         System.out.println(set.first());
+    }
+
+    @Test
+    public void fillHugePoint2IntObjectSetReducedTest() {
+        ObjectSet<Point2Int> set;
+        {
+            set = new ObjectSet<>(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add(new Point2Int(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE >>> REDUCTION) + " Point2Int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new ObjectSet<>(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add(new Point2Int(x, y));
+                }
+            }
+        }
+        System.out.println("ObjectSet of Point2Int took " + (System.currentTimeMillis() - startTime) +
+                " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
+    }
+
+    @Test
+    public void fillHugePoint2IntHashSetReducedTest() {
+        HashSet<Point2Int> set;
+        {
+            set = new HashSet<>(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add(new Point2Int(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE >>> REDUCTION) + " Point2Int items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new HashSet<>(REDUCED_CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    if((NumberPairing.cantor(x, y) & REDUCTION_MASK) == 0)
+                        set.add(new Point2Int(x, y));
+                }
+            }
+        }
+        System.out.println("HashSet of Point2Int took " + (System.currentTimeMillis() - startTime) +
+                " ms with REDUCED_CAPACITY=" + REDUCED_CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.iterator().next());
     }
 
 }
