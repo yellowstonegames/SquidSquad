@@ -744,4 +744,32 @@ public class CoordMapSetLoadTest {
                 " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
         System.out.println(set.first());
     }
+
+    @Test
+    public void fillHugeCoordPureSetTest() {
+        Coord.expandPoolTo(2048, 2048);
+        CoordPureSet set;
+        {
+            set = new CoordPureSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(Coord.get(x, y));
+                }
+            }
+        }
+        System.out.println("Creating " + LIMIT + " sets with " + (SIZE * SIZE) + " Coord items each...");
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < LIMIT; i++) {
+            set = new CoordPureSet(CAPACITY, LOAD);
+            for (int x = 0; x < SIZE; x++) {
+                for (int y = 0; y < SIZE; y++) {
+                    set.add(Coord.get(x, y));
+                }
+            }
+        }
+        System.out.println("CoordPureSet took " + (System.currentTimeMillis() - startTime) +
+                " ms with CAPACITY=" + CAPACITY + " and LOAD=" + LOAD);
+        System.out.println(set.first());
+    }
+
 }
