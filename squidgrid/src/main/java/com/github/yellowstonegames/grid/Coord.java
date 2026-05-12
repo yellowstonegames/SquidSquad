@@ -1030,40 +1030,42 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     }
 
     /**
-     * Something like hashCode(), but reversible with {@code Coord.decode()}. Works for Coords between roughly -256 and
-     * 32000 in each of x and y, but will probably only decode to pooled Coords if x and y are both between -3 and 255
-     * (inclusive for both).
+     * Quickly combines the 16-bit x and 16-bit y into one 32-bit int.
+     * Can be read back with {@code Coord.decode()}. Works for any Coord.
+     * Keep in mind that only Coords with x and y that are each -3 or greater will be pooled; all others will
+     * need to be allocated when read back.
      *
      * @return an int as a unique code for this Coord
      */
     public int encode() {
-        return ((x + 256) << 16) ^ (y + 256);
+        return (x << 16) | (y & 0xFFFF);
     }
 
     /**
      * An alternative to getting a Coord with Coord.get() only to encode() it as the next step. This doesn't create a
      * Coord in the middle step. Can be decoded with Coord.decode() to get the (x,y) Coord.
+     * Keep in mind that only Coords with x and y that are each -3 or greater will be pooled; all others will
+     * need to be allocated when read back.
      *
      * @param x the x position to encode
      * @param y the y position to encode
      * @return the coded int that a Coord at (x,y) would produce with encode()
      */
     public static int pureEncode(final int x, final int y) {
-        return ((x + 256) << 16) ^ (y + 256);
+        return (x << 16) | (y & 0xFFFF);
     }
 
     /**
-     * This can take an int produced by {@code someCoord.encode()} and get the original Coord back out of it. It
-     * works for all pooled Coords where the pool hasn't been expanded past about 32,000 in either dimension. It even
-     * works for Coords with negative x or y as well, if they are no lower than -256 in either dimension. This will
-     * almost certainly fail (producing a gibberish Coord that probably won't be pooled) on hashes produced by any other
-     * class, including subclasses of Coord.
+     * This can take an int produced by {@link #encode()} and get the original Coord back out of it. It
+     * works for Coords with negative x or y as well.
+     * Keep in mind that only Coords with x and y that are each -3 or greater will be pooled; all others will
+     * need to be allocated when read back.
      *
-     * @param code an encoded int from a Coord, but not a subclass of Coord
-     * @return the Coord that gave hash as its hashCode()
+     * @param code an encoded int from {@link Coord#encode()} or {@link #pureEncode(int, int)}
+     * @return the Coord that was encoded
      */
     public static Coord decode(final int code) {
-        return get((code >>> 16) - 256, (code & 0xFFFF) - 256);
+        return get((code >> 16), (short)code);
     }
 
     @Override
