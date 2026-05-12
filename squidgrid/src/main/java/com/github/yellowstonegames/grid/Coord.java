@@ -1068,6 +1068,28 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
         return get((code >> 16), (short)code);
     }
 
+    /**
+     * This can take an int produced by {@link #pureEncode(int, int)} and get the original x-value back out of it.
+     * This works for encoded ints with negative x as well.
+     *
+     * @param code an encoded int from {@link Coord#encode()} or {@link #pureEncode(int, int)}
+     * @return the x-value that was encoded
+     */
+    public static int pureDecodeX(final int code) {
+        return (code >> 16);
+    }
+
+    /**
+     * This can take an int produced by {@link #pureEncode(int, int)} and get the original y-value back out of it.
+     * This works for encoded ints with negative y as well.
+     *
+     * @param code an encoded int from {@link Coord#encode()} or {@link #pureEncode(int, int)}
+     * @return the y-value that was encoded
+     */
+    public static int pureDecodeY(final int code) {
+        return (short)code;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof Coord) {
