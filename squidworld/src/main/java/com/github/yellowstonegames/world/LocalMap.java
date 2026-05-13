@@ -47,10 +47,9 @@ public class LocalMap extends WorldMapGenerator {
 
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
-     * Always makes a 256x128 map.
+     * Constructs a concrete WorldMapGenerator for a map without projecting the
+     * land positions or changing heat by latitude.
+     * This constructor always makes a 256x128 map.
      * Uses Noise as its noise generator, with 1f as the octave multiplier affecting detail.
      * If you were using {@link com.github.yellowstonegames.world.LocalMap#LocalMap(long, int, int, INoise, float)}, then this would be the
      * same as passing the parameters {@code 0x1337BABE1337D00DL, 256, 128, new Noise(DEFAULT_NOISE), 1f}.
@@ -60,9 +59,8 @@ public class LocalMap extends WorldMapGenerator {
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map without projecting the
+     * land positions or changing heat by latitude.
      * Takes only the width/height of the map. The initial seed is set to the same large long
      * every time, and it's likely that you would set the seed when you call {@link #generate(long, long)}. The width and
      * height of the map cannot be changed after the fact, but you can zoom in.
@@ -76,9 +74,8 @@ public class LocalMap extends WorldMapGenerator {
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map without projecting the
+     * land positions or changing heat by latitude.
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
@@ -93,9 +90,8 @@ public class LocalMap extends WorldMapGenerator {
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map without projecting the
+     * land positions or changing heat by latitude.
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
@@ -111,9 +107,8 @@ public class LocalMap extends WorldMapGenerator {
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map without projecting the
+     * land positions or changing heat by latitude.
      * Takes an initial seed and the width/height of the map. The {@code initialSeed}
      * parameter may or may not be used, since you can specify the seed to use when you call {@link #generate(long, long)}.
      * The width and height of the map cannot be changed after the fact, but you can zoom in.
@@ -129,9 +124,8 @@ public class LocalMap extends WorldMapGenerator {
     }
 
     /**
-     * Constructs a concrete WorldMapGenerator for a map that can be used to wrap a sphere (as with a texture on a
-     * 3D model), with seamless east-west wrapping, no north-south wrapping, and distortion that causes the poles to
-     * have significantly-exaggerated-in-size features while the equator is not distorted.
+     * Constructs a concrete WorldMapGenerator for a map without projecting the
+     * land positions or changing heat by latitude.
      * Takes an initial seed, the width/height of the map, and parameters for noise
      * generation (a {@link Noise} implementation, which is usually {@link Noise#instance}, and a
      * multiplier on how many octaves of noise to use, with 1f being normal (high) detail and higher multipliers
