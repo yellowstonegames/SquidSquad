@@ -264,6 +264,19 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2
         this.y -= y;
         return this;
     }
+
+    public Point2Int add(Direction direction) {
+        this.x += direction.deltaX;
+        this.y += direction.deltaY;
+        return this;
+    }
+
+    public Point2Int subtract(Direction direction) {
+        this.x -= direction.deltaX;
+        this.y -= direction.deltaY;
+        return this;
+    }
+
     public Point2Int subtract(int x, int y) {
         return sub(x, y);
     }

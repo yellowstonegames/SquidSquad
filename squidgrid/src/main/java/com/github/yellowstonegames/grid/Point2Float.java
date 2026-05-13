@@ -79,6 +79,19 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
         y -= point.y();
         return this;
     }
+
+    public Point2Float add(Direction direction) {
+        this.x += direction.deltaX;
+        this.y += direction.deltaY;
+        return this;
+    }
+
+    public Point2Float subtract(Direction direction) {
+        this.x -= direction.deltaX;
+        this.y -= direction.deltaY;
+        return this;
+    }
+
     public Point2Float subtract(Point2<?> point) {
         return sub(point);
     }

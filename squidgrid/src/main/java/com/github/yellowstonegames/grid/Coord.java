@@ -519,7 +519,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @return The coordinate obtained by applying {@code d} on {@code this}.
      */
     public Coord translate(final Direction d) {
-        return add(d.coord);
+        return translate(d.deltaX, d.deltaY);
     }
 
     /**
