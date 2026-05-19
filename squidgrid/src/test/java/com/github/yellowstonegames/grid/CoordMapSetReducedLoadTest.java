@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.IntSet;
 import com.github.tommyettinger.ds.ObjectSet;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.BitSet;
@@ -80,7 +81,7 @@ import java.util.HashSet;
  * </pre>
  * <br>
  */
-//@Ignore
+@Ignore
 public class CoordMapSetReducedLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;

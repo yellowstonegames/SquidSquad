@@ -82,7 +82,7 @@ import java.util.HashSet;
  * <br>
  * Definitely use higher load factors with Coord sets!
  */
-//@Ignore
+@Ignore
 public class CoordMapSetLoadTest {
     public static final int LIMIT = 100;
     public static final int SIZE = 2048;

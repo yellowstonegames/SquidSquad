@@ -167,8 +167,8 @@ public final class MoreActions {
 
     static {
         // required since libGDX 1.14.0
-        Actions.registerAction(LenientParallelAction::new);
-        Actions.registerAction(LenientSequenceAction::new);
+        Actions.registerAction(LenientParallelAction.class, LenientParallelAction::new);
+        Actions.registerAction(LenientSequenceAction.class, LenientSequenceAction::new);
     }
 
     public static LenientSequenceAction sequence (Action action1) {
