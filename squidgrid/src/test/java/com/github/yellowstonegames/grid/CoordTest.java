@@ -1,10 +1,55 @@
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.TrigTools;
+import org.junit.Assert;
+import org.junit.Test;
+
 public class CoordTest {
+
+    @Test
+    public void testRotateAround() {
+        Coord origin = Coord.get(5, 5);
+        Coord rotating = Coord.get(5, 4);
+        Coord rotated;
+        {
+            // radians
+            rotated = rotating.rotateAroundRadians(origin, TrigTools.HALF_PI);
+            Assert.assertEquals(Coord.get(6, 5), rotated);
+            rotated = rotating.rotateAroundRadians(origin, TrigTools.PI);
+            Assert.assertEquals(Coord.get(5, 6), rotated);
+            rotated = rotating.rotateAroundRadians(origin, -TrigTools.HALF_PI);
+            Assert.assertEquals(Coord.get(4, 5), rotated);
+            rotated = rotating.rotateAroundRadians(origin, TrigTools.PI2);
+            Assert.assertEquals(rotating, rotated);
+        }
+        {
+            // degrees
+            rotated = rotating.rotateAroundDegrees(origin, 90);
+            Assert.assertEquals(Coord.get(6, 5), rotated);
+            rotated = rotating.rotateAroundDegrees(origin, 180);
+            Assert.assertEquals(Coord.get(5, 6), rotated);
+            rotated = rotating.rotateAroundDegrees(origin, -90);
+            Assert.assertEquals(Coord.get(4, 5), rotated);
+            rotated = rotating.rotateAroundDegrees(origin, 360);
+            Assert.assertEquals(rotating, rotated);
+        }
+        {
+            // turns
+            rotated = rotating.rotateAroundTurns(origin, 0.25f);
+            Assert.assertEquals(Coord.get(6, 5), rotated);
+            rotated = rotating.rotateAroundTurns(origin, 0.5f);
+            Assert.assertEquals(Coord.get(5, 6), rotated);
+            rotated = rotating.rotateAroundTurns(origin, -0.25f);
+            Assert.assertEquals(Coord.get(4, 5), rotated);
+            rotated = rotating.rotateAroundTurns(origin, 1f);
+            Assert.assertEquals(rotating, rotated);
+        }
+    }
+
     /**
      * All unique!
      */
-    public void testSignedRosenbergStrongMultiplyUniqueness() {
+    public void checkSignedRosenbergStrongMultiplyUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
@@ -20,7 +65,7 @@ public class CoordTest {
     /**
      * All unique!
      */
-    public void testSignedRosenbergStrongUniqueness() {
+    public void checkSignedRosenbergStrongUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
@@ -36,7 +81,7 @@ public class CoordTest {
     /**
      * Inverse works for all inputs!
      */
-    public void testSignedRosenbergStrongInverse() {
+    public void checkSignedRosenbergStrongInverse() {
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
                 int code = Coord.signedRosenbergStrongHashCode(x, y);
@@ -52,7 +97,7 @@ public class CoordTest {
     /**
      * Inverse works for all inputs!
      */
-    public void testSignedRosenbergStrongMultiplyInverse() {
+    public void checkSignedRosenbergStrongMultiplyInverse() {
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
                 int code = Coord.signedRosenbergStrongMultiplyHashCode(x, y);
@@ -65,7 +110,7 @@ public class CoordTest {
         }
     }
 
-    public void testRosenbergStrongUniqueness() {
+    public void checkRosenbergStrongUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
@@ -82,7 +127,7 @@ public class CoordTest {
     /**
      * Not all unique...
      */
-    public void testSignedCantorUniqueness() {
+    public void checkSignedCantorUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
@@ -98,7 +143,7 @@ public class CoordTest {
     /**
      * Not all unique, but with a small enough limit... 23169 passes.
      */
-    public void testLimitedSignedCantorUniqueness(int limit) {
+    public void checkLimitedSignedCantorUniqueness(int limit) {
         long[] bits = new long[1<<26];
         for (int x = -limit; x <= limit; x++) {
             for (int y = -limit; y <= limit; y++) {
@@ -114,7 +159,7 @@ public class CoordTest {
     /**
      * Not all unique... at all...
      */
-    public void testCantorUniqueness() {
+    public void checkCantorUniqueness() {
         long[] bits = new long[1<<26];
         for (int x = -32768; x <= 32767; x++) {
             for (int y = -32768; y <= 32767; y++) {
@@ -133,7 +178,7 @@ public class CoordTest {
      * @param lowerLimit lower inclusive limit
      * @param upperLimit upper inclusive limit
      */
-    public void testLimitedCantorUniqueness(int lowerLimit, int upperLimit) {
+    public void checkLimitedCantorUniqueness(int lowerLimit, int upperLimit) {
         long[] bits = new long[1<<26];
         for (int x = lowerLimit; x <= upperLimit; x++) {
             for (int y = lowerLimit; y <= upperLimit; y++) {
@@ -149,9 +194,9 @@ public class CoordTest {
     public static void main(String[] args) {
 //        System.out.printf(" 0x%08X ", MathTools.modularMultiplicativeInverse(0x9E3779B9)); // 0x144CBC89
 //        System.out.printf(" 0x%08X ", (0x7FFF * 0x7FFF + 0x7FFF + 0x7FFF - 0)); // 0x3FFFFFFF
-        new CoordTest().testSignedRosenbergStrongInverse(); // passes!
+        new CoordTest().checkSignedRosenbergStrongInverse(); // passes!
 //        new CoordTest().testSignedRosenbergStrongMultiplyInverse(); // passes!
-        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes!
+        new CoordTest().checkSignedRosenbergStrongUniqueness(); // passes!
 //        new CoordTest().testSignedRosenbergStrongUniqueness(); // passes! but, requires 16-bit x and y.
 //        new CoordTest().testRosenbergStrongUniqueness(); // passes!
 //        new CoordTest().testSignedCantorUniqueness(); // fails!

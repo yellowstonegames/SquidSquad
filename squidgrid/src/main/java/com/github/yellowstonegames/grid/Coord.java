@@ -189,7 +189,6 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     public static Coord rotateAroundRadians(float rotatingX, float rotatingY, float originX, float originY, float radians){
         rotatingX -= originX;
         rotatingY -= originY;
-        radians += TrigTools.atan2Finite(rotatingY, rotatingX);
         float c = TrigTools.cos(radians);
         float s = TrigTools.sin(radians);
         return Coord.get(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
@@ -234,7 +233,6 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     public static Coord rotateAroundDegrees(float rotatingX, float rotatingY, float originX, float originY, float degrees){
         rotatingX -= originX;
         rotatingY -= originY;
-        degrees += TrigTools.atan2DegFinite(rotatingY, rotatingX);
         float c = TrigTools.cosDeg(degrees);
         float s = TrigTools.sinDeg(degrees);
         return Coord.get(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
@@ -279,7 +277,6 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     public static Coord rotateAroundTurns(float rotatingX, float rotatingY, float originX, float originY, float turns){
         rotatingX -= originX;
         rotatingY -= originY;
-        turns += TrigTools.atan2TurnsFinite(rotatingY, rotatingX);
         float c = TrigTools.cosTurns(turns);
         float s = TrigTools.sinTurns(turns);
         return Coord.get(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
