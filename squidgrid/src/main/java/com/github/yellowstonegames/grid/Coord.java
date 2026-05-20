@@ -176,6 +176,141 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
     }
 
     /**
+     * Gets a Coord produced by rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code radians}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move the rotating point around the origin
+     * @return a Coord rounded from the rotation of {@code (rotatingX, rotatingY)} around {@code (originX, originY)}
+     */
+    public static Coord rotateAroundRadians(float rotatingX, float rotatingY, float originX, float originY, float radians){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        radians += TrigTools.atan2Finite(rotatingY, rotatingX);
+        float c = TrigTools.cos(radians);
+        float s = TrigTools.sin(radians);
+        return Coord.get(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
+    }
+
+    /**
+     * Gets a Coord produced by rotating this Coord around the point
+     * {@code (originX, originY)} by the given rotation in {@code radians}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move this Coord around the origin
+     * @return a Coord rounded from the rotation of this Coord around {@code (originX, originY)}
+     */
+    public Coord rotateAroundRadians(float originX, float originY, float radians){
+        return rotateAroundRadians(this.x, this.y, originX, originY, radians);
+    }
+
+    /**
+     * Gets a Coord produced by rotating this Coord around the point
+     * {@code origin} by the given rotation in {@code radians}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param origin the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move this Coord around the origin
+     * @return a Coord rounded from the rotation of this Coord around origin
+     */
+    public Coord rotateAroundRadians(Coord origin, float radians){
+        return rotateAroundRadians(this.x, this.y, origin.x, origin.y, radians);
+    }
+
+    /**
+     * Gets a Coord produced by rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code degrees}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move the rotating point around the origin
+     * @return a Coord rounded from the rotation of {@code (rotatingX, rotatingY)} around {@code (originX, originY)}
+     */
+    public static Coord rotateAroundDegrees(float rotatingX, float rotatingY, float originX, float originY, float degrees){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        degrees += TrigTools.atan2DegFinite(rotatingY, rotatingX);
+        float c = TrigTools.cosDeg(degrees);
+        float s = TrigTools.sinDeg(degrees);
+        return Coord.get(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
+    }
+
+    /**
+     * Gets a Coord produced by rotating this Coord around the point
+     * {@code (originX, originY)} by the given rotation in {@code degrees}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move this Coord around the origin
+     * @return a Coord rounded from the rotation of this Coord around {@code (originX, originY)}
+     */
+    public Coord rotateAroundDegrees(float originX, float originY, float degrees){
+        return rotateAroundDegrees(this.x, this.y, originX, originY, degrees);
+    }
+
+    /**
+     * Gets a Coord produced by rotating this Coord around the point
+     * {@code origin} by the given rotation in {@code degrees}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param origin the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move this Coord around the origin
+     * @return a Coord rounded from the rotation of this Coord around origin
+     */
+    public Coord rotateAroundDegrees(Coord origin, float degrees){
+        return rotateAroundDegrees(this.x, this.y, origin.x, origin.y, degrees);
+    }
+
+    /**
+     * Gets a Coord produced by rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code turns}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move the rotating point around the origin
+     * @return a Coord rounded from the rotation of {@code (rotatingX, rotatingY)} around {@code (originX, originY)}
+     */
+    public static Coord rotateAroundTurns(float rotatingX, float rotatingY, float originX, float originY, float turns){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        turns += TrigTools.atan2TurnsFinite(rotatingY, rotatingX);
+        float c = TrigTools.cosTurns(turns);
+        float s = TrigTools.sinTurns(turns);
+        return Coord.get(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
+    }
+
+    /**
+     * Gets a Coord produced by rotating this Coord around the point
+     * {@code (originX, originY)} by the given rotation in {@code turns}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move this Coord around the origin
+     * @return a Coord rounded from the rotation of this Coord around {@code (originX, originY)}
+     */
+    public Coord rotateAroundTurns(float originX, float originY, float turns){
+        return rotateAroundTurns(this.x, this.y, originX, originY, turns);
+    }
+
+    /**
+     * Gets a Coord produced by rotating this Coord around the point
+     * {@code origin} by the given rotation in {@code turns}. This rounds the x and y
+     * of the returned Coord to the nearest integer values.
+     * @param origin the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move this Coord around the origin
+     * @return a Coord rounded from the rotation of this Coord around origin
+     */
+    public Coord rotateAroundTurns(Coord origin, float turns){
+        return rotateAroundTurns(this.x, this.y, origin.x, origin.y, turns);
+    }
+
+    /**
      * Provided for compatibility with earlier code that used the AWT Point API.
      *
      * @return this Coord, without changes
