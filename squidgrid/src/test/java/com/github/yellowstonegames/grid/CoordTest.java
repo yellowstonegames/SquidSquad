@@ -13,35 +13,62 @@ public class CoordTest {
         Coord rotated;
         {
             // radians
-            rotated = rotating.rotateAroundRadians(origin, TrigTools.HALF_PI);
+            float octant = TrigTools.HALF_PI * 0.5f;
+            rotated = rotating.rotateAroundRadians(origin, octant);
+            Assert.assertEquals(Coord.get(6, 4), rotated);
+            rotated = rotating.rotateAroundRadians(origin, octant * 2);
             Assert.assertEquals(Coord.get(6, 5), rotated);
-            rotated = rotating.rotateAroundRadians(origin, TrigTools.PI);
+            rotated = rotating.rotateAroundRadians(origin, octant * 3);
+            Assert.assertEquals(Coord.get(6, 6), rotated);
+            rotated = rotating.rotateAroundRadians(origin, octant * 4);
             Assert.assertEquals(Coord.get(5, 6), rotated);
-            rotated = rotating.rotateAroundRadians(origin, -TrigTools.HALF_PI);
+            rotated = rotating.rotateAroundRadians(origin, octant * 5);
+            Assert.assertEquals(Coord.get(4, 6), rotated);
+            rotated = rotating.rotateAroundRadians(origin, octant * 6);
             Assert.assertEquals(Coord.get(4, 5), rotated);
-            rotated = rotating.rotateAroundRadians(origin, TrigTools.PI2);
+            rotated = rotating.rotateAroundRadians(origin, octant * 7);
+            Assert.assertEquals(Coord.get(4, 4), rotated);
+            rotated = rotating.rotateAroundRadians(origin, octant * 8);
             Assert.assertEquals(rotating, rotated);
         }
         {
             // degrees
-            rotated = rotating.rotateAroundDegrees(origin, 90);
+            float octant = 45f;
+            rotated = rotating.rotateAroundDegrees(origin, octant);
+            Assert.assertEquals(Coord.get(6, 4), rotated);
+            rotated = rotating.rotateAroundDegrees(origin, octant * 2);
             Assert.assertEquals(Coord.get(6, 5), rotated);
-            rotated = rotating.rotateAroundDegrees(origin, 180);
+            rotated = rotating.rotateAroundDegrees(origin, octant * 3);
+            Assert.assertEquals(Coord.get(6, 6), rotated);
+            rotated = rotating.rotateAroundDegrees(origin, octant * 4);
             Assert.assertEquals(Coord.get(5, 6), rotated);
-            rotated = rotating.rotateAroundDegrees(origin, -90);
+            rotated = rotating.rotateAroundDegrees(origin, octant * 5);
+            Assert.assertEquals(Coord.get(4, 6), rotated);
+            rotated = rotating.rotateAroundDegrees(origin, octant * 6);
             Assert.assertEquals(Coord.get(4, 5), rotated);
-            rotated = rotating.rotateAroundDegrees(origin, 360);
+            rotated = rotating.rotateAroundDegrees(origin, octant * 7);
+            Assert.assertEquals(Coord.get(4, 4), rotated);
+            rotated = rotating.rotateAroundDegrees(origin, octant * 8);
             Assert.assertEquals(rotating, rotated);
         }
         {
             // turns
-            rotated = rotating.rotateAroundTurns(origin, 0.25f);
+            float octant = 0.125f;
+            rotated = rotating.rotateAroundTurns(origin, octant);
+            Assert.assertEquals(Coord.get(6, 4), rotated);
+            rotated = rotating.rotateAroundTurns(origin, octant * 2);
             Assert.assertEquals(Coord.get(6, 5), rotated);
-            rotated = rotating.rotateAroundTurns(origin, 0.5f);
+            rotated = rotating.rotateAroundTurns(origin, octant * 3);
+            Assert.assertEquals(Coord.get(6, 6), rotated);
+            rotated = rotating.rotateAroundTurns(origin, octant * 4);
             Assert.assertEquals(Coord.get(5, 6), rotated);
-            rotated = rotating.rotateAroundTurns(origin, -0.25f);
+            rotated = rotating.rotateAroundTurns(origin, octant * 5);
+            Assert.assertEquals(Coord.get(4, 6), rotated);
+            rotated = rotating.rotateAroundTurns(origin, octant * 6);
             Assert.assertEquals(Coord.get(4, 5), rotated);
-            rotated = rotating.rotateAroundTurns(origin, 1f);
+            rotated = rotating.rotateAroundTurns(origin, octant * 7);
+            Assert.assertEquals(Coord.get(4, 4), rotated);
+            rotated = rotating.rotateAroundTurns(origin, octant * 8);
             Assert.assertEquals(rotating, rotated);
         }
     }
