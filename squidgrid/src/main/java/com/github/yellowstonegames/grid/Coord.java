@@ -19,6 +19,7 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.crux.Point2;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.digital.TrigTools;
 
 import com.github.tommyettinger.ds.PrimitiveCollection;
@@ -360,7 +361,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * operand}, with both x and y rounded accordingly
      */
     public Coord plus(final float operand) {
-        return get(Math.round(x + operand), Math.round(y + operand));
+        return get(MathTools.round(x + operand), MathTools.round(y + operand));
     }
 
     /**
@@ -372,7 +373,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * operand}, with both x and y rounded accordingly
      */
     public Coord minus(final float operand) {
-        return get(Math.round(x - operand), Math.round(y - operand));
+        return get(MathTools.round(x - operand), MathTools.round(y - operand));
     }
 
     /**
@@ -384,7 +385,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * operand}, with both x and y rounded accordingly
      */
     public Coord times(final float operand) {
-        return get(Math.round(x * operand), Math.round(y * operand));
+        return get(MathTools.round(x * operand), MathTools.round(y * operand));
     }
 
     /**
@@ -418,7 +419,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * operand}, with both x and y rounded accordingly
      */
     public Coord subtract(final float operand) {
-        return get(Math.round(x - operand), Math.round(y - operand));
+        return get(MathTools.round(x - operand), MathTools.round(y - operand));
     }
 
     /**
@@ -452,7 +453,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * operand}, with both x and y rounded accordingly
      */
     public Coord multiply(final float operand) {
-        return get(Math.round(x * operand), Math.round(y * operand));
+        return get(MathTools.round(x * operand), MathTools.round(y * operand));
     }
 
     /**
@@ -500,7 +501,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * operand}, with both x and y rounded accordingly
      */
     public Coord divideRounding(final float operand) {
-        return get(Math.round(x / operand), Math.round(y / operand));
+        return get(MathTools.round(x / operand), MathTools.round(y / operand));
     }
 
     /**
@@ -511,7 +512,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * @return a Coord (usually cached and not a new instance) halfway between this and other, rounded nearest.
      */
     public Coord average(final Coord other) {
-        return get(Math.round((x + other.x) / 2.0f), Math.round((y + other.y) / 2.0f));
+        return get(MathTools.round((x + other.x) / 2.0f), MathTools.round((y + other.y) / 2.0f));
     }
 
     /**
@@ -1256,8 +1257,8 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      */
     @Override
     public Coord lerp(Point2<?> end, float amountTraveled) {
-        return Coord.get(x + Math.round((end.x() - x) * amountTraveled),
-                y + Math.round((end.y() - y) * amountTraveled));
+        return Coord.get(x + MathTools.round((end.x() - x) * amountTraveled),
+                y + MathTools.round((end.y() - y) * amountTraveled));
     }
 
     @Override
