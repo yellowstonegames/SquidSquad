@@ -405,6 +405,143 @@ public class Point2Int implements Point2<Point2Int>, PointNInt<Point2Int, Point2
         return (oldLen2 == 0 || oldLen2 == len2) ? this : scl((float)Math.sqrt(len2 / oldLen2));
     }
 
+    /**
+     * Sets a Point2Int to the result of rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code radians}. This rounds the x and y
+     * of {@code modifying} to the nearest integer values.
+     *
+     * @param modifying a Point2Int that will be modified in-place to hold the result of the calculation
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move the rotating point around the origin
+     * @return {@code modifying}, after changes
+     */
+    public static Point2Int rotateAroundRadians(Point2Int modifying, float rotatingX, float rotatingY, float originX, float originY, float radians){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        float c = TrigTools.cos(radians);
+        float s = TrigTools.sin(radians);
+        return modifying.set(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
+    }
+
+    /**
+     * Sets this Point2Int to its position after rotating this around the point
+     * {@code (originX, originY)} by the given rotation in {@code radians}. This rounds the x and y
+     * of this Point2Int to the nearest integer values.
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move this Point2Int around the origin
+     * @return this Point2Int, after modification
+     */
+    public Point2Int rotateAroundRadians(float originX, float originY, float radians){
+        return rotateAroundRadians(this, this.x, this.y, originX, originY, radians);
+    }
+
+    /**
+     * Sets this Point2Int to its position after rotating this around the point
+     * {@code origin} by the given rotation in {@code radians}. This rounds the x and y
+     * of this Point2Int to the nearest integer values.
+     * @param origin the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move this Point2Int around the origin
+     * @return this Point2Int, after modification
+     */
+    public Point2Int rotateAroundRadians(Point2<?> origin, float radians){
+        return rotateAroundRadians(this, this.x, this.y, origin.x(), origin.y(), radians);
+    }
+
+    /**
+     * Sets a Point2Int to the result of rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code degrees}. This rounds the x and y
+     * of {@code modifying} to the nearest integer values.
+     *
+     * @param modifying a Point2Int that will be modified in-place to hold the result of the calculation
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move the rotating point around the origin
+     * @return {@code modifying}, after changes
+     */
+    public static Point2Int rotateAroundDegrees(Point2Int modifying, float rotatingX, float rotatingY, float originX, float originY, float degrees){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        float c = TrigTools.cosDeg(degrees);
+        float s = TrigTools.sinDeg(degrees);
+        return modifying.set(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
+    }
+
+    /**
+     * Sets this Point2Int to its position after rotating this around the point
+     * {@code (originX, originY)} by the given rotation in {@code degrees}. This rounds the x and y
+     * of this Point2Int to the nearest integer values.
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move this Point2Int around the origin
+     * @return this Point2Int, after modification
+     */
+    public Point2Int rotateAroundDegrees(float originX, float originY, float degrees){
+        return rotateAroundDegrees(this, this.x, this.y, originX, originY, degrees);
+    }
+
+    /**
+     * Sets this Point2Int to its position after rotating this around the point
+     * {@code origin} by the given rotation in {@code degrees}. This rounds the x and y
+     * of this Point2Int to the nearest integer values.
+     * @param origin the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move this Point2Int around the origin
+     * @return this Point2Int, after modification
+     */
+    public Point2Int rotateAroundDegrees(Point2<?> origin, float degrees){
+        return rotateAroundDegrees(this, this.x, this.y, origin.x(), origin.y(), degrees);
+    }
+
+    /**
+     * Sets a Point2Int to the result of rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code turns}. This rounds the x and y
+     * of {@code modifying} to the nearest integer values.
+     *
+     * @param modifying a Point2Int that will be modified in-place to hold the result of the calculation
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move the rotating point around the origin
+     * @return {@code modifying}, after changes
+     */
+    public static Point2Int rotateAroundTurns(Point2Int modifying, float rotatingX, float rotatingY, float originX, float originY, float turns){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        float c = TrigTools.cosTurns(turns);
+        float s = TrigTools.sinTurns(turns);
+        return modifying.set(MathTools.round(originX + rotatingX * c - rotatingY * s), MathTools.round(originY + rotatingX * s + rotatingY * c));
+    }
+
+    /**
+     * Sets this Point2Int to its position after rotating this around the point
+     * {@code (originX, originY)} by the given rotation in {@code turns}. This rounds the x and y
+     * of this Point2Int to the nearest integer values.
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move this Point2Int around the origin
+     * @return this Point2Int, after modification
+     */
+    public Point2Int rotateAroundTurns(float originX, float originY, float turns){
+        return rotateAroundTurns(this, this.x, this.y, originX, originY, turns);
+    }
+
+    /**
+     * Sets this Point2Int to its position after rotating this around the point
+     * {@code origin} by the given rotation in {@code turns}. This rounds the x and y
+     * of this Point2Int to the nearest integer values.
+     * @param origin the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move this Point2Int around the origin
+     * @return this Point2Int, after modification
+     */
+    public Point2Int rotateAroundTurns(Point2<?> origin, float turns){
+        return rotateAroundTurns(this, this.x, this.y, origin.x(), origin.y(), turns);
+    }
 
     public float dot(Point2<?> other) {
         return x * other.x() + y * other.y();
