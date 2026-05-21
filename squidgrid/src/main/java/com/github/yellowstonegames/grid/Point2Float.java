@@ -413,17 +413,148 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
     }
 
     public Point2Float rotateAroundRad(Point2<?> reference, float radians) {
-        return this.sub(reference).rotateRad(radians).add(reference);
+        return rotateAroundRadians(reference, radians);
     }
 
     public Point2Float rotateAroundDeg(Point2<?> reference, float degrees) {
-        return this.sub(reference).rotateDeg(degrees).add(reference);
+        return rotateAroundDegrees(reference, degrees);
     }
 
-    public Point2Float rotateAroundTurns(Point2<?> reference, float turns) {
-        return this.sub(reference).rotateTurns(turns).add(reference);
+    /**
+     * Sets a Point2Float to the result of rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code radians}.
+     *
+     * @param modifying a Point2Float that will be modified in-place to hold the result of the calculation
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move the rotating point around the origin
+     * @return {@code modifying}, after changes
+     */
+    public static Point2Float rotateAroundRadians(Point2Float modifying, float rotatingX, float rotatingY, float originX, float originY, float radians){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        float c = TrigTools.cos(radians);
+        float s = TrigTools.sin(radians);
+        return modifying.set(originX + rotatingX * c - rotatingY * s, originY + rotatingX * s + rotatingY * c);
     }
 
+    /**
+     * Sets this Point2Float to its position after rotating this around the point
+     * {@code (originX, originY)} by the given rotation in {@code radians}.
+     *
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move this Point2Float around the origin
+     * @return this Point2Float, after modification
+     */
+    public Point2Float rotateAroundRadians(float originX, float originY, float radians){
+        return rotateAroundRadians(this, this.x, this.y, originX, originY, radians);
+    }
+
+    /**
+     * Sets this Point2Float to its position after rotating this around the point
+     * {@code origin} by the given rotation in {@code radians}.
+     *
+     * @param origin the point to rotate around
+     * @param radians the counterclockwise rotation, in radians, to move this Point2Float around the origin
+     * @return this Point2Float, after modification
+     */
+    public Point2Float rotateAroundRadians(Point2<?> origin, float radians){
+        return rotateAroundRadians(this, this.x, this.y, origin.x(), origin.y(), radians);
+    }
+
+    /**
+     * Sets a Point2Float to the result of rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code degrees}.
+     *
+     * @param modifying a Point2Float that will be modified in-place to hold the result of the calculation
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move the rotating point around the origin
+     * @return {@code modifying}, after changes
+     */
+    public static Point2Float rotateAroundDegrees(Point2Float modifying, float rotatingX, float rotatingY, float originX, float originY, float degrees){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        float c = TrigTools.cosDeg(degrees);
+        float s = TrigTools.sinDeg(degrees);
+        return modifying.set(originX + rotatingX * c - rotatingY * s, originY + rotatingX * s + rotatingY * c);
+    }
+
+    /**
+     * Sets this Point2Float to its position after rotating this around the point
+     * {@code (originX, originY)} by the given rotation in {@code degrees}.
+     *
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move this Point2Float around the origin
+     * @return this Point2Float, after modification
+     */
+    public Point2Float rotateAroundDegrees(float originX, float originY, float degrees){
+        return rotateAroundDegrees(this, this.x, this.y, originX, originY, degrees);
+    }
+
+    /**
+     * Sets this Point2Float to its position after rotating this around the point
+     * {@code origin} by the given rotation in {@code degrees}.
+     *
+     * @param origin the point to rotate around
+     * @param degrees the counterclockwise rotation, in degrees, to move this Point2Float around the origin
+     * @return this Point2Float, after modification
+     */
+    public Point2Float rotateAroundDegrees(Point2<?> origin, float degrees){
+        return rotateAroundDegrees(this, this.x, this.y, origin.x(), origin.y(), degrees);
+    }
+
+    /**
+     * Sets a Point2Float to the result of rotating the point {@code (rotatingX, rotatingY)} around the point
+     * {@code (originX, originY)} by the given rotation in {@code turns}.
+     *
+     * @param modifying a Point2Float that will be modified in-place to hold the result of the calculation
+     * @param rotatingX the x-coordinate of the point being rotated
+     * @param rotatingY the y-coordinate of the point being rotated
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move the rotating point around the origin
+     * @return {@code modifying}, after changes
+     */
+    public static Point2Float rotateAroundTurns(Point2Float modifying, float rotatingX, float rotatingY, float originX, float originY, float turns){
+        rotatingX -= originX;
+        rotatingY -= originY;
+        float c = TrigTools.cosTurns(turns);
+        float s = TrigTools.sinTurns(turns);
+        return modifying.set(originX + rotatingX * c - rotatingY * s, originY + rotatingX * s + rotatingY * c);
+    }
+
+    /**
+     * Sets this Point2Float to its position after rotating this around the point
+     * {@code (originX, originY)} by the given rotation in {@code turns}.
+     *
+     * @param originX the x-coordinate of the point to rotate around
+     * @param originY the y-coordinate of the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move this Point2Float around the origin
+     * @return this Point2Float, after modification
+     */
+    public Point2Float rotateAroundTurns(float originX, float originY, float turns){
+        return rotateAroundTurns(this, this.x, this.y, originX, originY, turns);
+    }
+
+    /**
+     * Sets this Point2Float to its position after rotating this around the point
+     * {@code origin} by the given rotation in {@code turns}.
+     *
+     * @param origin the point to rotate around
+     * @param turns the counterclockwise rotation, in turns, to move this Point2Float around the origin
+     * @return this Point2Float, after modification
+     */
+    public Point2Float rotateAroundTurns(Point2<?> origin, float turns){
+        return rotateAroundTurns(this, this.x, this.y, origin.x(), origin.y(), turns);
+    }
+    
     public Point2Float rotate90(int sign) {
         float x = this.x;
         if (sign >= 0) {
