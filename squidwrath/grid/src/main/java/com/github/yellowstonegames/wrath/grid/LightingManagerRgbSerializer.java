@@ -39,7 +39,7 @@ public class LightingManagerRgbSerializer extends Serializer<LightingManagerRgb>
     public void write(WriteContext fory, LightingManagerRgb data) {
         fory.writeRef(data.resistances);
         fory.writeInt32(data.backgroundColor);
-        fory.writeVarUint32(data.radiusStrategy.ordinal());
+        fory.writeVarUInt32(data.radiusStrategy.ordinal());
         fory.writeFloat32(data.viewerRange);
         fory.writeRef(data.noticeable);
         fory.writeRef(data.lights);
@@ -52,7 +52,7 @@ public class LightingManagerRgbSerializer extends Serializer<LightingManagerRgb>
 
     @Override
     public LightingManagerRgb read(ReadContext fory) {
-        LightingManagerRgb lm = new LightingManagerRgb((float[][]) fory.readRef(), fory.readInt32(), Radius.ALL[fory.readVarUint32()], fory.readFloat32());
+        LightingManagerRgb lm = new LightingManagerRgb((float[][]) fory.readRef(), fory.readInt32(), Radius.ALL[fory.readVarUInt32()], fory.readFloat32());
         lm.noticeable = (Region) fory.readRef();
         lm.lights = (ObjectDeque<LightSource>) fory.readRef();
         lm.colorLighting = (int[][]) fory.readRef();

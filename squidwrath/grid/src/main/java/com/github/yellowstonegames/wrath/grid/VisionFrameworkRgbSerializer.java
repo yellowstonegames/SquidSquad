@@ -38,8 +38,8 @@ public class VisionFrameworkRgbSerializer extends Serializer<VisionFrameworkRgb>
 
     @Override
     public void write(WriteContext fory, VisionFrameworkRgb data) {
-        fory.writeVarUint32(data.placeWidth);
-        fory.writeVarUint32(data.placeHeight);
+        fory.writeVarUInt32(data.placeWidth);
+        fory.writeVarUInt32(data.placeHeight);
         fory.writeInt32(data.rememberedColor);
         fory.writeRef(data.linePlaceMap);
         fory.writeRef(data.prunedPlaceMap);
@@ -58,8 +58,8 @@ public class VisionFrameworkRgbSerializer extends Serializer<VisionFrameworkRgb>
     @Override
     public VisionFrameworkRgb read(ReadContext input) {
         VisionFrameworkRgb vf = new VisionFrameworkRgb();
-        vf.placeWidth = input.readVarUint32();
-        vf.placeHeight = input.readVarUint32();
+        vf.placeWidth = input.readVarUInt32();
+        vf.placeHeight = input.readVarUInt32();
         vf.rememberedColor = input.readInt32();
         vf.linePlaceMap = (char[][])input.readRef();
         vf.prunedPlaceMap = (char[][])input.readRef();

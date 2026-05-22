@@ -36,7 +36,7 @@ public class CoordOrderedSetSerializer extends CollectionSerializer<CoordOrdered
     @Override
     public void write(final WriteContext output, final CoordOrderedSet data) {
         final int len = data.size();
-        output.writeVarUint32(len);
+        output.writeVarUInt32(len);
         for (Coord item : data) {
             output.writeInt16(item.x);
             output.writeInt16(item.y);
@@ -45,7 +45,7 @@ public class CoordOrderedSetSerializer extends CollectionSerializer<CoordOrdered
 
     @Override
     public CoordOrderedSet read(ReadContext input) {
-        final int len = input.readVarUint32();
+        final int len = input.readVarUInt32();
         CoordOrderedSet data = new CoordOrderedSet(len);
         for (int i = 0; i < len; i++) {
             data.add(Coord.get(input.readInt16(), input.readInt16()));

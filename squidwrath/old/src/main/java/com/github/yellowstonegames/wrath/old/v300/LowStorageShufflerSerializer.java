@@ -30,15 +30,15 @@ public class LowStorageShufflerSerializer extends Serializer<LowStorageShuffler>
 
     @Override
     public void write(WriteContext output, final LowStorageShuffler data) {
-        output.writeVarUint32(data.getBound());
+        output.writeVarUInt32(data.getBound());
         output.writeInt32(data.getKey0());
         output.writeInt32(data.getKey1());
-        output.writeVarUint32(data.getIndex());
+        output.writeVarUInt32(data.getIndex());
     }
 
     @Override
     public LowStorageShuffler read(ReadContext input) {
-        return new LowStorageShuffler(input.readVarUint32(), input.readInt32(), input.readInt32()).setIndex(input.readVarUint32());
+        return new LowStorageShuffler(input.readVarUInt32(), input.readInt32(), input.readInt32()).setIndex(input.readVarUInt32());
     }
 
 }

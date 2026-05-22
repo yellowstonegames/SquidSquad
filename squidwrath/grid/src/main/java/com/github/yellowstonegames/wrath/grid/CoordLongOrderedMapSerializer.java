@@ -36,7 +36,7 @@ public class CoordLongOrderedMapSerializer extends Serializer<CoordLongOrderedMa
 
     @Override
     public void write(final WriteContext output, final CoordLongOrderedMap data) {
-        output.writeVarUint32(data.size());
+        output.writeVarUInt32(data.size());
         for(Coord k : data.order()){
             output.writeInt16(k.x);
             output.writeInt16(k.y);
@@ -50,7 +50,7 @@ public class CoordLongOrderedMapSerializer extends Serializer<CoordLongOrderedMa
 
     @Override
     public CoordLongOrderedMap read(ReadContext input) {
-        final int len = input.readVarUint32();
+        final int len = input.readVarUInt32();
         Coord[] ks = new Coord[len];
         long[] vs = new long[len];
         for (int i = 0; i < len; i++) {

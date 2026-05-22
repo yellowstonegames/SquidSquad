@@ -30,15 +30,15 @@ public class MnemonicSerializer extends Serializer<Mnemonic> {
 
     @Override
     public void write(WriteContext output, Mnemonic data) {
-        output.writeVarUint32(data.items.size());
+        output.writeVarUInt32(data.items.size());
         for(String k : data.items.order()){
             output.writeString(k);
         }
-        output.writeVarUint32(data.allAdjectives.size());
+        output.writeVarUInt32(data.allAdjectives.size());
         for(String k : data.allAdjectives.order()){
             output.writeString(k);
         }
-        output.writeVarUint32(data.allNouns.size());
+        output.writeVarUInt32(data.allNouns.size());
         for(String k : data.allNouns.order()){
             output.writeString(k);
         }
@@ -46,17 +46,17 @@ public class MnemonicSerializer extends Serializer<Mnemonic> {
 
     @Override
     public Mnemonic read(ReadContext input) {
-        int itemSize = input.readVarUint32();
+        int itemSize = input.readVarUInt32();
         NumberedSet<String> items = new NumberedSet<>(itemSize);
         for (int i = 0; i < itemSize; i++) {
             items.add(input.readString());
         }
-        int adjSize = input.readVarUint32();
+        int adjSize = input.readVarUInt32();
         NumberedSet<String> adj = new NumberedSet<>(adjSize);
         for (int i = 0; i < adjSize; i++) {
             adj.add(input.readString());
         }
-        int nounSize = input.readVarUint32();
+        int nounSize = input.readVarUInt32();
         NumberedSet<String> noun = new NumberedSet<>(nounSize);
         for (int i = 0; i < nounSize; i++) {
             noun.add(input.readString());

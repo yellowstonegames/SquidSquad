@@ -36,7 +36,7 @@ public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
 
     @Override
     public void write(final WriteContext output, final CoordFloatMap data) {
-        output.writeVarUint32(data.size());
+        output.writeVarUInt32(data.size());
         for(Coord k : data.keySet()){
             output.writeInt16(k.x);
             output.writeInt16(k.y);
@@ -50,7 +50,7 @@ public class CoordFloatMapSerializer extends Serializer<CoordFloatMap> {
 
     @Override
     public CoordFloatMap read(ReadContext input) {
-        final int len = input.readVarUint32();
+        final int len = input.readVarUInt32();
         Coord[] ks = new Coord[len];
         float[] vs = new float[len];
         for (int i = 0; i < len; i++) {

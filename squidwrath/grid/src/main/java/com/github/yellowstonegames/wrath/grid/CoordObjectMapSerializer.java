@@ -37,7 +37,7 @@ public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap> {
 
     @Override
     public void write(final WriteContext output, final CoordObjectMap data) {
-        output.writeVarUint32(data.size());
+        output.writeVarUInt32(data.size());
         for(Object k : data.keySet()){
             output.writeInt16(((Coord)k).x);
             output.writeInt16(((Coord)k).y);
@@ -50,7 +50,7 @@ public class CoordObjectMapSerializer extends MapSerializer<CoordObjectMap> {
 
     @Override
     public CoordObjectMap<?> read(ReadContext input) {
-        final int len = input.readVarUint32();
+        final int len = input.readVarUInt32();
         Coord[] ks = new Coord[len];
         Object[] vs = new Object[len];
         for (int i = 0; i < len; i++) {

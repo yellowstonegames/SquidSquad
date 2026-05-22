@@ -38,7 +38,7 @@ public class SpatialMapSerializer extends CollectionSerializer<SpatialMap> {
     @Override
     public void write(final WriteContext output, final SpatialMap data) {
         final int len = data.size();
-        output.writeVarUint32(len);
+        output.writeVarUInt32(len);
         for (Object item : data) {
             output.writeRef(item);
         }
@@ -46,7 +46,7 @@ public class SpatialMapSerializer extends CollectionSerializer<SpatialMap> {
 
     @Override
     public SpatialMap<? extends IGridIdentified> read(ReadContext input) {
-        final int len = input.readVarUint32();
+        final int len = input.readVarUInt32();
         SpatialMap data = new SpatialMap(len);
         for (int i = 0; i < len; i++) {
             data.add((IGridIdentified) input.readRef());

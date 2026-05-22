@@ -33,8 +33,8 @@ public class TranslatorSerializer extends Serializer<Translator> {
     public void write(WriteContext output, Translator data) {
         output.writeString(data.language.stringSerialize());
         output.writeInt64(data.shift);
-        output.writeVarUint32(data.cacheLevel);
-        output.writeVarUint32(data.table.size());
+        output.writeVarUInt32(data.cacheLevel);
+        output.writeVarUInt32(data.table.size());
         for(String k : data.table.keySet()){
             output.writeString(k);
         }
@@ -48,8 +48,8 @@ public class TranslatorSerializer extends Serializer<Translator> {
     public Translator read(ReadContext input) {
         Language lang = Language.stringDeserialize(input.readString());
         long shift = input.readInt64();
-        int cacheLevel = input.readVarUint32();
-        int tableSize = input.readVarUint32();
+        int cacheLevel = input.readVarUInt32();
+        int tableSize = input.readVarUInt32();
         String[] ks = new String[tableSize];
         String[] vs = new String[tableSize];
 

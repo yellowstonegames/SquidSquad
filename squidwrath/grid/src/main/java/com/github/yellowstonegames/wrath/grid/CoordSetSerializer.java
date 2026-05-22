@@ -36,7 +36,7 @@ public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
     @Override
     public void write(final WriteContext output, final CoordSet data) {
         final int len = data.size();
-        output.writeVarUint32(len);
+        output.writeVarUInt32(len);
         for (Coord item : data) {
             output.writeInt16(item.x);
             output.writeInt16(item.y);
@@ -45,7 +45,7 @@ public class CoordSetSerializer extends CollectionSerializer<CoordSet> {
 
     @Override
     public CoordSet read(ReadContext input) {
-        final int len = input.readVarUint32();
+        final int len = input.readVarUInt32();
         CoordSet data = new CoordSet(len);
         for (int i = 0; i < len; i++) {
             data.add(Coord.get(input.readInt16(), input.readInt16()));

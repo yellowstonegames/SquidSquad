@@ -554,7 +554,7 @@ public class Point2Float implements Point2<Point2Float>, PointNFloat<Point2Float
     public Point2Float rotateAroundTurns(Point2<?> origin, float turns){
         return rotateAroundTurns(this, this.x, this.y, origin.x(), origin.y(), turns);
     }
-    
+
     public Point2Float rotate90(int sign) {
         float x = this.x;
         if (sign >= 0) {
