@@ -21,6 +21,8 @@ import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.random.AceRandom;
 import org.junit.Test;
 
+import static com.github.yellowstonegames.CoreInternals.PRINTING;
+
 public class TableTests {
     @Test
     public void testWeightedTable() {
@@ -31,7 +33,10 @@ public class TableTests {
         for (int i = 0; i < 10000; i++) {
             frequencies[table.random(random)]++;
         }
-        System.out.println(Base.BASE10.join(", ", frequencies));
+        if(PRINTING)
+            System.out.println(Base.BASE10.join(", ", frequencies));
+
+
     }
 
     @Test
@@ -46,6 +51,72 @@ public class TableTests {
         for (int i = 0; i < 10000; i++) {
             frequencies.getAndIncrement(table.random(), 0, 1);
         }
-        System.out.println(frequencies);
+        if(PRINTING)
+            System.out.println(frequencies);
+
+        ProbabilityTable<String> wood = new ProbabilityTable<>("wood"),
+                carpenter = new ProbabilityTable<>("carpenter");
+        wood.add("splinter", 10).add("twig", 4).add("branch", 2).add("plank", 1).add("twig", 3);
+        carpenter.add("table", 3).add("shelf", 7).add(wood, 5).add("chair", 3).add("chair", 2);
+
+        ObjectIntMap<String> woodCounts = new ObjectIntMap<>(
+                new String[]{"splinter", "twig", "branch", "plank"}, new int[]{0, 0, 0, 0}),
+                carpenterCounts = new ObjectIntMap<>(
+                        new String[]{"splinter", "twig", "branch", "plank", "table", "shelf", "chair"},
+                        new int[]{0, 0, 0, 0, 0, 0, 0});
+        String current;
+        for (int l = 0; l < 10; l++) {
+            for (int i = 0; i < 20; i++) {
+                current = wood.random();
+                woodCounts.getAndIncrement(current, 0, 1);
+                if (PRINTING) {
+                    System.out.print(current);
+                    System.out.print(' ');
+                }
+            }
+            if (PRINTING) System.out.println();
+        }
+        if (PRINTING) {
+            System.out.println();
+            System.out.println(woodCounts);
+            System.out.println('\n');
+        }
+        for (int l = 0; l < 10; l++) {
+            for (int i = 0; i < 20; i++) {
+                current = carpenter.random();
+                carpenterCounts.getAndIncrement(current, 0, 1);
+                if (PRINTING) {
+                    System.out.print(current);
+                    System.out.print(' ');
+                }
+            }
+            if (PRINTING) System.out.println();
+        }
+        if (PRINTING) {
+            System.out.println();
+            System.out.println(carpenterCounts);
+            System.out.println('\n');
+        }
+        carpenterCounts = new ObjectIntMap<>(
+                new String[]{"splinter", "twig", "branch", "plank", "table", "shelf", "chair"},
+                new int[]{0, 0, 0, 0, 0, 0, 0});
+        carpenter.remove("shelf", 4);
+        carpenter.remove("chair");
+        for (int l = 0; l < 10; l++) {
+            for (int i = 0; i < 20; i++) {
+                current = carpenter.random();
+                carpenterCounts.getAndIncrement(current, 0, 1);
+                if (PRINTING) {
+                    System.out.print(current);
+                    System.out.print(' ');
+                }
+            }
+            if (PRINTING) System.out.println();
+        }
+        if (PRINTING) {
+            System.out.println();
+            System.out.println(carpenterCounts);
+        }
     }
+
 }
