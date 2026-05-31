@@ -36,7 +36,33 @@ public class TableTests {
         if(PRINTING)
             System.out.println(Base.BASE10.join(", ", frequencies));
 
+        float[] weights = {5.777f, 4.666f, 2.444f, 3.222f};
+        float sum = weights[0] + weights[1] + weights[2] + weights[3];
+        WeightedTable wood = new WeightedTable(weights);
+        String[] woodStrings = {"splinter", "twig", "plank", "branch"};
 
+        ObjectIntMap<String> woodCounts = new ObjectIntMap<>(
+                new String[]{"splinter", "twig", "plank", "branch"}, new int[]{0, 0, 0, 0});
+        String current;
+        // this is the RNG state; it is fixed currently for replicable testing.
+        long state = -1000000L;
+        // change state to the commented line below to get a different seed every time.
+        //long state = (long) (System.nanoTime() / (Math.random() * Math.random() + 0.01));
+        int inner = 256, outer = 256, total = inner * outer;
+        for (int l = 0; l < outer; l++) {
+            for (int i = 0; i < inner; i++) {
+                current = woodStrings[wood.random(++state)];
+                woodCounts.put(current, woodCounts.get(current) + 1);
+            }
+        }
+        if (PRINTING) {
+            System.out.println();
+            for (int i = 0; i < 4; i++) {
+                System.out.println("There should be about " + (total * weights[i] / sum) + " " + woodStrings[i] +
+                        " and there are " + woodCounts.get(woodStrings[i]) + ", a percentage difference of " + ((woodCounts.get(woodStrings[i]) - (total * weights[i] / sum)) / (0.01 * total * weights[i] / sum)));
+            }
+            System.out.println('\n');
+        }
     }
 
     @Test
