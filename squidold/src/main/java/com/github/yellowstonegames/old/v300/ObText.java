@@ -461,6 +461,10 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
         return sb.toString();
     }
 
+    public <T extends CharSequence & Appendable> T appendSerialized(T sb){
+        return iterate(sb, this);
+    }
+
     /**
      * Deserializes an ObText that was serialized by {@link #serializeToString()} or {@link #toString()}, and will
      * ignore the prefix and suffix that toString appends for readability (these are "ObText object: [[[[ " and " ]]]]",
@@ -477,31 +481,35 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
         return new ObText(data);
     }
 
-    private static void iterate(StringBuilder sb, ArrayList<ObTextEntry> obt)
+    private static <T extends CharSequence & Appendable> T iterate(T sb, List<ObTextEntry> obt)
     {
         int len = obt.size();
         ObTextEntry entry;
-        for (int i = 0; i < len; i++) {
-            appendQuotedObText(sb, (entry = obt.get(i)).primary);
-            sb.append('\n');
-            if(entry.hasAssociated())
-            {
-                sb.append("[\n");
-                iterate(sb, entry.associated);
-                sb.append("]\n");
+        try {
+            for (int i = 0; i < len; i++) {
+                appendQuotedObText(sb, (entry = obt.get(i)).primary);
+                sb.append('\n');
+                if (entry.hasAssociated()) {
+                    sb.append("[\n");
+                    iterate(sb, entry.associated);
+                    sb.append("]\n");
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        return sb;
     }
 
-    private static void iterate(ArrayList<String> buffer, ArrayList<ObTextEntry> obt)
+    private static void iterate(List<String> list, List<ObTextEntry> obt)
     {
         int len = obt.size();
         ObTextEntry entry;
         for (int i = 0; i < len; i++) {
-            buffer.add((entry = obt.get(i)).primary);
+            list.add((entry = obt.get(i)).primary);
             if(entry.hasAssociated())
             {
-                iterate(buffer, entry.associated);
+                iterate(list, entry.associated);
             }
         }
     }
