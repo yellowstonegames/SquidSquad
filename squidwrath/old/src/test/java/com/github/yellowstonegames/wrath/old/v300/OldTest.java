@@ -262,4 +262,27 @@ public class OldTest {
             Assert.assertEquals(data.hash(longs), hasher2.hash(longs));
         }
     }
+
+    @Test
+    public void testObText() {
+        LoggerFactory.disableLogging();
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializer(ObText.class, new ObTextSerializer(fory));
+
+        ObText data = new ObText(
+                "hello world\n" +
+                        "'how are you today?' [just great thanks]\n" +
+                        "hooray!\n" +
+                        "\n" +
+                        "complexity?\n" +
+                        "[it is possible [yes this is a good example]\n" +
+                        "'escapes like \\[\\'\\] all work'\n" +
+                        "]\n");
+
+        byte[] bytes = fory.serialize(data);
+        {
+            ObText data2 = fory.deserialize(bytes, ObText.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
