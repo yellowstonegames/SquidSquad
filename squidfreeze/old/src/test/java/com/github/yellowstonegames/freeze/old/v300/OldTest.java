@@ -279,4 +279,28 @@ public class OldTest {
             Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
         }
     }
+
+    @Test
+    public void testObText() {
+        Kryo kryo = new Kryo();
+        kryo.register(ObText.class, new ObTextSerializer());
+
+        ObText data = new ObText(
+                "hello world\n" +
+                        "'how are you today?' [just great thanks]\n" +
+                        "hooray!\n" +
+                        "\n" +
+                        "complexity?\n" +
+                        "[it is possible [yes this is a good example]\n" +
+                        "'escapes like \\[\\'\\] all work'\n" +
+                        "]\n");
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            ObText data2 = kryo.readObject(input, ObText.class);
+            Assert.assertEquals(data, data2);
+        }
+    }
 }
