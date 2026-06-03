@@ -41,6 +41,11 @@ public final class JsonOld {
         registerLongPeriodRNG(json);
         registerXoshiroStarPhi32RNG(json);
         JsonSupport.registerEnhancedRandom(json);
+        registerLowStorageShuffler(json);
+        registerCrossHashMist(json);
+        registerCrossHashCurlup(json);
+        registerCrossHashYolk(json);
+        registerObText(json);
     }
 
     /**
@@ -374,5 +379,25 @@ public final class JsonOld {
             }
         });
     }
+    /**
+     * Registers ObText with the given Json object, so ObText can be written to and read from JSON.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerObText(Json json) {
+        json.addClassTag("ObTx", ObText.class);
+        json.setSerializer(ObText.class, new Json.Serializer<ObText>() {
+            @Override
+            public void write(Json json, ObText object, Class knownType) {
+                json.writeValue(object.serializeToString());
+            }
 
+            @Override
+            public ObText read(Json json, JsonValue jsonData, Class type) {
+                String s;
+                if (jsonData == null || jsonData.isNull() || (s = jsonData.asString()) == null) return null;
+                return new ObText(s);
+            }
+        });
+    }
 }

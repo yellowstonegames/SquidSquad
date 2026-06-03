@@ -191,4 +191,23 @@ public class JsonOldTest {
         Assert.assertEquals(hasher.hash64(longs), hasher2.hash64(longs));
         Assert.assertEquals(hasher.hash(longs), hasher2.hash(longs));
     }
+
+    @Test
+    public void testObText() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonOld.registerObText(json);
+        ObText text = new ObText(
+                "hello world\n" +
+                "'how are you today?' [just great thanks]\n" +
+                "hooray!\n" +
+                "\n" +
+                "complexity?\n" +
+                "[it is possible [yes this is a good example]\n" +
+                "'escapes like \\[\\'\\] all work'\n" +
+                "]\n");
+        String data = json.toJson(text);
+        System.out.println(data);
+        ObText text2 = json.fromJson(ObText.class, data);
+        Assert.assertEquals(text, text2);
+    }
 }
