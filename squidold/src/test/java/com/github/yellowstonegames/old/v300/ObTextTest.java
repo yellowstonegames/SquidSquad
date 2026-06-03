@@ -48,6 +48,20 @@ public class ObTextTest {
         }
         iterate(ot);
     }
+    @Test
+    public void basicComplexDelimiter(){
+        ObText ot = new ObText(
+                "[[different[\n" +
+                "if you may need \"triple quotes\"\n" +
+                "    in the raw string, use a different syntax, [[delim[ ]delim]] , that allows delimiters.\n" +
+                "here, the delimiter is '''different''', just to be different.]different]]\n");
+        if(PRINTING) {
+            String o = ot.toString();
+            System.out.println(o);
+            System.out.println(ObText.deserializeFromString(o));
+        }
+        iterate(ot);
+    }
     public static void iterate(List<ObText.ObTextEntry> it)
     {
         for(ObText.ObTextEntry entry : it)

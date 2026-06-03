@@ -390,11 +390,11 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
                         count = TextTools.containsPart(text, myChars);
                     } while (count == 12);
                     sb.append("[[");
-                    for (int i = 1; i < count - 2; i++) {
+                    for (int i = 1; i < count + 1; i++) {
                         sb.append(myChars[i]);
                     }
                     sb.append("[\n").append(text).append("\n]");
-                    for (int i = 1; i < count - 2; i++) {
+                    for (int i = 1; i < count + 1; i++) {
                         sb.append(myChars[i]);
                     }
                     sb.append("]]");
