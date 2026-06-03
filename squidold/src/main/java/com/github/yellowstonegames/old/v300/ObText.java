@@ -24,13 +24,10 @@ import regexodus.Matcher;
 import regexodus.Pattern;
 import regexodus.REFlags;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static com.github.yellowstonegames.core.StringTools.LETTERS;
 
@@ -124,6 +121,7 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
         }
         public void add(ObTextEntry entry)
         {
+            if(this == entry) throw new IllegalArgumentException("An ObTextEntry cannot add itself as a child.");
             if(associated == null)
                 associated = new ArrayList<>(16);
             associated.add(entry);
@@ -186,7 +184,7 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
             ObTextEntry entry = (ObTextEntry) o;
 
             if (!primary.equals(entry.primary)) return false;
-            return associated != null ? associated.equals(entry.associated) : entry.associated == null;
+            return Objects.equals(associated, entry.associated);
         }
 
         public long hash64() {
@@ -356,20 +354,22 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
         mut[offset  ] = LETTERS.charAt((int)(128 + (z >>> 56 & 127)));
     }
 
-    public static void appendQuoted(StringBuilder sb, String text)
+    public static <T extends CharSequence & Appendable> T appendQuoted(T sb, String text)
     {
-        appendQuoted(sb, text, reallyBare);
+        return appendQuoted(sb, text, reallyBare);
     }
 
-    public static void appendQuotedObText(StringBuilder sb, String text)
+    public static <T extends CharSequence & Appendable> T appendQuotedObText(T sb, String text)
     {
-        appendQuoted(sb, text, bare);
+        return appendQuoted(sb, text, bare);
     }
-    protected static void appendQuoted(StringBuilder sb, String text, Matcher bareFinder)
+
+    protected static <T extends CharSequence & Appendable> T appendQuoted(T sb, String text, Matcher bareFinder)
     {
+        try {
         if(text == null || text.isEmpty()) {
             sb.append("''");
-            return;
+            return sb;
         }
         bareFinder.setTarget(text);
         if(!bareFinder.find())
@@ -390,8 +390,15 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
                         randomChars(state += 0x9E3779B97F4A7C15L, myChars, 1);
                         count = TextTools.containsPart(text, myChars);
                     } while (count == 12);
-                    sb.append("[[").append(myChars, 0, count).append("[\n").append(text).append("\n]")
-                            .append(myChars, 0, count).append("]]");
+                    sb.append("[[");
+                    for (int i = 1; i < count - 2; i++) {
+                        sb.append(myChars[i]);
+                    }
+                    sb.append("[\n").append(text).append("\n]");
+                    for (int i = 1; i < count - 2; i++) {
+                        sb.append(myChars[i]);
+                    }
+                    sb.append("]]");
                 } else {
                     sb.append("'''\n").append(text).append("\n'''");
                 }
@@ -414,8 +421,16 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
                             randomChars(state += 0x9E3779B97F4A7C15L, myChars, 0);
                             count = TextTools.containsPart(text, myChars);
                         }while(count == 9);
-                        sb.append("[[").append(myChars, 0, count).append("[\n").append(text).append("\n]")
-                                .append(myChars, 0, count).append("]]");
+                        sb.append("[[");
+                        for (int i = 0; i < count; i++) {
+                            sb.append(myChars[i]);
+                        }
+                        sb.append("[\n").append(text).append("\n]");
+                        for (int i = 0; i < count; i++) {
+                            sb.append(myChars[i]);
+                        }
+
+                        sb.append("]]");
                     }
                     else
                     {
@@ -428,6 +443,10 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
                 }
             }
         }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return sb;
     }
 
     @Override
