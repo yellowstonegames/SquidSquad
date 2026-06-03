@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.old.v300;
 
+import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
@@ -28,8 +29,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
 import java.util.*;
-
-import static com.github.yellowstonegames.core.StringTools.LETTERS;
 
 /**
  * A simple format parser for String-based configuration or data files where JSON is overkill.
@@ -343,15 +342,15 @@ public class ObText extends ArrayList<ObText.ObTextEntry> implements Serializabl
         z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;
         z ^= (z >>> 31);
 
-        mut[offset++] = LETTERS.charAt((int)(128 + (z & 127)));
-        mut[offset++] = LETTERS.charAt((int)(128 + (z >>> 7 & 127)));
-        mut[offset++] = LETTERS.charAt((int)(128 + (z >>> 14 & 127)));
-        mut[offset++] = LETTERS.charAt((int)(128 + (z >>> 21 & 127)));
-        mut[offset++] = LETTERS.charAt((int)(128 + (z >>> 28 & 127)));
-        mut[offset++] = LETTERS.charAt((int)(128 + (z >>> 35 & 127)));
-        mut[offset++] = LETTERS.charAt((int)(128 + (z >>> 42 & 127)));
-        mut[offset++] = LETTERS.charAt((int)(128 + (z >>> 49 & 127)));
-        mut[offset  ] = LETTERS.charAt((int)(128 + (z >>> 56 & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z >>> 7 & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z >>> 14 & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z >>> 21 & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z >>> 28 & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z >>> 35 & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z >>> 42 & 127)));
+        mut[offset++] = ArrayTools.letterAt((int)(128 + (z >>> 49 & 127)));
+        mut[offset  ] = ArrayTools.letterAt((int)(128 + (z >>> 56 & 127)));
     }
 
     public static <T extends CharSequence & Appendable> T appendQuoted(T sb, String text)
