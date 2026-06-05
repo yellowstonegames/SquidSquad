@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2026 Eben Howard, Tommy Ettinger, and contributors
+ * Copyright (c) 2020-2026 See AUTHORS file.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.github.yellowstonegames.text;
@@ -31,16 +31,13 @@ import java.util.ArrayList;
  * A simple Markov chain text generator; it is called "Limited" because it only can be used as an order-1 Markov chain,
  * meaning only one prior word is looked at. To use, call {@link #analyze(CharSequence)} once on a large sample text,
  * then you can call {@link #chain(long)} many times to get odd-sounding "remixes" of the sample text. For more natural
- * output, you can use {@link MarkovText}, which is an order-2 Markov chain and so looks at two previous
- * words.
+ * output, you can use {@link MarkovText}, which is an order-2 Markov chain and so looks at two previous words.
  * <br>
  * This is meant to allow easy serialization of the necessary data to call chain(); if you can store the {@link #words}
  * and {@link #processed} arrays in some serialized form, then you can reassign them to the same fields to avoid calling
- * analyze(). One way to do this conveniently is to use {@link #serializeToString()} after calling analyze() once and to
+ * analyze(). One way to do this conveniently is to use {@link #stringSerialize()} after calling analyze() once and to
  * save the resulting String; then, rather than calling analyze() again on future runs, you would call
- * {@link #deserializeFromString(String)} to create the MarkovTextLimited without needing any repeated analysis.
- * <br>
- * Created by Tommy Ettinger on 1/30/2018.
+ * {@link #stringDeserialize(String)} to create the MarkovTextLimited without needing any repeated analysis.
  */
 public class MarkovTextLimited {
     /**
@@ -58,6 +55,17 @@ public class MarkovTextLimited {
     private static final Matcher matcher = Pattern.compile("\\.\\.\\.|[\\.!\\?]|[^\\.!\\?\"\\(\\)\\[\\]\\{\\}\\s]+").matcher();
     public MarkovTextLimited()
     {
+    }
+
+    public MarkovTextLimited(MarkovTextLimited other){
+        words = new String[other.words.length];
+        System.arraycopy(other.words, 0, words, 0, other.words.length);
+        processed = new int[other.processed.length][];
+        int len;
+        for (int i = 0; i < other.processed.length; i++) {
+            processed[i] = new int[len = other.processed[i].length];
+            System.arraycopy(other.processed[i], 0, processed[i], 0, len);
+        }
     }
 
     /**
@@ -288,13 +296,13 @@ public class MarkovTextLimited {
     }
 
     /**
-     * Returns a representation of this MarkovTextLimited as a String; use {@link #deserializeFromString(String)} to get a
+     * Returns a representation of this MarkovTextLimited as a String; use {@link #stringDeserialize(String)} to get a
      * MarkovTextLimited back from this String. The {@link #words} and {@link #processed} fields must have been given values by
-     * either direct assignment, calling {@link #analyze(CharSequence)}, or building this MarkovTest with the
-     * aforementioned deserializeToString method. Uses spaces to separate words and a tab to separate the two fields.
+     * either direct assignment, calling {@link #analyze(CharSequence)}, or building this MarkovTextLimited with the
+     * aforementioned stringDeserialize method. Uses spaces to separate words and a tab to separate the two fields.
      * @return a String that can be used to store the analyzed words and frequencies in this MarkovTextLimited
      */
-    public String serializeToString()
+    public String stringSerialize()
     {
         return appendTo(new StringBuilder(100)).toString();
     }
@@ -311,16 +319,16 @@ public class MarkovTextLimited {
     }
 
     /**
-     * Recreates an already-analyzed MarkovTextLimited given a String produced by {@link #serializeToString()}.
-     * @param data a String returned by {@link #serializeToString()}
+     * Recreates an already-analyzed MarkovTextLimited given a String produced by {@link #stringSerialize()}.
+     * @param data a String returned by {@link #stringSerialize()}
      * @return a MarkovTextLimited that is ready to generate text with {@link #chain(long)}
      */
-    public static MarkovTextLimited deserializeFromString(String data)
+    public static MarkovTextLimited stringDeserialize(String data)
     {
         int split = data.indexOf('\t');
         MarkovTextLimited markov = new MarkovTextLimited();
         markov.words = TextTools.split(data.substring(0, split), " ");
-        markov.processed = Base.BASE10.intSplit2D(data, "$", "|", split + 1, data.length()));
+        markov.processed = Base.BASE10.intSplit2D(data, "$", "|", split + 1, data.length());
         return markov;
     }
 
@@ -333,15 +341,6 @@ public class MarkovTextLimited {
      */
     public MarkovTextLimited copy()
     {
-        MarkovTextLimited other = new MarkovTextLimited();
-        other.words = new String[words.length];
-        System.arraycopy(words, 0, other.words, 0, words.length);
-        other.processed = new int[processed.length][];
-        int len;
-        for (int i = 0; i < processed.length; i++) {
-            other.processed[i] = new int[len = processed[i].length];
-            System.arraycopy(processed[i], 0, other.processed[i], 0, len);
-        }
-        return other;
+        return new MarkovTextLimited(this);
     }
 }
