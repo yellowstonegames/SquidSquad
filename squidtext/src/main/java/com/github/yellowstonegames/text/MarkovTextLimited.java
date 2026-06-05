@@ -38,6 +38,9 @@ import java.util.ArrayList;
  * analyze(). One way to do this conveniently is to use {@link #stringSerialize()} after calling analyze() once and to
  * save the resulting String; then, rather than calling analyze() again on future runs, you would call
  * {@link #stringDeserialize(String)} to create the MarkovTextLimited without needing any repeated analysis.
+ * <br>
+ * This doesn't produce especially understandable sentences, but sometimes that's all you need. This class is mostly
+ * present to provide feature parity with SquidLib 3.x .
  */
 public class MarkovTextLimited {
     /**
