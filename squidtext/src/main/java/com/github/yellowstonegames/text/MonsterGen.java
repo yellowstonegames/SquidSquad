@@ -22,8 +22,14 @@ import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.ds.ObjectOrderedSet;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.yellowstonegames.core.ISerializersNeeded;
+import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A class for generating random monster descriptions; can be subclassed to generate stats for a specific game. Use the
@@ -36,9 +42,9 @@ import java.util.*;
  * <br>
  * This doesn't produce very good output; it's mostly here for feature parity with SquidLib 3.x .
  */
-public class MonsterGen {
+public class MonsterGen implements ISerializersNeeded {
 
-    public static EnhancedRandom random = new DistinctRandom();
+    public final DistinctRandom random = new DistinctRandom();
 
     public String[] components =
             new String[]{
@@ -64,9 +70,9 @@ public class MonsterGen {
      * A creature that can be mixed with other Chimeras or given additional descriptors, then printed in a usable format
      * for game text.
      */
-    public static class Chimera
+    public static class Chimera implements ISerializersNeeded
     {
-        public ObjectObjectOrderedMap<String, List<String>> parts;
+        public ObjectObjectOrderedMap<String, ObjectList<String>> parts;
         public ObjectOrderedSet<String> unsaidAdjectives, wholeAdjectives, powerAdjectives, powerPhrases;
         public String name, mainForm, unknown;
 
@@ -84,7 +90,7 @@ public class MonsterGen {
             else
                 mainForm = other.name;
             parts = new ObjectObjectOrderedMap<>(other.parts);
-            List<String> oldParts = new ArrayList<>(parts.remove(mainForm));
+            ObjectList<String> oldParts = new ObjectList<>(parts.remove(mainForm));
             parts.put(name, oldParts);
             unsaidAdjectives = new ObjectOrderedSet<>(other.unsaidAdjectives);
             wholeAdjectives = new ObjectOrderedSet<>(other.wholeAdjectives);
@@ -131,7 +137,7 @@ public class MonsterGen {
             wholeAdjectives = new ObjectOrderedSet<>();
             powerAdjectives = new ObjectOrderedSet<>();
             powerPhrases = new ObjectOrderedSet<>();
-            ArrayList<String> selfParts = new ArrayList<>();
+            ObjectList<String> selfParts = new ObjectList<>();
             int t = 0;
             for (; t < terms.length; t++) {
                 if(";".equals(terms[t]))
@@ -209,12 +215,12 @@ public class MonsterGen {
                 mainForm = unknown;
             else
                 mainForm = name;
-            this.parts = new ObjectObjectOrderedMap<String, List<String>>();
-            unsaidAdjectives = new ObjectOrderedSet<String>(unsaid);
-            wholeAdjectives = new ObjectOrderedSet<String>(whole);
-            powerAdjectives = new ObjectOrderedSet<String>(powerAdj);
-            powerPhrases = new ObjectOrderedSet<String>(powerPhr);
-            ArrayList<String> selfParts = new ArrayList<String>(parts);
+            this.parts = new ObjectObjectOrderedMap<>();
+            unsaidAdjectives = new ObjectOrderedSet<>(unsaid);
+            wholeAdjectives = new ObjectOrderedSet<>(whole);
+            powerAdjectives = new ObjectOrderedSet<>(powerAdj);
+            powerPhrases = new ObjectOrderedSet<>(powerPhr);
+            ObjectList<String> selfParts = new ObjectList<>(parts);
             this.parts.put(name, selfParts);
         }
 
@@ -253,7 +259,7 @@ public class MonsterGen {
             {
                 sb.append("with the");
                 i = 1;
-                for(Map.Entry<String, List<String>> ent : parts.entrySet())
+                for(Map.Entry<String, ObjectList<String>> ent : parts.entrySet())
                 {
                     if(name != null && name.equals(ent.getKey()))
                         continue;
@@ -329,7 +335,7 @@ public class MonsterGen {
             {
                 sb.append(" with the");
                 i = 1;
-                for(Map.Entry<String, List<String>> ent : parts.entrySet())
+                for(Map.Entry<String, ObjectList<String>> ent : parts.entrySet())
                 {
                     if(name != null && name.equals(ent.getKey()))
                         continue;
@@ -396,8 +402,8 @@ public class MonsterGen {
         }
 
         /**
-         * Fuse two Chimera objects by some fraction of influence, using the default EnhancedRandom and possibly renaming the
-         * creature. Does not modify the existing Chimera objects.
+         * Fuse two Chimera objects by some fraction of influence, using a new randomly-seeded DistinctRandom and
+         * possibly renaming the creature. Does not modify the existing Chimera objects.
          * @param newName the name to call the produced Chimera
          * @param other the Chimera to mix with this one
          * @param otherInfluence the fraction between 0.0 and 1.0 of descriptors from other to use
@@ -405,7 +411,19 @@ public class MonsterGen {
          */
         public Chimera mix(String newName, Chimera other, double otherInfluence)
         {
-            return mix(random, newName, other, otherInfluence);
+            return mix(new DistinctRandom(), newName, other, otherInfluence);
+        }
+
+        /**
+         * Gets a List of Class instances that must each be registered with a serialization library before this object can
+         * be successfully serialized or deserialized. This is {@link GwtIncompatible}; none of the serialization libraries
+         * this is meant for have any support for GWT.
+         *
+         * @return a List of Class instances that must each be registered with a serialization library
+         */
+        @GwtIncompatible
+        public List<Class<?>> getSerializersNeeded() {
+            return Arrays.asList(ObjectList.class, ObjectOrderedSet.class, ObjectObjectOrderedMap.class);
         }
     }
     public static final Chimera SNAKE = new Chimera("snake", null, "head", "tail", "fangs", "eyes", ";",
@@ -442,7 +460,7 @@ public class MonsterGen {
      */
     public MonsterGen(long seed)
     {
-        random.setState(seed);
+        random.setSeed(seed);
     }
     /**
      * Constructs a MonsterGen with the given seed (hashing seed with {@link Hasher#hashBulk64(long, String)}) for
@@ -450,7 +468,7 @@ public class MonsterGen {
      */
     public MonsterGen(String seed)
     {
-        random.setState(Hasher.hashBulk64(1L, seed));
+        random.setSeed(Hasher.hashBulk64(1L, seed));
     }
 
     /**
@@ -529,10 +547,10 @@ public class MonsterGen {
      */
     public Chimera randomize(EnhancedRandom rng, String newName, int detail)
     {
-        ArrayList<String> ps = new ArrayList<String>();
+        ObjectList<String> ps = new ObjectList<>();
         Collections.addAll(ps, portion(rng, Arrays.copyOf(components, components.length), detail));
-        Chimera next = new Chimera(newName, "thing", ps, new ArrayList<String>(),
-                new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
+        Chimera next = new Chimera(newName, "thing", ps, new ObjectList<>(),
+                new ObjectList<>(), new ObjectList<>(), new ObjectList<>());
         if(detail > 0) {
             int powerCount = rng.nextInt(detail), bodyCount = detail - powerCount;
             int adjs = rng.nextInt(powerCount + 1), phrs = powerCount - adjs;
@@ -595,4 +613,15 @@ public class MonsterGen {
         return part;
     }
 
+    /**
+     * Gets a List of Class instances that must each be registered with a serialization library before this object can
+     * be successfully serialized or deserialized. This is {@link GwtIncompatible}; none of the serialization libraries
+     * this is meant for have any support for GWT.
+     *
+     * @return a List of Class instances that must each be registered with a serialization library
+     */
+    @GwtIncompatible
+    public List<Class<?>> getSerializersNeeded() {
+        return Arrays.asList(DistinctRandom.class, String[].class);
+    }
 }
