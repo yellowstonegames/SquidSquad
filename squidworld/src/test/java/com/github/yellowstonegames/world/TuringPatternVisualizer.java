@@ -57,7 +57,7 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
             turingInhibit = TuringPattern.offsetsCircle(width, height, 8);
 
     private FlowRandom random = new FlowRandom(123456789L);
-    private PuffyNoise noise = new PuffyNoise(12345L, 3, 0.1f);
+    private NoiseWrapper noise = new NoiseWrapper(new FoamNoise(12345L), 0.1f, NoiseWrapper.FBM, 1);
     private ImmediateModeRenderer20 renderer;
 
     private static final int width = 256, height = 256;
@@ -159,13 +159,11 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                             case 1:
                                 random.setSeed(BitConversion.doubleToLongBits(Math.random()));
                                 TuringPattern.initializeInto(turing, random);
-                                System.out.println("CHANGED TO MODE " + mode + " WITH FIRST ITEM " + turing[0]);
                                 break;
                             case 2:
                                 TuringPattern.offsetsCircleInto(turingActivate, width, height, 4);
                                 TuringPattern.offsetsCircleInto(turingInhibit, width, height, 8);
                                 TuringPattern.initializeInto(turing, width, height, noise, ctr);
-                                System.out.println("CHANGED TO MODE " + mode + " WITH FIRST ITEM" + turing[0]);
                                 break;
                         }
                         break;
@@ -203,7 +201,6 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         bright = basicPrepare(turing[x * height + y]);
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        if(x == 0 && y == 0) System.out.println(bright + " " + turing[0]);
                     }
                 }
                 break;
@@ -217,7 +214,6 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         bright = basicPrepare(turing[x * height + y]);
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        if(x == 0 && y == 0) System.out.println(bright + " " + turing[0]);
                     }
                 }
                 break;
@@ -229,7 +225,6 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         bright = basicPrepare(turing[x * height + y]);
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        if(x == 0 && y == 0) System.out.println(bright + " " + turing[0]);
                     }
                 }
                 break;
@@ -240,7 +235,6 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         bright = basicPrepare(noise.getNoise(x, y, ctr * 0.25f));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
-                        if(x == 0 && y == 0) System.out.println(bright);
                     }
                 }
                 break;
