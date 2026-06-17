@@ -49,14 +49,14 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
 public class TuringPatternVisualizer extends ApplicationAdapter {
 
     int mode = 0;
-    int modes = 2;
+    int modes = 3;
 
     private final float[] turing = TuringPattern.initialize(width, height);
     private final int[][] turingActivate = TuringPattern.offsetsCircle(width, height, 4),
             turingInhibit = TuringPattern.offsetsCircle(width, height, 8);
 
     private FlowRandom random = new FlowRandom(123456789L);
-    private SorbetNoise noise = new SorbetNoise(12345L, 3);
+    private PuffyNoise noise = new PuffyNoise(12345L, 3, 0.1f);
     private ImmediateModeRenderer20 renderer;
 
     private static final int width = 256, height = 256;
@@ -115,8 +115,7 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                             Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
                             for (int x = 0; x < w; x++) {
                                 for (int y = 0; y < h; y++) {
-//                                    float color = basicPrepare(noise.getConfiguredNoise(x, y, c));
-                                    float color = circleInPrepare(
+                                    float color = basicPrepare(
                                             noise.getNoise(
                                             x, y, c - inv * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH)))
                                     );
@@ -195,7 +194,6 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
         float bright;
         switch (mode) {
             case 0:
-
                 Gdx.graphics.setTitle("3D noise at " + Gdx.graphics.getFramesPerSecond()  + " FPS");
                 TuringPattern.distort(turingActivate, width, height, noise, ctr, 778899);
                 TuringPattern.distort(turingInhibit, width, height, noise, ctr, 556677);
@@ -214,6 +212,16 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
                         bright = basicPrepare(turing[x * height + y]);
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                    }
+                }
+                break;
+            case 2:
+                Gdx.graphics.setTitle("Plain noise " + Gdx.graphics.getFramesPerSecond()  + " FPS");
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bright = basicPrepare(noise.getNoise(x, y));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
                     }
