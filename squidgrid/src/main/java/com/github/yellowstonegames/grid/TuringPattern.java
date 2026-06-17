@@ -352,7 +352,7 @@ public final class TuringPattern {
      */
     public static void step(final float[] substance, final int[][] activator,
                             final float activation, final int[][] inhibitor, final float inhibition) {
-        float mn = -Float.MAX_VALUE, mx = Float.MAX_VALUE, t;
+        float mn = Float.MAX_VALUE, mx = -Float.MAX_VALUE, t;
 
         for (int s = 0; s < substance.length; s++) {
             float activate = 0f, inhibit = 0f;
@@ -446,7 +446,7 @@ public final class TuringPattern {
      */
     public static void normalize(final float[] substance)
     {
-        float mn = -Float.MAX_VALUE, mx = Float.MAX_VALUE, t;
+        float mn = Float.MAX_VALUE, mx = -Float.MAX_VALUE, t;
         for (int s = 0; s < substance.length; s++) {
             mx = Math.max(mx, (t = substance[s]));
             mn = Math.min(mn, t);
