@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.PaletteReducer;
+import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.TrigTools;
@@ -89,7 +90,6 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
 
         random.setSeed(ctr);
         TuringPattern.initializeInto(turing, random);
-
 
         int[] gray256 = new int[256];
         for (int i = 0; i < 256; i++) {
@@ -156,13 +156,15 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         mode = ((mode + (UIUtils.shift() ? modes - 1 : 1)) % modes);
                         switch (mode){
                             case 0:
-                                random.setSeed(ctr);
+                                random.setSeed(BitConversion.doubleToLongBits(Math.random()));
                                 TuringPattern.initializeInto(turing, random);
+                                System.out.println("CHANGED TO MODE " + mode + " WITH FIRST ITEM " + turing[0]);
                                 break;
                             case 1:
                                 TuringPattern.offsetsCircleInto(turingActivate, width, height, 4);
                                 TuringPattern.offsetsCircleInto(turingInhibit, width, height, 8);
                                 TuringPattern.initializeInto(turing, width, height, noise, ctr);
+                                System.out.println("CHANGED TO MODE " + mode + " WITH FIRST ITEM" + turing[0]);
                                 break;
                         }
                         break;
@@ -203,6 +205,7 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         bright = basicPrepare(turing[x * height + y]);
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
+                        if(x == 0 && y == 0) System.out.println(bright + " " + turing[0]);
                     }
                 }
                 break;
@@ -214,6 +217,7 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         bright = basicPrepare(turing[x * height + y]);
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
+                        if(x == 0 && y == 0) System.out.println(bright + " " + turing[0]);
                     }
                 }
                 break;
@@ -221,9 +225,10 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                 Gdx.graphics.setTitle("Plain noise " + Gdx.graphics.getFramesPerSecond()  + " FPS");
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bright = basicPrepare(noise.getNoise(x, y));
+                        bright = basicPrepare(noise.getNoise(x, y, ctr * 0.25f));
                         renderer.color(bright, bright, bright, 1f);
                         renderer.vertex(x, y, 0);
+                        if(x == 0 && y == 0) System.out.println(bright);
                     }
                 }
                 break;
