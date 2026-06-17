@@ -50,7 +50,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_POINTS;
 public class TuringPatternVisualizer extends ApplicationAdapter {
 
     int mode = 0;
-    int modes = 3;
+    int modes = 4;
 
     private final float[] turing = TuringPattern.initialize(width, height);
     private final int[][] turingActivate = TuringPattern.offsetsCircle(width, height, 4),
@@ -156,11 +156,12 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         mode = ((mode + (UIUtils.shift() ? modes - 1 : 1)) % modes);
                         switch (mode){
                             case 0:
+                            case 1:
                                 random.setSeed(BitConversion.doubleToLongBits(Math.random()));
                                 TuringPattern.initializeInto(turing, random);
                                 System.out.println("CHANGED TO MODE " + mode + " WITH FIRST ITEM " + turing[0]);
                                 break;
-                            case 1:
+                            case 2:
                                 TuringPattern.offsetsCircleInto(turingActivate, width, height, 4);
                                 TuringPattern.offsetsCircleInto(turingInhibit, width, height, 8);
                                 TuringPattern.initializeInto(turing, width, height, noise, ctr);
@@ -197,6 +198,17 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
         switch (mode) {
             case 0:
                 Gdx.graphics.setTitle("3D noise at " + Gdx.graphics.getFramesPerSecond()  + " FPS");
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        bright = basicPrepare(turing[x * height + y]);
+                        renderer.color(bright, bright, bright, 1f);
+                        renderer.vertex(x, y, 0);
+                        if(x == 0 && y == 0) System.out.println(bright + " " + turing[0]);
+                    }
+                }
+                break;
+            case 1:
+                Gdx.graphics.setTitle("3D noise at " + Gdx.graphics.getFramesPerSecond()  + " FPS");
                 TuringPattern.distort(turingActivate, width, height, noise, ctr, 778899);
                 TuringPattern.distort(turingInhibit, width, height, noise, ctr, 556677);
                 TuringPattern.step(turing, turingActivate, 0.2f, turingInhibit, -0.2f);
@@ -209,7 +221,7 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                     }
                 }
                 break;
-            case 1:
+            case 2:
                 Gdx.graphics.setTitle("Offsets at " + Gdx.graphics.getFramesPerSecond()  + " FPS");
                 TuringPattern.step(turing, turingActivate, 0.1f, turingInhibit, -0.1f);
                 for (int x = 0; x < width; x++) {
@@ -221,7 +233,7 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                     }
                 }
                 break;
-            case 2:
+            case 3:
                 Gdx.graphics.setTitle("Plain noise " + Gdx.graphics.getFramesPerSecond()  + " FPS");
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
