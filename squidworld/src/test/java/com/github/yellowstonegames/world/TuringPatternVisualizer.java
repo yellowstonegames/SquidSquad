@@ -57,7 +57,7 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
             turingInhibit = TuringPattern.offsetsCircle(width, height, 8);
 
     private FlowRandom random = new FlowRandom(123456789L);
-    private NoiseWrapper noise = new NoiseWrapper(new FoamNoise(12345L), 0.1f, NoiseWrapper.FBM, 1);
+    private NoiseWrapper noise = new NoiseWrapper(new FoamNoise(12345L), 0.01f, NoiseWrapper.FBM, 1);
     private ImmediateModeRenderer20 renderer;
 
     private static final int width = 256, height = 256;
@@ -109,18 +109,17 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         noise.stringDeserialize(Gdx.app.getClipboard().getContents());
                         break;
                     case W:
-                        for (int c = 0; c < 256; c++) {
+                        random.setSeed(123L);
+                        TuringPattern.initializeInto(turing, random);
+                        for (int c = 0; c < 192; c++) {
                             int w = 256, h = 256;
-                            float halfW = (w-1) * 0.5f, halfH = (h-1) * 0.5f, inv = 1f / w;
+                            TuringPattern.distort(turingActivate, w, h, noise, c, 778899);
+                            TuringPattern.distort(turingInhibit, w, h, noise, c, 556677);
+                            TuringPattern.step(turing, turingActivate, 0.2f, turingInhibit, -0.2f);
                             Pixmap p = new Pixmap(w, h, Pixmap.Format.RGBA8888);
                             for (int x = 0; x < w; x++) {
                                 for (int y = 0; y < h; y++) {
-                                    float color = basicPrepare(
-                                            noise.getNoise(
-                                            x, y, c - inv * ((x - halfW) * (x - halfW) + (y - halfH) * (y - halfH)))
-                                    );
-//                                            * 0.5f + 0.25f + TrigTools.sinTurns(c * 0x1p-7f) * 0.25f;
-//                                    color = color * 0x0.FFp0f + 0x1p-8f;
+                                    float color = basicPrepare(turing[x * h + y]);
                                     p.setColor(color, color, color, 1f);
                                     p.drawPixel(x, y);
                                 }
@@ -157,7 +156,6 @@ public class TuringPatternVisualizer extends ApplicationAdapter {
                         switch (mode){
                             case 0:
                             case 1:
-                                random.setSeed(BitConversion.doubleToLongBits(Math.random()));
                                 TuringPattern.initializeInto(turing, random);
                                 break;
                             case 2:
