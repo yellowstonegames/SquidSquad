@@ -69,7 +69,9 @@ not want to, though; the generators in juniper tend to have passed really large 
 a suite of tests, and sometimes over 10 petabytes of a single test), and are often extremely fast. Plus, they have more
 features out-of-the-box, like easy serialization of potentially much-larger states to Strings; squidlib-util could only
 handle 64-bit states for that. `regexodus` is also a dependency of `squidlib-util`; it hasn't changed. It provides
-cross-platform regular expressions that work the same on GWT as on desktop, and adds a few features.
+cross-platform regular expressions that work the same on GWT as on desktop, and adds a few features. Note that the
+`Pattern` in regexodus is not identical to the `Pattern` in `java.util.regex`; some features use different syntax,
+while others are missing in one library or the other. 
 
 # Which?
 There are currently quite a few modules here; they depend on each other when necessary, so pulling in one module as a
@@ -125,6 +127,7 @@ dependency will usually pull in a few others. The full list is:
      which can be applied to a `GlyphGrid` or `GlyphActor`.
      - On platforms other than GWT, this module can load [REXPaint](https://www.gridsagegames.com/rexpaint/) .xp files. It
        can also save a `GlyphGrid` to a new .xp file. These use the small `XPIO` class.
+     - The `rexpaint` module should in theory be compatible with TeaVM, even though it isn't compatible with GWT.
  - squidpath
    - Pathfinding, mostly using a modified older version of [simple-graphs](https://github.com/earlygrey/simple-graphs). There
      is also `DijkstraMap` here, which is good for some types of pathfinding that simple-graphs' `A*` algorithm can't
@@ -177,6 +180,7 @@ dependency will usually pull in a few others. The full list is:
       want to keep in a stable format for a long time. It typically isn't as fast at serialization or deserialization
       as Fory, as a counterpoint.
     - Unlike most other modules here, `squidfreeze` is not GWT-compatible, because Kryo isn't either.
+    - It isn't TeaVM-compatible, either; core IO classes that Kryo uses don't make sense in a web browser.
  - squidwrath
     - Like `squidstore` or `squidfreeze`, but using [Apache Fory](https://fory.apache.org) instead of libGDX Json. Fory
       uses a binary format, like Kryo but incompatible, and can produce generally smaller serialized data in
@@ -188,6 +192,7 @@ dependency will usually pull in a few others. The full list is:
         don't need any serializer to be registered. That means `squidwrathcore` and `squidwrathpath` are empty other
         than their tests.
     - Unlike most other modules here, `squidwrath` is not GWT-compatible, because Fory isn't either.
+    - It isn't TeaVM-compatible, either; core IO classes that Fory uses don't make sense in a web browser.
 
 # Why?
 
