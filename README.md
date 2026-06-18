@@ -182,8 +182,8 @@ dependency will usually pull in a few others. The full list is:
       uses a binary format, like Kryo but incompatible, and can produce generally smaller serialized data in
       most cases, while both serializing and deserializing even more quickly than Kryo.
     - Unlike `squidfreeze`, many classes can be serialized by `squidwrath` without needing a special serializer
-      (the class still needs to be registered with Fory, just not with `registerSerializer()`). If a serializer isn't
-      present in `squidwrath` or `tantrum`, that usually means you don't need a serializer when registering it.
+      (the class still needs to be registered with Fory, just not with `registerSerializerAndType()`). If a serializer
+      isn't present in `squidwrath` or `tantrum`, that usually means you don't need a serializer when registering it.
       - All random number generators in `juniper` and any classes in `squidcore` or `squidpath` that can be serialized
         don't need any serializer to be registered. That means `squidwrathcore` and `squidwrathpath` are empty other
         than their tests.

@@ -29,7 +29,7 @@ public class TextTest {
     public void testLanguage() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(Language.class, new LanguageSerializer(fory));
+        fory.registerSerializerAndType(Language.class, new LanguageSerializer(fory));
 
         Language data = Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP);
 
@@ -56,7 +56,7 @@ public class TextTest {
     public void testLanguageSentenceForm() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(Language.SentenceForm.class, new LanguageSentenceFormSerializer(fory));
+        fory.registerSerializerAndType(Language.SentenceForm.class, new LanguageSentenceFormSerializer(fory));
 
         Language.SentenceForm data = new Language.SentenceForm(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), 1, 8);
         {
@@ -70,8 +70,8 @@ public class TextTest {
     public void testTranslator() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(Language.class, new LanguageSerializer(fory));
-        fory.registerSerializer(Translator.class, new TranslatorSerializer(fory));
+        fory.registerSerializerAndType(Language.class, new LanguageSerializer(fory));
+        fory.registerSerializerAndType(Translator.class, new TranslatorSerializer(fory));
 
         String sentence = "For you, I can translate; I will lower my steep rate; to something more affordable; since you are so adorable.";
         Translator data = new Translator(Language.randomLanguage(1L).addModifiers(Language.Modifier.LISP), -1L);
@@ -88,7 +88,7 @@ public class TextTest {
     public void testMnemonic() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(Mnemonic.class, new MnemonicSerializer(fory));
+        fory.registerSerializerAndType(Mnemonic.class, new MnemonicSerializer(fory));
 
         Mnemonic data = new Mnemonic(1234567L);
         {

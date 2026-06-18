@@ -62,7 +62,7 @@ public class PathTest {
     public void testUndirectedGraph() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
         fory.register(UndirectedGraph.class);
 
         int n = 5;
@@ -84,7 +84,7 @@ public class PathTest {
     public void testDirectedGraph() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
         fory.register(DirectedGraph.class);
 
         int n = 5;
@@ -106,7 +106,7 @@ public class PathTest {
     public void testDefaultGraph() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
         fory.register(DefaultGraph.class);
 
         Graph<Coord> data = new DefaultGraph(new char[][]{
@@ -134,7 +134,7 @@ public class PathTest {
     public void testCostlyGraph() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
         fory.register(CostlyGraph.class);
 
         Graph<Coord> data = new CostlyGraph(new char[][]{

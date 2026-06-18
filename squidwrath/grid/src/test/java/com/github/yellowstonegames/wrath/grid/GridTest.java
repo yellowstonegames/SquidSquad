@@ -37,8 +37,8 @@ public class GridTest {
     public void testCoord() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(ObjectList.class, new ObjectListSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(ObjectList.class, new ObjectListSerializer(fory));
         ObjectList<Coord> data = ObjectList.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(-2, -3), Coord.get(100, 100));
 
         byte[] bytes = fory.serialize(data);
@@ -64,8 +64,8 @@ public class GridTest {
     public void testCoordSet() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordSet.class, new CoordSetSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordSet.class, new CoordSetSerializer(fory));
         CoordSet data = CoordSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
         byte[] bytes = fory.serialize(data);
@@ -79,8 +79,8 @@ public class GridTest {
     public void testCoordOrderedSet() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordOrderedSet.class, new CoordOrderedSetSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordOrderedSet.class, new CoordOrderedSetSerializer(fory));
         CoordOrderedSet data = CoordOrderedSet.with(Coord.get(0, 0), Coord.get(1, 1), Coord.get(2, 3), Coord.get(100, 100));
 
         byte[] bytes = fory.serialize(data);
@@ -94,8 +94,8 @@ public class GridTest {
     public void testCoordObjectMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordObjectMap.class, new CoordObjectMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordObjectMap.class, new CoordObjectMapSerializer(fory));
         CoordObjectMap<String> data = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
 
         byte[] bytes = fory.serialize(data);
@@ -110,8 +110,8 @@ public class GridTest {
     public void testCoordObjectOrderedMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordObjectOrderedMap.class, new CoordObjectOrderedMapSerializer(fory));
         CoordObjectOrderedMap<String> data = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(1, 1), "bar", Coord.get(2, 3), "baz", Coord.get(100, 100), "quux");
         byte[] bytes = fory.serialize(data);
         //Serialized length is ~~105~~ now it's 44!
@@ -126,8 +126,8 @@ public class GridTest {
     public void testCoordFloatMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordFloatMap.class, new CoordFloatMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordFloatMap.class, new CoordFloatMapSerializer(fory));
         CoordFloatMap data = CoordFloatMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
         byte[] bytes = fory.serialize(data);
@@ -141,8 +141,8 @@ public class GridTest {
     public void testCoordFloatOrderedMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
         CoordFloatOrderedMap data = CoordFloatOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 6.66, Coord.get(100, 100), 3.14159);
 
         byte[] bytes = fory.serialize(data);
@@ -156,8 +156,8 @@ public class GridTest {
     public void testCoordLongMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordLongMap.class, new CoordLongMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordLongMap.class, new CoordLongMapSerializer(fory));
         CoordLongMap data = CoordLongMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
         byte[] bytes = fory.serialize(data);
@@ -171,8 +171,8 @@ public class GridTest {
     public void testCoordLongOrderedMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordLongOrderedMap.class, new CoordLongOrderedMapSerializer(fory));
         CoordLongOrderedMap data = CoordLongOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
         byte[] bytes = fory.serialize(data);
@@ -186,8 +186,8 @@ public class GridTest {
     public void testCoordIntMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordIntMap.class, new CoordIntMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordIntMap.class, new CoordIntMapSerializer(fory));
         CoordIntMap data = CoordIntMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
         byte[] bytes = fory.serialize(data);
@@ -201,8 +201,8 @@ public class GridTest {
     public void testCoordIntOrderedMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(CoordIntOrderedMap.class, new CoordIntOrderedMapSerializer(fory));
         CoordIntOrderedMap data = CoordIntOrderedMap.with(Coord.get(0, 0), 42, Coord.get(1, 1), 123, Coord.get(2, 3), 666, Coord.get(100, 100), 314159);
 
         byte[] bytes = fory.serialize(data);
@@ -273,9 +273,9 @@ public class GridTest {
     public void testSpatialMap() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
         fory.register(IGI.class);
-        fory.registerSerializer(SpatialMap.class, new SpatialMapSerializer(fory));
+        fory.registerSerializerAndType(SpatialMap.class, new SpatialMapSerializer(fory));
         SpatialMap<IGI> data = new SpatialMap<>(8);
         data.add(new IGI(Coord.get(1, 2)));
         data.add(new IGI(Coord.get(2, 2)));
@@ -293,7 +293,7 @@ public class GridTest {
     public void testRadiance() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializerAndType(Radiance.class, new RadianceSerializer(fory));
 
         Radiance data = new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123);
 
@@ -308,9 +308,9 @@ public class GridTest {
     public void testLightSource() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
-        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializerAndType(LightSource.class, new LightSourceSerializer(fory));
 
         LightSource data = new LightSource(Coord.get(1, 10), new Radiance(5, 0xD0F055FF, 0.7f, 0.05f, 0.2f, 0.5f, -123), 1f/6f, 0.125f);
 
@@ -329,12 +329,12 @@ public class GridTest {
         fory.register(int[][].class);
         fory.register(float[].class);
         fory.register(float[][].class);
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
         fory.register(Region.class);
-        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
-        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
-        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
-        fory.registerSerializer(LightingManager.class, new LightingManagerSerializer(fory));
+        fory.registerSerializerAndType(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializerAndType(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializerAndType(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializerAndType(LightingManager.class, new LightingManagerSerializer(fory));
 
         LightingManager data = new LightingManager(new float[10][10], 0x252033FF, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
@@ -354,12 +354,12 @@ public class GridTest {
         fory.register(int[][].class);
         fory.register(float[].class);
         fory.register(float[][].class);
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
         fory.register(Region.class);
-        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
-        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
-        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
-        fory.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fory));
+        fory.registerSerializerAndType(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializerAndType(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializerAndType(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializerAndType(LightingManagerRgb.class, new LightingManagerRgbSerializer(fory));
 
         LightingManagerRgb data = new LightingManagerRgb(new float[10][10], 0xFF858040, Radius.CIRCLE, 4f);
         data.addLight(5, 4, new Radiance(2f, 0x99DDFFFF, 0.2f, 0f, 0f, 0f));
@@ -381,14 +381,14 @@ public class GridTest {
         fory.register(float[][].class);
         fory.register(char[].class);
         fory.register(char[][].class);
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Radiance.class, new RadianceSerializer(fory));
         fory.register(Region.class);
-        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
-        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
-        fory.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
-        fory.registerSerializer(LightingManager.class, new LightingManagerSerializer(fory));
-        fory.registerSerializer(VisionFramework.class, new VisionFrameworkSerializer(fory));
+        fory.registerSerializerAndType(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializerAndType(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializerAndType(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
+        fory.registerSerializerAndType(LightingManager.class, new LightingManagerSerializer(fory));
+        fory.registerSerializerAndType(VisionFramework.class, new VisionFrameworkSerializer(fory));
 
         VisionFramework data = new VisionFramework();
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColor.describeOklab("darker gray 9 yellow"));
@@ -411,14 +411,14 @@ public class GridTest {
         fory.register(float[][].class);
         fory.register(char[].class);
         fory.register(char[][].class);
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(Radiance.class, new RadianceSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(Radiance.class, new RadianceSerializer(fory));
         fory.register(Region.class);
-        fory.registerSerializer(LightSource.class, new LightSourceSerializer(fory));
-        fory.registerSerializer(ObjectDeque.class, new ObjectDequeSerializer(fory));
-        fory.registerSerializer(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
-        fory.registerSerializer(LightingManagerRgb.class, new LightingManagerRgbSerializer(fory));
-        fory.registerSerializer(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer(fory));
+        fory.registerSerializerAndType(LightSource.class, new LightSourceSerializer(fory));
+        fory.registerSerializerAndType(ObjectDeque.class, new ObjectDequeSerializer(fory));
+        fory.registerSerializerAndType(CoordFloatOrderedMap.class, new CoordFloatOrderedMapSerializer(fory));
+        fory.registerSerializerAndType(LightingManagerRgb.class, new LightingManagerRgbSerializer(fory));
+        fory.registerSerializerAndType(VisionFrameworkRgb.class, new VisionFrameworkRgbSerializer(fory));
 
         VisionFrameworkRgb data = new VisionFrameworkRgb();
         data.restart(ArrayTools.fill('.', 10, 10), Coord.get(3, 3), 2f, DescriptiveColorRgb.describe("darker gray 9 yellow"));
@@ -746,7 +746,7 @@ public class GridTest {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash.class);
-        fory.registerSerializer(BasicHashNoise.class, new BasicHashNoiseSerializer(fory));
+        fory.registerSerializerAndType(BasicHashNoise.class, new BasicHashNoiseSerializer(fory));
 
         BasicHashNoise data = new BasicHashNoise(-987654321, new FlawedPointHash.FlowerHash(123456789));
 
@@ -922,8 +922,8 @@ public class GridTest {
     public void testPointPair() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(Coord.class, new CoordSerializer(fory));
-        fory.registerSerializer(PointPair.class, new PointPairSerializer(fory));
+        fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
+        fory.registerSerializerAndType(PointPair.class, new PointPairSerializer(fory));
         PointPair<Coord> data = new PointPair<>(Coord.get(0, 0), Coord.get(1, 1));
 
         byte[] bytes = fory.serialize(data);

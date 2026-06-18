@@ -34,7 +34,7 @@ public class WorldTest {
     public void testEllipticalWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(EllipticalWorldMap.class, new EllipticalWorldMapSerializer(fory));
+        fory.registerSerializerAndType(EllipticalWorldMap.class, new EllipticalWorldMapSerializer(fory));
 
         EllipticalWorldMap data = new EllipticalWorldMap(123, 200, 100);
         data.generate();
@@ -49,7 +49,7 @@ public class WorldTest {
     public void testGlobeMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
+        fory.registerSerializerAndType(GlobeMap.class, new GlobeMapSerializer(fory));
 
         GlobeMap data = new GlobeMap(123, 100, 100);
         data.generate();
@@ -64,7 +64,7 @@ public class WorldTest {
     public void testHexagonalWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(HexagonalWorldMap.class, new HexagonalWorldMapSerializer(fory));
+        fory.registerSerializerAndType(HexagonalWorldMap.class, new HexagonalWorldMapSerializer(fory));
 
         HexagonalWorldMap data = new HexagonalWorldMap(123, 200, 100);
         data.generate();
@@ -79,7 +79,7 @@ public class WorldTest {
     public void testHyperellipticalWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(HyperellipticalWorldMap.class, new HyperellipticalWorldMapSerializer(fory));
+        fory.registerSerializerAndType(HyperellipticalWorldMap.class, new HyperellipticalWorldMapSerializer(fory));
 
         HyperellipticalWorldMap data = new HyperellipticalWorldMap(123, 200, 100);
         data.generate();
@@ -94,7 +94,7 @@ public class WorldTest {
     public void testDiagonalWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(DiagonalWorldMap.class, new DiagonalWorldMapSerializer(fory));
+        fory.registerSerializerAndType(DiagonalWorldMap.class, new DiagonalWorldMapSerializer(fory));
 
         DiagonalWorldMap data = new DiagonalWorldMap(123, 200);
         data.generate();
@@ -109,7 +109,7 @@ public class WorldTest {
     public void testLatLonWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(LatLonWorldMap.class, new LatLonWorldMapSerializer(fory));
+        fory.registerSerializerAndType(LatLonWorldMap.class, new LatLonWorldMapSerializer(fory));
 
         LatLonWorldMap data = new LatLonWorldMap(123, 200, 100);
         data.generate();
@@ -124,7 +124,7 @@ public class WorldTest {
     public void testLocalMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(LocalMap.class, new LocalMapSerializer(fory));
+        fory.registerSerializerAndType(LocalMap.class, new LocalMapSerializer(fory));
 
         LocalMap data = new LocalMap(123, 100, 100);
         data.generate();
@@ -139,7 +139,7 @@ public class WorldTest {
     public void testMimicLocalMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(MimicLocalMap.class, new MimicLocalMapSerializer(fory));
+        fory.registerSerializerAndType(MimicLocalMap.class, new MimicLocalMapSerializer(fory));
 
         MimicLocalMap data = new MimicLocalMap(123);
         data.generate();
@@ -154,7 +154,7 @@ public class WorldTest {
     public void testMimicWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(MimicWorldMap.class, new MimicWorldMapSerializer(fory));
+        fory.registerSerializerAndType(MimicWorldMap.class, new MimicWorldMapSerializer(fory));
 
         MimicWorldMap data = new MimicWorldMap(123);
         data.generate();
@@ -169,7 +169,7 @@ public class WorldTest {
     public void testRotatingGlobeMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(RotatingGlobeMap.class, new RotatingGlobeMapSerializer(fory));
+        fory.registerSerializerAndType(RotatingGlobeMap.class, new RotatingGlobeMapSerializer(fory));
 
         RotatingGlobeMap data = new RotatingGlobeMap(123, 100, 100);
         data.generate();
@@ -184,7 +184,7 @@ public class WorldTest {
     public void testRoundSideWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(RoundSideWorldMap.class, new RoundSideWorldMapSerializer(fory));
+        fory.registerSerializerAndType(RoundSideWorldMap.class, new RoundSideWorldMapSerializer(fory));
 
         RoundSideWorldMap data = new RoundSideWorldMap(123, 100, 100);
         data.generate();
@@ -199,7 +199,7 @@ public class WorldTest {
     public void testStretchWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(StretchWorldMap.class, new StretchWorldMapSerializer(fory));
+        fory.registerSerializerAndType(StretchWorldMap.class, new StretchWorldMapSerializer(fory));
 
         StretchWorldMap data = new StretchWorldMap(123, 100, 100);
         data.generate();
@@ -214,7 +214,7 @@ public class WorldTest {
     public void testTilingWorldMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(TilingWorldMap.class, new TilingWorldMapSerializer(fory));
+        fory.registerSerializerAndType(TilingWorldMap.class, new TilingWorldMapSerializer(fory));
 
         TilingWorldMap data = new TilingWorldMap(123, 100, 100);
         data.generate();
@@ -229,7 +229,7 @@ public class WorldTest {
     public void testSimpleBiomeMapper() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(SimpleBiomeMapper.class, new SimpleBiomeMapperSerializer(fory));
+        fory.registerSerializerAndType(SimpleBiomeMapper.class, new SimpleBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -247,7 +247,7 @@ public class WorldTest {
     public void testDetailedBiomeMapper() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(DetailedBiomeMapper.class, new DetailedBiomeMapperSerializer(fory));
+        fory.registerSerializerAndType(DetailedBiomeMapper.class, new DetailedBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -265,7 +265,7 @@ public class WorldTest {
     public void testBlendedBiomeMapper() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fory));
+        fory.registerSerializerAndType(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -283,7 +283,7 @@ public class WorldTest {
     public void testUnrealisticBiomeMapper() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(UnrealisticBiomeMapper.class, new UnrealisticBiomeMapperSerializer(fory));
+        fory.registerSerializerAndType(UnrealisticBiomeMapper.class, new UnrealisticBiomeMapperSerializer(fory));
 
         StretchWorldMap wmg = new StretchWorldMap(124, 200, 100);
         wmg.generate();
@@ -301,8 +301,8 @@ public class WorldTest {
     public void testSimpleWorldMapView() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(SimpleWorldMapView.class, new SimpleWorldMapViewSerializer(fory));
-        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
+        fory.registerSerializerAndType(SimpleWorldMapView.class, new SimpleWorldMapViewSerializer(fory));
+        fory.registerSerializerAndType(GlobeMap.class, new GlobeMapSerializer(fory));
 
         SimpleWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -320,8 +320,8 @@ public class WorldTest {
     public void testDetailedWorldMapView() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(DetailedWorldMapView.class, new DetailedWorldMapViewSerializer(fory));
-        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
+        fory.registerSerializerAndType(DetailedWorldMapView.class, new DetailedWorldMapViewSerializer(fory));
+        fory.registerSerializerAndType(GlobeMap.class, new GlobeMapSerializer(fory));
 
         DetailedWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -339,8 +339,8 @@ public class WorldTest {
     public void testBlendedWorldMapView() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(BlendedWorldMapView.class, new BlendedWorldMapViewSerializer(fory));
-        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
+        fory.registerSerializerAndType(BlendedWorldMapView.class, new BlendedWorldMapViewSerializer(fory));
+        fory.registerSerializerAndType(GlobeMap.class, new GlobeMapSerializer(fory));
 
         BlendedWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -358,8 +358,8 @@ public class WorldTest {
     public void testUnrealisticWorldMapView() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(UnrealisticWorldMapView.class, new UnrealisticWorldMapViewSerializer(fory));
-        fory.registerSerializer(GlobeMap.class, new GlobeMapSerializer(fory));
+        fory.registerSerializerAndType(UnrealisticWorldMapView.class, new UnrealisticWorldMapViewSerializer(fory));
+        fory.registerSerializerAndType(GlobeMap.class, new GlobeMapSerializer(fory));
 
         UnrealisticWorldMapView data;
         GlobeMap world = new GlobeMap(1234567, 100, 100);
@@ -377,7 +377,7 @@ public class WorldTest {
     public void testFaction() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(Faction.class, new FactionSerializer(fory));
+        fory.registerSerializerAndType(Faction.class, new FactionSerializer(fory));
 
         Faction data = new Faction(Language.randomLanguage(123), "The Joyous Land of Tormentia", "Tormentia", new String[]{Biome.DESERT_BIOME});
         {
@@ -391,11 +391,11 @@ public class WorldTest {
     public void testPoliticalMapper() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(org.apache.fory.config.Language.JAVA).build();
-        fory.registerSerializer(Faction.class, new FactionSerializer(fory));
-        fory.registerSerializer(IntObjectOrderedMap.class, new IntObjectOrderedMapSerializer(fory));
-        fory.registerSerializer(StretchWorldMap.class, new StretchWorldMapSerializer(fory));
-        fory.registerSerializer(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fory));
-        fory.registerSerializer(PoliticalMapper.class, new PoliticalMapperSerializer(fory));
+        fory.registerSerializerAndType(Faction.class, new FactionSerializer(fory));
+        fory.registerSerializerAndType(IntObjectOrderedMap.class, new IntObjectOrderedMapSerializer(fory));
+        fory.registerSerializerAndType(StretchWorldMap.class, new StretchWorldMapSerializer(fory));
+        fory.registerSerializerAndType(BlendedBiomeMapper.class, new BlendedBiomeMapperSerializer(fory));
+        fory.registerSerializerAndType(PoliticalMapper.class, new PoliticalMapperSerializer(fory));
         PoliticalMapper data = new PoliticalMapper(new WhiskerRandom(123));
         StretchWorldMap w = new StretchWorldMap(123L, 20, 10, 1f);
         w.generate(12, 34);

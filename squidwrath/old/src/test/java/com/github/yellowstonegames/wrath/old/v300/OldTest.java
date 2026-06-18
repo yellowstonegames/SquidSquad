@@ -187,7 +187,7 @@ public class OldTest {
     public void testLowStorageShuffler() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(LowStorageShuffler.class, new LowStorageShufflerSerializer(fory));
+        fory.registerSerializerAndType(LowStorageShuffler.class, new LowStorageShufflerSerializer(fory));
 
         LowStorageShuffler data = new LowStorageShuffler(5, 12345, 67890);
 
@@ -207,7 +207,7 @@ public class OldTest {
     public void testCrossHashYolk() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(CrossHash.Yolk.class, new CrossHashYolkSerializer(fory));
+        fory.registerSerializerAndType(CrossHash.Yolk.class, new CrossHashYolkSerializer(fory));
 
         CrossHash.Yolk data = CrossHash.Yolk.psi;
 
@@ -227,7 +227,7 @@ public class OldTest {
     public void testCrossHashCurlup() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(CrossHash.Curlup.class, new CrossHashCurlupSerializer(fory));
+        fory.registerSerializerAndType(CrossHash.Curlup.class, new CrossHashCurlupSerializer(fory));
 
         CrossHash.Curlup data = CrossHash.Curlup.psi;
 
@@ -247,7 +247,7 @@ public class OldTest {
     public void testCrossHashMist() {        
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(CrossHash.Mist.class, new CrossHashMistSerializer(fory));
+        fory.registerSerializerAndType(CrossHash.Mist.class, new CrossHashMistSerializer(fory));
 
         CrossHash.Mist data = CrossHash.Mist.psi;
 
@@ -267,7 +267,7 @@ public class OldTest {
     public void testObText() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
-        fory.registerSerializer(ObText.class, new ObTextSerializer(fory));
+        fory.registerSerializerAndType(ObText.class, new ObTextSerializer(fory));
 
         ObText data = new ObText(
                 "hello world\n" +

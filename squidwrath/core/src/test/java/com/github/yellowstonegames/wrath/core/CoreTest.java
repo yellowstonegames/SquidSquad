@@ -43,7 +43,7 @@ public class CoreTest {
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(EnhancedRandom.class);
         fory.register(Xoshiro256MX3Random.class);
-        fory.registerSerializer(IntDeque.class, new IntDequeSerializer(fory));
+        fory.registerSerializerAndType(IntDeque.class, new IntDequeSerializer(fory));
         fory.register(Cards.class);
 
         Cards data = new Cards(Cards.DeckType.FRENCH_52_WITH_2_JOKERS, new Xoshiro256MX3Random(1234567890L));
@@ -81,7 +81,7 @@ public class CoreTest {
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(EnhancedRandom.class);
         fory.register(AceRandom.class);
-        fory.registerSerializer(ObjectList.class, new ObjectListSerializer(fory));
+        fory.registerSerializerAndType(ObjectList.class, new ObjectListSerializer(fory));
         fory.register(GapShuffler.class);
 
         GapShuffler<String> data = new GapShuffler<>(new String[]{"Foo", "Bar", "Baz", "Quux"}, new AceRandom(123));
@@ -99,9 +99,9 @@ public class CoreTest {
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(EnhancedRandom.class);
         fory.register(WhiskerRandom.class);
-        fory.registerSerializer(ObjectList.class, new ObjectListSerializer(fory));
-        fory.registerSerializer(NumberedSet.class, new NumberedSetSerializer(fory));
-        fory.registerSerializer(IntList.class, new IntListSerializer(fory));
+        fory.registerSerializerAndType(ObjectList.class, new ObjectListSerializer(fory));
+        fory.registerSerializerAndType(NumberedSet.class, new NumberedSetSerializer(fory));
+        fory.registerSerializerAndType(IntList.class, new IntListSerializer(fory));
         fory.register(ProbabilityTable.class);
 
         ProbabilityTable<String> data = new ProbabilityTable<>(new WhiskerRandom(123));
