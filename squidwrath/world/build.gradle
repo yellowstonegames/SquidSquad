@@ -55,3 +55,24 @@ jar {
         attributes 'Implementation-Title': projectName, 'Implementation-Version': archiveVersion
     }
 }
+
+// Needed by Fory starting in 1.3.0 to get Java 25 to run anything.
+// Thanks to https://github.com/tehnewb/Valthorne/blob/2d5bd29e5950f30be5d25b581b954802e6529be2/build.gradle#L79-L101
+// for the syntax here!
+def openArgs = [
+  "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
+]
+
+if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25)) {
+  allprojects {
+// Apply to any JavaExec tasks (e.g., application plugin's run task, custom runners)
+    tasks.withType(JavaExec).configureEach {
+      jvmArgs += openArgs
+    }
+
+// Apply to all tests
+    tasks.withType(Test).configureEach {
+      jvmArgs += openArgs
+    }
+  }
+}
