@@ -14,7 +14,7 @@ apply plugin: 'com.vanniktech.maven.publish'
 
 def projectName = 'SquidSquad'
 version = "$VERSION_NAME"
-group = 'com.squidpony'
+group = 'com.github.yellowstonegames'
 
 allprojects {
     apply plugin: 'eclipse'

@@ -8,14 +8,15 @@ From all corners of the maybe-seven procedurally-generated seas, arise, O Mighty
 Depend on the modules you need by adding dependencies to core/build.gradle . For example,
 
 ```
-api 'com.squidpony:squidgrid:4.0.11' // important code for anything that has a position here
-api 'com.squidpony:squidplace:4.0.11' // allows generating dungeons, caves, wilderness areas as char arrays
-api 'com.squidpony:squidstorepath:4.0.11' // adds a dependency for pathfinding and also allows saving related types 
-api 'com.squidpony:squidstoretext:4.0.11' // adds a dependency for gibberish generation/translation; allows saving types
+api 'com.github.yellowstonegames.squidsquad:squidgrid:4.0.12' // important code for anything that has a position here
+api 'com.github.yellowstonegames.squidsquad:squidplace:4.0.12' // allows generating dungeons, caves, wilderness areas as char arrays
+api 'com.github.yellowstonegames.squidsquad:squidstorepath:4.0.12' // adds a dependency for pathfinding and also allows saving related types 
+api 'com.github.yellowstonegames.squidsquad:squidstoretext:4.0.12' // adds a dependency for gibberish generation/translation; allows saving types
 ```
 
-On all platforms but GWT, this will download everything SquidSquad needs, including `'com.squidpony:squidcore:4.0.11'`,
-which is a dependency of all other SquidSquad modules. The `squidstorepath` and `squidstoretext` dependencies pull in
+On all platforms but GWT, this will download everything SquidSquad needs, including
+`'com.github.yellowstonegames.squidsquad:squidcore:4.0.11'`, which is a dependency of all other SquidSquad modules.
+The `squidstorepath` and `squidstoretext` dependencies pull in
 `squidpath` and `squidtext`, as well as allowing saving their various types to JSON using [libGDX](https://libgdx.com/)
 and its `Json` class. If you aren't using libGDX, there's other options that don't depend on it, though SquidSquad is
 designed with libGDX in mind. That includes the limitations of libGDX; in order to target iOS via RoboVM, this library
@@ -227,14 +228,18 @@ libGDX application.
 The dependency situation is complicated because everything depends on `squidcore`, and that depends on several other
 libraries. It's easier on projects that don't target GWT; for non-web projects like that, you can probably just depend
 on the SquidSquad module(s) you want, and the rest will be obtained by Gradle. Depending on this with Gradle can use a
-released version such as the current `4.0.11`, which can be obtained from the main source for dependencies on the
-JVM, Maven Central. You can also get a specific commit, typically a newer one, using JitPack. The Maven Central
-dependencies [can be seen for each version here on Maven Central](https://search.maven.org/search?q=g:com.squidpony),
-and look like `implementation 'com.squidpony:squidcore:4.0.11'`. Maven Central's search will still show (much) older
-SquidLib versions as well, such as `squidlib`, `squidlib-util`, and `squidlib-extra`; these are not used at all here.
-Some compatibility code is present for porting from SquidLib to SquidSquad in the SquidSquad module `squidold`.
+released version such as the current `4.0.12`, which can be obtained from JitPack.io, a service that builds Git repos
+and makes them available to Maven and Gradle. You can also get a specific commit, typically a newer one, using JitPack.
+the JitPack dependencies can be seed for any release [on the releases tab here](https://jitpack.io/#yellowstonegames/squidsquad).
+When you have selected a version, click "Get it" and scroll down to the drop-down menu just below the repo instructions.
+Select a module from the drop-down, which will have a dependency that looks like
+`implementation 'com.github.yellowstonegames.squidsquad:squidcore:4.0.12'`. Get whatever dependencies you need and don't
+get any dependencies you don't; it's that simple. Thanks to how Gradle and Maven work, if you select a module that needs
+another SquidSquad module, all the modules it needs will be pulled in even if you select just one module like
+`squidplace`, which needs `squidgrid` and `squidcore`.
 
-As an alternative, [the JitPack page is here](https://jitpack.io/#yellowstonegames/squidsquad); go to the Commits tab, choose any commit
+You don't need to wait for a stable release to get recent changes to SquidSquad.
+[On the JitPack page](https://jitpack.io/#yellowstonegames/squidsquad), go to the Commits tab, choose any commit
 except for `-SNAPSHOT`, click "Get It", and wait to see if it built successfully. Maybe get yourself some of your
 beverage of choice during this time. If it built successfully, "Get It" will be green; if it failed, it will have
 changed to "Report" in red. You probably don't have to report a build failure; these often are caused by the build
@@ -257,18 +262,21 @@ Copy over any changes you want, reload your Gradle project, and you're done. The
 they will probably all be in the dependencies, but this ensures all the versions are up-to-date and necessary other
 projects are present.
 
-Liftoff fetches SquidSquad from Maven Central, and needs a fixed release for `squidSquadVersion`. Right now, the best
-such release is `4.0.11`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
+Liftoff fetches SquidSquad from JitPack.io, and uses a fixed release for `squidSquadVersion`. Right now, the best
+such release is `4.0.12`. You can always use a more recent build of SquidSquad, using JitPack to build a recent
 commit. You should typically use a recent commit from [its JitPack page](https://jitpack.io/#yellowstonegames/squidsquad) for your `squidSquadVersion` property.
-The group is different for JitPack builds of SquidSquad; change `com.squidpony` to
+Older releases of SquidSquad were published to Maven Central at the `com.squidpony` group; this should be changed to
 `com.github.yellowstonegames.squidsquad` when using JitPack. Note that the artifact IDs may have changed if you are
 updating from before `4.0.0-beta1` to that release or later; now they are all lower-case to match conventions, so
 `SquidGrid` is now `squidgrid`. It's referred to as `squidgrid` in other places, so this simplifies things.
 
-JitPack is generally recommended over the Maven Central alpha or beta releases, because you can (and really
-should) specify an exact commit to use on the Commits tab (click "Get It" on any commit except -SNAPSHOT; this will
-provide useful info below once it... eventually... builds). I strongly discourage using JitPack's -SNAPSHOT versions,
-because they can change without warning and don't tell you what commit you are actually using; use a commit instead!
+JitPack allows you to specify an exact commit to use on the Commits tab (click "Get It" on any commit except -SNAPSHOT;
+this will provide useful info below once it... eventually... builds). I strongly discourage using JitPack's -SNAPSHOT
+versions, because they can change without warning and don't tell you what commit you are actually using; use a commit
+instead! Using a commit is technically also "safer" in the unlikely event of repo-jacking, which is a known problem for
+JitPack (and many other package management repos), but only for releases that didn't build correctly and are mutable. If
+you have successfully depended on a commit hash from JitPack, that means that commit was built correctly, and 2 weeks
+after that build, the commit's build will be "frozen" and preserved permanently.
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
