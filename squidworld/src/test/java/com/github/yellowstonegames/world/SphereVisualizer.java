@@ -28,6 +28,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
@@ -62,8 +63,8 @@ public class SphereVisualizer extends ApplicationAdapter {
     public static final int POINT_COUNT = 1 << 14;
     public static final float INVERSE_SPEED = 1E-11f;
     private float[][] points = new float[POINT_COUNT][3];
-    private int mode = 12;
-    private final int modes = 39;
+    private int mode = 39;
+    private final int modes = 41;
     private SpriteBatch batch;
     private ImmediateModeRenderer20 renderer;
     private InputAdapter input;
@@ -976,6 +977,12 @@ public static final float[] GRADIENTS_6D = {
             case 38:
                 twoGaussianMode();
                 break;
+            case 39:
+                paxMode();
+                break;
+            case 40:
+                paxFixedMode();
+                break;
         }
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -1247,7 +1254,7 @@ public static final float[] GRADIENTS_6D = {
         for (int i = 0; i < 4096; i++) {
             renderer.color(black);
             float angle = random.nextExclusiveFloat(), s = TrigTools.sinSmootherTurns(angle), c = TrigTools.cosSmootherTurns(angle);
-            float distance = MathTools.signPreservingSqrt((float)random.nextGaussian()) * 100;
+            float distance = MathTools.signPreservingSqrt(random.nextGaussianFloat()) * 100;
 //            float distance = ((float)random.nextGaussian()) * 128;
             renderer.vertex(s * distance + 256, c * distance + 256, 0f);
         }
@@ -1259,6 +1266,35 @@ public static final float[] GRADIENTS_6D = {
         for (int i = 0; i < 4096; i++) {
             renderer.color(black);
             renderer.vertex(Distributor.probitI(random.nextInt()) * 50 + 256, Distributor.probitI(random.nextInt()) * 50 + 256, 0f);
+        }
+        renderer.end();
+    }
+
+    /**
+     * <a href="https://i.imgur.com/f3RLE40.png">Looks like an uneven square.</a>
+     */
+    private void paxMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        random.setSeed(1L);
+        for (int i = 0; i < 4096; i++) {
+            renderer.color(black);
+            renderer.vertex(
+                MathUtils.cos(random.nextFloat() * MathUtils.PI2) * (float) Math.sqrt(random.nextFloat()) * 50f + 256f,
+                MathUtils.sin(random.nextFloat() * MathUtils.PI2) * (float) Math.sqrt(random.nextFloat()) * 50f + 256f, 0f);
+        }
+        renderer.end();
+    }
+
+    /**
+     * <a href="https://i.imgur.com/M4QCt5e.png">Looks like an even circle.</a>
+     */
+    private void paxFixedMode() {
+        renderer.begin(camera.combined, GL20.GL_POINTS);
+        random.setSeed(1L);
+        for (int i = 0; i < 4096; i++) {
+            renderer.color(black);
+            final float angle = random.nextFloat() * MathUtils.PI2, mag = (float) Math.sqrt(random.nextFloat()) * 50f;
+            renderer.vertex(MathUtils.cos(angle) * mag + 256f, MathUtils.sin(angle) * mag + 256f, 0f);
         }
         renderer.end();
     }
