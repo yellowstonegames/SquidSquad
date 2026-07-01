@@ -149,7 +149,7 @@ public class HashFloodResistance {
                 protected int place(Object item) {
                     return hashWisp2((String) item) & mask;
                 }
-            };// 0.604 seconds taken.
+            };// 0.627 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
 //                @Override
 //                protected int place(Object item) {
@@ -291,7 +291,7 @@ public class HashFloodResistance {
         int result = 0x9E3779B9, a = 0x632BE5AB, b = 0x75AE2165;
         final int len = data.length();
         for (int i = 1; i < len; i += 2) {
-            result = result + (a ^= 0x85157AF5 * data.charAt(i - 1)) ^ (b ^= 0xF1357AEB * data.charAt(i));
+            result ^= (a = (a << 5 | a >>> 27) + 0x85157AF5 * data.charAt(i - 1)) ^ (b = (b << 9 | b >>> 23) + 0xF1357AEB * data.charAt(i));
         }
         if((len & 1) == 1)
             result ^= data.charAt(len - 1) * 0x2E62A9C5;
