@@ -138,12 +138,18 @@ public class HashFloodResistance {
 //                    return hashCurlup((String) item) & mask;
 //                }
 //            };// 0.646 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+//                @Override
+//                protected int place(Object item) {
+//                    return hashWisp((String) item) & mask;
+//                }
+//            };// 0.641 seconds taken.
             com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
                 @Override
                 protected int place(Object item) {
-                    return hashWisp((String) item) & mask;
+                    return hashWispL((String) item) & mask;
                 }
-            };// 0.641 seconds taken.
+            };// 0.647 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.727 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.707 seconds taken.
             String s = "a";
@@ -265,6 +271,17 @@ public class HashFloodResistance {
             result = (result << 5 | result >>> 27) + (a ^= 0x85157AF5 * data.charAt(i));
         }
         return result * (a | 1) ^ (result >>> 11 | result << 21);
+    }
+
+    public static int hashWispL(final String data) {
+        if (data == null)
+            return 0;
+        long result = 0x9E3779B97F4A7C15L, a = 0xD1B54A32D192ED03L;
+        final int len = data.length();
+        for (int i = 0; i < len; i++) {
+            result += (a ^= 0xF1357AEA2E62A9C5L * data.charAt(i));
+        }
+        return (int) (result * (a | 1) ^ (result >>> 43 | result << 21));
     }
 
 }
