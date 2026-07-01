@@ -104,37 +104,43 @@ public class HashFloodResistance {
         {
             // testing 1 to 30000 'a'' chars in a set of Strings:
             // HashSet can take advantage of String being Comparable and falls back to a TreeSet if needed. It shouldn't here.
-//            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 0.679 seconds taken.
+//            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 0.688 seconds taken.
 //            java.util.HashSet<String> set = new java.util.HashSet<>(30000, 0.75f); // 0.682 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(1, 0.75f); // 0.72 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(30000, 0.75f); // 0.699 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(1, 0.75f); // 0.707 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(30000, 0.75f); // 0.721 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
 //                @Override
 //                protected int place(Object item) {
 //                    return Hasher.hashBulk(1L, (String) item) & mask;
 //                }
-//            };// 0.726 seconds taken.
+//            };// 0.73 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
 //                @Override
 //                protected int place(Object item) {
 //                    return Hasher.hash(1L, (String) item) & mask;
 //                }
-//            };// 0.649 seconds taken.
+//            };// 0.656 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
 //                @Override
 //                protected int place(Object item) {
 //                    return hashAdze(1111111111111111111L, (String) item) & mask;
 //                }
-//            };// 0.74 seconds taken.
+//            };// 0.724 seconds taken.
             com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
                 @Override
                 protected int place(Object item) {
                     return hashPairAAT(1111111111111111111L, (String) item) & mask;
                 }
-            };// 0.677 seconds taken.
-//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.713 seconds taken.
-//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.721 seconds taken.
-            String s = "\0";
+            };// 0.631 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+//                @Override
+//                protected int place(Object item) {
+//                    return hashCurlup((String) item) & mask;
+//                }
+//            };// 0.646 seconds taken.
+//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.727 seconds taken.
+//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.707 seconds taken.
+            String s = "a";
             for (int iter = 0; iter < 30; iter++) {
                 for (int i = 0; i < 1000; i++)
                     set.add(s += 'a');
@@ -214,6 +220,34 @@ public class HashFloodResistance {
         h1 ^= h2; h1 += (h2 << 5 | h2 >>> 27);
         h2 ^= h1; h2 += (h1 << 19 | h1 >>> 13);
         return h2 ^ h1;
+    }
+
+    public static int hashCurlup(final String data) {
+        if (data == null) return 0;
+        final int length = data.length();
+        long result = length * 0x9E3779B97F4A7C15L;
+        int i = 7;
+        for (; i < length; i += 8) {
+            result =  0xEBEDEED9D803C815L * result
+                + 0xD96EB1A810CAAF5FL * data.charAt(i - 7)
+                + 0xC862B36DAF790DD5L * data.charAt(i - 6)
+                + 0xB8ACD90C142FE10BL * data.charAt(i - 5)
+                + 0xAA324F90DED86B69L * data.charAt(i - 4)
+                + 0x9CDA5E693FEA10AFL * data.charAt(i - 3)
+                + 0x908E3D2C82567A73L * data.charAt(i - 2)
+                + 0x8538ECB5BD456EA3L * data.charAt(i - 1)
+                + 0xD1B54A32D192ED03L * data.charAt(i)
+            ;
+        }
+        for (int r = (length & 7); r > 0; r--) {
+            result = 0x9E3779B97F4A7C15L * result + data.charAt(length - r);
+        }
+        result *= 0x94D049BB133111EBL;
+        result ^= (result << 41 | result >>> 23) ^ (result << 17 | result >>> 47);
+        result *= 0x369DEA0F31A53F85L;
+        result ^= result >>> 31;
+        result *= 0xDB4F0B9175AE2165L;
+        return (int)(result ^ result >>> 28);
     }
 
 }
