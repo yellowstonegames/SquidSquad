@@ -71,107 +71,113 @@ public class HashFloodResistance {
 //            System.out.println(((System.currentTimeMillis() - startTime) * 1E-3) + " seconds taken.");
 //        }
 
-//        {
-//            // testing 1 to 30000 NUL chars in a set of Strings:
-//            // HashSet takes advantage of String being Comparable and falls back to a TreeSet.
-////            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 1.063 seconds taken.
-////            java.util.HashSet<String> set = new java.util.HashSet<>(30000, 0.75f); // 0.983 seconds taken.
-////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(1, 0.75f); // 3.024 seconds taken.
-////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(30000, 0.75f); // 2.949 seconds taken.
+        {
+            // testing 1 to 30000 NUL chars in a set of Strings:
+            // HashSet takes advantage of String being Comparable and falls back to a TreeSet.
+//            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 1.063 seconds taken.
+//            java.util.HashSet<String> set = new java.util.HashSet<>(30000, 0.75f); // 0.983 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(1, 0.75f); // 3.024 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(30000, 0.75f); // 2.949 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
 //                @Override
 //                protected int place(Object item) {
 //                    return Hasher.hashBulk(1L, (String) item) & mask;
 //                }
 //            };// 0.728 seconds taken.
-////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-////                @Override
-////                protected int place(Object item) {
-////                    return Hasher.hash(1L, (String) item) & mask;
-////                }
-////            };// 0.644 seconds taken.
-////            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 2.677 seconds taken.
-////            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 2.724 seconds taken.
-//            String s = "\0";
-//            for (int iter = 0; iter < 30; iter++) {
-//                for (int i = 0; i < 1000; i++)
-//                    set.add(s += '\0');
-//            }
-//            System.out.println(set.size());
-//            System.out.println(((System.currentTimeMillis() - startTime) * 1E-3) + " seconds taken.");
-//        }
-//
-        {
-            // testing 1 to 30000 'a'' chars in a set of Strings:
-            // HashSet can take advantage of String being Comparable and falls back to a TreeSet if needed. It shouldn't here.
-//            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 0.688 seconds taken.
-//            java.util.HashSet<String> set = new java.util.HashSet<>(30000, 0.75f); // 0.682 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(1, 0.75f); // 0.707 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(30000, 0.75f); // 0.721 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-//                @Override
-//                protected int place(Object item) {
-//                    return Hasher.hashBulk(1L, (String) item) & mask;
-//                }
-//            };// 0.73 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
 //                @Override
 //                protected int place(Object item) {
 //                    return Hasher.hash(1L, (String) item) & mask;
 //                }
-//            };// 0.656 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-//                @Override
-//                protected int place(Object item) {
-//                    return hashAdze(1111111111111111111L, (String) item) & mask;
-//                }
-//            };// 0.724 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-//                @Override
-//                protected int place(Object item) {
-//                    return hashPairAAT(1111111111111111111L, (String) item) & mask;
-//                }
-//            };// 0.631 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-//                @Override
-//                protected int place(Object item) {
-//                    return hashCurlup((String) item) & mask;
-//                }
-//            };// 0.646 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-//                @Override
-//                protected int place(Object item) {
-//                    return hashWisp((String) item) & mask;
-//                }
-//            };// 0.641 seconds taken.
+//            };// 0.644 seconds taken.
             com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
                 @Override
                 protected int place(Object item) {
                     return hashWisp2((String) item) & mask;
                 }
-            };// 0.627 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-//                @Override
-//                protected int place(Object item) {
-//                    return hashWisp4((String) item) & mask;
-//                }
-//            };// 0.669 seconds taken.
-//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
-//                @Override
-//                protected int place(Object item) {
-//                    return hashWispL((String) item) & mask;
-//                }
-//            };// 0.647 seconds taken.
-//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.727 seconds taken.
-//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.707 seconds taken.
-            String s = "a";
+            };// 0.606 seconds taken.
+//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 2.677 seconds taken.
+//            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 2.724 seconds taken.
+            String s = "\0";
             for (int iter = 0; iter < 30; iter++) {
                 for (int i = 0; i < 1000; i++)
-                    set.add(s += 'a');
+                    set.add(s += '\0');
             }
             System.out.println(set.size());
             System.out.println(((System.currentTimeMillis() - startTime) * 1E-3) + " seconds taken.");
         }
+
+//        {
+//            // testing 1 to 30000 'a'' chars in a set of Strings:
+//            // HashSet can take advantage of String being Comparable and falls back to a TreeSet if needed. It shouldn't here.
+////            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 0.688 seconds taken.
+////            java.util.HashSet<String> set = new java.util.HashSet<>(30000, 0.75f); // 0.682 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(1, 0.75f); // 0.707 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(30000, 0.75f); // 0.721 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return Hasher.hashBulk(1L, (String) item) & mask;
+////                }
+////            };// 0.73 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return Hasher.hash(1L, (String) item) & mask;
+////                }
+////            };// 0.656 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return hashAdze(1111111111111111111L, (String) item) & mask;
+////                }
+////            };// 0.724 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return hashPairAAT(1111111111111111111L, (String) item) & mask;
+////                }
+////            };// 0.631 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return hashCurlup((String) item) & mask;
+////                }
+////            };// 0.646 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return hashWisp((String) item) & mask;
+////                }
+////            };// 0.641 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+//                @Override
+//                protected int place(Object item) {
+//                    return hashWisp2((String) item) & mask;
+//                }
+//            };// 0.616 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return hashWisp4((String) item) & mask;
+////                }
+////            };// 0.669 seconds taken.
+////            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+////                @Override
+////                protected int place(Object item) {
+////                    return hashWispL((String) item) & mask;
+////                }
+////            };// 0.647 seconds taken.
+////            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.727 seconds taken.
+////            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.707 seconds taken.
+//            String s = "a";
+//            for (int iter = 0; iter < 30; iter++) {
+//                for (int i = 0; i < 1000; i++)
+//                    set.add(s += 'a');
+//            }
+//            System.out.println(set.size());
+//            System.out.println(((System.currentTimeMillis() - startTime) * 1E-3) + " seconds taken.");
+//        }
 
     }
 
@@ -286,6 +292,19 @@ public class HashFloodResistance {
     }
 
     public static int hashWisp2(final String data) {
+        if (data == null)
+            return 0;
+        int result = 0x9E3779B9, a = 0x632BE5AB, b = 0x75AE2165;
+        final int len = data.length();
+        for (int i = 1; i < len; i += 2) {
+            result = result + (a ^= 0x85157AF5 * data.charAt(i - 1)) ^ (b ^= 0xF1357AEB * data.charAt(i));
+        }
+        if((len & 1) == 1)
+            result ^= data.charAt(len - 1) * 0x2E62A9C5;
+        return result * (a | 1) ^ (result >>> 11 | result << 21) * (b | 1);
+    }
+
+    public static int hashWisp3(final String data) {
         if (data == null)
             return 0;
         int result = 0x9E3779B9, a = 0x632BE5AB, b = 0x75AE2165;
