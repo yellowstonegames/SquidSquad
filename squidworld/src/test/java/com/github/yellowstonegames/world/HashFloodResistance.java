@@ -95,7 +95,7 @@ public class HashFloodResistance {
                 protected int place(Object item) {
                     return hashWisp2((String) item) & mask;
                 }
-            };// 0.606 seconds taken.
+            };// 0.605 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 2.677 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 2.724 seconds taken.
             String s = "\0";
@@ -294,8 +294,8 @@ public class HashFloodResistance {
     public static int hashWisp2(final String data) {
         if (data == null)
             return 0;
-        int result = 0x9E3779B9, a = 0x632BE5AB, b = 0x75AE2165;
         final int len = data.length();
+        int result = 0x9E3779B9 ^ len, a = 0x632BE5AB, b = 0x75AE2165;
         for (int i = 1; i < len; i += 2) {
             result = result + (a ^= 0x85157AF5 * data.charAt(i - 1)) ^ (b ^= 0xF1357AEB * data.charAt(i));
         }
