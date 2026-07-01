@@ -153,6 +153,12 @@ public class HashFloodResistance {
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
 //                @Override
 //                protected int place(Object item) {
+//                    return hashWisp4((String) item) & mask;
+//                }
+//            };// 0.669 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+//                @Override
+//                protected int place(Object item) {
 //                    return hashWispL((String) item) & mask;
 //                }
 //            };// 0.647 seconds taken.
@@ -290,6 +296,22 @@ public class HashFloodResistance {
         if((len & 1) == 1)
             result ^= data.charAt(len - 1) * 0x2E62A9C5;
         return result * (a | 1) ^ (result >>> 11 | result << 21) * (b | 1);
+    }
+
+    public static int hashWisp4(final String data) {
+        if (data == null)
+            return 0;
+        int result = 0x9E3779B9, a = 0x632BE5AB, b = 0x75AE2165, c = 0x8538ECB5, d = 0xD1B54A32;
+        final int len = data.length();
+        for (int i = 3; i < len; i += 4) {
+            result = result + (a ^= 0x85157AF5 * data.charAt(i - 3)) ^ (b ^= 0xF1357AEB * data.charAt(i - 2)) + (c ^= 0x7F4A7C15 * data.charAt(i - 1)) + (d ^= 0xD192ED03 * data.charAt(i));
+        }
+        switch (len & 3) {
+            case 1: result ^= data.charAt(len - 1) * 0xF1357AEB; break;
+            case 2: result ^= data.charAt(len - 2) * 0xF1357AEB ^ data.charAt(len - 1) * 0x7F4A7C15; break;
+            case 3: result ^= data.charAt(len - 3) * 0xF1357AEB ^ data.charAt(len - 2) * 0x7F4A7C15 ^ data.charAt(len - 1) * 0xD192ED03; break;
+        }
+        return result * (a | 1) ^ (result >>> 11 | result << 21) * (b | 1) ^ (result >>> 17 | result << 15) * (c | 1) ^ (result >>> 23 | result << 9) * (d | 1);
     }
 
     public static int hashWispL(final String data) {
