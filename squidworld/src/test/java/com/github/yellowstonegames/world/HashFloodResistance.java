@@ -120,12 +120,18 @@ public class HashFloodResistance {
 //                    return Hasher.hash(1L, (String) item) & mask;
 //                }
 //            };// 0.649 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+//                @Override
+//                protected int place(Object item) {
+//                    return hashAdze(1111111111111111111L, (String) item) & mask;
+//                }
+//            };// 0.74 seconds taken.
             com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
                 @Override
                 protected int place(Object item) {
-                    return hashAdze(1111111111111111111L, (String) item) & mask;
+                    return hashPairAAT(1111111111111111111L, (String) item) & mask;
                 }
-            };// 0.74 seconds taken.
+            };// 0.766 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.713 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.721 seconds taken.
             String s = "\0";
@@ -163,6 +169,43 @@ public class HashFloodResistance {
             case 3 :  h = mixMultiple(h, data.charAt(start), data.charAt(start + 1), data.charAt(start + 2)); break;
         }
         return (int) mix(h);
+    }
+    /**
+     * Hashes a String.
+     * Gets a 32-bit hash. Uses 64-bit math so this behaves correctly, though slowly, on GWT.
+     * <br>
+     * Based on Sokolov Yura's (funny_falcon's) GoodOAAT hash for bytes, but made to work on Java's 16-bit chars
+     * instead. GoodOAAT is MIT-licensed. Like GoodOAAT, this is non-multiplicative.
+     * <br>
+     * This hash passes SMHasher 3 testing. It is called "PairAAT_C" in
+     * <a href="https://github.com/tommyettinger/smhasher-with-junk/tree/master/smhasher3">the test repo</a>.
+     *
+     * @param seed any change to the seed should change the hashes of non-null, non-empty data
+     * @param data  the String to hash
+     * @return a 32-bit hash of data
+     */
+    public static int hashPairAAT(long seed, String data) {
+        if (data == null)
+            return 0;
+        long h1 = seed + 0xD1B92B09B92266DDL;
+        long h2 = seed ^ (seed << 22 | seed >>> 42) ^ (seed << 47 | seed >>> 17) ^ 0x9E3779B97F4A7C15L;
+        final int end = data.length();
+        for (int i = 0; i < end; i++) {
+            h1 += data.charAt(i);
+            h1 += h1 << 8;
+            h2 += h1;
+            h2 = (h2 << 7 | h2 >>> 57);
+            h2 += h2 << 2;
+        }
+
+        h1 ^= h2;
+        h1 += (h2 << 25 | h2 >>> 39);
+        h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
+        h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
+        h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
+        h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
+        h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
+        return (int)h2;
     }
 
 }
