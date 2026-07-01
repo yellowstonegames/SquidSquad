@@ -19,8 +19,11 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Hasher;
 
+import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
+
+import static com.github.tommyettinger.digital.Hasher.*;
 
 /**
  * Meant to see how resilient different hashtable implementations are against inserting many different items with
@@ -101,7 +104,7 @@ public class HashFloodResistance {
         {
             // testing 1 to 30000 'a'' chars in a set of Strings:
             // HashSet can take advantage of String being Comparable and falls back to a TreeSet if needed. It shouldn't here.
-            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 0.679 seconds taken.
+//            java.util.HashSet<String> set = new java.util.HashSet<>(1, 0.75f); // 0.679 seconds taken.
 //            java.util.HashSet<String> set = new java.util.HashSet<>(30000, 0.75f); // 0.682 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(1, 0.75f); // 0.72 seconds taken.
 //            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<>(30000, 0.75f); // 0.699 seconds taken.
@@ -117,6 +120,12 @@ public class HashFloodResistance {
 //                    return Hasher.hash(1L, (String) item) & mask;
 //                }
 //            };// 0.649 seconds taken.
+            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+                @Override
+                protected int place(Object item) {
+                    return hashAdze(1111111111111111111L, (String) item) & mask;
+                }
+            };// 0.74 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.713 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.721 seconds taken.
             String s = "\0";
@@ -129,4 +138,31 @@ public class HashFloodResistance {
         }
 
     }
+
+    public static int hashAdze(final long seed, final String data) {
+        if (data == null)
+            return 0;
+        int len = data.length(), start = 0;
+        long h = len ^ seed;
+        while(len >= 14){
+            len -= 14;
+            h *= C;
+            h += mixMultiple(data.charAt(start), data.charAt(start + 1), data.charAt(start + 2), data.charAt(start + 3), data.charAt(start + 4), data.charAt(start + 5), data.charAt(start + 6));
+            h = (h << 39 | h >>> 25);
+            h += mixMultiple(data.charAt(start + 7), data.charAt(start + 8), data.charAt(start + 9), data.charAt(start + 10), data.charAt(start + 11), data.charAt(start + 12), data.charAt(start + 13));
+            start += 14;
+        }
+        while(len >= 4){
+            len -= 4;
+            h = mixMultiple(h, data.charAt(start), data.charAt(start + 1), data.charAt(start + 2), data.charAt(start + 3));
+            start += 4;
+        }
+        switch (len) {
+            case 1 :  h = mixMultiple(h, data.charAt(start)); break;
+            case 2 :  h = mixMultiple(h, data.charAt(start), data.charAt(start + 1)); break;
+            case 3 :  h = mixMultiple(h, data.charAt(start), data.charAt(start + 1), data.charAt(start + 2)); break;
+        }
+        return (int) mix(h);
+    }
+
 }
