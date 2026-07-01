@@ -131,7 +131,7 @@ public class HashFloodResistance {
                 protected int place(Object item) {
                     return hashPairAAT(1111111111111111111L, (String) item) & mask;
                 }
-            };// 0.766 seconds taken.
+            };// 0.677 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 0.713 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 0.721 seconds taken.
             String s = "\0";
@@ -187,25 +187,33 @@ public class HashFloodResistance {
     public static int hashPairAAT(long seed, String data) {
         if (data == null)
             return 0;
-        long h1 = seed + 0xD1B92B09B92266DDL;
-        long h2 = seed ^ (seed << 22 | seed >>> 42) ^ (seed << 47 | seed >>> 17) ^ 0x9E3779B97F4A7C15L;
-        final int end = data.length();
-        for (int i = 0; i < end; i++) {
-            h1 += data.charAt(i);
-            h1 += h1 << 8;
+        int h1 = (int)seed + 0xB92266DD;
+        int h2 = (int) (seed >>> 32 ^ (seed << 22 | seed >>> 42) ^ seed >>> 17) ^ 0x9E3779B9;
+        final int len = data.length();
+        for (int i = 1; i < len; i+= 2) {
+            h1 += data.charAt(i - 1);
+            h1 ^= h1 << 8;
+            h2 += h1 ^ data.charAt(i);
+            h2 = (h2 << 7 | h2 >>> 25);
+            h2 += h2 << 2;
+        }
+
+        if((len & 1) == 1) {
+            h1 += data.charAt(len - 1);
+            h1 ^= h1 << 8;
             h2 += h1;
-            h2 = (h2 << 7 | h2 >>> 57);
+            h2 = (h2 << 7 | h2 >>> 25);
             h2 += h2 << 2;
         }
 
         h1 ^= h2;
-        h1 += (h2 << 25 | h2 >>> 39);
-        h2 ^= h1; h2 += (h1 << 53 | h1 >>> 11);
-        h1 ^= h2; h1 += (h2 << 11 | h2 >>> 53);
-        h2 ^= h1; h2 += (h1 << 46 | h1 >>> 18);
-        h1 ^= h2; h1 += (h2 << 37 | h2 >>> 27);
-        h2 ^= h1; h2 += (h1 << 19 | h1 >>> 45);
-        return (int)h2;
+        h1 += (h2 << 25 | h2 >>> 7);
+        h2 ^= h1; h2 += (h1 << 21 | h1 >>> 11);
+        h1 ^= h2; h1 += (h2 << 11 | h2 >>> 21);
+        h2 ^= h1; h2 += (h1 << 14 | h1 >>> 18);
+        h1 ^= h2; h1 += (h2 << 5 | h2 >>> 27);
+        h2 ^= h1; h2 += (h1 << 19 | h1 >>> 13);
+        return h2 ^ h1;
     }
 
 }
