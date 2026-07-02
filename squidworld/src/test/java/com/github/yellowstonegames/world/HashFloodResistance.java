@@ -90,12 +90,18 @@ public class HashFloodResistance {
 //                    return Hasher.hash(1L, (String) item) & mask;
 //                }
 //            };// 0.644 seconds taken.
+//            com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
+//                @Override
+//                protected int place(Object item) {
+//                    return hashWisp2((String) item) & mask;
+//                }
+//            };// 0.605 seconds taken.
             com.github.tommyettinger.ds.ObjectSet<String> set = new com.github.tommyettinger.ds.ObjectSet<String>(30000, 0.75f){
                 @Override
                 protected int place(Object item) {
-                    return hashWisp2((String) item) & mask;
+                    return hashWisp3((String) item) & mask;
                 }
-            };// 0.605 seconds taken.
+            };// ??? seconds taken. (Conditions changed, timing isn't equivalent.)
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(1, 0.75f); // 2.677 seconds taken.
 //            com.badlogic.gdx.utils.ObjectSet<String> set = new com.badlogic.gdx.utils.ObjectSet<>(30000, 0.75f); // 2.724 seconds taken.
             String s = "\0";
@@ -307,14 +313,14 @@ public class HashFloodResistance {
     public static int hashWisp3(final String data) {
         if (data == null)
             return 0;
-        int result = 0x9E3779B9, a = 0x632BE5AB, b = 0x75AE2165;
         final int len = data.length();
+        int result = 0x9E3779B9 ^ len, a = 0x632BE5AB, b = 0x75AE2165;
         for (int i = 1; i < len; i += 2) {
-            result ^= (a = (a << 5 | a >>> 27) + 0x85157AF5 * data.charAt(i - 1)) ^ (b = (b << 9 | b >>> 23) + 0xF1357AEB * data.charAt(i));
+            result = result + (a = (a << 17 | a >>> 15) + data.charAt(i - 1)) ^ (b = (b << 19 | b >>> 13) + data.charAt(i));
         }
         if((len & 1) == 1)
-            result ^= data.charAt(len - 1) * 0x2E62A9C5;
-        return result * (a | 1) ^ (result >>> 11 | result << 21) * (b | 1);
+            result = (result << 18 | result >>> 14) + data.charAt(len - 1);
+        return result * (a | 1) ^ (result << 21 | result >>> 11) * (b | 1);
     }
 
     public static int hashWisp4(final String data) {
