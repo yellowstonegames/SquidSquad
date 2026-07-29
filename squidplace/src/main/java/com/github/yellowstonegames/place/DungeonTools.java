@@ -36,7 +36,7 @@ import java.util.*;
  * such as the often-used {@link LineTools#hashesToLines(char[][])}. This class still has {@link #debugPrint(char[][])},
  * but new code may want to prefer {@link StringTools#printChar2D(char[][])}, which calls the same code.
  */
-public class DungeonTools {
+public final class DungeonTools {
 
     /**
      * Constant for environment tiles that are not near a cave, room, or corridor. Value is 0.
@@ -156,6 +156,51 @@ public class DungeonTools {
     public static final int CORE_ENVIRONMENT_MASK = ROOM_WALL | NATURAL_WALL | CORRIDOR_WALL | ANY_FLOOR;
 
     private DungeonTools() {
+    }
+
+    /**
+     * Checks an environment int and returns true if it represents any type of floor (passable cell).
+     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @return true if the int represents any passable terrain cell
+     */
+    public boolean isFloor(int environment) {
+        return (environment & ANY_FLOOR) != 0;
+    }
+
+    /**
+     * Checks an environment int and returns true if it represents any type of wall (impassable cell).
+     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @return true if the int represents any impassable terrain cell
+     */
+    public boolean isWall(int environment) {
+        return (environment & ANY_FLOOR) == 0;
+    }
+
+    /**
+     * Checks an environment int and returns true if it represents any type of room cell (floor or wall).
+     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @return true if the int represents any room cell
+     */
+    public boolean isRoom(int environment) {
+        return (environment & ROOM_WALL) != 0;
+    }
+
+    /**
+     * Checks an environment int and returns true if it represents any type of corridor cell (floor or wall).
+     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @return true if the int represents any corridor cell
+     */
+    public boolean isCorridor(int environment) {
+        return (environment & CORRIDOR_WALL) != 0;
+    }
+
+    /**
+     * Checks an environment int and returns true if it represents any type of natural cell (floor or wall).
+     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @return true if the int represents any natural cell (such as cave walls or floors)
+     */
+    public boolean isNatural(int environment) {
+        return (environment & NATURAL_WALL) != 0;
     }
 
     //                    case '├ ┤ ┴ ┬ ┌ ┐ └ ┘ │ ─':
@@ -335,7 +380,7 @@ public class DungeonTools {
     }
 
     /**
-     * @param level dungeon/map level as 2D double array. x,y indexed
+     * @param level dungeon/map level as 2D float array. x,y indexed
      * @param c     Coord to check
      * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
      */
@@ -344,7 +389,7 @@ public class DungeonTools {
     }
 
     /**
-     * @param level dungeon/map level as 2D double array. x,y indexed
+     * @param level dungeon/map level as 2D float array. x,y indexed
      * @param x     x coordinate to check
      * @param y     y coordinate to check
      * @return {@code true} if {@code c} is valid in {@code level}, {@code false} otherwise.
@@ -371,7 +416,7 @@ public class DungeonTools {
     public static <T> boolean inLevel(T[][] level, int x, int y) {
         return 0 <= x && x < level.length && 0 <= y && y < level[x].length;
     }
-    
+
     /**
      * Quickly counts the number of char elements in level that are equal to match.
      *
