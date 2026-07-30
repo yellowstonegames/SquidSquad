@@ -160,15 +160,49 @@ public final class DungeonTools {
      * doors with a free hand. This should block animals from entering areas that require opening a door to access. It
      * may also temporarily block people who are frozen numb, for instance, or creatures like vampires who aren't
      * allowed to open a door themselves in some versions.
+     * <br>
+     * This is lock 0.
      */
     public static final int LOCK_NEEDS_HAND = 1 << 4;
+
+    /**
+     * A lock for the optional lock-and-key system that indicates an area can only be accessed by creatures who can swim
+     * or otherwise move through deep water.
+     * <br>
+     * This is lock 1.
+     */
+    public static final int LOCK_DEEP_WATER = 1 << 5;
+
+    /**
+     * A lock for the optional lock-and-key system that indicates an area can only be accessed by creatures who can move
+     * without risking death through intense heat and/or fire, such as a path blocked by lava.
+     * <br>
+     * This is lock 2.
+     */
+    public static final int LOCK_FIRE = 1 << 6;
+
+    /**
+     * A lock for the optional lock-and-key system that indicates an area can only be accessed by creatures who can jump
+     * or fly some higher-than-normal amount vertically, such as to get up and out of a pit.
+     * <br>
+     * This is lock 3.
+     */
+    public static final int LOCK_HIGH_JUMP = 1 << 7;
+
+    /**
+     * A lock for the optional lock-and-key system that indicates an area can only be accessed by creatures who can jump
+     * or fly some longer-than-normal amount horizontally, such as to get over a low hazard.
+     * <br>
+     * This is lock 4.
+     */
+    public static final int LOCK_LONG_JUMP = 1 << 8;
 
     private DungeonTools() {
     }
 
     /**
      * Checks an environment int and returns true if it represents any type of floor (passable cell).
-     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
      * @return true if the int represents any passable terrain cell
      */
     public boolean isFloor(int environment) {
@@ -177,7 +211,7 @@ public final class DungeonTools {
 
     /**
      * Checks an environment int and returns true if it represents any type of wall (impassable cell).
-     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
      * @return true if the int represents any impassable terrain cell
      */
     public boolean isWall(int environment) {
@@ -186,7 +220,7 @@ public final class DungeonTools {
 
     /**
      * Checks an environment int and returns true if it represents any type of room cell (floor or wall).
-     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
      * @return true if the int represents any room cell
      */
     public boolean isRoom(int environment) {
@@ -195,7 +229,7 @@ public final class DungeonTools {
 
     /**
      * Checks an environment int and returns true if it represents any type of corridor cell (floor or wall).
-     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
      * @return true if the int represents any corridor cell
      */
     public boolean isCorridor(int environment) {
@@ -204,7 +238,7 @@ public final class DungeonTools {
 
     /**
      * Checks an environment int and returns true if it represents any type of natural cell (floor or wall).
-     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
      * @return true if the int represents any natural cell (such as cave walls or floors)
      */
     public boolean isNatural(int environment) {
@@ -214,7 +248,7 @@ public final class DungeonTools {
     /**
      * For the optional lock-and-key puzzle system, checks if an environment cell has access prohibited by a given lock.
      * There are 20 locks, traditionally ranging from 0 to 19.
-     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
      * @param lock between 0 and 19, both inclusive
      * @return true if the environment cell has locked access by the given lock number
      */
@@ -227,7 +261,7 @@ public final class DungeonTools {
      * The "level" starts at 0 and can go up to 255, inclusive. It can be used to mean the approximate power of enemies
      * in an area, as one meaning, or a linear score of some kind needed or preferred to enter the area. It is separate
      * from the optional lock-and-key system, which allows any locks to be passed independently of any others.
-     * @param environment an environment int, typically taken from {@link DungeonProcessor#getEnvironment()}
+     * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
      * @return an int between 0 and 255, drawn from the given environment cell
      */
     public int getLevel(int environment) {
@@ -261,7 +295,7 @@ public final class DungeonTools {
      * When a map is generated by DungeonProcessor with addDoors enabled, different chars are used for vertical and
      * horizontal doors ('+' for vertical and '/' for horizontal).  This makes all doors '+', which is useful if you
      * want '/' to be used for a different purpose and/or to distinguish open and closed doors. This also takes and
-     * modifies an int 2D array, which is often generated by {@link DungeonProcessor#getEnvironment()}, and sets the
+     * modifies an int 2D array, which is often generated by {@link PlaceGenerator#getEnvironment()}, and sets the
      * optional lock value on all doors to enable {@link #LOCK_NEEDS_HAND}. That lock is used to mean an area that can
      * only be opened by someone with an available and working hand, but not an animal or mindless creature. This does
      * not set the lock value on areas past closed doors, since that would need to know an entry point.
@@ -314,7 +348,7 @@ public final class DungeonTools {
      * When a map is generated by DungeonProcessor with addDoors enabled, different chars are used for vertical and
      * horizontal doors ('+' for vertical and '/' for horizontal).  This makes all doors '/', which is useful if you
      * want '+' to be used for a different purpose and/or to distinguish open and closed doors. This also takes and
-     * modifies an int 2D array, which is often generated by {@link DungeonProcessor#getEnvironment()}, and sets the
+     * modifies an int 2D array, which is often generated by {@link PlaceGenerator#getEnvironment()}, and sets the
      * optional lock value on all doors to disable {@link #LOCK_NEEDS_HAND}. That lock is used to mean an area that can
      * only be opened by someone with an available and working hand, but not an animal or mindless creature. This does
      * not change the lock value on areas past open doors, since that would need to know an entry point.
