@@ -42,7 +42,7 @@ import java.util.List;
  * sets could take hundreds of times longer than they should. It also usually doesn't use drastically more memory unless
  * the Coord pool has been expanded quite a bit.
  * <br>
- * This tends to perform significantly better with a high low factor, such as 0.9f, instead of a lower one like 0.5f .
+ * This tends to perform significantly better with a high load factor, such as 0.9f, instead of a lower one like 0.5f .
  * It also performs its best when the initial capacity is sufficient to hold every key this needs without resizing, but
  * it typically only has to resize once if it has to resize at all.
  * <br>

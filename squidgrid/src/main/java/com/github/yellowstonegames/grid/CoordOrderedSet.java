@@ -41,7 +41,7 @@ import java.util.List;
  * the Coord pool has been expanded quite a bit. If the Coord pool hasn't been expanded, each set should use about 1MB
  * of memory or less when created with the default constructor, plus size proportional to {@link #size()} for the order.
  * <br>
- * This tends to perform significantly better with a high low factor, such as 0.9f, instead of a lower one like 0.5f .
+ * This tends to perform significantly better with a high load factor, such as 0.9f, instead of a lower one like 0.5f .
  * It also performs its best when the initial capacity is sufficient to hold every item this needs without resizing, but
  * it typically only has to resize once if it has to resize at all.
  */
