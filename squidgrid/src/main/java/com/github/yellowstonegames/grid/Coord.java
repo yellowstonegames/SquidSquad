@@ -105,7 +105,7 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
         final int my = this.y ^ ys;
         // Math.max can be branchless on modern JVMs, which may help if the Coord pool is expanded a lot or often.
         final int max = Math.max(mx, my);
-        this.hash = 
+        this.hash =
                     // Rosenberg-Strong pairing function; produces larger values in a "ripple" moving away from the origin
                     (max * max + max + mx - my)
                     // XOR with every odd-index bit of xs and every even-index bit of ys
@@ -1449,7 +1449,9 @@ public final class Coord implements Point2<Coord>, PointNInt<Coord, Point2<?>>, 
      * Coord-based data structures.
      */
     public static final PartialParser<Coord> COORD_PARSER = (text, start, end) -> {
-        final int comma = text.indexOf(',');
-        return Coord.get(Base.BASE10.readShort(text, start + 1, comma), Base.BASE10.readShort(text, comma + 1, text.indexOf(')')));
+        final int comma = text.indexOf(',', start);
+        if(comma == -1 || comma >= end)
+            return null; // This should not happen with correct Coord.toString() results!
+        return Coord.get(Base.BASE10.readShort(text, start + 1, comma), Base.BASE10.readShort(text, comma + 1, text.indexOf(')', start + 1)));
     };
 }
