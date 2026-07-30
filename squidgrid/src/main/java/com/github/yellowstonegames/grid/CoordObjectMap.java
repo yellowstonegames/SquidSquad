@@ -18,6 +18,7 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectObjectMap;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
@@ -85,6 +86,79 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> implements ISer
     @Override
     protected void resize(int newSize) {
         super.resize(Math.max(newSize, Utilities.tableSize(Coord.getCacheWidth() * Coord.getCacheHeight(), loadFactor)));
+    }
+
+    /**
+     * Adds items to this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
+     * {@code ", "}, and every key should be followed by {@code "="} before the value (which
+     * {@link #toString()} does).
+     * {@link Coord#COORD_PARSER} will be used to parse keys from sections of {@code str}.
+     * A provided PartialParser will be used to parse values from sections of {@code str}.
+     * Extra brackets inside the given range of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str         a String containing parseable text
+     * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+     */
+    public void putLegible(String str, PartialParser<V> valueParser) {
+        super.putLegible(str, Coord.COORD_PARSER, valueParser);
+    }
+
+    /**
+     * Adds items to this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
+     * {@code entrySeparator}, and every key should be followed by {@code "="} before the value (which
+     * {@link #toString()} does).
+     * {@link Coord#COORD_PARSER} will be used to parse keys from sections of {@code str}.
+     * A provided PartialParser will be used to parse values from sections of {@code str}.
+     * Extra brackets inside the given range of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str         a String containing parseable text
+     * @param entrySeparator the String separating every key-value pair
+     * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+     */
+    public void putLegible(String str, String entrySeparator, PartialParser<V> valueParser) {
+        super.putLegible(str, entrySeparator, Coord.COORD_PARSER, valueParser);
+    }
+
+    /**
+     * Adds items to this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
+     * {@code entrySeparator}, and every key should be followed by {@code keyValueSeparator} before the value.
+     * {@link Coord#COORD_PARSER} will be used to parse keys from sections of {@code str}.
+     * A provided PartialParser will be used to parse values from sections of {@code str}.
+     * Extra brackets inside the given range of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str         a String containing parseable text
+     * @param entrySeparator the String separating every key-value pair
+     * @param keyValueSeparator the String separating every key from its corresponding value
+     * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+     */
+    public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<V> valueParser) {
+        super.putLegible(str, entrySeparator, keyValueSeparator, Coord.COORD_PARSER, valueParser);
+    }
+
+    /**
+     * Adds items to this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
+     * {@code entrySeparator}, and every key should be followed by {@code keyValueSeparator} before the value.
+     * {@link Coord#COORD_PARSER} will be used to parse keys from sections of {@code str}.
+     * A provided PartialParser will be used to parse values from sections of {@code str}.
+     * Extra brackets inside the given range of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str         a String containing parseable text
+     * @param entrySeparator the String separating every key-value pair
+     * @param keyValueSeparator the String separating every key from its corresponding value
+     * @param valueParser a PartialParser that returns a {@code V} value from a section of {@code str}
+     * @param offset the first position to read parseable text from in {@code str}
+     * @param length how many chars to read; -1 is treated as maximum length
+     */
+    public void putLegible(String str, String entrySeparator, String keyValueSeparator, PartialParser<V> valueParser, int offset, int length) {
+        super.putLegible(str, entrySeparator, keyValueSeparator, Coord.COORD_PARSER, valueParser, offset, length);
     }
 
     /**
@@ -182,7 +256,7 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> implements ISer
         map.put(key3, value3);
         return map;
     }
-    
+
     /**
      * Constructs a map given alternating keys and values.
      * This can be useful in some code-generation scenarios, or when you want to make a
