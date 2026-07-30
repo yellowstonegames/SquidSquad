@@ -89,6 +89,30 @@ public class CoordSet extends ObjectSet<Coord> implements ISerializersNeeded {
     }
 
     /**
+     * Adds Coord items shown with the default {@link Coord#toString()} into this CoordSet, separating items with the
+     * given delimiter. Only reads starting at offset, for the given length of characters.
+     *
+     * @param str the String to read from
+     * @param delimiter the String that separates items
+     * @param offset the first index in str to start reading from
+     * @param length how many chars to read from str
+     */
+    public void addLegible(String str, String delimiter, int offset, int length) {
+        super.addLegible(str, delimiter, Coord.COORD_PARSER, offset, length);
+    }
+
+    /**
+     * Adds Coord items shown with the default {@link Coord#toString()} into this CoordSet, separating items with the
+     * given delimiter. This assumes no additional brackets were added to the printed items.
+     *
+     * @param str the String to read from
+     * @param delimiter the String that separates items
+     */
+    public void addLegible(String str, String delimiter) {
+        super.addLegible(str, delimiter, Coord.COORD_PARSER);
+    }
+
+    /**
      * Constructs an empty set given the type as a generic type argument.
      * This is usually less useful than just using the constructor, but can be handy
      * in some code-generation scenarios when you don't know how many arguments you will have.
