@@ -16,9 +16,12 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.Utilities;
+import com.github.tommyettinger.ds.support.util.Appender;
+import com.github.tommyettinger.ds.support.util.IntAppender;
 import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
@@ -86,6 +89,76 @@ public class CoordIntMap extends ObjectIntMap<Coord> implements ISerializersNeed
     @Override
     protected void resize(int newSize) {
         super.resize(Math.max(newSize, Utilities.tableSize(Coord.getCacheWidth() * Coord.getCacheHeight(), loadFactor)));
+    }
+
+    /**
+     * Adds items to this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
+     * {@code ", "}, and every key should be followed by {@code "="} before the value (which
+     * {@link #toString()} does).
+     * Keys are parsed with {@link Coord#COORD_PARSER}.
+     * Values are parsed with {@link Base#readInt(CharSequence, int, int)} using {@link Base#BASE10}.
+     * Extra brackets inside the given range
+     * of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str       a String containing parseable text
+     */
+    public void putLegible(String str) {
+        super.putLegible(str, Coord.COORD_PARSER);
+    }
+
+    /**
+     * Adds items to this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, boolean)}. Every key-value pair should be separated by
+     * {@code entrySeparator}, and every key should be followed by "=" before the value (which
+     * {@link #toString(String)} does).
+     * Keys are parsed with {@link Coord#COORD_PARSER}.
+     * Values are parsed with {@link Base#readInt(CharSequence, int, int)} using {@link Base#BASE10}.
+     * Extra brackets inside the given range
+     * of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str            a String containing parseable text
+     * @param entrySeparator the String separating every key-value pair
+     */
+    public void putLegible(String str, String entrySeparator) {
+        super.putLegible(str, entrySeparator, Coord.COORD_PARSER);
+    }
+    /**
+     * Adds items to this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, String, boolean, Appender, IntAppender)}.
+     * Keys are parsed with {@link Coord#COORD_PARSER}.
+     * Values are parsed with {@link Base#readInt(CharSequence, int, int)} using {@link Base#BASE10}.
+     * Extra brackets inside the given range
+     * of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str               a String containing parseable text
+     * @param entrySeparator    the String separating every key-value pair
+     * @param keyValueSeparator the String separating every key from its corresponding value
+     */
+    public void putLegible(String str, String entrySeparator, String keyValueSeparator) {
+        super.putLegible(str, entrySeparator, keyValueSeparator, Coord.COORD_PARSER);
+    }
+
+    /**
+     * Puts key-value pairs into this map drawn from the result of {@link #toString(String)} or
+     * {@link #appendTo(CharSequence, String, String, boolean, Appender, IntAppender)}.
+     * Keys are parsed with {@link Coord#COORD_PARSER}.
+     * Values are parsed with {@link Base#readInt(CharSequence, int, int)} using {@link Base#BASE10}.
+     * Extra brackets inside the given range
+     * of characters will ruin the parsing, so increase offset by 1 and
+     * reduce length by 2 if the original String had brackets added to it.
+     *
+     * @param str               a String containing parseable text
+     * @param entrySeparator    the String separating every key-value pair
+     * @param keyValueSeparator the String separating every key from its corresponding value
+     * @param offset            the first position to read parseable text from in {@code str}
+     * @param length            how many chars to read; -1 is treated as maximum length
+     */
+    public void putLegible(String str, String entrySeparator, String keyValueSeparator, int offset, int length) {
+        super.putLegible(str, entrySeparator, keyValueSeparator, Coord.COORD_PARSER, offset, length);
     }
 
     /**
