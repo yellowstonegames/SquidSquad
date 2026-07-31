@@ -223,7 +223,7 @@ public class WildernessGenerator implements PlaceGenerator {
         al.shuffle(rng);
         return al;
     }
-//    
+//
 //    public static ObjectList<String> makeVegetation(EnhancedRandom rng, int size, double monoculture, FakeLanguageGen naming)
 //    {
 //        Thesaurus t = new Thesaurus(rng);
@@ -630,7 +630,7 @@ public class WildernessGenerator implements PlaceGenerator {
 
     /**
      * Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
-     * in {@link DungeonTools} like {@link DungeonTools#NATURAL_WALL} or {@link DungeonTools#ROOM_FLOOR}.
+     * in {@link DungeonTools}, here always {@link DungeonTools#NATURAL_FLOOR}.
      *
      * @return the environment of the most recently-produced place, as a 2D int array
      */
@@ -661,11 +661,11 @@ public class WildernessGenerator implements PlaceGenerator {
         public final int[][] pieceMap;
         public final WildernessGenerator[] pieces;
         protected final int[] minFloors, maxFloors, minContents, maxContents;
-        
+
         public MixedWildernessGenerator() {
             this(new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new WildernessGenerator(), new FlowRandom());
         }
-        
+
         public MixedWildernessGenerator(WildernessGenerator northeast, WildernessGenerator southeast, WildernessGenerator southwest, WildernessGenerator northwest, EnhancedRandom rng) {
             super(northeast.width, northeast.height, northeast.biome, rng, new ObjectList<>(northeast.floorTypes), new ObjectList<>(northeast.contentTypes), northeast.viewer);
             minFloors = new int[4];
@@ -689,7 +689,7 @@ public class WildernessGenerator implements PlaceGenerator {
             pieces = new WildernessGenerator[]{northeast, southeast, southwest, northwest};
             pieceMap = new int[width][height];
         }
-        
+
         protected void preparePieceMap() {
             ArrayTools.fill(pieceMap, 255);
             pieceMap[width - 1][height - 1] = 0; // northeast

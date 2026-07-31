@@ -198,7 +198,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
         this(80, 80, 8, 8, new WhiskerRandom(), 2);
     }
     /**
-     * Determines room width and room height by dividing width or height by 10; wallThickness is 2. 
+     * Determines room width and room height by dividing width or height by 10; wallThickness is 2.
      * @param width total width of the map, in cells
      * @param height total height of the map, in cells
      * @param random an IRNG to make random choices for connecting rooms
@@ -222,7 +222,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
     }
 
     /**
-     * 
+     *
      * @param width total width of the map, in cells
      * @param height total height of the map, in cells
      * @param roomWidth target width of each room, in cells; only counts the center floor area of a room
@@ -235,7 +235,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
         this(width, height, roomWidth, roomHeight, random, wallThickness, 0.0);
     }
     /**
-     * 
+     *
      * @param width total width of the map, in cells
      * @param height total height of the map, in cells
      * @param roomWidth target width of each room, in cells; only counts the center floor area of a room
@@ -265,7 +265,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      * Generates a dungeon or other map as a 2D char array. Uses the convention of '#' representing a wall and '.'
      * representing a bare floor, and also fills {@link #environment} with appropriate constants from DungeonTools,
      * like {@link DungeonTools#ROOM_FLOOR} and {@link DungeonTools#ROOM_WALL}.
-     * 
+     *
      * @return a 2D char array representing a room-based map, using standard conventions for walls/floors
      */
     @Override
@@ -422,19 +422,24 @@ public class ConnectingMapGenerator implements PlaceGenerator {
     public char[][] getPlaceGrid() {
         return dungeon;
     }
+
     /**
      * Gets a 2D array of int constants, each representing a type of environment corresponding to a static field of
      * DungeonTools. This array will have the same size as the last char 2D array produced by generate(); the value
      * of this method if called before generate() is undefined, but probably will be a 2D array of all 0 (UNTOUCHED).
      * <ul>
      * <li>DungeonTools.UNTOUCHED, equal to 0, is used for any cells that aren't near a floor.</li>
-     * <li>DungeonTools.ROOM_FLOOR, equal to 1, is used for floor cells inside wide room areas.</li>
      * <li>DungeonTools.ROOM_WALL, equal to 2, is used for wall cells around wide room areas.</li>
-     * <li>DungeonTools.NATURAL_FLOOR, equal to 3, is used for floor cells inside rough natural/cave areas.</li>
+     * <li>DungeonTools.ROOM_FLOOR, equal to 3, is used for floor cells inside wide room areas.</li>
      * <li>DungeonTools.NATURAL_WALL, equal to 4, is used for wall cells around rough natural/cave areas.</li>
-     * <li>DungeonTools.CORRIDOR_FLOOR, equal to 5, is used for floor cells inside narrow corridor areas.</li>
-     * <li>DungeonTools.CORRIDOR_WALL, equal to 6, is used for wall cells around narrow corridor areas.</li>
+     * <li>DungeonTools.NATURAL_FLOOR, equal to 5, is used for floor cells inside rough natural/cave areas.</li>
+     * <li>DungeonTools.CORRIDOR_WALL, equal to 8, is used for wall cells around narrow corridor areas.</li>
+     * <li>DungeonTools.CORRIDOR_FLOOR, equal to 9, is used for floor cells inside narrow corridor areas.</li>
      * </ul>
+     * You can use methods from DungeonTools to check whether an environment cell represents a floor, wall, or any
+     * particular theme of area (room, natural, or corridor). These include {@link DungeonTools#isFloor(int)},
+     * {@link DungeonTools#isWall(int)}, {@link DungeonTools#isRoom(int)}, and {@link DungeonTools#isNatural(int)},
+     * among others.
      *
      * @return a 2D int array where each element is an environment type constant in DungeonTools
      */

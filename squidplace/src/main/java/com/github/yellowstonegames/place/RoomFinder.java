@@ -614,7 +614,7 @@ public class RoomFinder {
     /**
      * Takes an x, y position and finds the rooms or corridors that are directly connected to the room, corridor or cave
      * at that position, and returns the group as an ObjectList of 2D char arrays, one per connecting region.
-     * 
+     *
      * @param x the x coordinate of a position that should be in a room or corridor
      * @param y the y coordinate of a position that should be in a room or corridor
      * @return an ObjectList of masked 2D char arrays where anything not in a connected region is '#'
