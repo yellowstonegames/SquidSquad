@@ -29,4 +29,31 @@ public class CoordMapSetTests {
         base.addLegible(str, ";");
         Assert.assertEquals(base, adding);
     }
+    @Test
+    public void testPutLegibleMaps() {
+        {
+            CoordIntMap base = CoordIntMap.with(Coord.get(1, 1), 3);
+            CoordIntMap adding = CoordIntMap.with(Coord.get(0, 0), 0, Coord.get(0, 1), 1, Coord.get(1, 0), 2, Coord.get(1, 1), 3, Coord.get(20, 20), 1000000);
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";");
+            Assert.assertEquals(base, adding);
+        }
+        {
+            CoordFloatMap base = CoordFloatMap.with(Coord.get(1, 1), 3);
+            CoordFloatMap adding = CoordFloatMap.with(Coord.get(0, 0), 0, Coord.get(0, 1), 1, Coord.get(1, 0), 2, Coord.get(1, 1), 3, Coord.get(20, 20), 1000000);
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";");
+            Assert.assertEquals(base, adding);
+        }
+        {
+            CoordLongMap base = CoordLongMap.with(Coord.get(1, 1), 3);
+            CoordLongMap adding = CoordLongMap.with(Coord.get(0, 0), 0, Coord.get(0, 1), 1, Coord.get(1, 0), 2, Coord.get(1, 1), 3, Coord.get(20, 20), 1000000);
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";");
+            Assert.assertEquals(base, adding);
+        }
+    }
 }
