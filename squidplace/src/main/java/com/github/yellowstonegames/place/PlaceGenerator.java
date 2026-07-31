@@ -38,8 +38,16 @@ public interface PlaceGenerator {
     char[][] getPlaceGrid();
 
     /**
-     * Gets the most recently-produced place's environment as a 2D int array, where each int is typically a constant
-     * in {@link DungeonTools} like {@link DungeonTools#NATURAL_WALL} or {@link DungeonTools#ROOM_FLOOR}.
+     * Gets the most recently-produced place's environment as a 2D int array, where each int is typically a bit-flag
+     * from {@link DungeonTools} like {@link DungeonTools#NATURAL_WALL} or {@link DungeonTools#ROOM_FLOOR}. Use methods
+     * from DungeonTools, such as {@link DungeonTools#isFloor(int)} or {@link DungeonTools#isRoom(int)}, to check if
+     * an environment int represents specific parts of a dungeon map. If you just check environment ints for equality,
+     * you may get incorrect results if that int represents any cell using the optional lock-and-key system. You can
+     * also use DungeonTools to check for locks, using {@link DungeonTools#checkLock(int, int)} and a constant such as
+     * {@link DungeonTools#LOCK_NEEDS_HAND} (for areas inaccessible to animals) or {@link DungeonTools#LOCK_DEEP_WATER}
+     * (for areas that require being able to swim). All lock values are defined in {@link DungeonTools#LOCKS}, which
+     * allows accessing any of the 20 locks by an index 0-19.
+     *
      * @return the environment of the most recently-produced place, as a 2D int array
      */
     int[][] getEnvironment();

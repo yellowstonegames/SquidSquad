@@ -197,6 +197,15 @@ public final class DungeonTools {
      */
     public static final int LOCK_LONG_JUMP = 1 << 8;
 
+    /**
+     * All bit-flag constants that represent locks. There are 20 constants here, and any one can be passed to
+     * {@link #checkLock(int, int)} as its {@code lock} parameter.
+     */
+    public static final int[] LOCKS = {
+        1 << 4, 1 << 5, 1 << 6, 1 << 7, 1 << 8, 1 << 9, 1 << 10, 1 << 11, 1 << 12, 1 << 13,
+        1 << 14, 1 << 15, 1 << 16, 1 << 17, 1 << 18, 1 << 19, 1 << 20, 1 << 21, 1 << 22, 1 << 23,
+    };
+
     private DungeonTools() {
     }
 
@@ -247,13 +256,15 @@ public final class DungeonTools {
 
     /**
      * For the optional lock-and-key puzzle system, checks if an environment cell has access prohibited by a given lock.
-     * There are 20 locks, traditionally ranging from 0 to 19.
+     * There are 20 locks, all stored in {@link #LOCKS} and some additionally available as constants in this class, such
+     * as {@link #LOCK_NEEDS_HAND} or {@link #LOCK_DEEP_WATER}.
+     *
      * @param environment an environment int, typically taken from {@link PlaceGenerator#getEnvironment()}
-     * @param lock between 0 and 19, both inclusive
-     * @return true if the environment cell has locked access by the given lock number
+     * @param lock either from {@link #LOCKS} or a constant from this class such as {@link #LOCK_NEEDS_HAND}
+     * @return true if the environment cell has locked access by the given lock
      */
     public boolean checkLock(int environment, int lock) {
-        return (environment >>> 4 + lock & 1) == 1;
+        return (environment & lock) == lock;
     }
 
     /**
