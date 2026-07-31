@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.ds.support.util.PartialParser;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,6 +54,46 @@ public class CoordMapSetTests {
             String str = adding.toString(";");
             System.out.println(str);
             base.putLegible(str, ";");
+            Assert.assertEquals(base, adding);
+        }
+        {
+            CoordObjectMap<String> base = CoordObjectMap.with(Coord.get(1, 1), "quux");
+            CoordObjectMap<String> adding = CoordObjectMap.with(Coord.get(0, 0), "foo", Coord.get(0, 1), "bar", Coord.get(1, 0), "baz", Coord.get(1, 1), "quux", Coord.get(20, 20), "Ziltoid the Omniscient");
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";", PartialParser.DEFAULT_STRING);
+            Assert.assertEquals(base, adding);
+        }
+        {
+            CoordIntOrderedMap base = CoordIntOrderedMap.with(Coord.get(1, 1), 3);
+            CoordIntOrderedMap adding = CoordIntOrderedMap.with(Coord.get(0, 0), 0, Coord.get(0, 1), 1, Coord.get(1, 0), 2, Coord.get(1, 1), 3, Coord.get(20, 20), 1000000);
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";");
+            Assert.assertEquals(base, adding);
+        }
+        {
+            CoordFloatOrderedMap base = CoordFloatOrderedMap.with(Coord.get(1, 1), 3);
+            CoordFloatOrderedMap adding = CoordFloatOrderedMap.with(Coord.get(0, 0), 0, Coord.get(0, 1), 1, Coord.get(1, 0), 2, Coord.get(1, 1), 3, Coord.get(20, 20), 1000000);
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";");
+            Assert.assertEquals(base, adding);
+        }
+        {
+            CoordLongOrderedMap base = CoordLongOrderedMap.with(Coord.get(1, 1), 3);
+            CoordLongOrderedMap adding = CoordLongOrderedMap.with(Coord.get(0, 0), 0, Coord.get(0, 1), 1, Coord.get(1, 0), 2, Coord.get(1, 1), 3, Coord.get(20, 20), 1000000);
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";");
+            Assert.assertEquals(base, adding);
+        }
+        {
+            CoordObjectOrderedMap<String> base = CoordObjectOrderedMap.with(Coord.get(1, 1), "quux");
+            CoordObjectOrderedMap<String> adding = CoordObjectOrderedMap.with(Coord.get(0, 0), "foo", Coord.get(0, 1), "bar", Coord.get(1, 0), "baz", Coord.get(1, 1), "quux", Coord.get(20, 20), "Ziltoid the Omniscient");
+            String str = adding.toString(";");
+            System.out.println(str);
+            base.putLegible(str, ";", PartialParser.DEFAULT_STRING);
             Assert.assertEquals(base, adding);
         }
     }
