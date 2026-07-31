@@ -209,7 +209,7 @@ public class MixedGenerator implements PlaceGenerator {
         }
         carvers = new float[5];
     }
-    
+
     /**
      * Changes the number of "carvers" that will create caves from one room to the next. If count is 0 or less, no caves
      * will be made. If count is at least 1, caves are possible, and higher numbers relative to the other carvers make
@@ -468,13 +468,13 @@ public class MixedGenerator implements PlaceGenerator {
     protected void markEnvironmentWalls() {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if (environment[i][j] == DungeonTools.UNTOUCHED) {
+                if ((environment[i][j] & DungeonTools.CORE_ENVIRONMENT_MASK) == DungeonTools.UNTOUCHED) {
                     boolean allWalls = true;
                     //lowest precedence, also checks for any floors
                     for (int x = Math.max(0, i - 1); x <= Math.min(width - 1, i + 1); x++) {
 
                         for (int y = Math.max(0, j - 1); y <= Math.min(height - 1, j + 1); y++) {
-                            if (environment[x][y] == DungeonTools.CORRIDOR_FLOOR) {
+                            if ((environment[x][y] & DungeonTools.CORE_ENVIRONMENT_MASK) == DungeonTools.CORRIDOR_FLOOR) {
                                 markEnvironment(i, j, DungeonTools.CORRIDOR_WALL);
                             }
                             if (dungeon[x][y] == '.')
@@ -488,7 +488,7 @@ public class MixedGenerator implements PlaceGenerator {
                     for (int x = Math.max(0, i - 1); x <= Math.min(width - 1, i + 1); x++) {
 
                         for (int y = Math.max(0, j - 1); y <= Math.min(height - 1, j + 1); y++) {
-                            if (environment[x][y] == DungeonTools.NATURAL_FLOOR) {
+                            if ((environment[x][y] & DungeonTools.CORE_ENVIRONMENT_MASK) == DungeonTools.NATURAL_FLOOR) {
                                 markEnvironment(i, j, DungeonTools.NATURAL_WALL);
                             }
                         }
@@ -497,7 +497,7 @@ public class MixedGenerator implements PlaceGenerator {
                     for (int x = Math.max(0, i - 1); x <= Math.min(width - 1, i + 1); x++) {
 
                         for (int y = Math.max(0, j - 1); y <= Math.min(height - 1, j + 1); y++) {
-                            if (environment[x][y] == DungeonTools.ROOM_FLOOR) {
+                            if ((environment[x][y] & DungeonTools.CORE_ENVIRONMENT_MASK) == DungeonTools.ROOM_FLOOR) {
                                 markEnvironment(i, j, DungeonTools.ROOM_WALL);
                             }
                         }
@@ -549,8 +549,8 @@ public class MixedGenerator implements PlaceGenerator {
      */
     protected void markEnvironmentCorridor(int x, int y) {
         if (x > 0 && x < width - 1 && y > 0 && y < height - 1
-                && environment[x][y] != DungeonTools.ROOM_FLOOR
-                && environment[x][y] != DungeonTools.NATURAL_FLOOR) {
+                && (environment[x][y] & DungeonTools.CORE_ENVIRONMENT_MASK) != DungeonTools.ROOM_FLOOR
+                && (environment[x][y] & DungeonTools.CORE_ENVIRONMENT_MASK) != DungeonTools.NATURAL_FLOOR) {
             markEnvironment(x, y, DungeonTools.CORRIDOR_FLOOR);
         }
     }
@@ -572,7 +572,7 @@ public class MixedGenerator implements PlaceGenerator {
      * @param y y position to mark
      */
     protected void markEnvironmentCave(int x, int y) {
-        if (x > 0 && x < width - 1 && y > 0 && y < height - 1 && environment[x][y] != DungeonTools.ROOM_FLOOR) {
+        if (x > 0 && x < width - 1 && y > 0 && y < height - 1 && (environment[x][y] & DungeonTools.CORE_ENVIRONMENT_MASK) != DungeonTools.ROOM_FLOOR) {
             markEnvironment(x, y, DungeonTools.NATURAL_FLOOR);
         }
     }
