@@ -156,7 +156,7 @@ public class DungeonProcessor implements PlaceGenerator{
     public EnhancedRandom rng;
     protected EnhancedRandom rebuildRNG;
     protected boolean seedFixed;
-    protected int environmentType = 1;
+    protected int environmentType = DungeonTools.ROOM_FLOOR;
 
     protected char[][] dungeon;
 

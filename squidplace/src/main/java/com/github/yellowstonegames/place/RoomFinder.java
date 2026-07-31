@@ -27,17 +27,17 @@ import java.util.Arrays;
 
 /**
  * A small class that can analyze a dungeon or other map and identify areas as being "room" or "corridor" based on how
- * thick the walkable areas are (corridors are at most 2 cells wide at their widest, rooms are anything else). Most
+ * thick the walkable areas are. Corridors are at most 2 cells wide at their widest, rooms are anything else. Most
  * methods of this class return 2D char arrays or Lists thereof, with the subset of the map that is in a specific region
  * kept the same, but everything else replaced with '#'.
  */
 public class RoomFinder {
     /**
-     * A copy of the dungeon map, however it was passed to the constructor.
+     * A copy of the place map, however it was passed to the constructor.
      */
     public char[][] map,
     /**
-     * A simplified version of the dungeon map, using '#' for walls and '.' for floors.
+     * A simplified version of the place map, using '#' for walls and '.' for floors.
      */
     basic;
 
@@ -76,32 +76,32 @@ public class RoomFinder {
     public int width, height;
 
     /**
-     * Constructs a RoomFinder given a dungeon map, and finds rooms, corridors, and their connections on the map. Does
+     * Constructs a RoomFinder given a place map, and finds rooms, corridors, and their connections on the map. Does
      * not find caves; if a collection of caves is requested from this, it will be non-null but empty.
-     * @param dungeon a 2D char array that uses '#', box drawing characters, or ' ' for walls.
+     * @param place a 2D char array that uses '#', box drawing characters, or ' ' for walls.
      */
-    public RoomFinder(char[][] dungeon)
+    public RoomFinder(char[][] place)
     {
-        this(dungeon, DungeonTools.ROOM_FLOOR);
+        this(place, DungeonTools.ROOM_FLOOR);
     }
 
     /**
-     * Constructs a RoomFinder given a dungeon map and a general kind of environment for the whole map, then finds
+     * Constructs a RoomFinder given a place map and a general kind of environment for the whole map, then finds
      * rooms, corridors, and their connections on the map. Defaults to treating all areas as cave unless
-     * {@code environmentKind} is {@link DungeonTools#ROOM_FLOOR} (or its equivalent, 1).
-     * @param dungeon a 2D char array that uses '#', box drawing characters, or ' ' for walls.
-     * @param environmentKind if 1 ({@link DungeonTools#ROOM_FLOOR}), this will find rooms and corridors, else caves
+     * {@code environmentKind} is {@link DungeonTools#ROOM_FLOOR}.
+     * @param place a 2D char array that uses '#', box drawing characters, or ' ' for walls.
+     * @param environmentKind if ({@link DungeonTools#ROOM_FLOOR}), this will find rooms and corridors, else caves
      */
-    public RoomFinder(char[][] dungeon, int environmentKind)
+    public RoomFinder(char[][] place, int environmentKind)
     {
-        if(dungeon.length <= 0)
+        if(place.length <= 0)
             return;
-        width = dungeon.length;
-        height = dungeon[0].length;
+        width = place.length;
+        height = place[0].length;
         map = new char[width][height];
         environment = new int[width][height];
         for (int i = 0; i < width; i++) {
-            System.arraycopy(dungeon[i], 0, map[i], 0, height);
+            System.arraycopy(place[i], 0, map[i], 0, height);
         }
         rooms = new ObjectObjectOrderedMap<>(32);
         corridors = new ObjectObjectOrderedMap<>(32);
@@ -161,20 +161,20 @@ public class RoomFinder {
     }
 
     /**
-     * Constructs a RoomFinder given a dungeon map and an environment map (typically obtained with
+     * Constructs a RoomFinder given a place map and an environment map (typically obtained with
      * {@link PlaceGenerator#getEnvironment()} after generating a map with {@link PlaceGenerator#getPlaceGrid()}), and
      * finds rooms, corridors, caves, and their connections on the map.
-     * @param dungeon a 2D char array that uses '#' for walls.
+     * @param place a 2D char array that uses '#' for walls.
      * @param environment a 2D int array using constants from DungeonTools; typically produced by a call to
-     *                    getEnvironment() in a PlaceGenerator after dungeon generation.
+     *                    getEnvironment() in a PlaceGenerator after place generation.
      */
-    public RoomFinder(char[][] dungeon, int[][] environment)
+    public RoomFinder(char[][] place, int[][] environment)
     {
-        if(dungeon.length <= 0)
+        if(place.length <= 0)
             return;
-        width = dungeon.length;
-        height = dungeon[0].length;
-        map = ArrayTools.copy(dungeon);
+        width = place.length;
+        height = place[0].length;
+        map = ArrayTools.copy(place);
         this.environment = ArrayTools.copy(environment);
         rooms = new ObjectObjectOrderedMap<>(32);
         corridors = new ObjectObjectOrderedMap<>(32);
@@ -238,19 +238,38 @@ public class RoomFinder {
             caves.put(sep, near);
         }
     }
-    public RoomFinder reset(char[][] dungeon) {
-        return reset(dungeon, DungeonTools.ROOM_FLOOR);
+
+    /**
+     * Recreates this RoomFinder while trying to reuse existing mutable objects, like Region instances.
+     * This always treats the place as being made of rooms and corridors, with no natural (cave) areas.
+     * This works well if {@code place} is the same size as the 2D char array used to construct this RoomFinder, and
+     * can avoid much allocation in that case.
+     *
+     * @param place a 2D char array typically produced by a {@link PlaceGenerator}
+     * @return this, for chaining
+     */
+    public RoomFinder reset(char[][] place) {
+        return reset(place, DungeonTools.ROOM_FLOOR);
     }
-    public RoomFinder reset(char[][] dungeon, int environmentKind){
-        if(width != dungeon.length || height != dungeon[0].length){
-            width = dungeon.length;
-            height = dungeon[0].length;
-            map = ArrayTools.copy(dungeon);
+
+    /**
+     * Recreates this RoomFinder while trying to reuse existing mutable objects, like Region instances.
+     * This works well if {@code place} is the same size as the 2D char array used to construct this RoomFinder, and
+     * can avoid much allocation in that case.
+     * @param place a 2D char array typically produced by a {@link PlaceGenerator}
+     * @param environmentKind if {@link DungeonTools#ROOM_FLOOR}, this treats the place as entirely rooms and corridors; otherwise, all caves
+     * @return this, for chaining
+     */
+    public RoomFinder reset(char[][] place, int environmentKind){
+        if(width != place.length || height != place[0].length){
+            width = place.length;
+            height = place[0].length;
+            map = ArrayTools.copy(place);
             environment = new int[width][height];
             allCaves.resizeAndEmpty(width, height);
         }
         else {
-            ArrayTools.insert(dungeon, map, 0, 0);
+            ArrayTools.insert(place, map, 0, 0);
             ArrayTools.fill(environment, DungeonTools.UNTOUCHED);
             allCaves.clear();
         }
@@ -305,16 +324,28 @@ public class RoomFinder {
         }
         return this;
     }
-    public RoomFinder reset(char[][] dungeon, int[][] environment){
-        if(width != dungeon.length || height != dungeon[0].length){
-            width = dungeon.length;
-            height = dungeon[0].length;
-            map = ArrayTools.copy(dungeon);
+
+    /**
+     * Recreates this RoomFinder while trying to reuse existing mutable objects, like Region instances.
+     * This works well if {@code place} is the same size as the 2D char array used to construct this RoomFinder, and
+     * can avoid much allocation in that case. This overload allows every cell to be a different environment type.
+     * The {@link #environment} of this RoomFinder will be a copy of the {@code environment} parameter that will not
+     * contain any optional lock-and-key or level information that might be present in the parameter.
+     *
+     * @param place a 2D char array typically produced by a {@link PlaceGenerator}
+     * @param environment a 2D int array typically returned by {@link PlaceGenerator#getEnvironment()}
+     * @return this, for chaining
+     */
+    public RoomFinder reset(char[][] place, int[][] environment){
+        if(width != place.length || height != place[0].length){
+            width = place.length;
+            height = place[0].length;
+            map = ArrayTools.copy(place);
             this.environment = ArrayTools.copy(environment);
             allCaves.resizeAndEmpty(width, height);
         }
         else {
-            ArrayTools.insert(dungeon, map, 0, 0);
+            ArrayTools.insert(place, map, 0, 0);
             ArrayTools.insert(environment, this.environment, 0, 0);
             allCaves.clear();
         }
@@ -385,8 +416,9 @@ public class RoomFinder {
     }
 
     /**
-     * Gets all the rooms this found during construction, returning them as an ObjectList of 2D char arrays, where an
-     * individual room is "masked" so only its contents have normal map chars and the rest have only '#'.
+     * Gets all the rooms this found during construction, returning them as an ObjectList of 2D char arrays.
+     * Every individual room is "masked" so only its contents have normal map chars and the rest have only '#'.
+     *
      * @return an ObjectList of 2D char arrays representing rooms.
      */
     public ObjectList<char[][]> findRooms()
@@ -400,8 +432,9 @@ public class RoomFinder {
     }
 
     /**
-     * Gets all the corridors this found during construction, returning them as an ObjectList of 2D char arrays, where an
-     * individual corridor is "masked" so only its contents have normal map chars and the rest have only '#'.
+     * Gets all the corridors this found during construction, returning them as an ObjectList of 2D char arrays.
+     * Every individual corridor is "masked" so only its contents have normal map chars and the rest have only '#'.
+     *
      * @return an ObjectList of 2D char arrays representing corridors.
      */
     public ObjectList<char[][]> findCorridors()
@@ -415,9 +448,10 @@ public class RoomFinder {
     }
 
     /**
-     * Gets all the caves this found during construction, returning them as an ObjectList of 2D char arrays, where an
+     * Gets all the caves this found during construction, returning them as an ObjectList of 2D char arrays. Every
      * individual room is "masked" so only its contents have normal map chars and the rest have only '#'. Will only
-     * return a non-empty collection if the two-arg constructor was used and the environment contains caves.
+     * return a non-empty collection if the environment contains caves.
+     *
      * @return an ObjectList of 2D char arrays representing caves.
      */
     public ObjectList<char[][]> findCaves()
@@ -431,8 +465,9 @@ public class RoomFinder {
     }
     /**
      * Gets all the rooms, corridors, and caves this found during construction, returning them as an ObjectList of 2D
-     * char arrays, where an individual room or corridor is "masked" so only its contents have normal map chars and the
+     * char arrays. Every individual room or corridor is "masked" so only its contents have normal map chars and the
      * rest have only '#'.
+     *
      * @return an ObjectList of 2D char arrays representing rooms, corridors, or caves.
      */
     public ObjectList<char[][]> findRegions()
@@ -452,6 +487,14 @@ public class RoomFinder {
         }
         return rs;
     }
+
+    /**
+     * Creates a 2D char array filled entirely with the char {@code '#'}, using the given width and height.
+     *
+     * @param width must be positive; the size of the first index of the returned 2D array
+     * @param height must be positive; the size of the second index of the returned 2D array
+     * @return a new 2D char array of the requested size containing only the char {@code '#'}
+     */
     private static char[][] defaultFill(int width, int height)
     {
         char[][] d = new char[width][height];
@@ -465,6 +508,7 @@ public class RoomFinder {
      * Merges multiple 2D char arrays where the '#' character means "no value", and combines them so all cells with
      * value are on one map, with '#' filling any other cells. If regions is empty, this uses width and height to
      * construct a blank map, all '#'. It will also use width and height for the size of the returned 2D array.
+     *
      * @param regions An ObjectList of 2D char array regions, where '#' is an empty value and all others will be merged
      * @param width the width of any map this returns
      * @param height the height of any map this returns
@@ -475,25 +519,26 @@ public class RoomFinder {
         if(regions == null || regions.isEmpty())
             return defaultFill(width, height);
         char[][] first = regions.get(0);
-        char[][] dungeon = new char[Math.min(width, first.length)][Math.min(height, first[0].length)];
+        char[][] place = new char[Math.min(width, first.length)][Math.min(height, first[0].length)];
         for (int x = 0; x < first.length; x++) {
-            Arrays.fill(dungeon[x], '#');
+            Arrays.fill(place[x], '#');
         }
         for(char[][] region : regions)
         {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     if(region[x][y] != '#')
-                        dungeon[x][y] = region[x][y];
+                        place[x][y] = region[x][y];
                 }
             }
         }
-        return dungeon;
+        return place;
     }
 
     /**
      * Takes an x, y position and finds the room, corridor, or cave at that position, if there is one, returning the
      * same 2D char array format as the other methods.
+     *
      * @param x the x coordinate of a position that should be in a room or corridor
      * @param y the y coordinate of a position that should be in a room or corridor
      * @return a masked 2D char array where anything not in the current region is '#'
@@ -515,6 +560,7 @@ public class RoomFinder {
     /**
      * Takes an x, y position and finds the room or corridor at that position and the rooms, corridors or caves that it
      * directly connects to, and returns the group as one merged 2D char array.
+     *
      * @param x the x coordinate of a position that should be in a room or corridor
      * @param y the y coordinate of a position that should be in a room or corridor
      * @return a masked 2D char array where anything not in the current region or one nearby is '#'
@@ -568,6 +614,7 @@ public class RoomFinder {
     /**
      * Takes an x, y position and finds the rooms or corridors that are directly connected to the room, corridor or cave
      * at that position, and returns the group as an ObjectList of 2D char arrays, one per connecting region.
+     * 
      * @param x the x coordinate of a position that should be in a room or corridor
      * @param y the y coordinate of a position that should be in a room or corridor
      * @return an ObjectList of masked 2D char arrays where anything not in a connected region is '#'
