@@ -7,14 +7,14 @@ javadoc.destinationDir = file("../../docs/squidwrath/$name/apidocs")
 dependencies {
     api project(':squidcore')
 
-	api("com.github.tommyettinger.tantrum:tantrum-regexodus:1.4.0.0"){
+	api("com.github.tommyettinger.tantrum:tantrum-regexodus:1.5.0.0"){
         exclude module: 'regexodus'
     }
 
-	api("com.github.tommyettinger.tantrum:tantrum-digital:1.4.0.0"){
+	api("com.github.tommyettinger.tantrum:tantrum-digital:1.5.0.0"){
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger.tantrum:tantrum-jdkgdxds:1.4.0.0"){
+	api("com.github.tommyettinger.tantrum:tantrum-jdkgdxds:1.5.0.0"){
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }
