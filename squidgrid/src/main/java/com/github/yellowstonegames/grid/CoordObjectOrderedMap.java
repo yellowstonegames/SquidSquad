@@ -25,10 +25,7 @@ import com.github.tommyettinger.ds.support.util.PartialParser;
 import com.github.yellowstonegames.core.ISerializersNeeded;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A variant on jdkgdxds' {@link ObjectObjectMap} class that only uses Coord keys, and can do so more efficiently.
@@ -319,6 +316,6 @@ public class CoordObjectOrderedMap<V> extends ObjectObjectOrderedMap<Coord, V> i
     @GwtIncompatible
     @Override
     public List<Class<?>> getSerializersNeeded() {
-        return Arrays.asList(Coord.class, defaultValue.getClass());
+        return Collections.singletonList(Coord.class);
     }
 }

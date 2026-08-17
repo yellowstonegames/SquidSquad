@@ -287,6 +287,6 @@ public class CoordObjectMap<V> extends ObjectObjectMap<Coord, V> implements ISer
     @GwtIncompatible
     @Override
     public List<Class<?>> getSerializersNeeded() {
-        return Arrays.asList(Coord.class, defaultValue.getClass());
+        return Collections.singletonList(Coord.class);
     }
 }
