@@ -280,9 +280,9 @@ after that build, the commit's build will be "frozen" and preserved permanently.
 
 The other versions go up fairly often as things are fixed or improved, but they will be at least:
 
-  - `digitalVersion`=0.10.2
-  - `jdkgdxdsVersion`=2.1.8
-  - `juniperVersion`=0.10.5
+  - `digitalVersion`=0.10.3
+  - `jdkgdxdsVersion`=2.1.9
+  - `juniperVersion`=0.10.6
   - `regExodusVersion`=0.1.21
   - `cruxVersion`=0.1.3
   - `textraTypistVersion`=2.4.3
