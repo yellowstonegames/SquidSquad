@@ -50,12 +50,12 @@ public class IntersectorTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-        font = KnownFonts.getGentiumMSDF().scaleHeightTo(1f);
+        font = KnownFonts.getGentiumSDF().scaleHeightTo(1f);
         view = new StretchViewport(40, 40);
         view.getCamera().position.set(5, 0, 0);
         batch = new SpriteBatch();
         sd = new ShapeDrawer(batch, font.mapping.get(font.solidBlock));
-        tags = new Array<>(TextraLabel.class);
+        tags = new Array<>(TextraLabel[]::new);
         trapezoid = new Polygon(new float[]{-2.8626027f, -3.054608f, 0.09345288f, 14.654785f, 18.01647f, 4.9480224f, 4.8018613f, -7.2055407f});
         square = new Polygon(new float[]{-8.879811f, -14.852028f, -8.879811f, 5.1479716f, 11.120189f, 5.1479716f, 11.120189f, -14.852028f});
         overlap = new Polygon();

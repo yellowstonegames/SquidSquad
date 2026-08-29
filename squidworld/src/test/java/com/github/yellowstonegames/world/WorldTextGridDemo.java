@@ -87,7 +87,7 @@ public class WorldTextGridDemo extends ApplicationAdapter {
             BIOME_CHARS[i] = Biome.TABLE[i].representation;
         }
     }
-    
+
     @Override
     public void create() {
 //        System.out.printf("%.8ff, %.8ff, %.8ff, 1f\n\n", DescriptiveColor.red(0xFF7A8121), DescriptiveColor.green(0xFF7A8121), DescriptiveColor.blue(0xFF7A8121));
@@ -127,11 +127,11 @@ public class WorldTextGridDemo extends ApplicationAdapter {
                         break;
                     case Input.Keys.S:
                     case Input.Keys.DOWN:
-                        position.add(0, 1, 0);
+                        position.add(0, -1, 0);
                         break;
                     case Input.Keys.W:
                     case Input.Keys.UP:
-                        position.add(0, -1, 0);
+                        position.add(0, 1, 0);
                         break;
                     case Input.Keys.A:
                     case Input.Keys.LEFT:

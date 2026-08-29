@@ -46,7 +46,7 @@ public class AnimatedLogoGenerator extends ApplicationAdapter {
     SpriteBatch batch;
     Font[] fonts = new Font[10];
     AnimatedGif gif;
-    Array<Pixmap> pms = new Array<>(Pixmap.class);
+    Array<Pixmap> pms = new Array<>(Pixmap[]::new);
     String squid = " Squid....";
     String squad = " Squad....";
     NoiseWrapper noise;

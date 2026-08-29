@@ -97,7 +97,7 @@ public class WorldWildGridDemo extends ApplicationAdapter {
     @Override
     public void create() {
         stage = new Stage();
-        display = new GlyphGrid(KnownFonts.getIosevkaMSDF(), bigWidth, bigHeight, true);
+        display = new GlyphGrid(KnownFonts.getIosevkaSDF(), bigWidth, bigHeight, true);
         display.viewport.setWorldSize(shownWidth, shownHeight);
         view = display.viewport;// = new StretchViewport(shownWidth, shownHeight);
         camera = view.getCamera();
@@ -153,10 +153,10 @@ public class WorldWildGridDemo extends ApplicationAdapter {
                         rng.setSeed(seed);
                         break;
                     case Input.Keys.DOWN:
-                        position.add(0, 1, 0);
+                        position.add(0, -1, 0);
                         break;
                     case Input.Keys.UP:
-                        position.add(0, -1, 0);
+                        position.add(0, 1, 0);
                         break;
                     case Input.Keys.LEFT:
                         position.add(-1, 0, 0);
