@@ -233,7 +233,7 @@ public class OrganicConnectingMapGenerator implements PlaceGenerator {
         if(remakeEnvironment)
         {
             gen.region.writeIntsInto(environment, DungeonTools.NATURAL_FLOOR);
-            gen.region.copy().fringe8way().writeIntsInto(environment, DungeonTools.NATURAL_WALL);
+            gen.tempRegion.remake(gen.region).fringe8way().writeIntsInto(environment, DungeonTools.NATURAL_WALL);
             remakeEnvironment = false;
         }
         return environment;

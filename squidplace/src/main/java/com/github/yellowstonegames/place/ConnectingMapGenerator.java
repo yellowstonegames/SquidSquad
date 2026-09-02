@@ -171,7 +171,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
      * connection (which can be made into a door using {@link DungeonProcessor}).
      */
     public double divideRooms;
-    private final transient Region tempRegion;
+    protected final transient Region tempRegion;
     /**
      * Can be swapped out for another EnhancedRandom implementation, but must not be null.
      */
