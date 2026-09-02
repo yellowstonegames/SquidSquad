@@ -24,18 +24,18 @@ public class PlaceGeneratorSampler {
 
     public static void main(String[] args) {
         AceRandom random = new AceRandom(0xB0BAFE77BA77L);
-//        DungeonProcessor proc = new DungeonProcessor(42, 42, random);
 
         PlaceGenerator[] generators = {
-                new DungeonProcessor(42, 42, random),
-                new FlowingCaveGenerator(42, 42, TilesetType.DEFAULT_DUNGEON, random),
-                new ConnectingMapGenerator(42, 42, random),
-                new GrowingTreeMazeGenerator(42, 42, random),
-                new MixedGenerator(42, 42, random),
-                new PacMazeGenerator(42, 42, random),
-                new SerpentMapGenerator(42, 42, random),
-                new SymmetryDungeonGenerator(42, 42, random),
-                new SlashMazeGenerator(42, 42, random).setThin(true),
+            new DungeonProcessor(42, 42, random),
+            new FlowingCaveGenerator(42, 42, TilesetType.DEFAULT_DUNGEON, random),
+            new ConnectingMapGenerator(42, 42, random),
+            new GrowingTreeMazeGenerator(42, 42, random),
+            new MixedGenerator(42, 42, random),
+            new PacMazeGenerator(42, 42, random),
+            new SerpentMapGenerator(42, 42, random),
+            new SymmetryDungeonGenerator(42, 42, random),
+            new SlashMazeGenerator(42, 42, random).setThin(true),
+            new OrganicConnectingMapGenerator(42, 42, 6, 6, 3, random),
         };
 
         for(PlaceGenerator gen : generators){
