@@ -26,16 +26,16 @@ public class PlaceGeneratorSampler {
         AceRandom random = new AceRandom(0xB0BAFE77BA77L);
 
         PlaceGenerator[] generators = {
-            new DungeonProcessor(42, 42, random),
-            new FlowingCaveGenerator(42, 42, TilesetType.DEFAULT_DUNGEON, random),
-            new ConnectingMapGenerator(42, 42, random),
-            new GrowingTreeMazeGenerator(42, 42, random),
-            new MixedGenerator(42, 42, random),
-            new PacMazeGenerator(42, 42, random),
-            new SerpentMapGenerator(42, 42, random),
-            new SymmetryDungeonGenerator(42, 42, random),
-            new SlashMazeGenerator(42, 42, random).setThin(true),
-            new OrganicConnectingMapGenerator(42, 42, 6, 6, 3, random),
+            new DungeonProcessor(80, 53, random),
+            new FlowingCaveGenerator(80, 53, TilesetType.DEFAULT_DUNGEON, random),
+            new ConnectingMapGenerator(80, 53, 5, 5, random, 1, 0.),
+            new GrowingTreeMazeGenerator(80, 53, random),
+            new MixedGenerator(80, 53, random),
+            new PacMazeGenerator(80, 53, random),
+            new SerpentMapGenerator(80, 53, random),
+            new SymmetryDungeonGenerator(80, 53, random),
+            new SlashMazeGenerator(80, 53, random).setThin(true),
+            new OrganicConnectingMapGenerator(80, 53, 6, 6, 3, random),
         };
 
         for(PlaceGenerator gen : generators){

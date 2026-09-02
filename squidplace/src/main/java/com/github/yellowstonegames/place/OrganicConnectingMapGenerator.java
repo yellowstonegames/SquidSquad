@@ -166,10 +166,10 @@ public class OrganicConnectingMapGenerator implements PlaceGenerator {
     public char[][] generate() {
         remakeEnvironment = true;
         gen.generate();
+        gen.region.not().fray(rng, 0.6f, ca.current).not().removeEdges();
         ca.remake(gen.region);
         gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.85f);
-        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.85f);
-        ca.current.remake(gen.region.deteriorate(rng, 0.9f));
+        ca.current.remake(gen.region.fray(rng, 0.85f));
         gen.region.or(ca.runBasicSmoothing());
         ca.current.remake(gen.region.removeEdges().largestPart());
         gen.region.remake(ca.runDiagonalGapCleanup());
