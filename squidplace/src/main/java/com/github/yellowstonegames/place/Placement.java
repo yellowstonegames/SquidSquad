@@ -45,9 +45,6 @@ public class Placement {
 
     /**
      * Constructs a Placement using the given RoomFinder, which will have collections of rooms, corridors, and caves.
-     * A common use case for this class involves the Placement field that is constructed in a SectionDungeonGenerator
-     * when generate() or generateRespectingStairs() in that class is called; if you use SectionDungeonGenerator, there
-     * isn't much need for this constructor, since you can normally use the one created as a field in that class.
      * @param finder a RoomFinder that must not be null.
      */
     public Placement(RoomFinder finder)

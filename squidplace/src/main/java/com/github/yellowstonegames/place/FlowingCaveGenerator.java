@@ -25,7 +25,7 @@ import com.github.yellowstonegames.place.tileset.DungeonBoneGen;
 import com.github.yellowstonegames.place.tileset.TilesetType;
 
 /**
- * An IDungeonGenerator that distorts and smooths an ordinary dungeon map to make it appear like a cave complex.
+ * A PlaceGenerator that distorts and smooths an ordinary dungeon map to make it appear like a cave complex.
  * This usually exhibits the complex connectivity that dungeons made with a {@link TilesetType} like
  * {@link TilesetType#DEFAULT_DUNGEON} have, but shouldn't have noticeable room/corridor areas, and should appear as
  * all one cave.
@@ -219,7 +219,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
     /**
      * Gets the most recently-produced dungeon as a 2D char array, usually produced by calling {@link #generate()} or
      * some similar method present in a specific implementation. This normally passes a direct reference and not a copy,
-     * so you can normally modify the returned array to propagate changes back into this IDungeonGenerator.
+     * so you can normally modify the returned array to propagate changes back into this PlaceGenerator.
      *
      * @return the most recently-produced dungeon/map as a 2D char array
      */
@@ -234,7 +234,7 @@ public class FlowingCaveGenerator implements PlaceGenerator {
      * (equal to 0), {@link DungeonTools#NATURAL_FLOOR}, or {@link DungeonTools#NATURAL_WALL}.
      * If the environment has not yet been retrieved since generate() was last called, this assigns the environment map
      * to match the dungeon map; otherwise it uses the cached environment map.
-     * @return a 2D int array that can be used as an environment map with SectionDungeonGenerator.
+     * @return a 2D int array that can be used as an environment map
      */
     public int[][] getEnvironment()
     {

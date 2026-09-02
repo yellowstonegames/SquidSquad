@@ -414,7 +414,7 @@ public class ConnectingMapGenerator implements PlaceGenerator {
     /**
      * Gets the most recently-produced dungeon as a 2D char array, usually produced by calling {@link #generate()} or
      * some similar method present in a specific implementation. This normally passes a direct reference and not a copy,
-     * so you can normally modify the returned array to propagate changes back into this IDungeonGenerator.
+     * so you can normally modify the returned array to propagate changes back into this PlaceGenerator.
      *
      * @return the most recently-produced dungeon/map as a 2D char array
      */
