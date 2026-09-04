@@ -190,10 +190,10 @@ public class OrganicConnectingMapGenerator implements PlaceGenerator {
         remakeEnvironment = true;
         gen.generate();
         ObjectList<Region> rooms = gen.region.copy().retract8way().flood8way(gen.region, 1).split();
+        gen.region.not().fray(rng, 0.6f, ca.current).not().removeEdges();
         ca.remake(gen.region);
-        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.9f);
-        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.9f);
-        ca.current.remake(gen.region.deteriorate(rng, 0.9f));
+        gen.region.and(ca.runBasicSmoothing()).deteriorate(rng, 0.85f);
+        ca.current.remake(gen.region.fray(rng, 0.85f));
         gen.region.or(ca.runBasicSmoothing());
         for (int i = 0; i < rooms.size(); i++) {
             if(rng.nextDouble() < roomChance)
@@ -201,7 +201,7 @@ public class OrganicConnectingMapGenerator implements PlaceGenerator {
                 gen.region.andNot(rooms.get(i).fringe8way().deteriorate(rng, 0.81f));
             }
         }
-        gen.region.remake(gen.region.removeEdges());
+        gen.region.removeEdges();
         gen.region.insertSeveral(DungeonTools.ensurePath(gen.region.intoChars(gen.getPlaceGrid(), '.', '#'), rng, '.', '#'));
         ca.current.remake(gen.region.largestPart());
         gen.region.remake(ca.runDiagonalGapCleanup());
