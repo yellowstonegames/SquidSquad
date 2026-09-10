@@ -20,14 +20,11 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.SimplexNoiseScaled;
 
 /**
  * Serializer for {@link SimplexNoiseScaled}; doesn't need anything else registered.
- * This is marked as Beta because SimplexNoiseScaled may be removed in the future.
  */
-@Beta
 public class SimplexNoiseScaledSerializer extends Serializer<SimplexNoiseScaled> {
     public SimplexNoiseScaledSerializer() {
         setImmutable(false);

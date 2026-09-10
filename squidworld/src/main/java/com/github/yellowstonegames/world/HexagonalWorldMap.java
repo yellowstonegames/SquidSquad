@@ -18,7 +18,6 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.random.FlowRandom;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.grid.INoise;
 import com.github.yellowstonegames.grid.Noise;
 import com.github.yellowstonegames.grid.NoiseWrapper;
@@ -30,7 +29,6 @@ import java.util.Arrays;
  * of a regular hexagon, so it could be used for a map with a hexagonal grid; Eckert II uses different angles from
  * a regular hexagon. It looks best when its width is twice its height.
  */
-@Beta
 public class HexagonalWorldMap extends WorldMapGenerator {
     protected static final float terrainFreq = 2.1f, terrainLayeredFreq = 0.9f, heatFreq = 1.9f, moistureFreq = 2.1f, otherFreq = 4.6f;
     //    protected static final float terrainFreq = 1.45f, terrainLayeredFreq = 2.6f, heatFreq = 2.1f, moistureFreq = 2.125f, otherFreq = 3.375f;

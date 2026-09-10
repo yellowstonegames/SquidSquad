@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.AceRandom;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * A variant on {@link PhantomNoise} that also produces arbitrary-dimensional continuous noise, but that is optimized
@@ -28,46 +27,7 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * noise do when dimensions are added. This has configurable detail; 3 is typically the minimum for decent noise in low
  * dimensions, but it can be set higher independently of fractal octaves.
  */
-@Beta
 public class FlanNoise implements INoise {
-//    /**
-//     * Generates a balanced wobbly line by shrinking sections of a sine wave, with an equal amount shrunken from the
-//     * negative side as the positive side. Fills the generated data into result, which must have length 16384 (0x4000).
-//     * You can call this with {@link #WOBBLE} as the result and any seed you want to change the static line data.
-//     * @param result a float array that will be modified; must have length 16384 (0x4000)
-//     * @param seed a long seed to determine some shuffled ordering
-//     */
-//    public static void generateLookupTable(float[] result, long seed) {
-//        float[] high = new float[32], low = new float[32];
-//        int m = 0;
-//        for (float f = 0x1p-6f; f < 1f; f+= 0x1p-5f, m++) {
-//            high[m] = low[m] = f;
-//        }
-//        WhiskerRandom random = new WhiskerRandom(seed);
-//        random.shuffle(high);
-//        random.shuffle(low);
-//        for (int outer = 0, idx = 0; outer < 32; outer++) {
-//            for (int lobe = 0; lobe < 0x2000; lobe += 32) {
-//                result[idx++] = TrigTools.SIN_TABLE[lobe] * high[outer];
-//            }
-//            for (int lobe = 0x2000; lobe < 0x4000; lobe += 32) {
-//                result[idx++] = TrigTools.SIN_TABLE[lobe] * low[outer];
-//            }
-//        }
-//    }
-//    public static final float[] WOBBLE = new float[0x4000];
-//    static {
-//        generateLookupTable(WOBBLE, 1234567890123L);
-//    }
-
-//    public static void main(String[] args) {
-//        double sum = 0;
-//        for (int i = 0; i < 0x4000; i++) {
-//            sum += wobble[i];
-//        }
-//        System.out.println(sum);
-//    }
-
     public long seed;
     public int dim;
     public float sharpness;

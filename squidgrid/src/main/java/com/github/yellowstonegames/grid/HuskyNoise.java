@@ -22,7 +22,6 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.LineWobble;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
 
@@ -38,7 +37,6 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * time, and relies on {@link LineWobble#bicubicWobble(long, float)} to generate different results per seed. This allows
  * {@link #hasEfficientSetSeed()} to be true here.
  */
-@Beta
 public class HuskyNoise implements INoise {
     protected static final float LACUNARITY = 1.6f;
     protected static final float GAIN = 0.625f;

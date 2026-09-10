@@ -21,7 +21,6 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.IntObjectOrderedMap;
 import com.github.tommyettinger.ds.PrimitiveCollection;
 import com.github.tommyettinger.ds.support.util.IntIterator;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 
 import java.util.AbstractCollection;
@@ -39,7 +38,6 @@ import java.util.Set;
  * ({@link #contains(Object)}).
  * @param <V> the type of all values; this must implement {@link IGridIdentified}
  */
-@Beta
 public class SpatialMap<V extends IGridIdentified> extends AbstractCollection<V> implements Arrangeable {
     public final CoordObjectOrderedMap<V> positionMap;
     public final IntObjectOrderedMap<V> idMap;

@@ -16,14 +16,12 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * Foam noise but using Simplex noise instead of Value noise. An {@link INoise} implementation.
  * This has a somewhat-similar appearance to higher-frequency Foam noise. It can be a little faster in dimensions 4
  * and up, though it can be hard to notice.
  */
-@Beta
 public class FoamplexNoise implements INoise {
 
     /**
@@ -408,7 +406,7 @@ public class FoamplexNoise implements INoise {
     public boolean hasEfficientSetSeed() {
         return true;
     }
-    
+
     public void setSeed(long seed) {
         this.seed = seed;
     }

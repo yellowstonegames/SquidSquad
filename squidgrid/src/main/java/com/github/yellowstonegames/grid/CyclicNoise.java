@@ -19,7 +19,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
 
@@ -31,7 +30,6 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>. It's hard to tell, but it seems like
  * this might be rather fast, especially when more octaves or a higher dimension are needed.
  */
-@Beta
 public class CyclicNoise implements INoise {
     /* // Mostly the original GLSL code, with few changes, for comparison and archival purposes.
 // From https://www.shadertoy.com/view/3tcyD7 by jeyko, based on https://www.shadertoy.com/view/wl3czN by nimitz

@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
 
@@ -34,7 +33,6 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * don't do that very well. CyclicNoise is unusually fast in high dimensions and unusually low-quality in 2D, so maybe
  * using more dimensions will help?
  */
-@Beta
 public class PuffyNoise implements INoise {
     protected static final float LACUNARITY = 1.6f;
     protected static final float GAIN = 0.625f;

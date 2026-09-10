@@ -19,7 +19,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.yellowstonegames.core.ISerializersNeeded;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Collections;
@@ -42,7 +41,6 @@ import java.util.List;
  * This defaults to using a FoamNoise for its basis INoise, which allows dimensions 2 through 5 to be produced with a
  * mutation value.
  */
-@Beta
 public class DualMutantNoiseWrapper implements INoise, ISerializersNeeded {
     /**
      * The INoise this uses for all its internal noise generation.

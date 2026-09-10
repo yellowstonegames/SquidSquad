@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.random.DistinctRandom;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
 
@@ -32,7 +31,6 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * <br>
  * Called PerfyNoise because it acts like {@link PuffyNoise} using Perlin Noise to puff it up instead of a constant 1.
  */
-@Beta
 public class PerfyNoise implements INoise {
     protected static final float LACUNARITY = 1.6f;
     protected static final float GAIN = 0.625f;

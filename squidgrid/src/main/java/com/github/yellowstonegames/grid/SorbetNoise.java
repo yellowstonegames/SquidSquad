@@ -17,7 +17,6 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * A mix of {@link CyclicNoise} with Simplex noise; much less periodic than CyclicNoise alone. Largely based upon
@@ -25,12 +24,11 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * <a href="https://www.shadertoy.com/view/wl3czN">this ShaderToy by nimitz</a>. This uses cyclic noise with a
  * dimension one higher than requested, and uses a call to {@link SimplexNoise#noise} to fill that parameter.
  * <br>
- * This is still very much in beta. 3D SorbetNoise can often have very obvious waves of high and low values pass through
+ * 3D SorbetNoise can often have very obvious waves of high and low values pass through
  * the noise field in straight-line bands. Higher dimensions tend to look better. This is somewhat unusual because this
  * uses SimplexNoise, which looks drastically worse in dimensions 5 and up, but because CyclicNoise looks better around
  * those dimensions, the quality changes offset each other.
  */
-@Beta
 public class SorbetNoise extends CyclicNoise {
 
     public SorbetNoise() {

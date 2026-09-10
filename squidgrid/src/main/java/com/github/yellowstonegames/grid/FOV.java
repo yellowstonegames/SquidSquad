@@ -22,7 +22,6 @@ import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.ObjectDeque;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.ds.support.sort.FloatComparators;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Iterator;
 
@@ -346,7 +345,7 @@ public final class FOV {
         float radius = light.length + light[0].length;
         ArrayTools.fill(light, 0.0f);
         light[startX][startY] = 1.0f;//make the starting space full power
-        
+
         shadowCastBinary(1, 1.0f, 0.0f, 0, 1, 1, 0, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);
         shadowCastBinary(1, 1.0f, 0.0f, 1, 0, 0, 1, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);
         shadowCastBinary(1, 1.0f, 0.0f, 0, 1, -1, 0, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);
@@ -355,7 +354,7 @@ public final class FOV {
         shadowCastBinary(1, 1.0f, 0.0f, -1, 0, 0, -1, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);
         shadowCastBinary(1, 1.0f, 0.0f, 0, -1, 1, 0, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);
         shadowCastBinary(1, 1.0f, 0.0f, -1, 0, 0, 1, radius, startX, startY, light, resistanceMap, minX, minY, maxX, maxY);
-        
+
         return light;
     }
 
@@ -657,7 +656,7 @@ public final class FOV {
      * Like the {@link #reuseFOV(float[][], float[][], int, int, float, Radius, float, float)} method, but this
      * uses Ripple FOV with a configurable tightness/looseness (between 1, tightest, and 6, loosest). Other parameters
      * are similar; you can get a resistance map from {@link #generateResistances(char[][])}, {@code light} will be
-     * modified and returned (it will be overwritten, but its size should be the same as the resistance map), there's 
+     * modified and returned (it will be overwritten, but its size should be the same as the resistance map), there's
      * starting x,y position, a radius in cells, a {@link Radius} enum constant to choose the distance measurement, and
      * the angle/span combination to specify a conical section of FOV (span is the total in degrees, centered on angle).
      * <br>
@@ -804,7 +803,7 @@ public final class FOV {
                 }
                 float newAngle = TrigTools.atan2TurnsFinite(y2 - y, x2 - x) - angle;
                 newAngle -= MathTools.fastFloor(newAngle);
-                if (newAngle > span * 0.5f && newAngle < 1.0f - span * 0.5f) 
+                if (newAngle > span * 0.5f && newAngle < 1.0f - span * 0.5f)
                     continue;
 
                 float surroundingLight = nearRippleLight(x2, y2, ripple, x, y, decay, lightMap, map, radiusStrategy );
@@ -1038,7 +1037,7 @@ public final class FOV {
                 float deltaRadius = radiusStrategy.radius(deltaX, deltaY);
                 //check if it's within the lightable area and light if needed
                 if (deltaRadius <= radius) {
-                    lightMap[currentX][currentY] = 1.0f - decay * deltaRadius; 
+                    lightMap[currentX][currentY] = 1.0f - decay * deltaRadius;
                 }
 
                 if (blocked) { //previous cell was a blocking one
@@ -1356,7 +1355,6 @@ public final class FOV {
      * @param radiusTechnique provides a means to calculate the radius as desired
      * @return the computed light grid, which is the same 2D array as the value assigned to {@code light}
      */
-    @Beta
     public static float[][] reuseFOVOrtho(float[][] resistanceMap, float[][] light,
                                           int startX, int startY, float radius,
                                           Radius radiusTechnique)
@@ -2112,7 +2110,7 @@ public final class FOV {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 switch (grid[i][j]) {
-                    case ' ': 
+                    case ' ':
                         portion[i][j] = 1.0f;
                         break;
                     case '├':

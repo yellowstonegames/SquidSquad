@@ -19,7 +19,6 @@ package com.github.yellowstonegames.grid;
 import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import static com.github.tommyettinger.digital.TrigTools.*;
 
@@ -38,7 +37,6 @@ import static com.github.tommyettinger.digital.TrigTools.*;
  * via {@link Noise#setMutation(float)}). Noise is faster than this class because it isn't as generalized to operate in
  * arbitrarily-high dimensions.
  */
-@Beta
 public class TaffyNoise implements INoise {
     public long seed;
     public int dim;

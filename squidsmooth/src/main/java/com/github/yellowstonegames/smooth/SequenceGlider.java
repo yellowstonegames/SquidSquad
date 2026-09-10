@@ -20,7 +20,6 @@ import com.github.tommyettinger.digital.BitConversion;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.Interpolations.Interpolator;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 import java.util.Arrays;
 
@@ -29,7 +28,6 @@ import java.util.Arrays;
  * likely that you will want to use a sequence of all the same type of Glider (that is, all can have their "x"
  * or "color" coordinate queried and have it mean the same thing for any member of the sequence, for example).
  */
-@Beta
 public class SequenceGlider extends Glider {
     protected Glider[] sequence;
     protected float[] durations;

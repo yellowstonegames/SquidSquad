@@ -17,7 +17,6 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.BitConversion;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * Foam noise code as an {@link INoise} implementation, additionally taking a shape parameter for its interpolations
@@ -28,7 +27,6 @@ import com.github.yellowstonegames.core.annotations.Beta;
  * {@link SimplexNoise} change their appearance quite a bit in 2D vs. 7D. Changing the shape with
  * {@link #setShape(float)} can make this try to be smoother (with shape values greater than 1) or spiky (less than 1).
  */
-@Beta
 public class ShapedFoamNoise implements INoise {
 
     /**
@@ -749,7 +747,7 @@ public class ShapedFoamNoise implements INoise {
                                 ))))))
         ) * 0x1p-64f + 0.5f;
     }
-    
+
     /**
      * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
      * (2 to the 64).
@@ -1115,7 +1113,7 @@ public class ShapedFoamNoise implements INoise {
     public boolean hasEfficientSetSeed() {
         return true;
     }
-    
+
     public void setSeed(long seed) {
         this.seed = seed;
     }
