@@ -34,7 +34,6 @@ public class FontTest extends ApplicationAdapter {
     Font font;
     Font[] fonts;
     SpriteBatch batch;
-//    LaserRandom random;
     int[][] backgrounds;
     char[][] lines;
     Layout layout;
@@ -49,9 +48,6 @@ public class FontTest extends ApplicationAdapter {
 
     @Override
     public void create() {
-//        random = new LaserRandom(1L);
-//        long seed = random.nextLong();
-//        char[][] lines0 = LineTools.decode4x4(seed | LineTools.exteriorSquare, LineTools.light);
 
         lines = new char[][]
                 {
