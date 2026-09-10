@@ -22,7 +22,6 @@ import com.github.tommyettinger.ds.IntList;
 import com.github.tommyettinger.ds.ObjectIntOrderedMap;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.function.FloatToFloatFunction;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * A palette, the same as the one in {@link DescriptiveColor}, just using RGBA8888 ints instead of Oklab ints for
@@ -883,15 +882,15 @@ public final class DescriptiveColorRgb {
     public static int redInt(int rgba) {
         return rgba >>> 24;
     }
-    
+
     public static float red(int rgba) {
         return (rgba >>> 24) * (1f/255f);
     }
-    
+
     public static int greenInt(int rgba) {
         return rgba >>> 16 & 255;
     }
-    
+
     public static float green(int rgba) {
         return (rgba >>> 16 & 255) * (1f/255f);
     }
@@ -1012,7 +1011,7 @@ public final class DescriptiveColorRgb {
         final float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
         return (int)(hue * 255.999f) << 24 | (int)(sat * 255.999f) << 16 | (int)(lit * 255.999f) << 8 | (int)(a * 255.999f);
     }
-    
+
     /**
      * Converts the given "HSLA-format" int color to an int color in the RGBA8888 format.
      * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
@@ -1081,7 +1080,7 @@ public final class DescriptiveColorRgb {
         final float sat = (x - lit) / (Math.min(lit, 1f - lit) + 1e-10f);
         return (int)(hue * 255.999f) << 24 | (int)(sat * 255.999f) << 16 | (int)(lit * 255.999f) << 8 | (rgba & 0xFF);
     }
-    
+
     /**
      * Converts the four HCLA components, each in the 0.0 to 1.0 range, to an int in RGBA8888 format.
      * I brought this over from colorful-gdx's FloatColors class. I can't recall where I got the original HSL(A) code
@@ -2471,14 +2470,13 @@ public final class DescriptiveColorRgb {
      * The functions should expect a float argument in the {@code [0, 1]} range, and generally should return a float
      * in the same range representing the same channel (hue, saturation, or lightness). Some validation is performed;
      * all channels have a minimum of 0, and hue will wrap to be in the {@code [0, 1[} range for any finite input.
-     * 
+     *
      * @param rgba an RGBA8888 int color
      * @param hueTransform        a function that, if non-null, will be used to change the hue of the modified color
      * @param saturationTransform a function that, if non-null, will be used to change the saturation of the modified color
      * @param lightnessTransform  a function that, if non-null, will be used to change the lightness of the modified color
      * @return a potentially-modified version of {@code rgba}, still as an RGBA8888 int
      */
-    @Beta
     public static int evaluateHsl(final int rgba,
                                   FloatToFloatFunction hueTransform,
                                   FloatToFloatFunction saturationTransform,
@@ -2544,7 +2542,6 @@ public final class DescriptiveColorRgb {
      * @param lightnessTransform a function that, if non-null, will be used to change the lightness of the modified color
      * @return a potentially-modified version of {@code rgba}, still as an RGBA8888 int
      */
-    @Beta
     public static int evaluateHcl(final int rgba,
                                   FloatToFloatFunction hueTransform,
                                   FloatToFloatFunction chromaTransform,
@@ -2609,7 +2606,6 @@ public final class DescriptiveColorRgb {
      * @param brightnessTransform a function that, if non-null, will be used to change the brightness of the modified color
      * @return a potentially-modified version of {@code rgba}, still as an RGBA8888 int
      */
-    @Beta
     public static int evaluateHsb(final int rgba,
                                   FloatToFloatFunction hueTransform,
                                   FloatToFloatFunction saturationTransform,

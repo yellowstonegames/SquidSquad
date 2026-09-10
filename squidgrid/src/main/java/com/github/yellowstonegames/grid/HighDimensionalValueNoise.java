@@ -18,12 +18,10 @@ package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.MathTools;
 import com.github.yellowstonegames.core.DigitTools;
-import com.github.yellowstonegames.core.annotations.Beta;
 
 /**
  * Arbitrary-dimensional continuous noise that always looks very blocky.
  */
-@Beta
 public class HighDimensionalValueNoise implements INoise {
     /**
      * The seed for the noise; can be any long.

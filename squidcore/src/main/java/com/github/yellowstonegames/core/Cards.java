@@ -18,11 +18,11 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.ArrayTools;
 import com.github.tommyettinger.digital.Hasher;
+import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.IntDeque;
 import com.github.tommyettinger.function.IntToIntFunction;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.Xoshiro256MX3Random;
-import com.github.yellowstonegames.core.annotations.Beta;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Arrays;
@@ -33,15 +33,19 @@ import java.util.List;
  * empty and the user tries to draw a card, the deck is shuffled entirely and then a card is drawn. You can draw a card
  * simulated by an int index with {@link #drawInt()}, or get a String name for a card drawn with {@link #drawName()}.
  * <br>
- * An array of String names must be provided (currently) for each card's name, such as "Ace of Spades" or "The Chariot"
- * (for a game like poker, and for tarot, respectively). You can get a name from an int retrieved earlier with
- * {@link #nameForInt(int)}, or just retrieve the name directly with {@link #drawName()}.
+ * If not using a predefined {@link DeckType}, an array of String names must be provided for each card's name, such as
+ * "Ace of Spades" or "The Chariot" (for a game like poker, and for tarot, respectively).
+ * You can get a name from an int retrieved earlier with {@link #nameForInt(int)}, or just retrieve the name directly
+ * with {@link #drawName()}.
  */
-@Beta
 public class Cards implements ISerializersNeeded {
 
     /**
      * Predefined common types of card decks, stored by the names of cards (permitting duplicates).
+     * These decks allow getting the numerical values of cards as used by at least some games that can compare cards
+     * by some order, using {@link #numericalValue(int)}. For instance, in the 52-card {@link #FRENCH_52} deck, an Ace
+     * has numerical value 1, a 2 has numerical value 2... a 10 has numerical value 10, a Jack has numerical value 11,
+     * and so on.
      */
     public enum DeckType {
         /**
@@ -171,13 +175,20 @@ public class Cards implements ISerializersNeeded {
          * and continue to index 40. Face cards start at index 41 and continue to index 56. Trump cards start at index
          * 57 and continue to the end (index 77).
          * <br>
-         * This deck is unusually large; there isn't an {@link EnhancedRandom} currently available that can guarantee it
-         * can produce all possible shuffles of the deck. There are
+         * This deck is unusually large; there isn't a default {@link EnhancedRandom} currently available without some
+         * extra effort that can guarantee it can produce all possible shuffles of the deck. There are
          * {@code 11324281178206297831457521158732046228731749579488251990048962825668835325234200766245086213177344000000000000000000}
          * possible shuffles of a French Tarot deck, which is incredibly large, but possible for a few generators
          * to guarantee all possible shuffles. Xoshiro512, but not Xoshiro256, generators can, as can Xoroshiro1024 and
          * Mersenne Twister generators. PCG-Random generators can be constructed with large enough periods. A minimum of
-         * 12 ints or 6 longs of state are needed for most generators to potentially have a large enough period.
+         * 12 ints or 6 longs of state are needed for most generators to potentially have a large enough period. Today,
+         * you can create a {@link com.github.tommyettinger.random.CompositeWrapper} around an
+         * {@link com.github.tommyettinger.random.OrbitalRandom} and a {@link Xoshiro256MX3Random}, which does have a
+         * sufficient state size and period to produce all possible shuffles. How you seed any generator with such a
+         * large state size matters quite a lot; using {@link EnhancedRandom#setSeed(long)} will not be sufficient
+         * because it only permits 2 to the 64 initial states, and we need 2 to the 383 states at minimum to be able to
+         * encounter all shuffles. This is only a theoretical problem, though; there's no way a human could encounter
+         * even 2 to the 100 states in a lifetime of continual game-playing.
          */
         TAROT_78((index -> index),
                 "The Fool",
@@ -258,8 +269,21 @@ public class Cards implements ISerializersNeeded {
         }
     }
 
+    /**
+     * One int per value in {@link #names}, used as indices into names that can be shuffled.
+     */
     public IntDeque deck;
+    /**
+     * The random number generator used to shuffle the {@link #deck}. This should have a large period to permit all
+     * shuffles, but it is unlikely a period of greater than 2 to the 100 would ever actually be noticeably different.
+     * {@link Xoshiro256MX3Random} is a safe bet just in case, with a period of just less than 2 to the 256.
+     */
     public EnhancedRandom random;
+
+    /**
+     * An array of the names for each card, such as "Ace of Spades" or "The Fool". These are often unique, but do not
+     * have to be.
+     */
     public String[] names;
 
     /**
@@ -399,7 +423,7 @@ public class Cards implements ISerializersNeeded {
     @Override
     public String toString() {
         return "Cards{" +
-                "names=" + Arrays.toString(names) +
+                "names=" + TextTools.join(", ", names) +
                 '}';
     }
 
