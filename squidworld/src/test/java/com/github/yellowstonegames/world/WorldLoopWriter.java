@@ -28,9 +28,7 @@ import com.github.tommyettinger.anim8.AnimatedGif;
 import com.github.tommyettinger.anim8.Dithered;
 import com.github.tommyettinger.anim8.FastPNG;
 import com.github.tommyettinger.anim8.QualityPalette;
-import com.github.tommyettinger.digital.Hasher;
-import com.github.tommyettinger.digital.MathTools;
-import com.github.tommyettinger.digital.TrigTools;
+import com.github.tommyettinger.digital.*;
 import com.github.tommyettinger.random.DistinctRandom;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
 import com.github.yellowstonegames.core.StringTools;
@@ -112,7 +110,7 @@ public class WorldLoopWriter extends ApplicationAdapter {
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
-        date = DateFormat.getDateInstance().format(new Date());
+        date = DateFormat.getDateInstance().format(new Date(0L));
 
         pm = new Pixmap[FRAMES];
         for (int i = 0; i < FRAMES; i++) {
@@ -213,8 +211,7 @@ public class WorldLoopWriter extends ApplicationAdapter {
     }
 
     public void putMap() {
-        ++counter;
-        String name = makeName(thesaurus);
+        String name = StringTools.capitalize(ArrayTools.greekLetterAt(counter));//makeName(thesaurus);
         while (Gdx.files.local(path + name + ".gif").exists() || Gdx.files.local(path + name + ".png").exists())
             name = makeName(thesaurus);
 //        Gdx.files.local(path + name + "_frames/").mkdirs();
@@ -304,7 +301,7 @@ public class WorldLoopWriter extends ApplicationAdapter {
             if(STILLS_EVERY > 0 && i % STILLS_EVERY == 0)
             {
                 pngWriter.write(Gdx.files.local(path + "stills/" + name + "_" + (i / STILLS_EVERY) + ".png"), pm[i]);
-                Gdx.files.local(path + "data/" + name + "_" + (i / STILLS_EVERY) + ".txt").writeString(world.stringSerialize(), false, "UTF-8");
+//                Gdx.files.local(path + "data/" + name + "_" + (i / STILLS_EVERY) + ".txt").writeString(world.stringSerialize(), false, "UTF-8");
             }
 
             if(FRAMES >= 10)
@@ -323,7 +320,7 @@ public class WorldLoopWriter extends ApplicationAdapter {
 //        }
         temp.dispose();
         System.out.println();
-        System.out.println("World #" + counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
+        System.out.println("World #" + ++counter + ", " + name + ", completed in " + (System.currentTimeMillis() - worldTime) + " ms");
     }
     @Override
     public void render() {
