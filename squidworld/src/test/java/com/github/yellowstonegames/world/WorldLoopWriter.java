@@ -302,7 +302,10 @@ public class WorldLoopWriter extends ApplicationAdapter {
 //                    buf.putInt(pos, SPACE);
 //            }
             if(STILLS_EVERY > 0 && i % STILLS_EVERY == 0)
+            {
                 pngWriter.write(Gdx.files.local(path + "stills/" + name + "_" + (i / STILLS_EVERY) + ".png"), pm[i]);
+                Gdx.files.local(path + "data/" + name + "_" + (i / STILLS_EVERY) + ".txt").writeString(world.stringSerialize(), false, "UTF-8");
+            }
 
             if(FRAMES >= 10)
                 if(i % (FRAMES / 10) == (FRAMES / 10) - 1) System.out.print(((i + 1) * 100 / FRAMES) + "% (" + (System.currentTimeMillis() - worldTime) + " ms)... ");
