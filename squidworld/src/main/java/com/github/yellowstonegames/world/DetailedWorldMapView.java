@@ -32,6 +32,10 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
  * {@link WorldMapGenerator#generate()} and {@link DetailedBiomeMapper#makeBiomes(WorldMapGenerator)}.
  * For extra convenience, you can get a possible interpretation of how the generated world would look by calling
  * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors.
+ * <br>
+ * New code should probably prefer {@link BlendedWorldMapView} for rendering, because it avoids the strange-looking
+ * discontinuities in the renders for a DetailedBiomeMapper. You may still want this if you want each location to be
+ * treated as a ratio between two biomes.
  */
 public class DetailedWorldMapView implements WorldMapView {
     protected int width, height;
@@ -54,7 +58,7 @@ public class DetailedWorldMapView implements WorldMapView {
         this.biomeMapper = new DetailedBiomeMapper();
         initialize();
     }
-    
+
     public DetailedWorldMapView(long seed, int width, int height)
     {
         this(new LocalMap(seed, width, height));
@@ -231,7 +235,7 @@ public class DetailedWorldMapView implements WorldMapView {
     {
         generate(world.seedA, world.seedB, landMod, heatMod);
     }
-    
+
     @Override
     public void generate(long seedA, long seedB, float landMod, float heatMod) {
         world.generate(landMod, heatMod, seedA, seedB);
@@ -296,7 +300,7 @@ public class DetailedWorldMapView implements WorldMapView {
                 }
             }
         }
-        
+
         return colorMap;
     }
 

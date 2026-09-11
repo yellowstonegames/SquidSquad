@@ -25,8 +25,11 @@ import com.github.yellowstonegames.world.BiomeMapper.UnrealisticBiomeMapper;
  * and wraps it so that you can call {@link #generate()} on this to coordinate calls to
  * {@link WorldMapGenerator#generate()} and {@link UnrealisticBiomeMapper#makeBiomes(WorldMapGenerator)}.
  * For extra convenience, you can get a possible interpretation of how the generated world would look by calling
- * {@link #show()}, which returns a 2D array of ints as wildly chaotic RGBA8888 colors. This is meant primarily for
- * debugging world map generation, either within squidworld or in user code.
+ * {@link #show()}, which returns a 2D array of ints as wildly chaotic RGBA8888 colors.
+ * <br>
+ * This is meant primarily for debugging world map generation, either within squidworld or in user code. Actual usage
+ * would probably want {@link BlendedWorldMapView} for realistic-looking maps, or {@link SimpleWorldMapView} if the maps
+ * should not have gradients.
  */
 public class UnrealisticWorldMapView implements WorldMapView {
     protected int width, height;
@@ -174,7 +177,7 @@ public class UnrealisticWorldMapView implements WorldMapView {
     {
         generate(world.seedA, world.seedB, landMod, heatMod);
     }
-    
+
     @Override
     public void generate(long seedA, long seedB, float landMod, float heatMod) {
         world.generate(landMod, heatMod, seedA, seedB);

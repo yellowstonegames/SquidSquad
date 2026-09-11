@@ -34,6 +34,9 @@ import static com.github.yellowstonegames.core.DescriptiveColor.*;
  * {@link WorldMapGenerator#generate()} and {@link SimpleBiomeMapper#makeBiomes(WorldMapGenerator)}.
  * For extra convenience, you can get a possible interpretation of how the generated world would look by calling
  * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors.
+ * <br>
+ * If you want smooth rendering, you should prefer {@link BlendedWorldMapView}, but this can work well if you don't want
+ * gradients between parts of the world map for any reason.
  */
 public class SimpleWorldMapView implements WorldMapView {
     protected int width, height;

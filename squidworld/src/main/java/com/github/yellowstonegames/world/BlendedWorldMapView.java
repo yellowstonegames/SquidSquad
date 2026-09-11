@@ -18,6 +18,7 @@ package com.github.yellowstonegames.world;
 
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.DescriptiveColor;
+import com.github.yellowstonegames.place.Biome;
 import com.github.yellowstonegames.world.BiomeMapper.BlendedBiomeMapper;
 
 /**
@@ -25,7 +26,11 @@ import com.github.yellowstonegames.world.BiomeMapper.BlendedBiomeMapper;
  * and wraps it so that you can call {@link #generate()} on this to coordinate calls to
  * {@link WorldMapGenerator#generate()} and {@link BlendedBiomeMapper#makeBiomes(WorldMapGenerator)}.
  * For extra convenience, you can get a possible interpretation of how the generated world would look by calling
- * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors.
+ * {@link #show()}, which returns a 2D array of ints as RGBA8888 colors. This produces gradients between biome colors
+ * without discontinuities.
+ * <br>
+ * If you want to use different biome tables for alien planets, you can generate Biome arrays with {@link AlienBiomes}
+ * and send those to {@link BlendedBiomeMapper#initialize(Biome[])}, called on {@link #getBiomeMapper()}.
  */
 public class BlendedWorldMapView implements WorldMapView {
     protected int width, height;
@@ -173,7 +178,7 @@ public class BlendedWorldMapView implements WorldMapView {
     {
         generate(world.seedA, world.seedB, landMod, heatMod);
     }
-    
+
     @Override
     public void generate(long seedA, long seedB, float landMod, float heatMod) {
         world.generate(landMod, heatMod, seedA, seedB);
