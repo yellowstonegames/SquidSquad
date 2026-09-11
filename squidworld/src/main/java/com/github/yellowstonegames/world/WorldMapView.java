@@ -105,6 +105,17 @@ public interface WorldMapView {
     void generate(long seedA, long seedB, float landMod, float heatMod);
 
     /**
+     * If you have a WorldMapGenerator and don't want to generate another world (such as if you loaded a world from
+     * a file), you can call this to perform the last steps of {@link #generate()} without creating a new world. This
+     * typically just calls {@link BiomeMapper#makeBiomes(WorldMapGenerator)} using {@link #getBiomeMapper()} and
+     * {@link #getWorld()}. If {@link #getWorld()} is a WorldMapGenerator that hasn't yet generated a world, nor was it
+     * loaded from a generated world, this won't have a useful result.
+     */
+    default void loadExistingWorld() {
+        getBiomeMapper().makeBiomes(getWorld());
+    }
+
+    /**
      * After calling {@link #generate()}, you can call this to assign values to {@link #getColorMap()} and
      * {@link #getColorMapOklab()}. This method returns the RGBA colorMap, but it assigns to colorMapOklab
      * at the same time, so you can use the Oklab colors with methods like

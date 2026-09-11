@@ -284,7 +284,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
         sb.append(landData.toCompressedString()).append('\n');
         b.appendJoined2D(sb, "\t", " ", heightCodeData).append('\n');
 
-        // FIELDS Of this class:
+        // Fields of this class:
         b.appendUnsigned(sb, minHeat0).append('\n');
         b.appendUnsigned(sb, maxHeat0).append('\n');
         b.appendUnsigned(sb, minHeat1).append('\n');
@@ -500,7 +500,7 @@ public class RotatingGlobeMap extends WorldMapGenerator {
         if(!landData.equals(that.landData)) return false;
         if(!Arrays.deepEquals(heightCodeData, that.heightCodeData)) return false;
 
-        // Fields Of this class:
+        // Fields of this class:
         if(Float.compare(minHeat0, that.minHeat0) != 0) return false;
         if(Float.compare(maxHeat0, that.maxHeat0) != 0) return false;
         if(Float.compare(minHeat1, that.minHeat1) != 0) return false;

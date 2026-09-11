@@ -553,7 +553,7 @@ public class DiagonalWorldMap extends WorldMapGenerator {
         if(!landData.equals(that.landData)) return false;
         if(!Arrays.deepEquals(heightCodeData, that.heightCodeData)) return false;
 
-        // Fields Of this class:
+        // Fields of this class:
         if(!terrainRidged.equals(that.terrainRidged)) return false;
         if(!terrainBasic .equals(that.terrainBasic )) return false;
         if(!heat         .equals(that.heat         )) return false;
