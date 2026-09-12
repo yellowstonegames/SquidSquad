@@ -64,12 +64,12 @@ public class WorldLoopWriter extends ApplicationAdapter {
     private static final int STILLS_EVERY = 1;
     private static final int LIMIT = 3;
     private static final float SPEED = 0.25f;
-    private static final int baseSeed = 1234567890;
+    private static final long BASE_SEED = 1234567890;
 
     private Thesaurus thesaurus;
     private String makeName(final Thesaurus thesaurus)
     {
-        return StringTools.capitalize(thesaurus.makePlantName(Language.MALAY).replaceAll("'s", "")).replaceAll("\\W", "");
+        return StringTools.capitalize(thesaurus.defaultLanguage.word(thesaurus.rng, true)).replaceAll("\\W", "");
     }
 
     private Pixmap[] pm;
@@ -110,7 +110,7 @@ public class WorldLoopWriter extends ApplicationAdapter {
     @Override
     public void create() {
         view = new StretchViewport(width * cellWidth, height * cellHeight);
-        date = DateFormat.getDateInstance().format(new Date(0L));
+        date = DateFormat.getDateInstance().format(new Date());
 
         pm = new Pixmap[FRAMES];
         for (int i = 0; i < FRAMES; i++) {
@@ -130,11 +130,12 @@ public class WorldLoopWriter extends ApplicationAdapter {
 
         pngWriter = new FastPNG();
         pngWriter.setFlipY(false);
-        rng = new DistinctRandom(Hasher.balam.hashBulk64(date));
+        rng = new DistinctRandom(Hasher.hashBulk64(BASE_SEED, date));
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         seed = rng.getSelectedState(0);
 
         thesaurus = new Thesaurus(rng);
+        thesaurus.defaultLanguage = Language.MALAY.mix(Language.SIMPLISH, 0.2).removeAccents();
 
         iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new FoamNoise(seed), seed, 1.4f, NoiseWrapper.FBM, 2));
 //        iNoise = new DualMutantNoiseWrapper(new NoiseWrapper(new FoamNoise(seed), seed, 1.6f, NoiseWrapper.FBM, 1));
@@ -211,11 +212,11 @@ public class WorldLoopWriter extends ApplicationAdapter {
     }
 
     public void putMap() {
-        String name = StringTools.capitalize(ArrayTools.greekLetterAt(counter));//makeName(thesaurus);
+        String name = makeName(thesaurus);
         while (Gdx.files.local(path + name + ".gif").exists() || Gdx.files.local(path + name + ".png").exists())
             name = makeName(thesaurus);
 //        Gdx.files.local(path + name + "_frames/").mkdirs();
-        long hash = Hasher.balam.hashBulk64(name);
+        long hash = Hasher.hashBulk64(BASE_SEED, name);
         worldTime = System.currentTimeMillis();
         world.rng.setSeed(hash);
         if (ALIEN_COLORS) {
