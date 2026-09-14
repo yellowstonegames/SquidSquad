@@ -91,15 +91,30 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
     }
 
     /**
-     * Given a String containing the output of {@link #stringSerialize()}, this creates a new UniqueIdentifier
+     * Given a String or other CharSequence containing the output of {@link #stringSerialize()} or
+     * {@link #appendTo(CharSequence)}, this creates a new UniqueIdentifier
      * with the same data as the UniqueIdentifier that was serialized.
-     * @param serialized a String almost always produced by {@link #stringSerialize()}
+     * @param serialized a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
      */
-    public UniqueIdentifier(String serialized){
+    public UniqueIdentifier(CharSequence serialized){
         a = Base.BASE16.readInt(serialized, 0, 8);
         b = Base.BASE16.readInt(serialized, 9, 17);
         c = Base.BASE16.readInt(serialized, 18, 26);
         d = Base.BASE16.readInt(serialized, 27, 35);
+    }
+
+    /**
+     * Given a String or other CharSequence containing the output of {@link #stringSerialize()} or
+     * {@link #appendTo(CharSequence)}, this creates a new UniqueIdentifier
+     * with the same data as the UniqueIdentifier that was serialized.
+     * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
+     * @param start the first index, inclusive, to read 35 chars from
+     */
+    public UniqueIdentifier(CharSequence data, int start){
+        a = Base.BASE16.readInt(data, start, start+8);
+        b = Base.BASE16.readInt(data, start+9, start+17);
+        c = Base.BASE16.readInt(data, start+18, start+26);
+        d = Base.BASE16.readInt(data, start+27, start+35);
     }
 
     public int getA() {
@@ -219,10 +234,9 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
      * are permitted to be anything (such as {@code '$'} for {@link Generator} or {@code '_'} for this).
      * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
      * @param start the first index, inclusive, to read 35 chars from
-     * @param end ignored
      * @return this Generator, after deserializing
      */
-    public UniqueIdentifier stringDeserialize(CharSequence data, int start, int end) {
+    public UniqueIdentifier stringDeserialize(CharSequence data, int start) {
         a = Base.BASE16.readInt(data, start, start+8);
         b = Base.BASE16.readInt(data, start+9, start+17);
         c = Base.BASE16.readInt(data, start+18, start+26);
