@@ -18,6 +18,8 @@ package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
 
+import java.io.IOException;
+
 /**
  * A substitute for the UUID class, since it isn't available on GWT.
  * The typical usage is to call {@link #next()} when you want a new UniqueIdentifier. If the app is closing down and
@@ -169,6 +171,29 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
         Base.BASE16.appendUnsigned(sb, c).append('_');
         Base.BASE16.appendUnsigned(sb, d);
         return sb.toString();
+    }
+
+    /**
+     * Appends the serialized String format to the given Appendable CharSequence, such as a {@link StringBuilder} or
+     * {@link com.github.tommyettinger.ds.CharList}. This separates the four {@code int} values, printed as unsigned
+     * with {@link Base#BASE16}, with underscores.
+     * @param sb any Appendable CharSequence, such as a {@link StringBuilder}
+     * @return sb, for chaining
+     * @param <S> any Appendable CharSequence, such as a {@link StringBuilder} or {@link com.github.tommyettinger.ds.CharList}
+     */
+    public <S extends CharSequence & Appendable> S appendTo(S sb){
+        try {
+            Base.BASE16.appendUnsigned(sb, a);
+            sb.append('_');
+            Base.BASE16.appendUnsigned(sb, b);
+            sb.append('_');
+            Base.BASE16.appendUnsigned(sb, c);
+            sb.append('_');
+            Base.BASE16.appendUnsigned(sb, d);
+        } catch (IOException e) {
+            throw new RuntimeException(e); // should never happen unless sb is capacity-restricted
+        }
+        return sb;
     }
 
     /**

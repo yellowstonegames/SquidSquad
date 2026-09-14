@@ -215,7 +215,6 @@ public class WorldLoopWriter extends ApplicationAdapter {
         String name = makeName(thesaurus);
         while (Gdx.files.local(path + name + ".gif").exists() || Gdx.files.local(path + name + ".png").exists())
             name = makeName(thesaurus);
-//        Gdx.files.local(path + name + "_frames/").mkdirs();
         long hash = Hasher.hashBulk64(BASE_SEED, name);
         worldTime = System.currentTimeMillis();
         world.rng.setSeed(hash);
