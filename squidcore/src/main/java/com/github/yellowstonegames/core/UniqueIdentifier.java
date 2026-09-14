@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.core;
 
 import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.ds.support.util.PartialParser;
 
 import java.io.IOException;
 
@@ -254,6 +255,12 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
     public static Generator GENERATOR = new Generator();
 
     /**
+     * A jdkgdxds PartialParser that can be used to read UniqueIdentifier values from String-serialized data structures
+     * containing them.
+     */
+    public static final PartialParser<UniqueIdentifier> PARSER = (data, start, end) -> new UniqueIdentifier(data, start);
+
+    /**
      * Generates a UniqueIdentifier that will actually be unique, assuming {@link #GENERATOR}
      * is non-null and has had its state tracked with the rest of the program (see the docs
      * for {@link #GENERATOR}).
@@ -451,5 +458,11 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
             d = Base.BASE16.readInt(data, start+27, start+35);
             return this;
         }
+
+        /**
+         * A jdkgdxds PartialParser that can be used to read Generator values from String-serialized data structures
+         * containing them.
+         */
+        public static final PartialParser<Generator> PARSER = (data, start, end) -> new Generator(data, start);
     }
 }
