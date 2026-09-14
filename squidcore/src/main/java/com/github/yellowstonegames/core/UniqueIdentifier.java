@@ -213,6 +213,24 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
     }
 
     /**
+     * Loads the state of another serialized UniqueIdentifier (or {@link Generator}) into this.
+     * This requires a 35-char CharSequence (such as a String) at minimum after start
+     * with four 8-hex-digit sections, but the delimiters between sections
+     * are permitted to be anything (such as {@code '$'} for {@link Generator} or {@code '_'} for this).
+     * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
+     * @param start the first index, inclusive, to read 35 chars from
+     * @param end ignored
+     * @return this Generator, after deserializing
+     */
+    public UniqueIdentifier stringDeserialize(CharSequence data, int start, int end) {
+        a = Base.BASE16.readInt(data, start, start+8);
+        b = Base.BASE16.readInt(data, start+9, start+17);
+        c = Base.BASE16.readInt(data, start+18, start+26);
+        d = Base.BASE16.readInt(data, start+27, start+35);
+        return this;
+    }
+
+    /**
      * The {@link Generator} that actually produces unique identifiers.
      * If your application pauses and needs to be resumed later by loading serialized state,
      * you must include this field in what you serialize, and load it before creating any
@@ -383,6 +401,24 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
             b = Base.BASE16.readInt(data, 9, 17);
             c = Base.BASE16.readInt(data, 18, 26);
             d = Base.BASE16.readInt(data, 27, 35);
+            return this;
+        }
+
+        /**
+         * Loads the state of another serialized Generator (or UniqueIdentifier) into this.
+         * This requires a 35-char CharSequence (such as a String) at minimum after start
+         * with four 8-hex-digit sections, but the delimiters between sections
+         * are permitted to be anything (such as {@code '_'} for {@link UniqueIdentifier} or {@code '$'} for this).
+         * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
+         * @param start the first index, inclusive, to read 35 chars from
+         * @param end ignored
+         * @return this Generator, after deserializing
+         */
+        public Generator stringDeserialize(CharSequence data, int start, int end) {
+            a = Base.BASE16.readInt(data, start, start+8);
+            b = Base.BASE16.readInt(data, start+9, start+17);
+            c = Base.BASE16.readInt(data, start+18, start+26);
+            d = Base.BASE16.readInt(data, start+27, start+35);
             return this;
         }
     }
