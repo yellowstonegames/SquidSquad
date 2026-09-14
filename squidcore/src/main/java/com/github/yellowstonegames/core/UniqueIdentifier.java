@@ -327,17 +327,34 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
         }
 
         /**
-         * Given a String containing the output of {@link #stringSerialize()}, this creates a new
+         * Given a CharSequence containing the output of {@link #stringSerialize()}, this creates a new
          * UniqueIdentifier.Generator with the same data as the UniqueIdentifier.Generator that was serialized.
-         * This requires a 35-char String at minimum with four 8-hex-digit sections, but the delimiters between sections
+         * This requires a 35-char String or other CharSequence at minimum with four 8-hex-digit sections, but the
+         * delimiters between sections
          * are permitted to be anything (such as {@code '_'} for {@link UniqueIdentifier} or {@code '$'} for this).
-         * @param serialized a String almost always produced by {@link #stringSerialize()}
+         * @param serialized a CharSequence almost always produced by {@link #stringSerialize()}
          */
-        public Generator(String serialized){
+        public Generator(CharSequence serialized){
             a = Base.BASE16.readInt(serialized, 0, 8);
             b = Base.BASE16.readInt(serialized, 9, 17);
             c = Base.BASE16.readInt(serialized, 18, 26);
             d = Base.BASE16.readInt(serialized, 27, 35);
+        }
+
+        /**
+         * Given a CharSequence containing the output of {@link #stringSerialize()}, this creates a new
+         * UniqueIdentifier.Generator with the same data as the UniqueIdentifier.Generator that was serialized.
+         * This requires a 35-char String or other CharSequence at minimum with four 8-hex-digit sections, but the
+         * delimiters between sections
+         * are permitted to be anything (such as {@code '_'} for {@link UniqueIdentifier} or {@code '$'} for this).
+         * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
+         * @param start the first index, inclusive, to read 35 chars from
+         */
+        public Generator(CharSequence data, int start){
+            a = Base.BASE16.readInt(data, start, start+8);
+            b = Base.BASE16.readInt(data, start+9, start+17);
+            c = Base.BASE16.readInt(data, start+18, start+26);
+            d = Base.BASE16.readInt(data, start+27, start+35);
         }
 
         /**
@@ -425,10 +442,9 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
          * are permitted to be anything (such as {@code '_'} for {@link UniqueIdentifier} or {@code '$'} for this).
          * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
          * @param start the first index, inclusive, to read 35 chars from
-         * @param end ignored
          * @return this Generator, after deserializing
          */
-        public Generator stringDeserialize(CharSequence data, int start, int end) {
+        public Generator stringDeserialize(CharSequence data, int start) {
             a = Base.BASE16.readInt(data, start, start+8);
             b = Base.BASE16.readInt(data, start+9, start+17);
             c = Base.BASE16.readInt(data, start+18, start+26);
