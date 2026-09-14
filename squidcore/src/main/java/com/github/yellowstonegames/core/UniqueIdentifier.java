@@ -159,11 +159,12 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
     }
 
     /**
-     * Serializes this UniqueIdentifier to a String, where it can be read back by {@link #stringDeserialize(String)}.
+     * Serializes this UniqueIdentifier to a String, where it can be read back by
+     * {@link #stringDeserialize(CharSequence)}.
      * This is different from most other stringSerialize() methods in that it always produces a 35-character String,
      * consisting of {@link #getA()}, then a {@code '_'}, then {@link #getB()}, then another underscore, c, underscore,
      * and finally d, with a, b, c, and d represented as unsigned hex int Strings.
-     * @return a 35-character-long String storing this identifier; can be read back with {@link #stringDeserialize(String)}
+     * @return a 35-character-long String storing this identifier; can be read back with {@link #stringDeserialize(CharSequence)}
      */
     public String stringSerialize() {
         StringBuilder sb = Base.BASE16.appendUnsigned(new StringBuilder(35), a).append('_');
@@ -197,11 +198,13 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
     }
 
     /**
-     * Reads back a String produced by {@link #stringSerialize()}, storing the result in this UniqueIdentifier.
-     * @param data a String almost certainly produced by {@link #stringSerialize()}
+     * Reads back a CharSequence produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}, storing the
+     * result in this UniqueIdentifier. Reads chars from index 0 (inclusive) to 34 (inclusive).
+     *
+     * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
      * @return this UniqueIdentifier, after it has been modified.
      */
-    public UniqueIdentifier stringDeserialize(String data) {
+    public UniqueIdentifier stringDeserialize(CharSequence data) {
         a = Base.BASE16.readInt(data, 0, 8);
         b = Base.BASE16.readInt(data, 9, 17);
         c = Base.BASE16.readInt(data, 18, 26);
@@ -369,12 +372,13 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
 
         /**
          * Loads the state of another serialized Generator (or UniqueIdentifier) into this.
-         * This requires a 35-char String at minimum with four 8-hex-digit sections, but the delimiters between sections
+         * This requires a 35-char CharSequence (such as a String) at minimum with four 8-hex-digit sections,
+         * but the delimiters between sections
          * are permitted to be anything (such as {@code '_'} for {@link UniqueIdentifier} or {@code '$'} for this).
-         * @param data a String almost always produced by {@link #stringSerialize()}
+         * @param data a CharSequence often produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
          * @return this Generator, after deserializing
          */
-        public Generator stringDeserialize(String data) {
+        public Generator stringDeserialize(CharSequence data) {
             a = Base.BASE16.readInt(data, 0, 8);
             b = Base.BASE16.readInt(data, 9, 17);
             c = Base.BASE16.readInt(data, 18, 26);

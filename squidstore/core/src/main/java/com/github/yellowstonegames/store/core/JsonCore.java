@@ -383,7 +383,7 @@ public final class JsonCore {
     /**
      * Registers UniqueIdentifier with the given Json object, so UniqueIdentifier can be written to and read from JSON.
      * This is a simple wrapper around UniqueIdentifier's built-in {@link UniqueIdentifier#stringSerialize()} and
-     * {@link UniqueIdentifier#stringDeserialize(String)} methods.
+     * {@link UniqueIdentifier#stringDeserialize(CharSequence)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
@@ -406,7 +406,7 @@ public final class JsonCore {
     /**
      * Registers UniqueIdentifier with the given Json object, so UniqueIdentifier can be written to and read from JSON.
      * This is a simple wrapper around UniqueIdentifier's built-in {@link UniqueIdentifier#stringSerialize()} and
-     * {@link UniqueIdentifier#stringDeserialize(String)} methods.
+     * {@link UniqueIdentifier#stringDeserialize(CharSequence)} methods.
      *
      * @param json a libGDX Json object that will have a serializer registered
      */
