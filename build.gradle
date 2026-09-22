@@ -75,23 +75,31 @@ if(JavaVersion.current().isJava9Compatible()) {
   }
 }
 
-allprojects {
+allprojects - project('squidfreeze:core') - project('squidfreeze:grid') - project('squidfreeze:old') - project('squidfreeze:path') - project('squidfreeze:text') - project('squidfreeze:world') {
   tasks.withType(JavaExec.class).configureEach {
     environment("__GL_THREADED_OPTIMIZATIONS", 0)
-    jvmArgs(
-      // Required for Java 21+ restricted native access warnings
-      "--enable-native-access=ALL-UNNAMED"
-      // May be needed by Fory on newer JVMs.
-      , "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
-    )
+    if(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25)) {
+      jvmArgs(
+        // Required for Java 21+ restricted native access warnings
+        "--enable-native-access=ALL-UNNAMED"
+        // May be needed by Fory on newer JVMs.
+        , "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
+        // Makes LWJGL 3.4.3 actually use FFM APIs, which avoids printing warnings.
+        , "--sun-misc-unsafe-memory-access=deny"
+      )
+    }
   }
   tasks.withType(Test.class).configureEach {
     environment("__GL_THREADED_OPTIMIZATIONS", 0)
-    jvmArgs(
-      // Required for Java 21+ restricted native access warnings
-      "--enable-native-access=ALL-UNNAMED"
-      // May be needed by Fory on newer JVMs.
-      , "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
-    )
+    if(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25)) {
+      jvmArgs(
+        // Required for Java 21+ restricted native access warnings
+        "--enable-native-access=ALL-UNNAMED"
+        // May be needed by Fory on newer JVMs.
+        , "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
+        // Makes LWJGL 3.4.3 actually use FFM APIs, which avoids printing warnings.
+        , "--sun-misc-unsafe-memory-access=deny"
+      )
+    }
   }
 }
