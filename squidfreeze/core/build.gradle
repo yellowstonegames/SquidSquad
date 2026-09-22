@@ -17,7 +17,7 @@ dependencies {
         exclude module: 'jdkgdxds'
         exclude module: 'digital'
     }
-	api("com.github.tommyettinger:kryo-juniper:0.10.6.2"){
+	api("com.github.tommyettinger:kryo-juniper:0.10.8.2"){
         exclude module: 'juniper'
         exclude module: 'digital'
     }
