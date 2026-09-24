@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.core;
 
+import com.github.tommyettinger.digital.Base;
 import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.CharBitSetFixedSize;
 import com.github.tommyettinger.ds.ObjectList;
@@ -46,9 +47,11 @@ public final class StringTools {
 
     /**
      * Use {@link com.github.tommyettinger.digital.TextTools#join(CharSequence, Object[])} instead.
-     * @param delimiter
-     * @param elements
-     * @return
+     * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
+     * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
+     *                 returns an empty String, and if items are null, they are shown as "null"
+     * @return the String representations of the items in elements, separated by delimiter and put in one String
+     * @deprecated Use {@link com.github.tommyettinger.digital.TextTools#join(CharSequence, Object[])} instead
      */
     @Deprecated
     public static String join(CharSequence delimiter, CharSequence... elements) {
@@ -61,6 +64,14 @@ public final class StringTools {
         return sb.toString();
     }
 
+    /**
+     * Use {@link TextTools#joinArrays(CharSequence, char[]...)} instead.
+     * @param delimiter a CharSequence to place between each {@code char[]}
+     * @param elements an array or varargs of char arrays; if null, this returns the empty String
+     * @return the items in {@code elements}, joined by {@code delimiter}
+     * @deprecated Use {@link TextTools#joinArrays(CharSequence, char[]...)} instead
+     */
+    @Deprecated
     public static String joinArrays(CharSequence delimiter, char[]... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -71,6 +82,17 @@ public final class StringTools {
         return sb.toString();
     }
 
+    /**
+     * Given a long array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all longs from elements, in base 10, separated by delimiter.
+     * <br>
+     * Consider using {@link Base#join(CharSequence, long[])} instead if you want to
+     * use anything other than base 10. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a long array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, long... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -80,6 +102,18 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
+    /**
+     * Given a double array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all doubles from elements, in base 10, separated by delimiter.
+     * <br>
+     * Consider using {@link Base#join(CharSequence, double[])} instead if you want to
+     * use anything other than base 10. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a double array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, double... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -89,6 +123,18 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
+    /**
+     * Given a int array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all ints from elements, in base 10, separated by delimiter.
+     * <br>
+     * Consider using {@link Base#join(CharSequence, int[])} instead if you want to
+     * use anything other than base 10. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a int array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, int... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -98,6 +144,18 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
+    /**
+     * Given a float array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all floats from elements, in base 10, separated by delimiter.
+     * <br>
+     * Consider using {@link Base#join(CharSequence, float[])} instead if you want to
+     * use anything other than base 10. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a float array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, float... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -107,6 +165,18 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
+    /**
+     * Given a short array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all shorts from elements, in base 10, separated by delimiter.
+     * <br>
+     * Consider using {@link Base#join(CharSequence, short[])} instead if you want to
+     * use anything other than base 10. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a short array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, short... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -116,6 +186,18 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
+    /**
+     * Given a char array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all chars from elements, in base 10, separated by delimiter.
+     * <br>
+     * Consider using {@link Base#join(CharSequence, char[])} instead if you want to
+     * use anything other than base 10. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a char array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, char... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -125,6 +207,18 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
+    /**
+     * Given a byte array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all bytes from elements, in base 10, separated by delimiter.
+     * <br>
+     * Consider using {@link Base#join(CharSequence, byte[])} instead if you want to
+     * use anything other than base 10. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a byte array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, byte... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -134,6 +228,18 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
+    /**
+     * Given a boolean array or varargs and a delimiter to separate the items of that array, produces a String
+     * containing all booleans from elements, as "true" or "false", separated by delimiter.
+     * <br>
+     * Consider using {@link com.github.tommyettinger.digital.TextTools#joinDense(char, char, boolean...)}  instead if
+     * you want to avoid using a delimiter. The behavior of join() methods here with empty varargs is undefined.
+     *
+     * @param delimiter the separator to put between numbers
+     * @param elements  a boolean array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written in base 10, separated by delimiter
+     */
     public static String join(CharSequence delimiter, boolean... elements) {
         if (elements == null || elements.length == 0) return "";
         StringBuilder sb = new StringBuilder(64);
@@ -145,13 +251,14 @@ public final class StringTools {
     }
 
     /**
-     * Like {@link com.github.tommyettinger.digital.Base#join(CharSequence, long[])}, but this appends an 'L' to each number,
+     * Like {@link Base#join(CharSequence, long[])}, but this appends an 'L' to each number,
      * so they can be read in by Java.
-     * Replaced by {@link com.github.tommyettinger.digital.Base#joinReadable(CharSequence, long[])} in most circumstances.
+     * <br>
+     * Replaced by {@link Base#joinReadable(CharSequence, long[])} in most circumstances.
      *
-     * @param delimiter
-     * @param elements
-     * @return
+     * @param delimiter the separator to put between numbers
+     * @param elements  a long array or varargs; if null, this returns an empty String
+     * @return a String containing all numbers in elements, written as literals, separated by delimiter
      */
     public static String joinReadably(CharSequence delimiter, long... elements) {
         if (elements == null || elements.length == 0) return "";
@@ -164,12 +271,16 @@ public final class StringTools {
     }
 
     /**
-     * Like {@link com.github.tommyettinger.digital.Base#appendJoined(CharSequence, CharSequence, long[])} , but this appends an 'L' to each number so they
+     * Like {@link Base#appendJoined(CharSequence, CharSequence, long[])} , but this appends an 'L' to each number so they
      * can be read in by Java.
-     * Replaced by {@link com.github.tommyettinger.digital.Base#appendJoinedReadable(CharSequence, CharSequence, long[])}.     * @param sb
-     * @param delimiter
-     * @param elements
-     * @return
+     * <br>
+     * Replaced by {@link Base#appendJoinedReadable(CharSequence, CharSequence, long[])} unless you always work with
+     * StringBuilder or need varargs of long.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a long array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
      */
     public static StringBuilder appendJoinedReadably(StringBuilder sb, CharSequence delimiter, long... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
@@ -180,6 +291,20 @@ public final class StringTools {
         return sb;
     }
 
+    /**
+     * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
+     * null items), and separating each item with {@code delimiter}.
+     * <br>
+     * Replaced by {@link TextTools#appendJoined(CharSequence, CharSequence, Object[])} unless you always work with
+     * StringBuilder or need varargs of CharSequence.
+     * The behavior of appendJoined() methods here with empty varargs is undefined.
+     *
+     * @param sb a StringBuilder that will be modified in-place
+     * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
+     * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
+     *                 returns an empty String, and if items are null, they are shown as "null"
+     * @return sb after modifications (if elements was non-null)
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, CharSequence... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -189,6 +314,20 @@ public final class StringTools {
         return sb;
     }
 
+    /**
+     * Joins the items in {@code elements} by appending each char array (or just using the text "null" for
+     * null items), and separating each item with {@code delimiter}.
+     * <br>
+     * Replaced by {@link TextTools#appendJoinedArrays(CharSequence, CharSequence, char[]...)} unless you always
+     * work with StringBuilder.
+     * The behavior of appendJoined() methods here with empty varargs is undefined.
+     *
+     * @param sb a StringBuilder that will be modified in-place
+     * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
+     * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
+     *                 returns an empty String, and if items are null, they are shown as "null"
+     * @return sb after modifications (if elements was non-null)
+     */
     public static StringBuilder appendJoinedArrays(StringBuilder sb, CharSequence delimiter, char[]... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -198,6 +337,18 @@ public final class StringTools {
         return sb;
     }
 
+    /**
+     * Given a long array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all longs from elements, in base 10, separated by delimiter.
+     * <br>
+     * Replaced by {@link Base#appendJoined(CharSequence, CharSequence, long[])} unless you always work with
+     * StringBuilder or need varargs.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a long array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, long... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -206,6 +357,19 @@ public final class StringTools {
         }
         return sb;
     }
+
+    /**
+     * Given a double array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all doubles from elements, in base 10, separated by delimiter.
+     * <br>
+     * Replaced by {@link Base#appendJoined(CharSequence, CharSequence, double[])} unless you always work with
+     * StringBuilder or need varargs.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a double array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, double... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -214,6 +378,19 @@ public final class StringTools {
         }
         return sb;
     }
+
+    /**
+     * Given a int array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all ints from elements, in base 10, separated by delimiter.
+     * <br>
+     * Replaced by {@link Base#appendJoined(CharSequence, CharSequence, int[])} unless you always work with
+     * StringBuilder or need varargs.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a int array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, int... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -222,6 +399,19 @@ public final class StringTools {
         }
         return sb;
     }
+
+    /**
+     * Given a float array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all floats from elements, in base 10, separated by delimiter.
+     * <br>
+     * Replaced by {@link Base#appendJoined(CharSequence, CharSequence, float[])} unless you always work with
+     * StringBuilder or need varargs.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a float array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, float... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -230,6 +420,19 @@ public final class StringTools {
         }
         return sb;
     }
+
+    /**
+     * Given a short array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all shorts from elements, in base 10, separated by delimiter.
+     * <br>
+     * Replaced by {@link Base#appendJoined(CharSequence, CharSequence, short[])} unless you always work with
+     * StringBuilder or need varargs.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a short array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, short... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -238,6 +441,19 @@ public final class StringTools {
         }
         return sb;
     }
+
+    /**
+     * Given a char array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all chars from elements, in base 10, separated by delimiter.
+     * <br>
+     * Replaced by {@link Base#appendJoined(CharSequence, CharSequence, char[])} unless you always work with
+     * StringBuilder or need varargs.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a char array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, char... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -246,6 +462,19 @@ public final class StringTools {
         }
         return sb;
     }
+
+    /**
+     * Given a byte array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends to
+     * the StringBuilder all bytes from elements, in base 10, separated by delimiter.
+     * <br>
+     * Replaced by {@link Base#appendJoined(CharSequence, CharSequence, byte[])} unless you always work with
+     * StringBuilder or need varargs.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a byte array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, byte... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -254,6 +483,16 @@ public final class StringTools {
         }
         return sb;
     }
+
+    /**
+     * Given a boolean array, a delimiter to separate the items of that array, and a StringBuilder to append to, appends
+     * to the StringBuilder all booleans from elements, as "true" or "false", separated by delimiter.
+     *
+     * @param sb        the StringBuilder to append to; if null, this returns null
+     * @param delimiter the separator to put between numbers
+     * @param elements  a boolean array or varargs; if null, this returns sb without changes
+     * @return {@code sb}, with {@code elements} appended
+     */
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, boolean... elements) {
         if (sb == null || elements == null || elements.length == 0) return sb;
         sb.append(elements[0]);
@@ -270,22 +509,23 @@ public final class StringTools {
      *
      * @param elements an array or vararg of booleans
      * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
-     * @deprecated
+     * @deprecated Use {@link TextTools#joinDense(boolean...)} instead
      */
     @Deprecated
     public static String joinDense(boolean... elements) {
         return joinDense('1', '0', elements);
     }
+
     /**
-     * Joins the boolean array {@code elements} without delimiters into a String, using the char {@code t} for
-     * true and the char {@code f} for false. This is "dense" because it doesn't have any delimiters between
+     * Joins the boolean array {@code elements} without delimiters into a String, using the parameter {@code t} for
+     * true and the parameter {@code f} for false. This is "dense" because it doesn't have any delimiters between
      * elements.
      * Using {@link TextTools#joinDense(char, char, boolean...)} is recommended instead.
      * @param t the char to write for true values
      * @param f the char to write for false values
      * @param elements an array or vararg of booleans
-     * @return a String using 1 for true elements and 0 for false, or the empty string if elements is null or empty
-     * @deprecated
+     * @return a String using t for true elements and f for false, or the empty string if elements is null or empty
+     * @deprecated Use {@link TextTools#joinDense(char, char, boolean...)} instead
      */
     @Deprecated
     public static String joinDense(char t, char f, boolean... elements) {
@@ -304,7 +544,7 @@ public final class StringTools {
      * @param sb a StringBuilder that will be modified in-place
      * @param elements an array or vararg of booleans
      * @return sb after modifications (if elements was non-null)
-     * @deprecated
+     * @deprecated Use {@link TextTools#appendJoinedDense(CharSequence, boolean...)} instead
      */
     @Deprecated
     public static StringBuilder appendJoinedDense(StringBuilder sb, boolean... elements) {
@@ -315,13 +555,15 @@ public final class StringTools {
      * Joins the boolean array {@code elements} without delimiters into a StringBuilder, using the char {@code t} for
      * true and the char {@code f} for false. This is "dense" because it doesn't have any delimiters between
      * elements.
+     * <br>
      * Using {@link TextTools#appendJoinedDense(CharSequence, char, char, boolean...)} is recommended instead.
+
      * @param sb a StringBuilder that will be modified in-place
      * @param t the char to write for true values
      * @param f the char to write for false values
      * @param elements an array or vararg of booleans
      * @return sb after modifications (if elements was non-null)
-     * @deprecated
+     * @deprecated Use {@link TextTools#appendJoinedDense(CharSequence, char, char, boolean...)} instead
      */
     @Deprecated
     public static StringBuilder appendJoinedDense(StringBuilder sb, char t, char f, boolean... elements) {
@@ -338,12 +580,14 @@ public final class StringTools {
      * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
      * not take a vararg of Object items, since that would cause confusion with the overloads that take one object; it
      * takes a non-vararg Object array instead.
+     * <br>
      * Using {@link TextTools#join(CharSequence, Object[])} is recommended instead.
+     *
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return the String representations of the items in elements, separated by delimiter and put in one String
-     * @deprecated
+     * @deprecated Use {@link TextTools#join(CharSequence, Object[])} instead
      */
     @Deprecated
     public static String join(CharSequence delimiter, Object[] elements) {
@@ -359,14 +603,15 @@ public final class StringTools {
     /**
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
-     * elements parameter.
+     * parameter {@code elements}.
+     * <br>
      * Using {@link TextTools#join(CharSequence, Iterable)} is recommended instead.
      *
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return the String representations of the items in elements, separated by delimiter and put in one String
-     * @deprecated
+     * @deprecated Use {@link TextTools#join(CharSequence, Iterable)} instead
      */
     @Deprecated
     public static String join(CharSequence delimiter, Iterable<?> elements) {
@@ -387,13 +632,15 @@ public final class StringTools {
      * null items), and separating each item with {@code delimiter}. Unlike other join methods in this class, this does
      * not take a vararg of Object items, since that would cause confusion with the overloads that take one object; it
      * takes a non-vararg Object array instead.
+     * <br>
      * Using {@link TextTools#appendJoined(CharSequence, CharSequence, Object[])} is recommended instead.
+     *
      * @param sb a StringBuilder that will be modified in-place
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if the array is null or empty, this
      *                 returns an empty String, and if items are null, they are shown as "null"
      * @return sb after modifications (if elements was non-null)
-     * @deprecated
+     * @deprecated Use {@link TextTools#appendJoined(CharSequence, CharSequence, Object[])} instead
      */
     @Deprecated
     public static StringBuilder appendJoined(StringBuilder sb, CharSequence delimiter, Object[] elements) {
@@ -410,7 +657,9 @@ public final class StringTools {
      * Joins the items in {@code elements} by calling their toString method on them (or just using the String "null" for
      * null items), and separating each item with {@code delimiter}. This can take any Iterable of any type for its
      * {@code elements} parameter.
+     * <br>
      * Using {@link TextTools#appendJoined(CharSequence, CharSequence, Iterable)} is recommended instead.
+     *
      * @param sb a StringBuilder that will be modified in-place
      * @param delimiter the String or other CharSequence to separate items in elements with; if null, uses ""
      * @param elements the Object items to stringify and join into one String; if Iterable is null or empty, this
@@ -433,11 +682,13 @@ public final class StringTools {
 
     /**
      * Searches text for the exact contents of the char array search; returns true if text contains search.
+     * <br>
      * Use {@link TextTools#contains(CharSequence, CharSequence)} instead.
+     *
      * @param text a CharSequence, such as a String or StringBuilder, that might contain search
      * @param search a char array to try to find in text
      * @return true if search was found
-     * @deprecated
+     * @deprecated Use {@link TextTools#contains(CharSequence, CharSequence)} instead
      */
     @Deprecated
     public static boolean contains(CharSequence text, CharSequence search) {
@@ -449,12 +700,13 @@ public final class StringTools {
      * Tries to find as much of the char array {@code search} in the CharSequence {@code text}, always starting from the
      * beginning of search (if the beginning isn't found, then it finds nothing), and returns the length of the found
      * part of search (0 if not found).
+     * <br>
      * Use {@link TextTools#containsPart(CharSequence, CharSequence)} instead.
      *
      * @param text a CharSequence to search in
      * @param search a char array to look for
      * @return the length of the searched-for char array that was found
-     * @deprecated
+     * @deprecated Use {@link TextTools#containsPart(CharSequence, CharSequence)} instead
      */
     @Deprecated
     public static int containsPart(CharSequence text, CharSequence search)
@@ -480,11 +732,13 @@ public final class StringTools {
 
     /**
      * Searches text for the exact contents of the char array search; returns true if text contains search.
+     * <br>
      * Use {@link TextTools#contains(CharSequence, char[])} instead.
+     *
      * @param text a CharSequence, such as a String or StringBuilder, that might contain search
      * @param search a char array to try to find in text
      * @return true if search was found
-     * @deprecated
+     * @deprecated Use {@link TextTools#contains(CharSequence, char[])} instead
      */
     @Deprecated
     public static boolean contains(CharSequence text, char[] search) {
@@ -532,6 +786,7 @@ public final class StringTools {
      * <br>
      * This is almost certainly too specific to be useful outside a handful of cases, but it isn't marked as deprecated
      * because it was removed from TextTools. If you for whatever reason need this, it is here.
+     *
      * @param text a CharSequence to search in
      * @param search a char array to look for, surrounded by prefix and suffix
      * @param prefix a mandatory prefix before search, separated for some weird optimization reason
@@ -582,11 +837,12 @@ public final class StringTools {
 
     /**
      * Use {@link TextTools#replace(CharSequence, CharSequence, CharSequence)} instead.
-     * @param text
-     * @param before
-     * @param after
-     * @return
-     * @deprecated
+     *
+     * @param text optimally a String, but may be any non-null CharSequence
+     * @param before the CharSequence (often a String) to search for
+     * @param after the CharSequence (often a String) to replace with
+     * @return a String resulting from replacing occurrences of before in text with after
+     * @deprecated Use {@link TextTools#replace(CharSequence, CharSequence, CharSequence)} instead
      */
     @Deprecated
     public static String replace(CharSequence text, CharSequence before, CharSequence after) {
@@ -602,6 +858,7 @@ public final class StringTools {
      * Scans repeatedly in {@code source} for the String {@code search}, not scanning the same char twice except as part
      * of a larger String, and returns the number of instances of search that were found, or 0 if source is null or if
      * search is null or empty.
+     *
      * @param source a String to look through
      * @param search a String to look for
      * @return the number of times search was found in source
@@ -620,6 +877,7 @@ public final class StringTools {
      * Scans repeatedly in {@code source} for the codepoint {@code search} (which is usually a char literal), not
      * scanning the same section twice, and returns the number of instances of search that were found, or 0 if source is
      * null.
+     *
      * @param source a String to look through
      * @param search a codepoint or char to look for
      * @return the number of times search was found in source
@@ -638,6 +896,7 @@ public final class StringTools {
      * the String {@code search}, not scanning the same char twice except as part of a larger String, and returns the
      * number of instances of search that were found, or 0 if source or search is null or if the searched area is empty.
      * If endIndex is negative, this will search from startIndex until the end of the source.
+     *
      * @param source a String to look through
      * @param search a String to look for
      * @param startIndex the first index to search through, inclusive
@@ -661,6 +920,7 @@ public final class StringTools {
      * the codepoint {@code search} (which is usually a char literal), not scanning the same section twice, and returns
      * the number of instances of search that were found, or 0 if source is null or if the searched area is empty.
      * If endIndex is negative, this will search from startIndex until the end of the source.
+     *
      * @param source a String to look through
      * @param search a codepoint or char to look for
      * @param startIndex the first index to search through, inclusive
@@ -681,6 +941,7 @@ public final class StringTools {
     /**
      * Like {@link String#substring(int, int)} but returns "" instead of throwing any sort of Exception.
      * This delegates to {@link TextTools#safeSubstring(String, int, int)}.
+     *
      * @param source the String to get a substring from
      * @param beginIndex the first index, inclusive; will be treated as 0 if negative
      * @param endIndex the index after the last character (exclusive); if negative this will be source.length()
@@ -693,6 +954,8 @@ public final class StringTools {
 
     /**
      * Like {@link String#split(String)} but doesn't use any regex for splitting (the delimiter is a literal String).
+     * This delegates to {@link TextTools#split(String, String)}.
+     *
      * @param source the String to get split-up substrings from
      * @param delimiter the literal String to split on (not a regex); will not be included in the returned String array
      * @return a String array consisting of at least one String (the entirety of Source if nothing was split)
@@ -704,6 +967,7 @@ public final class StringTools {
     /**
      * If text is shorter than the given minimumLength, returns a String with text padded on the right with spaces until
      * it reaches that length; otherwise it simply returns text.
+     *
      * @param text the text to pad if necessary
      * @param minimumLength the minimum length of String to return
      * @return text, potentially padded with spaces to reach the given minimum length
@@ -718,6 +982,7 @@ public final class StringTools {
     /**
      * If text is shorter than the given minimumLength, returns a String with text padded on the right with padChar
      * until it reaches that length; otherwise it simply returns text.
+     *
      * @param text the text to pad if necessary
      * @param padChar the char to use to pad text, if necessary
      * @param minimumLength the minimum length of String to return
@@ -734,6 +999,7 @@ public final class StringTools {
      * Constructs a String with exactly the given totalLength by taking text (or a substring of it) and padding it on
      * its right side with spaces until totalLength is reached. If text is longer than totalLength, this only uses the
      * portion of text needed to fill totalLength, and no more.
+     *
      * @param text the String to pad if necessary, or truncate if too long
      * @param totalLength the exact length of String to return
      * @return a String with exactly totalLength for its length, made from text and possibly extra spaces
@@ -746,6 +1012,7 @@ public final class StringTools {
      * Constructs a String with exactly the given totalLength by taking text (or a substring of it) and padding it on
      * its right side with padChar until totalLength is reached. If text is longer than totalLength, this only uses the
      * portion of text needed to fill totalLength, and no more.
+     *
      * @param text the String to pad if necessary, or truncate if too long
      * @param padChar the char to use to fill any remaining length
      * @param totalLength the exact length of String to return
@@ -764,6 +1031,7 @@ public final class StringTools {
     /**
      * If text is shorter than the given minimumLength, returns a String with text padded on the left with spaces until
      * it reaches that length; otherwise it simply returns text.
+     *
      * @param text the text to pad if necessary
      * @param minimumLength the minimum length of String to return
      * @return text, potentially padded with spaces to reach the given minimum length
@@ -777,6 +1045,7 @@ public final class StringTools {
     /**
      * If text is shorter than the given minimumLength, returns a String with text padded on the left with padChar until
      * it reaches that length; otherwise it simply returns text.
+     *
      * @param text the text to pad if necessary
      * @param padChar the char to use to pad text, if necessary
      * @param minimumLength the minimum length of String to return
@@ -793,6 +1062,7 @@ public final class StringTools {
      * Constructs a String with exactly the given totalLength by taking text (or a substring of it) and padding it on
      * its left side with spaces until totalLength is reached. If text is longer than totalLength, this only uses the
      * portion of text needed to fill totalLength, and no more.
+     *
      * @param text the String to pad if necessary, or truncate if too long
      * @param totalLength the exact length of String to return
      * @return a String with exactly totalLength for its length, made from text and possibly extra spaces
@@ -805,6 +1075,7 @@ public final class StringTools {
      * Constructs a String with exactly the given totalLength by taking text (or a substring of it) and padding it on
      * its left side with padChar until totalLength is reached. If text is longer than totalLength, this only uses the
      * portion of text needed to fill totalLength, and no more.
+     *
      * @param text the String to pad if necessary, or truncate if too long
      * @param padChar the char to use to fill any remaining length
      * @param totalLength the exact length of String to return
@@ -834,6 +1105,7 @@ public final class StringTools {
      * "Ki Moon"
      * </pre>
      * Spaces are not preserved if they were used to split something into two lines, but dashes are.
+     *
      * @param longText a probably-large piece of text that needs to be split into multiple lines with a max width
      * @param width the max width to use for any line, removing trailing whitespace at the end of a line
      * @return a List of Strings for the lines after word-wrapping
@@ -859,6 +1131,7 @@ public final class StringTools {
      * "Ki Moon"
      * </pre>
      * Spaces are not preserved if they were used to split something into two lines, but dashes are.
+     *
      * @param receiving the List of String to append the word-wrapped lines to
      * @param longText a probably-large piece of text that needs to be split into multiple lines with a max width
      * @param width the max width to use for any line, removing trailing whitespace at the end of a line
@@ -925,6 +1198,15 @@ public final class StringTools {
             nonSpacePattern = Pattern.compile("\\S+");
     private static final Matcher matcher = new Matcher(whitespacePattern);
 
+    /**
+     * Searches for a RegExodus-format regex in text starting at the given index, and returns the start of the match if
+     * found or -1 if not found.
+     *
+     * @param text any CharSequence, such as a String
+     * @param regex a RegExodus Pattern to search for
+     * @param beginIndex the first index to search in text
+     * @return the start of the first match for regex in text, if found, or -1 if not
+     */
     public static int indexOf(CharSequence text, Pattern regex, int beginIndex)
     {
         matcher.setPattern(regex);
@@ -934,6 +1216,16 @@ public final class StringTools {
             return -1;
         return matcher.start();
     }
+
+    /**
+     * Searches for a RegExodus-format regex (as a String that will be compiled) in text starting at the given index,
+     * and returns the start of the match if found or -1 if not found.
+     *
+     * @param text any CharSequence, such as a String
+     * @param regex a String that will be compiled to a RegExodus Pattern to search for
+     * @param beginIndex the first index to search in text
+     * @return the start of the first match for regex in text, if found, or -1 if not
+     */
     public static int indexOf(CharSequence text, String regex, int beginIndex)
     {
         matcher.setPattern(Pattern.compile(regex));
@@ -943,6 +1235,15 @@ public final class StringTools {
             return -1;
         return matcher.start();
     }
+
+    /**
+     * Searches for a RegExodus-format regex in text starting at index 0, and returns the start of the match if
+     * found or -1 if not found.
+     *
+     * @param text any CharSequence, such as a String
+     * @param regex a RegExodus Pattern to search for
+     * @return the start of the first match for regex in text, if found, or -1 if not
+     */
     public static int indexOf(CharSequence text, Pattern regex)
     {
         matcher.setPattern(regex);
@@ -951,6 +1252,15 @@ public final class StringTools {
             return -1;
         return matcher.start();
     }
+
+    /**
+     * Searches for a RegExodus-format regex (as a String that will be compiled) in text starting at index 0,
+     * and returns the start of the match if found or -1 if not found.
+     *
+     * @param text any CharSequence, such as a String
+     * @param regex a String that will be compiled to a RegExodus Pattern to search for
+     * @return the start of the first match for regex in text, if found, or -1 if not
+     */
     public static int indexOf(CharSequence text, String regex)
     {
         matcher.setPattern(Pattern.compile(regex));
@@ -1006,6 +1316,7 @@ public final class StringTools {
         }
         return sb.toString();
     }
+
     private static final Replacer anReplacer = new Replacer(Pattern.compile("\\b(a)(\\p{G}+)(?=(?:({=brace}[\\[\\{])[^\\]\\}]*{\\:brace})*(?:\\p{G}*)[àáâãäåæāăąǻǽaèéêëēĕėęěeìíîïĩīĭįıiòóôõöøōŏőœǿoùúûüũūŭůűųu])", Pattern.IGNORE_CASE | Pattern.UNICODE), "$1n$2");
 
     private static final Replacer unAnReplacer = new Replacer(Pattern.compile("\\b(a)n(\\p{G}+)(?=(?:({=brace}[\\[\\{])[^\\]\\}]*{\\:brace})*(?:\\p{G}*)[bcçćĉċčdþðďđfgĝğġģhĥħjĵȷkķlĺļľŀłmnñńņňŋpqrŕŗřsśŝşšștţťțvwŵẁẃẅxyýÿŷỳzźżž])", Pattern.IGNORE_CASE | Pattern.UNICODE), "$1$2");
@@ -1032,12 +1343,13 @@ public final class StringTools {
 
     /**
      * Takes the compressed bitset inside a RegExodus {@link Category} and decompresses it to a jdkgdxds
-     * {@link OffsetBitSet}. This may improve lookup time for frequently-checked Categories, since
-     * {@link OffsetBitSet#contains(int)} is quite fast (it runs in O(1) time), while {@link Category#contains(char)}
-     * is... not as fast (it runs in O(n) time, where n is the RLE-compressed size of the entire bitset). An
-     * OffsetBitSet can also be modified if needed, whereas a Category cannot.
+     * {@link CharBitSetFixedSize}. This may improve lookup time for frequently-checked Categories, since
+     * {@link CharBitSetFixedSize#contains(int)} is quite fast (it runs in O(1) time), while
+     * {@link Category#contains(char)} is... not as fast (it runs in O(n) time, where n is the RLE-compressed size of
+     * the entire bitset). A CharBitSetFixedSize can also be modified if needed, whereas a Category cannot.
+     *
      * @param category a RegExodus Category, such as {@link Category#Lu} for upper-case letters
-     * @return a new OffsetBitSet storing the same contents as the given Category, but optimized for faster access
+     * @return a new CharBitSetFixedSize storing the same contents as the given Category, but optimized for faster access
      */
     public static CharBitSetFixedSize decompressCategory(Category category) {
         return new CharBitSetFixedSize(category.contents());
