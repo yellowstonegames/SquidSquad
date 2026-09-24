@@ -27,7 +27,13 @@ import java.util.zip.*;
  * <br>
  * Created by bison on 02-01-2016.
  */
-public class CompressionUtils {
+public final class CompressionUtils {
+
+    /**
+     * No need to instantiate.
+     */
+    private CompressionUtils() {
+    }
 
     public static byte[] compress(byte[] data) throws IOException {
         Deflater deflater = new Deflater();
