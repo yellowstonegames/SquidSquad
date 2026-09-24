@@ -47,9 +47,10 @@ import java.io.ObjectOutput;
  * @author yam655
  * @author <a href="http://squidpony.com">Eben Howard</a> - howard@squidpony.com
  * @author <a href="https://github.com/tommyettinger">Tommy Ettinger</a>
+ * @see #roll(String) The Javadocs for roll() have documentation on the supported syntax.
  */
 public class Dice {
-    
+
     // The Creature.
     private static final Matcher mat = Pattern.compile("\\s*(?:({=op}[+/*-])?\\s*({=sn}-?\\d+)?\\s*(?:({=im}[:><])\\s*({=mn}\\d+))?\\s*(?:({=mm}[d:!])\\s*({=en}\\d+))?)\\s*").matcher();
     private EnhancedRandom rng;
@@ -619,6 +620,9 @@ public class Dice {
      * 6-sided dice and add 4 to the result. You can generate a Rule once (such as by using the constructor,
      * {@link #Rule(String)}, or {@link Dice#parseRollRule(String)}) and roll it potentially many times using
      * {@link Dice#runRollRule(Rule)}. This avoids overhead from repeated parsing.
+     * <br>
+     * This can be serialized by custom serializers in squidstore.core for libGDX Json and by squidfreeze.core for Kryo.
+     * Fory doesn't need a serializer registered.
      */
     public static class Rule implements Externalizable {
         public String rollCode;

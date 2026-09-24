@@ -40,6 +40,9 @@ import java.io.IOException;
  * centuries of generation. If you were using UUID, it only supports 2 to the 122 unique random UUIDs, with a collision
  * 50% likely after 2 to the 61 UUIDs were generated. If this is used properly, it can't collide until all (2 to the 128
  * minus 1) identifiers have been generated.
+ * <br>
+ * This can be serialized by custom serializers in squidstore.core for libGDX Json or squidfreeze.core for
+ * Kryo. Fory doesn't need a serializer registered.
  */
 public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
 
@@ -284,6 +287,9 @@ public final class UniqueIdentifier implements Comparable<UniqueIdentifier> {
     /**
      * The type used as a factory to produce UniqueIdentifiers that are actually unique for a given Generator.
      * This is used in {@link UniqueIdentifier#GENERATOR}, and can be used independently via {@link #generate()}.
+     * <br>
+     * This can be serialized by custom serializers in squidstore.core for libGDX Json or squidfreeze.core for
+     * Kryo. Fory doesn't need a serializer registered.
      */
     public static final class Generator {
         private int a;

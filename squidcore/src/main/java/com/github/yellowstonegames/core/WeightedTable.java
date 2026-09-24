@@ -35,6 +35,9 @@ import java.util.Random;
  * the code given by Keith Schwarz at that link. Because Vose's Alias Method is remarkably fast (it takes O(1) time to
  * get a random index, and takes O(n) time to construct a WeightedTable instance), this may be useful to consider if you
  * don't need all the features of ProbabilityTable or if you want deeper control over the random aspects of it.
+ * <br>
+ * This can be serialized by custom serializers in squidstore.core for libGDX Json or squidfreeze.core for
+ * Kryo. Fory doesn't need a serializer registered.
  */
 public class WeightedTable {
     protected int[] mixed;

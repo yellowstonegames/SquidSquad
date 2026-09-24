@@ -39,8 +39,8 @@ import java.util.List;
  * You can serialize this with <a href="https://fory.apache.org">Fory</a> without needing a serializer, as long as you
  * have the classes in {@link #getSerializersNeeded()} registered. You probably need to register the concrete subclass
  * of EnhancedRandom you use here; the default subclass of EnhancedRandom used here is {@link AceRandom}, unless you
- * have provided your own with a different type. If you use JSON, a serializer is available in squidstore.grid, and if
- * you use Kryo, one is available in squidfreeze.grid .
+ * have provided your own with a different type. If you use JSON, a serializer is available in squidstore.core . If
+ * you use Kryo, one is available in squidfreeze.core . If you use Fory, this should be registered without a serializer.
  *
  * @param <T> the type of items to iterate over; ideally, the items are unique
  */
