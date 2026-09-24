@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.random.PouchRandom;
 import com.github.tommyettinger.textra.Font;
@@ -44,25 +45,25 @@ public class WildernessGridTest extends ApplicationAdapter {
     long startTime;
 
     static int[] colorRanges = {
-            0,       // Only used for before night starts
-            299,     // Night (midnight to dawn)
-            419,     // Early Morning (dawn to sunrise)
-            689,     // Morning (sunrise to mid-morning)
-            1019,    // Day (mid-morning to afternoon)
-            1139,    // Late Afternoon (afternoon to sunset)
-            1249,    // Early Evening (sunset to 1.5 hours after)
-            1439     // Evening (1.5 hours after sunset to midnight)
+            0,        // Only used for before night starts
+            5*60+30,  // Night (midnight to dawn)
+            7*60,     // Early Morning (dawn to sunrise)
+            10*60+30, // Morning (sunrise to mid-morning)
+            16*60,    // Day (mid-morning to afternoon)
+            19*60,    // Late Afternoon (afternoon to sunset)
+            20*60+30, // Early Evening (sunset to 1.5 hours after)
+            24*60     // Evening (1.5 hours after sunset to midnight)
     };
 
     static int[] rgbValues = {
-            Integer.reverseBytes(Color.toIntBits(90, 20, 70, 255)),          // Evening (dark purple)
+            Integer.reverseBytes(Color.toIntBits(80, 20, 90, 255)),          // Evening (dark purple)
             Integer.reverseBytes(Color.toIntBits(0, 0, 0, 255)),             // Night (black)
-            Integer.reverseBytes(Color.toIntBits(140, 180, 210, 255)),       // Early Morning (light sky blue)
+            Integer.reverseBytes(Color.toIntBits(100, 150, 190, 255)),       // Early Morning (light sky blue)
             Integer.reverseBytes(Color.toIntBits(173, 216, 230, 255)),       // Morning (very light sky blue)
-            Integer.reverseBytes(Color.toIntBits(228, 232, 240, 255)),       // Day (very light sky blue)
+            Integer.reverseBytes(Color.toIntBits(250, 248, 220, 255)),       // Day (very light yellow)
             Integer.reverseBytes(Color.toIntBits(255, 200, 150, 255)),       // Late Afternoon (light orange)
-            Integer.reverseBytes(Color.toIntBits(205, 160, 195, 255)),       // Early Evening (medium purple)
-            Integer.reverseBytes(Color.toIntBits(90, 20, 90, 255))           // Evening (dark purple)
+            Integer.reverseBytes(Color.toIntBits(155, 110, 145, 255)),       // Early Evening (medium purple)
+            Integer.reverseBytes(Color.toIntBits(80, 20, 90, 255))           // Evening (dark purple)
     };
 
     static int[] oklabValues = new int[rgbValues.length];
@@ -126,19 +127,19 @@ public class WildernessGridTest extends ApplicationAdapter {
         camera.update();
         long time = (TimeUtils.timeSinceNanos(startTime) >>> 23) % 1440L;
         int range = 1;
-        for (; range < colorRanges.length;) {
-            if (time <= colorRanges[range])
+        while (range < colorRanges.length) {
+            if (time < colorRanges[range])
                 break;
             ++range;
         }
-        float interpolant = MathTools.norm(colorRanges[range-1], colorRanges[range], time);
+        float interpolant = Interpolations.smooth.apply(MathTools.norm(colorRanges[range-1], colorRanges[range], time));
 //        int dayColor = DescriptiveColorRgb.lerpColors(rgbValues[range-1], rgbValues[range], interpolant);
         int dayColor = DescriptiveColor.lerpColors(oklabValues[range-1], oklabValues[range], interpolant);
         for (int x = 0; x < gg.gridWidth; x++) {
             for (int y = 0; y < gg.gridHeight; y++) {
 //                gg.backgrounds[x][y] = DescriptiveColorRgb.lerpColors(wilderness.colors[x][y], dayColor, 0.25f);
                 gg.backgrounds[x][y] = DescriptiveColor.toRGBA8888(
-                        DescriptiveColor.lerpColors(wilderness.colorsOklab[x][y], dayColor, 0.25f));
+                        DescriptiveColor.lerpColors(wilderness.colorsOklab[x][y], dayColor, 0.3f));
             }
 
         }
