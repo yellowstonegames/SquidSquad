@@ -1373,77 +1373,231 @@ public final class StringTools {
                     "чшщъыьэюяѐёђѓєѕіїјљњћќѝўџѴѵҐґẀẁẂẃẄẅỲỳ–—‘’‚‛“”„†‡•…‰‹›ⁿ₤€№™Ω℮←↑→↓∆−√≈" +
                     "─│┌┐└┘├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬■□▲▼○●◦♀♂♠♣♥♦♪";
 
+    /**
+     * All Unicode box drawing chars that only use normal-thickness single lines, but not including dashed or diagonal
+     * lines. This also does not include partial lines that only extend part-way across a cell.
+     */
     public static final String BOX_DRAWING_SINGLE = "─│┌┐└┘├┤┬┴┼";
+
+    /**
+     * All Unicode box drawing chars that only use extra-thick single lines, but not including dashed or diagonal
+     * lines.
+     */
+    public static final String BOX_DRAWING_THICK = "━┃┏┓┗┛┣┫┳┻╋";
+
+    /**
+     * All Unicode box drawing chars that only use normal-thickness double lines, but not including dashed or diagonal
+     * lines.
+     */
     public static final String BOX_DRAWING_DOUBLE = "═║╔╗╚╝╠╣╦╩╬";
+
+    /**
+     * All Unicode box drawing characters that only use normal-thickness lines, sometimes mixing single and double
+     * lines, but not including dashed or diagonal lines.
+     */
     public static final String BOX_DRAWING = "─│┌┐└┘├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬";
+
+    /**
+     * Simple arrows, geometric shapes, the male and female signs, the four playing card suits, and a musical note.
+     */
     public static final String VISUAL_SYMBOLS = "←↑→↓■□▲▼○●◦♀♂♠♣♥♦♪";
+
+    /**
+     * The digit chars 0 through 9.
+     */
     public static final String DIGITS = "0123456789";
+
+    /**
+     * Non-combining diacritical marks that can sometimes be overdrawn on an existing letter char.
+     */
     public static final String MARKS = "~`^'¨¯°´¸ˆˇˉˋ˘˙˚˛˜˝΄΅‘’‚‛";
+
     /**
      * Can be used to match an index with one in {@link #GROUPING_SIGNS_CLOSE} to find the closing char (this way only).
      */
     public static final String GROUPING_SIGNS_OPEN  = "([{<«‘‛“‹";
+
     /**
      * An index in {@link #GROUPING_SIGNS_OPEN} can be used here to find the closing char for that opening one.
      */
     public static final String GROUPING_SIGNS_CLOSE = ")]}>»’’”›";
+
+    /**
+     * Most punctuation marks that could be found on a pre-digital typewriter, such as the exclamation point, question
+     * mark, period, comma, ampersand, percent sign, double/single straight quotes, and simple arithmetic symbols. This
+     * also includes a few non-ASCII punctuation marks: the bullet, the ellipsis, and two lengths of Unicode dashes.
+     */
     public static final String COMMON_PUNCTUATION = "!\"%&'*+,-./:;<>?•…–—";
-    public static final String MODERN_PUNCTUATION = "@\\^_`|~¦©®™´№♀♂♪";
+
+    /**
+     * An arbitrary set of punctuation marks that are more common on digital keyboards than mechanical typewriters, such
+     * as the at-sign, backslash, caret, underscore, backtick, tilde, pipe, and broken pipe. This also includes the
+     * octothorpe (hash sign or pound sign), copyright mark, circled-R and TM forms of the trademark sign, acute accent,
+     * "No" ordinal sign, male and female signs, and a musical note.
+     */
+    public static final String MODERN_PUNCTUATION = "#@\\^_`|~¦©®™´№♀♂♪";
+
+    /**
+     * More technical punctuation marks, such as the section sign, paragraph mark, French masculine and feminine
+     * ordinals, reversed exclamation point and question mark from Spanish, degree symbol, dagger and double dagger.
+     */
     public static final String UNCOMMON_PUNCTUATION = "§¶¨ªº¯°·¸¡¿·‚„†‡";
-    public static final String TECHNICAL_PUNCTUATION = "#%'*+,-./<=>^|¬°µ±¹²³ⁿ¼½¾×÷‰№Ω℮∆−√≈";
+
+    /**
+     * Punctuation marks mostly used in mathematical or scientific contexts, such as arithmetic symbols, the Greek
+     * letters mu (the micro prefix), pi (the irrational number), capital omega (the ohm symbol), and capital delta
+     * (difference in physics). This also includes logical not, superscript digits 1, 2, and 3, the square root symbol,
+     * the approximately-equal-to sign, positive-or-negative sign, degree symbol, and more.
+     *
+     */
+    public static final String TECHNICAL_PUNCTUATION = "#%'*+,-./<=>^|¬°µπ±¹²³ⁿ¼½¾×÷‰№Ω℮∆−√≈";
+
+    /**
+     * A set of all punctuation marks here, with some duplicates. This is the concatenation of
+     * {@link #COMMON_PUNCTUATION}, {@link #MODERN_PUNCTUATION}, {@link #UNCOMMON_PUNCTUATION},
+     * {@link #TECHNICAL_PUNCTUATION}, {@link #GROUPING_SIGNS_OPEN}, and {@link #GROUPING_SIGNS_CLOSE}.
+     */
     public static final String PUNCTUATION = COMMON_PUNCTUATION + MODERN_PUNCTUATION + UNCOMMON_PUNCTUATION +
             TECHNICAL_PUNCTUATION + GROUPING_SIGNS_OPEN + GROUPING_SIGNS_CLOSE;
-    public static final String CURRENCY = "$¢£¤¥₤€";
+
+    /**
+     * A few relatively-common and widely-supported currency symbols: the dollar sign, cent sign, pound sign, currency
+     * sign, yen sign, and Euro sign. At one point this included the double-barred pound sign (or Italian lira sign),
+     * but that hasn't been in wide use for over 50 years.
+     */
+    public static final String CURRENCY = "$¢£¤¥€";
+
+    /**
+     * Only includes the ASCII space.
+     */
     public static final String SPACING = " ";
+
+    /**
+     * The English capital letters A to Z.
+     */
     public static final String ENGLISH_LETTERS_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    /**
+     * The English lower-case letters a to z.
+     */
     public static final String ENGLISH_LETTERS_LOWER = "abcdefghijklmnopqrstuvwxyz";
+
+    /**
+     * The English capital and lower-case letters A to Z and a to z.
+     */
     public static final String ENGLISH_LETTERS = ENGLISH_LETTERS_UPPER + ENGLISH_LETTERS_LOWER;
 
+    /**
+     * A set of many extended-Latin letters with a variety of accent marks. A few of these are duplicates of letters
+     * already in {@link #ENGLISH_LETTERS}, because there are cases where the upper-case of an extended lower-case
+     * letter is a non-extended English letter.
+     */
     public static final String LATIN_EXTENDED_LETTERS_UPPER =
-            "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŨŪŬŮŰŲŴŶŸŹŻŽǺǼǾȘȚẀẂẄỲßSFJ";
+            "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮIİĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŨŪŬŮŰŲŴŶŸŹŻŽǺǼǾȘȚẀẂẄỲßSFJ";
+
+    /**
+     * A set of many extended-Latin letters with a variety of accent marks. A few of these are duplicates of letters
+     * already in {@link #ENGLISH_LETTERS}, because there are cases where the lower-case of an extended upper-case
+     * letter is a non-extended English letter.
+     */
     public static final String LATIN_EXTENDED_LETTERS_LOWER =
-            "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĵķĺļľŀłńņňŋōŏőœŕŗřśŝşšţťũūŭůűųŵŷÿźżžǻǽǿșțẁẃẅỳßſƒȷ";
+            "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıiĵķĺļľŀłńņňŋōŏőœŕŗřśŝşšţťũūŭůűųŵŷÿźżžǻǽǿșțẁẃẅỳßſƒȷ";
+
+    /**
+     * The concatenation of {@link #LATIN_EXTENDED_LETTERS_UPPER} and {@link #LATIN_EXTENDED_LETTERS_LOWER}. This has
+     * some duplicates and also includes some letters already in {@link #ENGLISH_LETTERS}.
+     */
     public static final String LATIN_EXTENDED_LETTERS = LATIN_EXTENDED_LETTERS_UPPER + LATIN_EXTENDED_LETTERS_LOWER;
 
+    /**
+     * The concatenation of {@link #ENGLISH_LETTERS_UPPER} and {@link #LATIN_EXTENDED_LETTERS_UPPER}. This has some
+     * duplicates.
+     */
     public static final String LATIN_LETTERS_UPPER = ENGLISH_LETTERS_UPPER + LATIN_EXTENDED_LETTERS_UPPER;
+
+    /**
+     * The concatenation of {@link #ENGLISH_LETTERS_LOWER} and {@link #LATIN_EXTENDED_LETTERS_LOWER}. This has some
+     * duplicates.
+     */
     public static final String LATIN_LETTERS_LOWER = ENGLISH_LETTERS_LOWER + LATIN_EXTENDED_LETTERS_LOWER;
+
+    /**
+     * The concatenation of {@link #LATIN_LETTERS_UPPER} and {@link #LATIN_LETTERS_LOWER}. This has some duplicates.
+     */
     public static final String LATIN_LETTERS = LATIN_LETTERS_UPPER + LATIN_LETTERS_LOWER;
 
     /**
+     * All upper-case Greek letters.
      * Includes the letter Sigma, 'Σ', twice because it has two lower-case forms in {@link #GREEK_LETTERS_LOWER}. This
      * lets you use one index for both lower and upper case, like with Latin and Cyrillic.
      */
     public static final String GREEK_LETTERS_UPPER = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΣΤΥΦΧΨΩΆΈΉΊΌΎΏΪΫΪΫ";
+
     /**
+     * All lower-case Greek letters.
      * Includes both lower-case forms for Sigma, 'ς' and 'σ', but this matches the two upper-case Sigma in
      * {@link #GREEK_LETTERS_UPPER}. This lets you use one index for both lower and upper case, like with Latin and
      * Cyrillic.
      */
     public static final String GREEK_LETTERS_LOWER = "αβγδεζηθικλμνξοπρςστυφχψωάέήίόύώϊϋΐΰ";
 
+    /**
+     * The concatenation of {@link #GREEK_LETTERS_UPPER} and {@link #GREEK_LETTERS_LOWER}.
+     */
     public static final String GREEK_LETTERS = GREEK_LETTERS_UPPER + GREEK_LETTERS_LOWER;
 
+    /**
+     * All upper-case Cyrillic letters, including some in the extended set of letters used by a variety of languages.
+     */
     public static final String CYRILLIC_LETTERS_UPPER = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏѴҐ";
+
+    /**
+     * All lower-case Cyrillic letters, including some in the extended set of letters used by a variety of languages.
+     */
     public static final String CYRILLIC_LETTERS_LOWER = "абвгдежзийклмнопрстуфхцчшщъыьэюяѐёђѓєѕіїјљњћќѝўџѵґ";
+
+    /**
+     * The concatenation of {@link #CYRILLIC_LETTERS_UPPER} and {@link #CYRILLIC_LETTERS_LOWER}.
+     */
     public static final String CYRILLIC_LETTERS = CYRILLIC_LETTERS_UPPER + CYRILLIC_LETTERS_LOWER;
 
+    /**
+     * The concatenation of {@link #LATIN_LETTERS_UPPER}, {@link #GREEK_LETTERS_UPPER}, and
+     * {@link #CYRILLIC_LETTERS_UPPER}.
+     * This does not include all letter chars, just the upper-case ones from the widely-supported "LGC" scripts.
+     */
     public static final String LETTERS_UPPER = LATIN_LETTERS_UPPER + GREEK_LETTERS_UPPER + CYRILLIC_LETTERS_UPPER;
+
+    /**
+     * The concatenation of {@link #LATIN_LETTERS_LOWER}, {@link #GREEK_LETTERS_LOWER}, and
+     * {@link #CYRILLIC_LETTERS_LOWER}.
+     * This does not include all letter chars, just the lower-case ones from the widely-supported "LGC" scripts.
+     */
     public static final String LETTERS_LOWER = LATIN_LETTERS_LOWER + GREEK_LETTERS_LOWER + CYRILLIC_LETTERS_LOWER;
+
+    /**
+     * The concatenation of {@link #LETTERS_UPPER} and {@link #LETTERS_LOWER}.
+     * This does not include all letter chars, just the ones from the widely-supported "LGC" scripts.
+     */
     public static final String LETTERS = LETTERS_UPPER + LETTERS_LOWER;
+
+    /**
+     * The concatenation of {@link #LETTERS} and {@link #DIGITS}.
+     */
     public static final String LETTERS_AND_NUMBERS = LETTERS + DIGITS;
 
     /**
-     * An OffsetBitSet containing every letter char in the Unicode BMP as an index.
+     * A CharBitSetFixedSize containing every letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LETTER_SET.contains(c)} .
      */
     public static final CharBitSetFixedSize ALL_UNICODE_LETTER_SET = decompressCategory(Category.L);
     /**
-     * An OffsetBitSet containing every upper-case letter char in the Unicode BMP as an index.
+     * A CharBitSetFixedSize containing every upper-case letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_UPPERCASE_LETTER_SET.contains(c)} .
      */
     public static final CharBitSetFixedSize ALL_UNICODE_UPPERCASE_LETTER_SET = decompressCategory(Category.Lu);
     /**
-     * An OffsetBitSet containing every lower-case letter char in the Unicode BMP as an index.
+     * A CharBitSetFixedSize containing every lower-case letter char in the Unicode BMP as an index.
      * You can check if a char {@code c} is in this set with {@code ALL_UNICODE_LOWERCASE_LETTER_SET.contains(c)} .
      */
     public static final CharBitSetFixedSize ALL_UNICODE_LOWERCASE_LETTER_SET = decompressCategory(Category.Ll);
