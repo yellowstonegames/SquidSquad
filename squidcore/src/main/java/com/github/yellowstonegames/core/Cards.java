@@ -22,7 +22,7 @@ import com.github.tommyettinger.digital.TextTools;
 import com.github.tommyettinger.ds.IntDeque;
 import com.github.tommyettinger.function.IntToIntFunction;
 import com.github.tommyettinger.random.EnhancedRandom;
-import com.github.tommyettinger.random.Xoshiro256MX3Random;
+import com.github.tommyettinger.random.Xoshiro512PlusPlusRandom;
 import com.github.yellowstonegames.core.annotations.GwtIncompatible;
 
 import java.util.Arrays;
@@ -179,12 +179,13 @@ public class Cards implements ISerializersNeeded {
          * extra effort that can guarantee it can produce all possible shuffles of the deck. There are
          * {@code 11324281178206297831457521158732046228731749579488251990048962825668835325234200766245086213177344000000000000000000}
          * possible shuffles of a French Tarot deck, which is incredibly large, but possible for a few generators
-         * to guarantee all possible shuffles. Xoshiro512, but not Xoshiro256, generators can, as can Xoroshiro1024 and
-         * Mersenne Twister generators. PCG-Random generators can be constructed with large enough periods. A minimum of
-         * 12 ints or 6 longs of state are needed for most generators to potentially have a large enough period. Today,
-         * you can create a {@link com.github.tommyettinger.random.CompositeWrapper} around an
-         * {@link com.github.tommyettinger.random.OrbitalRandom} and a {@link Xoshiro256MX3Random}, which does have a
-         * sufficient state size and period to produce all possible shuffles. How you seed any generator with such a
+         * to guarantee all possible shuffles. In juniper, the EnhancedRandom types
+         * {@link com.github.tommyettinger.random.Goblin6Random}, {@link com.github.tommyettinger.random.Goblin7Random},
+         * and {@link com.github.tommyettinger.random.Xoshiro512PlusPlusRandom} all have a long enough period to
+         * guarantee all shuffles can be produced. Using {@link com.github.tommyettinger.random.CompositeWrapper} also
+         * can produce a generator with enough period, such as by combining
+         * {@link com.github.tommyettinger.random.OrbitalRandom} with
+         * {@link com.github.tommyettinger.random.Xoshiro256MX3Random}. How you seed any generator with such a
          * large state size matters quite a lot; using {@link EnhancedRandom#setSeed(long)} will not be sufficient
          * because it only permits 2 to the 64 initial states, and we need 2 to the 383 states at minimum to be able to
          * encounter all shuffles. This is only a theoretical problem, though; there's no way a human could encounter
@@ -276,7 +277,7 @@ public class Cards implements ISerializersNeeded {
     /**
      * The random number generator used to shuffle the {@link #deck}. This should have a large period to permit all
      * shuffles, but it is unlikely a period of greater than 2 to the 100 would ever actually be noticeably different.
-     * {@link Xoshiro256MX3Random} is a safe bet just in case, with a period of just less than 2 to the 256.
+     * {@link Xoshiro512PlusPlusRandom} is a safe bet just in case, with a period of just less than 2 to the 512.
      */
     public EnhancedRandom random;
 
@@ -295,9 +296,14 @@ public class Cards implements ISerializersNeeded {
      * generator will (in theory) be able to produce all possible shuffles of that deck. A generator such as
      * {@link com.github.tommyettinger.random.OrbitalRandom} with a period of 2 to the 71 or greater can produce all
      * shuffles for the 22 tarot major arcana. Larger decks might need as much as a period of 2 to the
-     * 256 for a typical playing card deck (with or without jokers). CCG-type decks with 60 or more cards likely can't
-     * have all shuffles produced by a single generator currently, though the amount of possible shuffles for even the
-     * 22 tarot major arcana cards is astronomically large already.
+     * 238 for a typical playing card deck (with or without jokers). CCG-type decks with 60 cards likely would
+     * need a period of at least 2 to the 273 to handle all shuffles, limiting the options in juniper to
+     * {@link com.github.tommyettinger.random.Goblin5Random}, {@link com.github.tommyettinger.random.Goblin6Random},
+     * {@link com.github.tommyettinger.random.Goblin7Random},
+     * {@link com.github.tommyettinger.random.Xoshiro512PlusPlusRandom}, and
+     * {@link com.github.tommyettinger.random.CompositeWrapper} versions of some other generator types. If using
+     * CompositeWrapper, check that its {@link EnhancedRandom#getMinimumPeriod()} result is as large as you need;
+     * combining some generator types won't increase their period.
      *
      * @param names  a String array of names for cards, which do not need to be unique; used directly (not copied)
      * @param random an EnhancedRandom generator that will be used directly (not copied)
@@ -316,9 +322,14 @@ public class Cards implements ISerializersNeeded {
      * generator will (in theory) be able to produce all possible shuffles of that deck type. A generator such as
      * {@link com.github.tommyettinger.random.OrbitalRandom} with a period of 2 to the 71 or greater can produce all
      * shuffles for {@link DeckType#TAROT_MAJOR_ARCANA}. Larger decks might need as much as a period of 2 to the
-     * 256 for a typical playing card deck (with or without jokers). CCG-type decks with 60 or more cards likely can't
-     * have all shuffles produced by a single generator currently, though the amount of possible shuffles for even the
-     * 22 tarot major arcana cards is astronomically large already.
+     * 256 for a typical playing card deck (with or without jokers). CCG-type decks with 60 cards likely would
+     * need a period of at least 2 to the 273 to handle all shuffles, limiting the options in juniper to
+     * {@link com.github.tommyettinger.random.Goblin5Random}, {@link com.github.tommyettinger.random.Goblin6Random},
+     * {@link com.github.tommyettinger.random.Goblin7Random},
+     * {@link com.github.tommyettinger.random.Xoshiro512PlusPlusRandom}, and
+     * {@link com.github.tommyettinger.random.CompositeWrapper} versions of some other generator types. If using
+     * CompositeWrapper, check that its {@link EnhancedRandom#getMinimumPeriod()} result is as large as you need;
+     * combining some generator types won't increase their period.
      *
      * @param type a predefined {@link DeckType} enum constant
      */
@@ -327,13 +338,13 @@ public class Cards implements ISerializersNeeded {
     }
 
     /**
-     * Creates a new Cards using the specified {@link DeckType} and an unseeded {@link Xoshiro256MX3Random} generator,
-     * which is guaranteed to be able to produce all possible shuffles of an up-to-57-card deck.
+     * Creates a new Cards using the specified {@link DeckType} and an unseeded {@link Xoshiro512PlusPlusRandom}
+     * generator, which is guaranteed to be able to produce all possible shuffles of an up-to-98-card deck.
      *
      * @param type a predefined {@link DeckType} enum constant
      */
     public Cards(DeckType type) {
-        this(type, new Xoshiro256MX3Random());
+        this(type, new Xoshiro512PlusPlusRandom());
     }
 
     /**
