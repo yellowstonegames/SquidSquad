@@ -38,7 +38,7 @@ import com.github.yellowstonegames.core.DescriptiveColor;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class InterpolationsGraphing extends ApplicationAdapter {
-    static final boolean WRITE = false;
+    static final boolean WRITE = true;
 
     private static final int width = 300, height = 420;
 
@@ -66,9 +66,10 @@ public class InterpolationsGraphing extends ApplicationAdapter {
 
     @Override
     public void create() {
-        font = KnownFonts.getCozette();
+        font = KnownFonts.getDINishCondensedHeavy(Font.DistanceFieldType.SDF).scaleHeightTo(24);
         view = new StretchViewport(width, height);
         batch = new SpriteBatch();
+        font.distanceFieldCrispness = font.actualCrispness = 1.5f;
         sd = new ShapeDrawer(batch, font.mapping.get(font.solidBlock));
 
 //        Interpolator adjusted = new Interpolations.Interpolator("adjustedHue", a -> MathTools.barronSpline(a, 1.7f, 0.9f));
@@ -234,14 +235,15 @@ public class InterpolationsGraphing extends ApplicationAdapter {
 //        }
 //        renderer.end();
 
+        font.enableShader(batch);
         float level = -0.4f;
-        for (int i = 15; i <= 400; i+=40) {
-            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), 32, i);
+        for (int i = 24; i <= 400; i+=40) {
+            font.drawMarkupText(batch, String.format("[dark gray]%4.1f", level), 29, i);
             level += 0.2f;
         }
         level = 0f;
-        for (int i = 46; i <= 260; i+=40) {
-            font.drawMarkupText(batch, String.format("[darker gray]%4.1f", level), i, 82);
+        for (int i = 45; i <= 260; i+=40) {
+            font.drawMarkupText(batch, String.format("[dark gray]%4.1f", level), i, 86);
             level += 0.2f;
         }
         font.drawGlyphs(batch, name, width * 0.5f, height - 16f, Align.center);
@@ -253,6 +255,7 @@ public class InterpolationsGraphing extends ApplicationAdapter {
         super.resize(width, height);
         view.update(width, height, true);
         view.apply(true);
+//        font.resizeDistanceField(width, height, view);
     }
 
     public static void main(String[] arg) {
