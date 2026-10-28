@@ -268,8 +268,8 @@ public interface INoise extends Externalizable {
      */
     default float getNoiseWithSeed(float x, float y, long seed) {
         if(!hasEfficientSetSeed()) {
-            float s = seed * 0x1p-48f;
-            return getNoise(x + s, y + s);
+            return getNoise(x + seed * 0x1p-52f,
+                y + (seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f);
         }
         final long s = getSeed();
         setSeed(seed);
@@ -290,8 +290,9 @@ public interface INoise extends Externalizable {
      */
     default float getNoiseWithSeed(float x, float y, float z, long seed) {
         if(!hasEfficientSetSeed()) {
-            float s = seed * 0x1p-48f;
-            return getNoise(x + s, y + s, z + s);
+            return getNoise(x + seed * 0x1p-52f,
+                y + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                z + (seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f);
         }
         final long s = getSeed();
         setSeed(seed);
@@ -313,8 +314,10 @@ public interface INoise extends Externalizable {
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, long seed) {
         if(!hasEfficientSetSeed()) {
-            float s = seed * 0x1p-48f;
-            return getNoise(x + s, y + s, z + s, w + s);
+            return getNoise(x + seed * 0x1p-52f,
+                y + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                z + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                w + (seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f);
         }
         final long s = getSeed();
         setSeed(seed);
@@ -337,8 +340,11 @@ public interface INoise extends Externalizable {
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, float u, long seed) {
         if(!hasEfficientSetSeed()) {
-            float s = seed * 0x1p-48f;
-            return getNoise(x + s, y + s, z + s, w + s, u + s);
+            return getNoise(x + seed * 0x1p-52f,
+                y + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                z + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                w + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                u + (seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f);
         }
         final long s = getSeed();
         setSeed(seed);
@@ -362,8 +368,12 @@ public interface INoise extends Externalizable {
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, long seed) {
         if(!hasEfficientSetSeed()) {
-            float s = seed * 0x1p-48f;
-            return getNoise(x + s, y + s, z + s, w + s, u + s, v + s);
+            return getNoise(x + seed * 0x1p-52f,
+                y + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                z + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                w + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                u + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                v + (seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f);
         }
         final long s = getSeed();
         setSeed(seed);
@@ -388,8 +398,13 @@ public interface INoise extends Externalizable {
      */
     default float getNoiseWithSeed(float x, float y, float z, float w, float u, float v, float m, long seed) {
         if(!hasEfficientSetSeed()) {
-            float s = seed * 0x1p-48f;
-            return getNoise(x + s, y + s, z + s, w + s, u + s, v + s, m + s);
+            return getNoise(x + seed * 0x1p-52f,
+                y + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                z + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                w + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                u + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                v + (seed = seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f,
+                m + (seed * 3333333333333333333L + 5555555555555555555L) * 0x1p-52f);
         }
         final long s = getSeed();
         setSeed(seed);
