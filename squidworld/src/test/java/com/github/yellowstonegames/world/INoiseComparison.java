@@ -316,7 +316,7 @@ public class INoiseComparison extends ApplicationAdapter {
     @Override
     public void create() {
         renderer = new ImmediateModeRenderer20(width * height << 1, false, true, 0);
-        if(PROFILING) {
+        if (PROFILING) {
             Gdx.app.setLogLevel(Application.LOG_INFO);
             profiler = new GLProfiler(Gdx.graphics);
         }
@@ -403,7 +403,7 @@ public class INoiseComparison extends ApplicationAdapter {
                         break;
                     case R: // fRactal type
                         wrap0.setFractalType((wrap0.getFractalType() + (UIUtils.shift() ? 4 : 1)) % 5);
-                        if(!UIUtils.ctrl())
+                        if (!UIUtils.ctrl())
                             wrap1.setFractalType((wrap1.getFractalType() + (UIUtils.shift() ? 4 : 1)) % 5);
                         break;
                     case H: // higher octaves
@@ -424,8 +424,16 @@ public class INoiseComparison extends ApplicationAdapter {
                         ctr += 1000;
                         break;
                     case V: // view
-                        System.out.println("Comparing left: " + wrap0.wrapped.getClass() );
-                        System.out.println("      to right: " + wrap1.wrapped.getClass() );
+                        try {
+                            System.out.println("Comparing left: " + INoise.Serializer.serialize(wrap0.wrapped));
+                        } catch (Exception e) {
+                            System.out.println("Comparing left: UNSERIALIZABLE");
+                        }
+                        try {
+                            System.out.println("      to right: " + INoise.Serializer.serialize(wrap1.wrapped));
+                        } catch (Exception e) {
+                            System.out.println("      to right: UNSERIALIZABLE");
+                        }
                         System.out.println("mul = " + mul);
                         System.out.println("gamma = " + gamma);
                         System.out.println("mix = " + mix);
@@ -442,7 +450,7 @@ public class INoiseComparison extends ApplicationAdapter {
         };
         Gdx.input.setInputProcessor(input);
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        if(PROFILING)
+        if (PROFILING)
             profiler.enable();
     }
 
@@ -679,13 +687,14 @@ public class INoiseComparison extends ApplicationAdapter {
             renderer.end();
         }
     }
-    
+
     private void colorize(float v){
         if(hue)
             renderer.color(v);
         else
             renderer.color(v, v, v, 1f);
     }
+
     @Override
     public void render() {
         if(Gdx.input.isKeyPressed(M)) // multiplier for redistributor2
