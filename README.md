@@ -282,10 +282,10 @@ The other versions go up fairly often as things are fixed or improved, but they 
 
   - `digitalVersion`=0.10.3
   - `jdkgdxdsVersion`=2.1.9
-  - `juniperVersion`=0.10.8
-  - `regExodusVersion`=0.1.21
+  - `juniperVersion`=0.10.9
+  - `regExodusVersion`=0.1.22
   - `cruxVersion`=0.1.3
-  - `textraTypistVersion`=2.5.0
+  - `textraTypistVersion`=2.6.0
   - `gdxVersion`=1.14.2
 
 # Help!
