@@ -570,7 +570,7 @@ public class CellularNoise implements INoise {
         if (data == null || data.length() < 5)
             return this;
         int middle;
-        seed = DigitTools.intFromDec(data, 1, middle = data.indexOf('~', 2));
+        seed = DigitTools.longFromDec(data, 1, middle = data.indexOf('~', 2));
         int index = DigitTools.intFromDec(data, middle + 1, data.indexOf('`', middle+1));
         setNoiseType(index);
         return this;
@@ -580,7 +580,7 @@ public class CellularNoise implements INoise {
         if (data == null || data.length() < 5)
             return null;
         int middle;
-        long seed = DigitTools.intFromDec(data, 1, middle = data.indexOf('`', 2));
+        long seed = DigitTools.longFromDec(data, 1, middle = data.indexOf('`', 2));
         int index = DigitTools.intFromDec(data, middle + 1, data.indexOf('`', middle+1));
         return new CellularNoise(seed, index);
     }
