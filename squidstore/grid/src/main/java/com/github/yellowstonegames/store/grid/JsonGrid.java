@@ -73,12 +73,14 @@ public final class JsonGrid {
         registerBadgerNoise(json);
         registerBitNoise(json);
         registerCyclicNoise(json);
+        registerDualMutantNoiseWrapper(json);
         registerFlanNoise(json);
         registerFoamNoise(json);
         registerFoamplexNoise(json);
         registerHighDimensionalValueNoise(json);
         registerHoneyNoise(json);
         registerHuskyNoise(json);
+        registerMutantNoiseWrapper(json);
         registerNoiseAdjustment(json);
         registerNoise(json);
         registerNoiseWrapper(json);
@@ -97,6 +99,7 @@ public final class JsonGrid {
         registerSorbetNoise(json);
         registerTaffyNoise(json);
         registerValueNoise(json);
+        registerVroomNoise(json);
         registerWhiteNoise(json);
         registerINoise(json);
     }
@@ -952,7 +955,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerDualMutantNoiseWrapper(Json json) {
-        json.addClassTag("Muta", DualMutantNoiseWrapper.class);
+        json.addClassTag("DuMu", DualMutantNoiseWrapper.class);
         json.setSerializer(DualMutantNoiseWrapper.class, new Json.Serializer<DualMutantNoiseWrapper>() {
             @Override
             public void write(Json json, DualMutantNoiseWrapper object, Class knownType) {
