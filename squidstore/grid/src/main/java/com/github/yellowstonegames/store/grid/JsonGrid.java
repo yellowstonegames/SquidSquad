@@ -72,6 +72,7 @@ public final class JsonGrid {
 //        registerBasicHashNoise(json); // Cannot be serialized to JSON without IPointHash being serializable, too.
         registerBadgerNoise(json);
         registerBitNoise(json);
+        registerCellularNoise(json);
         registerCyclicNoise(json);
         registerDualMutantNoiseWrapper(json);
         registerFlanNoise(json);
@@ -1143,6 +1144,31 @@ public final class JsonGrid {
             public SnakeNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return SnakeNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers CellularNoise with the given Json object, so CellularNoise can be written to and read from JSON.
+     * This is a simple wrapper around CellularNoise's built-in {@link CellularNoise#stringSerialize()} and
+     * {@link CellularNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCellularNoise(Json json) {
+        json.addClassTag("CelN", CellularNoise.class);
+        json.setSerializer(CellularNoise.class, new Json.Serializer<CellularNoise>() {
+            @Override
+            public void write(Json json, CellularNoise object, Class knownType) {
+                json.writeObjectStart(CellularNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public CellularNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return CellularNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
