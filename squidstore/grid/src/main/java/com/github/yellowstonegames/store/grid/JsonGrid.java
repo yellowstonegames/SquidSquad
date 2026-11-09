@@ -87,6 +87,7 @@ public final class JsonGrid {
         registerNoiseWrapper(json);
         registerOpenSimplex2(json);
         registerOpenSimplex2Smooth(json);
+        registerPerfyNoise(json);
         registerPerlinNoise(json);
         registerPerlueNoise(json);
         registerPhantomNoise(json);
@@ -1548,6 +1549,31 @@ public final class JsonGrid {
             public ValueNoise read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return ValueNoise.recreateFromString(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers PerfyNoise with the given Json object, so PerfyNoise can be written to and read from JSON.
+     * This is a simple wrapper around PerfyNoise's built-in {@link PerfyNoise#stringSerialize()} and
+     * {@link PerfyNoise#recreateFromString(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerPerfyNoise(Json json) {
+        json.addClassTag("PrfN", PerfyNoise.class);
+        json.setSerializer(PerfyNoise.class, new Json.Serializer<PerfyNoise>() {
+            @Override
+            public void write(Json json, PerfyNoise object, Class knownType) {
+                json.writeObjectStart(PerfyNoise.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public PerfyNoise read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return PerfyNoise.recreateFromString(jsonData.get("v").asString());
             }
         });
     }
