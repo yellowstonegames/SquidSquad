@@ -21,6 +21,7 @@ import com.github.tommyettinger.digital.Hasher;
 import com.github.tommyettinger.ds.FloatList;
 import com.github.tommyettinger.ds.IntList;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -219,18 +220,23 @@ public class WeightedTable {
     {
         return Base.SIMPLE64.join(",", mixed);
     }
-    public static WeightedTable stringDeserialize(String data)
+
+    public <S extends CharSequence & Appendable> S appendTo(S sb){
+        return Base.SIMPLE64.appendJoined(sb, ",", mixed);
+    }
+
+    public WeightedTable stringDeserialize(String data){
+        if(data == null || data.isEmpty())
+            return this;
+        mixed = Base.SIMPLE64.intSplit(data, ",");
+        size = mixed.length >>> 1;
+        return this;
+    }
+
+    public static WeightedTable recreateFromString(String data)
     {
         if(data == null || data.isEmpty())
             return null;
-//        int pos = -1;
-//        int count = StringTools.count(data, ',') + 1;
-//        int[] mixed = new int[count];
-//        for (int i = 0; i < count; i++) {
-//            int next = data.indexOf(',', pos+1);
-//            if(next == -1) next = data.length();
-//            mixed[i] = Base.BASE10.readInt(data, pos+1, pos = next);
-//        }
         return new WeightedTable(Base.SIMPLE64.intSplit(data, ","), true);
     }
 

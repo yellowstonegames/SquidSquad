@@ -375,7 +375,7 @@ public final class JsonCore {
             @Override
             public WeightedTable read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
-                return WeightedTable.stringDeserialize(jsonData.asString());
+                return WeightedTable.recreateFromString(jsonData.asString());
             }
         });
     }
