@@ -28,6 +28,7 @@ import com.github.yellowstonegames.core.DigitTools;
 import com.github.tommyettinger.digital.Hasher;
 import com.github.yellowstonegames.core.LZSEncoding;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -1562,9 +1563,9 @@ public class Region implements Set<Coord> {
         }
         int newYSections = (newHeight + 63) >> 6;
         yEndMask = -1L >>> (64 - (newHeight & 63));
-        long[] newData = new long[newWidth * newYSections];         
+        long[] newData = new long[newWidth * newYSections];
         counts = new int[newWidth * newYSections];
-        
+
         for (int x = 0; x < width && x < newWidth; x++) {
             for (int ys = 0; ys < ySections && ys < newYSections; ys++) {
                 newData[x * newYSections + ys] = data[x * ySections + ys];
@@ -1640,7 +1641,7 @@ public class Region implements Set<Coord> {
             }
         }
     }
-    
+
     public Region flip(boolean leftRight, boolean upDown) {
         if(ySections <= 0) return this;
         if(leftRight) {
@@ -1688,7 +1689,7 @@ public class Region implements Set<Coord> {
                         data[is] |= big << 64 - shift;
                         data[ib] = start << 64 - shift;
                         data[ib] |= little >>> shift;
-                        
+
                         for (int y = 1; y < (ySections >>> 1); y++) {
                             end = big;
                             start = little;
@@ -2140,10 +2141,10 @@ public class Region implements Set<Coord> {
         for (int dx = -radius; dx <= radius; ++dx) {
             changedX = dx - 0.25f * (dx >> 31 | -dx >>> 31); // project nayuki signum
             rndX = Math.round(changedX);
-            high = (float) Math.sqrt(radius * radius - changedX * changedX);             
+            high = (float) Math.sqrt(radius * radius - changedX * changedX);
             insert(center.x + rndX, center.y);
             for (float dy = high; dy >= 0.75f; --dy) {
-                rndY = Math.round(dy - 0.25f);                 
+                rndY = Math.round(dy - 0.25f);
                 insert(center.x + rndX, center.y + rndY);
                 insert(center.x + rndX, center.y - rndY);
             }
@@ -2461,7 +2462,7 @@ public class Region implements Set<Coord> {
     }
 
     /**
-     * Removes all "on" cells from (startX, startY) inclusive 
+     * Removes all "on" cells from (startX, startY) inclusive
      * to (startX+rectangleWidth, startY+rectangleHeight) exclusive, removing a total width of rectangleWidth and a
      * total height of rectangleHeight in cells.
      * @param startX left side x-coordinate
@@ -4457,7 +4458,7 @@ public class Region implements Set<Coord> {
      * This method allocates and discards a temporary copy of this Region.
      * There is an overload of this method, {@link #fringe(Region)}, that takes a reusable buffer Region to avoid
      * allocations; it can be preferable if you intend to call fringe() repeatedly.
-     * 
+     *
      * @param amount how thick the bordering area should be
      * @return this for chaining
      */
@@ -7132,7 +7133,7 @@ public class Region implements Set<Coord> {
 
     /**
      * Like {@link #retract()}, this removes the "on" cells that are 4-way-adjacent to any "off" cell, but unlike that
-     * method it keeps a fraction of those surface cells, randomly selecting them. This can be thought of as running 
+     * method it keeps a fraction of those surface cells, randomly selecting them. This can be thought of as running
      * {@link #surface()} on a copy of this Region, running {@link #deteriorate(EnhancedRandom, float)} on
      * that surface with the given fractionKept, taking the original Region and removing its whole surface with
      * {@link #retract()}, then inserting the randomly-removed surface into this Region to replace its surface
@@ -8299,10 +8300,32 @@ public class Region implements Set<Coord> {
     }
 
     /**
-     * Mutates this Region so its contents match the serialized data in {@code s}. The given String should have been
-     * produced by {@link #stringSerialize()}.
+     * Given a StringBuilder or other Appendable CharSequence, appends the serialized form of this Region to sb.
+     * This serialized form can be read back with {@link #stringDeserialize(String)} or
+     * {@link #recreateFromString(String)}.
      *
-     * @param s a String that should have been produced by {@link #stringSerialize()}
+     * @param sb any object that implements both CharSequence and Appendable, such as {@link StringBuilder} or {@link com.github.tommyettinger.ds.CharList}
+     * @return sb, potentially after changes
+     * @param <S> must implement both CharSequence and Appendable; commonly {@link StringBuilder} or {@link com.github.tommyettinger.ds.CharList}
+     */
+    public <S extends CharSequence & Appendable> S appendTo(S sb) {
+        try {
+            Base.BASE10.appendSigned(sb, width);
+            sb.append(',');
+            Base.BASE10.appendSigned(sb, height);
+            sb.append(',');
+            Base.appendJoinedReadable(sb, ",", data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return sb;
+    }
+
+    /**
+     * Mutates this Region so its contents match the serialized data in {@code s}. The given String should have been
+     * produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}.
+     *
+     * @param s a String that should have been produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
      * @return this Region, after modification
      */
     public Region stringDeserialize(String s){
@@ -8331,9 +8354,9 @@ public class Region implements Set<Coord> {
 
     /**
      * Creates a new Region with the same contents stored in {@code s}, which should have been produced by
-     * {@link #stringSerialize()}.
+     * {@link #stringSerialize()} or {@link #appendTo(CharSequence)}.
      *
-     * @param s a String that should have been produced by {@link #stringSerialize()}
+     * @param s a String that should have been produced by {@link #stringSerialize()} or {@link #appendTo(CharSequence)}
      * @return a new Region with the same contents serialized into {@code s}
      */
     public static Region recreateFromString(String s)

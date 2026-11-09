@@ -216,26 +216,24 @@ public class WeightedTable {
         return ((state >>> 33) <= mixed[column << 1]) ? column : mixed[column << 1 | 1];
     }
 
-    public String stringSerialize()
-    {
+    public String stringSerialize() {
         return Base.SIMPLE64.join(",", mixed);
     }
 
-    public <S extends CharSequence & Appendable> S appendTo(S sb){
+    public <S extends CharSequence & Appendable> S appendTo(S sb) {
         return Base.SIMPLE64.appendJoined(sb, ",", mixed);
     }
 
-    public WeightedTable stringDeserialize(String data){
-        if(data == null || data.isEmpty())
+    public WeightedTable stringDeserialize(String data) {
+        if (data == null || data.isEmpty())
             return this;
         mixed = Base.SIMPLE64.intSplit(data, ",");
         size = mixed.length >>> 1;
         return this;
     }
 
-    public static WeightedTable recreateFromString(String data)
-    {
-        if(data == null || data.isEmpty())
+    public static WeightedTable recreateFromString(String data) {
+        if (data == null || data.isEmpty())
             return null;
         return new WeightedTable(Base.SIMPLE64.intSplit(data, ","), true);
     }
