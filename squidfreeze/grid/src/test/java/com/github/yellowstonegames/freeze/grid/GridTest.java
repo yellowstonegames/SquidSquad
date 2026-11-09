@@ -867,6 +867,23 @@ public class GridTest {
     }
 
     @Test
+    public void testCellularNoise() {
+        Kryo kryo = new Kryo();
+        kryo.register(CellularNoise.class, new CellularNoiseSerializer());
+
+        CellularNoise data = new CellularNoise(-9876543210L, CellularNoise.NoiseType.DISTANCE_2);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            CellularNoise data2 = kryo.readObject(input, CellularNoise.class);
+            Assert.assertEquals(data.getNoise(0.1f, 0.2f, 0.3f), data2.getNoise(0.1f, 0.2f, 0.3f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testCyclicNoise() {
         Kryo kryo = new Kryo();
         kryo.register(CyclicNoise.class, new CyclicNoiseSerializer());
@@ -1264,7 +1281,7 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
-    
+
     @Test
     public void testRadialNoiseWrapper() {
         Kryo kryo = new Kryo();
@@ -1283,7 +1300,7 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
-    
+
     @Test
     public void testNoiseAdjustment() {
         Kryo kryo = new Kryo();
