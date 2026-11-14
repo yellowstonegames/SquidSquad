@@ -25,7 +25,7 @@ import static com.github.yellowstonegames.grid.GradientVectors.*;
 /**
  * A mix of "Classic" {@link PerlinNoise}, written by Ken Perlin before he created Simplex Noise, with
  * {@link ValueNoise} calculated at the same time. This uses quintic interpolation throughout (which was an improvement
- * found in Simplex Noise), and has a single {@code int} seed. Perlue Noise can have significant grid-aligned and
+ * in a later revision), and has a single {@code int} seed. Perlue Noise can have significant grid-aligned and
  * 45-degree-diagonal artifacts when too few octaves are used, but sometimes this is irrelevant, such as when sampling
  * 3D noise on the surface of a sphere. These artifacts sometimes manifest as "waves" of quickly-changing and then
  * slowly-changing noise, when 3D noise uses time as the z axis.

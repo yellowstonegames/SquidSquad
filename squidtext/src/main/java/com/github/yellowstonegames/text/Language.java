@@ -27,12 +27,7 @@ import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.tommyettinger.random.LaserRandom;
 import regexodus.*;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A text generator for producing sentences and/or words in nonsense languages that fit a theme. This does not use an
@@ -76,7 +71,7 @@ public class Language {
     public static final String anyVowel = "[àáâãäåæāăǎąǻǽaèéêëēĕėęěeìíîïĩīĭįǐıiòóôõöøōŏőǒœǿoùúûüũūŭůǔűųuýÿŷỳyαοειυωаеёийоуъыэюя]",
     /**
      * A pattern String that will match one or more of any vowels Language can produce out-of-the-box, including
-     * Latin, Greek, and Cyrillic; for use when a String will be interpreted as a regex (as in 
+     * Latin, Greek, and Cyrillic; for use when a String will be interpreted as a regex (as in
      * {@link Language.Alteration}).
      */
     anyVowelCluster = anyVowel + '+',
@@ -314,7 +309,7 @@ public class Language {
     static {
 
         registry.put("", null);
-        
+
         openVowels = ObjectObjectOrderedMap.with(
         "a", "a aa ae ai au ea ia oa ua",
         "e", "e ae ea ee ei eo eu ie ue",
@@ -553,7 +548,7 @@ public class Language {
                         "anes", "eros", "or", "or", "ophon", "on", "on", "ikon", "otron", "ik",},
                 new String[]{}, new int[]{1, 2, 3, 4}, new double[]{5, 7, 4, 1}, 0.45, 0.45, 0.0, 0.2, null, true);
     }
-    
+
     /**
      * Imitation ancient Greek, romanized to use the Latin alphabet. Likely to seem pretty fake to many readers.
      * <br>
@@ -2372,7 +2367,7 @@ public class Language {
                         "br", "gr", "fr"
                 },
                 new String[]{"ñ", "rr", "ll", "ñ", "rr", "ll", "mb", "nd", "ng", "nqu", "rqu", "zqu", "zc", "rd", "rb", "rt", "rt", "rc", "sm", "sd"},
-                new String[]{"r", "n", "s", "s", "r", "n", "s", "s", "r", "n", "s", "s", "r", "n", "s", "s", 
+                new String[]{"r", "n", "s", "s", "r", "n", "s", "s", "r", "n", "s", "s", "r", "n", "s", "s",
                         "r", "n", "s", "r", "n", "s", "r", "n", "s", "r", "n", "s",
                 },
                 new String[]{"on", "ez", "es", "es", "es", "es", "es",
@@ -2399,7 +2394,7 @@ public class Language {
      * Jamos daí oñuezqui, luarbezquisdas canga ombiurta irri hoño resda!
      */
     public static final Language SPANISH = spanish().register("Spanish");
-    
+
     private static Language deepSpeech(){
         return new Language(
                 new String[]{
@@ -2471,7 +2466,7 @@ public class Language {
      */
     public static final Language NORSE_SIMPLIFIED = norse().addModifiers(Modifier.SIMPLIFY_NORSE)
             .register("Norse Simplified");
-    
+
     private static Language hletkip(){
         return new Language(
                 new String[]{"a", "a", "a", "e", "e", "e", "e", "e", "i", "i", "i", "i",
@@ -2507,7 +2502,7 @@ public class Language {
                 },
                 new String[]{"ip", "ik", "id", "iz", "ir", "ikh", "ish", "is", "ith", "iv", "in", "im", "ib", "if",
                         "ep", "ek", "ed", "ez", "er", "ekh", "esh", "es", "eth", "ev", "en", "em", "eb", "ef",
-                        "up", "ud", "uz", "ur", "ush", "us", "uth", "uv", "un", "um", "ub", "uf", 
+                        "up", "ud", "uz", "ur", "ush", "us", "uth", "uv", "un", "um", "ub", "uf",
                 },
                 new String[]{}, new int[]{1, 2, 3}, new double[]{1, 1, 1}, 0.0, 0.4, 0.0, 1.0, null, true);
     }
@@ -2522,7 +2517,7 @@ public class Language {
      * Nyep khruv kwolbik psesh klulzhanbik psahzahwuth bluryup; hnish zhrim?
      */
     public static final Language HLETKIP = hletkip().register("Hletkip");
-    
+
     private static Language ancientEgyptian(){
         return new Language(
                 new String[]{"a", "a", "a", "a", "a", "aa", "e", "e", "e", "e", "e", "e", "e", "i", "i", "i",
@@ -2541,7 +2536,7 @@ public class Language {
                         "s", "s", "s", "s", "s", "s", "s", "s",
                         "sh", "sh", "sh", "sh",
                         "k", "k", "k", "k", "k",
-                        "g", "g", "g", 
+                        "g", "g", "g",
                         "t", "t", "t", "t", "t", "t",
                         "th", "th", "th",
                         "d", "d", "d",
@@ -2672,14 +2667,14 @@ public class Language {
      * Siii-aghak fítríííg dú-úgh ru-úúk, grííírá!
      */
     public static final Language IMP = imp().register("Imp");
-    
+
     private static Language malay(){
         return new Language(
                 new String[]{
                         "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "ai", "ai", "au",
                         "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e", "e",
                         "i", "i", "i", "i", "i", "i", "i", "i", "ia", "ia",
-                        "o", "o", "o", "o", "o", "o", "ou", 
+                        "o", "o", "o", "o", "o", "o", "ou",
                         "u", "u", "u", "u", "u", "u", "u", "u", "u", "ua", "ua",},
                 new String[]{},
                 new String[]{
@@ -2806,7 +2801,7 @@ public class Language {
      * Emŏl ebin hanzi'ab, isharar omrihrel nevyăd.
      */
     public static final Language CELESTIAL = celestial().register("Celestial");
-    
+
     private static Language chinese(){
         return new Language(
                 new String[]{
@@ -3083,7 +3078,7 @@ public class Language {
      * maybe be used as an approximation of (badly) Romanized Thai, since Thai normally uses its own script but also has
      * many tones (which would be indicated by the accents here).
      * <br>
-     * Bach trich, nŏ ngiukh nga cä tran ngonh... 
+     * Bach trich, nŏ ngiukh nga cä tran ngonh...
      */
     public static final Language VIETNAMESE = vietnamese().register("Vietnamese");
 
@@ -3263,7 +3258,7 @@ public class Language {
      */
     public static final Language[] romanizedHumanLanguages = {
             ENGLISH, KOREAN_ROMANIZED, SPANISH, SWAHILI, NORSE_SIMPLIFIED, ARABIC_ROMANIZED, HINDI_ROMANIZED, FRENCH,
-            MAORI, GREEK_ROMANIZED, INUKTITUT, RUSSIAN_ROMANIZED, NAHUATL, JAPANESE_ROMANIZED, MONGOLIAN, SOMALI, CROW, 
+            MAORI, GREEK_ROMANIZED, INUKTITUT, RUSSIAN_ROMANIZED, NAHUATL, JAPANESE_ROMANIZED, MONGOLIAN, SOMALI, CROW,
             ANCIENT_EGYPTIAN, MALAY, CHINESE_ROMANIZED, CHEROKEE_ROMANIZED, VIETNAMESE, LATIN
     };
 
@@ -4005,7 +4000,7 @@ public class Language {
     }
 
     /**
-     * Generate a word from this Language with an approximate number of syllables using the specified long seed 
+     * Generate a word from this Language with an approximate number of syllables using the specified long seed
      * to use for a shared StatefulRNG.
      * If seed and the other parameters are the same, a Language should produce the same word every time with
      * this method.
@@ -4032,7 +4027,7 @@ public class Language {
         return word(rng, capitalize, approxSyllables, null);
     }
     /**
-     * Generate a word from this Language with an approximate number of syllables using the specified long seed 
+     * Generate a word from this Language with an approximate number of syllables using the specified long seed
      * to use for a shared StatefulRNG. This takes an array of {@link Pattern} objects (from RegExodus, not
      * java.util.regex) that should match invalid outputs, such as words that shouldn't be generated in some context due
      * to vulgarity or cultural matters. If seed and the other parameters are the same, a Language should produce
@@ -4196,7 +4191,7 @@ public class Language {
      * Generate a sentence from this Language, using the given RNG, with the length in words between minWords and
      * maxWords, both inclusive. This can use commas and semicolons between words, and can end a
      * sentence with ".", "!", "?", or "...".
-     * 
+     *
      * @param rng      the RNG to use for the randomized string building
      * @param minWords an int for the minimum number of words in a sentence; should be at least 1
      * @param maxWords an int for the maximum number of words in a sentence; should be at least equal to minWords
@@ -4384,7 +4379,7 @@ public class Language {
         // If maxWords is less than minWords, this sets it to minWords; otherwise, a random value between the two.
         maxWords = minWords + rng.nextInt(maxWords + 1 - minWords);
         int frustration = 0;
-        ssb.setLength(0); 
+        ssb.setLength(0);
         ssb.ensureCapacity(maxChars);
         String next = word(rng, true);
         while (next.length() >= maxChars - 1 && frustration < 50) {
@@ -4633,7 +4628,7 @@ public class Language {
     /**
      * Makes a new Language that mixes this object with {@code other}, mingling the consonants and vowels they
      * use as well as any word suffixes or other traits, and favoring the qualities in {@code other} by
-     * {@code otherInfluence}, which will value both languages evenly if it is 0.5 . 
+     * {@code otherInfluence}, which will value both languages evenly if it is 0.5 .
      * <br>
      * You should generally prefer {@link #mix(double, Language, double, Object...)} or
      * {@link #mixAll(Object...)} if you ever mix 3 or more languages. Chaining this mix() method can be very
@@ -4981,24 +4976,16 @@ public class Language {
         if (Double.compare(that.vowelEndFrequency, vowelEndFrequency) != 0) return false;
         if (Double.compare(that.vowelSplitFrequency, vowelSplitFrequency) != 0) return false;
         if (Double.compare(that.syllableEndFrequency, syllableEndFrequency) != 0) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(openingVowels, that.openingVowels)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(midVowels, that.midVowels)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(openingConsonants, that.openingConsonants)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(midConsonants, that.midConsonants)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(closingConsonants, that.closingConsonants)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(vowelSplitters, that.vowelSplitters)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(closingSyllables, that.closingSyllables)) return false;
         if (!Arrays.equals(syllableFrequencies, that.syllableFrequencies)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(sanityChecks, that.sanityChecks)) return false;
-        return modifiers != null ? modifiers.equals(that.modifiers) : that.modifiers == null;
+        return Objects.equals(modifiers, that.modifiers);
     }
 
     @Override
@@ -5726,9 +5713,7 @@ public class Language {
             if (maxChars != that.maxChars) return false;
             if (Double.compare(that.midPunctuationFrequency, midPunctuationFrequency) != 0) return false;
             if (!rng.equals(that.rng)) return false;
-            // Probably incorrect - comparing Object[] arrays with Arrays.equals
             if (!Arrays.equals(midPunctuation, that.midPunctuation)) return false;
-            // Probably incorrect - comparing Object[] arrays with Arrays.equals
             if (!Arrays.equals(endPunctuation, that.endPunctuation)) return false;
             return language.equals(that.language);
         }

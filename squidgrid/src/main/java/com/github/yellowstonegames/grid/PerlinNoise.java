@@ -28,7 +28,7 @@ import static com.github.yellowstonegames.grid.GradientVectors.*;
 
 /**
  * "Classic" Perlin noise, written by Ken Perlin before he created {@link SimplexNoise Simplex Noise}, with minor
- * adjustments. This uses quintic interpolation throughout (which was an improvement found in Simplex Noise), and has a
+ * adjustments. This uses quintic interpolation throughout (which was an improvement in a later revision), and has a
  * single {@code long} seed. Perlin Noise can have significant grid-aligned and 45-degree-diagonal artifacts when too
  * few octaves are used, but sometimes this is irrelevant, such as when sampling 3D noise on the surface of a sphere.
  * <br>

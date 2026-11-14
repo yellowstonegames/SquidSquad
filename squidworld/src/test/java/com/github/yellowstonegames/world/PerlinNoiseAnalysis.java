@@ -29,7 +29,7 @@ import static java.lang.Math.min;
 
 /**
  * "Classic" Perlin noise, written by Ken Perlin before he created {@link SimplexNoise Simplex Noise}, with minor
- * adjustments. This uses quintic interpolation throughout (which was an improvement found in Simplex Noise), and has a
+ * adjustments. This uses quintic interpolation throughout (which was an improvement in a later revision), and has a
  * single {@code long} seed. Perlin Noise can have significant grid-aligned and 45-degree-diagonal artifacts when too
  * few octaves are used, but sometimes this is irrelevant, such as when sampling 3D noise on the surface of a sphere.
  */
@@ -201,7 +201,7 @@ public class PerlinNoiseAnalysis implements INoise {
         return xd * GRADIENTS_5D[hash] + yd * GRADIENTS_5D[hash + 1] + zd * GRADIENTS_5D[hash + 2]
                 + wd * GRADIENTS_5D[hash + 3] + ud * GRADIENTS_5D[hash + 4];
     }
-    
+
     public float gradCoord6D(long seed, int x, int y, int z, int w, int u, int v,
                                         float xd, float yd, float zd, float wd, float ud, float vd) {
         final int hash =

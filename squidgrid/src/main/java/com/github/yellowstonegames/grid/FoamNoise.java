@@ -104,10 +104,10 @@ public class FoamNoise implements INoise {
         final long STEPY = 0x91E10DA5C79E7B1DL;
         long xFloor = (long)Math.floor(x);
         x -= xFloor;
-        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        x *= x * (3 - (x + x)); /* Won't go outside 0f to 1f range. */
         long yFloor = (long)Math.floor(y);
         y -= yFloor;
-        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        y *= y * (3 - (y + y)); /* Won't go outside 0f to 1f range. */
         xFloor *= STEPX;
         yFloor *= STEPY;
         return ((1 - y) * ((1 - x) * hashPart(xFloor, yFloor, seed) + x * hashPart(xFloor + STEPX, yFloor, seed))
@@ -195,13 +195,13 @@ public class FoamNoise implements INoise {
         final long STEPZ = 0x8CB92BA72F3D8DD7L;
         long xFloor = (long)Math.floor(x);
         x -= xFloor;
-        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        x *= x * (3 - (x + x)); /* Won't go outside 0f to 1f range. */
         long yFloor = (long)Math.floor(y);
         y -= yFloor;
-        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        y *= y * (3 - (y + y)); /* Won't go outside 0f to 1f range. */
         long zFloor = (long)Math.floor(z);
         z -= zFloor;
-        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        z *= z * (3 - (z + z)); /* Won't go outside 0f to 1f range. */
         xFloor *= STEPX;
         yFloor *= STEPY;
         zFloor *= STEPZ;
@@ -310,16 +310,16 @@ public class FoamNoise implements INoise {
         final long STEPW = 0x89E182857D9ED689L;
         long xFloor = (long)Math.floor(x);
         x -= xFloor;
-        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        x *= x * (3 - (x + x)); /* Won't go outside 0f to 1f range. */
         long yFloor = (long)Math.floor(y);
         y -= yFloor;
-        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        y *= y * (3 - (y + y)); /* Won't go outside 0f to 1f range. */
         long zFloor = (long)Math.floor(z);
         z -= zFloor;
-        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        z *= z * (3 - (z + z)); /* Won't go outside 0f to 1f range. */
         long wFloor = (long)Math.floor(w);
         w -= wFloor;
-        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        w *= w * (3 - (w + w)); /* Won't go outside 0f to 1f range. */
         xFloor *= STEPX;
         yFloor *= STEPY;
         zFloor *= STEPZ;
@@ -457,19 +457,19 @@ public class FoamNoise implements INoise {
         final long STEPU = 0x881403B9339BD42DL;
         long xFloor = (long)Math.floor(x);
         x -= xFloor;
-        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        x *= x * (3 - (x + x)); /* Won't go outside 0f to 1f range. */
         long yFloor = (long)Math.floor(y);
         y -= yFloor;
-        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        y *= y * (3 - (y + y)); /* Won't go outside 0f to 1f range. */
         long zFloor = (long)Math.floor(z);
         z -= zFloor;
-        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        z *= z * (3 - (z + z)); /* Won't go outside 0f to 1f range. */
         long wFloor = (long)Math.floor(w);
         w -= wFloor;
-        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        w *= w * (3 - (w + w)); /* Won't go outside 0f to 1f range. */
         long uFloor = (long)Math.floor(u);
         u -= uFloor;
-        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
+        u *= u * (3 - (u + u)); /* Won't go outside 0f to 1f range. */
         //STEPX, STEPY, STEPZ, STEPW, STEPU
         xFloor *= STEPX;
         yFloor *= STEPY;
@@ -631,22 +631,22 @@ public class FoamNoise implements INoise {
         final long STEPV = 0x86D516E50B04AB1BL;
         long xFloor = (long)Math.floor(x);
         x -= xFloor;
-        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        x *= x * (3 - (x + x)); /* Won't go outside 0f to 1f range. */
         long yFloor = (long)Math.floor(y);
         y -= yFloor;
-        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        y *= y * (3 - (y + y)); /* Won't go outside 0f to 1f range. */
         long zFloor = (long)Math.floor(z);
         z -= zFloor;
-        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        z *= z * (3 - (z + z)); /* Won't go outside 0f to 1f range. */
         long wFloor = (long)Math.floor(w);
         w -= wFloor;
-        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        w *= w * (3 - (w + w)); /* Won't go outside 0f to 1f range. */
         long uFloor = (long)Math.floor(u);
         u -= uFloor;
-        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
+        u *= u * (3 - (u + u)); /* Won't go outside 0f to 1f range. */
         long vFloor = (long)Math.floor(v);
         v -= vFloor;
-        v *= v * (1 - v - v + 2); /* Won't go outside 0f to 1f range. */
+        v *= v * (3 - (v + v)); /* Won't go outside 0f to 1f range. */
         //STEPX, STEPY, STEPZ, STEPW, STEPU, STEPV
         xFloor *= STEPX;
         yFloor *= STEPY;
@@ -722,7 +722,7 @@ public class FoamNoise implements INoise {
                                 ))))))
         ) * 0x1p-64f + 0.5f;
     }
-    
+
     /**
      * Constants are from harmonious numbers, essentially negative integer powers of specific irrational numbers times
      * (2 to the 64).
@@ -864,25 +864,25 @@ public class FoamNoise implements INoise {
         final long STEPM = 0x85EB75C3024385C3L;
         long xFloor = (long)Math.floor(x);
         x -= xFloor;
-        x *= x * (1 - x - x + 2); /* Won't go outside 0f to 1f range. */
+        x *= x * (3 - (x + x)); /* Won't go outside 0f to 1f range. */
         long yFloor = (long)Math.floor(y);
         y -= yFloor;
-        y *= y * (1 - y - y + 2); /* Won't go outside 0f to 1f range. */
+        y *= y * (3 - (y + y)); /* Won't go outside 0f to 1f range. */
         long zFloor = (long)Math.floor(z);
         z -= zFloor;
-        z *= z * (1 - z - z + 2); /* Won't go outside 0f to 1f range. */
+        z *= z * (3 - (z + z)); /* Won't go outside 0f to 1f range. */
         long wFloor = (long)Math.floor(w);
         w -= wFloor;
-        w *= w * (1 - w - w + 2); /* Won't go outside 0f to 1f range. */
+        w *= w * (3 - (w + w)); /* Won't go outside 0f to 1f range. */
         long uFloor = (long)Math.floor(u);
         u -= uFloor;
-        u *= u * (1 - u - u + 2); /* Won't go outside 0f to 1f range. */
+        u *= u * (3 - (u + u)); /* Won't go outside 0f to 1f range. */
         long vFloor = (long)Math.floor(v);
         v -= vFloor;
-        v *= v * (1 - v - v + 2); /* Won't go outside 0f to 1f range. */
+        v *= v * (3 - (v + v)); /* Won't go outside 0f to 1f range. */
         long mFloor = (long)Math.floor(m);
         m -= mFloor;
-        m *= m * (1 - m - m + 2); /* Won't go outside 0f to 1f range. */
+        m *= m * (3 - (m + m)); /* Won't go outside 0f to 1f range. */
         //STEPX, STEPY, STEPZ, STEPW, STEPU, STEPV
         xFloor *= STEPX;
         yFloor *= STEPY;
@@ -1088,7 +1088,7 @@ public class FoamNoise implements INoise {
     public boolean hasEfficientSetSeed() {
         return true;
     }
-    
+
     public void setSeed(long seed) {
         this.seed = seed;
     }
