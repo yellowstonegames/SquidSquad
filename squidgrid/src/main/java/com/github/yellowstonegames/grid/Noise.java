@@ -1481,138 +1481,45 @@ public class Noise implements INoise {
      * @return noise as a float from -1f to 1f
      */
     public float getConfiguredNoise(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
         switch (noiseType) {
             case VALUE:
-                return singleValue(seed, x, y);
+                return getGeneral(this::singleValue, x, y);
             case VALUE_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleValueFractalBillow(x, y);
-                    case RIDGED_MULTI:
-                        return singleValueFractalRidgedMulti(x, y);
-                    case DOMAIN_WARP:
-                        return singleValueFractalDomainWarp(x, y);
-                    default:
-                        return singleValueFractalFBM(x, y);
-                }
+                return getGeneralFractal(this::singleValue, x, y);
             case FOAM:
-                return singleFoam(seed, x, y);
+                return getGeneral(this::singleFoam, x, y);
             case FOAM_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleFoamFractalBillow(x, y);
-                    case RIDGED_MULTI:
-                        return singleFoamFractalRidgedMulti(x, y);
-                    case DOMAIN_WARP:
-                        return singleFoamFractalDomainWarp(x, y);
-                    default:
-                        return singleFoamFractalFBM(x, y);
-                }
+                return getGeneralFractal(this::singleFoam, x, y);
             case MUTANT:
-                return singleFoam(seed, x, y, mutation);
+                return getGeneral(this::singleFoam, x, y, mutation);
             case MUTANT_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleFoamFractalBillow(x, y, mutation);
-                    case RIDGED_MULTI:
-                        return singleFoamFractalRidgedMulti(x, y, mutation);
-                    case DOMAIN_WARP:
-                        return singleFoamFractalDomainWarp(x, y, mutation);
-                    default:
-                        return singleFoamFractalFBM(x, y, mutation);
-                }
+                return getGeneralFractal(this::singleFoam, x, y, mutation);
             case TAFFY:
-                return singleTaffy(seed, x, y, mutation);
+                return getGeneral(this::singleTaffy, x, y, mutation);
             case TAFFY_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleTaffyFractalBillow(x, y, mutation);
-                    case RIDGED_MULTI:
-                        return singleTaffyFractalRidgedMulti(x, y, mutation);
-                    case DOMAIN_WARP:
-                        return singleTaffyFractalDomainWarp(x, y, mutation);
-                    default:
-                        return singleTaffyFractalFBM(x, y, mutation);
-                }
+                return getGeneralFractal(this::singleTaffy, x, y, mutation);
             case HONEY:
-                return singleHoney(seed, x, y);
+                return getGeneral(this::singleHoney, x, y);
             case HONEY_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleHoneyFractalBillow(x, y);
-                    case RIDGED_MULTI:
-                        return singleHoneyFractalRidgedMulti(x, y);
-                    case DOMAIN_WARP:
-                        return singleHoneyFractalDomainWarp(x, y);
-                    default:
-                        return singleHoneyFractalFBM(x, y);
-                }
+                return getGeneralFractal(this::singleHoney, x, y);
             case PERLIN:
-                return singlePerlin(seed, x, y);
+                return getGeneral(this::singlePerlin, x, y);
             case PERLIN_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singlePerlinFractalBillow(x, y);
-                    case RIDGED_MULTI:
-                        return singlePerlinFractalRidgedMulti(x, y);
-                    case DOMAIN_WARP:
-                        return singlePerlinFractalDomainWarp(x, y);
-                    default:
-                        return singlePerlinFractalFBM(x, y);
-                }
+                return getGeneralFractal(this::singlePerlin, x, y);
             case SIMPLEX_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleSimplexFractalBillow(x, y);
-                    case RIDGED_MULTI:
-                        return singleSimplexFractalRidgedMulti(x, y);
-                    case DOMAIN_WARP:
-                        return singleSimplexFractalDomainWarp(x, y);
-                    default:
-                        return singleSimplexFractalFBM(x, y);
-                }
+                return getGeneralFractal(this::singleSimplex, x, y);
             case CELLULAR:
-                switch (cellularReturnType) {
-                    case CELL_VALUE:
-                    case NOISE_LOOKUP:
-                    case DISTANCE:
-                        return singleCellular(seed, x, y);
-                    case DISTANCE_VALUE:
-                        return singleCellularMerging(seed, x, y);
-                    default:
-                        return singleCellular2Edge(seed, x, y);
-                }
+                return getGeneral(this::switchCellular, x, y);
             case CELLULAR_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleCellularFractalBillow(x, y);
-                    case RIDGED_MULTI:
-                        return singleCellularFractalRidgedMulti(x, y);
-                    case DOMAIN_WARP:
-                        return singleCellularFractalDomainWarp(x, y);
-                    default:
-                        return singleCellularFractalFBM(x, y);
-                }
+                return getGeneralFractal(this::switchCellular, x, y);
             case WHITE_NOISE:
-                return getWhiteNoise(x, y);
+                return getGeneral(this::getWhiteNoise, x, y);
             case CUBIC:
-                return singleCubic(seed, x, y);
+                return getGeneral(this::singleCubic, x, y);
             case CUBIC_FRACTAL:
-                switch (fractalType) {
-                    case BILLOW:
-                        return singleCubicFractalBillow(x, y);
-                    case RIDGED_MULTI:
-                        return singleCubicFractalRidgedMulti(x, y);
-                    case DOMAIN_WARP:
-                        return singleCubicFractalDomainWarp(x, y);
-                    default:
-                        return singleCubicFractalFBM(x, y);
-                }
+                return getGeneralFractal(this::singleCubic, x, y);
             default:
-                return singleSimplex(seed, x, y);
+                return getGeneral(this::singleSimplex, x, y);
         }
     }
 
