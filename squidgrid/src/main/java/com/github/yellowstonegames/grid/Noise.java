@@ -2332,11 +2332,10 @@ public class Noise implements INoise {
 
     protected float singleValueFractalRidgedMulti(float x, float y) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleValue(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+        float sum = (1 - Math.abs(singleValue(seed, x, y)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX2D(x, y);
                 final float y2 = rotateY2D(x, y);
@@ -2344,8 +2343,11 @@ public class Noise implements INoise {
             }
             x *= lacunarity;
             y *= lacunarity;
+            amp *= gain;
+            sum += (1 - Math.abs(singleValue(++seed, x, y)) * 2) * amp;
         }
-        return sum * 2f / correction - 1f;
+
+        return sum * fractalBounding;
     }
 
     public float getValue(float x, float y) {
@@ -2486,11 +2488,10 @@ public class Noise implements INoise {
 
     protected float singleValueFractalRidgedMulti(float x, float y, float z) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleValue(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+        float sum = (1 - Math.abs(singleValue(seed, x, y, z)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX3D(x, y, z);
                 final float y2 = rotateY3D(x, y, z);
@@ -2500,8 +2501,12 @@ public class Noise implements INoise {
             x *= lacunarity;
             y *= lacunarity;
             z *= lacunarity;
+
+            amp *= gain;
+            sum += (1 - Math.abs(singleValue(++seed, x, y, z)) * 2) * amp;
         }
-        return sum * 2f / correction - 1f;
+
+        return sum * fractalBounding;
     }
 
     public float getValue(float x, float y, float z) {
@@ -2669,11 +2674,10 @@ public class Noise implements INoise {
 
     protected float singleValueFractalRidgedMulti(float x, float y, float z, float w) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+        float sum = (1 - Math.abs(singleValue(seed, x, y, z, w)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX4D(x, y, z, w);
                 final float y2 = rotateY4D(x, y, z, w);
@@ -2685,8 +2689,12 @@ public class Noise implements INoise {
             y *= lacunarity;
             z *= lacunarity;
             w *= lacunarity;
+
+            amp *= gain;
+            sum += (1 - Math.abs(singleValue(++seed, x, y, z, w)) * 2) * amp;
         }
-        return sum * 2f / correction - 1f;
+
+        return sum * fractalBounding;
     }
 
     public float getValue(float x, float y, float z, float w) {
@@ -2878,11 +2886,10 @@ public class Noise implements INoise {
 
     protected float singleValueFractalRidgedMulti(float x, float y, float z, float w, float u) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+        float sum = (1 - Math.abs(singleValue(seed, x, y, z, w, u)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX5D(x, y, z, w, u);
                 final float y2 = rotateY5D(x, y, z, w, u);
@@ -2896,8 +2903,12 @@ public class Noise implements INoise {
             z *= lacunarity;
             w *= lacunarity;
             u *= lacunarity;
+
+            amp *= gain;
+            sum += (1 - Math.abs(singleValue(++seed, x, y, z, w, u)) * 2) * amp;
         }
-        return sum * 2f / correction - 1f;
+
+        return sum * fractalBounding;
     }
 
     public float getValue(float x, float y, float z, float w, float u) {
@@ -3143,11 +3154,10 @@ public class Noise implements INoise {
 
     protected float singleValueFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
         int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleValue(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
+        float sum = (1 - Math.abs(singleValue(seed, x, y, z, w, u, v)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
             if(fractalSpiral){
                 final float x2 = rotateX6D(x, y, z, w, u, v);
                 final float y2 = rotateY6D(x, y, z, w, u, v);
@@ -3163,8 +3173,12 @@ public class Noise implements INoise {
             w *= lacunarity;
             u *= lacunarity;
             v *= lacunarity;
+
+            amp *= gain;
+            sum += (1 - Math.abs(singleValue(++seed, x, y, z, w, u, v)) * 2) * amp;
         }
-        return sum * 2f / correction - 1f;
+
+        return sum * fractalBounding;
     }
 
     public float getValue(float x, float y, float z, float w, float u, float v) {
