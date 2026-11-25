@@ -1448,7 +1448,7 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
                 final float w2 = rotateW7D(x, y, z, w, u, v, m);
                 final float u2 = rotateU7D(x, y, z, w, u, v, m);
                 final float v2 = rotateV7D(x, y, z, w, u, v, m);
-                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
             x *= 2f;
@@ -1492,7 +1492,7 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
                 final float w2 = rotateW7D(x, y, z, w, u, v, m);
                 final float u2 = rotateU7D(x, y, z, w, u, v, m);
                 final float v2 = rotateV7D(x, y, z, w, u, v, m);
-                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
             x *= 2f;
@@ -1537,7 +1537,7 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
                 final float w2 = rotateW7D(x, y, z, w, u, v, m);
                 final float u2 = rotateU7D(x, y, z, w, u, v, m);
                 final float v2 = rotateV7D(x, y, z, w, u, v, m);
-                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
             x *= 2f;
@@ -1577,7 +1577,7 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
                 final float w2 = rotateW7D(x, y, z, w, u, v, m);
                 final float u2 = rotateU7D(x, y, z, w, u, v, m);
                 final float v2 = rotateV7D(x, y, z, w, u, v, m);
-                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
             x *= 2f;
@@ -1630,7 +1630,7 @@ public class NoiseWrapper implements INoise, ISerializersNeeded {
                 final float w2 = rotateW7D(x, y, z, w, u, v, m);
                 final float u2 = rotateU7D(x, y, z, w, u, v, m);
                 final float v2 = rotateV7D(x, y, z, w, u, v, m);
-                final float m2 = rotateV7D(x, y, z, w, u, v, m);
+                final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
             float striation2 = wrapped.getNoiseWithSeed(x * 0.125f, y * 0.125f, z * 0.125f, w * 0.125f, u * 0.125f, v * 0.125f, m * 0.125f, seed + i + 3333);
