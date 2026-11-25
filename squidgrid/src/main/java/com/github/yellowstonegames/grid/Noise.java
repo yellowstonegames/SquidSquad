@@ -2118,6 +2118,298 @@ public class Noise implements INoise {
         }
     }
 
+    // General fractal type functions
+
+
+    protected float fractalFBM(NoiseFunction2D function, float x, float y) {
+        int seed = this.seed;
+        float sum = function.singleNoise(seed, x, y);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+
+            amp *= gain;
+            sum += function.singleNoise(++seed, x, y) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalDomainWarp(NoiseFunction2D function, float x, float y) {
+        int seed = this.seed;
+        float latest = function.singleNoise(seed, x, y);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx],
+                b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = function.singleNoise(++seed, x + a, y + b)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalBillow(NoiseFunction2D function, float x, float y) {
+        int seed = this.seed;
+        float sum = Math.abs(function.singleNoise(seed, x, y)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            amp *= gain;
+            sum += (Math.abs(function.singleNoise(++seed, x, y)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalRidgedMulti(NoiseFunction2D function, float x, float y) {
+        int seed = this.seed;
+        float sum = (1 - Math.abs(function.singleNoise(seed, x, y)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX2D(x, y);
+                final float y2 = rotateY2D(x, y);
+                x = x2; y = y2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            amp *= gain;
+            sum += (1 - Math.abs(function.singleNoise(++seed, x, y)) * 2) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+
+    protected float fractalFBM(NoiseFunction3D function, float x, float y, float z) {
+        int seed = this.seed;
+        float sum = function.singleNoise(seed, x, y, z);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += function.singleNoise(++seed, x, y, z) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    protected float fractalDomainWarp(NoiseFunction3D function, float x, float y, float z) {
+        int seed = this.seed;
+        float latest = function.singleNoise(seed, x, y, z);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = function.singleNoise(++seed, x + a, y + b, z + c)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+
+    protected float fractalBillow(NoiseFunction3D function, float x, float y, float z) {
+        int seed = this.seed;
+        float sum = Math.abs(function.singleNoise(seed, x, y, z)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(function.singleNoise(++seed, x, y, z)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalRidgedMulti(NoiseFunction3D function, float x, float y, float z) {
+        int seed = this.seed;
+        float sum = (1 - Math.abs(function.singleNoise(seed, x, y, z)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX3D(x, y, z);
+                final float y2 = rotateY3D(x, y, z);
+                final float z2 = rotateZ3D(x, y, z);
+                x = x2; y = y2; z = z2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+
+            amp *= gain;
+            sum += (1 - Math.abs(function.singleNoise(++seed, x, y, z)) * 2) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalFBM(NoiseFunction4D function, float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = function.singleNoise(seed, x, y, z, w);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += function.singleNoise(++seed, x, y, z, w) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    protected float fractalDomainWarp(NoiseFunction4D function, float x, float y, float z, float w) {
+        int seed = this.seed;
+        float latest = function.singleNoise(seed, x, y, z, w);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 4) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = function.singleNoise(++seed, x + a, y + b, z + c, w + d)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalBillow(NoiseFunction4D function, float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = Math.abs(function.singleNoise(seed, x, y, z, w)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(function.singleNoise(++seed, x, y, z, w)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalRidgedMulti(NoiseFunction4D function, float x, float y, float z, float w) {
+        int seed = this.seed;
+        float sum = (1 - Math.abs(function.singleNoise(seed, x, y, z, w)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            if(fractalSpiral){
+                final float x2 = rotateX4D(x, y, z, w);
+                final float y2 = rotateY4D(x, y, z, w);
+                final float z2 = rotateZ4D(x, y, z, w);
+                final float w2 = rotateW4D(x, y, z, w);
+                x = x2; y = y2; z = z2; w = w2;
+            }
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+
+            amp *= gain;
+            sum += (1 - Math.abs(function.singleNoise(++seed, x, y, z, w)) * 2) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
     // White Noise
 
     private int floatToIntMixed(final float f) {
@@ -10334,4 +10626,27 @@ public class Noise implements INoise {
     public static final float G6 = (float)(F6 / (1.0 + 6.0 * F6));
     public static final float LIMIT6 = 0.69f;
 
+    // Functional Interfaces
+    // These are used internally so we only need to define each fractal type once per dimension, instead of
+    // once per noise type per dimension.
+
+    protected interface NoiseFunction2D {
+        float singleNoise(int seed, float x, float y);
+    }
+
+    protected interface NoiseFunction3D {
+        float singleNoise(int seed, float x, float y, float z);
+    }
+
+    protected interface NoiseFunction4D {
+        float singleNoise(int seed, float x, float y, float z, float w);
+    }
+
+    protected interface NoiseFunction5D {
+        float singleNoise(int seed, float x, float y, float z, float w, float u);
+    }
+
+    protected interface NoiseFunction6D {
+        float singleNoise(int seed, float x, float y, float z, float w, float u, float v);
+    }
 }
