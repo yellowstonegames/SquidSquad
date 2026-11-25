@@ -3328,10 +3328,6 @@ public class Noise implements INoise {
 
     // Foam Noise
 
-    public float getFoam(float x, float y) {
-        return singleFoam(seed, x * frequency, y * frequency);
-    }
-
     public float singleFoam(int seed, float x, float y) {
         final float p0 = x;
         final float p1 = x * -0.5f + y * 0.8660254037844386f;
@@ -3357,178 +3353,11 @@ public class Noise implements INoise {
     }
 
     public float getFoamFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleFoamFractalFBM(x, y);
-            case BILLOW:
-                return singleFoamFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singleFoamFractalRidgedMulti(x, y);
-            default:
-                return 0;
-        }
+        return getGeneralFractal(this::singleFoam, x, y);
     }
 
-    protected float singleFoamFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleFoam(seed, x, y);
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += singleFoam(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleFoamFractalDomainWarp(float x, float y) {
-        int seed = this.seed;
-        float latest = singleFoam(seed, x, y);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx],
-                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleFoam(++seed, x + a, y + b)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleFoam(seed, x, y)) * 2 - 1;
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleFoam(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float t;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleFoam(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-
-    public float getFoamFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleFoamFractalFBM(x, y, z);
-            case BILLOW:
-                return singleFoamFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singleFoamFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleFoamFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleFoam(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleFoam(++seed, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleFoamFractalDomainWarp(float x, float y, float z) {
-        int seed = this.seed;
-        float latest = singleFoam(seed, x, y, z);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleFoam(++seed, x + a, y + b, z + c)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleFoam(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleFoam(++seed, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleFoam(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getFoam(float x, float y, float z) {
-        return singleFoam(seed, x * frequency, y * frequency, z * frequency);
+    public float getFoam(float x, float y) {
+        return getGeneral(this::singleFoam, x, y);
     }
 
     public float singleFoam(int seed, float x, float y, float z){
@@ -3562,86 +3391,14 @@ public class Noise implements INoise {
         final float diff = 0.5f - result;
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
-
     }
 
-
-    protected float singleFoamFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singleFoam(seed, x, y, z, w);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singleFoam(++seed, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float latest = singleFoam(seed, x, y, z, w);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 4) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getFoamFractal(float x, float y, float z) {
+        return getGeneralFractal(this::singleFoam, x, y, z);
     }
 
-    protected float singleFoamFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singleFoam(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleFoam(++seed, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleFoam(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getFoam(float x, float y, float z, float w) {
-        return singleFoam(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+    public float getFoam(float x, float y, float z) {
+        return getGeneral(this::singleFoam, x, y, z);
     }
 
     public float singleFoam(int seed, float x, float y, float z, float w) {
@@ -3687,107 +3444,13 @@ public class Noise implements INoise {
         final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
-    public float getFoamFractal(float x, float y, float z, float w, float u) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
 
-        switch (fractalType) {
-            case FBM:
-                return singleFoamFractalFBM(x, y, z, w, u);
-            case BILLOW:
-                return singleFoamFractalBillow(x, y, z, w, u);
-            case RIDGED_MULTI:
-                return singleFoamFractalRidgedMulti(x, y, z, w, u);
-            default:
-                return 0;
-        }
+    public float getFoamFractal(float x, float y, float z, float w) {
+        return getGeneralFractal(this::singleFoam, x, y, z, w);
     }
 
-    protected float singleFoamFractalFBM(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = singleFoam(seed, x, y, z, w, u);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += singleFoam(seed + i, x, y, z, w, u) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float latest = singleFoam(seed, x, y, z, w, u);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-
-    protected float singleFoamFractalBillow(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = Math.abs(singleFoam(seed, x, y, z, w, u)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleFoam(seed + i, x, y, z, w, u)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getFoam(float x, float y, float z, float w, float u) {
-        return singleFoam(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
+    public float getFoam(float x, float y, float z, float w) {
+        return getGeneral(this::singleFoam, x, y, z, w);
     }
 
     public float singleFoam(int seed, float x, float y, float z, float w, float u) {
@@ -3852,113 +3515,12 @@ public class Noise implements INoise {
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    public float getFoamFractal(float x, float y, float z, float w, float u, float v) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
-        v *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleFoamFractalFBM(x, y, z, w, u, v);
-            case BILLOW:
-                return singleFoamFractalBillow(x, y, z, w, u, v);
-            case RIDGED_MULTI:
-                return singleFoamFractalRidgedMulti(x, y, z, w, u, v);
-            default:
-                return 0;
-        }
+    public float getFoamFractal(float x, float y, float z, float w, float u) {
+        return getGeneralFractal(this::singleFoam, x, y, z, w, u);
     }
 
-    protected float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = singleFoam(seed, x, y, z, w, u, v);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += singleFoam(++seed, x, y, z, w, u, v) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float latest = singleFoam(seed, x, y, z, w, u, v);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            v = v * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
-            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = Math.abs(singleFoam(seed, x, y, z, w, u, v)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleFoam(++seed, x, y, z, w, u, v)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getFoam(float x, float y, float z, float w, float u, float v) {
-        return singleFoam(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
+    public float getFoam(float x, float y, float z, float w, float u) {
+        return getGeneral(this::singleFoam, x, y, z, w, u);
     }
 
     public float singleFoam(int seed, float x, float y, float z, float w, float u, float v) {
@@ -4031,93 +3593,12 @@ public class Noise implements INoise {
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    protected float singleFoamFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = singleFoam(seed, x, y, z, w, u, v, m);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-
-            amp *= gain;
-            sum += singleFoam(++seed, x, y, z, w, u, v, m) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleFoamFractalDomainWarp(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float latest = singleFoam(seed, x, y, z, w, u, v, m);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            v = v * lacunarity;
-            m = m * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 7) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 7) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 7) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 7) & TrigTools.TABLE_MASK];
-            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 7) & TrigTools.TABLE_MASK];
-            float g = TrigTools.SIN_TABLE[idx + (8192 * 6 / 7) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d, u + e, v + f, m + g)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getFoamFractal(float x, float y, float z, float w, float u, float v) {
+        return getGeneralFractal(this::singleFoam, x, y, z, w, u, v);
     }
 
-    protected float singleFoamFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = Math.abs(singleFoam(seed, x, y, z, w, u, v, m)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleFoam(++seed, x, y, z, w, u, v, m)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleFoamFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleFoam(seed + i, x, y, z, w, u, v, m));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
+    public float getFoam(float x, float y, float z, float w, float u, float v) {
+        return getGeneral(this::singleFoam, x, y, z, w, u, v);
     }
 
     public float singleFoam(int seed, float x, float y, float z, float w, float u, float v, float m) {
@@ -4207,11 +3688,15 @@ public class Noise implements INoise {
         return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    // Taffy Noise
-
-    public float getTaffy(float x, float y) {
-        return singleTaffy(seed, x * frequency, y * frequency);
+    public float getFoamFractal(float x, float y, float z, float w, float u, float v, float m) {
+        return getGeneralFractal(this::singleFoam, x, y, z, w, u, v, m);
     }
+
+    public float getFoam(float x, float y, float z, float w, float u, float v, float m) {
+        return getGeneral(this::singleFoam, x, y, z, w, u, v, m);
+    }
+
+    // Taffy Noise
 
     protected float trillNoise(int seed, float x, float y) {
         int sx = seed, sy = (seed << 13 | seed >>> 19) + 1234567;
@@ -4529,161 +4014,12 @@ public class Noise implements INoise {
 //        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
+    public float getTaffy(float x, float y) {
+        return getGeneral(this::singleTaffy, x, y);
+    }
+
     public float getTaffyFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleTaffyFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y);
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleTaffyFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y)) * 2 - 1;
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleTaffyFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float t;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-
-    public float getTaffyFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y, z);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleTaffyFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleTaffyFractalDomainWarp(float x, float y, float z) {
-        int seed = this.seed;
-        float latest = singleTaffy(seed, x, y, z);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-
-    protected float singleTaffyFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleTaffyFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getTaffy(float x, float y, float z) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency);
+        return getGeneralFractal(this::singleTaffy, x, y);
     }
 
     public float singleTaffy(int seed, float x, float y, float z){
@@ -4724,100 +4060,12 @@ public class Noise implements INoise {
 //        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-
-    protected float singleTaffyFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float latest = singleTaffy(seed, x, y, z, w);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 4) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c, w + d)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getTaffy(float x, float y, float z) {
+        return getGeneral(this::singleTaffy, x, y, z);
     }
 
-    protected float singleTaffyFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-    public float getTaffyFractal(float x, float y, float z, float w) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y, z, w);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y, z, w);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y, z, w);
-            default:
-                return 0;
-        }
-    }
-
-    public float getTaffy(float x, float y, float z, float w) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+    public float getTaffyFractal(float x, float y, float z) {
+        return getGeneralFractal(this::singleTaffy, x, y, z);
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w) {
@@ -4869,107 +4117,13 @@ public class Noise implements INoise {
 //        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
 //        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
-    public float getTaffyFractal(float x, float y, float z, float w, float u) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
 
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y, z, w, u);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y, z, w, u);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y, z, w, u);
-            default:
-                return 0;
-        }
+    public float getTaffy(float x, float y, float z, float w) {
+        return getGeneral(this::singleTaffy, x, y, z, w);
     }
 
-    protected float singleTaffyFractalFBM(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w, u);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(seed + i, x, y, z, w, u) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float latest = singleTaffy(seed, x, y, z, w, u);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-
-    protected float singleTaffyFractalBillow(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(seed + i, x, y, z, w, u)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getTaffy(float x, float y, float z, float w, float u) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
+    public float getTaffyFractal(float x, float y, float z, float w) {
+        return getGeneralFractal(this::singleTaffy, x, y, z, w);
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u) {
@@ -5041,113 +4195,12 @@ public class Noise implements INoise {
 //        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    public float getTaffyFractal(float x, float y, float z, float w, float u, float v) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
-        v *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleTaffyFractalFBM(x, y, z, w, u, v);
-            case BILLOW:
-                return singleTaffyFractalBillow(x, y, z, w, u, v);
-            case RIDGED_MULTI:
-                return singleTaffyFractalRidgedMulti(x, y, z, w, u, v);
-            default:
-                return 0;
-        }
+    public float getTaffy(float x, float y, float z, float w, float u) {
+        return getGeneral(this::singleTaffy, x, y, z, w, u);
     }
 
-    protected float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w, u, v);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z, w, u, v) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float latest = singleTaffy(seed, x, y, z, w, u, v);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            v = v * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
-            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-
-    protected float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z, w, u, v)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getTaffy(float x, float y, float z, float w, float u, float v) {
-        return singleTaffy(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
+    public float getTaffyFractal(float x, float y, float z, float w, float u) {
+        return getGeneralFractal(this::singleTaffy, x, y, z, w, u);
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v) {
@@ -5229,93 +4282,12 @@ public class Noise implements INoise {
 //        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
     }
 
-    protected float singleTaffyFractalFBM(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = singleTaffy(seed, x, y, z, w, u, v, m);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-
-            amp *= gain;
-            sum += singleTaffy(++seed, x, y, z, w, u, v, m) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleTaffyFractalDomainWarp(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float latest = singleTaffy(seed, x, y, z, w, u, v, m);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            v = v * lacunarity;
-            m = m * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 7) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 7) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 7) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 7) & TrigTools.TABLE_MASK];
-            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 7) & TrigTools.TABLE_MASK];
-            float g = TrigTools.SIN_TABLE[idx + (8192 * 6 / 7) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleTaffy(++seed, x + a, y + b, z + c, w + d, u + e, v + f, m + g)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getTaffy(float x, float y, float z, float w, float u, float v) {
+        return getGeneral(this::singleTaffy, x, y, z, w, u, v);
     }
 
-    protected float singleTaffyFractalBillow(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = Math.abs(singleTaffy(seed, x, y, z, w, u, v, m)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleTaffy(++seed, x, y, z, w, u, v, m)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleTaffyFractalRidgedMulti(float x, float y, float z, float w, float u, float v, float m) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleTaffy(seed + i, x, y, z, w, u, v, m));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-            m *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
+    public float getTaffyFractal(float x, float y, float z, float w, float u, float v) {
+        return getGeneralFractal(this::singleTaffy, x, y, z, w, u, v);
     }
 
     public float singleTaffy(int seed, float x, float y, float z, float w, float u, float v, float m) {
@@ -5413,6 +4385,14 @@ public class Noise implements INoise {
 //        final float diff = 0.5f - result;
 //        final int sign = BitConversion.floatToRawIntBits(diff) >> 31, one = sign | 1;
 //        return (((result + sign)) / (Float.MIN_VALUE - sign + (result + sharp * diff) * one) - sign - sign) - 1f;
+    }
+
+    public float getTaffy(float x, float y, float z, float w, float u, float v, float m) {
+        return getGeneral(this::singleTaffy, x, y, z, w, u, v, m);
+    }
+
+    public float getTaffyFractal(float x, float y, float z, float w, float u, float v, float m) {
+        return getGeneralFractal(this::singleTaffy, x, y, z, w, u, v, m);
     }
 
 
