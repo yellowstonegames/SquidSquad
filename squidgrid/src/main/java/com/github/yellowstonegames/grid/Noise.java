@@ -4395,112 +4395,7 @@ public class Noise implements INoise {
         return getGeneralFractal(this::singleTaffy, x, y, z, w, u, v, m);
     }
 
-
     // Classic Perlin Noise
-    public float getPerlinFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case DOMAIN_WARP:
-                return singlePerlinFractalDomainWarp(x, y);
-            case BILLOW:
-                return singlePerlinFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singlePerlinFractalRidgedMulti(x, y);
-            default:
-                return singlePerlinFractalFBM(x, y);
-        }
-    }
-
-    protected float singlePerlinFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singlePerlin(seed, x, y);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += singlePerlin(++seed, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalDomainWarp(float x, float y) {
-        int seed = this.seed;
-        float latest = singlePerlin(seed, x, y);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx],
-                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singlePerlin(++seed, x + a, y + b)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singlePerlin(seed, x, y)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singlePerlin(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singlePerlin(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getPerlin(float x, float y) {
-        return singlePerlin(seed, x * frequency, y * frequency);
-    }
 
     protected float singlePerlin(int seed, float x, float y) {
         int x0 = fastFloor(x);
@@ -4536,119 +4431,12 @@ public class Noise implements INoise {
         return equalize(lerp(xf0, xf1, ys) * SCALE2, ADD2, MUL2);
     }
 
-    public float getPerlinFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singlePerlinFractalFBM(x, y, z);
-            case BILLOW:
-                return singlePerlinFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singlePerlinFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
+    public float getPerlinFractal(float x, float y) {
+        return getGeneralFractal(this::singlePerlin, x, y);
     }
 
-    protected float singlePerlinFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singlePerlin(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singlePerlin(++seed, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalDomainWarp(float x, float y, float z) {
-        int seed = this.seed;
-        float latest = singlePerlin(seed, x, y, z);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singlePerlin(++seed, x + a, y + b, z + c)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singlePerlin(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singlePerlin(++seed, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singlePerlin(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getPerlin(float x, float y, float z) {
-        return singlePerlin(seed, x * frequency, y * frequency, z * frequency);
+    public float getPerlin(float x, float y) {
+        return getGeneral(this::singlePerlin, x, y);
     }
 
     protected float singlePerlin(int seed, float x, float y, float z) {
@@ -4696,8 +4484,13 @@ public class Noise implements INoise {
 
         return equalize(lerp(yf0, yf1, zs) * SCALE3, ADD3, MUL3);
     }
-    public float getPerlin(float x, float y, float z, float w) {
-        return singlePerlin(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+
+    public float getPerlinFractal(float x, float y, float z) {
+        return getGeneralFractal(this::singlePerlin, x, y, z);
+    }
+
+    public float getPerlin(float x, float y, float z) {
+        return getGeneral(this::singlePerlin, x, y, z);
     }
 
     protected float singlePerlin(int seed, float x, float y, float z, float w) {
@@ -4760,113 +4553,14 @@ public class Noise implements INoise {
         final float zf1 = lerp(yf01, yf11, zs);
         return equalize(lerp(zf0, zf1, ws) * SCALE4, ADD4, MUL4);
     }
-    protected float singlePerlinFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singlePerlin(seed, x, y, z, w);
-        float amp = 1;
 
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singlePerlin(++seed, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singlePerlinFractalDomainWarp(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float latest = singlePerlin(seed, x, y, z, w);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 4) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singlePerlin(++seed, x + a, y + b, z + c, w + d)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getPerlinFractal(float x, float y, float z, float w) {
+        return getGeneralFractal(this::singlePerlin, x, y, z, w);
     }
 
-    protected float singlePerlinFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singlePerlin(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singlePerlin(++seed, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getPerlin(float x, float y, float z, float w) {
+        return getGeneral(this::singlePerlin, x, y, z, w);
     }
-
-    protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singlePerlin(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getPerlin(float x, float y, float z, float w, float u) {
-        return singlePerlin(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
-    }
-
-//    public float minBound = -1f, maxBound = 1f;
 
     protected float singlePerlin(int seed, float x, float y, float z, float w, float u) {
         int x0 = fastFloor(x);
@@ -4953,127 +4647,13 @@ public class Noise implements INoise {
 
         return equalize(lerp(wf0, wf1, us) * SCALE5, ADD5, MUL5);
     }
-    protected float singlePerlinFractalFBM(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float sum = singlePerlin(seed, x, y, z, w, u);
-        float amp = 1;
 
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += singlePerlin(seed + i, x, y, z, w, u) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float latest = singlePerlin(seed, x, y, z, w, u);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singlePerlin(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getPerlinFractal(float x, float y, float z, float w, float u) {
+        return getGeneralFractal(this::singlePerlin, x, y, z, w, u);
     }
 
-    protected float singlePerlinFractalBillow(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float sum = Math.abs(singlePerlin(seed, x, y, z, w, u)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singlePerlin(seed + i, x, y, z, w, u)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singlePerlin(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-
-
-
-
-
-
-
-
-    public float getPerlin(float x, float y, float z, float w, float u, float v) {
-        return singlePerlin(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
+    public float getPerlin(float x, float y, float z, float w, float u) {
+        return getGeneral(this::singlePerlin, x, y, z, w, u);
     }
 
     protected float singlePerlin(int seed, float x, float y, float z, float w, float u, float v) {
@@ -5210,143 +4790,16 @@ public class Noise implements INoise {
 
         return equalize(lerp(uf0, uf1, vs) * SCALE6, ADD6, MUL6);
     }
-    protected float singlePerlinFractalFBM(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = singlePerlin(seed, x, y, z, w, u, v);
-        float amp = 1;
 
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += singlePerlin(++seed, x, y, z, w, u, v) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singlePerlinFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float latest = singlePerlin(seed, x, y, z, w, u, v);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            v = v * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
-            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singlePerlin(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getPerlinFractal(float x, float y, float z, float w, float u, float v) {
+        return getGeneralFractal(this::singlePerlin, x, y, z, w, u, v);
     }
 
-    protected float singlePerlinFractalBillow(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = Math.abs(singlePerlin(seed, x, y, z, w, u, v)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singlePerlin(++seed, x, y, z, w, u, v)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singlePerlin(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
+    public float getPerlin(float x, float y, float z, float w, float u, float v) {
+        return getGeneral(this::singlePerlin, x, y, z, w, u, v);
     }
 
     // 2D Simplex
-
-    public float getSimplexFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleSimplexFractalFBM(x, y);
-            case BILLOW:
-                return singleSimplexFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singleSimplexFractalRidgedMulti(x, y);
-            default:
-                return 0;
-        }
-    }
 
     /**
      * Generates FBM simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
@@ -5508,94 +4961,6 @@ public class Noise implements INoise {
         return sum * 2f / correction - 1f;
     }
 
-    protected float singleSimplexFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleSimplexFractalDomainWarp(float x, float y) {
-        int seed = this.seed;
-        float latest = singleSimplex(seed, x, y);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx],
-                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleSimplex(++seed, x + a, y + b)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleSimplexFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleSimplexFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getSimplex(float x, float y) {
-        return singleSimplex(seed, x * frequency, y * frequency);
-    }
-
     public float singleSimplex(int seed, float x, float y) {
         float t = (x + y) * F2;
         int i = fastFloor(x + t);
@@ -5644,23 +5009,15 @@ public class Noise implements INoise {
         return n * 99.20689070704672f; // this is 99.83685446303647 / 1.00635 ; the first number was found by kdotjpg
     }
 
-    // 3D Simplex
-    public float getSimplexFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleSimplexFractalFBM(x, y, z);
-            case BILLOW:
-                return singleSimplexFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singleSimplexFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
+    public float getSimplexFractal(float x, float y) {
+        return getGeneralFractal(this::singleSimplex, x, y);
     }
+
+    public float getSimplex(float x, float y) {
+        return getGeneral(this::singleSimplex, x, y);
+    }
+
+    // 3D Simplex
 
     /**
      * Generates FBM simplex noise with the given amount of octaves and default frequency (0.03125), lacunarity
@@ -5849,103 +5206,6 @@ public class Noise implements INoise {
         return sum * 2f / correction - 1f;
     }
 
-    protected float singleSimplexFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleSimplexFractalDomainWarp(float x, float y, float z) {
-        int seed = this.seed;
-        float latest = singleSimplex(seed, x, y, z);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleSimplex(++seed, x + a, y + b, z + c)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleSimplexFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(seed + i, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleSimplexFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getSimplex(float x, float y, float z) {
-        return singleSimplex(seed, x * frequency, y * frequency, z * frequency);
-    }
-
     public float singleSimplex(int seed, float x, float y, float z) {
         float t = (x + y + z) * F3;
         int i = fastFloor(x + t);
@@ -6050,131 +5310,15 @@ public class Noise implements INoise {
         return 39.59758f * n;
     }
 
+    public float getSimplexFractal(float x, float y, float z) {
+        return getGeneralFractal(this::singleSimplex, x, y, z);
+    }
+
+    public float getSimplex(float x, float y, float z) {
+        return getGeneral(this::singleSimplex, x, y, z);
+    }
+
     // 4D Simplex
-
-    public float getSimplexFractal(float x, float y, float z, float w) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleSimplexFractalFBM(x, y, z, w);
-            case BILLOW:
-                return singleSimplexFractalBillow(x, y, z, w);
-            case RIDGED_MULTI:
-                return singleSimplexFractalRidgedMulti(x, y, z, w);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleSimplexFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y, z, w);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleSimplexFractalDomainWarp(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float latest = singleSimplex(seed, x, y, z, w);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 4) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleSimplex(++seed, x + a, y + b, z + c, w + d)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleSimplexFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    protected float singleSimplexFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(seed + i, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    public float getSimplex(float x, float y, float z, float w) {
-        return singleSimplex(seed, x * frequency, y * frequency, z * frequency, w * frequency);
-    }
 
     public float singleSimplex(int seed, float x, float y, float z, float w) {
         float skew = (x + y + z + w) * F4;
@@ -6281,142 +5425,15 @@ public class Noise implements INoise {
 //        return t / (0.3f * Math.abs(t) + (1f - 0.3f));// gain function for [-1, 1] domain and range
     }
 
+    public float getSimplexFractal(float x, float y, float z, float w) {
+        return getGeneralFractal(this::singleSimplex, x, y, z, w);
+    }
+
+    public float getSimplex(float x, float y, float z, float w) {
+        return getGeneral(this::singleSimplex, x, y, z, w);
+    }
+
     // 5D Simplex
-
-    public float getSimplex(float x, float y, float z, float w, float u) {
-        return singleSimplex(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
-    }
-    // Simplex Noise
-    public float getSimplexFractal(float x, float y, float z, float w, float u) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleSimplexFractalFBM(x, y, z, w, u);
-            case BILLOW:
-                return singleSimplexFractalBillow(x, y, z, w, u);
-            case RIDGED_MULTI:
-                return singleSimplexFractalRidgedMulti(x, y, z, w, u);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleSimplexFractalFBM(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y, z, w, u);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y, z, w, u) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleSimplexFractalDomainWarp(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float latest = singleSimplex(seed, x, y, z, w, u);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleSimplex(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-
-    protected float singleSimplexFractalRidgedMulti(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    protected float singleSimplexFractalBillow(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y, z, w, u)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(seed + i, x, y, z, w, u)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
 
     public float singleSimplex(int seed, float x, float y, float z, float w, float u) {
         float n0, n1, n2, n3, n4, n5;
@@ -6563,151 +5580,15 @@ public class Noise implements INoise {
 //        return t / (0.5f * Math.abs(t) + (1f - 0.5f));// gain function for [-1, 1] domain and range
     }
 
+    public float getSimplexFractal(float x, float y, float z, float w, float u) {
+        return getGeneralFractal(this::singleSimplex, x, y, z, w, u);
+    }
+
+    public float getSimplex(float x, float y, float z, float w, float u) {
+        return getGeneral(this::singleSimplex, x, y, z, w, u);
+    }
+
     // 6D Simplex
-
-    public float getSimplex(float x, float y, float z, float w, float u, float v) {
-        return singleSimplex(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
-    }
-
-    public float getSimplexFractal(float x, float y, float z, float w, float u, float v) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
-        v *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleSimplexFractalFBM(x, y, z, w, u, v);
-            case BILLOW:
-                return singleSimplexFractalBillow(x, y, z, w, u, v);
-            case RIDGED_MULTI:
-                return singleSimplexFractalRidgedMulti(x, y, z, w, u, v);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleSimplexFractalFBM(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = singleSimplex(seed, x, y, z, w, u, v);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += singleSimplex(seed + i, x, y, z, w, u, v) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleSimplexFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float latest = singleSimplex(seed, x, y, z, w, u, v);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            v = v * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
-            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleSimplex(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleSimplexFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleSimplex(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    protected float singleSimplexFractalBillow(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = Math.abs(singleSimplex(seed, x, y, z, w, u, v)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleSimplex(seed + i, x, y, z, w, u, v)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
 
     public float singleSimplex(int seed, float x, float y, float z, float w, float u, float v) {
         float n0, n1, n2, n3, n4, n5, n6;
@@ -6894,118 +5775,15 @@ public class Noise implements INoise {
 //        return t / (0.7f * Math.abs(t) + (1f - 0.7f));// gain function for [-1, 1] domain and range
     }
 
+    public float getSimplexFractal(float x, float y, float z, float w, float u, float v) {
+        return getGeneralFractal(this::singleSimplex, x, y, z, w, u, v);
+    }
+
+    public float getSimplex(float x, float y, float z, float w, float u, float v) {
+        return getGeneral(this::singleSimplex, x, y, z, w, u, v);
+    }
+
     // Cubic Noise
-
-    public float getCubicFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleCubicFractalFBM(x, y);
-            case BILLOW:
-                return singleCubicFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singleCubicFractalRidgedMulti(x, y);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleCubicFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleCubic(seed, x, y);
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += singleCubic(++seed, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleCubicFractalDomainWarp(float x, float y) {
-        int seed = this.seed;
-        float latest = singleCubic(seed, x, y);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx],
-                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleCubic(++seed, x + a, y + b)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCubicFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleCubic(seed, x, y)) * 2 - 1;
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleCubic(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCubicFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleCubic(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getCubic(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        return singleCubic(0, x, y);
-    }
-
-    private final static float CUBIC_2D_BOUNDING = 1f / 1.5f / 1.5f;
 
     protected float singleCubic(int seed, float x, float y) {
         int x1 = fastFloor(x);
@@ -7023,8 +5801,6 @@ public class Noise implements INoise {
 
         float e =
                 (sharpness *
-//                (float)Math.pow(4.0f * sharpness,
-//        return
                 cubicLerp(
                 cubicLerp(phCoord2D(seed, x0, y0), phCoord2D(seed, x1, y0), phCoord2D(seed, x2, y0), phCoord2D(seed, x3, y0),
                         xs),
@@ -7037,127 +5813,15 @@ public class Noise implements INoise {
                 ys)
         );
         return e / (1f + Math.abs(e));
-//        return (e - 1.0f) / (e + 1.0f);
-//                * CUBIC_2D_BOUNDING;
     }
 
-    public float getCubicFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleCubicFractalFBM(x, y, z);
-            case BILLOW:
-                return singleCubicFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singleCubicFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
+    public float getCubicFractal(float x, float y) {
+        return getGeneralFractal(this::singleCubic, x, y);
     }
 
-    protected float singleCubicFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleCubic(seed, x, y, z);
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleCubic(++seed, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getCubic(float x, float y) {
+        return getGeneral(this::singleCubic, x, y);
     }
-    protected float singleCubicFractalDomainWarp(float x, float y, float z) {
-        int seed = this.seed;
-        float latest = singleCubic(seed, x, y, z);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleCubic(++seed, x + a, y + b, z + c)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCubicFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleCubic(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleCubic(++seed, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCubicFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleCubic(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getCubic(float x, float y, float z) {
-        return singleCubic(seed, x * frequency, y * frequency, z * frequency);
-    }
-
-    private final static float CUBIC_3D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f);
 
     protected float singleCubic(int seed, float x, float y, float z) {
         int x1 = fastFloor(x);
@@ -7210,135 +5874,15 @@ public class Noise implements INoise {
                 zs)
                 );
         return e / (1f + Math.abs(e));
-//        return (e - 1.0f) / (e + 1.0f);
-
-//        ;
-//        return TrigTools.sinTurns(e);
-
-//        return e * CUBIC_3D_BOUNDING;
-
     }
 
-    public float getCubicFractal(float x, float y, float z, float w) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleCubicFractalFBM(x, y, z, w);
-            case BILLOW:
-                return singleCubicFractalBillow(x, y, z, w);
-            case RIDGED_MULTI:
-                return singleCubicFractalRidgedMulti(x, y, z, w);
-            default:
-                return 0;
-        }
+    public float getCubicFractal(float x, float y, float z) {
+        return getGeneralFractal(this::singleCubic, x, y, z);
     }
 
-    protected float singleCubicFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singleCubic(seed, x, y, z, w);
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singleCubic(++seed, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getCubic(float x, float y, float z) {
+        return getGeneral(this::singleCubic, x, y, z);
     }
-    protected float singleCubicFractalDomainWarp(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float latest = singleCubic(seed, x, y, z, w);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 4) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleCubic(++seed, x + a, y + b, z + c, w + d)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCubicFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singleCubic(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-        int i = 0;
-
-        while (++i < octaves) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleCubic(++seed, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCubicFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleCubic(seed + i, x, y, z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getCubic(float x, float y, float z, float w) {
-        return singleCubic(seed, x * frequency, y * frequency, z * frequency, w * frequency);
-    }
-
-    private final static float CUBIC_4D_BOUNDING = 1f / (1.5f * 1.5f * 1.5f * 1.5f);
 
     protected float singleCubic(int seed, float x, float y, float z, float w) {
         int x1 = fastFloor(x);
@@ -7476,8 +6020,14 @@ public class Noise implements INoise {
                 ws)
         );
         return e / (1f + Math.abs(e));
-//        return (e - 1.0f) / (e + 1.0f);
-//                * CUBIC_4D_BOUNDING;
+    }
+
+    public float getCubicFractal(float x, float y, float z, float w) {
+        return getGeneralFractal(this::singleCubic, x, y, z, w);
+    }
+
+    public float getCubic(float x, float y, float z, float w) {
+        return getGeneral(this::singleCubic, x, y, z, w);
     }
 
     // Cellular 2D
