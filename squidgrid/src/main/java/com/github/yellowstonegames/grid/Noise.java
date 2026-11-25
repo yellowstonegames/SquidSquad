@@ -6032,22 +6032,6 @@ public class Noise implements INoise {
 
     // Cellular 2D
 
-    public float getCellular(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (cellularReturnType) {
-            case CELL_VALUE:
-            case NOISE_LOOKUP:
-            case DISTANCE:
-                return singleCellular(seed, x, y);
-            case DISTANCE_VALUE:
-                return singleCellularMerging(seed, x, y);
-            default:
-                return singleCellular2Edge(seed, x, y);
-        }
-    }
-
     public float switchCellular(int seed, float x, float y) {
         switch (cellularReturnType) {
             case CELL_VALUE:
@@ -6144,7 +6128,6 @@ public class Noise implements INoise {
                 return 0;
         }
     }
-
 
     protected float singleCellularMerging(int seed, float x, float y) {
         int xr = fastRound(x);
@@ -6291,108 +6274,16 @@ public class Noise implements INoise {
                 return 0;
         }
     }
-    protected float singleCellularFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = switchCellular(seed, x, y);
-        float amp = 1;
 
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += switchCellular(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleCellularFractalDomainWarp(float x, float y) {
-        int seed = this.seed;
-        float latest = switchCellular(seed, x, y);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx],
-                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = switchCellular(++seed, x + a, y + b)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getCellularFractal(float x, float y) {
+        return getGeneralFractal(this::switchCellular, x, y);
     }
 
-    protected float singleCellularFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(switchCellular(seed, x, y)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(switchCellular(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCellularFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(switchCellular(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if (fractalSpiral) {
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2;
-                y = y2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
+    public float getCellular(float x, float y) {
+        return getGeneral(this::switchCellular, x, y);
     }
 
     // Cellular 3D
-    public float getCellular(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (cellularReturnType) {
-            case CELL_VALUE:
-            case NOISE_LOOKUP:
-            case DISTANCE:
-                return singleCellular(seed, x, y, z);
-            case DISTANCE_VALUE:
-                return singleCellularMerging(seed, x, y, z);
-            default:
-                return singleCellular2Edge(seed, x, y, z);
-        }
-    }
 
     protected float switchCellular(int seed, float x, float y, float z) {
         switch (cellularReturnType) {
@@ -6672,334 +6563,25 @@ public class Noise implements INoise {
         }
     }
 
-    protected float singleCellularFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = switchCellular(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += switchCellular(seed + i, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleCellularFractalDomainWarp(float x, float y, float z) {
-        int seed = this.seed;
-        float latest = switchCellular(seed, x, y, z);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = switchCellular(++seed, x + a, y + b, z + c)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getCellularFractal(float x, float y, float z) {
+        return getGeneralFractal(this::switchCellular, x, y, z);
     }
 
-    protected float singleCellularFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(switchCellular(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(switchCellular(seed + i, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleCellularFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(switchCellular(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getHoney(float x, float y) {
-        return singleHoney(seed, x * frequency, y * frequency);
+    public float getCellular(float x, float y, float z) {
+        return getGeneral(this::switchCellular, x, y, z);
     }
 
     public float singleHoney(int seed, float x, float y) {
         final float result = (singleSimplex(seed, x, y) + singleValue(seed ^ 0x9E3779B9, x, y)) * 0.5f + 1f;
         return (result <= 1f) ? result * result - 1f : (result - 2f) * -(result - 2f) + 1f;
-
-        //return singleSimplex(seed, x, y, 0.5f * singleSimplex(seed * 0xDAB ^ 0x9E3779BD, x, y));
-//        return singleSimplex(seed, x, y + 0.25f * singleSimplex(seed * 0xDAB ^ 0x9E3779BD, y, x));
-//        return singleSimplex(seed, x + MathTools.wobble(seed, y) * 0.25f, y + MathTools.wobble(seed, x) * 0.25f);
-
-//        final float a = singleSimplex(seed, x, y);
-//        seed += 0x9E377;
-//        final float b = singleSimplex(seed, x + a * 0.25f, y);
-//        return TrigTools.sinTurns((a + b) * 0.25f);
     }
 
     public float getHoneyFractal(float x, float y) {
-        x *= frequency;
-        y *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleHoneyFractalFBM(x, y);
-            case BILLOW:
-                return singleHoneyFractalBillow(x, y);
-            case RIDGED_MULTI:
-                return singleHoneyFractalRidgedMulti(x, y);
-            default:
-                return 0;
-        }
+        return getGeneralFractal(this::singleHoney, x, y);
     }
 
-    protected float singleHoneyFractalFBM(float x, float y) {
-        int seed = this.seed;
-        float sum = singleHoney(seed, x, y);
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += singleHoney(seed + i, x, y) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleHoneyFractalDomainWarp(float x, float y) {
-        int seed = this.seed;
-        float latest = singleHoney(seed, x, y);
-        float sum = latest;
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx],
-                    b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleHoney(++seed, x + a, y + b)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalBillow(float x, float y) {
-        int seed = this.seed;
-        float sum = Math.abs(singleHoney(seed, x, y)) * 2 - 1;
-        float amp = 1, t;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleHoney(++seed, x, y)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalRidgedMulti(float x, float y) {
-        int seed = this.seed;
-        float t;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleHoney(seed + i, x, y));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX2D(x, y);
-                final float y2 = rotateY2D(x, y);
-                x = x2; y = y2;
-            }
-            t = x;
-            x = y * lacunarity;
-            y = t * lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getHoneyFractal(float x, float y, float z) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleHoneyFractalFBM(x, y, z);
-            case BILLOW:
-                return singleHoneyFractalBillow(x, y, z);
-            case RIDGED_MULTI:
-                return singleHoneyFractalRidgedMulti(x, y, z);
-            default:
-                return 0;
-        }
-    }
-
-    protected float singleHoneyFractalFBM(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = singleHoney(seed, x, y, z);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += singleHoney(++seed, x, y, z) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleHoneyFractalDomainWarp(float x, float y, float z) {
-        int seed = this.seed;
-        float latest = singleHoney(seed, x, y, z);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleHoney(++seed, x + a, y + b, z + c)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalBillow(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = Math.abs(singleHoney(seed, x, y, z)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleHoney(++seed, x, y, z)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalRidgedMulti(float x, float y, float z) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleHoney(seed + i, x, y, z));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX3D(x, y, z);
-                final float y2 = rotateY3D(x, y, z);
-                final float z2 = rotateZ3D(x, y, z);
-                x = x2; y = y2; z = z2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getHoney(float x, float y, float z) {
-        return singleHoney(seed, x * frequency, y * frequency, z * frequency);
+    public float getHoney(float x, float y) {
+        return getGeneral(this::singleHoney, x, y);
     }
 
     public float singleHoney(int seed, float x, float y, float z){
@@ -7007,250 +6589,25 @@ public class Noise implements INoise {
         return (result <= 1f) ? result * result - 1f : (result - 2f) * -(result - 2f) + 1f;
     }
 
-
-    protected float singleHoneyFractalFBM(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = singleHoney(seed, x, y, z, w);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += singleHoney(++seed, x, y, z, w) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleHoneyFractalDomainWarp(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float latest = singleHoney(seed, x, y, z, w);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 4) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleHoney(++seed, x + a, y + b, z + c, w + d)) * amp;
-        }
-
-        return sum * fractalBounding;
+    public float getHoneyFractal(float x, float y, float z) {
+        return getGeneralFractal(this::singleHoney, x, y, z);
     }
 
-    protected float singleHoneyFractalBillow(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = Math.abs(singleHoney(seed, x, y, z, w)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleHoney(++seed, x, y, z, w)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalRidgedMulti(float x, float y, float z, float w) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleHoney(seed + i, x, y,  z, w));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX4D(x, y, z, w);
-                final float y2 = rotateY4D(x, y, z, w);
-                final float z2 = rotateZ4D(x, y, z, w);
-                final float w2 = rotateW4D(x, y, z, w);
-                x = x2; y = y2; z = z2; w = w2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getHoney(float x, float y, float z, float w) {
-        return singleHoney(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+    public float getHoney(float x, float y, float z) {
+        return getGeneral(this::singleHoney, x, y, z);
     }
 
     public float singleHoney(int seed, float x, float y, float z, float w) {
         final float result = (singleSimplex(seed, x, y, z, w) + singleValue(seed ^ 0x9E3779B9, x, y, z, w)) * 0.5f + 1f;
         return (result <= 1f) ? result * result - 1f : (result - 2f) * -(result - 2f) + 1f;
     }
-    public float getHoneyFractal(float x, float y, float z, float w, float u) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
 
-        switch (fractalType) {
-            case FBM:
-                return singleHoneyFractalFBM(x, y, z, w, u);
-            case BILLOW:
-                return singleHoneyFractalBillow(x, y, z, w, u);
-            case RIDGED_MULTI:
-                return singleHoneyFractalRidgedMulti(x, y, z, w, u);
-            default:
-                return 0;
-        }
+    public float getHoneyFractal(float x, float y, float z, float w) {
+        return getGeneralFractal(this::singleHoney, x, y, z, w);
     }
 
-    protected float singleHoneyFractalFBM(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = singleHoney(seed, x, y, z, w, u);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += singleHoney(seed + i, x, y, z, w, u) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-    protected float singleHoneyFractalDomainWarp(float x, float y, float z, float w, float u) {
-        int seed = this.seed;
-        float latest = singleHoney(seed, x, y, z, w, u);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 5) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 5) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleHoney(++seed, x + a, y + b, z + c, w + d, u + e)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-
-    protected float singleHoneyFractalBillow(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = Math.abs(singleHoney(seed, x, y, z, w, u)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleHoney(seed + i, x, y, z, w, u)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalRidgedMulti(float x, float y, float z, float w, float u) {
-        final int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleHoney(seed + i, x, y, z, w, u));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX5D(x, y, z, w, u);
-                final float y2 = rotateY5D(x, y, z, w, u);
-                final float z2 = rotateZ5D(x, y, z, w, u);
-                final float w2 = rotateW5D(x, y, z, w, u);
-                final float u2 = rotateU5D(x, y, z, w, u);
-                x = x2; y = y2; z = z2; w = w2; u = u2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getHoney(float x, float y, float z, float w, float u) {
-        return singleHoney(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
+    public float getHoney(float x, float y, float z, float w) {
+        return getGeneral(this::singleHoney, x, y, z, w);
     }
 
     public float singleHoney(int seed, float x, float y, float z, float w, float u) {
@@ -7258,154 +6615,25 @@ public class Noise implements INoise {
         return (result <= 1f) ? result * result - 1f : (result - 2f) * -(result - 2f) + 1f;
     }
 
-    public float getHoneyFractal(float x, float y, float z, float w, float u, float v) {
-        x *= frequency;
-        y *= frequency;
-        z *= frequency;
-        w *= frequency;
-        u *= frequency;
-        v *= frequency;
-
-        switch (fractalType) {
-            case FBM:
-                return singleHoneyFractalFBM(x, y, z, w, u, v);
-            case BILLOW:
-                return singleHoneyFractalBillow(x, y, z, w, u, v);
-            case RIDGED_MULTI:
-                return singleHoneyFractalRidgedMulti(x, y, z, w, u, v);
-            default:
-                return 0;
-        }
+    public float getHoneyFractal(float x, float y, float z, float w, float u) {
+        return getGeneralFractal(this::singleHoney, x, y, z, w, u);
     }
 
-    protected float singleHoneyFractalFBM(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = singleHoney(seed, x, y, z, w, u, v);
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += singleHoney(++seed, x, y, z, w, u, v) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalDomainWarp(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float latest = singleHoney(seed, x, y, z, w, u, v);
-        float sum = latest;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x = x * lacunarity;
-            y = y * lacunarity;
-            z = z * lacunarity;
-            w = w * lacunarity;
-            u = u * lacunarity;
-            v = v * lacunarity;
-            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
-            float a = TrigTools.SIN_TABLE[idx];
-            float b = TrigTools.SIN_TABLE[idx + (8192 / 6) & TrigTools.TABLE_MASK];
-            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 6) & TrigTools.TABLE_MASK];
-            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 6) & TrigTools.TABLE_MASK];
-            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
-            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
-
-            amp *= gain;
-            sum += (latest = singleHoney(++seed, x + a, y + b, z + c, w + d, u + e, v + f)) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalBillow(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = Math.abs(singleHoney(seed, x, y, z, w, u, v)) * 2 - 1;
-        float amp = 1;
-
-        for (int i = 1; i < octaves; i++) {
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-
-            amp *= gain;
-            sum += (Math.abs(singleHoney(++seed, x, y, z, w, u, v)) * 2 - 1) * amp;
-        }
-
-        return sum * fractalBounding;
-    }
-
-    protected float singleHoneyFractalRidgedMulti(float x, float y, float z, float w, float u, float v) {
-        int seed = this.seed;
-        float sum = 0f, exp = 2f, correction = 0f, spike;
-        for (int i = 0; i < octaves; i++) {
-            spike = 1f - Math.abs(singleHoney(seed + i, x, y, z, w, u, v));
-            correction += (exp *= 0.5f);
-            sum += spike * exp;
-            if(fractalSpiral){
-                final float x2 = rotateX6D(x, y, z, w, u, v);
-                final float y2 = rotateY6D(x, y, z, w, u, v);
-                final float z2 = rotateZ6D(x, y, z, w, u, v);
-                final float w2 = rotateW6D(x, y, z, w, u, v);
-                final float u2 = rotateU6D(x, y, z, w, u, v);
-                final float v2 = rotateV6D(x, y, z, w, u, v);
-                x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
-            }
-            x *= lacunarity;
-            y *= lacunarity;
-            z *= lacunarity;
-            w *= lacunarity;
-            u *= lacunarity;
-            v *= lacunarity;
-        }
-        return sum * 2f / correction - 1f;
-    }
-
-    public float getHoney(float x, float y, float z, float w, float u, float v) {
-        return singleHoney(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
+    public float getHoney(float x, float y, float z, float w, float u) {
+        return getGeneral(this::singleHoney, x, y, z, w, u);
     }
 
     public float singleHoney(int seed, float x, float y, float z, float w, float u, float v) {
         final float result = (singleSimplex(seed, x, y, z, w, u, v) + singleValue(seed ^ 0x9E3779B9, x, y, z, w, u, v)) * 0.5f + 1f;
         return (result <= 1f) ? result * result - 1f : (result - 2f) * -(result - 2f) + 1f;
+    }
+
+    public float getHoneyFractal(float x, float y, float z, float w, float u, float v) {
+        return getGeneralFractal(this::singleHoney, x, y, z, w, u, v);
+    }
+
+    public float getHoney(float x, float y, float z, float w, float u, float v) {
+        return getGeneral(this::singleHoney, x, y, z, w, u, v);
     }
 
     // Gradient Perturb (currently unused)
