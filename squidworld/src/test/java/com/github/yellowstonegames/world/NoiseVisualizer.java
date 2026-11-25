@@ -49,11 +49,10 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private int dim = 0; // this can be 0, 1, 2, 3, or 4; add 2 to get the actual dimensions
     private int octaves = 1;
     private float freq = 0x1p-4f;
-    private boolean inverse;
 //    private Noise noise = new Noise(1, freq, Noise.CUBIC_FRACTAL, octaves);
     private Noise noise = new Noise(1, freq, Noise.CELLULAR_FRACTAL, octaves);
     private ImmediateModeRenderer20 renderer;
-    
+
     private LongPointHash ph = new LongPointHash();
     private IntPointHash iph = new IntPointHash();
     private FlawedPointHash.RugHash rug = new FlawedPointHash.RugHash(1);
@@ -69,23 +68,21 @@ public class NoiseVisualizer extends ApplicationAdapter {
     private static final float iWidth = 1f/width, iHeight = 1f/height;
 
     private InputAdapter input;
-    
+
     private Viewport view;
     private int ctr = -256;
     private boolean keepGoing = true;
-    
+
     private AnimatedGif gif;
     private Array<Pixmap> frames = new Array<>(256);
 
     public static float basicPrepare(float n)
     {
-//        return Math.max(0f, n);
-        return n * 0.5f + 0.5f;
+        return Math.min(Math.max(n * 0.5f + 0.5f, 0), 1);
     }
 
     public static float circleInPrepare(float n)
     {
-//        return Math.max(0f, n);
         return Interpolations.circleIn.apply(n * 0.5f + 0.5f);
     }
 
@@ -174,7 +171,7 @@ public class NoiseVisualizer extends ApplicationAdapter {
 //                0xff33ffff, 0xff6600ff, 0xff6633ff, 0xff6666ff, 0xff6699ff, 0xff66ccff, 0xff66ffff, 0xff9900ff,
 //                0xff9933ff, 0xff9966ff, 0xff9999ff, 0xff99ccff, 0xff99ffff, 0xffcc00ff, 0xffcc33ff, 0xffcc66ff,
 //                0xffcc99ff, 0xffccccff, 0xffccffff, 0xffff00ff, 0xffff33ff, 0xffff66ff, 0xffff99ff, 0xffffccff,
-//                0xffffffff, 
+//                0xffffffff,
         input = new InputAdapter(){
             @Override
             public boolean keyDown(int keycode) {
@@ -381,14 +378,15 @@ public class NoiseVisualizer extends ApplicationAdapter {
                         noise.setSharpness((float)Math.pow(TrigTools.sinDeg((System.currentTimeMillis() & 0xFFFF) * 0x1p-4f) + 1.5f, 3f));
                         System.out.println(noise.getSharpness());
                         break;
+                    case LEFT_BRACKET:
+                        noise.setFractalLacunarity(noise.getFractalLacunarity() * (UIUtils.shift() ? 1.25f : 0.8f));
+                        break;
+                    case RIGHT_BRACKET:
+                        noise.setFractalGain(noise.getFractalGain() * (UIUtils.shift() ? 0.8f : 1.25f));
+                        break;
                     case I: // inverse mode
-                        if (inverse = !inverse) {
-                            noise.setFractalLacunarity(0.5f);
-                            noise.setFractalGain(2f);
-                        } else {
-                            noise.setFractalLacunarity(2f);
-                            noise.setFractalGain(0.5f);
-                        }
+//                        noise.setFractalLacunarity(1f/noise.getFractalLacunarity());
+                        noise.setFractalGain(1f/noise.getFractalGain());
                         break;
                     case K: // sKip
                         ctr += 1000;
