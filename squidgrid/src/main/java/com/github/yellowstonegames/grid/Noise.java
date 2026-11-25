@@ -2649,6 +2649,234 @@ public class Noise implements INoise {
         return sum * fractalBounding;
     }
 
+    protected float fractalFBM(NoiseFunction7D function, float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = singleFoam(seed, x, y, z, w, u, v, m);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+
+            amp *= gain;
+            sum += singleFoam(++seed, x, y, z, w, u, v, m) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+    protected float fractalDomainWarp(NoiseFunction7D function, float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float latest = singleFoam(seed, x, y, z, w, u, v, m);
+        float sum = latest;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x = x * lacunarity;
+            y = y * lacunarity;
+            z = z * lacunarity;
+            w = w * lacunarity;
+            u = u * lacunarity;
+            v = v * lacunarity;
+            m = m * lacunarity;
+            final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
+            float a = TrigTools.SIN_TABLE[idx];
+            float b = TrigTools.SIN_TABLE[idx + (8192 / 7) & TrigTools.TABLE_MASK];
+            float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 7) & TrigTools.TABLE_MASK];
+            float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 7) & TrigTools.TABLE_MASK];
+            float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 7) & TrigTools.TABLE_MASK];
+            float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 7) & TrigTools.TABLE_MASK];
+            float g = TrigTools.SIN_TABLE[idx + (8192 * 6 / 7) & TrigTools.TABLE_MASK];
+
+            amp *= gain;
+            sum += (latest = singleFoam(++seed, x + a, y + b, z + c, w + d, u + e, v + f, m + g)) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalBillow(NoiseFunction7D function, float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = Math.abs(singleFoam(seed, x, y, z, w, u, v, m)) * 2 - 1;
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+
+            amp *= gain;
+            sum += (Math.abs(singleFoam(++seed, x, y, z, w, u, v, m)) * 2 - 1) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+    protected float fractalRidgedMulti(NoiseFunction7D function, float x, float y, float z, float w, float u, float v, float m) {
+        int seed = this.seed;
+        float sum = (1 - Math.abs(function.singleNoise(seed, x, y, z, w, u, v, m)) * 2);
+        float amp = 1;
+
+        for (int i = 1; i < octaves; i++) {
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+
+            amp *= gain;
+            sum += (1 - Math.abs(function.singleNoise(++seed, x, y, z, w, u, v, m)) * 2) * amp;
+        }
+
+        return sum * fractalBounding;
+    }
+
+
+    protected float getGeneral(NoiseFunction2D function, float x, float y) {
+        return function.singleNoise(seed, x * frequency, y * frequency);
+    }
+
+    protected float getGeneral(NoiseFunction3D function, float x, float y, float z) {
+        return function.singleNoise(seed, x * frequency, y * frequency, z * frequency);
+    }
+
+    protected float getGeneral(NoiseFunction4D function, float x, float y, float z, float w) {
+        return function.singleNoise(seed, x * frequency, y * frequency, z * frequency, w * frequency);
+    }
+
+    protected float getGeneral(NoiseFunction5D function, float x, float y, float z, float w, float u) {
+        return function.singleNoise(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency);
+    }
+
+    protected float getGeneral(NoiseFunction6D function, float x, float y, float z, float w, float u, float v) {
+        return function.singleNoise(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency);
+    }
+
+    protected float getGeneral(NoiseFunction7D function, float x, float y, float z, float w, float u, float v, float m) {
+        return function.singleNoise(seed, x * frequency, y * frequency, z * frequency, w * frequency, u * frequency, v * frequency, m * frequency);
+    }
+
+    protected float getGeneralFractal(NoiseFunction2D function, float x, float y) {
+        x *= frequency;
+        y *= frequency;
+
+        switch (fractalType) {
+            case DOMAIN_WARP:
+                return fractalDomainWarp(function, x, y);
+            case BILLOW:
+                return fractalBillow(function, x, y);
+            case RIDGED_MULTI:
+                return fractalRidgedMulti(function, x, y);
+            default:
+                return fractalFBM(function, x, y);
+        }
+    }
+
+    protected float getGeneralFractal(NoiseFunction3D function, float x, float y, float z) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+
+        switch (fractalType) {
+            case DOMAIN_WARP:
+                return fractalDomainWarp(function, x, y, z);
+            case BILLOW:
+                return fractalBillow(function, x, y, z);
+            case RIDGED_MULTI:
+                return fractalRidgedMulti(function, x, y, z);
+            default:
+                return fractalFBM(function, x, y, z);
+        }
+    }
+
+    protected float getGeneralFractal(NoiseFunction4D function, float x, float y, float z, float w) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+
+        switch (fractalType) {
+            case DOMAIN_WARP:
+                return fractalDomainWarp(function, x, y, z, w);
+            case BILLOW:
+                return fractalBillow(function, x, y, z, w);
+            case RIDGED_MULTI:
+                return fractalRidgedMulti(function, x, y, z, w);
+            default:
+                return fractalFBM(function, x, y, z, w);
+        }
+    }
+
+    protected float getGeneralFractal(NoiseFunction5D function, float x, float y, float z, float w, float u) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
+
+        switch (fractalType) {
+            case DOMAIN_WARP:
+                return fractalDomainWarp(function, x, y, z, w, u);
+            case BILLOW:
+                return fractalBillow(function, x, y, z, w, u);
+            case RIDGED_MULTI:
+                return fractalRidgedMulti(function, x, y, z, w, u);
+            default:
+                return fractalFBM(function, x, y, z, w, u);
+        }
+    }
+
+    protected float getGeneralFractal(NoiseFunction6D function, float x, float y, float z, float w, float u, float v) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
+        v *= frequency;
+
+        switch (fractalType) {
+            case DOMAIN_WARP:
+                return fractalDomainWarp(function, x, y, z, w, u, v);
+            case BILLOW:
+                return fractalBillow(function, x, y, z, w, u, v);
+            case RIDGED_MULTI:
+                return fractalRidgedMulti(function, x, y, z, w, u, v);
+            default:
+                return fractalFBM(function, x, y, z, w, u, v);
+        }
+    }
+
+    protected float getGeneralFractal(NoiseFunction7D function, float x, float y, float z, float w, float u, float v, float m) {
+        x *= frequency;
+        y *= frequency;
+        z *= frequency;
+        w *= frequency;
+        u *= frequency;
+        v *= frequency;
+        m *= frequency;
+
+        switch (fractalType) {
+            case DOMAIN_WARP:
+                return fractalDomainWarp(function, x, y, z, w, u, v, m);
+            case BILLOW:
+                return fractalBillow(function, x, y, z, w, u, v, m);
+            case RIDGED_MULTI:
+                return fractalRidgedMulti(function, x, y, z, w, u, v, m);
+            default:
+                return fractalFBM(function, x, y, z, w, u, v, m);
+        }
+    }
+
     // White Noise
 
     private int floatToIntMixed(final float f) {
@@ -2785,13 +3013,13 @@ public class Noise implements INoise {
 
         switch (fractalType) {
             case DOMAIN_WARP:
-                return singleValueFractalDomainWarp(x, y);
+                return fractalDomainWarp(this::singleValue, x, y);
             case BILLOW:
-                return singleValueFractalBillow(x, y);
+                return fractalBillow(this::singleValue, x, y);
             case RIDGED_MULTI:
-                return singleValueFractalRidgedMulti(x, y);
+                return fractalRidgedMulti(this::singleValue, x, y);
             default:
-                return singleValueFractalFBM(x, y);
+                return fractalFBM(this::singleValue, x, y);
         }
     }
 
@@ -2885,7 +3113,6 @@ public class Noise implements INoise {
         return singleValue(seed, x * frequency, y * frequency);
     }
 
-
     public float singleValue (int seed, float x, float y) {
         int xFloor = MathTools.fastFloor(x);
         x -= xFloor;
@@ -2935,13 +3162,13 @@ public class Noise implements INoise {
 
         switch (fractalType) {
             case DOMAIN_WARP:
-                return singleValueFractalDomainWarp(x, y, z);
+                return fractalDomainWarp(this::singleValue, x, y, z);
             case BILLOW:
-                return singleValueFractalBillow(x, y, z);
+                return fractalBillow(this::singleValue, x, y, z);
             case RIDGED_MULTI:
-                return singleValueFractalRidgedMulti(x, y, z);
+                return fractalRidgedMulti(this::singleValue, x, y, z);
             default:
-                return singleValueFractalFBM(x, y, z);
+                return fractalFBM(this::singleValue, x, y, z);
         }
     }
 
@@ -3117,13 +3344,13 @@ public class Noise implements INoise {
 
         switch (fractalType) {
             case DOMAIN_WARP:
-                return singleValueFractalDomainWarp(x, y, z, w);
+                return fractalDomainWarp(this::singleValue, x, y, z, w);
             case BILLOW:
-                return singleValueFractalBillow(x, y, z, w);
+                return fractalBillow(this::singleValue, x, y, z, w);
             case RIDGED_MULTI:
-                return singleValueFractalRidgedMulti(x, y, z, w);
+                return fractalRidgedMulti(this::singleValue, x, y, z, w);
             default:
-                return singleValueFractalFBM(x, y, z, w);
+                return fractalFBM(this::singleValue, x, y, z, w);
         }
     }
 
@@ -3325,13 +3552,13 @@ public class Noise implements INoise {
 
         switch (fractalType) {
             case DOMAIN_WARP:
-                return singleValueFractalDomainWarp(x, y, z, w, u);
+                return fractalDomainWarp(this::singleValue, x, y, z, w, u);
             case BILLOW:
-                return singleValueFractalBillow(x, y, z, w, u);
+                return fractalBillow(this::singleValue, x, y, z, w, u);
             case RIDGED_MULTI:
-                return singleValueFractalRidgedMulti(x, y, z, w, u);
+                return fractalRidgedMulti(this::singleValue, x, y, z, w, u);
             default:
-                return singleValueFractalFBM(x, y, z, w, u);
+                return fractalFBM(this::singleValue, x, y, z, w, u);
         }
     }
 
@@ -3588,13 +3815,13 @@ public class Noise implements INoise {
 
         switch (fractalType) {
             case DOMAIN_WARP:
-                return singleValueFractalDomainWarp(x, y, z, w, u, v);
+                return fractalDomainWarp(this::singleValue, x, y, z, w, u, v);
             case BILLOW:
-                return singleValueFractalBillow(x, y, z, w, u, v);
+                return fractalBillow(this::singleValue, x, y, z, w, u, v);
             case RIDGED_MULTI:
-                return singleValueFractalRidgedMulti(x, y, z, w, u, v);
+                return fractalRidgedMulti(this::singleValue, x, y, z, w, u, v);
             default:
-                return singleValueFractalFBM(x, y, z, w, u, v);
+                return fractalFBM(this::singleValue, x, y, z, w, u, v);
         }
     }
 
@@ -10897,5 +11124,9 @@ public class Noise implements INoise {
 
     protected interface NoiseFunction6D {
         float singleNoise(int seed, float x, float y, float z, float w, float u, float v);
+    }
+
+    protected interface NoiseFunction7D {
+        float singleNoise(int seed, float x, float y, float z, float w, float u, float v, float m);
     }
 }
