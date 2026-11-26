@@ -60,6 +60,9 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
      * Affects how much later octaves are weighted in the total result; the default is 0.5f .
      */
     protected float gain;
+    /**
+     * Calculated internally by {@link #calculateFractalBounding()} when {@link #octaves} or {@link #gain} changes.
+     */
     protected float fractalBounding;
     /**
      * If this is set to true, then later octaves will be rotated differently every time. The default is false.
@@ -315,14 +318,14 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
         calculateFractalBounding();
     }
 
-    private void calculateFractalBounding() {
+    protected void calculateFractalBounding() {
         float amp = gain;
         float ampFractal = 1;
         for (int i = 1; i < octaves; i++) {
             ampFractal += amp;
             amp *= gain;
         }
-        fractalBounding = 1 / ampFractal;
+        fractalBounding = 1f / ampFractal;
     }
 
 
@@ -588,14 +591,14 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float y2 = rotateY2D(x, y);
                 x = x2; y = y2;
             }
-            x *= 2f;
-            y *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += wrapped.getNoiseWithSeed(x, y, seed + i) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -618,14 +621,14 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float y2 = rotateY2D(x, y);
                 x = x2; y = y2;
             }
-            x *= 2f;
-            y *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -648,14 +651,14 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float y2 = rotateY2D(x, y);
                 x = x2; y = y2;
             }
-            x *= 2f;
-            y *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (1 - Math.abs(wrapped.getNoiseWithSeed(x, y, seed + i)) * 2) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -684,11 +687,11 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
             float a = TrigTools.SIN_TABLE[idx],
                     b = TrigTools.SIN_TABLE[idx + (8192 / 2) & TrigTools.TABLE_MASK];
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, seed + i)) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -717,14 +720,14 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, seed + i + 7777);
-            x *= 2f;
-            y *= 2f;
-            power *= 0.5f;
+            x *= lacunarity;
+            y *= lacunarity;
+            power *= gain;
             noise1 += (noise2 * noise2 * noise2) * power;
 //            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
         }
 
-        noise1 /= (0.6f * power * ((1 << octaves) - 1));
+        noise1 *= 3.3333333f * fractalBounding;
         // tanhRougher, from digital.
         // -1f + 2f / (1f + exp(-2f * noise1))
         return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
@@ -753,15 +756,15 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float z2 = rotateZ3D(x, y, z);
                 x = x2; y = y2; z = z2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += wrapped.getNoiseWithSeed(x, y, z, seed + i) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -786,15 +789,15 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float z2 = rotateZ3D(x, y, z);
                 x = x2; y = y2; z = z2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -819,15 +822,15 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float z2 = rotateZ3D(x, y, z);
                 x = x2; y = y2; z = z2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (1 - Math.abs(wrapped.getNoiseWithSeed(x, y, z, seed + i)) * 2) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -852,20 +855,20 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float z2 = rotateZ3D(x, y, z);
                 x = x2; y = y2; z = z2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
 
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
             float a = TrigTools.SIN_TABLE[idx];
             float b = TrigTools.SIN_TABLE[idx + (8192 / 3) & TrigTools.TABLE_MASK];
             float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 3) & TrigTools.TABLE_MASK];
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, seed + i)) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -896,15 +899,15 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, seed + i + 7777);
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            power *= 0.5f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            power *= gain;
             noise1 += (noise2 * noise2 * noise2) * power;
 //            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
         }
 
-        noise1 /= (0.6f * power * ((1 << octaves) - 1));
+        noise1 *= 3.3333333f * fractalBounding;
         // tanhRougher, from digital.
         // -1f + 2f / (1f + exp(-2f * noise1))
         return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
@@ -935,16 +938,16 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float w2 = rotateW4D(x, y, z, w);
                 x = x2; y = y2; z = z2; w = w2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += wrapped.getNoiseWithSeed(x, y, z, w, seed + i) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -971,16 +974,16 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float w2 = rotateW4D(x, y, z, w);
                 x = x2; y = y2; z = z2; w = w2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1007,16 +1010,16 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float w2 = rotateW4D(x, y, z, w);
                 x = x2; y = y2; z = z2; w = w2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (1 - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, seed + i)) * 2) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1043,10 +1046,10 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float w2 = rotateW4D(x, y, z, w);
                 x = x2; y = y2; z = z2; w = w2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
 
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
             float a = TrigTools.SIN_TABLE[idx];
@@ -1054,11 +1057,11 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
             float c = TrigTools.SIN_TABLE[idx + (8192 * 2 / 4) & TrigTools.TABLE_MASK];
             float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 4) & TrigTools.TABLE_MASK];
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, seed + i)) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1091,16 +1094,16 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, w * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, w * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, w * 2f, seed + i + 7777);
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            power *= 0.5f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            power *= gain;
             noise1 += (noise2 * noise2 * noise2) * power;
 //            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
         }
 
-        noise1 /= (0.6f * power * ((1 << octaves) - 1));
+        noise1 *= 3.3333333f * fractalBounding;
         // tanhRougher, from digital.
         // -1f + 2f / (1f + exp(-2f * noise1))
         return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
@@ -1133,17 +1136,17 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float u2 = rotateU5D(x, y, z, w, u);
                 x = x2; y = y2; z = z2; w = w2; u = u2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += wrapped.getNoiseWithSeed(x, y, z, w, u, seed + i) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1172,17 +1175,17 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float u2 = rotateU5D(x, y, z, w, u);
                 x = x2; y = y2; z = z2; w = w2; u = u2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1211,17 +1214,17 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float u2 = rotateU5D(x, y, z, w, u);
                 x = x2; y = y2; z = z2; w = w2; u = u2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (1 - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, seed + i)) * 2) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1250,11 +1253,11 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float u2 = rotateU5D(x, y, z, w, u);
                 x = x2; y = y2; z = z2; w = w2; u = u2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
 
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
             float a = TrigTools.SIN_TABLE[idx];
@@ -1263,11 +1266,11 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
             float d = TrigTools.SIN_TABLE[idx + (8192 * 3 / 5) & TrigTools.TABLE_MASK];
             float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 5) & TrigTools.TABLE_MASK];
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, u + e, seed + i)) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1302,17 +1305,17 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, w * 0.166f, u * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, w * 5f, u * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, w * 2f, u * 2f, seed + i + 7777);
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            power *= 0.5f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            power *= gain;
             noise1 += (noise2 * noise2 * noise2) * power;
 //            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
         }
 
-        noise1 /= (0.6f * power * ((1 << octaves) - 1));
+        noise1 *= 3.3333333f * fractalBounding;
         // tanhRougher, from digital.
         // -1f + 2f / (1f + exp(-2f * noise1))
         return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
@@ -1347,18 +1350,18 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float v2 = rotateV6D(x, y, z, w, u, v);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed + i) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1389,18 +1392,18 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float v2 = rotateV6D(x, y, z, w, u, v);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1431,18 +1434,18 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float v2 = rotateV6D(x, y, z, w, u, v);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (1 - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, seed + i)) * 2) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1473,12 +1476,12 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float v2 = rotateV6D(x, y, z, w, u, v);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
 
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
             float a = TrigTools.SIN_TABLE[idx];
@@ -1488,11 +1491,11 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
             float e = TrigTools.SIN_TABLE[idx + (8192 * 4 / 6) & TrigTools.TABLE_MASK];
             float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 6) & TrigTools.TABLE_MASK];
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, u + e, v + f, seed + i)) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1529,18 +1532,18 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, w * 0.166f, u * 0.166f, v * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, w * 5f, u * 5f, v * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, w * 2f, u * 2f, v * 2f, seed + i + 7777);
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
-            power *= 0.5f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            power *= gain;
             noise1 += (noise2 * noise2 * noise2) * power;
 //            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
         }
 
-        noise1 /= (0.6f * power * ((1 << octaves) - 1));
+        noise1 *= 3.3333333f * fractalBounding;
         // tanhRougher, from digital.
         // -1f + 2f / (1f + exp(-2f * noise1))
         return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
@@ -1576,19 +1579,19 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
-            m *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed + i) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1620,19 +1623,19 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
-            m *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed + i)) * 2 - 1) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1664,19 +1667,19 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
-            m *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (1 - Math.abs(wrapped.getNoiseWithSeed(x, y, z, w, u, v, m, seed + i)) * 2) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1708,13 +1711,13 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
                 final float m2 = rotateM7D(x, y, z, w, u, v, m);
                 x = x2; y = y2; z = z2; w = w2; u = u2; v = v2; m = m2;
             }
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
-            m *= 2f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
 
             final int idx = (int) (latest * 8192) & TrigTools.TABLE_MASK;
             float a = TrigTools.SIN_TABLE[idx];
@@ -1725,11 +1728,11 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
             float f = TrigTools.SIN_TABLE[idx + (8192 * 5 / 7) & TrigTools.TABLE_MASK];
             float g = TrigTools.SIN_TABLE[idx + (8192 * 6 / 7) & TrigTools.TABLE_MASK];
 
-            amp *= 0.5f;
+            amp *= gain;
             sum += (latest = wrapped.getNoiseWithSeed(x + a, y + b, z + c, w + d, u + e, v + f, m + g, seed + i)) * amp;
         }
 
-        return sum / (amp * ((1 << octaves) - 1));
+        return sum * fractalBounding;
     }
 
     /**
@@ -1767,19 +1770,19 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
 //            float roughness = wrapped.getNoiseWithSeed(x * 0.166f, y * 0.166f, z * 0.166f, w * 0.166f, u * 0.166f, v * 0.166f, seed + i + 5555) - 0.3f;
 //            float bumpDistort = wrapped.getNoiseWithSeed(x * 5f, y * 5f, z * 5f, w * 5f, u * 5f, v * 5f, seed + i + 6666);
 //            float bumpNoise = wrapped.getNoiseWithSeed((bumpDistort + x) * 2f, y * 2f, z * 2f, w * 2f, u * 2f, v * 2f, seed + i + 7777);
-            x *= 2f;
-            y *= 2f;
-            z *= 2f;
-            w *= 2f;
-            u *= 2f;
-            v *= 2f;
-            m *= 2f;
-            power *= 0.5f;
+            x *= lacunarity;
+            y *= lacunarity;
+            z *= lacunarity;
+            w *= lacunarity;
+            u *= lacunarity;
+            v *= lacunarity;
+            m *= lacunarity;
+            power *= gain;
             noise1 += (noise2 * noise2 * noise2) * power;
 //            noise1 += (noise2 * noise2 * noise2 + roughness * bumpNoise) * power;
         }
 
-        noise1 /= (0.6f * power * ((1 << octaves) - 1));
+        noise1 *= 3.3333333f * fractalBounding;
         // tanhRougher, from digital.
         // -1f + 2f / (1f + exp(-2f * noise1))
         return -1.0f + 2.0f / (1.0f + BitConversion.intBitsToFloat( (int)(0x800000 * (Math.max(-126.0f, -2.885390043258667f * noise1) + 126.94269504f))));
