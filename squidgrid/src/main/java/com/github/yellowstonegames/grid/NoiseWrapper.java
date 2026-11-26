@@ -27,11 +27,46 @@ import java.util.List;
 
 import static com.github.yellowstonegames.grid.Noise.*;
 
+/**
+ * The main way of consuming {@link INoise} types like {@link PerlinNoise} and {@link FoamNoise}. This allows
+ * setting the frequency of the wrapped INoise, as well as getting more than one octave at a time, potentially with a
+ * different mode (also called fractal type). Using more octaves with the default mode, FBM, produces "cloudy" noise,
+ * rather than having discrete "blobs" of high and low values. Other modes can look very different, and you may often
+ * want to mix NoiseWrappers with different modes to achieve a certain look.
+ * The modes supported here are {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, and
+ * {@link #EXO}; see their docs for descriptions of them.
+ * <br>
+ * Note, the frequency may need to be adjusted quite a bit depending on your application. This defaults to 1f/32f, or
+ * 0.03125f, for the frequency, which means for something like Perlin Noise with one octave, there will be a 32x32 grid
+ * of integer inputs that all slowly fade in about the same direction. Increase the frequency if you want more frequent
+ * changes, or decrease it to make changes even more gradual. Later octaves will have higher and higher frequencies, but
+ * will contribute less and less significant changes to the resulting noise. Later octaves look more like busy details,
+ * and less like large structural changes.
+ * <br>
+ * This can be serialized and deserialized to and from Strings with {@link INoise.Serializer}, like any INoise.
+ */
 public class NoiseWrapper implements INoise, ISerializersNeeded {
+    /**
+     * The INoise that this uses to generate any noise. Must not be null.
+     */
     public INoise wrapped;
+    /**
+     * Each component of a position gets multiplied by this value in the first octave, and by higher values in later
+     * octaves. This defaults to 0.03125f, or 1f/32f, which is usually a low, gradually-changing frequency.
+     */
     public float frequency;
+    /**
+     * One of {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, or {@link #EXO}.
+     * This determines how octaves are applied, and in some cases also changes single-octave noise.
+     */
     public int mode;
+    /**
+     * How many octaves to use; the minimum is 1.
+     */
     protected int octaves;
+    /**
+     * If this is set to true, then later octaves will be rotated differently every time. The default is false.
+     */
     public boolean fractalSpiral = false;
 
     /**
