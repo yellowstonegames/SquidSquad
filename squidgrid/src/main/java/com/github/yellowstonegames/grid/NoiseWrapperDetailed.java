@@ -42,28 +42,28 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
      * octaves (assuming {@link #getLacunarity()} is greater than 1). This defaults to 0.03125f, or 1f/32f, which is
      * usually a low, gradually-changing frequency.
      */
-    public float frequency;
+    public float frequency = 0.03125f;
     /**
      * One of {@link #FBM}, {@link #BILLOW}, {@link #RIDGED_MULTI}, {@link #DOMAIN_WARP}, or {@link #EXO}.
      * This determines how octaves are applied, and in some cases also changes single-octave noise.
      */
-    public int mode;
+    public int mode = FBM;
     /**
      * How many octaves to use; the minimum is 1.
      */
-    protected int octaves;
+    protected int octaves = 1;
     /**
      * Affects how frequency changes in later octaves; the default is 2.
      */
-    protected float lacunarity;
+    protected float lacunarity = 2f;
     /**
      * Affects how much later octaves are weighted in the total result; the default is 0.5f .
      */
-    protected float gain;
+    protected float gain = 0.5f;
     /**
      * Calculated internally by {@link #calculateFractalBounding()} when {@link #octaves} or {@link #gain} changes.
      */
-    protected float fractalBounding;
+    protected float fractalBounding = 1f;
     /**
      * If this is set to true, then later octaves will be rotated differently every time. The default is false.
      */
@@ -265,8 +265,8 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
      * @param octaves how many octaves to use to increase detail; must be at least 1.
      */
     public NoiseWrapperDetailed setFractalOctaves(int octaves) {
-        this.octaves = Math.max(1, octaves);
-
+        if(this.octaves != (this.octaves = Math.max(1, octaves)))
+            calculateFractalBounding();
         return this;
     }
 
@@ -314,10 +314,15 @@ public class NoiseWrapperDetailed implements INoise, ISerializersNeeded {
      * @param gain the gain to use
      */
     public void setGain(float gain) {
-        this.gain = gain;
-        calculateFractalBounding();
+        if(this.gain != (this.gain = gain))
+            calculateFractalBounding();
     }
 
+    /**
+     * Uses the current {@link #octaves} and {@link #gain} to calculate the limit of how far the noise can go from 0,
+     * and assigns {@link #fractalBounding} to be the inverse of that value. This allows multiplying by fractalBounding
+     * to bring multiple-octave noise results back to the -1 to 1 range.
+     */
     protected void calculateFractalBounding() {
         float amp = gain;
         float ampFractal = 1;

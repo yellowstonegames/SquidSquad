@@ -246,6 +246,9 @@ public class INoiseVisualizer extends ApplicationAdapter {
                     case K: // sKip
                         ctr += 1000;
                         break;
+                    case V:
+                        System.out.println(noise.toString());
+                        break;
                     case Q:
                     case ESCAPE: {
                         Gdx.app.exit();
