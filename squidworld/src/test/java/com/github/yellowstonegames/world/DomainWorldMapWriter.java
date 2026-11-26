@@ -114,7 +114,7 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
 //        rng.setState(rng.nextLong() + 2000L); // change addend when you need different results on the same date
         //rng = new StatefulRNG(0L);
         seed = rng.getSelectedState(0);
-        
+
         thesaurus = new Thesaurus(rng);
 
 //        Noise fn = new Noise((int) seed, 0.8f, Noise.PEAR_FRACTAL, 1);    // between 43797ms and 45564ms
@@ -138,10 +138,6 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
             @Override
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
-            }
-            @Override
-            protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u) {
-                return super.singlePerlinFractalDomainWarp(x, y, z, w, u);
             }
         }, terrainBasicNoise = new Noise(fn) {
             @Override
@@ -182,13 +178,9 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
             public float getNoiseWithSeed(float x, float y, float z, long seed) {
                 return getNoiseWithSeed(x, y, z, mutationA, mutationB, seed);
             }
-            @Override
-            protected float singlePerlinFractalRidgedMulti(float x, float y, float z, float w, float u) {
-                return super.singlePerlinFractalDomainWarp(x, y, z, w, u);
-            }
         };
 //        terrainBasicNoise.setMutation(1.618f);
-        
+
         //// Maelstrom
 //        Noise terrainRidgedNoise = new Noise(fn) {
 //            @Override
@@ -244,9 +236,9 @@ public class DomainWorldMapWriter extends ApplicationAdapter {
 //        WorldMapGenerator.DEFAULT_NOISE.setFrequency(1.25f);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalOctaves(1);
 //        WorldMapGenerator.DEFAULT_NOISE.setFractalType(FastNoise.BILLOW);
-        
+
 //        world = new WorldMapGenerator.RotatingSpaceMap(seed, width, height, noise, 1.0);
-        
+
 //        world = new WorldMapGenerator.SphereMap(seed, width, height, noise, 1.0);
 //        world = new WorldMapGenerator.TilingMap(seed, width, height, WorldMapGenerator.DEFAULT_NOISE, 1.75);
 //        world = new WorldMapGenerator.EllipticalMap(seed, width, height, noise, 1.75);
