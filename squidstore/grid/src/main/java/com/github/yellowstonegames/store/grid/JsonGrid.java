@@ -1051,6 +1051,31 @@ public final class JsonGrid {
     }
 
     /**
+     * Registers NoiseSelector with the given Json object, so NoiseSelector can be written to and read from JSON.
+     * This is a simple selector around NoiseSelector's built-in {@link NoiseSelector#stringSerialize()} and
+     * {@link NoiseSelector#stringDeserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerNoiseSelector(Json json) {
+        json.addClassTag("NSlc", NoiseSelector.class);
+        json.setSerializer(NoiseSelector.class, new Json.Serializer<NoiseSelector>() {
+            @Override
+            public void write(Json json, NoiseSelector object, Class knownType) {
+                json.writeObjectStart(NoiseSelector.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public NoiseSelector read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return new NoiseSelector().stringDeserialize(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
      * Registers PhantomNoise with the given Json object, so PhantomNoise can be written to and read from JSON.
      * This is a simple wrapper around PhantomNoise's built-in {@link PhantomNoise#stringSerialize()} and
      * {@link PhantomNoise#recreateFromString(String)} methods.

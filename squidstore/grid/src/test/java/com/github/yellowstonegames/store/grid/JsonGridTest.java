@@ -584,6 +584,20 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testNoiseSelector() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerNoiseSelector(json);
+        NoiseSelector noise, noise2;
+        noise = new NoiseSelector(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), new FoamplexNoise(123), new CyclicNoise(12345, 2, 0.3f), -0.2f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(NoiseSelector.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
     public void testMutantNoiseWrapper() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerMutantNoiseWrapper(json);
