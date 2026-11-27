@@ -85,6 +85,7 @@ public final class JsonGrid {
         registerNoiseAdjustment(json);
         registerNoise(json);
         registerNoiseWrapper(json);
+        registerNoiseWrapperDetailed(json);
         registerOpenSimplex2(json);
         registerOpenSimplex2Smooth(json);
         registerPerfyNoise(json);
@@ -907,7 +908,7 @@ public final class JsonGrid {
      * @param json a libGDX Json object that will have a serializer registered
      */
     public static void registerNoiseWrapper(Json json) {
-        json.addClassTag("NoWr", NoiseWrapper.class);
+        json.addClassTag("Wrap", NoiseWrapper.class);
         json.setSerializer(NoiseWrapper.class, new Json.Serializer<NoiseWrapper>() {
             @Override
             public void write(Json json, NoiseWrapper object, Class knownType) {
@@ -920,6 +921,31 @@ public final class JsonGrid {
             public NoiseWrapper read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
                 return new NoiseWrapper().stringDeserialize(jsonData.get("v").asString());
+            }
+        });
+    }
+
+    /**
+     * Registers NoiseWrapperDetailed with the given Json object, so NoiseWrapperDetailed can be written to and read from JSON.
+     * This is a simple wrapper around NoiseWrapperDetailed's built-in {@link NoiseWrapperDetailed#stringSerialize()} and
+     * {@link NoiseWrapperDetailed#stringDeserialize(String)} methods.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerNoiseWrapperDetailed(Json json) {
+        json.addClassTag("WraD", NoiseWrapperDetailed.class);
+        json.setSerializer(NoiseWrapperDetailed.class, new Json.Serializer<NoiseWrapperDetailed>() {
+            @Override
+            public void write(Json json, NoiseWrapperDetailed object, Class knownType) {
+                json.writeObjectStart(NoiseWrapperDetailed.class, knownType);
+                json.writeValue("v", object.stringSerialize());
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public NoiseWrapperDetailed read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull() || !jsonData.has("v")) return null;
+                return new NoiseWrapperDetailed().stringDeserialize(jsonData.get("v").asString());
             }
         });
     }

@@ -570,6 +570,20 @@ public class JsonGridTest {
     }
 
     @Test
+    public void testNoiseWrapperDetailed() {
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerNoiseWrapperDetailed(json);
+        NoiseWrapperDetailed noise, noise2;
+        noise = new NoiseWrapperDetailed(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 3, 0.7f);
+        String data = json.toJson(noise);
+        System.out.println(data);
+        noise2 = json.fromJson(NoiseWrapperDetailed.class, data);
+        Assert.assertEquals(noise, noise2);
+        Assert.assertEquals(noise.getNoise(-123f, 0.4f, 0.625f, -1.12f), noise2.getNoise(-123f, 0.4f, 0.625f, -1.12f), Double.MIN_NORMAL);
+        System.out.println();
+    }
+
+    @Test
     public void testMutantNoiseWrapper() {
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerMutantNoiseWrapper(json);
@@ -1042,7 +1056,7 @@ public class JsonGridTest {
         System.out.println(vf2);
         Assert.assertEquals(vf, vf2);
     }
-    
+
     @Test
     public void testVisionFrameworkRgb() {
         Json json = new Json(JsonWriter.OutputType.minimal);
