@@ -34,7 +34,7 @@ import org.junit.Test;
 
 public class GridTest {
     @Test
-    public void testCoord() {        
+    public void testCoord() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -47,7 +47,7 @@ public class GridTest {
     }
 
     @Test
-    public void testRegion() {        
+    public void testRegion() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(Region.class);
@@ -61,7 +61,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordSet() {        
+    public void testCoordSet() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -76,7 +76,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordOrderedSet() {        
+    public void testCoordOrderedSet() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -91,7 +91,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordObjectMap() {        
+    public void testCoordObjectMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -107,7 +107,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordObjectOrderedMap() {        
+    public void testCoordObjectOrderedMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -123,7 +123,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordFloatMap() {        
+    public void testCoordFloatMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -138,7 +138,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordFloatOrderedMap() {        
+    public void testCoordFloatOrderedMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -153,7 +153,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordLongMap() {        
+    public void testCoordLongMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -168,7 +168,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordLongOrderedMap() {        
+    public void testCoordLongOrderedMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -183,7 +183,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordIntMap() {        
+    public void testCoordIntMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -198,7 +198,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCoordIntOrderedMap() {        
+    public void testCoordIntOrderedMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -270,7 +270,7 @@ public class GridTest {
         }
     }
     @Test
-    public void testSpatialMap() {        
+    public void testSpatialMap() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -290,7 +290,7 @@ public class GridTest {
     }
 
     @Test
-    public void testRadiance() {        
+    public void testRadiance() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Radiance.class, new RadianceSerializer(fory));
@@ -305,7 +305,7 @@ public class GridTest {
     }
 
     @Test
-    public void testLightSource() {        
+    public void testLightSource() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
@@ -322,7 +322,7 @@ public class GridTest {
     }
 
     @Test
-    public void testLightingManager() {        
+    public void testLightingManager() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(int[].class);
@@ -347,7 +347,7 @@ public class GridTest {
     }
 
     @Test
-    public void testLightingManagerRgb() {        
+    public void testLightingManagerRgb() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(int[].class);
@@ -372,7 +372,7 @@ public class GridTest {
     }
 
     @Test
-    public void testVisionFramework() {        
+    public void testVisionFramework() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(int[].class);
@@ -402,7 +402,7 @@ public class GridTest {
     }
 
     @Test
-    public void testVisionFrameworkRgb() {        
+    public void testVisionFrameworkRgb() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(int[].class);
@@ -432,7 +432,7 @@ public class GridTest {
     }
 
     @Test
-    public void testNoise() {        
+    public void testNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(Noise.class);
@@ -454,7 +454,7 @@ public class GridTest {
     }
 
     @Test
-    public void testFoamNoise() {        
+    public void testFoamNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(FoamNoise.class);
@@ -474,7 +474,7 @@ public class GridTest {
     }
 
     @Test
-    public void testFoamplexNoise() {        
+    public void testFoamplexNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(FoamplexNoise.class);
@@ -494,7 +494,7 @@ public class GridTest {
     }
 
     @Test
-    public void testPhantomNoise() {        
+    public void testPhantomNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(PhantomNoise.class);
@@ -510,7 +510,7 @@ public class GridTest {
     }
 
     @Test
-    public void testTaffyNoise() {        
+    public void testTaffyNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(TaffyNoise.class);
@@ -526,7 +526,7 @@ public class GridTest {
     }
 
     @Test
-    public void testFlanNoise() {        
+    public void testFlanNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(FlanNoise.class);
@@ -542,7 +542,7 @@ public class GridTest {
     }
 
     @Test
-    public void testCyclicNoise() {        
+    public void testCyclicNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(CyclicNoise.class);
@@ -558,7 +558,7 @@ public class GridTest {
     }
 
     @Test
-    public void testPuffyNoise() {        
+    public void testPuffyNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(PuffyNoise.class);
@@ -574,7 +574,7 @@ public class GridTest {
     }
 
     @Test
-    public void testHuskyNoise() {        
+    public void testHuskyNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(HuskyNoise.class);
@@ -590,7 +590,7 @@ public class GridTest {
     }
 
     @Test
-    public void testSorbetNoise() {        
+    public void testSorbetNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(SorbetNoise.class);
@@ -606,7 +606,7 @@ public class GridTest {
     }
 
     @Test
-    public void testSimplexNoise() {        
+    public void testSimplexNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(SimplexNoise.class);
@@ -626,7 +626,7 @@ public class GridTest {
     }
 
     @Test
-    public void testSimplexNoiseScaled() {        
+    public void testSimplexNoiseScaled() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(SimplexNoiseScaled.class);
@@ -646,7 +646,7 @@ public class GridTest {
     }
 
     @Test
-    public void testSimplexNoiseHard() {        
+    public void testSimplexNoiseHard() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(SimplexNoiseHard.class);
@@ -666,7 +666,7 @@ public class GridTest {
     }
 
     @Test
-    public void testOpenSimplex2() {        
+    public void testOpenSimplex2() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(OpenSimplex2.class);
@@ -684,7 +684,7 @@ public class GridTest {
     }
 
     @Test
-    public void testOpenSimplex2Smooth() {        
+    public void testOpenSimplex2Smooth() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(OpenSimplex2Smooth.class);
@@ -702,7 +702,7 @@ public class GridTest {
     }
 
     @Test
-    public void testPerlinNoise() {        
+    public void testPerlinNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(PerlinNoise.class);
@@ -722,7 +722,7 @@ public class GridTest {
     }
 
     @Test
-    public void testValueNoise() {        
+    public void testValueNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(ValueNoise.class);
@@ -742,7 +742,7 @@ public class GridTest {
     }
 
     @Test
-    public void testBasicHashNoise() {        
+    public void testBasicHashNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(com.github.yellowstonegames.grid.FlawedPointHash.FlowerHash.class);
@@ -763,7 +763,7 @@ public class GridTest {
     }
 
     @Test
-    public void testHighDimensionalValueNoise() {        
+    public void testHighDimensionalValueNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(HighDimensionalValueNoise.class);
@@ -779,7 +779,7 @@ public class GridTest {
     }
 
     @Test
-    public void testWhiteNoise() {        
+    public void testWhiteNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(WhiteNoise.class);
@@ -797,9 +797,9 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
-    
+
     @Test
-    public void testPerlueNoise() {        
+    public void testPerlueNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(PerlueNoise.class);
@@ -819,7 +819,7 @@ public class GridTest {
     }
 
     @Test
-    public void testBadgerNoise() {        
+    public void testBadgerNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(BadgerNoise.class);
@@ -839,7 +839,7 @@ public class GridTest {
     }
 
     @Test
-    public void testSnakeNoise() {        
+    public void testSnakeNoise() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(SnakeNoise.class);
@@ -859,13 +859,13 @@ public class GridTest {
     }
 
     @Test
-    public void testNoiseWrapper() {        
+    public void testNoiseWrapper() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(Noise.class);
         fory.register(NoiseWrapper.class);
 
-        NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true);
+        NoiseWrapper data = new NoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, NoiseWrapper.EXO, 3, true);
 
         byte[] bytes = fory.serialize(data);
         {
@@ -880,13 +880,34 @@ public class GridTest {
     }
 
     @Test
-    public void testRadialNoiseWrapper() {        
+    public void testNoiseWrapperDetailed() {
+        LoggerFactory.disableLogging();
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.register(Noise.class);
+        fory.register(NoiseWrapperDetailed.class);
+
+        NoiseWrapperDetailed data = new NoiseWrapperDetailed(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, NoiseWrapper.EXO, 3, true, 3, 0.7f);
+
+        byte[] bytes = fory.serialize(data);
+        {
+            NoiseWrapperDetailed data2 = fory.deserialize(bytes, NoiseWrapperDetailed.class);
+            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
+    public void testRadialNoiseWrapper() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(Noise.class);
         fory.register(RadialNoiseWrapper.class);
 
-        RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, Noise.BILLOW, 3, true, 10f, 20.125f);
+        RadialNoiseWrapper data = new RadialNoiseWrapper(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), 123451234512345L, 0.2f, NoiseWrapper.EXO, 3, true, 10f, 20.125f);
 
         byte[] bytes = fory.serialize(data);
         {
@@ -898,7 +919,7 @@ public class GridTest {
     }
 
     @Test
-    public void testNoiseAdjustment() {        
+    public void testNoiseAdjustment() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.register(Noise.class);
@@ -919,7 +940,7 @@ public class GridTest {
     }
 
     @Test
-    public void testPointPair() {        
+    public void testPointPair() {
         LoggerFactory.disableLogging();
         Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
         fory.registerSerializerAndType(Coord.class, new CoordSerializer(fory));
