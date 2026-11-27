@@ -1363,6 +1363,30 @@ public class GridTest {
     }
 
     @Test
+    public void testNoiseSelector() {
+        Kryo kryo = new Kryo();
+        kryo.register(Noise.class, new NoiseSerializer());
+        kryo.register(FoamplexNoise.class, new FoamplexNoiseSerializer());
+        kryo.register(CyclicNoise.class, new CyclicNoiseSerializer());
+        kryo.register(NoiseSelector.class, new NoiseSelectorSerializer());
+
+        NoiseSelector data = new NoiseSelector(new Noise(-2345, 0.1f, Noise.VALUE_FRACTAL, 3, 2.5f, 0.4f), new FoamplexNoise(123), new CyclicNoise(12345, 2, 0.3f), -0.2f);
+
+        Output output = new Output(32, -1);
+        kryo.writeObject(output, data);
+        byte[] bytes = output.toBytes();
+        try (Input input = new Input(bytes)) {
+            NoiseSelector data2 = kryo.readObject(input, NoiseSelector.class);
+            Assert.assertEquals(data.getNoise(1f, 1.5f), data2.getNoise(1f, 1.5f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f), data2.getNoise(1f, 1.5f, 2.25f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f), Float.MIN_NORMAL);
+            Assert.assertEquals(data.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), data2.getNoise(1f, 1.5f, 2.25f, 3.125f, 4.0625f, 5.03125f), Float.MIN_NORMAL);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
+    @Test
     public void testPointPair() {
         Kryo kryo = new Kryo();
         kryo.register(Coord.class, new CoordSerializer());
