@@ -16,6 +16,7 @@
 
 package com.github.yellowstonegames.grid;
 
+import com.github.tommyettinger.digital.RoughMath;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 
@@ -222,4 +223,14 @@ public final class Combiners {
      * Returns the maximum of the two arguments.
      */
     public static final Combiner max = new Combiner("max", maxFunction);
+
+    /**
+     * Range is from -1 to 1, but can only gradually approach -1, while this returns 1 when x and y are both 0.
+     */
+    public static final Combiner gaussian = new Combiner("gaussian", (x, y) -> 2 * RoughMath.expRough(-x * x - y * y) - 1);
+
+    /**
+     * Range is from -1 to 1; this returns -1 when x and y are both 0, and returns 1 when both x and y are 1 or -1.
+     */
+    public static final Combiner parabola = new Combiner("parabola", (x, y) -> (x * x + y * y) - 1);
 }
