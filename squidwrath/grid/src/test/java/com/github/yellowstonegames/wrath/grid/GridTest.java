@@ -976,4 +976,22 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testCombiner() {
+        LoggerFactory.disableLogging();
+        Fory fory = Fory.builder().withLanguage(Language.JAVA).build();
+        fory.registerSerializerAndType(Combiners.Combiner.class, new CombinerSerializer(fory));
+
+        for (Combiners.Combiner data : Combiners.getCombinerArray()) {
+            byte[] bytes = fory.serialize(data);
+            Combiners.Combiner data2 = fory.deserialize(bytes, Combiners.Combiner.class);
+            Assert.assertEquals(data.applyAsFloat(0.1f, 0.7f), data2.applyAsFloat(0.1f, 0.7f), 1e-7f);
+            Assert.assertEquals(data.applyAsFloat(0.2f, 0.7f), data2.applyAsFloat(0.2f, 0.7f), 1e-7f);
+            Assert.assertEquals(data.applyAsFloat(0.7f, 0.7f), data2.applyAsFloat(0.7f, 0.7f), 1e-7f);
+            Assert.assertEquals(data.applyAsFloat(0.8f, 0.7f), data2.applyAsFloat(0.8f, 0.7f), 1e-7f);
+            Assert.assertEquals(data, data2);
+        }
+    }
+
 }
