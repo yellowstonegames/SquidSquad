@@ -17,6 +17,7 @@
 package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.digital.RoughMath;
+import com.github.tommyettinger.digital.TrigTools;
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;
 
@@ -233,4 +234,13 @@ public final class Combiners {
      * Range is from -1 to 1; this returns -1 when x and y are both 0, and returns 1 when both x and y are 1 or -1.
      */
     public static final Combiner parabola = new Combiner("parabola", (x, y) -> (x * x + y * y) - 1);
+    /**
+     * Range is from -1 to 1; this returns 1 when x or y is 0, and returns -1 when both x and y are 1 or -1.
+     */
+    public static final Combiner cosine = new Combiner("cosine", (x, y) -> TrigTools.cosSmootherTurns(x * y * 0.5f));
+    /**
+     * A <a href="https://en.wikipedia.org/wiki/Smooth_maximum#LogSumExp">smooth max</a> function, LogSumExp.
+     */
+    public static final Combiner logSumExp = new Combiner("logSumExp", (x, y) -> RoughMath.logRough(RoughMath.expRough(x) + RoughMath.expRough(y)));
+
 }
