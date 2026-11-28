@@ -163,9 +163,45 @@ public final class Combiners {
     public static final Combiner add = new Combiner("add", addFunction);
 
     /**
+     * Subtracts second from first and returns that, without further changes.
+     */
+    public static final FloatFloatToFloatBiFunction subtractFunction = (a, b) -> a - b;
+
+    /**
+     * Plain subtraction of the two arguments.
+     */
+    public static final Combiner subtract = new Combiner("subtract", subtractFunction);
+
+    /**
+     * Adds its arguments and clamps that if it exceeds the -1 to 1 range.
+     */
+    public static final FloatFloatToFloatBiFunction addClampedFunction = (a, b) -> Math.min(Math.max(a + b, -1), 1);
+
+    /**
+     * Adds its arguments and clamps them if they exceed the -1 to 1 range.
+     */
+    public static final Combiner addClamped = new Combiner("addClamped", addClampedFunction);
+
+    /**
+     * Subtracts second from first and clamps that if it exceeds the -1 to 1 range.
+     */
+    public static final FloatFloatToFloatBiFunction subtractClampedFunction = (a, b) -> Math.min(Math.max(a - b, -1), 1);
+
+    /**
+     * Subtracts second from first and clamps that if it exceeds the -1 to 1 range.
+     */
+    public static final Combiner subtractClamped = new Combiner("subtractClamped", subtractClampedFunction);
+
+    /**
      * Averages the two arguments. Just adds first and second, then multiplies by 0.5f .
      */
     public static final Combiner average = new Combiner("average", (a, b) -> (a + b) * 0.5f);
+
+    /**
+     * Like {@link #average}, but subtracts instead of adding.
+     * Subtracts second from first, then multiplies by 0.5f .
+     */
+    public static final Combiner halfSubtract = new Combiner("halfSubtract", (a, b) -> (a - b) * 0.5f);
 
     /**
      * Returns the minimum of the two arguments.
