@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 See AUTHORS file.
+ * Copyright (c) 2026; see AUTHORS file.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.yellowstonegames.freeze.grid;
+package com.github.yellowstonegames.grid;
 
 import com.github.tommyettinger.ds.ObjectObjectOrderedMap;
 import com.github.tommyettinger.function.FloatFloatToFloatBiFunction;

@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.crux.PointN;
 import com.github.tommyettinger.crux.PointPair;
+import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.*;
 import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.yellowstonegames.grid.*;
@@ -52,6 +53,7 @@ public final class JsonGrid {
         registerPoint4Float(json);
         registerPoint5Float(json);
         registerPoint6Float(json);
+        registerPointPair(json);
         registerRegion(json);
         registerCoordSet(json);
         registerCoordOrderedSet(json);
@@ -64,6 +66,9 @@ public final class JsonGrid {
         registerCoordLongMap(json);
         registerCoordLongOrderedMap(json);
         registerSpatialMap(json);
+
+        registerCombiner(json);
+
         registerRadiance(json);
         registerLightingManager(json);
         registerLightingManagerRgb(json);
@@ -2090,6 +2095,28 @@ public final class JsonGrid {
             public PointPair<?> read(Json json, JsonValue jsonData, Class type) {
                 if (jsonData == null || jsonData.isNull()) return null;
                 return new PointPair<>(json.readValue("a", null, jsonData), json.readValue("b", null, jsonData));
+            }
+        });
+    }
+    /**
+     * Registers Combiner with the given Json object, so Combiner can be written to and read from JSON.
+     * This is a simple wrapper around each Combiner's unique {@link Combiners.Combiner#getTag()} and
+     * {@link Combiners#get(String)} to read it back.
+     *
+     * @param json a libGDX Json object that will have a serializer registered
+     */
+    public static void registerCombiner(Json json) {
+        json.addClassTag("Cmbr", Combiners.Combiner.class);
+        json.setSerializer(Combiners.Combiner.class, new Json.Serializer<Combiners.Combiner>() {
+            @Override
+            public void write(Json json, Combiners.Combiner object, Class knownType) {
+                json.writeValue(object.getTag());
+            }
+
+            @Override
+            public Combiners.Combiner read(Json json, JsonValue jsonData, Class type) {
+                if (jsonData == null || jsonData.isNull()) return null;
+                return Combiners.get(jsonData.asString());
             }
         });
     }

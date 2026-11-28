@@ -20,11 +20,15 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.crux.PointPair;
 import com.github.tommyettinger.digital.ArrayTools;
+import com.github.tommyettinger.digital.Base;
+import com.github.tommyettinger.digital.MathTools;
 import com.github.tommyettinger.ds.ObjectFloatMap;
 import com.github.tommyettinger.digital.Interpolations;
 import com.github.tommyettinger.ds.ObjectIntMap;
 import com.github.tommyettinger.ds.ObjectLongMap;
+import com.github.tommyettinger.ds.interop.JsonSupport;
 import com.github.tommyettinger.random.AceRandom;
+import com.github.tommyettinger.random.DistinctRandom;
 import com.github.tommyettinger.random.EnhancedRandom;
 import com.github.yellowstonegames.core.DescriptiveColor;
 import com.github.yellowstonegames.core.DescriptiveColorRgb;
@@ -1112,6 +1116,22 @@ public class JsonGridTest {
         Assert.assertEquals(pair, pair2);
 
         System.out.println();
+    }
+
+    @Test
+    public void testCombiner() {
+        JsonSupport.setNumeralBase(Base.scrambledBase(new DistinctRandom()));
+        //JsonSupport.setNumeralBase(Base.BASE16);
+        Json json = new Json(JsonWriter.OutputType.minimal);
+        JsonGrid.registerCombiner(json);
+        Combiners.Combiner mx = Combiners.max;
+        String data = json.toJson(mx);
+        System.out.println(data);
+        Combiners.Combiner mx2 = json.fromJson(Combiners.Combiner.class, data);
+        Assert.assertEquals(mx, mx2);
+        Assert.assertEquals(mx.applyAsFloat(0.1f, 1f),   mx2.applyAsFloat(0.1f, 1f),   MathTools.FLOAT_ROUNDING_ERROR);
+        Assert.assertEquals(mx.applyAsFloat(0.3f, -1f),  mx2.applyAsFloat(0.3f, -1f),  MathTools.FLOAT_ROUNDING_ERROR);
+        Assert.assertEquals(mx.applyAsFloat(0.7f, 0.1f), mx2.applyAsFloat(0.7f, 0.1f), MathTools.FLOAT_ROUNDING_ERROR);
     }
 
 }
