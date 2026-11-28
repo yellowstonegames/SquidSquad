@@ -1401,4 +1401,25 @@ public class GridTest {
             Assert.assertEquals(data, data2);
         }
     }
+
+    @Test
+    public void testCombiner() {
+        Kryo kryo = new Kryo();
+        kryo.register(Combiners.Combiner.class, new CombinerSerializer());
+
+        for (Combiners.Combiner data : Combiners.getCombinerArray()) {
+            Output output = new Output(32, -1);
+            kryo.writeObject(output, data);
+            byte[] bytes = output.toBytes();
+            try (Input input = new Input(bytes)) {
+                Combiners.Combiner data2 = kryo.readObject(input, Combiners.Combiner.class);
+                Assert.assertEquals(data.applyAsFloat(0.1f, 0.7f), data2.applyAsFloat(0.1f, 0.7f), 1e-7f);
+                Assert.assertEquals(data.applyAsFloat(0.2f, 0.7f), data2.applyAsFloat(0.2f, 0.7f), 1e-7f);
+                Assert.assertEquals(data.applyAsFloat(0.7f, 0.7f), data2.applyAsFloat(0.7f, 0.7f), 1e-7f);
+                Assert.assertEquals(data.applyAsFloat(0.8f, 0.7f), data2.applyAsFloat(0.8f, 0.7f), 1e-7f);
+                Assert.assertEquals(data, data2);
+            }
+        }
+    }
+
 }

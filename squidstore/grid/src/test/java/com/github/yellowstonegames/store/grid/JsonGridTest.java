@@ -1124,14 +1124,15 @@ public class JsonGridTest {
         //JsonSupport.setNumeralBase(Base.BASE16);
         Json json = new Json(JsonWriter.OutputType.minimal);
         JsonGrid.registerCombiner(json);
-        Combiners.Combiner mx = Combiners.max;
-        String data = json.toJson(mx);
-        System.out.println(data);
-        Combiners.Combiner mx2 = json.fromJson(Combiners.Combiner.class, data);
-        Assert.assertEquals(mx, mx2);
-        Assert.assertEquals(mx.applyAsFloat(0.1f, 1f),   mx2.applyAsFloat(0.1f, 1f),   MathTools.FLOAT_ROUNDING_ERROR);
-        Assert.assertEquals(mx.applyAsFloat(0.3f, -1f),  mx2.applyAsFloat(0.3f, -1f),  MathTools.FLOAT_ROUNDING_ERROR);
-        Assert.assertEquals(mx.applyAsFloat(0.7f, 0.1f), mx2.applyAsFloat(0.7f, 0.1f), MathTools.FLOAT_ROUNDING_ERROR);
+        for (Combiners.Combiner data : Combiners.getCombinerArray()) {
+            String jsn = json.toJson(data);
+            System.out.println(jsn);
+            Combiners.Combiner data2 = json.fromJson(Combiners.Combiner.class, jsn);
+            Assert.assertEquals(data.applyAsFloat(0.1f, 0.7f), data2.applyAsFloat(0.1f, 0.7f), 1e-7f);
+            Assert.assertEquals(data.applyAsFloat(0.2f, 0.7f), data2.applyAsFloat(0.2f, 0.7f), 1e-7f);
+            Assert.assertEquals(data.applyAsFloat(0.7f, 0.7f), data2.applyAsFloat(0.7f, 0.7f), 1e-7f);
+            Assert.assertEquals(data.applyAsFloat(0.8f, 0.7f), data2.applyAsFloat(0.8f, 0.7f), 1e-7f);
+            Assert.assertEquals(data, data2);
+        }
     }
-
 }
